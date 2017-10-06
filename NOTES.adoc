@@ -1,0 +1,1 @@
+convert dyson_series.png -transparent white dyson_series2.png

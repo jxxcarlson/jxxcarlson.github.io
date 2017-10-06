@@ -30,19 +30,25 @@ p { font-size: 10pt; line-height: 14pt; }
 <p>James Carlson: @jxxcarlson on elmlang.slack.com, or at gmail</p>
 
 
-<p><a href="http://www.knode.io" target="_blank">Knode.io</a> is an app for creating, editing, and presenting technical documents
-on the web.  Originally designed
+<p><a href="http://www.knode.io" target="_blank">Knode.io</a> is an app for creating,
+editing, and presenting technical documents
+on the web with full support for mathematical formulas, beautifully typeset
+with <a href="http://www.mathjax.org" target="_blank">MathJax</a>:
+
+<center><img src="dyson_series2.png" width=300></center>
+
+<p>Originally designed
 for things like math and physics course notes, it has other uses as well.
 Please see <a href="http://www.knode.io/#@public/155" target="_blank">these examples</a>.</p>
 
-<p>The app has an Elm front end and a Phoenix-Elixir backend. I hope to release
+<p>The app has an Elm front end and a Phoenix-Elixir back end. I hope to release
 version 1.0 in January.  Would love to have some brave users to test it and
 give feedback on it before then.</p>
 
 <p>Documents at knode.io can be written in plain text, Asciidoc, or
    <a href="http://www.knode.io/#@public/445" target="_blank">MiniLateX</a>.
    MiniLaTeX builds on <a href="http://www.mathjax.org" target="_blank">MathJax</a>, adding support
-      for <code>\section</code>, tables, many environments (theorem, verbatim, etc.). The idea is to have
+      for <code>\section</code>, tables, many environments (theorem, verbatim, etc.) and more. The idea is to have
       a subset of LaTeX which (a) is good enough for writing lecture notes, articles, and books,
       (b) renders live in the browser and (c) which can
       also be processed by the usual tools, e.g., <code>pdflatex</code>.
