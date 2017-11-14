@@ -17,49 +17,68 @@ p { font-size: 10pt; line-height: 14pt; }
 
 <div style="width:600px; margin:0 auto;">
 
+
 <h1>jxxcarlson.github.io</h1>
 
-<h2>Contact</h2>
+<h2>Contents</h2>
+
+<ul>
+<li><a href="#minilatex">MiniLatex</a></li>
+<li><a href="#elm">Elm apps</a></li>
+  <ul>
+    <li><a href="#physics">Physics Simulations</a></li>
+    <li><a href="#art">Art</a></li>
+    <li><a href="#crypt">Cryptography</a></li>
+</ul>
 
 <p><a href="http://www.knode.io/#@public/137" target="_blank">James Carlson</a>: @jxxcarlson on elmlang.slack.com, or at gmail</p>
 
-<h2><a href="http://www.knode.io" target="_blank">www.knode.io</a></h2>
+<h2><a name="minilatex">MiniLatex</a></h2>
 
-<p><a href="http://www.knode.io" target="_blank">Knode.io</a> is an app for creating,
-editing, and presenting technical documents
-on the web with full support for mathematical formulas, beautifully typeset
-with <a href="http://www.mathjax.org" target="_blank">MathJax</a>:
+<p>MiniLatex is an experimental project to render a subset of LaTeX in <thead>
+  browser.  It relies on MathJax to render matheamtical text &mdash; $ .. $ and $$ .. $$
+  &mdash; and adds constructs such as section numbers, a set of macros, e.g., \emph,
+  and a variety of enviroments e.g., theorem, equation, align, tabular, and verbatim.
+  The aim is to be able to write things like lecture notes that can rendered in the
+  browser by processing with MiniLatex or into PDF by standard tools such as
+  <code>pdflatex</code>.
 
+
+</p>
+
+<p>
+  Some links (1) a web app where you can create and edit MiniLaTeX documents; (2) A fuller
+  description of MiniLaTeX; (3) An experimental demo app.
+  <ol>
+    <li><a href="http://www.knode.io/">www.knode.io</a></li>
+    <li><a href="http://www.knode.io/#@public/445" target="_blank">MiniLatex on the web</a> </li>
+    <li><a href="https://jxxcarlson.github.io/app/minilatex/src/index.html" target="_blank">Experimental Demo App</a></li>
+    <li><a href="https://github.com/jxxcarlson/minilatexDemo">Code for the demo app</a></li>
+  </ol>
+</p>
+
+<p>
+The site at <a href="http://www.knode.io/">www.knode.io</a> is working pretty well &mdash;
+I've been using it on a daily basis for some long and short projects.  The
+demo app has a problem in re-rendering text &mdash; hopefully to be fixed soon.
+</p>
+
+
+
+<!--
 <center><img src="image/dyson_series2.png" width=300></center>
+-->
 
-<p>Originally designed
-for things like math and physics course notes, knode.io has other uses as well.
-Please see <a href="http://www.knode.io/#@public/155" target="_blank">these examples</a>.</p>
 
-<p>The app has an Elm front end and a Phoenix-Elixir back end. I hope to release
-version 1.0 in January.  Would love to have some brave users to test it and
-give feedback on it before then.</p>
 
-<p>Documents at knode.io can be written in plain text, Asciidoc, or
-   <a href="http://www.knode.io/#@public/445" target="_blank">MiniLateX</a>.
-   MiniLaTeX builds on <a href="http://www.mathjax.org" target="_blank">MathJax</a>, adding support
-      for <code>\section</code> with automatic numbering, cross-references for equations,
-      many environments (theorem, verbatim, etc.), support for tables, and more. The idea is to have
-      a subset of LaTeX which (a) is good enough for writing lecture notes, articles, and books,
-      (b) renders live in the browser and (c) which can
-      also be processed by the usual tools, e.g., <code>pdflatex</code>.
-   For examples, see my <a href="http://www.knode.io/#@public/137" target="_blank">home page</a> at knode.io.
-   </p>
 
-<p>Here are two versions of the MiniLaTeX document:
-  (1) <a href="http://www.knode.io/#@public/445" target="_blank">MiniLateX A</a>
-on the web at knode.io, and (2) the same document exported to a file and rendered with <code>pdflatex</code>:
-<a href="http://noteimages.s3.amazonaws.com/uploads/MiniLaTeX.pdf" target="_blank">MiniLateX B</a>.
+<h2><a name="elm">Elm demo apps and code</h2>
 
-<h2>Physics simulations in Elm</h2>
 
+<h3><a name="physics"> Physics Simulations</a></h3>
 
 <img src="image/brownian_motion.png" style="float: right" width=300>
+
 
 
 
@@ -101,7 +120,7 @@ will be discussed in the <a href="http://www.knode.io#@public/480">Elm by Exampl
 
 
 
-<h2>Drawing with Elm</h2>
+<h3> <a name="art">Art</a></h3>
 
 <center>
 <img src="image/compostion1.png" width=400>
@@ -111,7 +130,7 @@ will be discussed in the <a href="http://www.knode.io#@public/480">Elm by Exampl
 
 
 
-<h2>Other Elm Apps</h2>
+<h3> <a name="crypt">Cryptography</a></h3>
 
 
 <strong><a href="app/caesar.html">Caesar Cipher</a></strong>
