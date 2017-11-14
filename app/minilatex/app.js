@@ -12522,7 +12522,10 @@ var _user$project$MiniLatex_Differ$diff = F2(
 			_user$project$MiniLatex_Differ$dropLast,
 			lb,
 			A2(_elm_lang$core$List$drop, la, v));
-		return A4(_user$project$MiniLatex_Differ$DiffRecord, a, b, x, y);
+		var bb = _elm_lang$core$Native_Utils.eq(
+			la,
+			_elm_lang$core$List$length(u)) ? {ctor: '[]'} : b;
+		return A4(_user$project$MiniLatex_Differ$DiffRecord, a, bb, x, y);
 	});
 var _user$project$MiniLatex_Differ$EditRecord = F3(
 	function (a, b, c) {
@@ -12662,7 +12665,7 @@ var _user$project$MiniLatex_KeyValueUtilities$getKeyValueList = function (str) {
 		A2(_elm_tools$parser$Parser$run, _user$project$MiniLatex_KeyValueUtilities$keyValuePairs, str));
 };
 
-var _user$project$MiniLatex_Configuration$client = 'http/www.knode.io';
+var _user$project$MiniLatex_Configuration$client = 'http://www.knode.io';
 
 var _user$project$MiniLatex_Render$imageAttributes = F2(
 	function (imageAttrs, attributeString) {
