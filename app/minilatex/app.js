@@ -14826,18 +14826,22 @@ var _user$project$Main$infoPanel = A2(
 var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _user$project$Main$init = function () {
-	var model = {
-		sourceText: _user$project$Main$initialSourceText,
-		editRecord: _user$project$MiniLatex_Driver$setup(_user$project$Main$initialSourceText)
-	};
-	return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-}();
 var _user$project$Main$typeset = _elm_lang$core$Native_Platform.outgoingPort(
 	'typeset',
 	function (v) {
 		return v;
 	});
+var _user$project$Main$init = function () {
+	var model = {
+		sourceText: _user$project$Main$initialSourceText,
+		editRecord: _user$project$MiniLatex_Driver$setup(_user$project$Main$initialSourceText)
+	};
+	return {
+		ctor: '_Tuple2',
+		_0: model,
+		_1: _user$project$Main$typeset('now')
+	};
+}();
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
