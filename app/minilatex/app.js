@@ -14604,9 +14604,7 @@ var _user$project$MiniLatex_Driver$render = function (text) {
 		A2(_user$project$MiniLatex_LatexDiffer$initialize2, _user$project$MiniLatex_LatexState$emptyLatexState, text));
 };
 
-var _user$project$Main$initialSourceText3 = '\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n';
-var _user$project$Main$initialSourceText2 = '\n\\section{Introduction}\n\nThis \\strong{is} a test.  Here is the\nPythagorean Theorem: $a^2 + b^2 = c^2$.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\nAccording to Oresme (14th Century):\n\n$$\n\\begin{equation}\n\\tag{QQ}\n\\label{oresme}\n\\sum_{n=1}^\\infty \\frac{1}{n} = \\infty\n\\end{equation}\n$$\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n';
-var _user$project$Main$initialSourceText1 = 'This \\strong{is} a test!\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$';
+var _user$project$Main$initialSourceText = '\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nSee the article\n\\href{http://www.knode.io/#@public/445}{MiniLatex}\nat \\href{http://www.knode.io}{www.knode.io} for more info.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\\section{Appendix}\n\n\n\\begin{itemize}\n%%\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n%%\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n%%\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n%%\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n in beta, and we need people to test it and give feedback.\nAlso, contributions to help improve the open-source\n\\href{https://github.com/jxxcarlson/minilatex}{MiniLatex Parser-Renderer}\nare most welcome.\n\nPlease send comments to jxxcarlson at gmail.\n';
 var _user$project$Main$textStyle = F4(
 	function (width, height, offset, color) {
 		return _elm_lang$html$Html_Attributes$style(
@@ -14670,23 +14668,27 @@ var _user$project$Main$buttonStyle = function (offSet) {
 				_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'width', _1: '100px'},
+					_0: {ctor: '_Tuple2', _0: 'width', _1: '90px'},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'height', _1: '25px'},
+						_0: {ctor: '_Tuple2', _0: 'font-size', _1: '10pt'},
 						_1: {
 							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'margin-left', _1: realOffset},
+							_0: {ctor: '_Tuple2', _0: 'height', _1: '25px'},
 							_1: {
 								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'font-size', _1: '12pt'},
+								_0: {ctor: '_Tuple2', _0: 'margin-left', _1: realOffset},
 								_1: {
 									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+									_0: {ctor: '_Tuple2', _0: 'font-size', _1: '12pt'},
 									_1: {
 										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'border', _1: 'none'},
-										_1: {ctor: '[]'}
+										_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'border', _1: 'none'},
+											_1: {ctor: '[]'}
+										}
 									}
 								}
 							}
@@ -14708,11 +14710,15 @@ var _user$project$Main$showRenderedSource = function (model) {
 			_0: _user$project$Main$renderedSourceStyle,
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html_Attributes$property,
-					'innerHTML',
-					_elm_lang$core$Json_Encode$string(renderedText)),
-				_1: {ctor: '[]'}
+				_0: _elm_lang$html$Html_Attributes$id('renderedText'),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html_Attributes$property,
+						'innerHTML',
+						_elm_lang$core$Json_Encode$string(renderedText)),
+					_1: {ctor: '[]'}
+				}
 			}
 		},
 		{ctor: '[]'});
@@ -14814,17 +14820,16 @@ var _user$project$Main$infoPanel = A2(
 	},
 	{
 		ctor: '::',
-		_0: _elm_lang$html$Html$text('There is currently a re-rendering bug that affects expression with a \\label. We\'re working on it!'),
+		_0: _elm_lang$html$Html$text('^^^ You can scroll both the source and rendered text panes to see more text.    ^^^'),
 		_1: {ctor: '[]'}
 	});
 var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
 var _user$project$Main$init = function () {
-	var initialSourceText = _user$project$Main$initialSourceText2;
 	var model = {
-		sourceText: initialSourceText,
-		editRecord: _user$project$MiniLatex_Driver$setup(initialSourceText)
+		sourceText: _user$project$Main$initialSourceText,
+		editRecord: _user$project$MiniLatex_Driver$setup(_user$project$Main$initialSourceText)
 	};
 	return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 }();
@@ -14857,6 +14862,34 @@ var _user$project$Main$update = F2(
 						}),
 					_1: _user$project$Main$typeset('now')
 				};
+			case 'Reset':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							sourceText: A2(_elm_lang$core$Debug$log, 'Restore src', ''),
+							editRecord: A2(
+								_elm_lang$core$Debug$log,
+								'Reset',
+								_user$project$MiniLatex_Driver$setup(''))
+						}),
+					_1: _user$project$Main$typeset('now')
+				};
+			case 'Restore':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							sourceText: A2(_elm_lang$core$Debug$log, 'Restore src', _user$project$Main$initialSourceText),
+							editRecord: A2(
+								_elm_lang$core$Debug$log,
+								'Restore',
+								_user$project$MiniLatex_Driver$setup(_user$project$Main$initialSourceText))
+						}),
+					_1: _user$project$Main$typeset('now')
+				};
 			default:
 				return {
 					ctor: '_Tuple2',
@@ -14871,6 +14904,44 @@ var _user$project$Main$Model = F2(
 	function (a, b) {
 		return {sourceText: a, editRecord: b};
 	});
+var _user$project$Main$Restore = {ctor: 'Restore'};
+var _user$project$Main$restoreButton = function (offSet) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Restore),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$buttonStyle(offSet),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Restore'),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$Reset = {ctor: 'Reset'};
+var _user$project$Main$resetButton = function (offSet) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Reset),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$buttonStyle(offSet),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Reset'),
+			_1: {ctor: '[]'}
+		});
+};
 var _user$project$Main$ReRender = {ctor: 'ReRender'};
 var _user$project$Main$reRenderButton = function (offSet) {
 	return A2(
@@ -14890,6 +14961,45 @@ var _user$project$Main$reRenderButton = function (offSet) {
 			_1: {ctor: '[]'}
 		});
 };
+var _user$project$Main$output = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Main$spacer(20),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$reRenderButton(0),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$resetButton(0),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$restoreButton(0),
+						_1: {
+							ctor: '::',
+							_0: _user$project$Main$spacer(5),
+							_1: {
+								ctor: '::',
+								_0: _user$project$Main$showRenderedSource(model),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		});
+};
 var _user$project$Main$GetContent = function (a) {
 	return {ctor: 'GetContent', _0: a};
 };
@@ -14902,7 +15012,11 @@ var _user$project$Main$editorPane = function (model) {
 			_1: {
 				ctor: '::',
 				_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$GetContent),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$value(model.sourceText),
+					_1: {ctor: '[]'}
+				}
 			}
 		},
 		{
@@ -14942,60 +15056,6 @@ var _user$project$Main$editor = function (model) {
 			}
 		});
 };
-var _user$project$Main$FastRender = {ctor: 'FastRender'};
-var _user$project$Main$fastRenderButton = function (offSet) {
-	return A2(
-		_elm_lang$html$Html$button,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$FastRender),
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$buttonStyle(offSet),
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('Fast render'),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$output = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _user$project$Main$spacer(20),
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$fastRenderButton(0),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Main$reRenderButton(0),
-					_1: {
-						ctor: '::',
-						_0: _user$project$Main$spacer(5),
-						_1: {
-							ctor: '::',
-							_0: _user$project$Main$showRenderedSource(model),
-							_1: {ctor: '[]'}
-						}
-					}
-				}
-			}
-		});
-};
 var _user$project$Main$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -15024,6 +15084,25 @@ var _user$project$Main$view = function (model) {
 };
 var _user$project$Main$main = _elm_lang$html$Html$program(
 	{view: _user$project$Main$view, update: _user$project$Main$update, init: _user$project$Main$init, subscriptions: _user$project$Main$subscriptions})();
+var _user$project$Main$FastRender = {ctor: 'FastRender'};
+var _user$project$Main$fastRenderButton = function (offSet) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$FastRender),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$buttonStyle(offSet),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Fast render'),
+			_1: {ctor: '[]'}
+		});
+};
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
