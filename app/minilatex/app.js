@@ -14664,7 +14664,7 @@ var _user$project$Main$buttonStyle = function (offSet) {
 	return _elm_lang$html$Html_Attributes$style(
 		{
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'backgroundColor', _1: 'rgb(100,100,100)'},
+			_0: {ctor: '_Tuple2', _0: 'backgroundColor', _1: 'rgb(100,100,200)'},
 			_1: {
 				ctor: '::',
 				_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
@@ -14695,9 +14695,6 @@ var _user$project$Main$buttonStyle = function (offSet) {
 				}
 			}
 		});
-};
-var _user$project$Main$counterAsString = function (model) {
-	return _elm_lang$core$Basics$toString(model.counter);
 };
 var _user$project$Main$showRenderedSource = function (model) {
 	var renderedText = A2(
@@ -14750,12 +14747,76 @@ var _user$project$Main$spacer = function (n) {
 							_elm_lang$core$Basics$toString(n),
 							'px')
 					},
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'clear', _1: 'left'},
+						_1: {ctor: '[]'}
+					}
 				}),
 			_1: {ctor: '[]'}
 		},
 		{ctor: '[]'});
 };
+var _user$project$Main$ribbonStyle = function (color) {
+	return _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'width', _1: '835px'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'height', _1: '20px'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'margin-bottom', _1: '-16px'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'padding', _1: '8px'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'clear', _1: 'left'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'background-color', _1: color},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'color', _1: '#eee'},
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$Main$headerPanel = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _user$project$Main$ribbonStyle('#555'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('MiniLatex Demo'),
+		_1: {ctor: '[]'}
+	});
+var _user$project$Main$infoPanel = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _user$project$Main$ribbonStyle('#777'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('There is currently a re-rendering bug that affects expression with a \\label. We\'re working on it!'),
+		_1: {ctor: '[]'}
+	});
 var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
@@ -14825,7 +14886,7 @@ var _user$project$Main$reRenderButton = function (offSet) {
 		},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text('Render again'),
+			_0: _elm_lang$html$Html$text('Render'),
 			_1: {ctor: '[]'}
 		});
 };
@@ -14871,8 +14932,12 @@ var _user$project$Main$editor = function (model) {
 				_0: _user$project$Main$label('Source text'),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Main$editorPane(model),
-					_1: {ctor: '[]'}
+					_0: _user$project$Main$spacer(5),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$editorPane(model),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		});
@@ -14920,8 +14985,12 @@ var _user$project$Main$output = function (model) {
 					_0: _user$project$Main$reRenderButton(0),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Main$showRenderedSource(model),
-						_1: {ctor: '[]'}
+						_0: _user$project$Main$spacer(5),
+						_1: {
+							ctor: '::',
+							_0: _user$project$Main$showRenderedSource(model),
+							_1: {ctor: '[]'}
+						}
 					}
 				}
 			}
@@ -14933,11 +15002,23 @@ var _user$project$Main$view = function (model) {
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: _user$project$Main$editor(model),
+			_0: _user$project$Main$headerPanel,
 			_1: {
 				ctor: '::',
-				_0: _user$project$Main$output(model),
-				_1: {ctor: '[]'}
+				_0: _user$project$Main$editor(model),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$output(model),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$spacer(5),
+						_1: {
+							ctor: '::',
+							_0: _user$project$Main$infoPanel,
+							_1: {ctor: '[]'}
+						}
+					}
+				}
 			}
 		});
 };
