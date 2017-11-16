@@ -14808,8 +14808,60 @@ var _user$project$Main$headerPanel = A2(
 	},
 	{
 		ctor: '::',
-		_0: _elm_lang$html$Html$text('MiniLatex Demo'),
-		_1: {ctor: '[]'}
+		_0: A2(
+			_elm_lang$html$Html$span,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$style(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '5px'},
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('MiniLatex Demo'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$a,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('linkback'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$style(
+							{
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'float', _1: 'right'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'margin-right', _1: '10px'},
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$href('http://www.knode.io'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$target('_blank'),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('www.knode.io'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		}
 	});
 var _user$project$Main$infoPanel = A2(
 	_elm_lang$html$Html$div,
@@ -14982,7 +15034,7 @@ var _user$project$Main$output = function (model) {
 				_0: _user$project$Main$reRenderButton(0),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Main$resetButton(0),
+					_0: _user$project$Main$resetButton(120),
 					_1: {
 						ctor: '::',
 						_0: _user$project$Main$restoreButton(0),
@@ -15056,7 +15108,7 @@ var _user$project$Main$editor = function (model) {
 			}
 		});
 };
-var _user$project$Main$view = function (model) {
+var _user$project$Main$mainView = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
@@ -15080,6 +15132,29 @@ var _user$project$Main$view = function (model) {
 					}
 				}
 			}
+		});
+};
+var _user$project$Main$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'width', _1: '900px'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'margin', _1: 'auto'},
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Main$mainView(model),
+			_1: {ctor: '[]'}
 		});
 };
 var _user$project$Main$main = _elm_lang$html$Html$program(
