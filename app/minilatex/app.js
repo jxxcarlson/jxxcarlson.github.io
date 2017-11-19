@@ -15429,12 +15429,9 @@ var _user$project$MiniLatex_Driver$pTags = function (editRecord) {
 	var suffix = A2(_elm_lang$core$List$repeat, n, '<p>');
 	var prefix = A2(_elm_lang$core$List$repeat, editRecord.idListStart, '<p>');
 	return A2(
-		_elm_lang$core$Debug$log,
-		'prepareIdlist',
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			prefix,
-			A2(_elm_lang$core$Basics_ops['++'], infix, suffix)));
+		_elm_lang$core$Basics_ops['++'],
+		prefix,
+		A2(_elm_lang$core$Basics_ops['++'], infix, suffix));
 };
 var _user$project$MiniLatex_Driver$getRenderedText = F2(
 	function (macroDefinitions, editRecord) {
