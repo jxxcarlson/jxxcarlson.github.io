@@ -13235,12 +13235,9 @@ var _user$project$MiniLatex_Differ$renderDiff = F4(
 		var middleSegmentRendered = A2(_elm_lang$core$List$map, renderer, diffRecord.middleSegmentInTarget);
 		var n = _elm_lang$core$List$length(diffRecord.middleSegmentInTarget);
 		var idList = A2(
-			_elm_lang$core$Debug$log,
-			'idList',
-			A2(
-				_elm_lang$core$List$map,
-				_user$project$MiniLatex_Differ$prefixer(seed),
-				A2(_elm_lang$core$List$range, 1, n)));
+			_elm_lang$core$List$map,
+			_user$project$MiniLatex_Differ$prefixer(seed),
+			A2(_elm_lang$core$List$range, 1, n));
 		var it = _elm_lang$core$List$length(diffRecord.commonTerminalSegment);
 		var terminalSegmentRendered = A2(_user$project$MiniLatex_Differ$takeLast, it, renderedStringList);
 		var ii = _elm_lang$core$List$length(diffRecord.commonInitialSegment);
@@ -13356,34 +13353,26 @@ var _user$project$MiniLatex_Differ$emptyEditRecord = A5(
 	0);
 var _user$project$MiniLatex_Differ$initialize = F2(
 	function (transformer, text) {
-		var _p1 = _elm_lang$core$Debug$log('idList - initialize');
 		var paragraphs = _user$project$MiniLatex_Differ$paragraphify(text);
 		var n = _elm_lang$core$List$length(paragraphs);
 		var idList = A2(
-			_elm_lang$core$Debug$log,
-			'idList',
-			A2(
-				_elm_lang$core$List$map,
-				_user$project$MiniLatex_Differ$prefixer(0),
-				A2(_elm_lang$core$List$range, 1, n)));
+			_elm_lang$core$List$map,
+			_user$project$MiniLatex_Differ$prefixer(0),
+			A2(_elm_lang$core$List$range, 1, n));
 		var renderedParagraphs = A2(_elm_lang$core$List$map, transformer, paragraphs);
 		return A5(_user$project$MiniLatex_Differ$EditRecord, paragraphs, renderedParagraphs, _user$project$MiniLatex_LatexState$emptyLatexState, idList, 0);
 	});
 var _user$project$MiniLatex_Differ$initialize2 = F2(
 	function (transformParagraphs, text) {
-		var _p2 = _elm_lang$core$Debug$log('idList - initialize2');
 		var paragraphs = _user$project$MiniLatex_Differ$paragraphify(text);
 		var n = _elm_lang$core$List$length(paragraphs);
 		var idList = A2(
-			_elm_lang$core$Debug$log,
-			'idList',
-			A2(
-				_elm_lang$core$List$map,
-				_user$project$MiniLatex_Differ$prefixer(0),
-				A2(_elm_lang$core$List$range, 1, n)));
-		var _p3 = transformParagraphs(paragraphs);
-		var renderedParagraphs = _p3._0;
-		var latexState = _p3._1;
+			_elm_lang$core$List$map,
+			_user$project$MiniLatex_Differ$prefixer(0),
+			A2(_elm_lang$core$List$range, 1, n));
+		var _p1 = transformParagraphs(paragraphs);
+		var renderedParagraphs = _p1._0;
+		var latexState = _p1._1;
 		return A5(_user$project$MiniLatex_Differ$EditRecord, paragraphs, renderedParagraphs, latexState, idList, 0);
 	});
 var _user$project$MiniLatex_Differ$update = F4(
@@ -15483,7 +15472,7 @@ var _user$project$MiniLatex_Driver$render = F2(
 			A2(_user$project$MiniLatex_LatexDiffer$initialize2, _user$project$MiniLatex_LatexState$emptyLatexState, text));
 	});
 
-var _user$project$Main$initialSourceText = '\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nSee the article\n\\href{http://www.knode.io/#@public/445}{MiniLatex}\nat \\href{http://www.knode.io}{www.knode.io} for more info.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\\section{Appendix}\n\n\n\\begin{itemize}\n%%\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n%%\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n%%\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n%%\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nAlso, contributions to help improve the open-source\n\\href{https://github.com/jxxcarlson/minilatex}{MiniLatex Parser-Renderer}\nare most welcome.\n\nPlease send comments to jxxcarlson at gmail.\n';
+var _user$project$Main$initialSourceText = '\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nSee the article\n\\href{http://www.knode.io/#@public/445}{MiniLatex}\nat \\href{http://www.knode.io}{www.knode.io} for more info.\n\nFeel free to edit and re-render the text on the left.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\\section{Appendix}\n\n\n\\begin{itemize}\n%%\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n%%\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n%%\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n%%\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nAlso, contributions to help improve the open-source\n\\href{https://github.com/jxxcarlson/minilatex}{MiniLatex Parser-Renderer}\nare most welcome.\n\nPlease send comments to jxxcarlson at gmail.\n';
 var _user$project$Main$textStyle = F4(
 	function (width, height, offset, color) {
 		return _elm_lang$html$Html_Attributes$style(
