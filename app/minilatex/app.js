@@ -15599,29 +15599,6 @@ var _user$project$Main$ribbonStyle = function (color) {
 			}
 		});
 };
-var _user$project$Main$showRenderedSource = function (model) {
-	var renderedText = A2(_user$project$MiniLatex_Driver$getRenderedText, '', model.editRecord);
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _user$project$Main$renderedSourceStyle,
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$id('renderedText'),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html_Attributes$property,
-						'innerHTML',
-						_elm_lang$core$Json_Encode$string(
-							A2(_elm_lang$core$Debug$log, 'RT', renderedText))),
-					_1: {ctor: '[]'}
-				}
-			}
-		},
-		{ctor: '[]'});
-};
 var _user$project$Main$label = function (text_) {
 	return A2(
 		_elm_lang$html$Html$p,
@@ -15662,7 +15639,66 @@ var _user$project$Main$spacer = function (n) {
 		},
 		{ctor: '[]'});
 };
-var _user$project$Main$infoPanel = A2(
+var _user$project$Main$renderedSourcePane = function (model) {
+	var renderedText = A2(_user$project$MiniLatex_Driver$getRenderedText, '', model.editRecord);
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _user$project$Main$renderedSourceStyle,
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$id('renderedText'),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html_Attributes$property,
+						'innerHTML',
+						_elm_lang$core$Json_Encode$string(
+							A2(_elm_lang$core$Debug$log, 'RT', renderedText))),
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		{ctor: '[]'});
+};
+var _user$project$Main$link = F2(
+	function (url, linkText) {
+		return A2(
+			_elm_lang$html$Html$a,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('linkback'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$style(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'float', _1: 'right'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'margin-right', _1: '10px'},
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$href(url),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$target('_blank'),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(linkText),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$Main$footerRibbon = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -15672,9 +15708,13 @@ var _user$project$Main$infoPanel = A2(
 	{
 		ctor: '::',
 		_0: _elm_lang$html$Html$text('Fast render updates only those paragraphs which have changed.'),
-		_1: {ctor: '[]'}
+		_1: {
+			ctor: '::',
+			_0: A2(_user$project$Main$link, 'http://jxxcarlson.github.io', 'jxxcarlson.github.io'),
+			_1: {ctor: '[]'}
+		}
 	});
-var _user$project$Main$headerPanel = A2(
+var _user$project$Main$headerRibbon = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -15702,39 +15742,7 @@ var _user$project$Main$headerPanel = A2(
 			}),
 		_1: {
 			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$a,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('linkback'),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$style(
-							{
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'float', _1: 'right'},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'margin-right', _1: '10px'},
-									_1: {ctor: '[]'}
-								}
-							}),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$href('http://www.knode.io'),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$target('_blank'),
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('www.knode.io'),
-					_1: {ctor: '[]'}
-				}),
+			_0: A2(_user$project$Main$link, 'http://www.knode.io', 'www.knode.io'),
 			_1: {ctor: '[]'}
 		}
 	});
@@ -15929,7 +15937,7 @@ var _user$project$Main$resetButton = function (offSet) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Main$buttonBar1 = A2(
+var _user$project$Main$buttonBarLeft = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -16012,7 +16020,7 @@ var _user$project$Main$editor = function (model) {
 			_0: _user$project$Main$spacer(20),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Main$buttonBar1,
+				_0: _user$project$Main$buttonBarLeft,
 				_1: {
 					ctor: '::',
 					_0: _user$project$Main$spacer(5),
@@ -16044,7 +16052,7 @@ var _user$project$Main$fastRenderButton = function (offSet) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Main$buttonBar2 = A2(
+var _user$project$Main$buttonBarRight = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -16065,7 +16073,7 @@ var _user$project$Main$buttonBar2 = A2(
 			_1: {ctor: '[]'}
 		}
 	});
-var _user$project$Main$outputPane = function (model) {
+var _user$project$Main$renderedSource = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -16083,13 +16091,13 @@ var _user$project$Main$outputPane = function (model) {
 			_0: _user$project$Main$spacer(20),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Main$buttonBar2,
+				_0: _user$project$Main$buttonBarRight,
 				_1: {
 					ctor: '::',
 					_0: _user$project$Main$spacer(5),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Main$showRenderedSource(model),
+						_0: _user$project$Main$renderedSourcePane(model),
 						_1: {ctor: '[]'}
 					}
 				}
@@ -16102,19 +16110,19 @@ var _user$project$Main$mainView = function (model) {
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: _user$project$Main$headerPanel,
+			_0: _user$project$Main$headerRibbon,
 			_1: {
 				ctor: '::',
 				_0: _user$project$Main$editor(model),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Main$outputPane(model),
+					_0: _user$project$Main$renderedSource(model),
 					_1: {
 						ctor: '::',
 						_0: _user$project$Main$spacer(5),
 						_1: {
 							ctor: '::',
-							_0: _user$project$Main$infoPanel,
+							_0: _user$project$Main$footerRibbon,
 							_1: {ctor: '[]'}
 						}
 					}
