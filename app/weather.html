@@ -9040,6 +9040,28 @@ var _user$project$Decoder$weatherDecoder = A4(
 	A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$int),
 	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'main', _user$project$Decoder$mainDecoder));
+var _user$project$View$exp = function (x) {
+	return Math.pow(_elm_lang$core$Basics$e, x);
+};
+var _user$project$View$evp = F2(
+	function (temperature, pressure) {
+		var temp = temperature - 273.15;
+		return ((1.0007 + (3.46e-6 * pressure)) * 6.1121) * _user$project$View$exp((17.502 * temp) / (240.9 + temp));
+	});
+var _user$project$View$avp = F3(
+	function (temperature, pressure, humidity) {
+		return (A2(_user$project$View$evp, temperature, pressure) * humidity) / 100;
+	});
+var _user$project$View$avpOfWeather = function (weather) {
+	return A3(_user$project$View$avp, weather.main.temp, weather.main.pressure, weather.main.humidity);
+};
+var _user$project$View$rhIndoor = F2(
+	function (indoorCentigradeTemperature, weather) {
+		var numerator = _user$project$View$avpOfWeather(weather);
+		var indoorTemperature = indoorCentigradeTemperature + 273.15;
+		var denominator = A2(_user$project$View$evp, indoorTemperature, weather.main.pressure);
+		return numerator / denominator;
+	});
 var _user$project$View$toFahrenheit = function (kelvin) {
 	return _elm_lang$core$Basics$toFloat(
 		_elm_lang$core$Basics$round((1.8 * (kelvin - 273.15)) + 32));
@@ -9047,6 +9069,54 @@ var _user$project$View$toFahrenheit = function (kelvin) {
 var _user$project$View$toCentigrade = function (kelvin) {
 	return _elm_lang$core$Basics$toFloat(
 		_elm_lang$core$Basics$round(kelvin - 273.15));
+};
+var _user$project$View$addSuffix = F2(
+	function (suffix, str) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			str,
+			A2(_elm_lang$core$Basics_ops['++'], ' ', suffix));
+	});
+var _user$project$View$humidityRow = function (weather) {
+	return A2(
+		_elm_lang$html$Html$tr,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$td,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Humidity'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$td,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$style(
+							{
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'padding-left', _1: '20px'},
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							A2(
+								_user$project$View$addSuffix,
+								'%',
+								_elm_lang$core$Basics$toString(weather.main.humidity))),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
 };
 var _user$project$View$pressureRow = function (weather) {
 	return A2(
@@ -9079,14 +9149,17 @@ var _user$project$View$pressureRow = function (weather) {
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
-							_elm_lang$core$Basics$toString(weather.main.pressure)),
+							A2(
+								_user$project$View$addSuffix,
+								'mb',
+								_elm_lang$core$Basics$toString(weather.main.pressure))),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
 			}
 		});
 };
-var _user$project$View$humidityRow = function (weather) {
+var _user$project$View$indoorRHRow = function (weather) {
 	return A2(
 		_elm_lang$html$Html$tr,
 		{ctor: '[]'},
@@ -9097,7 +9170,7 @@ var _user$project$View$humidityRow = function (weather) {
 				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text('Humidity'),
+					_0: _elm_lang$html$Html$text('Indoor RH'),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
@@ -9117,7 +9190,13 @@ var _user$project$View$humidityRow = function (weather) {
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
-							_elm_lang$core$Basics$toString(weather.main.humidity)),
+							A2(
+								_user$project$View$addSuffix,
+								'%',
+								_elm_lang$core$Basics$toString(
+									_elm_lang$core$Basics$toFloat(
+										_elm_lang$core$Basics$round(
+											A2(_user$project$View$rhIndoor, 22.2, weather) * 100))))),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
@@ -9129,16 +9208,16 @@ var _user$project$View$temperatureString = F2(
 		var _p0 = temperatureScale;
 		if (_p0.ctor === 'Centigrade') {
 			return A2(
-				_elm_lang$core$Basics_ops['++'],
+				_user$project$View$addSuffix,
+				'C',
 				_elm_lang$core$Basics$toString(
-					_user$project$View$toCentigrade(weather.main.temp)),
-				' C');
+					_user$project$View$toCentigrade(weather.main.temp)));
 		} else {
 			return A2(
-				_elm_lang$core$Basics_ops['++'],
+				_user$project$View$addSuffix,
+				'F',
 				_elm_lang$core$Basics$toString(
-					_user$project$View$toFahrenheit(weather.main.temp)),
-				' F');
+					_user$project$View$toFahrenheit(weather.main.temp)));
 		}
 	});
 var _user$project$View$temperatureRow = F2(
@@ -9242,8 +9321,12 @@ var _user$project$View$realWeatherTable = F2(
 						_0: _user$project$View$humidityRow(weather),
 						_1: {
 							ctor: '::',
-							_0: _user$project$View$pressureRow(weather),
-							_1: {ctor: '[]'}
+							_0: _user$project$View$indoorRHRow(weather),
+							_1: {
+								ctor: '::',
+								_0: _user$project$View$pressureRow(weather),
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				}
@@ -9544,7 +9627,7 @@ var _user$project$View$mainStyle = _elm_lang$html$Html_Attributes$style(
 				_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#eee'},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'width', _1: '200px'},
+					_0: {ctor: '_Tuple2', _0: 'width', _1: '240px'},
 					_1: {ctor: '[]'}
 				}
 			}
