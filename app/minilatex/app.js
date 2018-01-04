@@ -13260,13 +13260,13 @@ var _user$project$MiniLatex_Parser$parseParagraph = function (text) {
 					'<strong>Error:</strong> ',
 					A2(
 						_elm_lang$core$Basics_ops['++'],
-						'<pre>',
+						'<pre class=\"errormessage\">',
 						A2(
 							_elm_lang$core$Basics_ops['++'],
 							_elm_lang$core$Basics$toString(_p6.problem),
 							A2(
 								_elm_lang$core$Basics_ops['++'],
-								' </pre><strong>in </strong> </span><pre>',
+								' </pre><strong>in </strong> </span><pre class=\"errormessage\">',
 								A2(_elm_lang$core$Basics_ops['++'], _p6.source, '</pre>')))))),
 			_1: {ctor: '[]'}
 		};
@@ -13937,6 +13937,10 @@ var _user$project$MiniLatex_Render$a = F2(
 					'\"  target=\"_blank\" >\n',
 					A2(_elm_lang$core$Basics_ops['++'], label, '\n</a>'))));
 	});
+var _user$project$MiniLatex_Render$renderInlineComment = F2(
+	function (latexState, args) {
+		return '';
+	});
 var _user$project$MiniLatex_Render$renderSmallSkip = F2(
 	function (latexState, args) {
 		return A2(
@@ -14033,6 +14037,10 @@ var _user$project$MiniLatex_Render$renderTableBody = function (body) {
 var _user$project$MiniLatex_Render$renderTabular = F2(
 	function (latexState, body) {
 		return _user$project$MiniLatex_Render$renderTableBody(body);
+	});
+var _user$project$MiniLatex_Render$renderCommentEnvironment = F2(
+	function (latexState, body) {
+		return '';
 	});
 var _user$project$MiniLatex_Render$renderComment = function (str) {
 	return '';
@@ -14307,103 +14315,114 @@ var _user$project$MiniLatex_Render$renderEnvironmentDict = _elm_lang$core$Dict$f
 				ctor: '::',
 				_0: {
 					ctor: '_Tuple2',
-					_0: 'indent',
+					_0: 'comment',
 					_1: F2(
 						function (x, y) {
-							return A2(_user$project$MiniLatex_Render$renderIndentEnvironment, x, y);
+							return A2(_user$project$MiniLatex_Render$renderCommentEnvironment, x, y);
 						})
 				},
 				_1: {
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
-						_0: 'enumerate',
+						_0: 'indent',
 						_1: F2(
 							function (x, y) {
-								return A2(_user$project$MiniLatex_Render$renderEnumerate, x, y);
+								return A2(_user$project$MiniLatex_Render$renderIndentEnvironment, x, y);
 							})
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
-							_0: 'eqnarray',
+							_0: 'enumerate',
 							_1: F2(
 								function (x, y) {
-									return A2(_user$project$MiniLatex_Render$renderEqnArray, x, y);
+									return A2(_user$project$MiniLatex_Render$renderEnumerate, x, y);
 								})
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
-								_0: 'equation',
+								_0: 'eqnarray',
 								_1: F2(
 									function (x, y) {
-										return A2(_user$project$MiniLatex_Render$renderEquationEnvironment, x, y);
+										return A2(_user$project$MiniLatex_Render$renderEqnArray, x, y);
 									})
 							},
 							_1: {
 								ctor: '::',
 								_0: {
 									ctor: '_Tuple2',
-									_0: 'itemize',
+									_0: 'equation',
 									_1: F2(
 										function (x, y) {
-											return A2(_user$project$MiniLatex_Render$renderItemize, x, y);
+											return A2(_user$project$MiniLatex_Render$renderEquationEnvironment, x, y);
 										})
 								},
 								_1: {
 									ctor: '::',
 									_0: {
 										ctor: '_Tuple2',
-										_0: 'macros',
+										_0: 'itemize',
 										_1: F2(
 											function (x, y) {
-												return A2(_user$project$MiniLatex_Render$renderMacros, x, y);
+												return A2(_user$project$MiniLatex_Render$renderItemize, x, y);
 											})
 									},
 									_1: {
 										ctor: '::',
 										_0: {
 											ctor: '_Tuple2',
-											_0: 'quotation',
+											_0: 'macros',
 											_1: F2(
 												function (x, y) {
-													return A2(_user$project$MiniLatex_Render$renderQuotation, x, y);
+													return A2(_user$project$MiniLatex_Render$renderMacros, x, y);
 												})
 										},
 										_1: {
 											ctor: '::',
 											_0: {
 												ctor: '_Tuple2',
-												_0: 'tabular',
+												_0: 'quotation',
 												_1: F2(
 													function (x, y) {
-														return A2(_user$project$MiniLatex_Render$renderTabular, x, y);
+														return A2(_user$project$MiniLatex_Render$renderQuotation, x, y);
 													})
 											},
 											_1: {
 												ctor: '::',
 												_0: {
 													ctor: '_Tuple2',
-													_0: 'verbatim',
+													_0: 'tabular',
 													_1: F2(
 														function (x, y) {
-															return A2(_user$project$MiniLatex_Render$renderVerbatim, x, y);
+															return A2(_user$project$MiniLatex_Render$renderTabular, x, y);
 														})
 												},
 												_1: {
 													ctor: '::',
 													_0: {
 														ctor: '_Tuple2',
-														_0: 'verse',
+														_0: 'verbatim',
 														_1: F2(
 															function (x, y) {
-																return A2(_user$project$MiniLatex_Render$renderVerse, x, y);
+																return A2(_user$project$MiniLatex_Render$renderVerbatim, x, y);
 															})
 													},
-													_1: {ctor: '[]'}
+													_1: {
+														ctor: '::',
+														_0: {
+															ctor: '_Tuple2',
+															_0: 'verse',
+															_1: F2(
+																function (x, y) {
+																	return A2(_user$project$MiniLatex_Render$renderVerse, x, y);
+																})
+														},
+														_1: {ctor: '[]'}
+													}
 												}
 											}
 										}
@@ -14661,107 +14680,107 @@ var _user$project$MiniLatex_Render$renderMacroDict = _elm_lang$core$Dict$fromLis
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
-							_0: 'ellie',
+							_0: 'comment',
 							_1: F2(
 								function (x, y) {
-									return A2(_user$project$MiniLatex_Render$renderEllie, x, y);
+									return A2(_user$project$MiniLatex_Render$renderInlineComment, x, y);
 								})
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
-								_0: 'emph',
+								_0: 'ellie',
 								_1: F2(
 									function (x, y) {
-										return A2(_user$project$MiniLatex_Render$renderItalic, x, y);
+										return A2(_user$project$MiniLatex_Render$renderEllie, x, y);
 									})
 							},
 							_1: {
 								ctor: '::',
 								_0: {
 									ctor: '_Tuple2',
-									_0: 'eqref',
+									_0: 'emph',
 									_1: F2(
 										function (x, y) {
-											return A2(_user$project$MiniLatex_Render$renderEqRef, x, y);
+											return A2(_user$project$MiniLatex_Render$renderItalic, x, y);
 										})
 								},
 								_1: {
 									ctor: '::',
 									_0: {
 										ctor: '_Tuple2',
-										_0: 'href',
+										_0: 'eqref',
 										_1: F2(
 											function (x, y) {
-												return A2(_user$project$MiniLatex_Render$renderHRef, x, y);
+												return A2(_user$project$MiniLatex_Render$renderEqRef, x, y);
 											})
 									},
 									_1: {
 										ctor: '::',
 										_0: {
 											ctor: '_Tuple2',
-											_0: 'iframe',
+											_0: 'href',
 											_1: F2(
 												function (x, y) {
-													return A2(_user$project$MiniLatex_Render$renderIFrame, x, y);
+													return A2(_user$project$MiniLatex_Render$renderHRef, x, y);
 												})
 										},
 										_1: {
 											ctor: '::',
 											_0: {
 												ctor: '_Tuple2',
-												_0: 'image',
+												_0: 'iframe',
 												_1: F2(
 													function (x, y) {
-														return A2(_user$project$MiniLatex_Render$renderImage, x, y);
+														return A2(_user$project$MiniLatex_Render$renderIFrame, x, y);
 													})
 											},
 											_1: {
 												ctor: '::',
 												_0: {
 													ctor: '_Tuple2',
-													_0: 'imageref',
+													_0: 'image',
 													_1: F2(
 														function (x, y) {
-															return A2(_user$project$MiniLatex_Render$renderImageRef, x, y);
+															return A2(_user$project$MiniLatex_Render$renderImage, x, y);
 														})
 												},
 												_1: {
 													ctor: '::',
 													_0: {
 														ctor: '_Tuple2',
-														_0: 'index',
+														_0: 'imageref',
 														_1: F2(
 															function (x, y) {
-																return '';
+																return A2(_user$project$MiniLatex_Render$renderImageRef, x, y);
 															})
 													},
 													_1: {
 														ctor: '::',
 														_0: {
 															ctor: '_Tuple2',
-															_0: 'italic',
+															_0: 'index',
 															_1: F2(
 																function (x, y) {
-																	return A2(_user$project$MiniLatex_Render$renderItalic, x, y);
+																	return '';
 																})
 														},
 														_1: {
 															ctor: '::',
 															_0: {
 																ctor: '_Tuple2',
-																_0: 'label',
+																_0: 'italic',
 																_1: F2(
 																	function (x, y) {
-																		return '';
+																		return A2(_user$project$MiniLatex_Render$renderItalic, x, y);
 																	})
 															},
 															_1: {
 																ctor: '::',
 																_0: {
 																	ctor: '_Tuple2',
-																	_0: 'maketitle',
+																	_0: 'label',
 																	_1: F2(
 																		function (x, y) {
 																			return '';
@@ -14771,183 +14790,194 @@ var _user$project$MiniLatex_Render$renderMacroDict = _elm_lang$core$Dict$fromLis
 																	ctor: '::',
 																	_0: {
 																		ctor: '_Tuple2',
-																		_0: 'mdash',
+																		_0: 'maketitle',
 																		_1: F2(
 																			function (x, y) {
-																				return '&mdash;';
+																				return '';
 																			})
 																	},
 																	_1: {
 																		ctor: '::',
 																		_0: {
 																			ctor: '_Tuple2',
-																			_0: 'ndash',
+																			_0: 'mdash',
 																			_1: F2(
 																				function (x, y) {
-																					return '&ndash;';
+																					return '&mdash;';
 																				})
 																		},
 																		_1: {
 																			ctor: '::',
 																			_0: {
 																				ctor: '_Tuple2',
-																				_0: 'newcommand',
+																				_0: 'ndash',
 																				_1: F2(
 																					function (x, y) {
-																						return A2(_user$project$MiniLatex_Render$renderNewCommand, x, y);
+																						return '&ndash;';
 																					})
 																			},
 																			_1: {
 																				ctor: '::',
 																				_0: {
 																					ctor: '_Tuple2',
-																					_0: 'ref',
+																					_0: 'newcommand',
 																					_1: F2(
 																						function (x, y) {
-																							return A2(_user$project$MiniLatex_Render$renderRef, x, y);
+																							return A2(_user$project$MiniLatex_Render$renderNewCommand, x, y);
 																						})
 																				},
 																				_1: {
 																					ctor: '::',
 																					_0: {
 																						ctor: '_Tuple2',
-																						_0: 'section',
+																						_0: 'ref',
 																						_1: F2(
 																							function (x, y) {
-																								return A2(_user$project$MiniLatex_Render$renderSection, x, y);
+																								return A2(_user$project$MiniLatex_Render$renderRef, x, y);
 																							})
 																					},
 																					_1: {
 																						ctor: '::',
 																						_0: {
 																							ctor: '_Tuple2',
-																							_0: 'section*',
+																							_0: 'section',
 																							_1: F2(
 																								function (x, y) {
-																									return A2(_user$project$MiniLatex_Render$renderSectionStar, x, y);
+																									return A2(_user$project$MiniLatex_Render$renderSection, x, y);
 																								})
 																						},
 																						_1: {
 																							ctor: '::',
 																							_0: {
 																								ctor: '_Tuple2',
-																								_0: 'setcounter',
+																								_0: 'section*',
 																								_1: F2(
 																									function (x, y) {
-																										return '';
+																										return A2(_user$project$MiniLatex_Render$renderSectionStar, x, y);
 																									})
 																							},
 																							_1: {
 																								ctor: '::',
 																								_0: {
 																									ctor: '_Tuple2',
-																									_0: 'smallskip',
+																									_0: 'setcounter',
 																									_1: F2(
 																										function (x, y) {
-																											return A2(_user$project$MiniLatex_Render$renderSmallSkip, x, y);
+																											return '';
 																										})
 																								},
 																								_1: {
 																									ctor: '::',
 																									_0: {
 																										ctor: '_Tuple2',
-																										_0: 'strong',
+																										_0: 'smallskip',
 																										_1: F2(
 																											function (x, y) {
-																												return A2(_user$project$MiniLatex_Render$renderStrong, x, y);
+																												return A2(_user$project$MiniLatex_Render$renderSmallSkip, x, y);
 																											})
 																									},
 																									_1: {
 																										ctor: '::',
 																										_0: {
 																											ctor: '_Tuple2',
-																											_0: 'subheading',
+																											_0: 'strong',
 																											_1: F2(
 																												function (x, y) {
-																													return A2(_user$project$MiniLatex_Render$renderSubheading, x, y);
+																													return A2(_user$project$MiniLatex_Render$renderStrong, x, y);
 																												})
 																										},
 																										_1: {
 																											ctor: '::',
 																											_0: {
 																												ctor: '_Tuple2',
-																												_0: 'subsection',
+																												_0: 'subheading',
 																												_1: F2(
 																													function (x, y) {
-																														return A2(_user$project$MiniLatex_Render$renderSubsection, x, y);
+																														return A2(_user$project$MiniLatex_Render$renderSubheading, x, y);
 																													})
 																											},
 																											_1: {
 																												ctor: '::',
 																												_0: {
 																													ctor: '_Tuple2',
-																													_0: 'subsection*',
+																													_0: 'subsection',
 																													_1: F2(
 																														function (x, y) {
-																															return A2(_user$project$MiniLatex_Render$renderSubsectionStar, x, y);
+																															return A2(_user$project$MiniLatex_Render$renderSubsection, x, y);
 																														})
 																												},
 																												_1: {
 																													ctor: '::',
 																													_0: {
 																														ctor: '_Tuple2',
-																														_0: 'subsubsection',
+																														_0: 'subsection*',
 																														_1: F2(
 																															function (x, y) {
-																																return A2(_user$project$MiniLatex_Render$renderSubSubsection, x, y);
+																																return A2(_user$project$MiniLatex_Render$renderSubsectionStar, x, y);
 																															})
 																													},
 																													_1: {
 																														ctor: '::',
 																														_0: {
 																															ctor: '_Tuple2',
-																															_0: 'subsubsection*',
+																															_0: 'subsubsection',
 																															_1: F2(
 																																function (x, y) {
-																																	return A2(_user$project$MiniLatex_Render$renderSubSubsectionStar, x, y);
+																																	return A2(_user$project$MiniLatex_Render$renderSubSubsection, x, y);
 																																})
 																														},
 																														_1: {
 																															ctor: '::',
 																															_0: {
 																																ctor: '_Tuple2',
-																																_0: 'title',
+																																_0: 'subsubsection*',
 																																_1: F2(
 																																	function (x, y) {
-																																		return A2(_user$project$MiniLatex_Render$renderTitle, x, y);
+																																		return A2(_user$project$MiniLatex_Render$renderSubSubsectionStar, x, y);
 																																	})
 																															},
 																															_1: {
 																																ctor: '::',
 																																_0: {
 																																	ctor: '_Tuple2',
-																																	_0: 'term',
+																																	_0: 'title',
 																																	_1: F2(
 																																		function (x, y) {
-																																			return A2(_user$project$MiniLatex_Render$renderTerm, x, y);
+																																			return A2(_user$project$MiniLatex_Render$renderTitle, x, y);
 																																		})
 																																},
 																																_1: {
 																																	ctor: '::',
 																																	_0: {
 																																		ctor: '_Tuple2',
-																																		_0: 'xlink',
+																																		_0: 'term',
 																																		_1: F2(
 																																			function (x, y) {
-																																				return A2(_user$project$MiniLatex_Render$renderXLink, x, y);
+																																				return A2(_user$project$MiniLatex_Render$renderTerm, x, y);
 																																			})
 																																	},
 																																	_1: {
 																																		ctor: '::',
 																																		_0: {
 																																			ctor: '_Tuple2',
-																																			_0: 'xlinkPublic',
+																																			_0: 'xlink',
 																																			_1: F2(
 																																				function (x, y) {
-																																					return A2(_user$project$MiniLatex_Render$renderXLinkPublic, x, y);
+																																					return A2(_user$project$MiniLatex_Render$renderXLink, x, y);
 																																				})
 																																		},
-																																		_1: {ctor: '[]'}
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {
+																																				ctor: '_Tuple2',
+																																				_0: 'xlinkPublic',
+																																				_1: F2(
+																																					function (x, y) {
+																																						return A2(_user$project$MiniLatex_Render$renderXLinkPublic, x, y);
+																																					})
+																																			},
+																																			_1: {ctor: '[]'}
+																																		}
 																																	}
 																																}
 																															}
