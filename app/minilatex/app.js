@@ -12285,90 +12285,202 @@ var _elm_tools$parser$Parser$AtLeast = function (a) {
 var _elm_tools$parser$Parser$zeroOrMore = _elm_tools$parser$Parser$AtLeast(0);
 var _elm_tools$parser$Parser$oneOrMore = _elm_tools$parser$Parser$AtLeast(1);
 
-var _user$project$MiniLatex_Parser$reservedWord = A2(
-	_elm_tools$parser$Parser_ops['|='],
-	_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-	_elm_tools$parser$Parser$oneOf(
-		{
+var _user$project$MiniLatex_LatexState$initialCounters = _elm_lang$core$Dict$fromList(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 's1', _1: 0},
+		_1: {
 			ctor: '::',
-			_0: _elm_tools$parser$Parser$symbol('\\begin'),
+			_0: {ctor: '_Tuple2', _0: 's2', _1: 0},
 			_1: {
 				ctor: '::',
-				_0: _elm_tools$parser$Parser$keyword('\\end'),
+				_0: {ctor: '_Tuple2', _0: 's3', _1: 0},
 				_1: {
 					ctor: '::',
-					_0: _elm_tools$parser$Parser$keyword('\\item'),
-					_1: {ctor: '[]'}
+					_0: {ctor: '_Tuple2', _0: 'tno', _1: 0},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'eqno', _1: 0},
+						_1: {ctor: '[]'}
+					}
 				}
 			}
-		}));
-var _user$project$MiniLatex_Parser$mustFail = function (parser) {
-	return A2(
-		_elm_tools$parser$Parser$andThen,
-		function (res) {
-			var _p0 = res;
-			if (_p0.ctor === 'Err') {
-				return _elm_tools$parser$Parser$fail(_p0._0);
-			} else {
-				return _elm_tools$parser$Parser$succeed(
-					{ctor: '_Tuple0'});
-			}
-		},
+		}
+	});
+var _user$project$MiniLatex_LatexState$emptyLatexState = {counters: _user$project$MiniLatex_LatexState$initialCounters, crossReferences: _elm_lang$core$Dict$empty};
+var _user$project$MiniLatex_LatexState$setCrossReference = F3(
+	function (label, value, latexState) {
+		var crossReferences = latexState.crossReferences;
+		var newCrossReferences = A3(_elm_lang$core$Dict$insert, label, value, crossReferences);
+		return _elm_lang$core$Native_Utils.update(
+			latexState,
+			{crossReferences: newCrossReferences});
+	});
+var _user$project$MiniLatex_LatexState$updateCounter = F3(
+	function (name, value, latexState) {
+		var maybeSet = _elm_lang$core$Maybe$map(
+			function (x) {
+				return value;
+			});
+		var newCounters = A3(_elm_lang$core$Dict$update, name, maybeSet, latexState.counters);
+		return _elm_lang$core$Native_Utils.update(
+			latexState,
+			{counters: newCounters});
+	});
+var _user$project$MiniLatex_LatexState$incrementCounter = F2(
+	function (name, latexState) {
+		var maybeInc = _elm_lang$core$Maybe$map(
+			function (x) {
+				return x + 1;
+			});
+		var newCounters = A3(_elm_lang$core$Dict$update, name, maybeInc, latexState.counters);
+		return _elm_lang$core$Native_Utils.update(
+			latexState,
+			{counters: newCounters});
+	});
+var _user$project$MiniLatex_LatexState$getCrossReference = F2(
+	function (label, latexState) {
+		var _p0 = A2(_elm_lang$core$Dict$get, label, latexState.crossReferences);
+		if (_p0.ctor === 'Just') {
+			return _p0._0;
+		} else {
+			return '??';
+		}
+	});
+var _user$project$MiniLatex_LatexState$getCounter = F2(
+	function (name, latexState) {
+		var _p1 = A2(_elm_lang$core$Dict$get, name, latexState.counters);
+		if (_p1.ctor === 'Just') {
+			return _p1._0;
+		} else {
+			return 0;
+		}
+	});
+var _user$project$MiniLatex_LatexState$emptyDict = _elm_lang$core$Dict$empty;
+var _user$project$MiniLatex_LatexState$LatexState = F2(
+	function (a, b) {
+		return {counters: a, crossReferences: b};
+	});
+
+var _user$project$MiniLatex_Parser$reservedWord = A2(
+	_elm_tools$parser$Parser$inContext,
+	'reservedWord',
+	A2(
+		_elm_tools$parser$Parser_ops['|='],
+		_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
 		_elm_tools$parser$Parser$oneOf(
 			{
 				ctor: '::',
-				_0: A2(
-					_elm_tools$parser$Parser$map,
-					_elm_lang$core$Basics$always(
-						_elm_lang$core$Result$Err('I didn\'t fail')),
-					A3(
-						_elm_tools$parser$Parser$delayedCommitMap,
-						_elm_lang$core$Basics$always,
-						parser,
-						_elm_tools$parser$Parser$succeed(
-							{ctor: '_Tuple0'}))),
+				_0: _elm_tools$parser$Parser$symbol('\\begin'),
 				_1: {
 					ctor: '::',
-					_0: _elm_tools$parser$Parser$succeed(
-						_elm_lang$core$Result$Ok(
-							{ctor: '_Tuple0'})),
-					_1: {ctor: '[]'}
+					_0: _elm_tools$parser$Parser$keyword('\\end'),
+					_1: {
+						ctor: '::',
+						_0: _elm_tools$parser$Parser$keyword('\\item'),
+						_1: {ctor: '[]'}
+					}
 				}
-			}));
+			})));
+var _user$project$MiniLatex_Parser$mustFail = function (parser) {
+	return A2(
+		_elm_tools$parser$Parser$inContext,
+		'mustFail',
+		A2(
+			_elm_tools$parser$Parser$andThen,
+			function (res) {
+				var _p0 = res;
+				if (_p0.ctor === 'Err') {
+					return _elm_tools$parser$Parser$fail(_p0._0);
+				} else {
+					return _elm_tools$parser$Parser$succeed(
+						{ctor: '_Tuple0'});
+				}
+			},
+			_elm_tools$parser$Parser$oneOf(
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_tools$parser$Parser$map,
+						_elm_lang$core$Basics$always(
+							_elm_lang$core$Result$Err('I didn\'t fail')),
+						A3(
+							_elm_tools$parser$Parser$delayedCommitMap,
+							_elm_lang$core$Basics$always,
+							parser,
+							_elm_tools$parser$Parser$succeed(
+								{ctor: '_Tuple0'}))),
+					_1: {
+						ctor: '::',
+						_0: _elm_tools$parser$Parser$succeed(
+							_elm_lang$core$Result$Ok(
+								{ctor: '_Tuple0'})),
+						_1: {ctor: '[]'}
+					}
+				})));
 };
 var _user$project$MiniLatex_Parser$allOrNothing = function (parser) {
-	return A3(
-		_elm_tools$parser$Parser$delayedCommitMap,
-		_elm_lang$core$Basics$always,
-		parser,
-		_elm_tools$parser$Parser$succeed(
-			{ctor: '_Tuple0'}));
+	return A2(
+		_elm_tools$parser$Parser$inContext,
+		'allOrNothing',
+		A3(
+			_elm_tools$parser$Parser$delayedCommitMap,
+			_elm_lang$core$Basics$always,
+			parser,
+			_elm_tools$parser$Parser$succeed(
+				{ctor: '_Tuple0'})));
 };
 var _user$project$MiniLatex_Parser$parseUntil = function (marker) {
 	return A2(
-		_elm_tools$parser$Parser$map,
-		_elm_lang$core$String$dropRight(
-			_elm_lang$core$String$length(marker)),
-		_elm_tools$parser$Parser$source(
-			_elm_tools$parser$Parser$ignoreUntil(marker)));
+		_elm_tools$parser$Parser$inContext,
+		'parseUntil',
+		A2(
+			_elm_tools$parser$Parser$map,
+			_elm_lang$core$String$dropRight(
+				_elm_lang$core$String$length(marker)),
+			_elm_tools$parser$Parser$source(
+				_elm_tools$parser$Parser$ignoreUntil(marker))));
 };
 var _user$project$MiniLatex_Parser$beginWord = A2(
-	_elm_tools$parser$Parser_ops['|='],
+	_elm_tools$parser$Parser$inContext,
+	'beginWord',
 	A2(
-		_elm_tools$parser$Parser_ops['|.'],
+		_elm_tools$parser$Parser_ops['|='],
 		A2(
 			_elm_tools$parser$Parser_ops['|.'],
-			_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
 			A2(
-				_elm_tools$parser$Parser$ignore,
-				_elm_tools$parser$Parser$zeroOrMore,
-				F2(
-					function (x, y) {
-						return _elm_lang$core$Native_Utils.eq(x, y);
-					})(
-					_elm_lang$core$Native_Utils.chr(' ')))),
-		_elm_tools$parser$Parser$symbol('\\begin{')),
-	_user$project$MiniLatex_Parser$parseUntil('}'));
+				_elm_tools$parser$Parser_ops['|.'],
+				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+				A2(
+					_elm_tools$parser$Parser$ignore,
+					_elm_tools$parser$Parser$zeroOrMore,
+					F2(
+						function (x, y) {
+							return _elm_lang$core$Native_Utils.eq(x, y);
+						})(
+						_elm_lang$core$Native_Utils.chr(' ')))),
+			_elm_tools$parser$Parser$symbol('\\begin{')),
+		_user$project$MiniLatex_Parser$parseUntil('}')));
+var _user$project$MiniLatex_Parser$endWord = A2(
+	_elm_tools$parser$Parser$inContext,
+	'endWord',
+	A2(
+		_elm_tools$parser$Parser_ops['|='],
+		A2(
+			_elm_tools$parser$Parser_ops['|.'],
+			A2(
+				_elm_tools$parser$Parser_ops['|.'],
+				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+				A2(
+					_elm_tools$parser$Parser$ignore,
+					_elm_tools$parser$Parser$zeroOrMore,
+					F2(
+						function (x, y) {
+							return _elm_lang$core$Native_Utils.eq(x, y);
+						})(
+						_elm_lang$core$Native_Utils.chr(' ')))),
+			_elm_tools$parser$Parser$symbol('\\end{')),
+		_user$project$MiniLatex_Parser$parseUntil('}')));
 var _user$project$MiniLatex_Parser$ws = A2(
 	_elm_tools$parser$Parser$ignore,
 	_elm_tools$parser$Parser$zeroOrMore,
@@ -12482,7 +12594,7 @@ var _user$project$MiniLatex_Parser$word2a = A2(
 		_user$project$MiniLatex_Parser$spaces));
 var _user$project$MiniLatex_Parser$innerMacroName = A2(
 	_elm_tools$parser$Parser$inContext,
-	'macroName',
+	'innerMacroName',
 	A2(
 		_elm_tools$parser$Parser_ops['|='],
 		A2(
@@ -12504,14 +12616,17 @@ var _user$project$MiniLatex_Parser$innerMacroName = A2(
 					c,
 					_elm_lang$core$Native_Utils.chr('\n'))));
 			})));
-var _user$project$MiniLatex_Parser$macroName = _user$project$MiniLatex_Parser$allOrNothing(
-	A2(
-		_elm_tools$parser$Parser_ops['|='],
+var _user$project$MiniLatex_Parser$macroName = A2(
+	_elm_tools$parser$Parser$inContext,
+	'macroName',
+	_user$project$MiniLatex_Parser$allOrNothing(
 		A2(
-			_elm_tools$parser$Parser_ops['|.'],
-			_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-			_user$project$MiniLatex_Parser$mustFail(_user$project$MiniLatex_Parser$reservedWord)),
-		_user$project$MiniLatex_Parser$innerMacroName));
+			_elm_tools$parser$Parser_ops['|='],
+			A2(
+				_elm_tools$parser$Parser_ops['|.'],
+				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+				_user$project$MiniLatex_Parser$mustFail(_user$project$MiniLatex_Parser$reservedWord)),
+			_user$project$MiniLatex_Parser$innerMacroName)));
 var _user$project$MiniLatex_Parser$LatexList = function (a) {
 	return {ctor: 'LatexList', _0: a};
 };
@@ -12536,20 +12651,23 @@ var _user$project$MiniLatex_Parser$DisplayMath = function (a) {
 };
 var _user$project$MiniLatex_Parser$displayMathDollar = A2(
 	_elm_tools$parser$Parser$inContext,
-	'display math',
+	'display math $$',
 	A2(
 		_elm_tools$parser$Parser_ops['|.'],
 		A2(
 			_elm_tools$parser$Parser_ops['|='],
 			A2(
 				_elm_tools$parser$Parser_ops['|.'],
-				_elm_tools$parser$Parser$succeed(_user$project$MiniLatex_Parser$DisplayMath),
+				A2(
+					_elm_tools$parser$Parser_ops['|.'],
+					_elm_tools$parser$Parser$succeed(_user$project$MiniLatex_Parser$DisplayMath),
+					_user$project$MiniLatex_Parser$spaces),
 				_elm_tools$parser$Parser$symbol('$$')),
 			_user$project$MiniLatex_Parser$parseUntil('$$')),
-		_user$project$MiniLatex_Parser$ws));
+		_user$project$MiniLatex_Parser$spaces));
 var _user$project$MiniLatex_Parser$displayMathBrackets = A2(
 	_elm_tools$parser$Parser$inContext,
-	'display math',
+	'display math brackets',
 	A2(
 		_elm_tools$parser$Parser_ops['|='],
 		A2(
@@ -12604,13 +12722,16 @@ var _user$project$MiniLatex_Parser$Comment = function (a) {
 	return {ctor: 'Comment', _0: a};
 };
 var _user$project$MiniLatex_Parser$texComment = A2(
-	_elm_tools$parser$Parser$map,
-	_user$project$MiniLatex_Parser$Comment,
-	_elm_tools$parser$Parser$source(
-		A2(
-			_elm_tools$parser$Parser_ops['|.'],
-			_elm_tools$parser$Parser$symbol('%'),
-			_elm_tools$parser$Parser$ignoreUntil('\n'))));
+	_elm_tools$parser$Parser$inContext,
+	'texComment',
+	A2(
+		_elm_tools$parser$Parser$map,
+		_user$project$MiniLatex_Parser$Comment,
+		_elm_tools$parser$Parser$source(
+			A2(
+				_elm_tools$parser$Parser_ops['|.'],
+				_elm_tools$parser$Parser$symbol('%'),
+				_elm_tools$parser$Parser$ignoreUntil('\n')))));
 var _user$project$MiniLatex_Parser$LXString = function (a) {
 	return {ctor: 'LXString', _0: a};
 };
@@ -12647,37 +12768,40 @@ var _user$project$MiniLatex_Parser$words2 = A2(
 				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
 				A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$oneOrMore, _user$project$MiniLatex_Parser$word2)))));
 var _user$project$MiniLatex_Parser$arg = A2(
-	_elm_tools$parser$Parser$map,
-	_user$project$MiniLatex_Parser$LatexList,
+	_elm_tools$parser$Parser$inContext,
+	'arg',
 	A2(
-		_elm_tools$parser$Parser_ops['|.'],
+		_elm_tools$parser$Parser$map,
+		_user$project$MiniLatex_Parser$LatexList,
 		A2(
-			_elm_tools$parser$Parser_ops['|='],
+			_elm_tools$parser$Parser_ops['|.'],
 			A2(
-				_elm_tools$parser$Parser_ops['|.'],
-				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-				_elm_tools$parser$Parser$keyword('{')),
-			A2(
-				_elm_tools$parser$Parser$repeat,
-				_elm_tools$parser$Parser$zeroOrMore,
-				_elm_tools$parser$Parser$oneOf(
-					{
-						ctor: '::',
-						_0: _user$project$MiniLatex_Parser$words2,
-						_1: {
+				_elm_tools$parser$Parser_ops['|='],
+				A2(
+					_elm_tools$parser$Parser_ops['|.'],
+					_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+					_elm_tools$parser$Parser$keyword('{')),
+				A2(
+					_elm_tools$parser$Parser$repeat,
+					_elm_tools$parser$Parser$zeroOrMore,
+					_elm_tools$parser$Parser$oneOf(
+						{
 							ctor: '::',
-							_0: _user$project$MiniLatex_Parser$inlineMath2,
+							_0: _user$project$MiniLatex_Parser$words2,
 							_1: {
 								ctor: '::',
-								_0: _elm_tools$parser$Parser$lazy(
-									function (_p1) {
-										return _user$project$MiniLatex_Parser$macro;
-									}),
-								_1: {ctor: '[]'}
+								_0: _user$project$MiniLatex_Parser$inlineMath2,
+								_1: {
+									ctor: '::',
+									_0: _elm_tools$parser$Parser$lazy(
+										function (_p1) {
+											return _user$project$MiniLatex_Parser$macro;
+										}),
+									_1: {ctor: '[]'}
+								}
 							}
-						}
-					}))),
-		_elm_tools$parser$Parser$symbol('}')));
+						}))),
+			_elm_tools$parser$Parser$symbol('}'))));
 var _user$project$MiniLatex_Parser$macro = A2(
 	_elm_tools$parser$Parser$inContext,
 	'macro',
@@ -12693,7 +12817,7 @@ var _user$project$MiniLatex_Parser$macro = A2(
 		_user$project$MiniLatex_Parser$ws));
 var _user$project$MiniLatex_Parser$macro2 = A2(
 	_elm_tools$parser$Parser$inContext,
-	'macro',
+	'macro2',
 	A2(
 		_elm_tools$parser$Parser_ops['|.'],
 		A2(
@@ -12705,99 +12829,210 @@ var _user$project$MiniLatex_Parser$macro2 = A2(
 			A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$zeroOrMore, _user$project$MiniLatex_Parser$arg)),
 		_user$project$MiniLatex_Parser$spaces));
 var _user$project$MiniLatex_Parser$item = A2(
-	_elm_tools$parser$Parser$map,
-	function (x) {
-		return A2(
-			_user$project$MiniLatex_Parser$Item,
-			1,
-			_user$project$MiniLatex_Parser$LatexList(x));
-	},
+	_elm_tools$parser$Parser$inContext,
+	'item',
 	A2(
-		_elm_tools$parser$Parser_ops['|.'],
+		_elm_tools$parser$Parser$map,
+		function (x) {
+			return A2(
+				_user$project$MiniLatex_Parser$Item,
+				1,
+				_user$project$MiniLatex_Parser$LatexList(x));
+		},
 		A2(
 			_elm_tools$parser$Parser_ops['|.'],
 			A2(
-				_elm_tools$parser$Parser_ops['|='],
+				_elm_tools$parser$Parser_ops['|.'],
 				A2(
-					_elm_tools$parser$Parser_ops['|.'],
+					_elm_tools$parser$Parser_ops['|='],
 					A2(
 						_elm_tools$parser$Parser_ops['|.'],
 						A2(
 							_elm_tools$parser$Parser_ops['|.'],
-							_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-							_user$project$MiniLatex_Parser$ws),
-						_elm_tools$parser$Parser$keyword('\\item')),
-					_user$project$MiniLatex_Parser$spaces),
-				A2(
-					_elm_tools$parser$Parser$repeat,
-					_elm_tools$parser$Parser$zeroOrMore,
-					_elm_tools$parser$Parser$oneOf(
-						{
-							ctor: '::',
-							_0: _user$project$MiniLatex_Parser$words2,
-							_1: {
-								ctor: '::',
-								_0: _user$project$MiniLatex_Parser$inlineMath2,
-								_1: {
-									ctor: '::',
-									_0: _user$project$MiniLatex_Parser$macro2,
-									_1: {ctor: '[]'}
-								}
-							}
-						}))),
-			_elm_tools$parser$Parser$symbol('\n')),
-		_user$project$MiniLatex_Parser$spaces));
-var _user$project$MiniLatex_Parser$itemitem = A2(
-	_elm_tools$parser$Parser$map,
-	function (x) {
-		return A2(
-			_user$project$MiniLatex_Parser$Item,
-			2,
-			_user$project$MiniLatex_Parser$LatexList(x));
-	},
-	A2(
-		_elm_tools$parser$Parser_ops['|.'],
-		A2(
-			_elm_tools$parser$Parser_ops['|.'],
-			A2(
-				_elm_tools$parser$Parser_ops['|='],
-				A2(
-					_elm_tools$parser$Parser_ops['|.'],
+							A2(
+								_elm_tools$parser$Parser_ops['|.'],
+								_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+								_user$project$MiniLatex_Parser$ws),
+							_elm_tools$parser$Parser$keyword('\\item')),
+						_user$project$MiniLatex_Parser$spaces),
 					A2(
-						_elm_tools$parser$Parser_ops['|.'],
-						A2(
-							_elm_tools$parser$Parser_ops['|.'],
-							_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-							_user$project$MiniLatex_Parser$ws),
-						_elm_tools$parser$Parser$keyword('\\itemitem')),
-					_user$project$MiniLatex_Parser$spaces),
-				A2(
-					_elm_tools$parser$Parser$repeat,
-					_elm_tools$parser$Parser$zeroOrMore,
-					_elm_tools$parser$Parser$oneOf(
-						{
-							ctor: '::',
-							_0: _user$project$MiniLatex_Parser$words2,
-							_1: {
+						_elm_tools$parser$Parser$repeat,
+						_elm_tools$parser$Parser$zeroOrMore,
+						_elm_tools$parser$Parser$oneOf(
+							{
 								ctor: '::',
-								_0: _user$project$MiniLatex_Parser$inlineMath2,
+								_0: _user$project$MiniLatex_Parser$words2,
 								_1: {
 									ctor: '::',
-									_0: _user$project$MiniLatex_Parser$macro2,
-									_1: {ctor: '[]'}
+									_0: _user$project$MiniLatex_Parser$inlineMath2,
+									_1: {
+										ctor: '::',
+										_0: _user$project$MiniLatex_Parser$macro2,
+										_1: {ctor: '[]'}
+									}
 								}
-							}
-						}))),
-			_elm_tools$parser$Parser$symbol('\n')),
-		_user$project$MiniLatex_Parser$spaces));
+							}))),
+				_elm_tools$parser$Parser$symbol('\n')),
+			_user$project$MiniLatex_Parser$spaces)));
 var _user$project$MiniLatex_Parser$itemEnvironmentBody = F2(
 	function (endWord, envType) {
 		return A2(
-			_elm_tools$parser$Parser$map,
-			_user$project$MiniLatex_Parser$Environment(envType),
+			_elm_tools$parser$Parser$inContext,
+			'itemEnvironmentBody',
 			A2(
 				_elm_tools$parser$Parser$map,
-				_user$project$MiniLatex_Parser$LatexList,
+				_user$project$MiniLatex_Parser$Environment(envType),
+				A2(
+					_elm_tools$parser$Parser$map,
+					_user$project$MiniLatex_Parser$LatexList,
+					A2(
+						_elm_tools$parser$Parser_ops['|.'],
+						A2(
+							_elm_tools$parser$Parser_ops['|.'],
+							A2(
+								_elm_tools$parser$Parser_ops['|.'],
+								A2(
+									_elm_tools$parser$Parser_ops['|='],
+									A2(
+										_elm_tools$parser$Parser_ops['|.'],
+										_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+										_user$project$MiniLatex_Parser$ws),
+									A2(
+										_elm_tools$parser$Parser$repeat,
+										_elm_tools$parser$Parser$zeroOrMore,
+										_elm_tools$parser$Parser$oneOf(
+											{
+												ctor: '::',
+												_0: _user$project$MiniLatex_Parser$item,
+												_1: {
+													ctor: '::',
+													_0: _user$project$MiniLatex_Parser$texComment,
+													_1: {ctor: '[]'}
+												}
+											}))),
+								_user$project$MiniLatex_Parser$ws),
+							_elm_tools$parser$Parser$symbol(endWord)),
+						_user$project$MiniLatex_Parser$ws))));
+	});
+var _user$project$MiniLatex_Parser$tableCell = A2(
+	_elm_tools$parser$Parser$inContext,
+	'tableCell',
+	A2(
+		_elm_tools$parser$Parser_ops['|='],
+		A2(
+			_elm_tools$parser$Parser_ops['|.'],
+			_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+			_user$project$MiniLatex_Parser$spaces),
+		_elm_tools$parser$Parser$oneOf(
+			{
+				ctor: '::',
+				_0: _user$project$MiniLatex_Parser$inlineMath2,
+				_1: {
+					ctor: '::',
+					_0: _user$project$MiniLatex_Parser$words2,
+					_1: {ctor: '[]'}
+				}
+			})));
+var _user$project$MiniLatex_Parser$nextCell = A2(
+	_elm_tools$parser$Parser$inContext,
+	'nextCell',
+	A2(
+		_elm_tools$parser$Parser$delayedCommit,
+		_user$project$MiniLatex_Parser$spaces,
+		A2(
+			_elm_tools$parser$Parser_ops['|='],
+			A2(
+				_elm_tools$parser$Parser_ops['|.'],
+				A2(
+					_elm_tools$parser$Parser_ops['|.'],
+					_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+					_elm_tools$parser$Parser$symbol('&')),
+				_user$project$MiniLatex_Parser$spaces),
+			_user$project$MiniLatex_Parser$tableCell)));
+var _user$project$MiniLatex_Parser$tableCellHelp = function (revCells) {
+	return A2(
+		_elm_tools$parser$Parser$inContext,
+		'tableCellHelp',
+		_elm_tools$parser$Parser$oneOf(
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_tools$parser$Parser$andThen,
+					function (c) {
+						return _user$project$MiniLatex_Parser$tableCellHelp(
+							{ctor: '::', _0: c, _1: revCells});
+					},
+					_user$project$MiniLatex_Parser$nextCell),
+				_1: {
+					ctor: '::',
+					_0: _elm_tools$parser$Parser$succeed(
+						_elm_lang$core$List$reverse(revCells)),
+					_1: {ctor: '[]'}
+				}
+			}));
+};
+var _user$project$MiniLatex_Parser$tableRow = A2(
+	_elm_tools$parser$Parser$inContext,
+	'tableRow',
+	A2(
+		_elm_tools$parser$Parser$map,
+		_user$project$MiniLatex_Parser$LatexList,
+		A2(
+			_elm_tools$parser$Parser_ops['|.'],
+			A2(
+				_elm_tools$parser$Parser_ops['|.'],
+				A2(
+					_elm_tools$parser$Parser_ops['|='],
+					A2(
+						_elm_tools$parser$Parser_ops['|.'],
+						_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+						_user$project$MiniLatex_Parser$spaces),
+					A2(
+						_elm_tools$parser$Parser$andThen,
+						function (c) {
+							return _user$project$MiniLatex_Parser$tableCellHelp(
+								{
+									ctor: '::',
+									_0: c,
+									_1: {ctor: '[]'}
+								});
+						},
+						_user$project$MiniLatex_Parser$tableCell)),
+				_user$project$MiniLatex_Parser$spaces),
+			_elm_tools$parser$Parser$oneOf(
+				{
+					ctor: '::',
+					_0: _elm_tools$parser$Parser$symbol('\n'),
+					_1: {
+						ctor: '::',
+						_0: _elm_tools$parser$Parser$symbol('\\\\\n'),
+						_1: {ctor: '[]'}
+					}
+				}))));
+var _user$project$MiniLatex_Parser$tableBody = A2(
+	_elm_tools$parser$Parser$inContext,
+	'tableBody',
+	A2(
+		_elm_tools$parser$Parser$map,
+		_user$project$MiniLatex_Parser$LatexList,
+		A2(
+			_elm_tools$parser$Parser_ops['|='],
+			A2(
+				_elm_tools$parser$Parser_ops['|.'],
+				A2(
+					_elm_tools$parser$Parser_ops['|.'],
+					_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+					A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$zeroOrMore, _user$project$MiniLatex_Parser$arg)),
+				_user$project$MiniLatex_Parser$ws),
+			A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$oneOrMore, _user$project$MiniLatex_Parser$tableRow))));
+var _user$project$MiniLatex_Parser$tabularEnvironmentBody = F2(
+	function (endWord, envType) {
+		return A2(
+			_elm_tools$parser$Parser$inContext,
+			'tabularEnvironmentBody',
+			A2(
+				_elm_tools$parser$Parser$map,
+				_user$project$MiniLatex_Parser$Environment(envType),
 				A2(
 					_elm_tools$parser$Parser_ops['|.'],
 					A2(
@@ -12810,160 +13045,29 @@ var _user$project$MiniLatex_Parser$itemEnvironmentBody = F2(
 									_elm_tools$parser$Parser_ops['|.'],
 									_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
 									_user$project$MiniLatex_Parser$ws),
-								A2(
-									_elm_tools$parser$Parser$repeat,
-									_elm_tools$parser$Parser$zeroOrMore,
-									_elm_tools$parser$Parser$oneOf(
-										{
-											ctor: '::',
-											_0: _user$project$MiniLatex_Parser$itemitem,
-											_1: {
-												ctor: '::',
-												_0: _user$project$MiniLatex_Parser$item,
-												_1: {
-													ctor: '::',
-													_0: _user$project$MiniLatex_Parser$texComment,
-													_1: {ctor: '[]'}
-												}
-											}
-										}))),
+								_user$project$MiniLatex_Parser$tableBody),
 							_user$project$MiniLatex_Parser$ws),
 						_elm_tools$parser$Parser$symbol(endWord)),
 					_user$project$MiniLatex_Parser$ws)));
 	});
-var _user$project$MiniLatex_Parser$tableCell = A2(
-	_elm_tools$parser$Parser_ops['|='],
-	A2(
-		_elm_tools$parser$Parser_ops['|.'],
-		_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-		_user$project$MiniLatex_Parser$spaces),
-	_elm_tools$parser$Parser$oneOf(
-		{
-			ctor: '::',
-			_0: _user$project$MiniLatex_Parser$inlineMath2,
-			_1: {
-				ctor: '::',
-				_0: _user$project$MiniLatex_Parser$words2,
-				_1: {ctor: '[]'}
-			}
-		}));
-var _user$project$MiniLatex_Parser$nextCell = A2(
-	_elm_tools$parser$Parser$delayedCommit,
-	_user$project$MiniLatex_Parser$spaces,
-	A2(
-		_elm_tools$parser$Parser_ops['|='],
-		A2(
-			_elm_tools$parser$Parser_ops['|.'],
-			A2(
-				_elm_tools$parser$Parser_ops['|.'],
-				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-				_elm_tools$parser$Parser$symbol('&')),
-			_user$project$MiniLatex_Parser$spaces),
-		_user$project$MiniLatex_Parser$tableCell));
-var _user$project$MiniLatex_Parser$tableCellHelp = function (revCells) {
-	return _elm_tools$parser$Parser$oneOf(
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_tools$parser$Parser$andThen,
-				function (c) {
-					return _user$project$MiniLatex_Parser$tableCellHelp(
-						{ctor: '::', _0: c, _1: revCells});
-				},
-				_user$project$MiniLatex_Parser$nextCell),
-			_1: {
-				ctor: '::',
-				_0: _elm_tools$parser$Parser$succeed(
-					_elm_lang$core$List$reverse(revCells)),
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _user$project$MiniLatex_Parser$tableRow = A2(
-	_elm_tools$parser$Parser$map,
-	_user$project$MiniLatex_Parser$LatexList,
-	A2(
-		_elm_tools$parser$Parser_ops['|.'],
-		A2(
-			_elm_tools$parser$Parser_ops['|.'],
-			A2(
-				_elm_tools$parser$Parser_ops['|='],
-				A2(
-					_elm_tools$parser$Parser_ops['|.'],
-					_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-					_user$project$MiniLatex_Parser$spaces),
-				A2(
-					_elm_tools$parser$Parser$andThen,
-					function (c) {
-						return _user$project$MiniLatex_Parser$tableCellHelp(
-							{
-								ctor: '::',
-								_0: c,
-								_1: {ctor: '[]'}
-							});
-					},
-					_user$project$MiniLatex_Parser$tableCell)),
-			_user$project$MiniLatex_Parser$spaces),
-		_elm_tools$parser$Parser$oneOf(
-			{
-				ctor: '::',
-				_0: _elm_tools$parser$Parser$symbol('\n'),
-				_1: {
-					ctor: '::',
-					_0: _elm_tools$parser$Parser$symbol('\\\\\n'),
-					_1: {ctor: '[]'}
-				}
-			})));
-var _user$project$MiniLatex_Parser$tableBody = A2(
-	_elm_tools$parser$Parser$map,
-	_user$project$MiniLatex_Parser$LatexList,
-	A2(
-		_elm_tools$parser$Parser_ops['|='],
-		A2(
-			_elm_tools$parser$Parser_ops['|.'],
-			A2(
-				_elm_tools$parser$Parser_ops['|.'],
-				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-				A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$zeroOrMore, _user$project$MiniLatex_Parser$arg)),
-			_user$project$MiniLatex_Parser$ws),
-		A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$oneOrMore, _user$project$MiniLatex_Parser$tableRow)));
-var _user$project$MiniLatex_Parser$tabularEnvironmentBody = F2(
+var _user$project$MiniLatex_Parser$mathJaxBody = F2(
 	function (endWord, envType) {
 		return A2(
-			_elm_tools$parser$Parser$map,
-			_user$project$MiniLatex_Parser$Environment(envType),
+			_elm_tools$parser$Parser$inContext,
+			'mathJaxBody',
 			A2(
-				_elm_tools$parser$Parser_ops['|.'],
+				_elm_tools$parser$Parser$map,
+				_user$project$MiniLatex_Parser$Environment(envType),
 				A2(
-					_elm_tools$parser$Parser_ops['|.'],
+					_elm_tools$parser$Parser$map,
+					_user$project$MiniLatex_Parser$LXString,
 					A2(
 						_elm_tools$parser$Parser_ops['|.'],
 						A2(
 							_elm_tools$parser$Parser_ops['|='],
-							A2(
-								_elm_tools$parser$Parser_ops['|.'],
-								_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-								_user$project$MiniLatex_Parser$ws),
-							_user$project$MiniLatex_Parser$tableBody),
-						_user$project$MiniLatex_Parser$ws),
-					_elm_tools$parser$Parser$symbol(endWord)),
-				_user$project$MiniLatex_Parser$ws));
-	});
-var _user$project$MiniLatex_Parser$mathJaxBody = F2(
-	function (endWord, envType) {
-		return A2(
-			_elm_tools$parser$Parser$map,
-			_user$project$MiniLatex_Parser$Environment(envType),
-			A2(
-				_elm_tools$parser$Parser$map,
-				_user$project$MiniLatex_Parser$LXString,
-				A2(
-					_elm_tools$parser$Parser_ops['|.'],
-					A2(
-						_elm_tools$parser$Parser_ops['|='],
-						_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-						_user$project$MiniLatex_Parser$parseUntil(endWord)),
-					_user$project$MiniLatex_Parser$ws)));
+							_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+							_user$project$MiniLatex_Parser$parseUntil(endWord)),
+						_user$project$MiniLatex_Parser$ws))));
 	});
 var _user$project$MiniLatex_Parser$parseEnvirnomentDict = _elm_lang$core$Dict$fromList(
 	{
@@ -13022,27 +13126,30 @@ var _user$project$MiniLatex_Parser$environmentParser = function (name) {
 var _user$project$MiniLatex_Parser$standardEnvironmentBody = F2(
 	function (endWord, envType) {
 		return A2(
-			_elm_tools$parser$Parser$map,
-			_user$project$MiniLatex_Parser$Environment(envType),
+			_elm_tools$parser$Parser$inContext,
+			'standardEnvironmentBody',
 			A2(
 				_elm_tools$parser$Parser$map,
-				_user$project$MiniLatex_Parser$LatexList,
+				_user$project$MiniLatex_Parser$Environment(envType),
 				A2(
-					_elm_tools$parser$Parser_ops['|.'],
+					_elm_tools$parser$Parser$map,
+					_user$project$MiniLatex_Parser$LatexList,
 					A2(
 						_elm_tools$parser$Parser_ops['|.'],
 						A2(
 							_elm_tools$parser$Parser_ops['|.'],
 							A2(
-								_elm_tools$parser$Parser_ops['|='],
+								_elm_tools$parser$Parser_ops['|.'],
 								A2(
-									_elm_tools$parser$Parser_ops['|.'],
-									_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-									_user$project$MiniLatex_Parser$ws),
-								A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$zeroOrMore, _user$project$MiniLatex_Parser$parse)),
-							_user$project$MiniLatex_Parser$ws),
-						_elm_tools$parser$Parser$symbol(endWord)),
-					_user$project$MiniLatex_Parser$ws)));
+									_elm_tools$parser$Parser_ops['|='],
+									A2(
+										_elm_tools$parser$Parser_ops['|.'],
+										_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+										_user$project$MiniLatex_Parser$ws),
+									A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$zeroOrMore, _user$project$MiniLatex_Parser$parse)),
+								_user$project$MiniLatex_Parser$ws),
+							_elm_tools$parser$Parser$symbol(endWord)),
+						_user$project$MiniLatex_Parser$ws))));
 	});
 var _user$project$MiniLatex_Parser$parse = _elm_tools$parser$Parser$oneOf(
 	{
@@ -13077,130 +13184,94 @@ var _user$project$MiniLatex_Parser$parse = _elm_tools$parser$Parser$oneOf(
 			}
 		}
 	});
-var _user$project$MiniLatex_Parser$environment = _elm_tools$parser$Parser$lazy(
-	function (_p4) {
-		return A2(_elm_tools$parser$Parser$andThen, _user$project$MiniLatex_Parser$environmentOfType, _user$project$MiniLatex_Parser$beginWord);
-	});
+var _user$project$MiniLatex_Parser$environment = A2(
+	_elm_tools$parser$Parser$inContext,
+	'environment',
+	_elm_tools$parser$Parser$lazy(
+		function (_p4) {
+			return A2(_elm_tools$parser$Parser$andThen, _user$project$MiniLatex_Parser$environmentOfType, _user$project$MiniLatex_Parser$beginWord);
+		}));
 var _user$project$MiniLatex_Parser$environmentOfType = function (envType) {
-	var envKind = A2(
-		_elm_lang$core$List$member,
-		envType,
-		{
-			ctor: '::',
-			_0: 'equation',
-			_1: {
-				ctor: '::',
-				_0: 'align',
-				_1: {
+	return A2(
+		_elm_tools$parser$Parser$inContext,
+		'environmentOfType',
+		function () {
+			var envKind = A2(
+				_elm_lang$core$List$member,
+				envType,
+				{
 					ctor: '::',
-					_0: 'eqnarray',
+					_0: 'equation',
 					_1: {
 						ctor: '::',
-						_0: 'verbatim',
-						_1: {ctor: '[]'}
+						_0: 'align',
+						_1: {
+							ctor: '::',
+							_0: 'eqnarray',
+							_1: {
+								ctor: '::',
+								_0: 'verbatim',
+								_1: {
+									ctor: '::',
+									_0: 'verse',
+									_1: {ctor: '[]'}
+								}
+							}
+						}
 					}
-				}
-			}
-		}) ? 'mathJax' : envType;
-	var endWord = A2(
-		_elm_lang$core$Basics_ops['++'],
-		'\\end{',
-		A2(_elm_lang$core$Basics_ops['++'], envType, '}'));
-	return A3(_user$project$MiniLatex_Parser$environmentParser, envKind, endWord, envType);
+				}) ? 'mathJax' : envType;
+			var endWord = A2(
+				_elm_lang$core$Basics_ops['++'],
+				'\\end{',
+				A2(_elm_lang$core$Basics_ops['++'], envType, '}'));
+			return A3(_user$project$MiniLatex_Parser$environmentParser, envKind, endWord, envType);
+		}());
 };
 var _user$project$MiniLatex_Parser$latexList = A2(
-	_elm_tools$parser$Parser$map,
-	_user$project$MiniLatex_Parser$LatexList,
+	_elm_tools$parser$Parser$inContext,
+	'latexList',
 	A2(
-		_elm_tools$parser$Parser_ops['|='],
-		_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-		A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$oneOrMore, _user$project$MiniLatex_Parser$parse)));
+		_elm_tools$parser$Parser$map,
+		_user$project$MiniLatex_Parser$LatexList,
+		A2(
+			_elm_tools$parser$Parser_ops['|='],
+			_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+			A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$oneOrMore, _user$project$MiniLatex_Parser$parse))));
 var _user$project$MiniLatex_Parser$parseParagraph = function (text) {
 	var expr = A2(_elm_tools$parser$Parser$run, _user$project$MiniLatex_Parser$latexList, text);
 	var _p5 = expr;
-	if ((_p5.ctor === 'Ok') && (_p5._0.ctor === 'LatexList')) {
-		return _p5._0._0;
+	if (_p5.ctor === 'Ok') {
+		if (_p5._0.ctor === 'LatexList') {
+			return _p5._0._0;
+		} else {
+			return {
+				ctor: '::',
+				_0: _user$project$MiniLatex_Parser$LXString('yada!'),
+				_1: {ctor: '[]'}
+			};
+		}
 	} else {
-		return {ctor: '[]'};
+		var _p6 = _p5._0;
+		return {
+			ctor: '::',
+			_0: _user$project$MiniLatex_Parser$LXString(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'<strong>Error:</strong> ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'<pre>',
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_elm_lang$core$Basics$toString(_p6.problem),
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								' </pre><strong>in </strong> </span><pre>',
+								A2(_elm_lang$core$Basics_ops['++'], _p6.source, '</pre>')))))),
+			_1: {ctor: '[]'}
+		};
 	}
 };
-
-var _user$project$MiniLatex_LatexState$initialCounters = _elm_lang$core$Dict$fromList(
-	{
-		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 's1', _1: 0},
-		_1: {
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 's2', _1: 0},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 's3', _1: 0},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'tno', _1: 0},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'eqno', _1: 0},
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		}
-	});
-var _user$project$MiniLatex_LatexState$emptyLatexState = {counters: _user$project$MiniLatex_LatexState$initialCounters, crossReferences: _elm_lang$core$Dict$empty};
-var _user$project$MiniLatex_LatexState$setCrossReference = F3(
-	function (label, value, latexState) {
-		var crossReferences = latexState.crossReferences;
-		var newCrossReferences = A3(_elm_lang$core$Dict$insert, label, value, crossReferences);
-		return _elm_lang$core$Native_Utils.update(
-			latexState,
-			{crossReferences: newCrossReferences});
-	});
-var _user$project$MiniLatex_LatexState$updateCounter = F3(
-	function (name, value, latexState) {
-		var maybeSet = _elm_lang$core$Maybe$map(
-			function (x) {
-				return value;
-			});
-		var newCounters = A3(_elm_lang$core$Dict$update, name, maybeSet, latexState.counters);
-		return _elm_lang$core$Native_Utils.update(
-			latexState,
-			{counters: newCounters});
-	});
-var _user$project$MiniLatex_LatexState$incrementCounter = F2(
-	function (name, latexState) {
-		var maybeInc = _elm_lang$core$Maybe$map(
-			function (x) {
-				return x + 1;
-			});
-		var newCounters = A3(_elm_lang$core$Dict$update, name, maybeInc, latexState.counters);
-		return _elm_lang$core$Native_Utils.update(
-			latexState,
-			{counters: newCounters});
-	});
-var _user$project$MiniLatex_LatexState$getCrossReference = F2(
-	function (label, latexState) {
-		var _p0 = A2(_elm_lang$core$Dict$get, label, latexState.crossReferences);
-		if (_p0.ctor === 'Just') {
-			return _p0._0;
-		} else {
-			return '??';
-		}
-	});
-var _user$project$MiniLatex_LatexState$getCounter = F2(
-	function (name, latexState) {
-		var _p1 = A2(_elm_lang$core$Dict$get, name, latexState.counters);
-		if (_p1.ctor === 'Just') {
-			return _p1._0;
-		} else {
-			return 0;
-		}
-	});
-var _user$project$MiniLatex_LatexState$emptyDict = _elm_lang$core$Dict$empty;
-var _user$project$MiniLatex_LatexState$LatexState = F2(
-	function (a, b) {
-		return {counters: a, crossReferences: b};
-	});
 
 var _user$project$MiniLatex_Differ$prefixer = F2(
 	function (b, k) {
@@ -13313,6 +13384,70 @@ var _user$project$MiniLatex_Differ$paragraphify = function (text) {
 				_elm_lang$core$Regex$regex('\\n\\n+'),
 				text)));
 };
+var _user$project$MiniLatex_Differ$fixLine = function (line) {
+	return _elm_lang$core$Native_Utils.eq(line, '') ? '\n' : line;
+};
+var _user$project$MiniLatex_Differ$joinLines = F2(
+	function (a, b) {
+		var _p1 = {ctor: '_Tuple2', _0: a, _1: b};
+		_v0_2:
+		do {
+			_v0_1:
+			do {
+				switch (_p1._0) {
+					case '':
+						return b;
+					case '\n':
+						switch (_p1._1) {
+							case '':
+								break _v0_1;
+							case '\n':
+								break _v0_2;
+							default:
+								break _v0_2;
+						}
+					default:
+						switch (_p1._1) {
+							case '':
+								break _v0_1;
+							case '\n':
+								return A2(_elm_lang$core$Basics_ops['++'], a, '\n');
+							default:
+								return A2(
+									_elm_lang$core$Basics_ops['++'],
+									_p1._0,
+									A2(_elm_lang$core$Basics_ops['++'], '\n', _p1._1));
+						}
+				}
+			} while(false);
+			return a;
+		} while(false);
+		return A2(_elm_lang$core$Basics_ops['++'], '\n', b);
+	});
+var _user$project$MiniLatex_Differ$getEndArg = function (line) {
+	var parseResult = A2(_elm_tools$parser$Parser$run, _user$project$MiniLatex_Parser$endWord, line);
+	var arg = function () {
+		var _p2 = parseResult;
+		if (_p2.ctor === 'Ok') {
+			return _p2._0;
+		} else {
+			return '';
+		}
+	}();
+	return arg;
+};
+var _user$project$MiniLatex_Differ$getBeginArg = function (line) {
+	var parseResult = A2(_elm_tools$parser$Parser$run, _user$project$MiniLatex_Parser$beginWord, line);
+	var arg = function () {
+		var _p3 = parseResult;
+		if (_p3.ctor === 'Ok') {
+			return _p3._0;
+		} else {
+			return '';
+		}
+	}();
+	return arg;
+};
 var _user$project$MiniLatex_Differ$DiffRecord = F4(
 	function (a, b, c, d) {
 		return {commonInitialSegment: a, commonTerminalSegment: b, middleSegmentInSource: c, middleSegmentInTarget: d};
@@ -13351,9 +13486,154 @@ var _user$project$MiniLatex_Differ$emptyEditRecord = A5(
 	_user$project$MiniLatex_LatexState$emptyLatexState,
 	{ctor: '[]'},
 	0);
+var _user$project$MiniLatex_Differ$ParserRecord = F3(
+	function (a, b, c) {
+		return {currentParagraph: a, paragraphList: b, state: c};
+	});
+var _user$project$MiniLatex_Differ$Error = {ctor: 'Error'};
+var _user$project$MiniLatex_Differ$InBlock = function (a) {
+	return {ctor: 'InBlock', _0: a};
+};
+var _user$project$MiniLatex_Differ$InParagraph = {ctor: 'InParagraph'};
+var _user$project$MiniLatex_Differ$Start = {ctor: 'Start'};
+var _user$project$MiniLatex_Differ$EndBlock = function (a) {
+	return {ctor: 'EndBlock', _0: a};
+};
+var _user$project$MiniLatex_Differ$BeginBlock = function (a) {
+	return {ctor: 'BeginBlock', _0: a};
+};
+var _user$project$MiniLatex_Differ$Text = {ctor: 'Text'};
+var _user$project$MiniLatex_Differ$Blank = {ctor: 'Blank'};
+var _user$project$MiniLatex_Differ$lineType = function (line) {
+	return _elm_lang$core$Native_Utils.eq(line, '') ? _user$project$MiniLatex_Differ$Blank : (A2(_elm_lang$core$String$startsWith, '\\begin', line) ? _user$project$MiniLatex_Differ$BeginBlock(
+		_user$project$MiniLatex_Differ$getBeginArg(line)) : (A2(_elm_lang$core$String$startsWith, '\\end', line) ? _user$project$MiniLatex_Differ$EndBlock(
+		_user$project$MiniLatex_Differ$getEndArg(line)) : _user$project$MiniLatex_Differ$Text));
+};
+var _user$project$MiniLatex_Differ$nextState = F2(
+	function (line, parserState) {
+		var _p4 = {
+			ctor: '_Tuple2',
+			_0: parserState,
+			_1: _user$project$MiniLatex_Differ$lineType(line)
+		};
+		_v3_11:
+		do {
+			switch (_p4._0.ctor) {
+				case 'Start':
+					switch (_p4._1.ctor) {
+						case 'Blank':
+							return _user$project$MiniLatex_Differ$Start;
+						case 'Text':
+							return _user$project$MiniLatex_Differ$InParagraph;
+						case 'BeginBlock':
+							return _user$project$MiniLatex_Differ$InBlock(_p4._1._0);
+						default:
+							break _v3_11;
+					}
+				case 'InBlock':
+					switch (_p4._1.ctor) {
+						case 'Blank':
+							return _user$project$MiniLatex_Differ$InBlock(_p4._0._0);
+						case 'Text':
+							return _user$project$MiniLatex_Differ$InBlock(_p4._0._0);
+						case 'BeginBlock':
+							return _user$project$MiniLatex_Differ$InBlock(_p4._0._0);
+						default:
+							var _p5 = _p4._0._0;
+							return _elm_lang$core$Native_Utils.eq(_p5, _p4._1._0) ? _user$project$MiniLatex_Differ$Start : _user$project$MiniLatex_Differ$InBlock(_p5);
+					}
+				case 'InParagraph':
+					switch (_p4._1.ctor) {
+						case 'Text':
+							return _user$project$MiniLatex_Differ$InParagraph;
+						case 'BeginBlock':
+							return _user$project$MiniLatex_Differ$InParagraph;
+						case 'EndBlock':
+							return _user$project$MiniLatex_Differ$InParagraph;
+						default:
+							return _user$project$MiniLatex_Differ$Start;
+					}
+				default:
+					break _v3_11;
+			}
+		} while(false);
+		return _user$project$MiniLatex_Differ$Error;
+	});
+var _user$project$MiniLatex_Differ$updateParserRecord = F2(
+	function (line, parserRecord) {
+		var state2 = A2(_user$project$MiniLatex_Differ$nextState, line, parserRecord.state);
+		var _p6 = A2(_elm_lang$core$Debug$log, 'nextState', state2);
+		var _p7 = state2;
+		switch (_p7.ctor) {
+			case 'Start':
+				return _elm_lang$core$Native_Utils.update(
+					parserRecord,
+					{
+						currentParagraph: '',
+						paragraphList: A2(
+							_elm_lang$core$Basics_ops['++'],
+							parserRecord.paragraphList,
+							{
+								ctor: '::',
+								_0: A2(_user$project$MiniLatex_Differ$joinLines, parserRecord.currentParagraph, line),
+								_1: {ctor: '[]'}
+							}),
+						state: state2
+					});
+			case 'InParagraph':
+				return _elm_lang$core$Native_Utils.update(
+					parserRecord,
+					{
+						currentParagraph: A2(_user$project$MiniLatex_Differ$joinLines, parserRecord.currentParagraph, line),
+						state: state2
+					});
+			case 'InBlock':
+				return _elm_lang$core$Native_Utils.update(
+					parserRecord,
+					{
+						currentParagraph: A2(
+							_user$project$MiniLatex_Differ$joinLines,
+							parserRecord.currentParagraph,
+							_user$project$MiniLatex_Differ$fixLine(line)),
+						state: state2
+					});
+			default:
+				return parserRecord;
+		}
+	});
+var _user$project$MiniLatex_Differ$logicalParagraphParse = function (text) {
+	return A3(
+		_elm_lang$core$List$foldl,
+		_user$project$MiniLatex_Differ$updateParserRecord,
+		{
+			currentParagraph: '',
+			paragraphList: {ctor: '[]'},
+			state: _user$project$MiniLatex_Differ$Start
+		},
+		A2(
+			_elm_lang$core$String$split,
+			'\n',
+			A2(_elm_lang$core$Basics_ops['++'], text, '\n')));
+};
+var _user$project$MiniLatex_Differ$logicalParagraphify = function (text) {
+	var lastState = _user$project$MiniLatex_Differ$logicalParagraphParse(text);
+	return A2(
+		_elm_lang$core$List$filter,
+		function (x) {
+			return !_elm_lang$core$Native_Utils.eq(x, '');
+		},
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			lastState.paragraphList,
+			{
+				ctor: '::',
+				_0: lastState.currentParagraph,
+				_1: {ctor: '[]'}
+			}));
+};
 var _user$project$MiniLatex_Differ$initialize = F2(
 	function (transformer, text) {
-		var paragraphs = _user$project$MiniLatex_Differ$paragraphify(text);
+		var paragraphs = _user$project$MiniLatex_Differ$logicalParagraphify(text);
 		var n = _elm_lang$core$List$length(paragraphs);
 		var idList = A2(
 			_elm_lang$core$List$map,
@@ -13364,20 +13644,20 @@ var _user$project$MiniLatex_Differ$initialize = F2(
 	});
 var _user$project$MiniLatex_Differ$initialize2 = F2(
 	function (transformParagraphs, text) {
-		var paragraphs = _user$project$MiniLatex_Differ$paragraphify(text);
+		var paragraphs = _user$project$MiniLatex_Differ$logicalParagraphify(text);
 		var n = _elm_lang$core$List$length(paragraphs);
 		var idList = A2(
 			_elm_lang$core$List$map,
 			_user$project$MiniLatex_Differ$prefixer(0),
 			A2(_elm_lang$core$List$range, 1, n));
-		var _p1 = transformParagraphs(paragraphs);
-		var renderedParagraphs = _p1._0;
-		var latexState = _p1._1;
+		var _p8 = transformParagraphs(paragraphs);
+		var renderedParagraphs = _p8._0;
+		var latexState = _p8._1;
 		return A5(_user$project$MiniLatex_Differ$EditRecord, paragraphs, renderedParagraphs, latexState, idList, 0);
 	});
 var _user$project$MiniLatex_Differ$update = F4(
 	function (seed, transformer, editorRecord, text) {
-		var newParagraphs = _user$project$MiniLatex_Differ$paragraphify(text);
+		var newParagraphs = _user$project$MiniLatex_Differ$logicalParagraphify(text);
 		var diffRecord = A2(_user$project$MiniLatex_Differ$diff, editorRecord.paragraphs, newParagraphs);
 		var diffPacket = A4(_user$project$MiniLatex_Differ$renderDiff, seed, transformer, diffRecord, editorRecord.renderedParagraphs);
 		return A5(_user$project$MiniLatex_Differ$EditRecord, newParagraphs, diffPacket.renderedParagraphs, _user$project$MiniLatex_LatexState$emptyLatexState, diffPacket.idList, diffPacket.idListStart);
@@ -13562,37 +13842,122 @@ var _user$project$MiniLatex_Render$handleFloatedImageRight = F3(
 								'><br>',
 								A2(_elm_lang$core$Basics_ops['++'], label, '</div>')))))));
 	});
-var _user$project$MiniLatex_Render$handleCenterImage = F3(
-	function (url, label, imageAttributes) {
-		var imageCenterLeftPart = function (width) {
-			return A2(
-				_elm_lang$core$Basics_ops['++'],
-				'<div class=\"center\" style=\"width: ',
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					_elm_lang$core$Basics$toString(width + 20),
-					'px; margin-left:auto, margin-right:auto; text-align: center;\">'));
-		};
-		var width = imageAttributes.width;
+var _user$project$MiniLatex_Render$img = F2(
+	function (url, imageAttributs) {
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
-			imageCenterLeftPart(width),
+			'<img src=\"',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				'<img src=\"',
+				url,
 				A2(
 					_elm_lang$core$Basics_ops['++'],
-					url,
+					'\" width=',
 					A2(
 						_elm_lang$core$Basics_ops['++'],
-						'\" width=',
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							_elm_lang$core$Basics$toString(width),
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								' ><br>',
-								A2(_elm_lang$core$Basics_ops['++'], label, '</div>')))))));
+						_elm_lang$core$Basics$toString(imageAttributs.width),
+						' >'))));
+	});
+var _user$project$MiniLatex_Render$div = F2(
+	function (attributes, children) {
+		var childrenString = A2(_elm_lang$core$String$join, '\n', children);
+		var attributeString = A2(_elm_lang$core$String$join, ' ', attributes);
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'<div ',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				attributeString,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					' >\n',
+					A2(_elm_lang$core$Basics_ops['++'], childrenString, '\n</div>'))));
+	});
+var _user$project$MiniLatex_Render$imageFloatLeftStyle = function (imageAttributes) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		'style=\"float: left; width: ',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Basics$toString(imageAttributes.width + 20),
+			'px; margin: 0 10px 7.5px 0; text-align: center;\"'));
+};
+var _user$project$MiniLatex_Render$imageFloatRightStyle = function (imageAttributes) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		'style=\"float: right; width: ',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Basics$toString(imageAttributes.width + 20),
+			'px; margin: 0 0 7.5px 10px; text-align: center;\"'));
+};
+var _user$project$MiniLatex_Render$imageCenterStyle = function (imageAttributes) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		'class=\"center\" style=\"width: ',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Basics$toString(imageAttributes.width + 20),
+			'px; margin-left:auto, margin-right:auto; text-align: center;\"'));
+};
+var _user$project$MiniLatex_Render$handleCenterImage = F3(
+	function (url, label, imageAttributes) {
+		var width = imageAttributes.width;
+		return A2(
+			_user$project$MiniLatex_Render$div,
+			{
+				ctor: '::',
+				_0: _user$project$MiniLatex_Render$imageCenterStyle(imageAttributes),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(_user$project$MiniLatex_Render$img, url, imageAttributes),
+				_1: {
+					ctor: '::',
+					_0: '<br>',
+					_1: {
+						ctor: '::',
+						_0: label,
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
+var _user$project$MiniLatex_Render$a = F2(
+	function (url, label) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'<a href=\"',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				url,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'\"  target=\"_blank\" >\n',
+					A2(_elm_lang$core$Basics_ops['++'], label, '\n</a>'))));
+	});
+var _user$project$MiniLatex_Render$renderSmallSkip = F2(
+	function (latexState, args) {
+		return A2(
+			_user$project$MiniLatex_Render$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: '<br>',
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$MiniLatex_Render$renderBigSkip = F2(
+	function (latexState, args) {
+		return A2(
+			_user$project$MiniLatex_Render$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: '<br><br>',
+				_1: {ctor: '[]'}
+			});
 	});
 var _user$project$MiniLatex_Render$renderCell = function (cell) {
 	var _p0 = cell;
@@ -13678,68 +14043,8 @@ var _user$project$MiniLatex_Render$itemClass = function (level) {
 		'item',
 		_elm_lang$core$Basics$toString(level));
 };
-var _user$project$MiniLatex_Render$spaceify = function (str) {
-	var firstChar = A2(_elm_lang$core$String$left, 1, str);
-	var lastChar = A2(_elm_lang$core$String$right, 1, str);
-	return A2(
-		_elm_lang$core$List$member,
-		str,
-		{
-			ctor: '::',
-			_0: '.',
-			_1: {
-				ctor: '::',
-				_0: ',',
-				_1: {
-					ctor: '::',
-					_0: '?',
-					_1: {
-						ctor: '::',
-						_0: '!',
-						_1: {
-							ctor: '::',
-							_0: ';',
-							_1: {
-								ctor: '::',
-								_0: ':',
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				}
-			}
-		}) ? str : (A2(
-		_elm_lang$core$List$member,
-		firstChar,
-		{
-			ctor: '::',
-			_0: '.',
-			_1: {
-				ctor: '::',
-				_0: ',',
-				_1: {
-					ctor: '::',
-					_0: '?',
-					_1: {
-						ctor: '::',
-						_0: '!',
-						_1: {
-							ctor: '::',
-							_0: ';',
-							_1: {
-								ctor: '::',
-								_0: ':',
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				}
-			}
-		}) ? str : A2(_elm_lang$core$Basics_ops['++'], ' ', str));
-};
-var _user$project$MiniLatex_Render$xRenderString = function (str) {
-	return str;
-};
+var _user$project$MiniLatex_Render$firstChar = _elm_lang$core$String$left(1);
+var _user$project$MiniLatex_Render$lastChar = _elm_lang$core$String$right(1);
 var _user$project$MiniLatex_Render$extractList = function (latexExpression) {
 	var _p3 = latexExpression;
 	if (_p3.ctor === 'LatexList') {
@@ -13774,60 +14079,121 @@ var _user$project$MiniLatex_Render$parseImageAttributes = function (attributeStr
 	var alignValue = A2(_user$project$MiniLatex_KeyValueUtilities$getValue, 'align', kvList);
 	return A3(_user$project$MiniLatex_Render$ImageAttributes, widthValue, floatValue, alignValue);
 };
-var _user$project$MiniLatex_Render$renderImage = F2(
-	function (latexState, args) {
-		var attributeString = A3(_user$project$MiniLatex_Render$renderArg, 2, latexState, args);
-		var imageAttrs = _user$project$MiniLatex_Render$parseImageAttributes(attributeString);
-		var label = A3(_user$project$MiniLatex_Render$renderArg, 1, latexState, args);
-		var url = A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args);
-		return _elm_lang$core$Native_Utils.eq(imageAttrs.$float, 'left') ? A3(_user$project$MiniLatex_Render$handleFloatedImageLeft, url, label, imageAttrs) : (_elm_lang$core$Native_Utils.eq(imageAttrs.$float, 'right') ? A3(_user$project$MiniLatex_Render$handleFloatedImageRight, url, label, imageAttrs) : (_elm_lang$core$Native_Utils.eq(imageAttrs.align, 'center') ? A3(_user$project$MiniLatex_Render$handleCenterImage, url, label, imageAttrs) : A2(
-			_elm_lang$core$Basics_ops['++'],
-			'<image src=\"',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				url,
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'\" ',
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						A2(_user$project$MiniLatex_Render$imageAttributes, imageAttrs, attributeString),
-						' >'))))));
+var _user$project$MiniLatex_Render$NoSpace = {ctor: 'NoSpace'};
+var _user$project$MiniLatex_Render$Space = {ctor: 'Space'};
+var _user$project$MiniLatex_Render$joinType = F2(
+	function (l, r) {
+		var firstCharRight = _user$project$MiniLatex_Render$firstChar(r);
+		var lastCharLeft = _user$project$MiniLatex_Render$lastChar(l);
+		return _elm_lang$core$Native_Utils.eq(l, '') ? _user$project$MiniLatex_Render$NoSpace : (A2(
+			_elm_lang$core$List$member,
+			lastCharLeft,
+			{
+				ctor: '::',
+				_0: '(',
+				_1: {ctor: '[]'}
+			}) ? _user$project$MiniLatex_Render$NoSpace : (A2(
+			_elm_lang$core$List$member,
+			firstCharRight,
+			{
+				ctor: '::',
+				_0: ')',
+				_1: {
+					ctor: '::',
+					_0: '.',
+					_1: {
+						ctor: '::',
+						_0: ',',
+						_1: {
+							ctor: '::',
+							_0: '?',
+							_1: {
+								ctor: '::',
+								_0: '!',
+								_1: {
+									ctor: '::',
+									_0: ';',
+									_1: {
+										ctor: '::',
+										_0: ':',
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}
+			}) ? _user$project$MiniLatex_Render$NoSpace : _user$project$MiniLatex_Render$Space));
 	});
-var _user$project$MiniLatex_Render$renderArg = F3(
-	function (k, latexState, args) {
-		return _elm_lang$core$String$trim(
+var _user$project$MiniLatex_Render$joinDatum2String = F2(
+	function (current, datum) {
+		var _p4 = datum;
+		var acc = _p4._0;
+		var previous = _p4._1;
+		var _p5 = A2(_user$project$MiniLatex_Render$joinType, previous, current);
+		if (_p5.ctor === 'NoSpace') {
+			return {
+				ctor: '_Tuple2',
+				_0: A2(_elm_lang$core$Basics_ops['++'], acc, current),
+				_1: current
+			};
+		} else {
+			return {
+				ctor: '_Tuple2',
+				_0: A2(
+					_elm_lang$core$Basics_ops['++'],
+					acc,
+					A2(_elm_lang$core$Basics_ops['++'], ' ', current)),
+				_1: current
+			};
+		}
+	});
+var _user$project$MiniLatex_Render$joinList = function (stringList) {
+	var start = A2(
+		_elm_lang$core$Maybe$withDefault,
+		'',
+		_elm_lang$core$List$head(stringList));
+	return _elm_lang$core$Tuple$first(
+		A3(
+			_elm_lang$core$List$foldl,
+			_user$project$MiniLatex_Render$joinDatum2String,
+			{ctor: '_Tuple2', _0: '', _1: ''},
+			stringList));
+};
+var _user$project$MiniLatex_Render$renderLatexList = F2(
+	function (latexState, args) {
+		return _user$project$MiniLatex_Render$joinList(
 			A2(
-				_user$project$MiniLatex_Render$render,
-				latexState,
-				A2(_user$project$MiniLatex_Render$getElement, k, args)));
+				_elm_lang$core$List$map,
+				_user$project$MiniLatex_Render$render(latexState),
+				args));
 	});
 var _user$project$MiniLatex_Render$render = F2(
 	function (latexState, latexExpression) {
-		var _p4 = latexExpression;
-		switch (_p4.ctor) {
+		var _p6 = latexExpression;
+		switch (_p6.ctor) {
 			case 'Comment':
-				return _user$project$MiniLatex_Render$renderComment(_p4._0);
+				return _user$project$MiniLatex_Render$renderComment(_p6._0);
 			case 'Macro':
-				return A3(_user$project$MiniLatex_Render$renderMacro, latexState, _p4._0, _p4._1);
+				return A3(_user$project$MiniLatex_Render$renderMacro, latexState, _p6._0, _p6._1);
 			case 'Item':
-				return A3(_user$project$MiniLatex_Render$renderItem, latexState, _p4._0, _p4._1);
+				return A3(_user$project$MiniLatex_Render$renderItem, latexState, _p6._0, _p6._1);
 			case 'InlineMath':
 				return A2(
 					_elm_lang$core$Basics_ops['++'],
-					' $',
-					A2(_elm_lang$core$Basics_ops['++'], _p4._0, '$ '));
+					'$',
+					A2(_elm_lang$core$Basics_ops['++'], _p6._0, '$'));
 			case 'DisplayMath':
 				return A2(
 					_elm_lang$core$Basics_ops['++'],
 					'$$',
-					A2(_elm_lang$core$Basics_ops['++'], _p4._0, '$$'));
+					A2(_elm_lang$core$Basics_ops['++'], _p6._0, '$$'));
 			case 'Environment':
-				return A3(_user$project$MiniLatex_Render$renderEnvironment, latexState, _p4._0, _p4._1);
+				return A3(_user$project$MiniLatex_Render$renderEnvironment, latexState, _p6._0, _p6._1);
 			case 'LatexList':
-				return A2(_user$project$MiniLatex_Render$renderLatexList, latexState, _p4._0);
+				return A2(_user$project$MiniLatex_Render$renderLatexList, latexState, _p6._0);
 			default:
-				return _user$project$MiniLatex_Render$xRenderString(_p4._0);
+				return _p6._0;
 		}
 	});
 var _user$project$MiniLatex_Render$renderEnvironment = F3(
@@ -13835,9 +14201,9 @@ var _user$project$MiniLatex_Render$renderEnvironment = F3(
 		return A3(_user$project$MiniLatex_Render$environmentRenderer, name, latexState, body);
 	});
 var _user$project$MiniLatex_Render$environmentRenderer = function (name) {
-	var _p5 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderEnvironmentDict);
-	if (_p5.ctor === 'Just') {
-		return _p5._0;
+	var _p7 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderEnvironmentDict);
+	if (_p7.ctor === 'Just') {
+		return _p7._0;
 	} else {
 		return _user$project$MiniLatex_Render$renderDefaultEnvironment(name);
 	}
@@ -13941,73 +14307,106 @@ var _user$project$MiniLatex_Render$renderEnvironmentDict = _elm_lang$core$Dict$f
 				ctor: '::',
 				_0: {
 					ctor: '_Tuple2',
-					_0: 'enumerate',
+					_0: 'indent',
 					_1: F2(
 						function (x, y) {
-							return A2(_user$project$MiniLatex_Render$renderEnumerate, x, y);
+							return A2(_user$project$MiniLatex_Render$renderIndentEnvironment, x, y);
 						})
 				},
 				_1: {
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
-						_0: 'eqnarray',
+						_0: 'enumerate',
 						_1: F2(
 							function (x, y) {
-								return A2(_user$project$MiniLatex_Render$renderEqnArray, x, y);
+								return A2(_user$project$MiniLatex_Render$renderEnumerate, x, y);
 							})
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
-							_0: 'equation',
+							_0: 'eqnarray',
 							_1: F2(
 								function (x, y) {
-									return A2(_user$project$MiniLatex_Render$renderEquationEnvironment, x, y);
+									return A2(_user$project$MiniLatex_Render$renderEqnArray, x, y);
 								})
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
-								_0: 'itemize',
+								_0: 'equation',
 								_1: F2(
 									function (x, y) {
-										return A2(_user$project$MiniLatex_Render$renderItemize, x, y);
+										return A2(_user$project$MiniLatex_Render$renderEquationEnvironment, x, y);
 									})
 							},
 							_1: {
 								ctor: '::',
 								_0: {
 									ctor: '_Tuple2',
-									_0: 'macros',
+									_0: 'itemize',
 									_1: F2(
 										function (x, y) {
-											return A2(_user$project$MiniLatex_Render$renderMacros, x, y);
+											return A2(_user$project$MiniLatex_Render$renderItemize, x, y);
 										})
 								},
 								_1: {
 									ctor: '::',
 									_0: {
 										ctor: '_Tuple2',
-										_0: 'tabular',
+										_0: 'macros',
 										_1: F2(
 											function (x, y) {
-												return A2(_user$project$MiniLatex_Render$renderTabular, x, y);
+												return A2(_user$project$MiniLatex_Render$renderMacros, x, y);
 											})
 									},
 									_1: {
 										ctor: '::',
 										_0: {
 											ctor: '_Tuple2',
-											_0: 'verbatim',
+											_0: 'quotation',
 											_1: F2(
 												function (x, y) {
-													return A2(_user$project$MiniLatex_Render$renderVerbatim, x, y);
+													return A2(_user$project$MiniLatex_Render$renderQuotation, x, y);
 												})
 										},
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: {
+												ctor: '_Tuple2',
+												_0: 'tabular',
+												_1: F2(
+													function (x, y) {
+														return A2(_user$project$MiniLatex_Render$renderTabular, x, y);
+													})
+											},
+											_1: {
+												ctor: '::',
+												_0: {
+													ctor: '_Tuple2',
+													_0: 'verbatim',
+													_1: F2(
+														function (x, y) {
+															return A2(_user$project$MiniLatex_Render$renderVerbatim, x, y);
+														})
+												},
+												_1: {
+													ctor: '::',
+													_0: {
+														ctor: '_Tuple2',
+														_0: 'verse',
+														_1: F2(
+															function (x, y) {
+																return A2(_user$project$MiniLatex_Render$renderVerse, x, y);
+															})
+													},
+													_1: {ctor: '[]'}
+												}
+											}
+										}
 									}
 								}
 							}
@@ -14113,6 +14512,21 @@ var _user$project$MiniLatex_Render$renderEquationEnvironment = F2(
 				addendum,
 				A2(_elm_lang$core$Basics_ops['++'], r, '\\end{equation}\n$$\n')));
 	});
+var _user$project$MiniLatex_Render$renderIndentEnvironment = F2(
+	function (latexState, body) {
+		return A2(
+			_user$project$MiniLatex_Render$div,
+			{
+				ctor: '::',
+				_0: 'style=\"margin-left:2em\"',
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(_user$project$MiniLatex_Render$render, latexState, body),
+				_1: {ctor: '[]'}
+			});
+	});
 var _user$project$MiniLatex_Render$renderItemize = F2(
 	function (latexState, body) {
 		return A2(
@@ -14133,6 +14547,21 @@ var _user$project$MiniLatex_Render$renderMacros = F2(
 				A2(_user$project$MiniLatex_Render$render, latexState, body),
 				'\n$$\n'));
 	});
+var _user$project$MiniLatex_Render$renderQuotation = F2(
+	function (latexState, body) {
+		return A2(
+			_user$project$MiniLatex_Render$div,
+			{
+				ctor: '::',
+				_0: 'class=\"quotation\"',
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(_user$project$MiniLatex_Render$render, latexState, body),
+				_1: {ctor: '[]'}
+			});
+	});
 var _user$project$MiniLatex_Render$renderVerbatim = F2(
 	function (latexState, body) {
 		return A2(
@@ -14142,6 +14571,22 @@ var _user$project$MiniLatex_Render$renderVerbatim = F2(
 				_elm_lang$core$Basics_ops['++'],
 				A2(_user$project$MiniLatex_Render$render, latexState, body),
 				'</pre>\n'));
+	});
+var _user$project$MiniLatex_Render$renderVerse = F2(
+	function (latexState, body) {
+		return A2(
+			_user$project$MiniLatex_Render$div,
+			{
+				ctor: '::',
+				_0: 'class=\"verse\"',
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$core$String$trim(
+					A2(_user$project$MiniLatex_Render$render, latexState, body)),
+				_1: {ctor: '[]'}
+			});
 	});
 var _user$project$MiniLatex_Render$renderItem = F3(
 	function (latexState, level, latexExpression) {
@@ -14159,27 +14604,14 @@ var _user$project$MiniLatex_Render$renderItem = F3(
 						A2(_user$project$MiniLatex_Render$render, latexState, latexExpression),
 						'</li>\n'))));
 	});
-var _user$project$MiniLatex_Render$renderLatexList = F2(
-	function (latexState, args) {
-		return A2(
-			_elm_lang$core$String$join,
-			'',
-			A2(
-				_elm_lang$core$List$map,
-				_user$project$MiniLatex_Render$spaceify,
-				A2(
-					_elm_lang$core$List$map,
-					_user$project$MiniLatex_Render$render(latexState),
-					args)));
-	});
 var _user$project$MiniLatex_Render$renderMacro = F3(
 	function (latexState, name, args) {
 		return A3(_user$project$MiniLatex_Render$macroRenderer, name, latexState, args);
 	});
 var _user$project$MiniLatex_Render$macroRenderer = function (name) {
-	var _p6 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderMacroDict);
-	if (_p6.ctor === 'Just') {
-		return _p6._0;
+	var _p8 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderMacroDict);
+	if (_p8.ctor === 'Just') {
+		return _p8._0;
 	} else {
 		return _user$project$MiniLatex_Render$reproduceMacro(name);
 	}
@@ -14199,107 +14631,107 @@ var _user$project$MiniLatex_Render$renderMacroDict = _elm_lang$core$Dict$fromLis
 			ctor: '::',
 			_0: {
 				ctor: '_Tuple2',
-				_0: 'cite',
+				_0: 'bigskip',
 				_1: F2(
 					function (x, y) {
-						return A2(_user$project$MiniLatex_Render$renderCite, x, y);
+						return A2(_user$project$MiniLatex_Render$renderBigSkip, x, y);
 					})
 			},
 			_1: {
 				ctor: '::',
 				_0: {
 					ctor: '_Tuple2',
-					_0: 'code',
+					_0: 'cite',
 					_1: F2(
 						function (x, y) {
-							return A2(_user$project$MiniLatex_Render$renderCode, x, y);
+							return A2(_user$project$MiniLatex_Render$renderCite, x, y);
 						})
 				},
 				_1: {
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
-						_0: 'ellie',
+						_0: 'code',
 						_1: F2(
 							function (x, y) {
-								return A2(_user$project$MiniLatex_Render$renderEllie, x, y);
+								return A2(_user$project$MiniLatex_Render$renderCode, x, y);
 							})
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
-							_0: 'emph',
+							_0: 'ellie',
 							_1: F2(
 								function (x, y) {
-									return A2(_user$project$MiniLatex_Render$renderItalic, x, y);
+									return A2(_user$project$MiniLatex_Render$renderEllie, x, y);
 								})
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
-								_0: 'eqref',
+								_0: 'emph',
 								_1: F2(
 									function (x, y) {
-										return A2(_user$project$MiniLatex_Render$renderEqRef, x, y);
+										return A2(_user$project$MiniLatex_Render$renderItalic, x, y);
 									})
 							},
 							_1: {
 								ctor: '::',
 								_0: {
 									ctor: '_Tuple2',
-									_0: 'href',
+									_0: 'eqref',
 									_1: F2(
 										function (x, y) {
-											return A2(_user$project$MiniLatex_Render$renderHRef, x, y);
+											return A2(_user$project$MiniLatex_Render$renderEqRef, x, y);
 										})
 								},
 								_1: {
 									ctor: '::',
 									_0: {
 										ctor: '_Tuple2',
-										_0: 'iframe',
+										_0: 'href',
 										_1: F2(
 											function (x, y) {
-												return A2(_user$project$MiniLatex_Render$renderIFrame, x, y);
+												return A2(_user$project$MiniLatex_Render$renderHRef, x, y);
 											})
 									},
 									_1: {
 										ctor: '::',
 										_0: {
 											ctor: '_Tuple2',
-											_0: 'image',
+											_0: 'iframe',
 											_1: F2(
 												function (x, y) {
-													return A2(_user$project$MiniLatex_Render$renderImage, x, y);
+													return A2(_user$project$MiniLatex_Render$renderIFrame, x, y);
 												})
 										},
 										_1: {
 											ctor: '::',
 											_0: {
 												ctor: '_Tuple2',
-												_0: 'index',
+												_0: 'image',
 												_1: F2(
 													function (x, y) {
-														return '';
+														return A2(_user$project$MiniLatex_Render$renderImage, x, y);
 													})
 											},
 											_1: {
 												ctor: '::',
 												_0: {
 													ctor: '_Tuple2',
-													_0: 'italic',
+													_0: 'imageref',
 													_1: F2(
 														function (x, y) {
-															return A2(_user$project$MiniLatex_Render$renderItalic, x, y);
+															return A2(_user$project$MiniLatex_Render$renderImageRef, x, y);
 														})
 												},
 												_1: {
 													ctor: '::',
 													_0: {
 														ctor: '_Tuple2',
-														_0: 'label',
+														_0: 'index',
 														_1: F2(
 															function (x, y) {
 																return '';
@@ -14309,183 +14741,216 @@ var _user$project$MiniLatex_Render$renderMacroDict = _elm_lang$core$Dict$fromLis
 														ctor: '::',
 														_0: {
 															ctor: '_Tuple2',
-															_0: 'maketitle',
+															_0: 'italic',
 															_1: F2(
 																function (x, y) {
-																	return '';
+																	return A2(_user$project$MiniLatex_Render$renderItalic, x, y);
 																})
 														},
 														_1: {
 															ctor: '::',
 															_0: {
 																ctor: '_Tuple2',
-																_0: 'mdash',
+																_0: 'label',
 																_1: F2(
 																	function (x, y) {
-																		return '&mdash;';
+																		return '';
 																	})
 															},
 															_1: {
 																ctor: '::',
 																_0: {
 																	ctor: '_Tuple2',
-																	_0: 'ndash',
+																	_0: 'maketitle',
 																	_1: F2(
 																		function (x, y) {
-																			return '&ndash;';
+																			return '';
 																		})
 																},
 																_1: {
 																	ctor: '::',
 																	_0: {
 																		ctor: '_Tuple2',
-																		_0: 'newcommand',
+																		_0: 'mdash',
 																		_1: F2(
 																			function (x, y) {
-																				return A2(_user$project$MiniLatex_Render$renderNewCommand, x, y);
+																				return '&mdash;';
 																			})
 																	},
 																	_1: {
 																		ctor: '::',
 																		_0: {
 																			ctor: '_Tuple2',
-																			_0: 'ref',
+																			_0: 'ndash',
 																			_1: F2(
 																				function (x, y) {
-																					return A2(_user$project$MiniLatex_Render$renderRef, x, y);
+																					return '&ndash;';
 																				})
 																		},
 																		_1: {
 																			ctor: '::',
 																			_0: {
 																				ctor: '_Tuple2',
-																				_0: 'section',
+																				_0: 'newcommand',
 																				_1: F2(
 																					function (x, y) {
-																						return A2(_user$project$MiniLatex_Render$renderSection, x, y);
+																						return A2(_user$project$MiniLatex_Render$renderNewCommand, x, y);
 																					})
 																			},
 																			_1: {
 																				ctor: '::',
 																				_0: {
 																					ctor: '_Tuple2',
-																					_0: 'section*',
+																					_0: 'ref',
 																					_1: F2(
 																						function (x, y) {
-																							return A2(_user$project$MiniLatex_Render$renderSectionStar, x, y);
+																							return A2(_user$project$MiniLatex_Render$renderRef, x, y);
 																						})
 																				},
 																				_1: {
 																					ctor: '::',
 																					_0: {
 																						ctor: '_Tuple2',
-																						_0: 'setcounter',
+																						_0: 'section',
 																						_1: F2(
 																							function (x, y) {
-																								return '';
+																								return A2(_user$project$MiniLatex_Render$renderSection, x, y);
 																							})
 																					},
 																					_1: {
 																						ctor: '::',
 																						_0: {
 																							ctor: '_Tuple2',
-																							_0: 'strong',
+																							_0: 'section*',
 																							_1: F2(
 																								function (x, y) {
-																									return A2(_user$project$MiniLatex_Render$renderStrong, x, y);
+																									return A2(_user$project$MiniLatex_Render$renderSectionStar, x, y);
 																								})
 																						},
 																						_1: {
 																							ctor: '::',
 																							_0: {
 																								ctor: '_Tuple2',
-																								_0: 'subheading',
+																								_0: 'setcounter',
 																								_1: F2(
 																									function (x, y) {
-																										return A2(_user$project$MiniLatex_Render$renderSubheading, x, y);
+																										return '';
 																									})
 																							},
 																							_1: {
 																								ctor: '::',
 																								_0: {
 																									ctor: '_Tuple2',
-																									_0: 'subsection',
+																									_0: 'smallskip',
 																									_1: F2(
 																										function (x, y) {
-																											return A2(_user$project$MiniLatex_Render$renderSubsection, x, y);
+																											return A2(_user$project$MiniLatex_Render$renderSmallSkip, x, y);
 																										})
 																								},
 																								_1: {
 																									ctor: '::',
 																									_0: {
 																										ctor: '_Tuple2',
-																										_0: 'subsection*',
+																										_0: 'strong',
 																										_1: F2(
 																											function (x, y) {
-																												return A2(_user$project$MiniLatex_Render$renderSubsectionStar, x, y);
+																												return A2(_user$project$MiniLatex_Render$renderStrong, x, y);
 																											})
 																									},
 																									_1: {
 																										ctor: '::',
 																										_0: {
 																											ctor: '_Tuple2',
-																											_0: 'subsubsection',
+																											_0: 'subheading',
 																											_1: F2(
 																												function (x, y) {
-																													return A2(_user$project$MiniLatex_Render$renderSubSubsection, x, y);
+																													return A2(_user$project$MiniLatex_Render$renderSubheading, x, y);
 																												})
 																										},
 																										_1: {
 																											ctor: '::',
 																											_0: {
 																												ctor: '_Tuple2',
-																												_0: 'subsubsection*',
+																												_0: 'subsection',
 																												_1: F2(
 																													function (x, y) {
-																														return A2(_user$project$MiniLatex_Render$renderSubSubsectionStar, x, y);
+																														return A2(_user$project$MiniLatex_Render$renderSubsection, x, y);
 																													})
 																											},
 																											_1: {
 																												ctor: '::',
 																												_0: {
 																													ctor: '_Tuple2',
-																													_0: 'title',
+																													_0: 'subsection*',
 																													_1: F2(
 																														function (x, y) {
-																															return A2(_user$project$MiniLatex_Render$renderTitle, x, y);
+																															return A2(_user$project$MiniLatex_Render$renderSubsectionStar, x, y);
 																														})
 																												},
 																												_1: {
 																													ctor: '::',
 																													_0: {
 																														ctor: '_Tuple2',
-																														_0: 'term',
+																														_0: 'subsubsection',
 																														_1: F2(
 																															function (x, y) {
-																																return A2(_user$project$MiniLatex_Render$renderTerm, x, y);
+																																return A2(_user$project$MiniLatex_Render$renderSubSubsection, x, y);
 																															})
 																													},
 																													_1: {
 																														ctor: '::',
 																														_0: {
 																															ctor: '_Tuple2',
-																															_0: 'xlink',
+																															_0: 'subsubsection*',
 																															_1: F2(
 																																function (x, y) {
-																																	return A2(_user$project$MiniLatex_Render$renderXLink, x, y);
+																																	return A2(_user$project$MiniLatex_Render$renderSubSubsectionStar, x, y);
 																																})
 																														},
 																														_1: {
 																															ctor: '::',
 																															_0: {
 																																ctor: '_Tuple2',
-																																_0: 'xlinkPublic',
+																																_0: 'title',
 																																_1: F2(
 																																	function (x, y) {
-																																		return A2(_user$project$MiniLatex_Render$renderXLinkPublic, x, y);
+																																		return A2(_user$project$MiniLatex_Render$renderTitle, x, y);
 																																	})
 																															},
-																															_1: {ctor: '[]'}
+																															_1: {
+																																ctor: '::',
+																																_0: {
+																																	ctor: '_Tuple2',
+																																	_0: 'term',
+																																	_1: F2(
+																																		function (x, y) {
+																																			return A2(_user$project$MiniLatex_Render$renderTerm, x, y);
+																																		})
+																																},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {
+																																		ctor: '_Tuple2',
+																																		_0: 'xlink',
+																																		_1: F2(
+																																			function (x, y) {
+																																				return A2(_user$project$MiniLatex_Render$renderXLink, x, y);
+																																			})
+																																	},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {
+																																			ctor: '_Tuple2',
+																																			_0: 'xlinkPublic',
+																																			_1: F2(
+																																				function (x, y) {
+																																					return A2(_user$project$MiniLatex_Render$renderXLinkPublic, x, y);
+																																				})
+																																		},
+																																		_1: {ctor: '[]'}
+																																	}
+																																}
+																															}
 																														}
 																													}
 																												}
@@ -14531,6 +14996,14 @@ var _user$project$MiniLatex_Render$renderBozo = F2(
 						_elm_lang$core$Basics_ops['++'],
 						A3(_user$project$MiniLatex_Render$renderArg, 1, latexState, args),
 						'}'))));
+	});
+var _user$project$MiniLatex_Render$renderArg = F3(
+	function (k, latexState, args) {
+		return _elm_lang$core$String$trim(
+			A2(
+				_user$project$MiniLatex_Render$render,
+				latexState,
+				A2(_user$project$MiniLatex_Render$getElement, k, args)));
 	});
 var _user$project$MiniLatex_Render$renderCite = F2(
 	function (latexState, args) {
@@ -14608,7 +15081,7 @@ var _user$project$MiniLatex_Render$renderHRef = F2(
 		var url = A3(_user$project$MiniLatex_Render$renderArg, 0, _user$project$MiniLatex_LatexState$emptyLatexState, args);
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
-			' <a href=\"',
+			'<a href=\"',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
 				url,
@@ -14655,6 +15128,147 @@ var _user$project$MiniLatex_Render$renderIFrame = F2(
 									_elm_lang$core$Basics_ops['++'],
 									'\" target=_blank>',
 									A2(_elm_lang$core$Basics_ops['++'], title, '</a></center>'))))))));
+	});
+var _user$project$MiniLatex_Render$renderImage = F2(
+	function (latexState, args) {
+		var attributeString = A3(_user$project$MiniLatex_Render$renderArg, 2, latexState, args);
+		var imageAttrs = _user$project$MiniLatex_Render$parseImageAttributes(attributeString);
+		var label = A3(_user$project$MiniLatex_Render$renderArg, 1, latexState, args);
+		var url = A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args);
+		return _elm_lang$core$Native_Utils.eq(imageAttrs.$float, 'left') ? A2(
+			_user$project$MiniLatex_Render$div,
+			{
+				ctor: '::',
+				_0: _user$project$MiniLatex_Render$imageFloatLeftStyle(imageAttrs),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(_user$project$MiniLatex_Render$img, url, imageAttrs),
+				_1: {
+					ctor: '::',
+					_0: '<br>',
+					_1: {
+						ctor: '::',
+						_0: label,
+						_1: {ctor: '[]'}
+					}
+				}
+			}) : (_elm_lang$core$Native_Utils.eq(imageAttrs.$float, 'right') ? A2(
+			_user$project$MiniLatex_Render$div,
+			{
+				ctor: '::',
+				_0: _user$project$MiniLatex_Render$imageFloatRightStyle(imageAttrs),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(_user$project$MiniLatex_Render$img, url, imageAttrs),
+				_1: {
+					ctor: '::',
+					_0: '<br>',
+					_1: {
+						ctor: '::',
+						_0: label,
+						_1: {ctor: '[]'}
+					}
+				}
+			}) : (_elm_lang$core$Native_Utils.eq(imageAttrs.align, 'center') ? A2(
+			_user$project$MiniLatex_Render$div,
+			{
+				ctor: '::',
+				_0: _user$project$MiniLatex_Render$imageCenterStyle(imageAttrs),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(_user$project$MiniLatex_Render$img, url, imageAttrs),
+				_1: {
+					ctor: '::',
+					_0: '<br>',
+					_1: {
+						ctor: '::',
+						_0: label,
+						_1: {ctor: '[]'}
+					}
+				}
+			}) : A2(
+			_elm_lang$core$Basics_ops['++'],
+			'<image src=\"',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				url,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'\" ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						A2(_user$project$MiniLatex_Render$imageAttributes, imageAttrs, attributeString),
+						' >'))))));
+	});
+var _user$project$MiniLatex_Render$renderImageRef = F2(
+	function (latexState, args) {
+		var attributeString = A3(_user$project$MiniLatex_Render$renderArg, 2, latexState, args);
+		var imageAttrs = _user$project$MiniLatex_Render$parseImageAttributes(attributeString);
+		var imageUrl = A3(_user$project$MiniLatex_Render$renderArg, 1, latexState, args);
+		var url = A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args);
+		return _elm_lang$core$Native_Utils.eq(imageAttrs.$float, 'left') ? A2(
+			_user$project$MiniLatex_Render$a,
+			url,
+			A2(
+				_user$project$MiniLatex_Render$div,
+				{
+					ctor: '::',
+					_0: _user$project$MiniLatex_Render$imageFloatLeftStyle(imageAttrs),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(_user$project$MiniLatex_Render$img, imageUrl, imageAttrs),
+					_1: {ctor: '[]'}
+				})) : (_elm_lang$core$Native_Utils.eq(imageAttrs.$float, 'right') ? A2(
+			_user$project$MiniLatex_Render$a,
+			url,
+			A2(
+				_user$project$MiniLatex_Render$div,
+				{
+					ctor: '::',
+					_0: _user$project$MiniLatex_Render$imageFloatRightStyle(imageAttrs),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(_user$project$MiniLatex_Render$img, imageUrl, imageAttrs),
+					_1: {ctor: '[]'}
+				})) : (_elm_lang$core$Native_Utils.eq(imageAttrs.align, 'center') ? A2(
+			_user$project$MiniLatex_Render$a,
+			url,
+			A2(
+				_user$project$MiniLatex_Render$div,
+				{
+					ctor: '::',
+					_0: _user$project$MiniLatex_Render$imageCenterStyle(imageAttrs),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(_user$project$MiniLatex_Render$img, imageUrl, imageAttrs),
+					_1: {ctor: '[]'}
+				})) : A2(
+			_user$project$MiniLatex_Render$a,
+			url,
+			A2(
+				_user$project$MiniLatex_Render$div,
+				{
+					ctor: '::',
+					_0: _user$project$MiniLatex_Render$imageCenterStyle(imageAttrs),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(_user$project$MiniLatex_Render$img, imageUrl, imageAttrs),
+					_1: {ctor: '[]'}
+				}))));
 	});
 var _user$project$MiniLatex_Render$renderItalic = F2(
 	function (latexState, args) {
@@ -14891,11 +15505,14 @@ var _user$project$MiniLatex_Render$renderString = F3(
 	function (parser, latexState, str) {
 		var parserOutput = A2(_elm_tools$parser$Parser$run, parser, str);
 		var renderOutput = function () {
-			var _p7 = parserOutput;
-			if (_p7.ctor === 'Ok') {
-				return A2(_user$project$MiniLatex_Render$render, latexState, _p7._0);
+			var _p9 = parserOutput;
+			if (_p9.ctor === 'Ok') {
+				return A2(_user$project$MiniLatex_Render$render, latexState, _p9._0);
 			} else {
-				return 'PARSE ERROR';
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					'Error: ',
+					_elm_lang$core$Basics$toString(_p9._0));
 			}
 		}();
 		return renderOutput;
@@ -15375,7 +15992,7 @@ var _user$project$MiniLatex_LatexDiffer$update = F3(
 	});
 var _user$project$MiniLatex_LatexDiffer$initialize2 = F2(
 	function (latexState, text) {
-		var paragraphs = _user$project$MiniLatex_Differ$paragraphify(
+		var paragraphs = _user$project$MiniLatex_Differ$logicalParagraphify(
 			_user$project$MiniLatex_LatexDiffer$prepareContentForLatex(text));
 		var _p0 = A2(_user$project$MiniLatex_Accumulator$parseParagraphs, _user$project$MiniLatex_LatexState$emptyLatexState, paragraphs);
 		var latexExpressionList = _p0._0;
@@ -15415,6 +16032,28 @@ var _user$project$MiniLatex_Driver$setup = F2(
 	function (seed, text) {
 		return A3(_user$project$MiniLatex_LatexDiffer$safeUpdate, seed, _user$project$MiniLatex_Differ$emptyEditRecord, text);
 	});
+var _user$project$MiniLatex_Driver$getRenderedText = F2(
+	function (macroDefinitions, editRecord) {
+		var paragraphs = editRecord.renderedParagraphs;
+		return function (x) {
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				macroDefinitions,
+				A2(_elm_lang$core$Basics_ops['++'], '\n\n', x));
+		}(
+			A2(
+				_elm_lang$core$String$join,
+				'\n\n',
+				A2(
+					_elm_lang$core$List$map,
+					function (para) {
+						return A2(
+							_elm_lang$core$Basics_ops['++'],
+							'<p>\n',
+							A2(_elm_lang$core$Basics_ops['++'], para, '\n</p>'));
+					},
+					paragraphs)));
+	});
 var _user$project$MiniLatex_Driver$pTags = function (editRecord) {
 	var infix = A2(
 		_elm_lang$core$List$map,
@@ -15433,7 +16072,7 @@ var _user$project$MiniLatex_Driver$pTags = function (editRecord) {
 		prefix,
 		A2(_elm_lang$core$Basics_ops['++'], infix, suffix));
 };
-var _user$project$MiniLatex_Driver$getRenderedText = F2(
+var _user$project$MiniLatex_Driver$getRenderedText2 = F2(
 	function (macroDefinitions, editRecord) {
 		var pTagList = _user$project$MiniLatex_Driver$pTags(editRecord);
 		var paragraphs = editRecord.renderedParagraphs;
@@ -15461,6 +16100,13 @@ var _user$project$MiniLatex_Driver$getRenderedText = F2(
 					paragraphs,
 					pTagList)));
 	});
+var _user$project$MiniLatex_Driver$parse = function (text) {
+	return A2(
+		_elm_lang$core$List$map,
+		_user$project$MiniLatex_Parser$parseParagraph,
+		_user$project$MiniLatex_Differ$logicalParagraphify(
+			_user$project$MiniLatex_LatexDiffer$prepareContentForLatex(text)));
+};
 var _user$project$MiniLatex_Driver$render = F2(
 	function (macroDefinitions, text) {
 		return A2(
@@ -15469,7 +16115,40 @@ var _user$project$MiniLatex_Driver$render = F2(
 			A2(_user$project$MiniLatex_LatexDiffer$initialize2, _user$project$MiniLatex_LatexState$emptyLatexState, text));
 	});
 
-var _user$project$Main$initialSourceText = '\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nSee the article\n\\href{http://www.knode.io/#@public/445}{MiniLatex}\nat \\href{http://www.knode.io}{www.knode.io} for more info.\n\nFeel free to edit and re-render the text on the left.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\\section{Appendix}\n\n\n\\begin{itemize}\n%%\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n%%\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n%%\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n%%\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nAlso, contributions to help improve the open-source\n\\href{https://github.com/jxxcarlson/minilatex}{MiniLatex Parser-Renderer}\nare most welcome.\n\nPlease send comments to jxxcarlson at gmail.\n';
+var _user$project$Main$initialSourceText = '\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nSee the article\n\\href{http://www.knode.io/#@public/445}{MiniLatex}\nat \\href{http://www.knode.io}{www.knode.io} for more info.\n\nFeel free to edit and re-render the text on the left.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\\section{Appendix}\n\nArticles and code:\n\n\\begin{itemize}\n%%\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n%%\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n%%\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n%%\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nAlso, contributions to help improve the open-source\nMiniLatex Parser-Renderer are most welcome.\nHere is the \\href{https://github.com/jxxcarlson/minilatex}{GitHub repository}.\nThe MiniLatex Demo as well as the app at knode.io are written in\n\\href{http://elm-lang.org/}{Elm}.\n\nPlease send comments to jxxcarlson at gmail.\n';
+var _user$project$Main$textStyle2 = F4(
+	function (width, height, offset, color) {
+		return _elm_lang$html$Html_Attributes$style(
+			{
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'width', _1: width},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'height', _1: height},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'padding', _1: '15px'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '0'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'margin-left', _1: offset},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'background-color', _1: color},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'overflow', _1: 'scroll'},
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}
+			});
+	});
 var _user$project$Main$textStyle = F4(
 	function (width, height, offset, color) {
 		return _elm_lang$html$Html_Attributes$style(
@@ -15499,6 +16178,7 @@ var _user$project$Main$textStyle = F4(
 				}
 			});
 	});
+var _user$project$Main$parseResultsStyle = A4(_user$project$Main$textStyle2, '400px', '600px', '20px', '#eee');
 var _user$project$Main$renderedSourceStyle = A4(_user$project$Main$textStyle, '400px', '600px', '20px', '#eee');
 var _user$project$Main$editorStyle = A4(_user$project$Main$textStyle, '400px', '635px', '20px', '#eef');
 var _user$project$Main$labelStyle = _elm_lang$html$Html_Attributes$style(
@@ -15519,6 +16199,50 @@ var _user$project$Main$labelStyle = _elm_lang$html$Html_Attributes$style(
 			}
 		}
 	});
+var _user$project$Main$buttonStyleWide = function (offSet) {
+	var realOffset = function (x) {
+		return A2(_elm_lang$core$Basics_ops['++'], x, 'px');
+	}(
+		_elm_lang$core$Basics$toString(offSet + 0));
+	return _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'backgroundColor', _1: 'rgb(100,100,200)'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'width', _1: '190px'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'height', _1: '25px'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'margin-left', _1: realOffset},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'margin-right', _1: '8px'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'font-size', _1: '9pt'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'border', _1: 'none'},
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		});
+};
 var _user$project$Main$buttonStyle = function (offSet) {
 	var realOffset = function (x) {
 		return A2(_elm_lang$core$Basics_ops['++'], x, 'px');
@@ -15639,6 +16363,41 @@ var _user$project$Main$spacer = function (n) {
 		},
 		{ctor: '[]'});
 };
+var _user$project$Main$parseTitleButton = function (offSet) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _user$project$Main$buttonStyleWide(offSet),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Parse results'),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$buttonBarBlank = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$style(
+			{
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '0'},
+					_1: {ctor: '[]'}
+				}
+			}),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _user$project$Main$parseTitleButton(0),
+		_1: {ctor: '[]'}
+	});
 var _user$project$Main$renderedSourcePane = function (model) {
 	var renderedText = A2(_user$project$MiniLatex_Driver$getRenderedText, '', model.editRecord);
 	return A2(
@@ -15661,6 +16420,61 @@ var _user$project$Main$renderedSourcePane = function (model) {
 			}
 		},
 		{ctor: '[]'});
+};
+var _user$project$Main$prettyPrint = function (parseResult) {
+	return A2(
+		_elm_lang$core$String$join,
+		'\n\n',
+		A2(
+			_elm_lang$core$List$map,
+			A2(_elm_community$string_extra$String_Extra$replace, ' ', '\n '),
+			A2(_elm_lang$core$List$map, _elm_lang$core$Basics$toString, parseResult)));
+};
+var _user$project$Main$parseResultPane = function (model) {
+	return A2(
+		_elm_lang$html$Html$pre,
+		{
+			ctor: '::',
+			_0: _user$project$Main$parseResultsStyle,
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(
+				_user$project$Main$prettyPrint(model.parseResult)),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$showParseResult = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Main$spacer(20),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$buttonBarBlank,
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$spacer(5),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$parseResultPane(model),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
 };
 var _user$project$Main$link = F2(
 	function (url, linkText) {
@@ -15746,6 +16560,14 @@ var _user$project$Main$headerRibbon = A2(
 			_1: {ctor: '[]'}
 		}
 	});
+var _user$project$Main$appWidth = function (configuration) {
+	var _p0 = configuration;
+	if (_p0.ctor === 'Standard') {
+		return '900px';
+	} else {
+		return '1350px';
+	}
+};
 var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
@@ -15779,10 +16601,31 @@ var _user$project$Main$sendToJs = _elm_lang$core$Native_Platform.outgoingPort(
 	function (v) {
 		return v;
 	});
-var _user$project$Main$Model = F3(
-	function (a, b, c) {
-		return {sourceText: a, editRecord: b, seed: c};
+var _user$project$Main$Model = F5(
+	function (a, b, c, d, e) {
+		return {sourceText: a, parseResult: b, editRecord: c, seed: d, configuration: e};
 	});
+var _user$project$Main$ShowParseResults = {ctor: 'ShowParseResults'};
+var _user$project$Main$Standard = {ctor: 'Standard'};
+var _user$project$Main$ToggleConfiguration = {ctor: 'ToggleConfiguration'};
+var _user$project$Main$toggleConfigButton = function (offSet) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ToggleConfiguration),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$buttonStyleWide(offSet),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Toggle display'),
+			_1: {ctor: '[]'}
+		});
+};
 var _user$project$Main$NewSeed = function (a) {
 	return {ctor: 'NewSeed', _0: a};
 };
@@ -15790,7 +16633,9 @@ var _user$project$Main$init = function () {
 	var model = {
 		sourceText: _user$project$Main$initialSourceText,
 		editRecord: A2(_user$project$MiniLatex_Driver$setup, 0, _user$project$Main$initialSourceText),
-		seed: 0
+		parseResult: _user$project$MiniLatex_Driver$parse(_user$project$Main$initialSourceText),
+		seed: 0,
+		configuration: _user$project$Main$Standard
 	};
 	return {
 		ctor: '_Tuple2',
@@ -15803,15 +16648,18 @@ var _user$project$Main$init = function () {
 }();
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p0 = msg;
-		switch (_p0.ctor) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
 			case 'FastRender':
 				var newEditRecord = A3(_user$project$MiniLatex_Driver$update, model.seed, model.editRecord, model.sourceText);
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{editRecord: newEditRecord}),
+						{
+							editRecord: newEditRecord,
+							parseResult: _user$project$MiniLatex_Driver$parse(model.sourceText)
+						}),
 					_1: _elm_lang$core$Platform_Cmd$batch(
 						{
 							ctor: '::',
@@ -15833,7 +16681,8 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							editRecord: A2(_user$project$MiniLatex_Driver$setup, model.seed, model.sourceText)
+							editRecord: A2(_user$project$MiniLatex_Driver$setup, model.seed, model.sourceText),
+							parseResult: _user$project$MiniLatex_Driver$parse(model.sourceText)
 						}),
 					_1: _user$project$Main$sendToJs(
 						A2(
@@ -15876,7 +16725,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{sourceText: _p0._0}),
+						{sourceText: _p1._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'GenerateSeed':
@@ -15888,14 +16737,33 @@ var _user$project$Main$update = F2(
 						_user$project$Main$NewSeed,
 						A2(_elm_lang$core$Random$int, 1, 10000))
 				};
-			default:
+			case 'NewSeed':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{seed: _p0._0}),
+						{seed: _p1._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			default:
+				var _p2 = model.configuration;
+				if (_p2.ctor === 'ShowParseResults') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{configuration: _user$project$Main$Standard}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{configuration: _user$project$Main$ShowParseResults}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
 		}
 	});
 var _user$project$Main$GenerateSeed = {ctor: 'GenerateSeed'};
@@ -16070,7 +16938,11 @@ var _user$project$Main$buttonBarRight = A2(
 		_1: {
 			ctor: '::',
 			_0: _user$project$Main$fastRenderButton(0),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$toggleConfigButton(0),
+				_1: {ctor: '[]'}
+			}
 		}
 	});
 var _user$project$Main$renderedSource = function (model) {
@@ -16104,7 +16976,7 @@ var _user$project$Main$renderedSource = function (model) {
 			}
 		});
 };
-var _user$project$Main$mainView = function (model) {
+var _user$project$Main$standardView = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
@@ -16130,6 +17002,44 @@ var _user$project$Main$mainView = function (model) {
 			}
 		});
 };
+var _user$project$Main$parseResultsView = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _user$project$Main$headerRibbon,
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$editor(model),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$renderedSource(model),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$showParseResult(model),
+						_1: {
+							ctor: '::',
+							_0: _user$project$Main$spacer(5),
+							_1: {
+								ctor: '::',
+								_0: _user$project$Main$footerRibbon,
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$Main$mainView = function (model) {
+	var _p3 = model.configuration;
+	if (_p3.ctor === 'Standard') {
+		return _user$project$Main$standardView(model);
+	} else {
+		return _user$project$Main$parseResultsView(model);
+	}
+};
 var _user$project$Main$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -16138,7 +17048,11 @@ var _user$project$Main$view = function (model) {
 			_0: _elm_lang$html$Html_Attributes$style(
 				{
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'width', _1: '900px'},
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'width',
+						_1: _user$project$Main$appWidth(model.configuration)
+					},
 					_1: {
 						ctor: '::',
 						_0: {ctor: '_Tuple2', _0: 'margin', _1: 'auto'},
