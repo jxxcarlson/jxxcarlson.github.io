@@ -12627,6 +12627,75 @@ var _user$project$MiniLatex_Parser$macroName = A2(
 				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
 				_user$project$MiniLatex_Parser$mustFail(_user$project$MiniLatex_Parser$reservedWord)),
 			_user$project$MiniLatex_Parser$innerMacroName)));
+var _user$project$MiniLatex_Parser$hasMath = function (expr) {
+	hasMath:
+	while (true) {
+		var _p1 = expr;
+		switch (_p1.ctor) {
+			case 'LXString':
+				return false;
+			case 'Comment':
+				return false;
+			case 'Item':
+				var _v2 = _p1._1;
+				expr = _v2;
+				continue hasMath;
+			case 'InlineMath':
+				return true;
+			case 'DisplayMath':
+				return true;
+			case 'Macro':
+				return A3(
+					_elm_lang$core$List$foldr,
+					F2(
+						function (x, acc) {
+							return _user$project$MiniLatex_Parser$hasMath(x) || acc;
+						}),
+					false,
+					_p1._1);
+			case 'Environment':
+				return A2(_user$project$MiniLatex_Parser$envHasMath, _p1._0, _p1._1);
+			default:
+				return A3(
+					_elm_lang$core$List$foldr,
+					F2(
+						function (x, acc) {
+							return _user$project$MiniLatex_Parser$hasMath(x) || acc;
+						}),
+					false,
+					_p1._0);
+		}
+	}
+};
+var _user$project$MiniLatex_Parser$envHasMath = F2(
+	function (envType, expr) {
+		return A2(
+			_elm_lang$core$List$member,
+			envType,
+			{
+				ctor: '::',
+				_0: 'equation',
+				_1: {
+					ctor: '::',
+					_0: 'align',
+					_1: {
+						ctor: '::',
+						_0: 'eqnarray',
+						_1: {ctor: '[]'}
+					}
+				}
+			}) || _user$project$MiniLatex_Parser$hasMath(expr);
+	});
+var _user$project$MiniLatex_Parser$listHasMath = function (list) {
+	return A3(
+		_elm_lang$core$List$foldr,
+		F2(
+			function (x, acc) {
+				return _user$project$MiniLatex_Parser$hasMath(x) || acc;
+			}),
+		false,
+		list);
+};
 var _user$project$MiniLatex_Parser$LatexList = function (a) {
 	return {ctor: 'LatexList', _0: a};
 };
@@ -12794,7 +12863,7 @@ var _user$project$MiniLatex_Parser$arg = A2(
 								_1: {
 									ctor: '::',
 									_0: _elm_tools$parser$Parser$lazy(
-										function (_p1) {
+										function (_p2) {
 											return _user$project$MiniLatex_Parser$macro;
 										}),
 									_1: {ctor: '[]'}
@@ -13116,9 +13185,9 @@ var _user$project$MiniLatex_Parser$parseEnvirnomentDict = _elm_lang$core$Dict$fr
 		}
 	});
 var _user$project$MiniLatex_Parser$environmentParser = function (name) {
-	var _p2 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Parser$parseEnvirnomentDict);
-	if (_p2.ctor === 'Just') {
-		return _p2._0;
+	var _p3 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Parser$parseEnvirnomentDict);
+	if (_p3.ctor === 'Just') {
+		return _p3._0;
 	} else {
 		return _user$project$MiniLatex_Parser$standardEnvironmentBody;
 	}
@@ -13158,7 +13227,7 @@ var _user$project$MiniLatex_Parser$parse = _elm_tools$parser$Parser$oneOf(
 		_1: {
 			ctor: '::',
 			_0: _elm_tools$parser$Parser$lazy(
-				function (_p3) {
+				function (_p4) {
 					return _user$project$MiniLatex_Parser$environment;
 				}),
 			_1: {
@@ -13188,7 +13257,7 @@ var _user$project$MiniLatex_Parser$environment = A2(
 	_elm_tools$parser$Parser$inContext,
 	'environment',
 	_elm_tools$parser$Parser$lazy(
-		function (_p4) {
+		function (_p5) {
 			return A2(_elm_tools$parser$Parser$andThen, _user$project$MiniLatex_Parser$environmentOfType, _user$project$MiniLatex_Parser$beginWord);
 		}));
 var _user$project$MiniLatex_Parser$environmentOfType = function (envType) {
@@ -13213,8 +13282,12 @@ var _user$project$MiniLatex_Parser$environmentOfType = function (envType) {
 								_0: 'verbatim',
 								_1: {
 									ctor: '::',
-									_0: 'verse',
-									_1: {ctor: '[]'}
+									_0: 'listing',
+									_1: {
+										ctor: '::',
+										_0: 'verse',
+										_1: {ctor: '[]'}
+									}
 								}
 							}
 						}
@@ -13235,14 +13308,17 @@ var _user$project$MiniLatex_Parser$latexList = A2(
 		_user$project$MiniLatex_Parser$LatexList,
 		A2(
 			_elm_tools$parser$Parser_ops['|='],
-			_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+			A2(
+				_elm_tools$parser$Parser_ops['|.'],
+				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+				_user$project$MiniLatex_Parser$ws),
 			A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$oneOrMore, _user$project$MiniLatex_Parser$parse))));
 var _user$project$MiniLatex_Parser$parseParagraph = function (text) {
 	var expr = A2(_elm_tools$parser$Parser$run, _user$project$MiniLatex_Parser$latexList, text);
-	var _p5 = expr;
-	if (_p5.ctor === 'Ok') {
-		if (_p5._0.ctor === 'LatexList') {
-			return _p5._0._0;
+	var _p6 = expr;
+	if (_p6.ctor === 'Ok') {
+		if (_p6._0.ctor === 'LatexList') {
+			return _p6._0._0;
 		} else {
 			return {
 				ctor: '::',
@@ -13251,7 +13327,7 @@ var _user$project$MiniLatex_Parser$parseParagraph = function (text) {
 			};
 		}
 	} else {
-		var _p6 = _p5._0;
+		var _p7 = _p6._0;
 		return {
 			ctor: '::',
 			_0: _user$project$MiniLatex_Parser$LXString(
@@ -13263,14 +13339,245 @@ var _user$project$MiniLatex_Parser$parseParagraph = function (text) {
 						'<pre class=\"errormessage\">',
 						A2(
 							_elm_lang$core$Basics_ops['++'],
-							_elm_lang$core$Basics$toString(_p6.problem),
+							_elm_lang$core$Basics$toString(_p7.problem),
 							A2(
 								_elm_lang$core$Basics_ops['++'],
 								' </pre><strong>in </strong> </span><pre class=\"errormessage\">',
-								A2(_elm_lang$core$Basics_ops['++'], _p6.source, '</pre>')))))),
+								A2(_elm_lang$core$Basics_ops['++'], _p7.source, '</pre>')))))),
 			_1: {ctor: '[]'}
 		};
 	}
+};
+
+var _user$project$MiniLatex_Paragraph$paragraphify = function (text) {
+	return A2(
+		_elm_lang$core$List$map,
+		function (_p0) {
+			return function (x) {
+				return A2(_elm_lang$core$Basics_ops['++'], x, '\n\n');
+			}(
+				_elm_lang$core$String$trim(_p0));
+		},
+		A2(
+			_elm_lang$core$List$filter,
+			function (x) {
+				return !_elm_lang$core$Native_Utils.eq(
+					_elm_lang$core$String$length(x),
+					0);
+			},
+			A3(
+				_elm_lang$core$Regex$split,
+				_elm_lang$core$Regex$All,
+				_elm_lang$core$Regex$regex('\\n\\n+'),
+				text)));
+};
+var _user$project$MiniLatex_Paragraph$fixLine = function (line) {
+	return _elm_lang$core$Native_Utils.eq(line, '') ? '\n' : line;
+};
+var _user$project$MiniLatex_Paragraph$joinLines = F2(
+	function (a, b) {
+		var _p1 = {ctor: '_Tuple2', _0: a, _1: b};
+		_v0_2:
+		do {
+			_v0_1:
+			do {
+				switch (_p1._0) {
+					case '':
+						return b;
+					case '\n':
+						switch (_p1._1) {
+							case '':
+								break _v0_1;
+							case '\n':
+								break _v0_2;
+							default:
+								break _v0_2;
+						}
+					default:
+						switch (_p1._1) {
+							case '':
+								break _v0_1;
+							case '\n':
+								return A2(_elm_lang$core$Basics_ops['++'], a, '\n');
+							default:
+								return A2(
+									_elm_lang$core$Basics_ops['++'],
+									_p1._0,
+									A2(_elm_lang$core$Basics_ops['++'], '\n', _p1._1));
+						}
+				}
+			} while(false);
+			return a;
+		} while(false);
+		return A2(_elm_lang$core$Basics_ops['++'], '\n', b);
+	});
+var _user$project$MiniLatex_Paragraph$getEndArg = function (line) {
+	var parseResult = A2(_elm_tools$parser$Parser$run, _user$project$MiniLatex_Parser$endWord, line);
+	var arg = function () {
+		var _p2 = parseResult;
+		if (_p2.ctor === 'Ok') {
+			return _p2._0;
+		} else {
+			return '';
+		}
+	}();
+	return arg;
+};
+var _user$project$MiniLatex_Paragraph$getBeginArg = function (line) {
+	var parseResult = A2(_elm_tools$parser$Parser$run, _user$project$MiniLatex_Parser$beginWord, line);
+	var arg = function () {
+		var _p3 = parseResult;
+		if (_p3.ctor === 'Ok') {
+			return _p3._0;
+		} else {
+			return '';
+		}
+	}();
+	return arg;
+};
+var _user$project$MiniLatex_Paragraph$ParserRecord = F3(
+	function (a, b, c) {
+		return {currentParagraph: a, paragraphList: b, state: c};
+	});
+var _user$project$MiniLatex_Paragraph$Error = {ctor: 'Error'};
+var _user$project$MiniLatex_Paragraph$InBlock = function (a) {
+	return {ctor: 'InBlock', _0: a};
+};
+var _user$project$MiniLatex_Paragraph$InParagraph = {ctor: 'InParagraph'};
+var _user$project$MiniLatex_Paragraph$Start = {ctor: 'Start'};
+var _user$project$MiniLatex_Paragraph$EndBlock = function (a) {
+	return {ctor: 'EndBlock', _0: a};
+};
+var _user$project$MiniLatex_Paragraph$BeginBlock = function (a) {
+	return {ctor: 'BeginBlock', _0: a};
+};
+var _user$project$MiniLatex_Paragraph$Text = {ctor: 'Text'};
+var _user$project$MiniLatex_Paragraph$Blank = {ctor: 'Blank'};
+var _user$project$MiniLatex_Paragraph$lineType = function (line) {
+	return _elm_lang$core$Native_Utils.eq(line, '') ? _user$project$MiniLatex_Paragraph$Blank : (A2(_elm_lang$core$String$startsWith, '\\begin', line) ? _user$project$MiniLatex_Paragraph$BeginBlock(
+		_user$project$MiniLatex_Paragraph$getBeginArg(line)) : (A2(_elm_lang$core$String$startsWith, '\\end', line) ? _user$project$MiniLatex_Paragraph$EndBlock(
+		_user$project$MiniLatex_Paragraph$getEndArg(line)) : _user$project$MiniLatex_Paragraph$Text));
+};
+var _user$project$MiniLatex_Paragraph$nextState = F2(
+	function (line, parserState) {
+		var _p4 = {
+			ctor: '_Tuple2',
+			_0: parserState,
+			_1: _user$project$MiniLatex_Paragraph$lineType(line)
+		};
+		_v3_11:
+		do {
+			switch (_p4._0.ctor) {
+				case 'Start':
+					switch (_p4._1.ctor) {
+						case 'Blank':
+							return _user$project$MiniLatex_Paragraph$Start;
+						case 'Text':
+							return _user$project$MiniLatex_Paragraph$InParagraph;
+						case 'BeginBlock':
+							return _user$project$MiniLatex_Paragraph$InBlock(_p4._1._0);
+						default:
+							break _v3_11;
+					}
+				case 'InBlock':
+					switch (_p4._1.ctor) {
+						case 'Blank':
+							return _user$project$MiniLatex_Paragraph$InBlock(_p4._0._0);
+						case 'Text':
+							return _user$project$MiniLatex_Paragraph$InBlock(_p4._0._0);
+						case 'BeginBlock':
+							return _user$project$MiniLatex_Paragraph$InBlock(_p4._0._0);
+						default:
+							var _p5 = _p4._0._0;
+							return _elm_lang$core$Native_Utils.eq(_p5, _p4._1._0) ? _user$project$MiniLatex_Paragraph$Start : _user$project$MiniLatex_Paragraph$InBlock(_p5);
+					}
+				case 'InParagraph':
+					switch (_p4._1.ctor) {
+						case 'Text':
+							return _user$project$MiniLatex_Paragraph$InParagraph;
+						case 'BeginBlock':
+							return _user$project$MiniLatex_Paragraph$InParagraph;
+						case 'EndBlock':
+							return _user$project$MiniLatex_Paragraph$InParagraph;
+						default:
+							return _user$project$MiniLatex_Paragraph$Start;
+					}
+				default:
+					break _v3_11;
+			}
+		} while(false);
+		return _user$project$MiniLatex_Paragraph$Error;
+	});
+var _user$project$MiniLatex_Paragraph$updateParserRecord = F2(
+	function (line, parserRecord) {
+		var state2 = A2(_user$project$MiniLatex_Paragraph$nextState, line, parserRecord.state);
+		var _p6 = state2;
+		switch (_p6.ctor) {
+			case 'Start':
+				return _elm_lang$core$Native_Utils.update(
+					parserRecord,
+					{
+						currentParagraph: '',
+						paragraphList: A2(
+							_elm_lang$core$Basics_ops['++'],
+							parserRecord.paragraphList,
+							{
+								ctor: '::',
+								_0: A2(_user$project$MiniLatex_Paragraph$joinLines, parserRecord.currentParagraph, line),
+								_1: {ctor: '[]'}
+							}),
+						state: state2
+					});
+			case 'InParagraph':
+				return _elm_lang$core$Native_Utils.update(
+					parserRecord,
+					{
+						currentParagraph: A2(_user$project$MiniLatex_Paragraph$joinLines, parserRecord.currentParagraph, line),
+						state: state2
+					});
+			case 'InBlock':
+				return _elm_lang$core$Native_Utils.update(
+					parserRecord,
+					{
+						currentParagraph: A2(
+							_user$project$MiniLatex_Paragraph$joinLines,
+							parserRecord.currentParagraph,
+							_user$project$MiniLatex_Paragraph$fixLine(line)),
+						state: state2
+					});
+			default:
+				return parserRecord;
+		}
+	});
+var _user$project$MiniLatex_Paragraph$logicalParagraphParse = function (text) {
+	return A3(
+		_elm_lang$core$List$foldl,
+		_user$project$MiniLatex_Paragraph$updateParserRecord,
+		{
+			currentParagraph: '',
+			paragraphList: {ctor: '[]'},
+			state: _user$project$MiniLatex_Paragraph$Start
+		},
+		A2(
+			_elm_lang$core$String$split,
+			'\n',
+			A2(_elm_lang$core$Basics_ops['++'], text, '\n')));
+};
+var _user$project$MiniLatex_Paragraph$logicalParagraphify = function (text) {
+	var lastState = _user$project$MiniLatex_Paragraph$logicalParagraphParse(text);
+	return A2(
+		_elm_lang$core$List$filter,
+		function (x) {
+			return !_elm_lang$core$Native_Utils.eq(x, '');
+		},
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			lastState.paragraphList,
+			{
+				ctor: '::',
+				_0: lastState.currentParagraph,
+				_1: {ctor: '[]'}
+			}));
 };
 
 var _user$project$MiniLatex_Differ$prefixer = F2(
@@ -13301,25 +13608,43 @@ var _user$project$MiniLatex_Differ$takeLast = F2(
 				k,
 				_elm_lang$core$List$reverse(x)));
 	});
-var _user$project$MiniLatex_Differ$renderDiff = F4(
-	function (seed, renderer, diffRecord, renderedStringList) {
+var _user$project$MiniLatex_Differ$renderDiff = F5(
+	function (seed, renderer, diffRecord, editRecord, renderedStringList) {
 		var middleSegmentRendered = A2(_elm_lang$core$List$map, renderer, diffRecord.middleSegmentInTarget);
-		var n = _elm_lang$core$List$length(diffRecord.middleSegmentInTarget);
-		var idList = A2(
-			_elm_lang$core$List$map,
-			_user$project$MiniLatex_Differ$prefixer(seed),
-			A2(_elm_lang$core$List$range, 1, n));
+		var nt = _elm_lang$core$List$length(diffRecord.middleSegmentInTarget);
+		var ns = _elm_lang$core$List$length(diffRecord.middleSegmentInSource);
 		var it = _elm_lang$core$List$length(diffRecord.commonTerminalSegment);
 		var terminalSegmentRendered = A2(_user$project$MiniLatex_Differ$takeLast, it, renderedStringList);
 		var ii = _elm_lang$core$List$length(diffRecord.commonInitialSegment);
 		var initialSegmentRendered = A2(_elm_lang$core$List$take, ii, renderedStringList);
+		var idListInitial = A2(_elm_lang$core$List$take, ii, editRecord.idList);
+		var idListMiddle = A2(
+			_elm_lang$core$List$map,
+			_user$project$MiniLatex_Differ$prefixer(seed),
+			A2(_elm_lang$core$List$range, ii + 1, ii + nt));
+		var idListTerminal = A2(_elm_lang$core$List$drop, ii + ns, editRecord.idList);
+		var idList = A2(
+			_elm_lang$core$Basics_ops['++'],
+			idListInitial,
+			A2(_elm_lang$core$Basics_ops['++'], idListMiddle, idListTerminal));
+		var _p0 = A2(
+			_elm_lang$core$Debug$log,
+			'newId Info',
+			_elm_lang$core$Native_Utils.eq(nt, 0) ? {ctor: '_Tuple2', _0: _elm_lang$core$Maybe$Nothing, _1: _elm_lang$core$Maybe$Nothing} : {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Maybe$Just(ii),
+				_1: _elm_lang$core$Maybe$Just((ii + nt) - 1)
+			});
+		var newIdsStart = _p0._0;
+		var newIdsEnd = _p0._1;
 		return {
 			renderedParagraphs: A2(
 				_elm_lang$core$Basics_ops['++'],
 				initialSegmentRendered,
 				A2(_elm_lang$core$Basics_ops['++'], middleSegmentRendered, terminalSegmentRendered)),
 			idList: idList,
-			idListStart: ii
+			newIdsStart: newIdsStart,
+			newIdsEnd: newIdsEnd
 		};
 	});
 var _user$project$MiniLatex_Differ$dropLast = F2(
@@ -13362,92 +13687,6 @@ var _user$project$MiniLatex_Differ$commonTerminalSegment = F2(
 				_elm_lang$core$List$reverse(x),
 				_elm_lang$core$List$reverse(y)));
 	});
-var _user$project$MiniLatex_Differ$paragraphify = function (text) {
-	return A2(
-		_elm_lang$core$List$map,
-		function (_p0) {
-			return function (x) {
-				return A2(_elm_lang$core$Basics_ops['++'], x, '\n\n');
-			}(
-				_elm_lang$core$String$trim(_p0));
-		},
-		A2(
-			_elm_lang$core$List$filter,
-			function (x) {
-				return !_elm_lang$core$Native_Utils.eq(
-					_elm_lang$core$String$length(x),
-					0);
-			},
-			A3(
-				_elm_lang$core$Regex$split,
-				_elm_lang$core$Regex$All,
-				_elm_lang$core$Regex$regex('\\n\\n+'),
-				text)));
-};
-var _user$project$MiniLatex_Differ$fixLine = function (line) {
-	return _elm_lang$core$Native_Utils.eq(line, '') ? '\n' : line;
-};
-var _user$project$MiniLatex_Differ$joinLines = F2(
-	function (a, b) {
-		var _p1 = {ctor: '_Tuple2', _0: a, _1: b};
-		_v0_2:
-		do {
-			_v0_1:
-			do {
-				switch (_p1._0) {
-					case '':
-						return b;
-					case '\n':
-						switch (_p1._1) {
-							case '':
-								break _v0_1;
-							case '\n':
-								break _v0_2;
-							default:
-								break _v0_2;
-						}
-					default:
-						switch (_p1._1) {
-							case '':
-								break _v0_1;
-							case '\n':
-								return A2(_elm_lang$core$Basics_ops['++'], a, '\n');
-							default:
-								return A2(
-									_elm_lang$core$Basics_ops['++'],
-									_p1._0,
-									A2(_elm_lang$core$Basics_ops['++'], '\n', _p1._1));
-						}
-				}
-			} while(false);
-			return a;
-		} while(false);
-		return A2(_elm_lang$core$Basics_ops['++'], '\n', b);
-	});
-var _user$project$MiniLatex_Differ$getEndArg = function (line) {
-	var parseResult = A2(_elm_tools$parser$Parser$run, _user$project$MiniLatex_Parser$endWord, line);
-	var arg = function () {
-		var _p2 = parseResult;
-		if (_p2.ctor === 'Ok') {
-			return _p2._0;
-		} else {
-			return '';
-		}
-	}();
-	return arg;
-};
-var _user$project$MiniLatex_Differ$getBeginArg = function (line) {
-	var parseResult = A2(_elm_tools$parser$Parser$run, _user$project$MiniLatex_Parser$beginWord, line);
-	var arg = function () {
-		var _p3 = parseResult;
-		if (_p3.ctor === 'Ok') {
-			return _p3._0;
-		} else {
-			return '';
-		}
-	}();
-	return arg;
-};
 var _user$project$MiniLatex_Differ$DiffRecord = F4(
 	function (a, b, c, d) {
 		return {commonInitialSegment: a, commonTerminalSegment: b, middleSegmentInSource: c, middleSegmentInTarget: d};
@@ -13471,196 +13710,39 @@ var _user$project$MiniLatex_Differ$diff = F2(
 			_elm_lang$core$List$length(u)) ? {ctor: '[]'} : b;
 		return A4(_user$project$MiniLatex_Differ$DiffRecord, a, bb, x, y);
 	});
-var _user$project$MiniLatex_Differ$DiffPacket = F3(
-	function (a, b, c) {
-		return {renderedParagraphs: a, idList: b, idListStart: c};
+var _user$project$MiniLatex_Differ$DiffPacket = F4(
+	function (a, b, c, d) {
+		return {renderedParagraphs: a, idList: b, newIdsStart: c, newIdsEnd: d};
 	});
-var _user$project$MiniLatex_Differ$EditRecord = F5(
-	function (a, b, c, d, e) {
-		return {paragraphs: a, renderedParagraphs: b, latexState: c, idList: d, idListStart: e};
+var _user$project$MiniLatex_Differ$EditRecord = F6(
+	function (a, b, c, d, e, f) {
+		return {paragraphs: a, renderedParagraphs: b, latexState: c, idList: d, newIdsStart: e, newIdsEnd: f};
 	});
-var _user$project$MiniLatex_Differ$emptyEditRecord = A5(
+var _user$project$MiniLatex_Differ$emptyEditRecord = A6(
 	_user$project$MiniLatex_Differ$EditRecord,
 	{ctor: '[]'},
 	{ctor: '[]'},
 	_user$project$MiniLatex_LatexState$emptyLatexState,
 	{ctor: '[]'},
-	0);
-var _user$project$MiniLatex_Differ$ParserRecord = F3(
-	function (a, b, c) {
-		return {currentParagraph: a, paragraphList: b, state: c};
-	});
-var _user$project$MiniLatex_Differ$Error = {ctor: 'Error'};
-var _user$project$MiniLatex_Differ$InBlock = function (a) {
-	return {ctor: 'InBlock', _0: a};
-};
-var _user$project$MiniLatex_Differ$InParagraph = {ctor: 'InParagraph'};
-var _user$project$MiniLatex_Differ$Start = {ctor: 'Start'};
-var _user$project$MiniLatex_Differ$EndBlock = function (a) {
-	return {ctor: 'EndBlock', _0: a};
-};
-var _user$project$MiniLatex_Differ$BeginBlock = function (a) {
-	return {ctor: 'BeginBlock', _0: a};
-};
-var _user$project$MiniLatex_Differ$Text = {ctor: 'Text'};
-var _user$project$MiniLatex_Differ$Blank = {ctor: 'Blank'};
-var _user$project$MiniLatex_Differ$lineType = function (line) {
-	return _elm_lang$core$Native_Utils.eq(line, '') ? _user$project$MiniLatex_Differ$Blank : (A2(_elm_lang$core$String$startsWith, '\\begin', line) ? _user$project$MiniLatex_Differ$BeginBlock(
-		_user$project$MiniLatex_Differ$getBeginArg(line)) : (A2(_elm_lang$core$String$startsWith, '\\end', line) ? _user$project$MiniLatex_Differ$EndBlock(
-		_user$project$MiniLatex_Differ$getEndArg(line)) : _user$project$MiniLatex_Differ$Text));
-};
-var _user$project$MiniLatex_Differ$nextState = F2(
-	function (line, parserState) {
-		var _p4 = {
-			ctor: '_Tuple2',
-			_0: parserState,
-			_1: _user$project$MiniLatex_Differ$lineType(line)
-		};
-		_v3_11:
-		do {
-			switch (_p4._0.ctor) {
-				case 'Start':
-					switch (_p4._1.ctor) {
-						case 'Blank':
-							return _user$project$MiniLatex_Differ$Start;
-						case 'Text':
-							return _user$project$MiniLatex_Differ$InParagraph;
-						case 'BeginBlock':
-							return _user$project$MiniLatex_Differ$InBlock(_p4._1._0);
-						default:
-							break _v3_11;
-					}
-				case 'InBlock':
-					switch (_p4._1.ctor) {
-						case 'Blank':
-							return _user$project$MiniLatex_Differ$InBlock(_p4._0._0);
-						case 'Text':
-							return _user$project$MiniLatex_Differ$InBlock(_p4._0._0);
-						case 'BeginBlock':
-							return _user$project$MiniLatex_Differ$InBlock(_p4._0._0);
-						default:
-							var _p5 = _p4._0._0;
-							return _elm_lang$core$Native_Utils.eq(_p5, _p4._1._0) ? _user$project$MiniLatex_Differ$Start : _user$project$MiniLatex_Differ$InBlock(_p5);
-					}
-				case 'InParagraph':
-					switch (_p4._1.ctor) {
-						case 'Text':
-							return _user$project$MiniLatex_Differ$InParagraph;
-						case 'BeginBlock':
-							return _user$project$MiniLatex_Differ$InParagraph;
-						case 'EndBlock':
-							return _user$project$MiniLatex_Differ$InParagraph;
-						default:
-							return _user$project$MiniLatex_Differ$Start;
-					}
-				default:
-					break _v3_11;
-			}
-		} while(false);
-		return _user$project$MiniLatex_Differ$Error;
-	});
-var _user$project$MiniLatex_Differ$updateParserRecord = F2(
-	function (line, parserRecord) {
-		var state2 = A2(_user$project$MiniLatex_Differ$nextState, line, parserRecord.state);
-		var _p6 = A2(_elm_lang$core$Debug$log, 'nextState', state2);
-		var _p7 = state2;
-		switch (_p7.ctor) {
-			case 'Start':
-				return _elm_lang$core$Native_Utils.update(
-					parserRecord,
-					{
-						currentParagraph: '',
-						paragraphList: A2(
-							_elm_lang$core$Basics_ops['++'],
-							parserRecord.paragraphList,
-							{
-								ctor: '::',
-								_0: A2(_user$project$MiniLatex_Differ$joinLines, parserRecord.currentParagraph, line),
-								_1: {ctor: '[]'}
-							}),
-						state: state2
-					});
-			case 'InParagraph':
-				return _elm_lang$core$Native_Utils.update(
-					parserRecord,
-					{
-						currentParagraph: A2(_user$project$MiniLatex_Differ$joinLines, parserRecord.currentParagraph, line),
-						state: state2
-					});
-			case 'InBlock':
-				return _elm_lang$core$Native_Utils.update(
-					parserRecord,
-					{
-						currentParagraph: A2(
-							_user$project$MiniLatex_Differ$joinLines,
-							parserRecord.currentParagraph,
-							_user$project$MiniLatex_Differ$fixLine(line)),
-						state: state2
-					});
-			default:
-				return parserRecord;
-		}
-	});
-var _user$project$MiniLatex_Differ$logicalParagraphParse = function (text) {
-	return A3(
-		_elm_lang$core$List$foldl,
-		_user$project$MiniLatex_Differ$updateParserRecord,
-		{
-			currentParagraph: '',
-			paragraphList: {ctor: '[]'},
-			state: _user$project$MiniLatex_Differ$Start
-		},
-		A2(
-			_elm_lang$core$String$split,
-			'\n',
-			A2(_elm_lang$core$Basics_ops['++'], text, '\n')));
-};
-var _user$project$MiniLatex_Differ$logicalParagraphify = function (text) {
-	var lastState = _user$project$MiniLatex_Differ$logicalParagraphParse(text);
-	return A2(
-		_elm_lang$core$List$filter,
-		function (x) {
-			return !_elm_lang$core$Native_Utils.eq(x, '');
-		},
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			lastState.paragraphList,
-			{
-				ctor: '::',
-				_0: lastState.currentParagraph,
-				_1: {ctor: '[]'}
-			}));
-};
+	_elm_lang$core$Maybe$Nothing,
+	_elm_lang$core$Maybe$Nothing);
 var _user$project$MiniLatex_Differ$initialize = F2(
 	function (transformer, text) {
-		var paragraphs = _user$project$MiniLatex_Differ$logicalParagraphify(text);
+		var paragraphs = _user$project$MiniLatex_Paragraph$logicalParagraphify(text);
 		var n = _elm_lang$core$List$length(paragraphs);
 		var idList = A2(
 			_elm_lang$core$List$map,
 			_user$project$MiniLatex_Differ$prefixer(0),
 			A2(_elm_lang$core$List$range, 1, n));
 		var renderedParagraphs = A2(_elm_lang$core$List$map, transformer, paragraphs);
-		return A5(_user$project$MiniLatex_Differ$EditRecord, paragraphs, renderedParagraphs, _user$project$MiniLatex_LatexState$emptyLatexState, idList, 0);
-	});
-var _user$project$MiniLatex_Differ$initialize2 = F2(
-	function (transformParagraphs, text) {
-		var paragraphs = _user$project$MiniLatex_Differ$logicalParagraphify(text);
-		var n = _elm_lang$core$List$length(paragraphs);
-		var idList = A2(
-			_elm_lang$core$List$map,
-			_user$project$MiniLatex_Differ$prefixer(0),
-			A2(_elm_lang$core$List$range, 1, n));
-		var _p8 = transformParagraphs(paragraphs);
-		var renderedParagraphs = _p8._0;
-		var latexState = _p8._1;
-		return A5(_user$project$MiniLatex_Differ$EditRecord, paragraphs, renderedParagraphs, latexState, idList, 0);
+		return A6(_user$project$MiniLatex_Differ$EditRecord, paragraphs, renderedParagraphs, _user$project$MiniLatex_LatexState$emptyLatexState, idList, _elm_lang$core$Maybe$Nothing, _elm_lang$core$Maybe$Nothing);
 	});
 var _user$project$MiniLatex_Differ$update = F4(
 	function (seed, transformer, editorRecord, text) {
-		var newParagraphs = _user$project$MiniLatex_Differ$logicalParagraphify(text);
+		var newParagraphs = _user$project$MiniLatex_Paragraph$logicalParagraphify(text);
 		var diffRecord = A2(_user$project$MiniLatex_Differ$diff, editorRecord.paragraphs, newParagraphs);
-		var diffPacket = A4(_user$project$MiniLatex_Differ$renderDiff, seed, transformer, diffRecord, editorRecord.renderedParagraphs);
-		return A5(_user$project$MiniLatex_Differ$EditRecord, newParagraphs, diffPacket.renderedParagraphs, _user$project$MiniLatex_LatexState$emptyLatexState, diffPacket.idList, diffPacket.idListStart);
+		var diffPacket = A5(_user$project$MiniLatex_Differ$renderDiff, seed, transformer, diffRecord, editorRecord, editorRecord.renderedParagraphs);
+		return A6(_user$project$MiniLatex_Differ$EditRecord, newParagraphs, diffPacket.renderedParagraphs, _user$project$MiniLatex_LatexState$emptyLatexState, diffPacket.idList, diffPacket.newIdsStart, diffPacket.newIdsEnd);
 	});
 
 var _user$project$MiniLatex_KeyValueUtilities$getValue = F2(
@@ -13963,26 +14045,74 @@ var _user$project$MiniLatex_Render$renderBigSkip = F2(
 				_1: {ctor: '[]'}
 			});
 	});
+var _user$project$MiniLatex_Render$numberedLine = F2(
+	function (k, line) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			A3(
+				_elm_lang$core$String$padLeft,
+				5,
+				_elm_lang$core$Native_Utils.chr(' '),
+				_elm_lang$core$Basics$toString(k)),
+			A2(_elm_lang$core$Basics_ops['++'], '  ', line));
+	});
+var _user$project$MiniLatex_Render$addNumberedLine = F2(
+	function (line, data) {
+		var _p0 = data;
+		var k = _p0._0;
+		var lines = _p0._1;
+		return {
+			ctor: '_Tuple2',
+			_0: k + 1,
+			_1: A2(
+				_elm_lang$core$Basics_ops['++'],
+				{
+					ctor: '::',
+					_0: A2(_user$project$MiniLatex_Render$numberedLine, k + 1, line),
+					_1: {ctor: '[]'}
+				},
+				lines)
+		};
+	});
+var _user$project$MiniLatex_Render$addLineNumbers = function (text) {
+	return A2(
+		_elm_lang$core$String$join,
+		'\n',
+		_elm_lang$core$List$reverse(
+			_elm_lang$core$Tuple$second(
+				A3(
+					_elm_lang$core$List$foldl,
+					_user$project$MiniLatex_Render$addNumberedLine,
+					{
+						ctor: '_Tuple2',
+						_0: 0,
+						_1: {ctor: '[]'}
+					},
+					A2(
+						_elm_lang$core$String$split,
+						'\n',
+						_elm_lang$core$String$trim(text))))));
+};
 var _user$project$MiniLatex_Render$renderCell = function (cell) {
-	var _p0 = cell;
-	switch (_p0.ctor) {
+	var _p1 = cell;
+	switch (_p1.ctor) {
 		case 'LXString':
 			return A2(
 				_elm_lang$core$Basics_ops['++'],
 				'<td>',
-				A2(_elm_lang$core$Basics_ops['++'], _p0._0, '</td>'));
+				A2(_elm_lang$core$Basics_ops['++'], _p1._0, '</td>'));
 		case 'InlineMath':
 			return A2(
 				_elm_lang$core$Basics_ops['++'],
 				'<td>$',
-				A2(_elm_lang$core$Basics_ops['++'], _p0._0, '$</td>'));
+				A2(_elm_lang$core$Basics_ops['++'], _p1._0, '$</td>'));
 		default:
 			return '<td>-</td>';
 	}
 };
 var _user$project$MiniLatex_Render$renderRow = function (row) {
-	var _p1 = row;
-	if (_p1.ctor === 'LatexList') {
+	var _p2 = row;
+	if (_p2.ctor === 'LatexList') {
 		return function (row) {
 			return A2(
 				_elm_lang$core$Basics_ops['++'],
@@ -14002,14 +14132,14 @@ var _user$project$MiniLatex_Render$renderRow = function (row) {
 								_user$project$MiniLatex_Render$renderCell(cell)));
 					}),
 				'',
-				_p1._0));
+				_p2._0));
 	} else {
 		return '<tr>-</tr>';
 	}
 };
 var _user$project$MiniLatex_Render$renderTableBody = function (body) {
-	var _p2 = body;
-	if (_p2.ctor === 'LatexList') {
+	var _p3 = body;
+	if (_p3.ctor === 'LatexList') {
 		return function (body) {
 			return A2(
 				_elm_lang$core$Basics_ops['++'],
@@ -14029,7 +14159,7 @@ var _user$project$MiniLatex_Render$renderTableBody = function (body) {
 								_user$project$MiniLatex_Render$renderRow(row)));
 					}),
 				'',
-				_p2._0));
+				_p3._0));
 	} else {
 		return '<table>-</table>';
 	}
@@ -14054,9 +14184,9 @@ var _user$project$MiniLatex_Render$itemClass = function (level) {
 var _user$project$MiniLatex_Render$firstChar = _elm_lang$core$String$left(1);
 var _user$project$MiniLatex_Render$lastChar = _elm_lang$core$String$right(1);
 var _user$project$MiniLatex_Render$extractList = function (latexExpression) {
-	var _p3 = latexExpression;
-	if (_p3.ctor === 'LatexList') {
-		return _p3._0;
+	var _p4 = latexExpression;
+	if (_p4.ctor === 'LatexList') {
+		return _p4._0;
 	} else {
 		return {ctor: '[]'};
 	}
@@ -14135,11 +14265,11 @@ var _user$project$MiniLatex_Render$joinType = F2(
 	});
 var _user$project$MiniLatex_Render$joinDatum2String = F2(
 	function (current, datum) {
-		var _p4 = datum;
-		var acc = _p4._0;
-		var previous = _p4._1;
-		var _p5 = A2(_user$project$MiniLatex_Render$joinType, previous, current);
-		if (_p5.ctor === 'NoSpace') {
+		var _p5 = datum;
+		var acc = _p5._0;
+		var previous = _p5._1;
+		var _p6 = A2(_user$project$MiniLatex_Render$joinType, previous, current);
+		if (_p6.ctor === 'NoSpace') {
 			return {
 				ctor: '_Tuple2',
 				_0: A2(_elm_lang$core$Basics_ops['++'], acc, current),
@@ -14178,30 +14308,30 @@ var _user$project$MiniLatex_Render$renderLatexList = F2(
 	});
 var _user$project$MiniLatex_Render$render = F2(
 	function (latexState, latexExpression) {
-		var _p6 = latexExpression;
-		switch (_p6.ctor) {
+		var _p7 = latexExpression;
+		switch (_p7.ctor) {
 			case 'Comment':
-				return _user$project$MiniLatex_Render$renderComment(_p6._0);
+				return _user$project$MiniLatex_Render$renderComment(_p7._0);
 			case 'Macro':
-				return A3(_user$project$MiniLatex_Render$renderMacro, latexState, _p6._0, _p6._1);
+				return A3(_user$project$MiniLatex_Render$renderMacro, latexState, _p7._0, _p7._1);
 			case 'Item':
-				return A3(_user$project$MiniLatex_Render$renderItem, latexState, _p6._0, _p6._1);
+				return A3(_user$project$MiniLatex_Render$renderItem, latexState, _p7._0, _p7._1);
 			case 'InlineMath':
 				return A2(
 					_elm_lang$core$Basics_ops['++'],
 					'$',
-					A2(_elm_lang$core$Basics_ops['++'], _p6._0, '$'));
+					A2(_elm_lang$core$Basics_ops['++'], _p7._0, '$'));
 			case 'DisplayMath':
 				return A2(
 					_elm_lang$core$Basics_ops['++'],
 					'$$',
-					A2(_elm_lang$core$Basics_ops['++'], _p6._0, '$$'));
+					A2(_elm_lang$core$Basics_ops['++'], _p7._0, '$$'));
 			case 'Environment':
-				return A3(_user$project$MiniLatex_Render$renderEnvironment, latexState, _p6._0, _p6._1);
+				return A3(_user$project$MiniLatex_Render$renderEnvironment, latexState, _p7._0, _p7._1);
 			case 'LatexList':
-				return A2(_user$project$MiniLatex_Render$renderLatexList, latexState, _p6._0);
+				return A2(_user$project$MiniLatex_Render$renderLatexList, latexState, _p7._0);
 			default:
-				return _p6._0;
+				return _p7._0;
 		}
 	});
 var _user$project$MiniLatex_Render$renderEnvironment = F3(
@@ -14209,9 +14339,9 @@ var _user$project$MiniLatex_Render$renderEnvironment = F3(
 		return A3(_user$project$MiniLatex_Render$environmentRenderer, name, latexState, body);
 	});
 var _user$project$MiniLatex_Render$environmentRenderer = function (name) {
-	var _p7 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderEnvironmentDict);
-	if (_p7.ctor === 'Just') {
-		return _p7._0;
+	var _p8 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderEnvironmentDict);
+	if (_p8.ctor === 'Just') {
+		return _p8._0;
 	} else {
 		return _user$project$MiniLatex_Render$renderDefaultEnvironment(name);
 	}
@@ -14375,53 +14505,64 @@ var _user$project$MiniLatex_Render$renderEnvironmentDict = _elm_lang$core$Dict$f
 										ctor: '::',
 										_0: {
 											ctor: '_Tuple2',
-											_0: 'macros',
+											_0: 'listing',
 											_1: F2(
 												function (x, y) {
-													return A2(_user$project$MiniLatex_Render$renderMacros, x, y);
+													return A2(_user$project$MiniLatex_Render$renderListing, x, y);
 												})
 										},
 										_1: {
 											ctor: '::',
 											_0: {
 												ctor: '_Tuple2',
-												_0: 'quotation',
+												_0: 'macros',
 												_1: F2(
 													function (x, y) {
-														return A2(_user$project$MiniLatex_Render$renderQuotation, x, y);
+														return A2(_user$project$MiniLatex_Render$renderMacros, x, y);
 													})
 											},
 											_1: {
 												ctor: '::',
 												_0: {
 													ctor: '_Tuple2',
-													_0: 'tabular',
+													_0: 'quotation',
 													_1: F2(
 														function (x, y) {
-															return A2(_user$project$MiniLatex_Render$renderTabular, x, y);
+															return A2(_user$project$MiniLatex_Render$renderQuotation, x, y);
 														})
 												},
 												_1: {
 													ctor: '::',
 													_0: {
 														ctor: '_Tuple2',
-														_0: 'verbatim',
+														_0: 'tabular',
 														_1: F2(
 															function (x, y) {
-																return A2(_user$project$MiniLatex_Render$renderVerbatim, x, y);
+																return A2(_user$project$MiniLatex_Render$renderTabular, x, y);
 															})
 													},
 													_1: {
 														ctor: '::',
 														_0: {
 															ctor: '_Tuple2',
-															_0: 'verse',
+															_0: 'verbatim',
 															_1: F2(
 																function (x, y) {
-																	return A2(_user$project$MiniLatex_Render$renderVerse, x, y);
+																	return A2(_user$project$MiniLatex_Render$renderVerbatim, x, y);
 																})
 														},
-														_1: {ctor: '[]'}
+														_1: {
+															ctor: '::',
+															_0: {
+																ctor: '_Tuple2',
+																_0: 'verse',
+																_1: F2(
+																	function (x, y) {
+																		return A2(_user$project$MiniLatex_Render$renderVerse, x, y);
+																	})
+															},
+															_1: {ctor: '[]'}
+														}
 													}
 												}
 											}
@@ -14556,6 +14697,17 @@ var _user$project$MiniLatex_Render$renderItemize = F2(
 				A2(_user$project$MiniLatex_Render$render, latexState, body),
 				'\n</ul>\n'));
 	});
+var _user$project$MiniLatex_Render$renderListing = F2(
+	function (latexState, body) {
+		var text = A2(_user$project$MiniLatex_Render$render, latexState, body);
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'\n<pre class=\"verbatim\">',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_user$project$MiniLatex_Render$addLineNumbers(text),
+				'</pre>\n'));
+	});
 var _user$project$MiniLatex_Render$renderMacros = F2(
 	function (latexState, body) {
 		return A2(
@@ -14628,9 +14780,9 @@ var _user$project$MiniLatex_Render$renderMacro = F3(
 		return A3(_user$project$MiniLatex_Render$macroRenderer, name, latexState, args);
 	});
 var _user$project$MiniLatex_Render$macroRenderer = function (name) {
-	var _p8 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderMacroDict);
-	if (_p8.ctor === 'Just') {
-		return _p8._0;
+	var _p9 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderMacroDict);
+	if (_p9.ctor === 'Just') {
+		return _p9._0;
 	} else {
 		return _user$project$MiniLatex_Render$reproduceMacro(name);
 	}
@@ -15047,13 +15199,11 @@ var _user$project$MiniLatex_Render$renderCite = F2(
 	});
 var _user$project$MiniLatex_Render$renderCode = F2(
 	function (latexState, args) {
+		var arg = A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args);
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
 			' <span class=\"code\">',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args),
-				'</span>'));
+			A2(_elm_lang$core$Basics_ops['++'], arg, '</span>'));
 	});
 var _user$project$MiniLatex_Render$renderEllie = F2(
 	function (latexState, args) {
@@ -15535,14 +15685,14 @@ var _user$project$MiniLatex_Render$renderString = F3(
 	function (parser, latexState, str) {
 		var parserOutput = A2(_elm_tools$parser$Parser$run, parser, str);
 		var renderOutput = function () {
-			var _p9 = parserOutput;
-			if (_p9.ctor === 'Ok') {
-				return A2(_user$project$MiniLatex_Render$render, latexState, _p9._0);
+			var _p10 = parserOutput;
+			if (_p10.ctor === 'Ok') {
+				return A2(_user$project$MiniLatex_Render$render, latexState, _p10._0);
 			} else {
 				return A2(
 					_elm_lang$core$Basics_ops['++'],
 					'Error: ',
-					_elm_lang$core$Basics$toString(_p9._0));
+					_elm_lang$core$Basics$toString(_p10._0));
 			}
 		}();
 		return renderOutput;
@@ -16020,9 +16170,9 @@ var _user$project$MiniLatex_LatexDiffer$update = F3(
 			editorRecord,
 			_user$project$MiniLatex_LatexDiffer$prepareContentForLatex(text));
 	});
-var _user$project$MiniLatex_LatexDiffer$initialize2 = F2(
+var _user$project$MiniLatex_LatexDiffer$initialize = F2(
 	function (latexState, text) {
-		var paragraphs = _user$project$MiniLatex_Differ$logicalParagraphify(
+		var paragraphs = _user$project$MiniLatex_Paragraph$logicalParagraphify(
 			_user$project$MiniLatex_LatexDiffer$prepareContentForLatex(text));
 		var _p0 = A2(_user$project$MiniLatex_Accumulator$parseParagraphs, _user$project$MiniLatex_LatexState$emptyLatexState, paragraphs);
 		var latexExpressionList = _p0._0;
@@ -16034,24 +16184,20 @@ var _user$project$MiniLatex_LatexDiffer$initialize2 = F2(
 		var renderedParagraphs = _p1._0;
 		var latexState3 = _p1._1;
 		var renderedParagraphs2 = renderedParagraphs;
-		return A5(
-			_user$project$MiniLatex_Differ$EditRecord,
-			paragraphs,
-			renderedParagraphs2,
-			latexState2,
-			{ctor: '[]'},
-			0);
+		var n = _elm_lang$core$List$length(paragraphs);
+		var idList = A2(
+			_elm_lang$core$Debug$log,
+			'idList in initialize',
+			A2(
+				_elm_lang$core$List$map,
+				_user$project$MiniLatex_Differ$prefixer(0),
+				A2(_elm_lang$core$List$range, 1, n)));
+		return A6(_user$project$MiniLatex_Differ$EditRecord, paragraphs, renderedParagraphs2, latexState2, idList, _elm_lang$core$Maybe$Nothing, _elm_lang$core$Maybe$Nothing);
 	});
 var _user$project$MiniLatex_LatexDiffer$safeUpdate = F3(
 	function (seed, editRecord, content) {
-		return _user$project$MiniLatex_Differ$isEmpty(editRecord) ? A2(_user$project$MiniLatex_LatexDiffer$initialize2, _user$project$MiniLatex_LatexState$emptyLatexState, content) : A3(_user$project$MiniLatex_LatexDiffer$update, seed, editRecord, content);
+		return _user$project$MiniLatex_Differ$isEmpty(editRecord) ? A2(_user$project$MiniLatex_LatexDiffer$initialize, _user$project$MiniLatex_LatexState$emptyLatexState, content) : A3(_user$project$MiniLatex_LatexDiffer$update, seed, editRecord, content);
 	});
-var _user$project$MiniLatex_LatexDiffer$initialize = function (text) {
-	return A2(
-		_user$project$MiniLatex_Differ$initialize,
-		_user$project$MiniLatex_Render$transformText(_user$project$MiniLatex_LatexState$emptyLatexState),
-		_user$project$MiniLatex_LatexDiffer$prepareContentForLatex(text));
-};
 
 var _user$project$MiniLatex_Driver$update = F3(
 	function (seed, editRecord, text) {
@@ -16062,7 +16208,7 @@ var _user$project$MiniLatex_Driver$setup = F2(
 	function (seed, text) {
 		return A3(_user$project$MiniLatex_LatexDiffer$safeUpdate, seed, _user$project$MiniLatex_Differ$emptyEditRecord, text);
 	});
-var _user$project$MiniLatex_Driver$getRenderedText = F2(
+var _user$project$MiniLatex_Driver$getRenderedText2 = F2(
 	function (macroDefinitions, editRecord) {
 		var paragraphs = editRecord.renderedParagraphs;
 		return function (x) {
@@ -16085,7 +16231,7 @@ var _user$project$MiniLatex_Driver$getRenderedText = F2(
 					paragraphs)));
 	});
 var _user$project$MiniLatex_Driver$pTags = function (editRecord) {
-	var infix = A2(
+	return A2(
 		_elm_lang$core$List$map,
 		function (x) {
 			return A2(
@@ -16094,17 +16240,14 @@ var _user$project$MiniLatex_Driver$pTags = function (editRecord) {
 				A2(_elm_lang$core$Basics_ops['++'], x, '\">'));
 		},
 		editRecord.idList);
-	var n = _elm_lang$core$List$length(editRecord.paragraphs) - (editRecord.idListStart + _elm_lang$core$List$length(editRecord.idList));
-	var suffix = A2(_elm_lang$core$List$repeat, n, '<p>');
-	var prefix = A2(_elm_lang$core$List$repeat, editRecord.idListStart, '<p>');
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		prefix,
-		A2(_elm_lang$core$Basics_ops['++'], infix, suffix));
 };
-var _user$project$MiniLatex_Driver$getRenderedText2 = F2(
+var _user$project$MiniLatex_Driver$getRenderedText = F2(
 	function (macroDefinitions, editRecord) {
-		var pTagList = _user$project$MiniLatex_Driver$pTags(editRecord);
+		var pTagList = A2(
+			_elm_lang$core$Debug$log,
+			'pTags',
+			_user$project$MiniLatex_Driver$pTags(editRecord));
+		var _p0 = A2(_elm_lang$core$Debug$log, 'idList', editRecord.idList);
 		var paragraphs = editRecord.renderedParagraphs;
 		return function (x) {
 			return A2(
@@ -16134,7 +16277,7 @@ var _user$project$MiniLatex_Driver$parse = function (text) {
 	return A2(
 		_elm_lang$core$List$map,
 		_user$project$MiniLatex_Parser$parseParagraph,
-		_user$project$MiniLatex_Differ$logicalParagraphify(
+		_user$project$MiniLatex_Paragraph$logicalParagraphify(
 			_user$project$MiniLatex_LatexDiffer$prepareContentForLatex(text)));
 };
 var _user$project$MiniLatex_Driver$render = F2(
@@ -16142,10 +16285,10 @@ var _user$project$MiniLatex_Driver$render = F2(
 		return A2(
 			_user$project$MiniLatex_Driver$getRenderedText,
 			macroDefinitions,
-			A2(_user$project$MiniLatex_LatexDiffer$initialize2, _user$project$MiniLatex_LatexState$emptyLatexState, text));
+			A2(_user$project$MiniLatex_LatexDiffer$initialize, _user$project$MiniLatex_LatexState$emptyLatexState, text));
 	});
 
-var _user$project$Main$initialSourceText = '\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nSee the article\n\\href{http://www.knode.io/#@public/445}{MiniLatex}\nat \\href{http://www.knode.io}{www.knode.io} for more info.\n\nFeel free to edit and re-render the text on the left.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\\section{Appendix}\n\nArticles and code:\n\n\\begin{itemize}\n%%\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n%%\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n%%\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n%%\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nAlso, contributions to help improve the open-source\nMiniLatex Parser-Renderer are most welcome.\nHere is the \\href{https://github.com/jxxcarlson/minilatex}{GitHub repository}.\nThe MiniLatex Demo as well as the app at knode.io are written in\n\\href{http://elm-lang.org/}{Elm}.\n\nPlease send comments to jxxcarlson at gmail.\n';
+var _user$project$Main$initialSourceText = '\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nSee the article\n\\href{http://www.knode.io/#@public/445}{MiniLatex}\nat \\href{http://www.knode.io}{www.knode.io} for more info.\n\nFeel free to edit and re-render the text on the left.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\nNote that in the \\italic{source} of the listing below,\nthere are no line numbers.\n\n\\strong{MiniLaTeX Abstract Syntax Tree}\n\n\\begin{listing}\ntype LatexExpression\n    = LXString String\n    | Comment String\n    | Item Int LatexExpression\n    | InlineMath String\n    | DisplayMath String\n    | Macro String (List LatexExpression)\n    | Environment String LatexExpression\n    | LatexList (List LatexExpression)\n\\end{listing}\n\n\n\\section{Appendix}\n\nArticles and code:\n\n\\begin{itemize}\n%%\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n%%\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n%%\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n%%\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nAlso, contributions to help improve the open-source\nMiniLatex Parser-Renderer are most welcome.\nHere is the \\href{https://github.com/jxxcarlson/minilatex}{GitHub repository}.\nThe MiniLatex Demo as well as the app at knode.io are written in\n\\href{http://elm-lang.org/}{Elm}.\n\nPlease send comments to jxxcarlson at gmail.\n';
 var _user$project$Main$textStyle2 = F4(
 	function (width, height, offset, color) {
 		return _elm_lang$html$Html_Attributes$style(
@@ -16229,27 +16372,25 @@ var _user$project$Main$labelStyle = _elm_lang$html$Html_Attributes$style(
 			}
 		}
 	});
-var _user$project$Main$buttonStyleWide = function (offSet) {
-	var realOffset = function (x) {
-		return A2(_elm_lang$core$Basics_ops['++'], x, 'px');
-	}(
-		_elm_lang$core$Basics$toString(offSet + 0));
-	return _elm_lang$html$Html_Attributes$style(
-		{
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'backgroundColor', _1: 'rgb(100,100,200)'},
-			_1: {
+var _user$project$Main$buttonStyle = F2(
+	function (color, width) {
+		var realWidth = function (x) {
+			return A2(_elm_lang$core$Basics_ops['++'], x, 'px');
+		}(
+			_elm_lang$core$Basics$toString(width + 0));
+		return _elm_lang$html$Html_Attributes$style(
+			{
 				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
+				_0: {ctor: '_Tuple2', _0: 'backgroundColor', _1: color},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'width', _1: '190px'},
+					_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'height', _1: '25px'},
+						_0: {ctor: '_Tuple2', _0: 'width', _1: realWidth},
 						_1: {
 							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'margin-left', _1: realOffset},
+							_0: {ctor: '_Tuple2', _0: 'height', _1: '25px'},
 							_1: {
 								ctor: '::',
 								_0: {ctor: '_Tuple2', _0: 'margin-right', _1: '8px'},
@@ -16270,53 +16411,11 @@ var _user$project$Main$buttonStyleWide = function (offSet) {
 						}
 					}
 				}
-			}
-		});
-};
-var _user$project$Main$buttonStyle = function (offSet) {
-	var realOffset = function (x) {
-		return A2(_elm_lang$core$Basics_ops['++'], x, 'px');
-	}(
-		_elm_lang$core$Basics$toString(offSet + 0));
-	return _elm_lang$html$Html_Attributes$style(
-		{
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'backgroundColor', _1: 'rgb(100,100,200)'},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'width', _1: '85px'},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'height', _1: '25px'},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'margin-left', _1: realOffset},
-							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'margin-right', _1: '8px'},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'font-size', _1: '9pt'},
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
-										_1: {
-											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'border', _1: 'none'},
-											_1: {ctor: '[]'}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		});
-};
+			});
+	});
+var _user$project$Main$colorDark = '#444';
+var _user$project$Main$colorLight = '#88a';
+var _user$project$Main$colorBlue = 'rgb(100,100,200)';
 var _user$project$Main$ribbonStyle = function (color) {
 	return _elm_lang$html$Html_Attributes$style(
 		{
@@ -16393,41 +16492,89 @@ var _user$project$Main$spacer = function (n) {
 		},
 		{ctor: '[]'});
 };
-var _user$project$Main$parseTitleButton = function (offSet) {
+var _user$project$Main$viewLabel = F2(
+	function (text_, width) {
+		return A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorDark, width),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(text_),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$Main$optionaViewTitleButton = F2(
+	function (model, width) {
+		var _p0 = model.configuration;
+		switch (_p0.ctor) {
+			case 'StandardView':
+				return A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorDark, width),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Basic'),
+						_1: {ctor: '[]'}
+					});
+			case 'ParseResultsView':
+				return A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorDark, width),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Parse results'),
+						_1: {ctor: '[]'}
+					});
+			default:
+				return A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorDark, width),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Raw HTML'),
+						_1: {ctor: '[]'}
+					});
+		}
+	});
+var _user$project$Main$buttonBarBlank = function (model) {
 	return A2(
-		_elm_lang$html$Html$button,
+		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _user$project$Main$buttonStyleWide(offSet),
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '0'},
+						_1: {ctor: '[]'}
+					}
+				}),
 			_1: {ctor: '[]'}
 		},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text('Parse results'),
+			_0: A2(_user$project$Main$optionaViewTitleButton, model, 190),
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Main$buttonBarBlank = A2(
-	_elm_lang$html$Html$div,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$style(
-			{
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '0'},
-					_1: {ctor: '[]'}
-				}
-			}),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: _user$project$Main$parseTitleButton(0),
-		_1: {ctor: '[]'}
-	});
 var _user$project$Main$renderedSourcePane = function (model) {
 	var renderedText = A2(_user$project$MiniLatex_Driver$getRenderedText, '', model.editRecord);
 	return A2(
@@ -16450,6 +16597,21 @@ var _user$project$Main$renderedSourcePane = function (model) {
 			}
 		},
 		{ctor: '[]'});
+};
+var _user$project$Main$rawRenderedSourcePane = function (model) {
+	var renderedText = A2(_user$project$MiniLatex_Driver$getRenderedText, '', model.editRecord);
+	return A2(
+		_elm_lang$html$Html$pre,
+		{
+			ctor: '::',
+			_0: _user$project$Main$parseResultsStyle,
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(renderedText),
+			_1: {ctor: '[]'}
+		});
 };
 var _user$project$Main$prettyPrint = function (parseResult) {
 	return A2(
@@ -16475,6 +16637,37 @@ var _user$project$Main$parseResultPane = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
+var _user$project$Main$showHtmlResult = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Main$spacer(20),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$buttonBarBlank(model),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$spacer(5),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$rawRenderedSourcePane(model),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
 var _user$project$Main$showParseResult = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -16493,7 +16686,7 @@ var _user$project$Main$showParseResult = function (model) {
 			_0: _user$project$Main$spacer(20),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Main$buttonBarBlank,
+				_0: _user$project$Main$buttonBarBlank(model),
 				_1: {
 					ctor: '::',
 					_0: _user$project$Main$spacer(5),
@@ -16591,11 +16784,14 @@ var _user$project$Main$headerRibbon = A2(
 		}
 	});
 var _user$project$Main$appWidth = function (configuration) {
-	var _p0 = configuration;
-	if (_p0.ctor === 'Standard') {
-		return '900px';
-	} else {
-		return '1350px';
+	var _p1 = configuration;
+	switch (_p1.ctor) {
+		case 'StandardView':
+			return '900px';
+		case 'ParseResultsView':
+			return '1350px';
+		default:
+			return '1350px';
 	}
 };
 var _user$project$Main$subscriptions = function (model) {
@@ -16631,41 +16827,195 @@ var _user$project$Main$sendToJs = _elm_lang$core$Native_Platform.outgoingPort(
 	function (v) {
 		return v;
 	});
-var _user$project$Main$Model = F5(
-	function (a, b, c, d, e) {
-		return {sourceText: a, parseResult: b, editRecord: c, seed: d, configuration: e};
+var _user$project$Main$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {sourceText: a, parseResult: b, hasMathResult: c, editRecord: d, seed: e, configuration: f};
 	});
-var _user$project$Main$ShowParseResults = {ctor: 'ShowParseResults'};
-var _user$project$Main$Standard = {ctor: 'Standard'};
-var _user$project$Main$ToggleConfiguration = {ctor: 'ToggleConfiguration'};
-var _user$project$Main$toggleConfigButton = function (offSet) {
+var _user$project$Main$RawHtmlView = {ctor: 'RawHtmlView'};
+var _user$project$Main$ParseResultsView = {ctor: 'ParseResultsView'};
+var _user$project$Main$StandardView = {ctor: 'StandardView'};
+var _user$project$Main$ShowRawHtmlView = {ctor: 'ShowRawHtmlView'};
+var _user$project$Main$rawHtmlViewButton = F2(
+	function (model, width) {
+		return _elm_lang$core$Native_Utils.eq(model.configuration, _user$project$Main$RawHtmlView) ? A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ShowRawHtmlView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Raw Html'),
+				_1: {ctor: '[]'}
+			}) : A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ShowRawHtmlView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorLight, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Raw Html'),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$Main$ShowParseResultsView = {ctor: 'ShowParseResultsView'};
+var _user$project$Main$parseResultsViewButton = F2(
+	function (model, width) {
+		return _elm_lang$core$Native_Utils.eq(model.configuration, _user$project$Main$ParseResultsView) ? A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ShowParseResultsView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Parse Results'),
+				_1: {ctor: '[]'}
+			}) : A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ShowParseResultsView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorLight, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Parse Results'),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$Main$ShowStandardView = {ctor: 'ShowStandardView'};
+var _user$project$Main$standardViewButton = F2(
+	function (model, width) {
+		return _elm_lang$core$Native_Utils.eq(model.configuration, _user$project$Main$StandardView) ? A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ShowStandardView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Basic'),
+				_1: {ctor: '[]'}
+			}) : A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ShowStandardView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorLight, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Basic'),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$Main$buttonBarRight = function (model) {
 	return A2(
-		_elm_lang$html$Html$button,
+		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ToggleConfiguration),
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$buttonStyleWide(offSet),
-				_1: {ctor: '[]'}
-			}
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
 		},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text('Toggle display'),
+			_0: A2(_user$project$Main$viewLabel, 'View', 80),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$Main$standardViewButton, model, 108),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$Main$parseResultsViewButton, model, 108),
+					_1: {
+						ctor: '::',
+						_0: A2(_user$project$Main$rawHtmlViewButton, model, 108),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
+var _user$project$Main$renderedSource = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
+					_1: {ctor: '[]'}
+				}),
 			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Main$spacer(20),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$buttonBarRight(model),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$spacer(5),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$renderedSourcePane(model),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
 		});
 };
 var _user$project$Main$NewSeed = function (a) {
 	return {ctor: 'NewSeed', _0: a};
 };
 var _user$project$Main$init = function () {
+	var parseResult = _user$project$MiniLatex_Driver$parse(_user$project$Main$initialSourceText);
 	var model = {
 		sourceText: _user$project$Main$initialSourceText,
 		editRecord: A2(_user$project$MiniLatex_Driver$setup, 0, _user$project$Main$initialSourceText),
-		parseResult: _user$project$MiniLatex_Driver$parse(_user$project$Main$initialSourceText),
+		parseResult: parseResult,
+		hasMathResult: A2(
+			_elm_lang$core$Debug$log,
+			'hasMathResult',
+			A2(_elm_lang$core$List$map, _user$project$MiniLatex_Parser$listHasMath, parseResult)),
 		seed: 0,
-		configuration: _user$project$Main$Standard
+		configuration: _user$project$Main$StandardView
 	};
 	return {
 		ctor: '_Tuple2',
@@ -16678,18 +17028,20 @@ var _user$project$Main$init = function () {
 }();
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p1 = msg;
-		switch (_p1.ctor) {
+		var _p2 = msg;
+		switch (_p2.ctor) {
 			case 'FastRender':
+				var parseResult = _user$project$MiniLatex_Driver$parse(model.sourceText);
+				var hasMathResult = A2(
+					_elm_lang$core$Debug$log,
+					'hasMathResult',
+					A2(_elm_lang$core$List$map, _user$project$MiniLatex_Parser$listHasMath, parseResult));
 				var newEditRecord = A3(_user$project$MiniLatex_Driver$update, model.seed, model.editRecord, model.sourceText);
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{
-							editRecord: newEditRecord,
-							parseResult: _user$project$MiniLatex_Driver$parse(model.sourceText)
-						}),
+						{editRecord: newEditRecord, parseResult: parseResult, hasMathResult: hasMathResult}),
 					_1: _elm_lang$core$Platform_Cmd$batch(
 						{
 							ctor: '::',
@@ -16755,7 +17107,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{sourceText: _p1._0}),
+						{sourceText: _p2._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'GenerateSeed':
@@ -16772,33 +17124,38 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{seed: _p1._0}),
+						{seed: _p2._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ShowStandardView':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{configuration: _user$project$Main$StandardView}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ShowParseResultsView':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{configuration: _user$project$Main$ParseResultsView}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
-				var _p2 = model.configuration;
-				if (_p2.ctor === 'ShowParseResults') {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{configuration: _user$project$Main$Standard}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{configuration: _user$project$Main$ShowParseResults}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				}
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{configuration: _user$project$Main$RawHtmlView}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 		}
 	});
 var _user$project$Main$GenerateSeed = {ctor: 'GenerateSeed'};
 var _user$project$Main$Restore = {ctor: 'Restore'};
-var _user$project$Main$restoreButton = function (offSet) {
+var _user$project$Main$restoreButton = function (width) {
 	return A2(
 		_elm_lang$html$Html$button,
 		{
@@ -16806,7 +17163,7 @@ var _user$project$Main$restoreButton = function (offSet) {
 			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Restore),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Main$buttonStyle(offSet),
+				_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
 				_1: {ctor: '[]'}
 			}
 		},
@@ -16817,7 +17174,7 @@ var _user$project$Main$restoreButton = function (offSet) {
 		});
 };
 var _user$project$Main$Reset = {ctor: 'Reset'};
-var _user$project$Main$resetButton = function (offSet) {
+var _user$project$Main$resetButton = function (width) {
 	return A2(
 		_elm_lang$html$Html$button,
 		{
@@ -16825,39 +17182,18 @@ var _user$project$Main$resetButton = function (offSet) {
 			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Reset),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Main$buttonStyle(offSet),
+				_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
 				_1: {ctor: '[]'}
 			}
 		},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text('Reset'),
+			_0: _elm_lang$html$Html$text('Clear'),
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Main$buttonBarLeft = A2(
-	_elm_lang$html$Html$div,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$style(
-			{
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
-				_1: {ctor: '[]'}
-			}),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: _user$project$Main$resetButton(0),
-		_1: {
-			ctor: '::',
-			_0: _user$project$Main$restoreButton(0),
-			_1: {ctor: '[]'}
-		}
-	});
 var _user$project$Main$ReRender = {ctor: 'ReRender'};
-var _user$project$Main$reRenderButton = function (offSet) {
+var _user$project$Main$reRenderButton = function (width) {
 	return A2(
 		_elm_lang$html$Html$button,
 		{
@@ -16865,7 +17201,7 @@ var _user$project$Main$reRenderButton = function (offSet) {
 			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ReRender),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Main$buttonStyle(offSet),
+				_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
 				_1: {ctor: '[]'}
 			}
 		},
@@ -16900,6 +17236,54 @@ var _user$project$Main$editorPane = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
+var _user$project$Main$FastRender = {ctor: 'FastRender'};
+var _user$project$Main$fastRenderButton = function (width) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$FastRender),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Fast Render'),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$buttonBarLeft = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$style(
+			{
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _user$project$Main$resetButton(93),
+		_1: {
+			ctor: '::',
+			_0: _user$project$Main$restoreButton(93),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$reRenderButton(93),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$fastRenderButton(96),
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	});
 var _user$project$Main$editor = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -16925,81 +17309,6 @@ var _user$project$Main$editor = function (model) {
 					_1: {
 						ctor: '::',
 						_0: _user$project$Main$editorPane(model),
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		});
-};
-var _user$project$Main$FastRender = {ctor: 'FastRender'};
-var _user$project$Main$fastRenderButton = function (offSet) {
-	return A2(
-		_elm_lang$html$Html$button,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$FastRender),
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$buttonStyle(offSet),
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('Fast Render'),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$buttonBarRight = A2(
-	_elm_lang$html$Html$div,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$style(
-			{
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
-				_1: {ctor: '[]'}
-			}),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: _user$project$Main$reRenderButton(0),
-		_1: {
-			ctor: '::',
-			_0: _user$project$Main$fastRenderButton(0),
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$toggleConfigButton(0),
-				_1: {ctor: '[]'}
-			}
-		}
-	});
-var _user$project$Main$renderedSource = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _user$project$Main$spacer(20),
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$buttonBarRight,
-				_1: {
-					ctor: '::',
-					_0: _user$project$Main$spacer(5),
-					_1: {
-						ctor: '::',
-						_0: _user$project$Main$renderedSourcePane(model),
 						_1: {ctor: '[]'}
 					}
 				}
@@ -17062,12 +17371,45 @@ var _user$project$Main$parseResultsView = function (model) {
 			}
 		});
 };
+var _user$project$Main$rawHtmlResultsView = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _user$project$Main$headerRibbon,
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$editor(model),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$renderedSource(model),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$showHtmlResult(model),
+						_1: {
+							ctor: '::',
+							_0: _user$project$Main$spacer(5),
+							_1: {
+								ctor: '::',
+								_0: _user$project$Main$footerRibbon,
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		});
+};
 var _user$project$Main$mainView = function (model) {
 	var _p3 = model.configuration;
-	if (_p3.ctor === 'Standard') {
-		return _user$project$Main$standardView(model);
-	} else {
-		return _user$project$Main$parseResultsView(model);
+	switch (_p3.ctor) {
+		case 'StandardView':
+			return _user$project$Main$standardView(model);
+		case 'ParseResultsView':
+			return _user$project$Main$parseResultsView(model);
+		default:
+			return _user$project$Main$rawHtmlResultsView(model);
 	}
 };
 var _user$project$Main$view = function (model) {
