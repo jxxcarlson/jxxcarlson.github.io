@@ -16552,7 +16552,7 @@ var _user$project$Main$optionaViewTitleButton = F2(
 					});
 		}
 	});
-var _user$project$Main$buttonBarBlank = function (model) {
+var _user$project$Main$buttonBarRawHtmlResults = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -16613,15 +16613,24 @@ var _user$project$Main$rawRenderedSourcePane = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Main$prettyPrint = function (parseResult) {
-	return A2(
-		_elm_lang$core$String$join,
-		'\n\n',
-		A2(
-			_elm_lang$core$List$map,
-			A2(_elm_community$string_extra$String_Extra$replace, ' ', '\n '),
-			A2(_elm_lang$core$List$map, _elm_lang$core$Basics$toString, parseResult)));
-};
+var _user$project$Main$prettyPrint = F2(
+	function (lineViewStyle, parseResult) {
+		var _p1 = lineViewStyle;
+		if (_p1.ctor === 'Vertical') {
+			return A2(
+				_elm_lang$core$String$join,
+				'\n\n',
+				A2(
+					_elm_lang$core$List$map,
+					A2(_elm_community$string_extra$String_Extra$replace, ' ', '\n '),
+					A2(_elm_lang$core$List$map, _elm_lang$core$Basics$toString, parseResult)));
+		} else {
+			return A2(
+				_elm_lang$core$String$join,
+				'\n\n',
+				A2(_elm_lang$core$List$map, _elm_lang$core$Basics$toString, parseResult));
+		}
+	});
 var _user$project$Main$parseResultPane = function (model) {
 	return A2(
 		_elm_lang$html$Html$pre,
@@ -16633,7 +16642,7 @@ var _user$project$Main$parseResultPane = function (model) {
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html$text(
-				_user$project$Main$prettyPrint(model.parseResult)),
+				A2(_user$project$Main$prettyPrint, model.lineViewStyle, model.parseResult)),
 			_1: {ctor: '[]'}
 		});
 };
@@ -16655,44 +16664,13 @@ var _user$project$Main$showHtmlResult = function (model) {
 			_0: _user$project$Main$spacer(20),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Main$buttonBarBlank(model),
+				_0: _user$project$Main$buttonBarRawHtmlResults(model),
 				_1: {
 					ctor: '::',
 					_0: _user$project$Main$spacer(5),
 					_1: {
 						ctor: '::',
 						_0: _user$project$Main$rawRenderedSourcePane(model),
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		});
-};
-var _user$project$Main$showParseResult = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _user$project$Main$spacer(20),
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$buttonBarBlank(model),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Main$spacer(5),
-					_1: {
-						ctor: '::',
-						_0: _user$project$Main$parseResultPane(model),
 						_1: {ctor: '[]'}
 					}
 				}
@@ -16784,8 +16762,8 @@ var _user$project$Main$headerRibbon = A2(
 		}
 	});
 var _user$project$Main$appWidth = function (configuration) {
-	var _p1 = configuration;
-	switch (_p1.ctor) {
+	var _p2 = configuration;
+	switch (_p2.ctor) {
 		case 'StandardView':
 			return '900px';
 		case 'ParseResultsView':
@@ -16827,13 +16805,147 @@ var _user$project$Main$sendToJs = _elm_lang$core$Native_Platform.outgoingPort(
 	function (v) {
 		return v;
 	});
-var _user$project$Main$Model = F6(
-	function (a, b, c, d, e, f) {
-		return {sourceText: a, parseResult: b, hasMathResult: c, editRecord: d, seed: e, configuration: f};
+var _user$project$Main$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {sourceText: a, parseResult: b, hasMathResult: c, editRecord: d, seed: e, configuration: f, lineViewStyle: g};
 	});
 var _user$project$Main$RawHtmlView = {ctor: 'RawHtmlView'};
 var _user$project$Main$ParseResultsView = {ctor: 'ParseResultsView'};
 var _user$project$Main$StandardView = {ctor: 'StandardView'};
+var _user$project$Main$Vertical = {ctor: 'Vertical'};
+var _user$project$Main$Horizontal = {ctor: 'Horizontal'};
+var _user$project$Main$SetVerticalView = {ctor: 'SetVerticalView'};
+var _user$project$Main$setVerticalViewButton = F2(
+	function (model, width) {
+		return _elm_lang$core$Native_Utils.eq(model.lineViewStyle, _user$project$Main$Vertical) ? A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$SetVerticalView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Vertical'),
+				_1: {ctor: '[]'}
+			}) : A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$SetVerticalView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorLight, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Vertical'),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$Main$SetHorizontalView = {ctor: 'SetHorizontalView'};
+var _user$project$Main$setHorizontalViewButton = F2(
+	function (model, width) {
+		return _elm_lang$core$Native_Utils.eq(model.lineViewStyle, _user$project$Main$Horizontal) ? A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$SetHorizontalView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Horizontal'),
+				_1: {ctor: '[]'}
+			}) : A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$SetHorizontalView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorLight, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Horizontal'),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$Main$buttonBarParserResults = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '0'},
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(_user$project$Main$optionaViewTitleButton, model, 190),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$Main$setHorizontalViewButton, model, 90),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$Main$setVerticalViewButton, model, 90),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Main$showParseResult = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Main$spacer(20),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$buttonBarParserResults(model),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$spacer(5),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$parseResultPane(model),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
 var _user$project$Main$ShowRawHtmlView = {ctor: 'ShowRawHtmlView'};
 var _user$project$Main$rawHtmlViewButton = F2(
 	function (model, width) {
@@ -17015,7 +17127,8 @@ var _user$project$Main$init = function () {
 			'hasMathResult',
 			A2(_elm_lang$core$List$map, _user$project$MiniLatex_Parser$listHasMath, parseResult)),
 		seed: 0,
-		configuration: _user$project$Main$StandardView
+		configuration: _user$project$Main$StandardView,
+		lineViewStyle: _user$project$Main$Horizontal
 	};
 	return {
 		ctor: '_Tuple2',
@@ -17028,8 +17141,8 @@ var _user$project$Main$init = function () {
 }();
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p2 = msg;
-		switch (_p2.ctor) {
+		var _p3 = msg;
+		switch (_p3.ctor) {
 			case 'FastRender':
 				var parseResult = _user$project$MiniLatex_Driver$parse(model.sourceText);
 				var hasMathResult = A2(
@@ -17107,7 +17220,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{sourceText: _p2._0}),
+						{sourceText: _p3._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'GenerateSeed':
@@ -17124,7 +17237,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{seed: _p2._0}),
+						{seed: _p3._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ShowStandardView':
@@ -17143,12 +17256,28 @@ var _user$project$Main$update = F2(
 						{configuration: _user$project$Main$ParseResultsView}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			default:
+			case 'ShowRawHtmlView':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{configuration: _user$project$Main$RawHtmlView}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'SetHorizontalView':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{lineViewStyle: _user$project$Main$Horizontal}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{lineViewStyle: _user$project$Main$Vertical}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 		}
@@ -17402,8 +17531,8 @@ var _user$project$Main$rawHtmlResultsView = function (model) {
 		});
 };
 var _user$project$Main$mainView = function (model) {
-	var _p3 = model.configuration;
-	switch (_p3.ctor) {
+	var _p4 = model.configuration;
+	switch (_p4.ctor) {
 		case 'StandardView':
 			return _user$project$Main$standardView(model);
 		case 'ParseResultsView':
