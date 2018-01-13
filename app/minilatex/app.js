@@ -12362,6 +12362,41 @@ var _user$project$MiniLatex_LatexState$LatexState = F2(
 		return {counters: a, crossReferences: b};
 	});
 
+var _user$project$MiniLatex_Parser$notMacroSpecialCharacter = function (c) {
+	return !(_elm_lang$core$Native_Utils.eq(
+		c,
+		_elm_lang$core$Native_Utils.chr('{')) || (_elm_lang$core$Native_Utils.eq(
+		c,
+		_elm_lang$core$Native_Utils.chr(' ')) || _elm_lang$core$Native_Utils.eq(
+		c,
+		_elm_lang$core$Native_Utils.chr('\n'))));
+};
+var _user$project$MiniLatex_Parser$notSpecialTableOrMacroCharacter = function (c) {
+	return !(_elm_lang$core$Native_Utils.eq(
+		c,
+		_elm_lang$core$Native_Utils.chr(' ')) || (_elm_lang$core$Native_Utils.eq(
+		c,
+		_elm_lang$core$Native_Utils.chr('\n')) || (_elm_lang$core$Native_Utils.eq(
+		c,
+		_elm_lang$core$Native_Utils.chr('\\')) || (_elm_lang$core$Native_Utils.eq(
+		c,
+		_elm_lang$core$Native_Utils.chr('$')) || (_elm_lang$core$Native_Utils.eq(
+		c,
+		_elm_lang$core$Native_Utils.chr('}')) || _elm_lang$core$Native_Utils.eq(
+		c,
+		_elm_lang$core$Native_Utils.chr('&')))))));
+};
+var _user$project$MiniLatex_Parser$notSpecialCharacter = function (c) {
+	return !(_elm_lang$core$Native_Utils.eq(
+		c,
+		_elm_lang$core$Native_Utils.chr(' ')) || (_elm_lang$core$Native_Utils.eq(
+		c,
+		_elm_lang$core$Native_Utils.chr('\n')) || (_elm_lang$core$Native_Utils.eq(
+		c,
+		_elm_lang$core$Native_Utils.chr('\\')) || _elm_lang$core$Native_Utils.eq(
+		c,
+		_elm_lang$core$Native_Utils.chr('$')))));
+};
 var _user$project$MiniLatex_Parser$reservedWord = A2(
 	_elm_tools$parser$Parser$inContext,
 	'reservedWord',
@@ -12441,26 +12476,6 @@ var _user$project$MiniLatex_Parser$parseUntil = function (marker) {
 			_elm_tools$parser$Parser$source(
 				_elm_tools$parser$Parser$ignoreUntil(marker))));
 };
-var _user$project$MiniLatex_Parser$beginWord = A2(
-	_elm_tools$parser$Parser$inContext,
-	'beginWord',
-	A2(
-		_elm_tools$parser$Parser_ops['|='],
-		A2(
-			_elm_tools$parser$Parser_ops['|.'],
-			A2(
-				_elm_tools$parser$Parser_ops['|.'],
-				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-				A2(
-					_elm_tools$parser$Parser$ignore,
-					_elm_tools$parser$Parser$zeroOrMore,
-					F2(
-						function (x, y) {
-							return _elm_lang$core$Native_Utils.eq(x, y);
-						})(
-						_elm_lang$core$Native_Utils.chr(' ')))),
-			_elm_tools$parser$Parser$symbol('\\begin{')),
-		_user$project$MiniLatex_Parser$parseUntil('}')));
 var _user$project$MiniLatex_Parser$endWord = A2(
 	_elm_tools$parser$Parser$inContext,
 	'endWord',
@@ -12510,33 +12525,11 @@ var _user$project$MiniLatex_Parser$word = A2(
 				_elm_tools$parser$Parser_ops['|.'],
 				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
 				_user$project$MiniLatex_Parser$spaces),
-			A2(
-				_elm_tools$parser$Parser$keep,
-				_elm_tools$parser$Parser$oneOrMore,
-				function (c) {
-					return !(_elm_lang$core$Native_Utils.eq(
-						c,
-						_elm_lang$core$Native_Utils.chr(' ')) || (_elm_lang$core$Native_Utils.eq(
-						c,
-						_elm_lang$core$Native_Utils.chr('\n')) || (_elm_lang$core$Native_Utils.eq(
-						c,
-						_elm_lang$core$Native_Utils.chr('\\')) || _elm_lang$core$Native_Utils.eq(
-						c,
-						_elm_lang$core$Native_Utils.chr('$')))));
-				})),
-		A2(
-			_elm_tools$parser$Parser$ignore,
-			_elm_tools$parser$Parser$zeroOrMore,
-			function (c) {
-				return _elm_lang$core$Native_Utils.eq(
-					c,
-					_elm_lang$core$Native_Utils.chr(' ')) || _elm_lang$core$Native_Utils.eq(
-					c,
-					_elm_lang$core$Native_Utils.chr('\n'));
-			})));
-var _user$project$MiniLatex_Parser$word2 = A2(
+			A2(_elm_tools$parser$Parser$keep, _elm_tools$parser$Parser$oneOrMore, _user$project$MiniLatex_Parser$notSpecialCharacter)),
+		_user$project$MiniLatex_Parser$ws));
+var _user$project$MiniLatex_Parser$specialWord = A2(
 	_elm_tools$parser$Parser$inContext,
-	'word2',
+	'specialWord',
 	A2(
 		_elm_tools$parser$Parser_ops['|.'],
 		A2(
@@ -12545,52 +12538,7 @@ var _user$project$MiniLatex_Parser$word2 = A2(
 				_elm_tools$parser$Parser_ops['|.'],
 				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
 				_user$project$MiniLatex_Parser$spaces),
-			A2(
-				_elm_tools$parser$Parser$keep,
-				_elm_tools$parser$Parser$oneOrMore,
-				function (c) {
-					return !(_elm_lang$core$Native_Utils.eq(
-						c,
-						_elm_lang$core$Native_Utils.chr(' ')) || (_elm_lang$core$Native_Utils.eq(
-						c,
-						_elm_lang$core$Native_Utils.chr('\n')) || (_elm_lang$core$Native_Utils.eq(
-						c,
-						_elm_lang$core$Native_Utils.chr('\\')) || (_elm_lang$core$Native_Utils.eq(
-						c,
-						_elm_lang$core$Native_Utils.chr('$')) || (_elm_lang$core$Native_Utils.eq(
-						c,
-						_elm_lang$core$Native_Utils.chr('}')) || _elm_lang$core$Native_Utils.eq(
-						c,
-						_elm_lang$core$Native_Utils.chr('&')))))));
-				})),
-		_user$project$MiniLatex_Parser$spaces));
-var _user$project$MiniLatex_Parser$word2a = A2(
-	_elm_tools$parser$Parser$inContext,
-	'word',
-	A2(
-		_elm_tools$parser$Parser_ops['|.'],
-		A2(
-			_elm_tools$parser$Parser_ops['|='],
-			A2(
-				_elm_tools$parser$Parser_ops['|.'],
-				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-				_user$project$MiniLatex_Parser$spaces),
-			A2(
-				_elm_tools$parser$Parser$keep,
-				_elm_tools$parser$Parser$oneOrMore,
-				function (c) {
-					return !(_elm_lang$core$Native_Utils.eq(
-						c,
-						_elm_lang$core$Native_Utils.chr(' ')) || (_elm_lang$core$Native_Utils.eq(
-						c,
-						_elm_lang$core$Native_Utils.chr('\n')) || (_elm_lang$core$Native_Utils.eq(
-						c,
-						_elm_lang$core$Native_Utils.chr('\\')) || (_elm_lang$core$Native_Utils.eq(
-						c,
-						_elm_lang$core$Native_Utils.chr('$')) || _elm_lang$core$Native_Utils.eq(
-						c,
-						_elm_lang$core$Native_Utils.chr('}'))))));
-				})),
+			A2(_elm_tools$parser$Parser$keep, _elm_tools$parser$Parser$oneOrMore, _user$project$MiniLatex_Parser$notSpecialTableOrMacroCharacter)),
 		_user$project$MiniLatex_Parser$spaces));
 var _user$project$MiniLatex_Parser$innerMacroName = A2(
 	_elm_tools$parser$Parser$inContext,
@@ -12604,18 +12552,7 @@ var _user$project$MiniLatex_Parser$innerMacroName = A2(
 				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
 				_user$project$MiniLatex_Parser$spaces),
 			_elm_tools$parser$Parser$symbol('\\')),
-		A2(
-			_elm_tools$parser$Parser$keep,
-			_elm_tools$parser$Parser$zeroOrMore,
-			function (c) {
-				return !(_elm_lang$core$Native_Utils.eq(
-					c,
-					_elm_lang$core$Native_Utils.chr('{')) || (_elm_lang$core$Native_Utils.eq(
-					c,
-					_elm_lang$core$Native_Utils.chr(' ')) || _elm_lang$core$Native_Utils.eq(
-					c,
-					_elm_lang$core$Native_Utils.chr('\n'))));
-			})));
+		A2(_elm_tools$parser$Parser$keep, _elm_tools$parser$Parser$oneOrMore, _user$project$MiniLatex_Parser$notMacroSpecialCharacter)));
 var _user$project$MiniLatex_Parser$macroName = A2(
 	_elm_tools$parser$Parser$inContext,
 	'macroName',
@@ -12627,75 +12564,19 @@ var _user$project$MiniLatex_Parser$macroName = A2(
 				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
 				_user$project$MiniLatex_Parser$mustFail(_user$project$MiniLatex_Parser$reservedWord)),
 			_user$project$MiniLatex_Parser$innerMacroName)));
-var _user$project$MiniLatex_Parser$hasMath = function (expr) {
-	hasMath:
-	while (true) {
-		var _p1 = expr;
-		switch (_p1.ctor) {
-			case 'LXString':
-				return false;
-			case 'Comment':
-				return false;
-			case 'Item':
-				var _v2 = _p1._1;
-				expr = _v2;
-				continue hasMath;
-			case 'InlineMath':
-				return true;
-			case 'DisplayMath':
-				return true;
-			case 'Macro':
-				return A3(
-					_elm_lang$core$List$foldr,
-					F2(
-						function (x, acc) {
-							return _user$project$MiniLatex_Parser$hasMath(x) || acc;
-						}),
-					false,
-					_p1._1);
-			case 'Environment':
-				return A2(_user$project$MiniLatex_Parser$envHasMath, _p1._0, _p1._1);
-			default:
-				return A3(
-					_elm_lang$core$List$foldr,
-					F2(
-						function (x, acc) {
-							return _user$project$MiniLatex_Parser$hasMath(x) || acc;
-						}),
-					false,
-					_p1._0);
-		}
-	}
-};
-var _user$project$MiniLatex_Parser$envHasMath = F2(
-	function (envType, expr) {
-		return A2(
-			_elm_lang$core$List$member,
-			envType,
-			{
-				ctor: '::',
-				_0: 'equation',
-				_1: {
-					ctor: '::',
-					_0: 'align',
-					_1: {
-						ctor: '::',
-						_0: 'eqnarray',
-						_1: {ctor: '[]'}
-					}
-				}
-			}) || _user$project$MiniLatex_Parser$hasMath(expr);
-	});
-var _user$project$MiniLatex_Parser$listHasMath = function (list) {
-	return A3(
-		_elm_lang$core$List$foldr,
-		F2(
-			function (x, acc) {
-				return _user$project$MiniLatex_Parser$hasMath(x) || acc;
-			}),
-		false,
-		list);
-};
+var _user$project$MiniLatex_Parser$envName = A2(
+	_elm_tools$parser$Parser$inContext,
+	'envName',
+	A2(
+		_elm_tools$parser$Parser_ops['|='],
+		A2(
+			_elm_tools$parser$Parser_ops['|.'],
+			A2(
+				_elm_tools$parser$Parser_ops['|.'],
+				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+				_user$project$MiniLatex_Parser$spaces),
+			_elm_tools$parser$Parser$symbol('\\begin{')),
+		_user$project$MiniLatex_Parser$parseUntil('}')));
 var _user$project$MiniLatex_Parser$LatexList = function (a) {
 	return {ctor: 'LatexList', _0: a};
 };
@@ -12744,45 +12625,27 @@ var _user$project$MiniLatex_Parser$displayMathBrackets = A2(
 			A2(
 				_elm_tools$parser$Parser_ops['|.'],
 				_elm_tools$parser$Parser$succeed(_user$project$MiniLatex_Parser$DisplayMath),
-				A2(
-					_elm_tools$parser$Parser$ignore,
-					_elm_tools$parser$Parser$zeroOrMore,
-					F2(
-						function (x, y) {
-							return _elm_lang$core$Native_Utils.eq(x, y);
-						})(
-						_elm_lang$core$Native_Utils.chr(' ')))),
+				_user$project$MiniLatex_Parser$spaces),
 			_elm_tools$parser$Parser$symbol('\\[')),
 		_user$project$MiniLatex_Parser$parseUntil('\\]')));
 var _user$project$MiniLatex_Parser$InlineMath = function (a) {
 	return {ctor: 'InlineMath', _0: a};
 };
-var _user$project$MiniLatex_Parser$inlineMath = A2(
-	_elm_tools$parser$Parser$inContext,
-	'inline math',
-	A2(
-		_elm_tools$parser$Parser_ops['|.'],
+var _user$project$MiniLatex_Parser$inlineMath = function (wsParser) {
+	return A2(
+		_elm_tools$parser$Parser$inContext,
+		'inline math',
 		A2(
-			_elm_tools$parser$Parser_ops['|='],
+			_elm_tools$parser$Parser_ops['|.'],
 			A2(
-				_elm_tools$parser$Parser_ops['|.'],
-				_elm_tools$parser$Parser$succeed(_user$project$MiniLatex_Parser$InlineMath),
-				_elm_tools$parser$Parser$symbol('$')),
-			_user$project$MiniLatex_Parser$parseUntil('$')),
-		_user$project$MiniLatex_Parser$ws));
-var _user$project$MiniLatex_Parser$inlineMath2 = A2(
-	_elm_tools$parser$Parser$inContext,
-	'inline math',
-	A2(
-		_elm_tools$parser$Parser_ops['|.'],
-		A2(
-			_elm_tools$parser$Parser_ops['|='],
-			A2(
-				_elm_tools$parser$Parser_ops['|.'],
-				_elm_tools$parser$Parser$succeed(_user$project$MiniLatex_Parser$InlineMath),
-				_elm_tools$parser$Parser$symbol('$')),
-			_user$project$MiniLatex_Parser$parseUntil('$')),
-		_user$project$MiniLatex_Parser$spaces));
+				_elm_tools$parser$Parser_ops['|='],
+				A2(
+					_elm_tools$parser$Parser_ops['|.'],
+					_elm_tools$parser$Parser$succeed(_user$project$MiniLatex_Parser$InlineMath),
+					_elm_tools$parser$Parser$symbol('$')),
+				_user$project$MiniLatex_Parser$parseUntil('$')),
+			wsParser));
+};
 var _user$project$MiniLatex_Parser$Item = F2(
 	function (a, b) {
 		return {ctor: 'Item', _0: a, _1: b};
@@ -12823,9 +12686,9 @@ var _user$project$MiniLatex_Parser$words = A2(
 				_elm_tools$parser$Parser_ops['|='],
 				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
 				A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$oneOrMore, _user$project$MiniLatex_Parser$word)))));
-var _user$project$MiniLatex_Parser$words2 = A2(
+var _user$project$MiniLatex_Parser$specialWords = A2(
 	_elm_tools$parser$Parser$inContext,
-	'words2',
+	'specialWords',
 	A2(
 		_elm_tools$parser$Parser$map,
 		_user$project$MiniLatex_Parser$LXString,
@@ -12835,7 +12698,7 @@ var _user$project$MiniLatex_Parser$words2 = A2(
 			A2(
 				_elm_tools$parser$Parser_ops['|='],
 				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-				A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$oneOrMore, _user$project$MiniLatex_Parser$word2)))));
+				A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$oneOrMore, _user$project$MiniLatex_Parser$specialWord)))));
 var _user$project$MiniLatex_Parser$arg = A2(
 	_elm_tools$parser$Parser$inContext,
 	'arg',
@@ -12856,47 +12719,36 @@ var _user$project$MiniLatex_Parser$arg = A2(
 					_elm_tools$parser$Parser$oneOf(
 						{
 							ctor: '::',
-							_0: _user$project$MiniLatex_Parser$words2,
+							_0: _user$project$MiniLatex_Parser$specialWords,
 							_1: {
 								ctor: '::',
-								_0: _user$project$MiniLatex_Parser$inlineMath2,
+								_0: _user$project$MiniLatex_Parser$inlineMath(_user$project$MiniLatex_Parser$spaces),
 								_1: {
 									ctor: '::',
 									_0: _elm_tools$parser$Parser$lazy(
-										function (_p2) {
-											return _user$project$MiniLatex_Parser$macro;
+										function (_p1) {
+											return _user$project$MiniLatex_Parser$macro(_user$project$MiniLatex_Parser$ws);
 										}),
 									_1: {ctor: '[]'}
 								}
 							}
 						}))),
 			_elm_tools$parser$Parser$symbol('}'))));
-var _user$project$MiniLatex_Parser$macro = A2(
-	_elm_tools$parser$Parser$inContext,
-	'macro',
-	A2(
-		_elm_tools$parser$Parser_ops['|.'],
+var _user$project$MiniLatex_Parser$macro = function (wsParser) {
+	return A2(
+		_elm_tools$parser$Parser$inContext,
+		'macro',
 		A2(
-			_elm_tools$parser$Parser_ops['|='],
+			_elm_tools$parser$Parser_ops['|.'],
 			A2(
 				_elm_tools$parser$Parser_ops['|='],
-				_elm_tools$parser$Parser$succeed(_user$project$MiniLatex_Parser$Macro),
-				_user$project$MiniLatex_Parser$macroName),
-			A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$zeroOrMore, _user$project$MiniLatex_Parser$arg)),
-		_user$project$MiniLatex_Parser$ws));
-var _user$project$MiniLatex_Parser$macro2 = A2(
-	_elm_tools$parser$Parser$inContext,
-	'macro2',
-	A2(
-		_elm_tools$parser$Parser_ops['|.'],
-		A2(
-			_elm_tools$parser$Parser_ops['|='],
-			A2(
-				_elm_tools$parser$Parser_ops['|='],
-				_elm_tools$parser$Parser$succeed(_user$project$MiniLatex_Parser$Macro),
-				_user$project$MiniLatex_Parser$macroName),
-			A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$zeroOrMore, _user$project$MiniLatex_Parser$arg)),
-		_user$project$MiniLatex_Parser$spaces));
+				A2(
+					_elm_tools$parser$Parser_ops['|='],
+					_elm_tools$parser$Parser$succeed(_user$project$MiniLatex_Parser$Macro),
+					_user$project$MiniLatex_Parser$macroName),
+				A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$zeroOrMore, _user$project$MiniLatex_Parser$arg)),
+			wsParser));
+};
 var _user$project$MiniLatex_Parser$item = A2(
 	_elm_tools$parser$Parser$inContext,
 	'item',
@@ -12930,13 +12782,13 @@ var _user$project$MiniLatex_Parser$item = A2(
 						_elm_tools$parser$Parser$oneOf(
 							{
 								ctor: '::',
-								_0: _user$project$MiniLatex_Parser$words2,
+								_0: _user$project$MiniLatex_Parser$specialWords,
 								_1: {
 									ctor: '::',
-									_0: _user$project$MiniLatex_Parser$inlineMath2,
+									_0: _user$project$MiniLatex_Parser$inlineMath(_user$project$MiniLatex_Parser$spaces),
 									_1: {
 										ctor: '::',
-										_0: _user$project$MiniLatex_Parser$macro2,
+										_0: _user$project$MiniLatex_Parser$macro(_user$project$MiniLatex_Parser$spaces),
 										_1: {ctor: '[]'}
 									}
 								}
@@ -12995,10 +12847,10 @@ var _user$project$MiniLatex_Parser$tableCell = A2(
 		_elm_tools$parser$Parser$oneOf(
 			{
 				ctor: '::',
-				_0: _user$project$MiniLatex_Parser$inlineMath2,
+				_0: _user$project$MiniLatex_Parser$inlineMath(_user$project$MiniLatex_Parser$spaces),
 				_1: {
 					ctor: '::',
-					_0: _user$project$MiniLatex_Parser$words2,
+					_0: _user$project$MiniLatex_Parser$specialWords,
 					_1: {ctor: '[]'}
 				}
 			})));
@@ -13119,11 +12971,11 @@ var _user$project$MiniLatex_Parser$tabularEnvironmentBody = F2(
 						_elm_tools$parser$Parser$symbol(endWord)),
 					_user$project$MiniLatex_Parser$ws)));
 	});
-var _user$project$MiniLatex_Parser$mathJaxBody = F2(
+var _user$project$MiniLatex_Parser$passThroughBody = F2(
 	function (endWord, envType) {
 		return A2(
 			_elm_tools$parser$Parser$inContext,
-			'mathJaxBody',
+			'passThroughBody',
 			A2(
 				_elm_tools$parser$Parser$map,
 				_user$project$MiniLatex_Parser$Environment(envType),
@@ -13138,7 +12990,7 @@ var _user$project$MiniLatex_Parser$mathJaxBody = F2(
 							_user$project$MiniLatex_Parser$parseUntil(endWord)),
 						_user$project$MiniLatex_Parser$ws))));
 	});
-var _user$project$MiniLatex_Parser$parseEnvirnomentDict = _elm_lang$core$Dict$fromList(
+var _user$project$MiniLatex_Parser$parseEnvironmentDict = _elm_lang$core$Dict$fromList(
 	{
 		ctor: '::',
 		_0: {
@@ -13173,10 +13025,10 @@ var _user$project$MiniLatex_Parser$parseEnvirnomentDict = _elm_lang$core$Dict$fr
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
-						_0: 'mathJax',
+						_0: 'passThrough',
 						_1: F2(
 							function (endWord, envType) {
-								return A2(_user$project$MiniLatex_Parser$mathJaxBody, endWord, envType);
+								return A2(_user$project$MiniLatex_Parser$passThroughBody, endWord, envType);
 							})
 					},
 					_1: {ctor: '[]'}
@@ -13185,9 +13037,9 @@ var _user$project$MiniLatex_Parser$parseEnvirnomentDict = _elm_lang$core$Dict$fr
 		}
 	});
 var _user$project$MiniLatex_Parser$environmentParser = function (name) {
-	var _p3 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Parser$parseEnvirnomentDict);
-	if (_p3.ctor === 'Just') {
-		return _p3._0;
+	var _p2 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Parser$parseEnvironmentDict);
+	if (_p2.ctor === 'Just') {
+		return _p2._0;
 	} else {
 		return _user$project$MiniLatex_Parser$standardEnvironmentBody;
 	}
@@ -13215,19 +13067,19 @@ var _user$project$MiniLatex_Parser$standardEnvironmentBody = F2(
 										_elm_tools$parser$Parser_ops['|.'],
 										_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
 										_user$project$MiniLatex_Parser$ws),
-									A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$zeroOrMore, _user$project$MiniLatex_Parser$parse)),
+									A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$zeroOrMore, _user$project$MiniLatex_Parser$latexExpression)),
 								_user$project$MiniLatex_Parser$ws),
 							_elm_tools$parser$Parser$symbol(endWord)),
 						_user$project$MiniLatex_Parser$ws))));
 	});
-var _user$project$MiniLatex_Parser$parse = _elm_tools$parser$Parser$oneOf(
+var _user$project$MiniLatex_Parser$latexExpression = _elm_tools$parser$Parser$oneOf(
 	{
 		ctor: '::',
 		_0: _user$project$MiniLatex_Parser$texComment,
 		_1: {
 			ctor: '::',
 			_0: _elm_tools$parser$Parser$lazy(
-				function (_p4) {
+				function (_p3) {
 					return _user$project$MiniLatex_Parser$environment;
 				}),
 			_1: {
@@ -13238,10 +13090,10 @@ var _user$project$MiniLatex_Parser$parse = _elm_tools$parser$Parser$oneOf(
 					_0: _user$project$MiniLatex_Parser$displayMathBrackets,
 					_1: {
 						ctor: '::',
-						_0: _user$project$MiniLatex_Parser$inlineMath,
+						_0: _user$project$MiniLatex_Parser$inlineMath(_user$project$MiniLatex_Parser$ws),
 						_1: {
 							ctor: '::',
-							_0: _user$project$MiniLatex_Parser$macro,
+							_0: _user$project$MiniLatex_Parser$macro(_user$project$MiniLatex_Parser$ws),
 							_1: {
 								ctor: '::',
 								_0: _user$project$MiniLatex_Parser$words,
@@ -13257,8 +13109,8 @@ var _user$project$MiniLatex_Parser$environment = A2(
 	_elm_tools$parser$Parser$inContext,
 	'environment',
 	_elm_tools$parser$Parser$lazy(
-		function (_p5) {
-			return A2(_elm_tools$parser$Parser$andThen, _user$project$MiniLatex_Parser$environmentOfType, _user$project$MiniLatex_Parser$beginWord);
+		function (_p4) {
+			return A2(_elm_tools$parser$Parser$andThen, _user$project$MiniLatex_Parser$environmentOfType, _user$project$MiniLatex_Parser$envName);
 		}));
 var _user$project$MiniLatex_Parser$environmentOfType = function (envType) {
 	return A2(
@@ -13292,7 +13144,7 @@ var _user$project$MiniLatex_Parser$environmentOfType = function (envType) {
 							}
 						}
 					}
-				}) ? 'mathJax' : envType;
+				}) ? 'passThrough' : envType;
 			var endWord = A2(
 				_elm_lang$core$Basics_ops['++'],
 				'\\end{',
@@ -13312,13 +13164,13 @@ var _user$project$MiniLatex_Parser$latexList = A2(
 				_elm_tools$parser$Parser_ops['|.'],
 				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
 				_user$project$MiniLatex_Parser$ws),
-			A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$oneOrMore, _user$project$MiniLatex_Parser$parse))));
-var _user$project$MiniLatex_Parser$parseParagraph = function (text) {
+			A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$oneOrMore, _user$project$MiniLatex_Parser$latexExpression))));
+var _user$project$MiniLatex_Parser$parse = function (text) {
 	var expr = A2(_elm_tools$parser$Parser$run, _user$project$MiniLatex_Parser$latexList, text);
-	var _p6 = expr;
-	if (_p6.ctor === 'Ok') {
-		if (_p6._0.ctor === 'LatexList') {
-			return _p6._0._0;
+	var _p5 = expr;
+	if (_p5.ctor === 'Ok') {
+		if (_p5._0.ctor === 'LatexList') {
+			return _p5._0._0;
 		} else {
 			return {
 				ctor: '::',
@@ -13327,7 +13179,7 @@ var _user$project$MiniLatex_Parser$parseParagraph = function (text) {
 			};
 		}
 	} else {
-		var _p7 = _p6._0;
+		var _p6 = _p5._0;
 		return {
 			ctor: '::',
 			_0: _user$project$MiniLatex_Parser$LXString(
@@ -13339,11 +13191,11 @@ var _user$project$MiniLatex_Parser$parseParagraph = function (text) {
 						'<pre class=\"errormessage\">',
 						A2(
 							_elm_lang$core$Basics_ops['++'],
-							_elm_lang$core$Basics$toString(_p7.problem),
+							_elm_lang$core$Basics$toString(_p6.problem),
 							A2(
 								_elm_lang$core$Basics_ops['++'],
 								' </pre><strong>in </strong> </span><pre class=\"errormessage\">',
-								A2(_elm_lang$core$Basics_ops['++'], _p7.source, '</pre>')))))),
+								A2(_elm_lang$core$Basics_ops['++'], _p6.source, '</pre>')))))),
 			_1: {ctor: '[]'}
 		};
 	}
@@ -13424,7 +13276,7 @@ var _user$project$MiniLatex_Paragraph$getEndArg = function (line) {
 	return arg;
 };
 var _user$project$MiniLatex_Paragraph$getBeginArg = function (line) {
-	var parseResult = A2(_elm_tools$parser$Parser$run, _user$project$MiniLatex_Parser$beginWord, line);
+	var parseResult = A2(_elm_tools$parser$Parser$run, _user$project$MiniLatex_Parser$envName, line);
 	var arg = function () {
 		var _p3 = parseResult;
 		if (_p3.ctor === 'Ok') {
@@ -13745,6 +13597,87 @@ var _user$project$MiniLatex_Differ$update = F4(
 		return A6(_user$project$MiniLatex_Differ$EditRecord, newParagraphs, diffPacket.renderedParagraphs, _user$project$MiniLatex_LatexState$emptyLatexState, diffPacket.idList, diffPacket.newIdsStart, diffPacket.newIdsEnd);
 	});
 
+var _user$project$MiniLatex_ParserTools$getString = function (latexString) {
+	var _p0 = latexString;
+	if (_p0.ctor === 'LXString') {
+		return _p0._0;
+	} else {
+		return '';
+	}
+};
+var _user$project$MiniLatex_ParserTools$latexList2List = function (latexExpression) {
+	var _p1 = latexExpression;
+	if (_p1.ctor === 'LatexList') {
+		return _p1._0;
+	} else {
+		return {ctor: '[]'};
+	}
+};
+var _user$project$MiniLatex_ParserTools$list2LeadingString = function (list) {
+	var head_ = _elm_lang$core$List$head(list);
+	var value = function () {
+		var _p2 = head_;
+		if (_p2.ctor === 'Just') {
+			return _p2._0;
+		} else {
+			return _user$project$MiniLatex_Parser$LXString('');
+		}
+	}();
+	var _p3 = value;
+	if (_p3.ctor === 'LXString') {
+		return _p3._0;
+	} else {
+		return '';
+	}
+};
+var _user$project$MiniLatex_ParserTools$getMacroArgs = F2(
+	function (macroName, latexExpression) {
+		var _p4 = latexExpression;
+		if (_p4.ctor === 'Macro') {
+			return _elm_lang$core$Native_Utils.eq(_p4._0, macroName) ? A2(_elm_lang$core$List$map, _user$project$MiniLatex_ParserTools$latexList2List, _p4._1) : {ctor: '[]'};
+		} else {
+			return {ctor: '[]'};
+		}
+	});
+var _user$project$MiniLatex_ParserTools$getSimpleMacroArgs = F2(
+	function (macroName, latexExpression) {
+		return A2(
+			_elm_lang$core$List$map,
+			_user$project$MiniLatex_ParserTools$list2LeadingString,
+			A2(_user$project$MiniLatex_ParserTools$getMacroArgs, macroName, latexExpression));
+	});
+var _user$project$MiniLatex_ParserTools$getFirstMacroArg = F2(
+	function (macroName, latexExpression) {
+		var arg = _elm_lang$core$List$head(
+			A2(_user$project$MiniLatex_ParserTools$getSimpleMacroArgs, macroName, latexExpression));
+		var _p5 = arg;
+		if (_p5.ctor === 'Just') {
+			return _p5._0;
+		} else {
+			return '';
+		}
+	});
+var _user$project$MiniLatex_ParserTools$isMacro = F2(
+	function (macroName, latexExpression) {
+		var _p6 = latexExpression;
+		if (_p6.ctor === 'Macro') {
+			return _elm_lang$core$Native_Utils.eq(_p6._0, macroName);
+		} else {
+			return false;
+		}
+	});
+var _user$project$MiniLatex_ParserTools$getMacros = F2(
+	function (macroName, expressionList) {
+		return A2(
+			_elm_lang$core$List$filter,
+			function (expr) {
+				return A2(_user$project$MiniLatex_ParserTools$isMacro, macroName, expr);
+			},
+			expressionList);
+	});
+
+var _user$project$MiniLatex_Configuration$client = 'http://www.knode.io';
+
 var _user$project$MiniLatex_KeyValueUtilities$getValue = F2(
 	function (key, kvpList) {
 		return A2(
@@ -13851,8 +13784,6 @@ var _user$project$MiniLatex_KeyValueUtilities$getKeyValueList = function (str) {
 		{ctor: '[]'},
 		A2(_elm_tools$parser$Parser$run, _user$project$MiniLatex_KeyValueUtilities$keyValuePairs, str));
 };
-
-var _user$project$MiniLatex_Configuration$client = 'http://www.knode.io';
 
 var _user$project$MiniLatex_Render$imageAttributes = F2(
 	function (imageAttrs, attributeString) {
@@ -15702,89 +15633,10 @@ var _user$project$MiniLatex_Render$transformText = F2(
 		return A3(_user$project$MiniLatex_Render$renderString, _user$project$MiniLatex_Parser$latexList, latexState, text);
 	});
 
-var _user$project$MiniLatex_ParserTools$getString = function (latexString) {
-	var _p0 = latexString;
-	if (_p0.ctor === 'LXString') {
-		return _p0._0;
-	} else {
-		return '';
-	}
-};
-var _user$project$MiniLatex_ParserTools$latexList2List = function (latexExpression) {
-	var _p1 = latexExpression;
-	if (_p1.ctor === 'LatexList') {
-		return _p1._0;
-	} else {
-		return {ctor: '[]'};
-	}
-};
-var _user$project$MiniLatex_ParserTools$list2LeadingString = function (list) {
-	var head_ = _elm_lang$core$List$head(list);
-	var value = function () {
-		var _p2 = head_;
-		if (_p2.ctor === 'Just') {
-			return _p2._0;
-		} else {
-			return _user$project$MiniLatex_Parser$LXString('');
-		}
-	}();
-	var _p3 = value;
-	if (_p3.ctor === 'LXString') {
-		return _p3._0;
-	} else {
-		return '';
-	}
-};
-var _user$project$MiniLatex_ParserTools$getMacroArgs = F2(
-	function (macroName, latexExpression) {
-		var _p4 = latexExpression;
-		if (_p4.ctor === 'Macro') {
-			return _elm_lang$core$Native_Utils.eq(_p4._0, macroName) ? A2(_elm_lang$core$List$map, _user$project$MiniLatex_ParserTools$latexList2List, _p4._1) : {ctor: '[]'};
-		} else {
-			return {ctor: '[]'};
-		}
-	});
-var _user$project$MiniLatex_ParserTools$getSimpleMacroArgs = F2(
-	function (macroName, latexExpression) {
-		return A2(
-			_elm_lang$core$List$map,
-			_user$project$MiniLatex_ParserTools$list2LeadingString,
-			A2(_user$project$MiniLatex_ParserTools$getMacroArgs, macroName, latexExpression));
-	});
-var _user$project$MiniLatex_ParserTools$getFirstMacroArg = F2(
-	function (macroName, latexExpression) {
-		var arg = _elm_lang$core$List$head(
-			A2(_user$project$MiniLatex_ParserTools$getSimpleMacroArgs, macroName, latexExpression));
-		var _p5 = arg;
-		if (_p5.ctor === 'Just') {
-			return _p5._0;
-		} else {
-			return '';
-		}
-	});
-var _user$project$MiniLatex_ParserTools$isMacro = F2(
-	function (macroName, latexExpression) {
-		var _p6 = latexExpression;
-		if (_p6.ctor === 'Macro') {
-			return _elm_lang$core$Native_Utils.eq(_p6._0, macroName);
-		} else {
-			return false;
-		}
-	});
-var _user$project$MiniLatex_ParserTools$getMacros = F2(
-	function (macroName, expressionList) {
-		return A2(
-			_elm_lang$core$List$filter,
-			function (expr) {
-				return A2(_user$project$MiniLatex_ParserTools$isMacro, macroName, expr);
-			},
-			expressionList);
-	});
-
 var _user$project$MiniLatex_Accumulator$getLabel = function (str) {
 	var maybeMacro = A2(
 		_elm_tools$parser$Parser$run,
-		_user$project$MiniLatex_Parser$macro,
+		_user$project$MiniLatex_Parser$macro(_user$project$MiniLatex_Parser$ws),
 		_elm_lang$core$String$trim(str));
 	var _p0 = maybeMacro;
 	if (_p0.ctor === 'Ok') {
@@ -16144,7 +15996,7 @@ var _user$project$MiniLatex_Accumulator$updateState = F2(
 	});
 var _user$project$MiniLatex_Accumulator$parseParagraphs = F2(
 	function (latexState, paragraphs) {
-		return A4(_user$project$MiniLatex_Accumulator$parseAccumulator, _user$project$MiniLatex_Parser$parseParagraph, _user$project$MiniLatex_Accumulator$updateState, latexState, paragraphs);
+		return A4(_user$project$MiniLatex_Accumulator$parseAccumulator, _user$project$MiniLatex_Parser$parse, _user$project$MiniLatex_Accumulator$updateState, latexState, paragraphs);
 	});
 var _user$project$MiniLatex_Accumulator$renderParagraphs = F2(
 	function (latexState, paragraphs) {
@@ -16276,7 +16128,7 @@ var _user$project$MiniLatex_Driver$getRenderedText = F2(
 var _user$project$MiniLatex_Driver$parse = function (text) {
 	return A2(
 		_elm_lang$core$List$map,
-		_user$project$MiniLatex_Parser$parseParagraph,
+		_user$project$MiniLatex_Parser$parse,
 		_user$project$MiniLatex_Paragraph$logicalParagraphify(
 			_user$project$MiniLatex_LatexDiffer$prepareContentForLatex(text)));
 };
@@ -16288,7 +16140,77 @@ var _user$project$MiniLatex_Driver$render = F2(
 			A2(_user$project$MiniLatex_LatexDiffer$initialize, _user$project$MiniLatex_LatexState$emptyLatexState, text));
 	});
 
-var _user$project$Main$initialSourceText = '\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nSee the article\n\\href{http://www.knode.io/#@public/445}{MiniLatex}\nat \\href{http://www.knode.io}{www.knode.io} for more info.\n\nFeel free to edit and re-render the text on the left.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\nNote that in the \\italic{source} of the listing below,\nthere are no line numbers.\n\n\\strong{MiniLaTeX Abstract Syntax Tree}\n\n\\begin{listing}\ntype LatexExpression\n    = LXString String\n    | Comment String\n    | Item Int LatexExpression\n    | InlineMath String\n    | DisplayMath String\n    | Macro String (List LatexExpression)\n    | Environment String LatexExpression\n    | LatexList (List LatexExpression)\n\\end{listing}\n\n\n\\section{Appendix}\n\nArticles and code:\n\n\\begin{itemize}\n%%\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n%%\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n%%\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n%%\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nAlso, contributions to help improve the open-source\nMiniLatex Parser-Renderer are most welcome.\nHere is the \\href{https://github.com/jxxcarlson/minilatex}{GitHub repository}.\nThe MiniLatex Demo as well as the app at knode.io are written in\n\\href{http://elm-lang.org/}{Elm}.\n\nPlease send comments to jxxcarlson at gmail.\n';
+var _user$project$MiniLatex_HasMath$hasMath = function (expr) {
+	hasMath:
+	while (true) {
+		var _p0 = expr;
+		switch (_p0.ctor) {
+			case 'LXString':
+				return false;
+			case 'Comment':
+				return false;
+			case 'Item':
+				var _v1 = _p0._1;
+				expr = _v1;
+				continue hasMath;
+			case 'InlineMath':
+				return true;
+			case 'DisplayMath':
+				return true;
+			case 'Macro':
+				return A3(
+					_elm_lang$core$List$foldr,
+					F2(
+						function (x, acc) {
+							return _user$project$MiniLatex_HasMath$hasMath(x) || acc;
+						}),
+					false,
+					_p0._1);
+			case 'Environment':
+				return A2(_user$project$MiniLatex_HasMath$envHasMath, _p0._0, _p0._1);
+			default:
+				return A3(
+					_elm_lang$core$List$foldr,
+					F2(
+						function (x, acc) {
+							return _user$project$MiniLatex_HasMath$hasMath(x) || acc;
+						}),
+					false,
+					_p0._0);
+		}
+	}
+};
+var _user$project$MiniLatex_HasMath$envHasMath = F2(
+	function (envType, expr) {
+		return A2(
+			_elm_lang$core$List$member,
+			envType,
+			{
+				ctor: '::',
+				_0: 'equation',
+				_1: {
+					ctor: '::',
+					_0: 'align',
+					_1: {
+						ctor: '::',
+						_0: 'eqnarray',
+						_1: {ctor: '[]'}
+					}
+				}
+			}) || _user$project$MiniLatex_HasMath$hasMath(expr);
+	});
+var _user$project$MiniLatex_HasMath$listHasMath = function (list) {
+	return A3(
+		_elm_lang$core$List$foldr,
+		F2(
+			function (x, acc) {
+				return _user$project$MiniLatex_HasMath$hasMath(x) || acc;
+			}),
+		false,
+		list);
+};
+
+var _user$project$Main$initialSourceText = '\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nSee the article\n\\href{http://www.knode.io/#@public/559}{MiniLatex}\nat \\href{http://www.knode.io}{www.knode.io} for more info.\n\nFeel free to edit and re-render the text on the left.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\nNote that in the \\italic{source} of the listing below,\nthere are no line numbers.\n\n\\strong{MiniLaTeX Abstract Syntax Tree}\n\n\\begin{listing}\ntype LatexExpression\n    = LXString String\n    | Comment String\n    | Item Int LatexExpression\n    | InlineMath String\n    | DisplayMath String\n    | Macro String (List LatexExpression)\n    | Environment String LatexExpression\n    | LatexList (List LatexExpression)\n\\end{listing}\n\n\n\\section{Appendix}\n\nArticles and code:\n\n\\begin{itemize}\n%%\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n%%\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n%%\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n%%\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nAlso, contributions to help improve the open-source\nMiniLatex Parser-Renderer are most welcome.\nHere is the \\href{https://github.com/jxxcarlson/minilatex}{GitHub repository}.\nThe MiniLatex Demo as well as the app at knode.io are written in\n\\href{http://elm-lang.org/}{Elm}.\n\nPlease send comments to jxxcarlson at gmail.\n';
 var _user$project$Main$textStyle2 = F4(
 	function (width, height, offset, color) {
 		return _elm_lang$html$Html_Attributes$style(
@@ -17125,7 +17047,7 @@ var _user$project$Main$init = function () {
 		hasMathResult: A2(
 			_elm_lang$core$Debug$log,
 			'hasMathResult',
-			A2(_elm_lang$core$List$map, _user$project$MiniLatex_Parser$listHasMath, parseResult)),
+			A2(_elm_lang$core$List$map, _user$project$MiniLatex_HasMath$listHasMath, parseResult)),
 		seed: 0,
 		configuration: _user$project$Main$StandardView,
 		lineViewStyle: _user$project$Main$Horizontal
@@ -17148,7 +17070,7 @@ var _user$project$Main$update = F2(
 				var hasMathResult = A2(
 					_elm_lang$core$Debug$log,
 					'hasMathResult',
-					A2(_elm_lang$core$List$map, _user$project$MiniLatex_Parser$listHasMath, parseResult));
+					A2(_elm_lang$core$List$map, _user$project$MiniLatex_HasMath$listHasMath, parseResult));
 				var newEditRecord = A3(_user$project$MiniLatex_Driver$update, model.seed, model.editRecord, model.sourceText);
 				return {
 					ctor: '_Tuple2',
