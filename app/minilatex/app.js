@@ -12749,91 +12749,87 @@ var _user$project$MiniLatex_Parser$macro = function (wsParser) {
 				A2(_elm_tools$parser$Parser$repeat, _elm_tools$parser$Parser$zeroOrMore, _user$project$MiniLatex_Parser$arg)),
 			wsParser));
 };
-var _user$project$MiniLatex_Parser$item = A2(
-	_elm_tools$parser$Parser$inContext,
-	'item',
-	A2(
-		_elm_tools$parser$Parser$map,
-		function (x) {
-			return A2(
-				_user$project$MiniLatex_Parser$Item,
-				1,
-				_user$project$MiniLatex_Parser$LatexList(x));
-		},
+var _user$project$MiniLatex_Parser$item = function (endWord) {
+	return A2(
+		_elm_tools$parser$Parser$inContext,
+		'item',
 		A2(
-			_elm_tools$parser$Parser_ops['|.'],
+			_elm_tools$parser$Parser$map,
+			function (x) {
+				return A2(
+					_user$project$MiniLatex_Parser$Item,
+					1,
+					_user$project$MiniLatex_Parser$LatexList(x));
+			},
 			A2(
 				_elm_tools$parser$Parser_ops['|.'],
 				A2(
-					_elm_tools$parser$Parser_ops['|='],
+					_elm_tools$parser$Parser_ops['|.'],
 					A2(
-						_elm_tools$parser$Parser_ops['|.'],
+						_elm_tools$parser$Parser_ops['|='],
 						A2(
 							_elm_tools$parser$Parser_ops['|.'],
-							A2(
-								_elm_tools$parser$Parser_ops['|.'],
-								_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-								_user$project$MiniLatex_Parser$ws),
-							_elm_tools$parser$Parser$keyword('\\item')),
-						_user$project$MiniLatex_Parser$spaces),
-					A2(
-						_elm_tools$parser$Parser$repeat,
-						_elm_tools$parser$Parser$zeroOrMore,
-						_elm_tools$parser$Parser$oneOf(
-							{
-								ctor: '::',
-								_0: _user$project$MiniLatex_Parser$specialWords,
-								_1: {
+							_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+							_user$project$MiniLatex_Parser$spaces),
+						A2(
+							_elm_tools$parser$Parser$repeat,
+							_elm_tools$parser$Parser$zeroOrMore,
+							_elm_tools$parser$Parser$oneOf(
+								{
 									ctor: '::',
-									_0: _user$project$MiniLatex_Parser$inlineMath(_user$project$MiniLatex_Parser$spaces),
+									_0: _user$project$MiniLatex_Parser$words,
 									_1: {
 										ctor: '::',
-										_0: _user$project$MiniLatex_Parser$macro(_user$project$MiniLatex_Parser$spaces),
-										_1: {ctor: '[]'}
+										_0: _user$project$MiniLatex_Parser$inlineMath(_user$project$MiniLatex_Parser$ws),
+										_1: {
+											ctor: '::',
+											_0: _user$project$MiniLatex_Parser$macro(_user$project$MiniLatex_Parser$ws),
+											_1: {ctor: '[]'}
+										}
 									}
-								}
-							}))),
-				_elm_tools$parser$Parser$symbol('\n')),
-			_user$project$MiniLatex_Parser$spaces)));
+								}))),
+					_user$project$MiniLatex_Parser$ws),
+				_elm_tools$parser$Parser$oneOf(
+					{
+						ctor: '::',
+						_0: _elm_tools$parser$Parser$symbol('\\item'),
+						_1: {
+							ctor: '::',
+							_0: _elm_tools$parser$Parser$symbol(endWord),
+							_1: {ctor: '[]'}
+						}
+					}))));
+};
 var _user$project$MiniLatex_Parser$itemEnvironmentBody = F2(
 	function (endWord, envType) {
 		return A2(
 			_elm_tools$parser$Parser$inContext,
 			'itemEnvironmentBody',
-			A2(
-				_elm_tools$parser$Parser$map,
-				_user$project$MiniLatex_Parser$Environment(envType),
-				A2(
+			function () {
+				var beginSymbol = '';
+				return A2(
 					_elm_tools$parser$Parser$map,
-					_user$project$MiniLatex_Parser$LatexList,
+					_user$project$MiniLatex_Parser$Environment(envType),
 					A2(
-						_elm_tools$parser$Parser_ops['|.'],
+						_elm_tools$parser$Parser$map,
+						_user$project$MiniLatex_Parser$LatexList,
 						A2(
 							_elm_tools$parser$Parser_ops['|.'],
 							A2(
-								_elm_tools$parser$Parser_ops['|.'],
+								_elm_tools$parser$Parser_ops['|='],
 								A2(
-									_elm_tools$parser$Parser_ops['|='],
+									_elm_tools$parser$Parser_ops['|.'],
 									A2(
 										_elm_tools$parser$Parser_ops['|.'],
 										_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
 										_user$project$MiniLatex_Parser$ws),
-									A2(
-										_elm_tools$parser$Parser$repeat,
-										_elm_tools$parser$Parser$zeroOrMore,
-										_elm_tools$parser$Parser$oneOf(
-											{
-												ctor: '::',
-												_0: _user$project$MiniLatex_Parser$item,
-												_1: {
-													ctor: '::',
-													_0: _user$project$MiniLatex_Parser$texComment,
-													_1: {ctor: '[]'}
-												}
-											}))),
-								_user$project$MiniLatex_Parser$ws),
-							_elm_tools$parser$Parser$symbol(endWord)),
-						_user$project$MiniLatex_Parser$ws))));
+									_elm_tools$parser$Parser$symbol('\\item')),
+								A2(
+									_elm_tools$parser$Parser$repeat,
+									_elm_tools$parser$Parser$zeroOrMore,
+									_user$project$MiniLatex_Parser$item(endWord))),
+							_user$project$MiniLatex_Parser$ws)));
+			}());
 	});
 var _user$project$MiniLatex_Parser$tableCell = A2(
 	_elm_tools$parser$Parser$inContext,
@@ -14666,13 +14662,19 @@ var _user$project$MiniLatex_Render$renderQuotation = F2(
 	});
 var _user$project$MiniLatex_Render$renderVerbatim = F2(
 	function (latexState, body) {
+		var body2 = A3(
+			_elm_community$string_extra$String_Extra$replace,
+			'<',
+			'&lt;',
+			A3(
+				_elm_community$string_extra$String_Extra$replace,
+				'>',
+				'&gt;',
+				A2(_user$project$MiniLatex_Render$render, latexState, body)));
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
 			'\n<pre class=\"verbatim\">',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				A2(_user$project$MiniLatex_Render$render, latexState, body),
-				'</pre>\n'));
+			A2(_elm_lang$core$Basics_ops['++'], body2, '</pre>\n'));
 	});
 var _user$project$MiniLatex_Render$renderVerse = F2(
 	function (latexState, body) {
@@ -16210,7 +16212,7 @@ var _user$project$MiniLatex_HasMath$listHasMath = function (list) {
 		list);
 };
 
-var _user$project$Main$initialSourceText = '\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nSee the article\n\\href{http://www.knode.io/#@public/559}{MiniLatex}\nat \\href{http://www.knode.io}{www.knode.io} for more info.\n\nFeel free to edit and re-render the text on the left.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\nNote that in the \\italic{source} of the listing below,\nthere are no line numbers.\n\n\\strong{MiniLaTeX Abstract Syntax Tree}\n\n\\begin{listing}\ntype LatexExpression\n    = LXString String\n    | Comment String\n    | Item Int LatexExpression\n    | InlineMath String\n    | DisplayMath String\n    | Macro String (List LatexExpression)\n    | Environment String LatexExpression\n    | LatexList (List LatexExpression)\n\\end{listing}\n\n\n\\section{Appendix}\n\nArticles and code:\n\n\\begin{itemize}\n%%\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n%%\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n%%\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n%%\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nAlso, contributions to help improve the open-source\nMiniLatex Parser-Renderer are most welcome.\nHere is the \\href{https://github.com/jxxcarlson/minilatex}{GitHub repository}.\nThe MiniLatex Demo as well as the app at knode.io are written in\n\\href{http://elm-lang.org/}{Elm}.\n\nPlease send comments to jxxcarlson at gmail.\n';
+var _user$project$Main$initialSourceText = '\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nSee the article\n\\href{http://www.knode.io/#@public/559}{MiniLatex}\nat \\href{http://www.knode.io}{www.knode.io} for more info.\n\nFeel free to edit and re-render the text on the left.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\nNote that in the \\italic{source} of the listing below,\nthere are no line numbers.\n\n\\strong{MiniLaTeX Abstract Syntax Tree (AST)}\n\n\\begin{listing}\ntype LatexExpression\n    = LXString String\n    | Comment String\n    | Item Int LatexExpression\n    | InlineMath String\n    | DisplayMath String\n    | Macro String (List LatexExpression)\n    | Environment String LatexExpression\n    | LatexList (List LatexExpression)\n\\end{listing}\n\nThe MiniLaTeX parser reads text and produces\nan AST.  A rendering function converts the AST\ninto HTML.  One could easily write\nfunctions \\code{render: LatexExpression -> String}\nto make other conversions.\n\n\\section{More about MiniLaTeX}\n\nArticles and code:\n\n\\begin{itemize}\n\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nContributions to help improve the open-source\nMiniLatex Parser-Renderer are most welcome.\nHere is the \\href{https://github.com/jxxcarlson/minilatex}{GitHub repository}.\nThe MiniLatex Demo as well as the app at knode.io are written in\n\\href{http://elm-lang.org/}{Elm}.  We also plan a Haskell version.\n\nPlease send comments to jxxcarlson at gmail.\n\n\n\\section{Restrictions and Limitations}\n\nBelow\nare some of the current restrictions and limitations.\nThe main work is to extend the parser.  Expanding the\nscope of \\code{render : LatexExpression -> String} is\nstraightforward.\n\n\\begin{enumerate}\n\n\\item The enumerate and itemize environments cannot be nested.\n\n\\item The tabular environment ignores formatting information\nand left-justifies everything in the cell.\n\n\\end{enumerate}\n\nWe are working on these and other issues  to expand the scope of MiniLatex.\n\n\\bigskip\n\n\\image{https://cdn-images-1.medium.com/max/1200/1*HlpVE5TFBUp17ua1AdiKpw.gif}{The way we used to do it.}{align: center}\n\n';
 var _user$project$Main$textStyle2 = F4(
 	function (width, height, offset, color) {
 		return _elm_lang$html$Html_Attributes$style(
