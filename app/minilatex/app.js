@@ -12307,7 +12307,23 @@ var _user$project$MiniLatex_LatexState$initialCounters = _elm_lang$core$Dict$fro
 			}
 		}
 	});
-var _user$project$MiniLatex_LatexState$emptyLatexState = {counters: _user$project$MiniLatex_LatexState$initialCounters, crossReferences: _elm_lang$core$Dict$empty};
+var _user$project$MiniLatex_LatexState$emptyLatexState = {
+	counters: _user$project$MiniLatex_LatexState$initialCounters,
+	crossReferences: _elm_lang$core$Dict$empty,
+	dictionary: _elm_lang$core$Dict$empty,
+	tableOfContents: {ctor: '[]'}
+};
+var _user$project$MiniLatex_LatexState$setDictionaryItem = F3(
+	function (key, value, latexState) {
+		var dictionary = latexState.dictionary;
+		var newDictionary = A2(
+			_elm_lang$core$Debug$log,
+			'newDictionay',
+			A3(_elm_lang$core$Dict$insert, key, value, dictionary));
+		return _elm_lang$core$Native_Utils.update(
+			latexState,
+			{dictionary: newDictionary});
+	});
 var _user$project$MiniLatex_LatexState$setCrossReference = F3(
 	function (label, value, latexState) {
 		var crossReferences = latexState.crossReferences;
@@ -12338,28 +12354,56 @@ var _user$project$MiniLatex_LatexState$incrementCounter = F2(
 			latexState,
 			{counters: newCounters});
 	});
-var _user$project$MiniLatex_LatexState$getCrossReference = F2(
-	function (label, latexState) {
-		var _p0 = A2(_elm_lang$core$Dict$get, label, latexState.crossReferences);
+var _user$project$MiniLatex_LatexState$getDictionaryItem = F2(
+	function (key, latexState) {
+		var _p0 = A2(_elm_lang$core$Dict$get, key, latexState.dictionary);
 		if (_p0.ctor === 'Just') {
 			return _p0._0;
+		} else {
+			return '';
+		}
+	});
+var _user$project$MiniLatex_LatexState$getCrossReference = F2(
+	function (label, latexState) {
+		var _p1 = A2(_elm_lang$core$Dict$get, label, latexState.crossReferences);
+		if (_p1.ctor === 'Just') {
+			return _p1._0;
 		} else {
 			return '??';
 		}
 	});
 var _user$project$MiniLatex_LatexState$getCounter = F2(
 	function (name, latexState) {
-		var _p1 = A2(_elm_lang$core$Dict$get, name, latexState.counters);
-		if (_p1.ctor === 'Just') {
-			return _p1._0;
+		var _p2 = A2(_elm_lang$core$Dict$get, name, latexState.counters);
+		if (_p2.ctor === 'Just') {
+			return _p2._0;
 		} else {
 			return 0;
 		}
 	});
 var _user$project$MiniLatex_LatexState$emptyDict = _elm_lang$core$Dict$empty;
-var _user$project$MiniLatex_LatexState$LatexState = F2(
-	function (a, b) {
-		return {counters: a, crossReferences: b};
+var _user$project$MiniLatex_LatexState$TocEntry = F3(
+	function (a, b, c) {
+		return {name: a, label: b, level: c};
+	});
+var _user$project$MiniLatex_LatexState$addSection = F4(
+	function (sectionName, label, level, latexState) {
+		var newEntry = A3(_user$project$MiniLatex_LatexState$TocEntry, sectionName, label, level);
+		var toc = A2(
+			_elm_lang$core$Basics_ops['++'],
+			latexState.tableOfContents,
+			{
+				ctor: '::',
+				_0: newEntry,
+				_1: {ctor: '[]'}
+			});
+		return _elm_lang$core$Native_Utils.update(
+			latexState,
+			{tableOfContents: toc});
+	});
+var _user$project$MiniLatex_LatexState$LatexState = F4(
+	function (a, b, c, d) {
+		return {counters: a, crossReferences: b, tableOfContents: c, dictionary: d};
 	});
 
 var _user$project$MiniLatex_Parser$notMacroSpecialCharacter = function (c) {
@@ -13593,18 +13637,56 @@ var _user$project$MiniLatex_Differ$update = F4(
 		return A6(_user$project$MiniLatex_Differ$EditRecord, newParagraphs, diffPacket.renderedParagraphs, _user$project$MiniLatex_LatexState$emptyLatexState, diffPacket.idList, diffPacket.newIdsStart, diffPacket.newIdsEnd);
 	});
 
-var _user$project$MiniLatex_ParserTools$getString = function (latexString) {
-	var _p0 = latexString;
+var _user$project$MiniLatex_ParserTools$valueOfLXString = function (expr) {
+	var _p0 = expr;
 	if (_p0.ctor === 'LXString') {
 		return _p0._0;
+	} else {
+		return 'Error getting value of LatexString';
+	}
+};
+var _user$project$MiniLatex_ParserTools$valueOfLatexList = function (latexList) {
+	var _p1 = latexList;
+	if (_p1.ctor === 'LatexList') {
+		return _p1._0;
+	} else {
+		return {
+			ctor: '::',
+			_0: _user$project$MiniLatex_Parser$LXString('Error getting value of LatexList'),
+			_1: {ctor: '[]'}
+		};
+	}
+};
+var _user$project$MiniLatex_ParserTools$headLatexExpression = function (list) {
+	var he = function () {
+		var _p2 = _elm_lang$core$List$head(list);
+		if (_p2.ctor === 'Just') {
+			return _p2._0;
+		} else {
+			return _user$project$MiniLatex_Parser$LatexList(
+				{ctor: '[]'});
+		}
+	}();
+	return he;
+};
+var _user$project$MiniLatex_ParserTools$unpackString = function (expr) {
+	return _user$project$MiniLatex_ParserTools$valueOfLXString(
+		_user$project$MiniLatex_ParserTools$headLatexExpression(
+			_user$project$MiniLatex_ParserTools$valueOfLatexList(
+				_user$project$MiniLatex_ParserTools$headLatexExpression(expr))));
+};
+var _user$project$MiniLatex_ParserTools$getString = function (latexString) {
+	var _p3 = latexString;
+	if (_p3.ctor === 'LXString') {
+		return _p3._0;
 	} else {
 		return '';
 	}
 };
 var _user$project$MiniLatex_ParserTools$latexList2List = function (latexExpression) {
-	var _p1 = latexExpression;
-	if (_p1.ctor === 'LatexList') {
-		return _p1._0;
+	var _p4 = latexExpression;
+	if (_p4.ctor === 'LatexList') {
+		return _p4._0;
 	} else {
 		return {ctor: '[]'};
 	}
@@ -13612,25 +13694,25 @@ var _user$project$MiniLatex_ParserTools$latexList2List = function (latexExpressi
 var _user$project$MiniLatex_ParserTools$list2LeadingString = function (list) {
 	var head_ = _elm_lang$core$List$head(list);
 	var value = function () {
-		var _p2 = head_;
-		if (_p2.ctor === 'Just') {
-			return _p2._0;
+		var _p5 = head_;
+		if (_p5.ctor === 'Just') {
+			return _p5._0;
 		} else {
 			return _user$project$MiniLatex_Parser$LXString('');
 		}
 	}();
-	var _p3 = value;
-	if (_p3.ctor === 'LXString') {
-		return _p3._0;
+	var _p6 = value;
+	if (_p6.ctor === 'LXString') {
+		return _p6._0;
 	} else {
 		return '';
 	}
 };
 var _user$project$MiniLatex_ParserTools$getMacroArgs = F2(
 	function (macroName, latexExpression) {
-		var _p4 = latexExpression;
-		if (_p4.ctor === 'Macro') {
-			return _elm_lang$core$Native_Utils.eq(_p4._0, macroName) ? A2(_elm_lang$core$List$map, _user$project$MiniLatex_ParserTools$latexList2List, _p4._1) : {ctor: '[]'};
+		var _p7 = latexExpression;
+		if (_p7.ctor === 'Macro') {
+			return _elm_lang$core$Native_Utils.eq(_p7._0, macroName) ? A2(_elm_lang$core$List$map, _user$project$MiniLatex_ParserTools$latexList2List, _p7._1) : {ctor: '[]'};
 		} else {
 			return {ctor: '[]'};
 		}
@@ -13646,18 +13728,18 @@ var _user$project$MiniLatex_ParserTools$getFirstMacroArg = F2(
 	function (macroName, latexExpression) {
 		var arg = _elm_lang$core$List$head(
 			A2(_user$project$MiniLatex_ParserTools$getSimpleMacroArgs, macroName, latexExpression));
-		var _p5 = arg;
-		if (_p5.ctor === 'Just') {
-			return _p5._0;
+		var _p8 = arg;
+		if (_p8.ctor === 'Just') {
+			return _p8._0;
 		} else {
 			return '';
 		}
 	});
 var _user$project$MiniLatex_ParserTools$isMacro = F2(
 	function (macroName, latexExpression) {
-		var _p6 = latexExpression;
-		if (_p6.ctor === 'Macro') {
-			return _elm_lang$core$Native_Utils.eq(_p6._0, macroName);
+		var _p9 = latexExpression;
+		if (_p9.ctor === 'Macro') {
+			return _elm_lang$core$Native_Utils.eq(_p9._0, macroName);
 		} else {
 			return false;
 		}
@@ -13933,6 +14015,110 @@ var _user$project$MiniLatex_Render$handleCenterImage = F3(
 				}
 			});
 	});
+var _user$project$MiniLatex_Render$makeTocItem = function (tocItem) {
+	var tagSuffix = '</li>';
+	var ti = _elm_lang$core$Tuple$second(tocItem);
+	var tagPrefix = A2(
+		_elm_lang$core$Basics_ops['++'],
+		'<li class=\"sectionLevel',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Basics$toString(ti.level),
+			'\" >'));
+	var content = A2(
+		_elm_lang$core$Basics_ops['++'],
+		ti.label,
+		A2(_elm_lang$core$Basics_ops['++'], '. ', ti.name));
+	var i = _elm_lang$core$Tuple$first(tocItem);
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		tagPrefix,
+		A2(_elm_lang$core$Basics_ops['++'], content, tagSuffix));
+};
+var _user$project$MiniLatex_Render$makeTableOfContents = function (latexState) {
+	return A2(
+		_elm_lang$core$String$join,
+		'\n',
+		A3(
+			_elm_lang$core$List$foldl,
+			F2(
+				function (tocItem, acc) {
+					return A2(
+						_elm_lang$core$Basics_ops['++'],
+						acc,
+						{
+							ctor: '::',
+							_0: _user$project$MiniLatex_Render$makeTocItem(tocItem),
+							_1: {ctor: '[]'}
+						});
+				}),
+			{ctor: '[]'},
+			A2(
+				_elm_lang$core$List$indexedMap,
+				F2(
+					function (v0, v1) {
+						return {ctor: '_Tuple2', _0: v0, _1: v1};
+					}),
+				latexState.tableOfContents)));
+};
+var _user$project$MiniLatex_Render$renderTableOfContents = F2(
+	function (latexState, list) {
+		var innerPart = _user$project$MiniLatex_Render$makeTableOfContents(latexState);
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'\n<p class=\"tocTitle\">Table of Contents</p>\n<ul class=\"ListEnvironment\">\n',
+			A2(_elm_lang$core$Basics_ops['++'], innerPart, '\n</ul>\n'));
+	});
+var _user$project$MiniLatex_Render$renderTitle = F2(
+	function (latexState, list) {
+		var email = A2(_user$project$MiniLatex_LatexState$getDictionaryItem, 'email', latexState);
+		var date = A2(_user$project$MiniLatex_LatexState$getDictionaryItem, 'date', latexState);
+		var author = A2(_user$project$MiniLatex_LatexState$getDictionaryItem, 'author', latexState);
+		var bodyParts = A2(
+			_elm_lang$core$List$filter,
+			function (x) {
+				return !_elm_lang$core$Native_Utils.eq(x, '');
+			},
+			{
+				ctor: '::',
+				_0: '<div class=\"authorinfo\">',
+				_1: {
+					ctor: '::',
+					_0: author,
+					_1: {
+						ctor: '::',
+						_0: date,
+						_1: {
+							ctor: '::',
+							_0: email,
+							_1: {
+								ctor: '::',
+								_0: '</div>\n',
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			});
+		var bodyPart = A2(_elm_lang$core$String$join, '\n', bodyParts);
+		var title = A2(_user$project$MiniLatex_LatexState$getDictionaryItem, 'title', latexState);
+		var titlePart = A2(
+			_elm_lang$core$Basics_ops['++'],
+			'\n<div class=\"title\">',
+			A2(_elm_lang$core$Basics_ops['++'], title, '</div>'));
+		return A2(
+			_elm_lang$core$String$join,
+			'\n',
+			{
+				ctor: '::',
+				_0: titlePart,
+				_1: {
+					ctor: '::',
+					_0: bodyPart,
+					_1: {ctor: '[]'}
+				}
+			});
+	});
 var _user$project$MiniLatex_Render$a = F2(
 	function (url, label) {
 		return A2(
@@ -13951,6 +14137,10 @@ var _user$project$MiniLatex_Render$renderInlineComment = F2(
 		return '';
 	});
 var _user$project$MiniLatex_Render$renderSmallSkip = F2(
+	function (latexState, args) {
+		return '<p class=\"smallskip\"> &nbsp;</p>';
+	});
+var _user$project$MiniLatex_Render$renderMedSkip = F2(
 	function (latexState, args) {
 		return A2(
 			_user$project$MiniLatex_Render$div,
@@ -14235,30 +14425,31 @@ var _user$project$MiniLatex_Render$renderLatexList = F2(
 	});
 var _user$project$MiniLatex_Render$render = F2(
 	function (latexState, latexExpression) {
-		var _p7 = latexExpression;
-		switch (_p7.ctor) {
+		var _p7 = A2(_elm_lang$core$Debug$log, 'latexState1', latexState);
+		var _p8 = latexExpression;
+		switch (_p8.ctor) {
 			case 'Comment':
-				return _user$project$MiniLatex_Render$renderComment(_p7._0);
+				return _user$project$MiniLatex_Render$renderComment(_p8._0);
 			case 'Macro':
-				return A3(_user$project$MiniLatex_Render$renderMacro, latexState, _p7._0, _p7._1);
+				return A3(_user$project$MiniLatex_Render$renderMacro, latexState, _p8._0, _p8._1);
 			case 'Item':
-				return A3(_user$project$MiniLatex_Render$renderItem, latexState, _p7._0, _p7._1);
+				return A3(_user$project$MiniLatex_Render$renderItem, latexState, _p8._0, _p8._1);
 			case 'InlineMath':
 				return A2(
 					_elm_lang$core$Basics_ops['++'],
 					'$',
-					A2(_elm_lang$core$Basics_ops['++'], _p7._0, '$'));
+					A2(_elm_lang$core$Basics_ops['++'], _p8._0, '$'));
 			case 'DisplayMath':
 				return A2(
 					_elm_lang$core$Basics_ops['++'],
 					'$$',
-					A2(_elm_lang$core$Basics_ops['++'], _p7._0, '$$'));
+					A2(_elm_lang$core$Basics_ops['++'], _p8._0, '$$'));
 			case 'Environment':
-				return A3(_user$project$MiniLatex_Render$renderEnvironment, latexState, _p7._0, _p7._1);
+				return A3(_user$project$MiniLatex_Render$renderEnvironment, latexState, _p8._0, _p8._1);
 			case 'LatexList':
-				return A2(_user$project$MiniLatex_Render$renderLatexList, latexState, _p7._0);
+				return A2(_user$project$MiniLatex_Render$renderLatexList, latexState, _p8._0);
 			default:
-				return _p7._0;
+				return _p8._0;
 		}
 	});
 var _user$project$MiniLatex_Render$renderEnvironment = F3(
@@ -14266,9 +14457,9 @@ var _user$project$MiniLatex_Render$renderEnvironment = F3(
 		return A3(_user$project$MiniLatex_Render$environmentRenderer, name, latexState, body);
 	});
 var _user$project$MiniLatex_Render$environmentRenderer = function (name) {
-	var _p8 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderEnvironmentDict);
-	if (_p8.ctor === 'Just') {
-		return _p8._0;
+	var _p9 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderEnvironmentDict);
+	if (_p9.ctor === 'Just') {
+		return _p9._0;
 	} else {
 		return _user$project$MiniLatex_Render$renderDefaultEnvironment(name);
 	}
@@ -14713,9 +14904,9 @@ var _user$project$MiniLatex_Render$renderMacro = F3(
 		return A3(_user$project$MiniLatex_Render$macroRenderer, name, latexState, args);
 	});
 var _user$project$MiniLatex_Render$macroRenderer = function (name) {
-	var _p9 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderMacroDict);
-	if (_p9.ctor === 'Just') {
-		return _p9._0;
+	var _p10 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderMacroDict);
+	if (_p10.ctor === 'Just') {
+		return _p10._0;
 	} else {
 		return _user$project$MiniLatex_Render$reproduceMacro(name);
 	}
@@ -14885,183 +15076,249 @@ var _user$project$MiniLatex_Render$renderMacroDict = _elm_lang$core$Dict$fromLis
 																		ctor: '::',
 																		_0: {
 																			ctor: '_Tuple2',
-																			_0: 'mdash',
+																			_0: 'tableofcontents',
 																			_1: F2(
 																				function (x, y) {
-																					return '&mdash;';
+																					return A2(_user$project$MiniLatex_Render$renderTableOfContents, x, y);
 																				})
 																		},
 																		_1: {
 																			ctor: '::',
 																			_0: {
 																				ctor: '_Tuple2',
-																				_0: 'ndash',
+																				_0: 'maketitle',
 																				_1: F2(
 																					function (x, y) {
-																						return '&ndash;';
+																						return A2(_user$project$MiniLatex_Render$renderTitle, x, y);
 																					})
 																			},
 																			_1: {
 																				ctor: '::',
 																				_0: {
 																					ctor: '_Tuple2',
-																					_0: 'newcommand',
+																					_0: 'mdash',
 																					_1: F2(
 																						function (x, y) {
-																							return A2(_user$project$MiniLatex_Render$renderNewCommand, x, y);
+																							return '&mdash;';
 																						})
 																				},
 																				_1: {
 																					ctor: '::',
 																					_0: {
 																						ctor: '_Tuple2',
-																						_0: 'ref',
+																						_0: 'ndash',
 																						_1: F2(
 																							function (x, y) {
-																								return A2(_user$project$MiniLatex_Render$renderRef, x, y);
+																								return '&ndash;';
 																							})
 																					},
 																					_1: {
 																						ctor: '::',
 																						_0: {
 																							ctor: '_Tuple2',
-																							_0: 'section',
+																							_0: 'newcommand',
 																							_1: F2(
 																								function (x, y) {
-																									return A2(_user$project$MiniLatex_Render$renderSection, x, y);
+																									return A2(_user$project$MiniLatex_Render$renderNewCommand, x, y);
 																								})
 																						},
 																						_1: {
 																							ctor: '::',
 																							_0: {
 																								ctor: '_Tuple2',
-																								_0: 'section*',
+																								_0: 'ref',
 																								_1: F2(
 																									function (x, y) {
-																										return A2(_user$project$MiniLatex_Render$renderSectionStar, x, y);
+																										return A2(_user$project$MiniLatex_Render$renderRef, x, y);
 																									})
 																							},
 																							_1: {
 																								ctor: '::',
 																								_0: {
 																									ctor: '_Tuple2',
-																									_0: 'setcounter',
+																									_0: 'section',
 																									_1: F2(
 																										function (x, y) {
-																											return '';
+																											return A2(_user$project$MiniLatex_Render$renderSection, x, y);
 																										})
 																								},
 																								_1: {
 																									ctor: '::',
 																									_0: {
 																										ctor: '_Tuple2',
-																										_0: 'smallskip',
+																										_0: 'section*',
 																										_1: F2(
 																											function (x, y) {
-																												return A2(_user$project$MiniLatex_Render$renderSmallSkip, x, y);
+																												return A2(_user$project$MiniLatex_Render$renderSectionStar, x, y);
 																											})
 																									},
 																									_1: {
 																										ctor: '::',
 																										_0: {
 																											ctor: '_Tuple2',
-																											_0: 'strong',
+																											_0: 'setcounter',
 																											_1: F2(
 																												function (x, y) {
-																													return A2(_user$project$MiniLatex_Render$renderStrong, x, y);
+																													return '';
 																												})
 																										},
 																										_1: {
 																											ctor: '::',
 																											_0: {
 																												ctor: '_Tuple2',
-																												_0: 'subheading',
+																												_0: 'medskip',
 																												_1: F2(
 																													function (x, y) {
-																														return A2(_user$project$MiniLatex_Render$renderSubheading, x, y);
+																														return A2(_user$project$MiniLatex_Render$renderMedSkip, x, y);
 																													})
 																											},
 																											_1: {
 																												ctor: '::',
 																												_0: {
 																													ctor: '_Tuple2',
-																													_0: 'subsection',
+																													_0: 'smallskip',
 																													_1: F2(
 																														function (x, y) {
-																															return A2(_user$project$MiniLatex_Render$renderSubsection, x, y);
+																															return A2(_user$project$MiniLatex_Render$renderSmallSkip, x, y);
 																														})
 																												},
 																												_1: {
 																													ctor: '::',
 																													_0: {
 																														ctor: '_Tuple2',
-																														_0: 'subsection*',
+																														_0: 'strong',
 																														_1: F2(
 																															function (x, y) {
-																																return A2(_user$project$MiniLatex_Render$renderSubsectionStar, x, y);
+																																return A2(_user$project$MiniLatex_Render$renderStrong, x, y);
 																															})
 																													},
 																													_1: {
 																														ctor: '::',
 																														_0: {
 																															ctor: '_Tuple2',
-																															_0: 'subsubsection',
+																															_0: 'subheading',
 																															_1: F2(
 																																function (x, y) {
-																																	return A2(_user$project$MiniLatex_Render$renderSubSubsection, x, y);
+																																	return A2(_user$project$MiniLatex_Render$renderSubheading, x, y);
 																																})
 																														},
 																														_1: {
 																															ctor: '::',
 																															_0: {
 																																ctor: '_Tuple2',
-																																_0: 'subsubsection*',
+																																_0: 'subsection',
 																																_1: F2(
 																																	function (x, y) {
-																																		return A2(_user$project$MiniLatex_Render$renderSubSubsectionStar, x, y);
+																																		return A2(_user$project$MiniLatex_Render$renderSubsection, x, y);
 																																	})
 																															},
 																															_1: {
 																																ctor: '::',
 																																_0: {
 																																	ctor: '_Tuple2',
-																																	_0: 'title',
+																																	_0: 'subsection*',
 																																	_1: F2(
 																																		function (x, y) {
-																																			return A2(_user$project$MiniLatex_Render$renderTitle, x, y);
+																																			return A2(_user$project$MiniLatex_Render$renderSubsectionStar, x, y);
 																																		})
 																																},
 																																_1: {
 																																	ctor: '::',
 																																	_0: {
 																																		ctor: '_Tuple2',
-																																		_0: 'term',
+																																		_0: 'subsubsection',
 																																		_1: F2(
 																																			function (x, y) {
-																																				return A2(_user$project$MiniLatex_Render$renderTerm, x, y);
+																																				return A2(_user$project$MiniLatex_Render$renderSubSubsection, x, y);
 																																			})
 																																	},
 																																	_1: {
 																																		ctor: '::',
 																																		_0: {
 																																			ctor: '_Tuple2',
-																																			_0: 'xlink',
+																																			_0: 'subsubsection*',
 																																			_1: F2(
 																																				function (x, y) {
-																																					return A2(_user$project$MiniLatex_Render$renderXLink, x, y);
+																																					return A2(_user$project$MiniLatex_Render$renderSubSubsectionStar, x, y);
 																																				})
 																																		},
 																																		_1: {
 																																			ctor: '::',
 																																			_0: {
 																																				ctor: '_Tuple2',
-																																				_0: 'xlinkPublic',
+																																				_0: 'title',
 																																				_1: F2(
 																																					function (x, y) {
-																																						return A2(_user$project$MiniLatex_Render$renderXLinkPublic, x, y);
+																																						return '';
 																																					})
 																																			},
-																																			_1: {ctor: '[]'}
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {
+																																					ctor: '_Tuple2',
+																																					_0: 'author',
+																																					_1: F2(
+																																						function (x, y) {
+																																							return '';
+																																						})
+																																				},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {
+																																						ctor: '_Tuple2',
+																																						_0: 'date',
+																																						_1: F2(
+																																							function (x, y) {
+																																								return '';
+																																							})
+																																					},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {
+																																							ctor: '_Tuple2',
+																																							_0: 'email',
+																																							_1: F2(
+																																								function (x, y) {
+																																									return '';
+																																								})
+																																						},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {
+																																								ctor: '_Tuple2',
+																																								_0: 'term',
+																																								_1: F2(
+																																									function (x, y) {
+																																										return A2(_user$project$MiniLatex_Render$renderTerm, x, y);
+																																									})
+																																							},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {
+																																									ctor: '_Tuple2',
+																																									_0: 'xlink',
+																																									_1: F2(
+																																										function (x, y) {
+																																											return A2(_user$project$MiniLatex_Render$renderXLink, x, y);
+																																										})
+																																								},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {
+																																										ctor: '_Tuple2',
+																																										_0: 'xlinkPublic',
+																																										_1: F2(
+																																											function (x, y) {
+																																												return A2(_user$project$MiniLatex_Render$renderXLinkPublic, x, y);
+																																											})
+																																									},
+																																									_1: {ctor: '[]'}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
 																																		}
 																																	}
 																																}
@@ -15536,14 +15793,6 @@ var _user$project$MiniLatex_Render$renderTerm = F2(
 			' <span class=italic>',
 			A2(_elm_lang$core$Basics_ops['++'], arg, '</span>'));
 	});
-var _user$project$MiniLatex_Render$renderTitle = F2(
-	function (latexState, args) {
-		var arg = A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args);
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			'<h1>',
-			A2(_elm_lang$core$Basics_ops['++'], arg, '</h1>'));
-	});
 var _user$project$MiniLatex_Render$renderXLink = F2(
 	function (latexState, args) {
 		var label = A3(_user$project$MiniLatex_Render$renderArg, 1, latexState, args);
@@ -15618,14 +15867,14 @@ var _user$project$MiniLatex_Render$renderString = F3(
 	function (parser, latexState, str) {
 		var parserOutput = A2(_elm_tools$parser$Parser$run, parser, str);
 		var renderOutput = function () {
-			var _p10 = parserOutput;
-			if (_p10.ctor === 'Ok') {
-				return A2(_user$project$MiniLatex_Render$render, latexState, _p10._0);
+			var _p11 = parserOutput;
+			if (_p11.ctor === 'Ok') {
+				return A2(_user$project$MiniLatex_Render$render, latexState, _p11._0);
 			} else {
 				return A2(
 					_elm_lang$core$Basics_ops['++'],
 					'Error: ',
-					_elm_lang$core$Basics$toString(_p10._0));
+					_elm_lang$core$Basics$toString(_p11._0));
 			}
 		}();
 		return renderOutput;
@@ -15783,6 +16032,11 @@ var _user$project$MiniLatex_Accumulator$updateSection = F2(
 									' ')))))),
 			paragraph) : paragraph));
 	});
+var _user$project$MiniLatex_Accumulator$setDictionaryItemForMacro = F3(
+	function (macroname, headElement, latexState) {
+		var value = _user$project$MiniLatex_ParserTools$unpackString(headElement.value);
+		return A3(_user$project$MiniLatex_LatexState$setDictionaryItem, macroname, value, latexState);
+	});
 var _user$project$MiniLatex_Accumulator$info = function (latexExpression) {
 	var _p3 = latexExpression;
 	switch (_p3.ctor) {
@@ -15919,7 +16173,7 @@ var _user$project$MiniLatex_Accumulator$updateState = F2(
 				_elm_lang$core$List$head(parsedParagraph)));
 		var newLatexState = function () {
 			var _p6 = {ctor: '_Tuple2', _0: headElement.typ, _1: headElement.name};
-			_v4_11:
+			_v4_15:
 			do {
 				if (_p6.ctor === '_Tuple2') {
 					switch (_p6._0) {
@@ -15946,25 +16200,83 @@ var _user$project$MiniLatex_Accumulator$updateState = F2(
 											0,
 											A3(_user$project$MiniLatex_LatexState$updateCounter, 's1', initialSectionNumber - 1, latexState))) : latexState;
 								case 'section':
-									return A3(
-										_user$project$MiniLatex_LatexState$updateCounter,
-										's3',
-										0,
+									var label = _elm_lang$core$Basics$toString(
+										function (x) {
+											return x + 1;
+										}(
+											A2(_user$project$MiniLatex_LatexState$getCounter, 's1', latexState)));
+									return A4(
+										_user$project$MiniLatex_LatexState$addSection,
+										_user$project$MiniLatex_ParserTools$unpackString(headElement.value),
+										label,
+										1,
 										A3(
 											_user$project$MiniLatex_LatexState$updateCounter,
-											's2',
+											's3',
 											0,
-											A2(_user$project$MiniLatex_LatexState$incrementCounter, 's1', latexState)));
+											A3(
+												_user$project$MiniLatex_LatexState$updateCounter,
+												's2',
+												0,
+												A2(_user$project$MiniLatex_LatexState$incrementCounter, 's1', latexState))));
 								case 'subsection':
-									return A3(
-										_user$project$MiniLatex_LatexState$updateCounter,
-										's3',
-										0,
-										A2(_user$project$MiniLatex_LatexState$incrementCounter, 's2', latexState));
+									var s2 = _elm_lang$core$Basics$toString(
+										function (x) {
+											return x + 1;
+										}(
+											A2(_user$project$MiniLatex_LatexState$getCounter, 's2', latexState)));
+									var s1 = _elm_lang$core$Basics$toString(
+										A2(_user$project$MiniLatex_LatexState$getCounter, 's1', latexState));
+									var label = A2(
+										_elm_lang$core$Basics_ops['++'],
+										s1,
+										A2(_elm_lang$core$Basics_ops['++'], '.', s2));
+									return A4(
+										_user$project$MiniLatex_LatexState$addSection,
+										_user$project$MiniLatex_ParserTools$unpackString(headElement.value),
+										label,
+										2,
+										A3(
+											_user$project$MiniLatex_LatexState$updateCounter,
+											's3',
+											0,
+											A2(_user$project$MiniLatex_LatexState$incrementCounter, 's2', latexState)));
 								case 'subsubsection':
-									return A2(_user$project$MiniLatex_LatexState$incrementCounter, 's3', latexState);
+									var s3 = _elm_lang$core$Basics$toString(
+										function (x) {
+											return x + 1;
+										}(
+											A2(_user$project$MiniLatex_LatexState$getCounter, 's3', latexState)));
+									var s2 = _elm_lang$core$Basics$toString(
+										A2(_user$project$MiniLatex_LatexState$getCounter, 's2', latexState));
+									var s1 = _elm_lang$core$Basics$toString(
+										A2(_user$project$MiniLatex_LatexState$getCounter, 's1', latexState));
+									var label = A2(
+										_elm_lang$core$Basics_ops['++'],
+										s1,
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											'.',
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												s2,
+												A2(_elm_lang$core$Basics_ops['++'], '.', s3))));
+									return A4(
+										_user$project$MiniLatex_LatexState$addSection,
+										_user$project$MiniLatex_ParserTools$unpackString(headElement.value),
+										label,
+										3,
+										A2(_user$project$MiniLatex_LatexState$incrementCounter, 's3', latexState));
+								case 'title':
+									return A3(_user$project$MiniLatex_Accumulator$setDictionaryItemForMacro, 'title', headElement, latexState);
+								case 'author':
+									return A3(_user$project$MiniLatex_Accumulator$setDictionaryItemForMacro, 'author', headElement, latexState);
+								case 'date':
+									return A3(_user$project$MiniLatex_Accumulator$setDictionaryItemForMacro, 'date', headElement, latexState);
+								case 'email':
+									return A3(_user$project$MiniLatex_Accumulator$setDictionaryItemForMacro, 'email', headElement, latexState);
 								default:
-									break _v4_11;
+									break _v4_15;
 							}
 						case 'env':
 							switch (_p6._1) {
@@ -15983,13 +16295,13 @@ var _user$project$MiniLatex_Accumulator$updateState = F2(
 								case 'align':
 									return A2(_user$project$MiniLatex_Accumulator$handleEquationNumbers, latexState, headElement);
 								default:
-									break _v4_11;
+									break _v4_15;
 							}
 						default:
-							break _v4_11;
+							break _v4_15;
 					}
 				} else {
-					break _v4_11;
+					break _v4_15;
 				}
 			} while(false);
 			return latexState;
@@ -16031,9 +16343,12 @@ var _user$project$MiniLatex_LatexDiffer$initialize = F2(
 		var _p0 = A2(_user$project$MiniLatex_Accumulator$parseParagraphs, _user$project$MiniLatex_LatexState$emptyLatexState, paragraphs);
 		var latexExpressionList = _p0._0;
 		var latexState1 = _p0._1;
-		var latexState2 = _elm_lang$core$Native_Utils.update(
-			_user$project$MiniLatex_LatexState$emptyLatexState,
-			{crossReferences: latexState1.crossReferences});
+		var latexState2 = A2(
+			_elm_lang$core$Debug$log,
+			'latexState2',
+			_elm_lang$core$Native_Utils.update(
+				_user$project$MiniLatex_LatexState$emptyLatexState,
+				{crossReferences: latexState1.crossReferences, tableOfContents: latexState1.tableOfContents, dictionary: latexState1.dictionary}));
 		var _p1 = A2(_user$project$MiniLatex_Accumulator$renderParagraphs, latexState2, latexExpressionList);
 		var renderedParagraphs = _p1._0;
 		var latexState3 = _p1._1;
@@ -16101,7 +16416,8 @@ var _user$project$MiniLatex_Driver$getRenderedText = F2(
 			_elm_lang$core$Debug$log,
 			'pTags',
 			_user$project$MiniLatex_Driver$pTags(editRecord));
-		var _p0 = A2(_elm_lang$core$Debug$log, 'idList', editRecord.idList);
+		var _p0 = A2(_elm_lang$core$Debug$log, 'latexState2', editRecord.latexState);
+		var _p1 = A2(_elm_lang$core$Debug$log, 'idList', editRecord.idList);
 		var paragraphs = editRecord.renderedParagraphs;
 		return function (x) {
 			return A2(
@@ -16212,7 +16528,7 @@ var _user$project$MiniLatex_HasMath$listHasMath = function (list) {
 		list);
 };
 
-var _user$project$Main$initialSourceText = '\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nSee the article\n\\href{http://www.knode.io/#@public/559}{MiniLatex}\nat \\href{http://www.knode.io}{www.knode.io} for more info.\n\nFeel free to edit and re-render the text on the left.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\nNote that in the \\italic{source} of the listing below,\nthere are no line numbers.\n\n\\strong{MiniLaTeX Abstract Syntax Tree (AST)}\n\n\\begin{listing}\ntype LatexExpression\n    = LXString String\n    | Comment String\n    | Item Int LatexExpression\n    | InlineMath String\n    | DisplayMath String\n    | Macro String (List LatexExpression)\n    | Environment String LatexExpression\n    | LatexList (List LatexExpression)\n\\end{listing}\n\nThe MiniLaTeX parser reads text and produces\nan AST.  A rendering function converts the AST\ninto HTML.  One could easily write\nfunctions \\code{render: LatexExpression -> String}\nto make other conversions.\n\n\\section{More about MiniLaTeX}\n\nArticles and code:\n\n\\begin{itemize}\n\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nContributions to help improve the open-source\nMiniLatex Parser-Renderer are most welcome.\nHere is the \\href{https://github.com/jxxcarlson/minilatex}{GitHub repository}.\nThe MiniLatex Demo as well as the app at knode.io are written in\n\\href{http://elm-lang.org/}{Elm}.  We also plan a Haskell version.\n\nPlease send comments, bug reports, etc. to jxxcarlson at gmail.\n\n\\section{Technical Note}\nThere is a \\italic{very rough} \\href{http://www.knode.io/#@public/628}{draft grammar}\nfor MiniLaTeX, written mostly in EBNF.  However, there are a few\nproductions, notably for enviroments, which are not context-free.\nRecall that in a context-free grammar, all productions are\nof the form $A \\Rightarrow \\beta$, where $A$ is a terminal symbol\nand $\\beta$ is a sequence of terminals and nonterminals.  There\nare some productions of the form $A\\beta \\Rightarrow \\gamma$,\nwhere $\\beta$ is a terminal symbol.  These are\ncontext-sensitive productions, with $\\beta$ providing the context.\n\n\n\n\\section{Restrictions and Limitations}\n\nBelow\nare some of the current restrictions and limitations.\n\n\\begin{enumerate}\n\n\\item The enumerate and itemize environments cannot be nested.\n\n\\item The tabular environment ignores formatting information\nand left-justifies everything in the cell.\n\n\\end{enumerate}\n\nWe are working on these and other issues  to expand the scope of MiniLatex.\nThe project is still in the R&D phase -- we welcome comments (jxxcarlson at gmail)\n\n\\bigskip\n\n\\image{https://cdn-images-1.medium.com/max/1200/1*HlpVE5TFBUp17ua1AdiKpw.gif}{The way we used to do it.}{align: center}\n\n';
+var _user$project$Main$initialSourceText = '\n\\title{MiniLaTeX Demo}\n\n\\author{James Carlson}\n\n\\email{jxxcarlson at gmail}\n\n\\date{January 16, 2018}\n\n\\maketitle\n\n\\tableofcontents\n\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nSee the article\n\\href{http://www.knode.io/#@public/559}{MiniLatex}\nat \\href{http://www.knode.io}{www.knode.io} for more info.\n\nFeel free to edit and re-render the text on the left.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\nNote that in the \\italic{source} of the listing below,\nthere are no line numbers.\n\n\\strong{MiniLaTeX Abstract Syntax Tree (AST)}\n\n\\begin{listing}\ntype LatexExpression\n    = LXString String\n    | Comment String\n    | Item Int LatexExpression\n    | InlineMath String\n    | DisplayMath String\n    | Macro String (List LatexExpression)\n    | Environment String LatexExpression\n    | LatexList (List LatexExpression)\n\\end{listing}\n\nThe MiniLaTeX parser reads text and produces\nan AST.  A rendering function converts the AST\ninto HTML.  One could easily write\nfunctions \\code{render: LatexExpression -> String}\nto make other conversions.\n\n\\section{More about MiniLaTeX}\n\nArticles and code:\n\n\\begin{itemize}\n\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nContributions to help improve the open-source\nMiniLatex Parser-Renderer are most welcome.\nHere is the \\href{https://github.com/jxxcarlson/minilatex}{GitHub repository}.\nThe MiniLatex Demo as well as the app at knode.io are written in\n\\href{http://elm-lang.org/}{Elm}.  We also plan a Haskell version.\n\nPlease send comments, bug reports, etc. to jxxcarlson at gmail.\n\n\\section{Technical Note}\nThere is a \\italic{very rough} \\href{http://www.knode.io/#@public/628}{draft grammar}\nfor MiniLaTeX, written mostly in EBNF.  However, there are a few\nproductions, notably for enviroments, which are not context-free.\nRecall that in a context-free grammar, all productions are\nof the form $A \\Rightarrow \\beta$, where $A$ is a terminal symbol\nand $\\beta$ is a sequence of terminals and nonterminals.  There\nare some productions of the form $A\\beta \\Rightarrow \\gamma$,\nwhere $\\beta$ is a terminal symbol.  These are\ncontext-sensitive productions, with $\\beta$ providing the context.\n\n\n\n\\section{Restrictions, Limitations, and Todos}\n\nBelow\nare some of the current restrictions and limitations.\n\n\\begin{enumerate}\n\n\\item The enumerate and itemize environments cannot be nested (but can containe inline math and macros).\n\n\\item The tabular environment ignores formatting information\nand left-justifies everything in the cell.\n\n\\item We plan to make the table of contents entries into live links\nin the next few days.\n\n\\end{enumerate}\n\n\nWe are working on these and other issues  to expand the scope of MiniLatex.\nThe project is still in the R&D phase -- we welcome comments (jxxcarlson at gmail)\n\n\\bigskip\n\n\\image{https://cdn-images-1.medium.com/max/1200/1*HlpVE5TFBUp17ua1AdiKpw.gif}{The way we used to do it.}{align: center}\n\n';
 var _user$project$Main$textStyle2 = F4(
 	function (width, height, offset, color) {
 		return _elm_lang$html$Html_Attributes$style(
@@ -17095,12 +17411,14 @@ var _user$project$Main$update = F2(
 						})
 				};
 			case 'ReRender':
+				var editRecord = A2(_user$project$MiniLatex_Driver$setup, model.seed, model.sourceText);
+				var _p4 = A2(_elm_lang$core$Debug$log, 'TOC', editRecord.latexState.tableOfContents);
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							editRecord: A2(_user$project$MiniLatex_Driver$setup, model.seed, model.sourceText),
+							editRecord: editRecord,
 							parseResult: _user$project$MiniLatex_Driver$parse(model.sourceText)
 						}),
 					_1: _user$project$Main$sendToJs(
@@ -17455,8 +17773,8 @@ var _user$project$Main$rawHtmlResultsView = function (model) {
 		});
 };
 var _user$project$Main$mainView = function (model) {
-	var _p4 = model.configuration;
-	switch (_p4.ctor) {
+	var _p5 = model.configuration;
+	switch (_p5.ctor) {
 		case 'StandardView':
 			return _user$project$Main$standardView(model);
 		case 'ParseResultsView':
