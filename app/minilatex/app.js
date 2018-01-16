@@ -14071,6 +14071,8 @@ var _user$project$MiniLatex_Render$renderTableOfContents = F2(
 	});
 var _user$project$MiniLatex_Render$renderTitle = F2(
 	function (latexState, list) {
+		var revision = A2(_user$project$MiniLatex_LatexState$getDictionaryItem, 'revision', latexState);
+		var revisionText = (!_elm_lang$core$Native_Utils.eq(revision, '')) ? A2(_elm_lang$core$Basics_ops['++'], 'Last revised ', revision) : '';
 		var email = A2(_user$project$MiniLatex_LatexState$getDictionaryItem, 'email', latexState);
 		var date = A2(_user$project$MiniLatex_LatexState$getDictionaryItem, 'date', latexState);
 		var author = A2(_user$project$MiniLatex_LatexState$getDictionaryItem, 'author', latexState);
@@ -14087,14 +14089,18 @@ var _user$project$MiniLatex_Render$renderTitle = F2(
 					_0: author,
 					_1: {
 						ctor: '::',
-						_0: date,
+						_0: email,
 						_1: {
 							ctor: '::',
-							_0: email,
+							_0: date,
 							_1: {
 								ctor: '::',
-								_0: '</div>\n',
-								_1: {ctor: '[]'}
+								_0: revisionText,
+								_1: {
+									ctor: '::',
+									_0: '</div>\n',
+									_1: {ctor: '[]'}
+								}
 							}
 						}
 					}
@@ -15276,7 +15282,7 @@ var _user$project$MiniLatex_Render$renderMacroDict = _elm_lang$core$Dict$fromLis
 																																						ctor: '::',
 																																						_0: {
 																																							ctor: '_Tuple2',
-																																							_0: 'email',
+																																							_0: 'revision',
 																																							_1: F2(
 																																								function (x, y) {
 																																									return '';
@@ -15286,33 +15292,44 @@ var _user$project$MiniLatex_Render$renderMacroDict = _elm_lang$core$Dict$fromLis
 																																							ctor: '::',
 																																							_0: {
 																																								ctor: '_Tuple2',
-																																								_0: 'term',
+																																								_0: 'email',
 																																								_1: F2(
 																																									function (x, y) {
-																																										return A2(_user$project$MiniLatex_Render$renderTerm, x, y);
+																																										return '';
 																																									})
 																																							},
 																																							_1: {
 																																								ctor: '::',
 																																								_0: {
 																																									ctor: '_Tuple2',
-																																									_0: 'xlink',
+																																									_0: 'term',
 																																									_1: F2(
 																																										function (x, y) {
-																																											return A2(_user$project$MiniLatex_Render$renderXLink, x, y);
+																																											return A2(_user$project$MiniLatex_Render$renderTerm, x, y);
 																																										})
 																																								},
 																																								_1: {
 																																									ctor: '::',
 																																									_0: {
 																																										ctor: '_Tuple2',
-																																										_0: 'xlinkPublic',
+																																										_0: 'xlink',
 																																										_1: F2(
 																																											function (x, y) {
-																																												return A2(_user$project$MiniLatex_Render$renderXLinkPublic, x, y);
+																																												return A2(_user$project$MiniLatex_Render$renderXLink, x, y);
 																																											})
 																																									},
-																																									_1: {ctor: '[]'}
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {
+																																											ctor: '_Tuple2',
+																																											_0: 'xlinkPublic',
+																																											_1: F2(
+																																												function (x, y) {
+																																													return A2(_user$project$MiniLatex_Render$renderXLinkPublic, x, y);
+																																												})
+																																										},
+																																										_1: {ctor: '[]'}
+																																									}
 																																								}
 																																							}
 																																						}
@@ -16173,7 +16190,7 @@ var _user$project$MiniLatex_Accumulator$updateState = F2(
 				_elm_lang$core$List$head(parsedParagraph)));
 		var newLatexState = function () {
 			var _p6 = {ctor: '_Tuple2', _0: headElement.typ, _1: headElement.name};
-			_v4_15:
+			_v4_16:
 			do {
 				if (_p6.ctor === '_Tuple2') {
 					switch (_p6._0) {
@@ -16275,8 +16292,10 @@ var _user$project$MiniLatex_Accumulator$updateState = F2(
 									return A3(_user$project$MiniLatex_Accumulator$setDictionaryItemForMacro, 'date', headElement, latexState);
 								case 'email':
 									return A3(_user$project$MiniLatex_Accumulator$setDictionaryItemForMacro, 'email', headElement, latexState);
+								case 'revision':
+									return A3(_user$project$MiniLatex_Accumulator$setDictionaryItemForMacro, 'revision', headElement, latexState);
 								default:
-									break _v4_15;
+									break _v4_16;
 							}
 						case 'env':
 							switch (_p6._1) {
@@ -16295,13 +16314,13 @@ var _user$project$MiniLatex_Accumulator$updateState = F2(
 								case 'align':
 									return A2(_user$project$MiniLatex_Accumulator$handleEquationNumbers, latexState, headElement);
 								default:
-									break _v4_15;
+									break _v4_16;
 							}
 						default:
-							break _v4_15;
+							break _v4_16;
 					}
 				} else {
-					break _v4_15;
+					break _v4_16;
 				}
 			} while(false);
 			return latexState;
@@ -16528,7 +16547,7 @@ var _user$project$MiniLatex_HasMath$listHasMath = function (list) {
 		list);
 };
 
-var _user$project$Main$initialSourceText = '\n\\title{MiniLaTeX Demo}\n\n\\author{James Carlson}\n\n\\email{jxxcarlson at gmail}\n\n\\date{January 16, 2018}\n\n\\maketitle\n\n\\tableofcontents\n\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nSee the article\n\\href{http://www.knode.io/#@public/559}{MiniLatex}\nat \\href{http://www.knode.io}{www.knode.io} for more info.\n\nFeel free to edit and re-render the text on the left.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\nNote that in the \\italic{source} of the listing below,\nthere are no line numbers.\n\n\\strong{MiniLaTeX Abstract Syntax Tree (AST)}\n\n\\begin{listing}\ntype LatexExpression\n    = LXString String\n    | Comment String\n    | Item Int LatexExpression\n    | InlineMath String\n    | DisplayMath String\n    | Macro String (List LatexExpression)\n    | Environment String LatexExpression\n    | LatexList (List LatexExpression)\n\\end{listing}\n\nThe MiniLaTeX parser reads text and produces\nan AST.  A rendering function converts the AST\ninto HTML.  One could easily write\nfunctions \\code{render: LatexExpression -> String}\nto make other conversions.\n\n\\section{More about MiniLaTeX}\n\nArticles and code:\n\n\\begin{itemize}\n\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nContributions to help improve the open-source\nMiniLatex Parser-Renderer are most welcome.\nHere is the \\href{https://github.com/jxxcarlson/minilatex}{GitHub repository}.\nThe MiniLatex Demo as well as the app at knode.io are written in\n\\href{http://elm-lang.org/}{Elm}.  We also plan a Haskell version.\n\nPlease send comments, bug reports, etc. to jxxcarlson at gmail.\n\n\\section{Technical Note}\nThere is a \\italic{very rough} \\href{http://www.knode.io/#@public/628}{draft grammar}\nfor MiniLaTeX, written mostly in EBNF.  However, there are a few\nproductions, notably for enviroments, which are not context-free.\nRecall that in a context-free grammar, all productions are\nof the form $A \\Rightarrow \\beta$, where $A$ is a terminal symbol\nand $\\beta$ is a sequence of terminals and nonterminals.  There\nare some productions of the form $A\\beta \\Rightarrow \\gamma$,\nwhere $\\beta$ is a terminal symbol.  These are\ncontext-sensitive productions, with $\\beta$ providing the context.\n\n\n\n\\section{Restrictions, Limitations, and Todos}\n\nBelow\nare some of the current restrictions and limitations.\n\n\\begin{enumerate}\n\n\\item The enumerate and itemize environments cannot be nested (but can containe inline math and macros).\n\n\\item The tabular environment ignores formatting information\nand left-justifies everything in the cell.\n\n\\item We plan to make the table of contents entries into live links\nin the next few days.\n\n\\end{enumerate}\n\n\nWe are working on these and other issues  to expand the scope of MiniLatex.\nThe project is still in the R&D phase -- we welcome comments (jxxcarlson at gmail)\n\n\\bigskip\n\n\\image{https://cdn-images-1.medium.com/max/1200/1*HlpVE5TFBUp17ua1AdiKpw.gif}{The way we used to do it.}{align: center}\n\n';
+var _user$project$Main$initialSourceText = '\n\\title{MiniLaTeX Demo}\n\n\\author{James Carlson}\n\n\\email{jxxcarlson at gmail}\n\n\\date{November 13, 2017}\n\n\\revision{January 16, 2018}\n\n\\maketitle\n\n\\tableofcontents\n\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nSee the article\n\\href{http://www.knode.io/#@public/559}{MiniLatex}\nat \\href{http://www.knode.io}{www.knode.io} for more info.\n\nFeel free to edit and re-render the text on the left.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\nNote that in the \\italic{source} of the listing below,\nthere are no line numbers.\n\n\\strong{MiniLaTeX Abstract Syntax Tree (AST)}\n\n\\begin{listing}\ntype LatexExpression\n    = LXString String\n    | Comment String\n    | Item Int LatexExpression\n    | InlineMath String\n    | DisplayMath String\n    | Macro String (List LatexExpression)\n    | Environment String LatexExpression\n    | LatexList (List LatexExpression)\n\\end{listing}\n\nThe MiniLaTeX parser reads text and produces\nan AST.  A rendering function converts the AST\ninto HTML.  One could easily write\nfunctions \\code{render: LatexExpression -> String}\nto make other conversions.\n\n\\section{More about MiniLaTeX}\n\nArticles and code:\n\n\\begin{itemize}\n\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nContributions to help improve the open-source\nMiniLatex Parser-Renderer are most welcome.\nHere is the \\href{https://github.com/jxxcarlson/minilatex}{GitHub repository}.\nThe MiniLatex Demo as well as the app at knode.io are written in\n\\href{http://elm-lang.org/}{Elm}.  We also plan a Haskell version.\n\nPlease send comments, bug reports, etc. to jxxcarlson at gmail.\n\n\\section{Technical Note}\nThere is a \\italic{very rough} \\href{http://www.knode.io/#@public/628}{draft grammar}\nfor MiniLaTeX, written mostly in EBNF.  However, there are a few\nproductions, notably for enviroments, which are not context-free.\nRecall that in a context-free grammar, all productions are\nof the form $A \\Rightarrow \\beta$, where $A$ is a terminal symbol\nand $\\beta$ is a sequence of terminals and nonterminals.  There\nare some productions of the form $A\\beta \\Rightarrow \\gamma$,\nwhere $\\beta$ is a terminal symbol.  These are\ncontext-sensitive productions, with $\\beta$ providing the context.\n\n\n\n\\section{Restrictions, Limitations, and Todos}\n\nBelow\nare some of the current restrictions and limitations.\n\n\\begin{enumerate}\n\n\\item The enumerate and itemize environments cannot be nested (but can containe inline math and macros).\n\n\\item The tabular environment ignores formatting information\nand left-justifies everything in the cell.\n\n\\item We plan to make the table of contents entries into live links\nin the next few days.\n\n\\end{enumerate}\n\n\nWe are working on these and other issues  to expand the scope of MiniLatex.\nThe project is still in the R&D phase -- we welcome comments (jxxcarlson at gmail)\n\n\\bigskip\n\n\\image{https://cdn-images-1.medium.com/max/1200/1*HlpVE5TFBUp17ua1AdiKpw.gif}{The way we used to do it.}{align: center}\n\n';
 var _user$project$Main$textStyle2 = F4(
 	function (width, height, offset, color) {
 		return _elm_lang$html$Html_Attributes$style(
