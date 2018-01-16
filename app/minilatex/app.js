@@ -14015,60 +14015,19 @@ var _user$project$MiniLatex_Render$handleCenterImage = F3(
 				}
 			});
 	});
-var _user$project$MiniLatex_Render$makeTocItem = function (tocItem) {
-	var tagSuffix = '</li>';
-	var ti = _elm_lang$core$Tuple$second(tocItem);
-	var tagPrefix = A2(
-		_elm_lang$core$Basics_ops['++'],
-		'<li class=\"sectionLevel',
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			_elm_lang$core$Basics$toString(ti.level),
-			'\" >'));
-	var content = A2(
-		_elm_lang$core$Basics_ops['++'],
-		ti.label,
-		A2(_elm_lang$core$Basics_ops['++'], '. ', ti.name));
-	var i = _elm_lang$core$Tuple$first(tocItem);
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		tagPrefix,
-		A2(_elm_lang$core$Basics_ops['++'], content, tagSuffix));
+var _user$project$MiniLatex_Render$sectionPrefix = function (level) {
+	var _p0 = level;
+	switch (_p0) {
+		case 1:
+			return 'section';
+		case 2:
+			return 'subsection';
+		case 3:
+			return 'subsubsection';
+		default:
+			return 'asection';
+	}
 };
-var _user$project$MiniLatex_Render$makeTableOfContents = function (latexState) {
-	return A2(
-		_elm_lang$core$String$join,
-		'\n',
-		A3(
-			_elm_lang$core$List$foldl,
-			F2(
-				function (tocItem, acc) {
-					return A2(
-						_elm_lang$core$Basics_ops['++'],
-						acc,
-						{
-							ctor: '::',
-							_0: _user$project$MiniLatex_Render$makeTocItem(tocItem),
-							_1: {ctor: '[]'}
-						});
-				}),
-			{ctor: '[]'},
-			A2(
-				_elm_lang$core$List$indexedMap,
-				F2(
-					function (v0, v1) {
-						return {ctor: '_Tuple2', _0: v0, _1: v1};
-					}),
-				latexState.tableOfContents)));
-};
-var _user$project$MiniLatex_Render$renderTableOfContents = F2(
-	function (latexState, list) {
-		var innerPart = _user$project$MiniLatex_Render$makeTableOfContents(latexState);
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			'\n<p class=\"tocTitle\">Table of Contents</p>\n<ul class=\"ListEnvironment\">\n',
-			A2(_elm_lang$core$Basics_ops['++'], innerPart, '\n</ul>\n'));
-	});
 var _user$project$MiniLatex_Render$renderTitle = F2(
 	function (latexState, list) {
 		var revision = A2(_user$project$MiniLatex_LatexState$getDictionaryItem, 'revision', latexState);
@@ -14124,6 +14083,167 @@ var _user$project$MiniLatex_Render$renderTitle = F2(
 					_1: {ctor: '[]'}
 				}
 			});
+	});
+var _user$project$MiniLatex_Render$tag = F3(
+	function (tagName, tagProperties, content) {
+		return A2(
+			_elm_lang$core$String$join,
+			'',
+			{
+				ctor: '::',
+				_0: '<',
+				_1: {
+					ctor: '::',
+					_0: tagName,
+					_1: {
+						ctor: '::',
+						_0: ' ',
+						_1: {
+							ctor: '::',
+							_0: tagProperties,
+							_1: {
+								ctor: '::',
+								_0: ' ',
+								_1: {
+									ctor: '::',
+									_0: '>',
+									_1: {
+										ctor: '::',
+										_0: content,
+										_1: {
+											ctor: '::',
+											_0: '</',
+											_1: {
+												ctor: '::',
+												_0: tagName,
+												_1: {
+													ctor: '::',
+													_0: '>',
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			});
+	});
+var _user$project$MiniLatex_Render$compress = function (str) {
+	return A4(
+		_elm_lang$core$Regex$replace,
+		_elm_lang$core$Regex$All,
+		_elm_lang$core$Regex$regex('[,;.!?&_]'),
+		function (_p1) {
+			return '';
+		},
+		A3(
+			_elm_community$string_extra$String_Extra$replace,
+			' ',
+			':',
+			_elm_lang$core$String$toLower(str)));
+};
+var _user$project$MiniLatex_Render$makeId = F2(
+	function (prefix, name) {
+		return A2(
+			_elm_lang$core$String$join,
+			':',
+			{
+				ctor: '::',
+				_0: prefix,
+				_1: {
+					ctor: '::',
+					_0: _user$project$MiniLatex_Render$compress(name),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _user$project$MiniLatex_Render$idPhrase = F2(
+	function (prefix, name) {
+		var compressedName = A3(
+			_elm_community$string_extra$String_Extra$replace,
+			' ',
+			':',
+			_elm_lang$core$String$toLower(name));
+		return A2(
+			_elm_lang$core$String$join,
+			'',
+			{
+				ctor: '::',
+				_0: 'id=\"',
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$MiniLatex_Render$makeId, prefix, name),
+					_1: {
+						ctor: '::',
+						_0: '\"',
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
+var _user$project$MiniLatex_Render$makeTocItem = function (tocItem) {
+	var ti = _elm_lang$core$Tuple$second(tocItem);
+	var classProperty = A2(
+		_elm_lang$core$Basics_ops['++'],
+		'class=\"sectionLevel',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Basics$toString(ti.level),
+			'\"'));
+	var id = A2(
+		_user$project$MiniLatex_Render$makeId,
+		_user$project$MiniLatex_Render$sectionPrefix(ti.level),
+		ti.name);
+	var href = A2(
+		_elm_lang$core$Basics_ops['++'],
+		'href=\"#',
+		A2(_elm_lang$core$Basics_ops['++'], id, '\"'));
+	var innerTag = A2(
+		_elm_lang$core$Basics_ops['++'],
+		ti.label,
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			' ',
+			A3(_user$project$MiniLatex_Render$tag, 'a', href, ti.name)));
+	var i = _elm_lang$core$Tuple$first(tocItem);
+	return A3(_user$project$MiniLatex_Render$tag, 'li', classProperty, innerTag);
+};
+var _user$project$MiniLatex_Render$makeTableOfContents = function (latexState) {
+	return A2(
+		_elm_lang$core$String$join,
+		'\n',
+		A3(
+			_elm_lang$core$List$foldl,
+			F2(
+				function (tocItem, acc) {
+					return A2(
+						_elm_lang$core$Basics_ops['++'],
+						acc,
+						{
+							ctor: '::',
+							_0: _user$project$MiniLatex_Render$makeTocItem(tocItem),
+							_1: {ctor: '[]'}
+						});
+				}),
+			{ctor: '[]'},
+			A2(
+				_elm_lang$core$List$indexedMap,
+				F2(
+					function (v0, v1) {
+						return {ctor: '_Tuple2', _0: v0, _1: v1};
+					}),
+				latexState.tableOfContents)));
+};
+var _user$project$MiniLatex_Render$renderTableOfContents = F2(
+	function (latexState, list) {
+		var innerPart = _user$project$MiniLatex_Render$makeTableOfContents(latexState);
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'\n<p class=\"tocTitle\">Table of Contents</p>\n<ul class=\"ListEnvironment\">\n',
+			A2(_elm_lang$core$Basics_ops['++'], innerPart, '\n</ul>\n'));
 	});
 var _user$project$MiniLatex_Render$a = F2(
 	function (url, label) {
@@ -14181,9 +14301,9 @@ var _user$project$MiniLatex_Render$numberedLine = F2(
 	});
 var _user$project$MiniLatex_Render$addNumberedLine = F2(
 	function (line, data) {
-		var _p0 = data;
-		var k = _p0._0;
-		var lines = _p0._1;
+		var _p2 = data;
+		var k = _p2._0;
+		var lines = _p2._1;
 		return {
 			ctor: '_Tuple2',
 			_0: k + 1,
@@ -14217,25 +14337,25 @@ var _user$project$MiniLatex_Render$addLineNumbers = function (text) {
 						_elm_lang$core$String$trim(text))))));
 };
 var _user$project$MiniLatex_Render$renderCell = function (cell) {
-	var _p1 = cell;
-	switch (_p1.ctor) {
+	var _p3 = cell;
+	switch (_p3.ctor) {
 		case 'LXString':
 			return A2(
 				_elm_lang$core$Basics_ops['++'],
 				'<td>',
-				A2(_elm_lang$core$Basics_ops['++'], _p1._0, '</td>'));
+				A2(_elm_lang$core$Basics_ops['++'], _p3._0, '</td>'));
 		case 'InlineMath':
 			return A2(
 				_elm_lang$core$Basics_ops['++'],
 				'<td>$',
-				A2(_elm_lang$core$Basics_ops['++'], _p1._0, '$</td>'));
+				A2(_elm_lang$core$Basics_ops['++'], _p3._0, '$</td>'));
 		default:
 			return '<td>-</td>';
 	}
 };
 var _user$project$MiniLatex_Render$renderRow = function (row) {
-	var _p2 = row;
-	if (_p2.ctor === 'LatexList') {
+	var _p4 = row;
+	if (_p4.ctor === 'LatexList') {
 		return function (row) {
 			return A2(
 				_elm_lang$core$Basics_ops['++'],
@@ -14255,14 +14375,14 @@ var _user$project$MiniLatex_Render$renderRow = function (row) {
 								_user$project$MiniLatex_Render$renderCell(cell)));
 					}),
 				'',
-				_p2._0));
+				_p4._0));
 	} else {
 		return '<tr>-</tr>';
 	}
 };
 var _user$project$MiniLatex_Render$renderTableBody = function (body) {
-	var _p3 = body;
-	if (_p3.ctor === 'LatexList') {
+	var _p5 = body;
+	if (_p5.ctor === 'LatexList') {
 		return function (body) {
 			return A2(
 				_elm_lang$core$Basics_ops['++'],
@@ -14282,7 +14402,7 @@ var _user$project$MiniLatex_Render$renderTableBody = function (body) {
 								_user$project$MiniLatex_Render$renderRow(row)));
 					}),
 				'',
-				_p3._0));
+				_p5._0));
 	} else {
 		return '<table>-</table>';
 	}
@@ -14307,9 +14427,9 @@ var _user$project$MiniLatex_Render$itemClass = function (level) {
 var _user$project$MiniLatex_Render$firstChar = _elm_lang$core$String$left(1);
 var _user$project$MiniLatex_Render$lastChar = _elm_lang$core$String$right(1);
 var _user$project$MiniLatex_Render$extractList = function (latexExpression) {
-	var _p4 = latexExpression;
-	if (_p4.ctor === 'LatexList') {
-		return _p4._0;
+	var _p6 = latexExpression;
+	if (_p6.ctor === 'LatexList') {
+		return _p6._0;
 	} else {
 		return {ctor: '[]'};
 	}
@@ -14388,11 +14508,11 @@ var _user$project$MiniLatex_Render$joinType = F2(
 	});
 var _user$project$MiniLatex_Render$joinDatum2String = F2(
 	function (current, datum) {
-		var _p5 = datum;
-		var acc = _p5._0;
-		var previous = _p5._1;
-		var _p6 = A2(_user$project$MiniLatex_Render$joinType, previous, current);
-		if (_p6.ctor === 'NoSpace') {
+		var _p7 = datum;
+		var acc = _p7._0;
+		var previous = _p7._1;
+		var _p8 = A2(_user$project$MiniLatex_Render$joinType, previous, current);
+		if (_p8.ctor === 'NoSpace') {
 			return {
 				ctor: '_Tuple2',
 				_0: A2(_elm_lang$core$Basics_ops['++'], acc, current),
@@ -14431,31 +14551,31 @@ var _user$project$MiniLatex_Render$renderLatexList = F2(
 	});
 var _user$project$MiniLatex_Render$render = F2(
 	function (latexState, latexExpression) {
-		var _p7 = A2(_elm_lang$core$Debug$log, 'latexState1', latexState);
-		var _p8 = latexExpression;
-		switch (_p8.ctor) {
+		var _p9 = A2(_elm_lang$core$Debug$log, 'latexState1', latexState);
+		var _p10 = latexExpression;
+		switch (_p10.ctor) {
 			case 'Comment':
-				return _user$project$MiniLatex_Render$renderComment(_p8._0);
+				return _user$project$MiniLatex_Render$renderComment(_p10._0);
 			case 'Macro':
-				return A3(_user$project$MiniLatex_Render$renderMacro, latexState, _p8._0, _p8._1);
+				return A3(_user$project$MiniLatex_Render$renderMacro, latexState, _p10._0, _p10._1);
 			case 'Item':
-				return A3(_user$project$MiniLatex_Render$renderItem, latexState, _p8._0, _p8._1);
+				return A3(_user$project$MiniLatex_Render$renderItem, latexState, _p10._0, _p10._1);
 			case 'InlineMath':
 				return A2(
 					_elm_lang$core$Basics_ops['++'],
 					'$',
-					A2(_elm_lang$core$Basics_ops['++'], _p8._0, '$'));
+					A2(_elm_lang$core$Basics_ops['++'], _p10._0, '$'));
 			case 'DisplayMath':
 				return A2(
 					_elm_lang$core$Basics_ops['++'],
 					'$$',
-					A2(_elm_lang$core$Basics_ops['++'], _p8._0, '$$'));
+					A2(_elm_lang$core$Basics_ops['++'], _p10._0, '$$'));
 			case 'Environment':
-				return A3(_user$project$MiniLatex_Render$renderEnvironment, latexState, _p8._0, _p8._1);
+				return A3(_user$project$MiniLatex_Render$renderEnvironment, latexState, _p10._0, _p10._1);
 			case 'LatexList':
-				return A2(_user$project$MiniLatex_Render$renderLatexList, latexState, _p8._0);
+				return A2(_user$project$MiniLatex_Render$renderLatexList, latexState, _p10._0);
 			default:
-				return _p8._0;
+				return _p10._0;
 		}
 	});
 var _user$project$MiniLatex_Render$renderEnvironment = F3(
@@ -14463,9 +14583,9 @@ var _user$project$MiniLatex_Render$renderEnvironment = F3(
 		return A3(_user$project$MiniLatex_Render$environmentRenderer, name, latexState, body);
 	});
 var _user$project$MiniLatex_Render$environmentRenderer = function (name) {
-	var _p9 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderEnvironmentDict);
-	if (_p9.ctor === 'Just') {
-		return _p9._0;
+	var _p11 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderEnvironmentDict);
+	if (_p11.ctor === 'Just') {
+		return _p11._0;
 	} else {
 		return _user$project$MiniLatex_Render$renderDefaultEnvironment(name);
 	}
@@ -14910,9 +15030,9 @@ var _user$project$MiniLatex_Render$renderMacro = F3(
 		return A3(_user$project$MiniLatex_Render$macroRenderer, name, latexState, args);
 	});
 var _user$project$MiniLatex_Render$macroRenderer = function (name) {
-	var _p10 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderMacroDict);
-	if (_p10.ctor === 'Just') {
-		return _p10._0;
+	var _p12 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderMacroDict);
+	if (_p12.ctor === 'Just') {
+		return _p12._0;
 	} else {
 		return _user$project$MiniLatex_Render$reproduceMacro(name);
 	}
@@ -15690,28 +15810,25 @@ var _user$project$MiniLatex_Render$renderRef = F2(
 var _user$project$MiniLatex_Render$renderSection = F2(
 	function (latexState, args) {
 		var s1 = A2(_user$project$MiniLatex_LatexState$getCounter, 's1', latexState);
-		var addendum = (_elm_lang$core$Native_Utils.cmp(s1, 0) > 0) ? A2(
+		var label = (_elm_lang$core$Native_Utils.cmp(s1, 0) > 0) ? A2(
 			_elm_lang$core$Basics_ops['++'],
 			_elm_lang$core$Basics$toString(s1),
 			' ') : '';
-		var arg = A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args);
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			'<h2>',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				addendum,
-				A2(_elm_lang$core$Basics_ops['++'], arg, '</h2>')));
+		var sectionName = A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args);
+		return A3(
+			_user$project$MiniLatex_Render$tag,
+			'h2',
+			A2(_user$project$MiniLatex_Render$idPhrase, 'section', sectionName),
+			A2(_elm_lang$core$Basics_ops['++'], label, sectionName));
 	});
 var _user$project$MiniLatex_Render$renderSectionStar = F2(
 	function (latexState, args) {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			'<h2>',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args),
-				'</h2>'));
+		var sectionName = A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args);
+		return A3(
+			_user$project$MiniLatex_Render$tag,
+			'h2',
+			A2(_user$project$MiniLatex_Render$idPhrase, 'section', sectionName),
+			sectionName);
 	});
 var _user$project$MiniLatex_Render$renderStrong = F2(
 	function (latexState, args) {
@@ -15728,7 +15845,7 @@ var _user$project$MiniLatex_Render$renderSubSubsection = F2(
 		var s3 = A2(_user$project$MiniLatex_LatexState$getCounter, 's3', latexState);
 		var s2 = A2(_user$project$MiniLatex_LatexState$getCounter, 's2', latexState);
 		var s1 = A2(_user$project$MiniLatex_LatexState$getCounter, 's1', latexState);
-		var addendum = (_elm_lang$core$Native_Utils.cmp(s1, 0) > 0) ? A2(
+		var label = (_elm_lang$core$Native_Utils.cmp(s1, 0) > 0) ? A2(
 			_elm_lang$core$Basics_ops['++'],
 			_elm_lang$core$Basics$toString(s1),
 			A2(
@@ -15744,22 +15861,21 @@ var _user$project$MiniLatex_Render$renderSubSubsection = F2(
 							_elm_lang$core$Basics_ops['++'],
 							_elm_lang$core$Basics$toString(s3),
 							' '))))) : '';
-		var arg = A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args);
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			'<h4>',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				addendum,
-				A2(_elm_lang$core$Basics_ops['++'], arg, '</h4>')));
+		var sectionName = A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args);
+		return A3(
+			_user$project$MiniLatex_Render$tag,
+			'h4',
+			A2(_user$project$MiniLatex_Render$idPhrase, 'subsubsection', sectionName),
+			A2(_elm_lang$core$Basics_ops['++'], label, sectionName));
 	});
 var _user$project$MiniLatex_Render$renderSubSubsectionStar = F2(
 	function (latexState, args) {
-		var arg = A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args);
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			'<h4>',
-			A2(_elm_lang$core$Basics_ops['++'], arg, '</h4>'));
+		var sectionName = A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args);
+		return A3(
+			_user$project$MiniLatex_Render$tag,
+			'h4',
+			A2(_user$project$MiniLatex_Render$idPhrase, 'subsubsection', sectionName),
+			sectionName);
 	});
 var _user$project$MiniLatex_Render$renderSubheading = F2(
 	function (latexState, args) {
@@ -15775,7 +15891,7 @@ var _user$project$MiniLatex_Render$renderSubsection = F2(
 	function (latexState, args) {
 		var s2 = A2(_user$project$MiniLatex_LatexState$getCounter, 's2', latexState);
 		var s1 = A2(_user$project$MiniLatex_LatexState$getCounter, 's1', latexState);
-		var addendum = (_elm_lang$core$Native_Utils.cmp(s1, 0) > 0) ? A2(
+		var label = (_elm_lang$core$Native_Utils.cmp(s1, 0) > 0) ? A2(
 			_elm_lang$core$Basics_ops['++'],
 			_elm_lang$core$Basics$toString(s1),
 			A2(
@@ -15785,22 +15901,21 @@ var _user$project$MiniLatex_Render$renderSubsection = F2(
 					_elm_lang$core$Basics_ops['++'],
 					_elm_lang$core$Basics$toString(s2),
 					' '))) : '';
-		var arg = A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args);
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			'<h3>',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				addendum,
-				A2(_elm_lang$core$Basics_ops['++'], arg, '</h3>')));
+		var sectionName = A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args);
+		return A3(
+			_user$project$MiniLatex_Render$tag,
+			'h3',
+			A2(_user$project$MiniLatex_Render$idPhrase, 'subsection', sectionName),
+			A2(_elm_lang$core$Basics_ops['++'], label, sectionName));
 	});
 var _user$project$MiniLatex_Render$renderSubsectionStar = F2(
 	function (latexState, args) {
-		var arg = A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args);
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			'<h3>',
-			A2(_elm_lang$core$Basics_ops['++'], arg, '</h3>'));
+		var sectionName = A3(_user$project$MiniLatex_Render$renderArg, 0, latexState, args);
+		return A3(
+			_user$project$MiniLatex_Render$tag,
+			'h3',
+			A2(_user$project$MiniLatex_Render$idPhrase, 'subsection', sectionName),
+			sectionName);
 	});
 var _user$project$MiniLatex_Render$renderTerm = F2(
 	function (latexState, args) {
@@ -15884,14 +15999,14 @@ var _user$project$MiniLatex_Render$renderString = F3(
 	function (parser, latexState, str) {
 		var parserOutput = A2(_elm_tools$parser$Parser$run, parser, str);
 		var renderOutput = function () {
-			var _p11 = parserOutput;
-			if (_p11.ctor === 'Ok') {
-				return A2(_user$project$MiniLatex_Render$render, latexState, _p11._0);
+			var _p13 = parserOutput;
+			if (_p13.ctor === 'Ok') {
+				return A2(_user$project$MiniLatex_Render$render, latexState, _p13._0);
 			} else {
 				return A2(
 					_elm_lang$core$Basics_ops['++'],
 					'Error: ',
-					_elm_lang$core$Basics$toString(_p11._0));
+					_elm_lang$core$Basics$toString(_p13._0));
 			}
 		}();
 		return renderOutput;
