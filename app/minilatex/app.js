@@ -12285,126 +12285,12 @@ var _elm_tools$parser$Parser$AtLeast = function (a) {
 var _elm_tools$parser$Parser$zeroOrMore = _elm_tools$parser$Parser$AtLeast(0);
 var _elm_tools$parser$Parser$oneOrMore = _elm_tools$parser$Parser$AtLeast(1);
 
-var _user$project$MiniLatex_LatexState$initialCounters = _elm_lang$core$Dict$fromList(
-	{
-		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 's1', _1: 0},
-		_1: {
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 's2', _1: 0},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 's3', _1: 0},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'tno', _1: 0},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'eqno', _1: 0},
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		}
-	});
-var _user$project$MiniLatex_LatexState$emptyLatexState = {
-	counters: _user$project$MiniLatex_LatexState$initialCounters,
-	crossReferences: _elm_lang$core$Dict$empty,
-	dictionary: _elm_lang$core$Dict$empty,
-	tableOfContents: {ctor: '[]'}
-};
-var _user$project$MiniLatex_LatexState$setDictionaryItem = F3(
-	function (key, value, latexState) {
-		var dictionary = latexState.dictionary;
-		var newDictionary = A2(
-			_elm_lang$core$Debug$log,
-			'newDictionay',
-			A3(_elm_lang$core$Dict$insert, key, value, dictionary));
-		return _elm_lang$core$Native_Utils.update(
-			latexState,
-			{dictionary: newDictionary});
-	});
-var _user$project$MiniLatex_LatexState$setCrossReference = F3(
-	function (label, value, latexState) {
-		var crossReferences = latexState.crossReferences;
-		var newCrossReferences = A3(_elm_lang$core$Dict$insert, label, value, crossReferences);
-		return _elm_lang$core$Native_Utils.update(
-			latexState,
-			{crossReferences: newCrossReferences});
-	});
-var _user$project$MiniLatex_LatexState$updateCounter = F3(
-	function (name, value, latexState) {
-		var maybeSet = _elm_lang$core$Maybe$map(
-			function (x) {
-				return value;
-			});
-		var newCounters = A3(_elm_lang$core$Dict$update, name, maybeSet, latexState.counters);
-		return _elm_lang$core$Native_Utils.update(
-			latexState,
-			{counters: newCounters});
-	});
-var _user$project$MiniLatex_LatexState$incrementCounter = F2(
-	function (name, latexState) {
-		var maybeInc = _elm_lang$core$Maybe$map(
-			function (x) {
-				return x + 1;
-			});
-		var newCounters = A3(_elm_lang$core$Dict$update, name, maybeInc, latexState.counters);
-		return _elm_lang$core$Native_Utils.update(
-			latexState,
-			{counters: newCounters});
-	});
-var _user$project$MiniLatex_LatexState$getDictionaryItem = F2(
-	function (key, latexState) {
-		var _p0 = A2(_elm_lang$core$Dict$get, key, latexState.dictionary);
-		if (_p0.ctor === 'Just') {
-			return _p0._0;
-		} else {
-			return '';
-		}
-	});
-var _user$project$MiniLatex_LatexState$getCrossReference = F2(
-	function (label, latexState) {
-		var _p1 = A2(_elm_lang$core$Dict$get, label, latexState.crossReferences);
-		if (_p1.ctor === 'Just') {
-			return _p1._0;
-		} else {
-			return '??';
-		}
-	});
-var _user$project$MiniLatex_LatexState$getCounter = F2(
-	function (name, latexState) {
-		var _p2 = A2(_elm_lang$core$Dict$get, name, latexState.counters);
-		if (_p2.ctor === 'Just') {
-			return _p2._0;
-		} else {
-			return 0;
-		}
-	});
-var _user$project$MiniLatex_LatexState$emptyDict = _elm_lang$core$Dict$empty;
-var _user$project$MiniLatex_LatexState$TocEntry = F3(
-	function (a, b, c) {
-		return {name: a, label: b, level: c};
-	});
-var _user$project$MiniLatex_LatexState$addSection = F4(
-	function (sectionName, label, level, latexState) {
-		var newEntry = A3(_user$project$MiniLatex_LatexState$TocEntry, sectionName, label, level);
-		var toc = A2(
-			_elm_lang$core$Basics_ops['++'],
-			latexState.tableOfContents,
-			{
-				ctor: '::',
-				_0: newEntry,
-				_1: {ctor: '[]'}
-			});
-		return _elm_lang$core$Native_Utils.update(
-			latexState,
-			{tableOfContents: toc});
-	});
-var _user$project$MiniLatex_LatexState$LatexState = F4(
-	function (a, b, c, d) {
-		return {counters: a, crossReferences: b, tableOfContents: c, dictionary: d};
-	});
+var _user$project$App_Source$grammar = '\n\n\\title{MiniLaTeX Grammar (Draft)}\n\n\\author{James A. Carlson}\n\n\\email{jxxcarlson at gmail}\n\n\\date{January 12, 2018}\n\n\\maketitle\n\n\\tableofcontents\n\n\n  $$\n  \\newcommand{\\dollar}{ \\text{$ \\$ $} }\n  \\newcommand{\\begg}[1]{\\text{\\begin{$#1$}}}\n  \\newcommand{\\endd}[1]{\\text{\\end{$#1$}}}\n  $$\n\n  \\section{Introduction}\n\n  In this article, we describe a formal grammar which defines the MiniLaTeX language.  MiniLaTex is a subset of LaTeX, and  text written in it can be translated into HTML by means of a suitable parser-renderer.  Because of the balanced begin-end pairs characteristic of LaTeX environments and the fact that the number of distinct such pairs is arbitrary, the grammar is not context-free.  The context sensitivity is, however, limited.  Indeed, it occurs in only in the productions for environments and tables, so that the grammatical description is \"almost EBNF.\"\n\n  The MiniLaTex parser is written in Elm.  Elm is the functional language for creating web apps developed by Evan Czaplicki, first announced in his Harvard senior thesis (2012).  The  choice of language was governed by two considerations. First, Elm provides excellent tools for creating fast, reliable web apps with a codebase that is maintainable over the long run.  This was an important consideration, since the point of MiniLaTeX is to be able to create, edit, and distribute technical documents in HTML.  The second consideration is that Elm, with its ML-flavored type system and an expressive parser combinator library, is well-suited to the task of realizing a grammar.  The resulting parser is quite compact --- just 336 lines of code as of this writing.\n\n  A second implementation of the parser in Haskell is planned in order to have additional validation of MiniLaTeX and to make it more widely available.  The Haskell parser will be released with a command-line tool for translating MiniLaTeX into HTML.\n\n  The code for the MiniLaTeX parser-renderer is open source, available on  \\href{https://github.com/jxxcarlson/minilatex}{GitHub}\n  and also as an Elm package at \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{package.elm-lang.org} --- search for \\code{jxxcarlson/minilatex}.\n  To experiment with MiniLaTeX, try the \\href{https://jxxcarlson.github.io/app/minilatex/src/index.html}{Demo App}.  To use MiniLaTeX to create documents, try \\href{http://www.knode.io}{www.knode.io}\n\n  I am indebted to Ilias van Peer for thoughtful suggestions and specific technical help through the entire course of this project.  I would also like to thank Evan Czaplicki, who brought Elm\'s \\href{https://github.com/elm-tools/parser}{elm-tools/parser} package to my attention; its role is fundamental.\n\n  This document is written in MiniLaTeX and is available on the web at\n  \\href{http://www.knode.io/#@public/628}{www.knode.io/#@public/628}.\n\n\n\n  \\section{Abstract Syntax Tree}\n\n  The MiniLatex parser accepts text as input and produces an abstract syntax tree (AST) as output.  An AST is a $LatexExpression$, as defined by the following type.\n\n  \\begin{verbatim}\n  type LatexExpression\n      = LXString String\n      | Comment String\n      | InlineMath String\n      | DisplayMath String\n      | Item Int LatexExpression\n      | Macro String (List LatexExpression)\n      | Environment String LatexExpression\n      | LatexList (List LatexExpression)\n  \\end{verbatim}\n\n  The translation from source text to abstract syntax tree is accomplished by a function in the \\code{MiniLatex.Parser} module:\n\n  \\begin{equation}\n  parse: {\\tt String} \\rightarrow {\\tt LatexExpression}.\n  \\end{equation}\n\n  The abstract syntax tree of MiniLaTeX text carries the information\n  needed to render it either as LaTeX or as HTML. Thus one can construct functions\n\n\n  \\begin{align}\n  renderToLatex &: LatexExpression \\rightarrow String \\\\\n  renderToHtml &: LatexExpression \\rightarrow String\n  \\end{align}\n\n  One might think of the function $renderToLatex$ as an inverse of $parse$, since it reverses the role of domain and codomain.  Nonetheless, this is not the case, since one can make changes to the source text which do not affect the AST.  It is possible, however, to state a related property.  Let\n   $f = renderToLatex\\circ parse$.  This is a function \\code{String -> String}; although one cannot assert that $f = id$, one has the\n  idempotency relation $f\\circ f = f$.\n\n\n\n  \\section{Terminals and Non-Terminals}\n\n  Let us now describe the grammar, beginning with terminal and nonterminal symbols.  In the next section we list and discuss the productions of this grammar.\n\n  \\subheading{Terminals}\n\n\\begin{enumerate}\n\n  \\item $spaces \\Rightarrow sp^*$, where $sp$ is the space character.\n\n  \\item $ws \\Rightarrow \\{ sp, nl \\}^*$, where $nl$ is the newline character.\n\n  \\item $reservedWord \\Rightarrow \\{ \\backslash begin, \\backslash end, \\backslash item \\}$\n\n  \\item $word \\Rightarrow (Char - \\{sp, nl, backslash, dollarSign \\})^+$ -- Nonempty strings without whitespace characters, backslashes or dollar signs\n\n  \\item $specialWord \\Rightarrow (Char - \\{sp, nl, backslash, dollarSign, \\}, \\& \\})^+$\n\n  \\item $macroName \\Rightarrow  (Char - \\{sp, nl, , leftBrace, backslash\\})^+ - reservedWord$\n\n\\end{enumerate}\n\n  Associated with these terminals are productions $Word \\Rightarrow word$, $Identifier \\Rightarrow identifier$, etc.  We shall not list all of these, but rather just the terminal and a description of it.\n\n\n\n  \\subheading{Non-Terminals}\n\n\n  \\begin{enumerate}\n  \\item $Arg$ -- arguments for macros\n  \\item $BeginWord$ -- produce $\\begg{identifier}$ phrase for LaTeX environments.\n  \\item $Comment$ -- LaTeX comments -- \\% foo, bar\n  \\item $IMath$ -- inline mathematical text, as in $\\dollar$ ... $\\dollar$\n  \\item $DMath$ -- display mathematical text, as in $\\dollar\\dollar$ ... $\\dollar\\dollar$ or $\\backslash[\\ ... \\backslash]$.\n  \\item $Env$ -- LaTeX environments $\\begg{foo}\\ $ ... $\\endd{foo}$.\n  \\item $EnvName$ -- produce an environment name such as \\italic{foo}, or \\italic{theorem}.\n  \\item $Identifier$ -- a lowercase alphanumeric string beginning with a letter.\n  \\item $Item$ -- item in an enumeration or itemization environemnt\n  \\item $LatexExpression$ -- a union type\n  \\item $LatexList$ -- a list of LatexExpressions\n  \\item $Macro$ -- a LaTeX macro of zero or more arguments.\n  \\item $MacroName$ -- an identifier\n  \\item $Words$ -- a string obtained by joining a list of $Word$ with spaces.\n  \\end{enumerate}\n\n\n  \\section{Productions}\n\n\n\n  The MiniLaTeX grammar is defined by its productions.  This set is fairly small, just 24 if one discounts productions which could be viewed as performing lexical analysis -- the recognition of identifiers, for instance.  Of the 24 productions, 11 are for general nonterminals, 7 are for environments of various kinds, and 5 are for the tabular environment.  With two exceptions we present them in EBNF form.  The topmost productions are for $LatexList$ and $LatexExpression$:\n\n  \\begin{align}\n  \\label{Production:LatexExpression}\n  LatexList &\\Rightarrow LatexExpression^+ \\\\\n  LatexExpression &\\Rightarrow Words\\ |\\ Comment\\ |\\ IMath\\ |\\ DMath\\  \\\\\n  & \\phantom{\\Rightarrow}\\ |\\ Macro\\ |\\ Env\n  \\end{align}\n\n  The productions for the first four non-terminals on the right-hand side of \\eqref{Production:LatexExpression} are non-recursive, straightforward, and all result in a terminal.\n  The terminal is of the form $Constructor\\ x$, where the first term is a constructor for $LatexExpression$ and $x$ is a string.  When $A$ is a non-terminal, ${\\tt A}$ is the\n  corresponding constructor.\n\n\\begin{enumerate}\n\n  \\item $ Words  \\Rightarrow {\\tt LXString}\\ (join\\ Word^+) $ where a $Word$ is any sequence of characters which is not a whitespace character, $\\backslash$, or $\\dollar$, and where $join$ is the function which joins the elements of a list of strings by single spaces to produce a string.\n\n  \\item $ Comment \\Rightarrow {\\tt Comment}\\ (Char - \\{ \\text{\\n}\\})^* $\n\n  \\item $ IMath  \\Rightarrow {\\tt IMath}\\ Line\'$ where $Line\'$ is $Line$ with no occurernce of $\\dollar$\n\n  \\item $ DMath  \\Rightarrow {\\tt DMath}\\ Line\'\\ |\\ {\\tt DMath}\\ Line\'\' $ | where $Line\'\'$ is $Line$ with no occurrence of of a right bracket.\n\n\\end{enumerate}\n\n  Let us now treat the two recursive productions. They generate LaTeX macros and environments.\n\n\n  \\subsection{Macros}\n\n  \\begin{align}\n  Macro &\\Rightarrow {\\tt Macro}\\ Macroname\\ Arg^* \\\\\n  Arg &\\Rightarrow Words\\ |\\ IMath\\ |\\ Macro\n  \\end{align}\n\n\n  \\subsection{Environments}\n\n\n  Because of the use of constructions of the form\n\n  \\begin{verbatim}\n  \\begin{envName}\n  ...\n  \\end{envName}\n  \\end{verbatim}\n\n  the production of environments requires  the use of a context-sensitive grammar.\n  Here $envName$ may take on arbitrarily many values, and, in particular, values not known at the time the parser is written.  Note that the production \\eqref{production:envname} below has a nonterminal followed by a terminal on the right-hand side, while \\eqref{production:env} has a nonterminal followed by a terminal on the left-hand side.  The presence of a terminal on the left-hand side tells us that the grammar is context-sensitive. In $Env\\ identifier$, the terminal $identifier$ provides the context.\n\n  \\begin{equation}\n  \\label{production:envname}\n  EnvName \\Rightarrow Env\\ identifier\n  \\end{equation}\n\n  \\begin{align}\n  \\label{production:env}\n  Env\\ {\\rm itemize} & \\Rightarrow {\\tt Environment}\\ {\\rm itemize}\\ Item^+ \\\\\n  Env\\ {\\rm enumerate} & \\Rightarrow {\\tt Environment}\\ {\\rm enumerate}\\ Item^+\\\\\n  Env\\ {\\rm tabular} & \\Rightarrow {\\tt Environment}\\ {\\rm tabular} \\ Table \\\\\n  Env\\ passThroughIdentifier & \\Rightarrow {\\tt Environment}\\ passThroughIdentifier\\ Text \\\\\n  Env\\ genericIdentifier & \\Rightarrow {\\tt Environment}\\ genericIdentifier\\ LatexList \\\\\n  \\end{align}\n\n  The set of all $envNames$ is decomposed as follows:\n\n  \\begin{align}\n  specialIdentifier &= \\{ \\text{itemize, enumerate, tabular} \\} \\\\\n  passThroughIdentifier &= \\{ \\text{equation, align, eqnarray, verbatim, verse} \\} \\\\\n  genericIdentifier &= identifier - specialIdentifier - passThroughIdentifier\n  \\end{align}\n\n\n  \\subsection{Tabular Environment}\n\n  The tabular environment also requires a context-sensitive grammar.\n\n  \\begin{align}\n  Table &\\Rightarrow TableHead\\ (TableRows\\ ncols)^+ \\\\\n  TableRows\\ ncols &\\Rightarrow TableCells^{ncols}\n  \\end{align}\n\n\n\n';
+var _user$project$App_Source$nongeodesic = '\n\n\n \\title{Non-geodesic variations of Hodge structure of maximum dimension}\n\n  \\author{James A. Carlson and Domingo Toledo}\n\n  \\date{November 1, 2017}\n\n\n\n\n  \\maketitle\n\n\\tableofcontents\n\n\n  \\begin{abstract}\n  There are a number of examples of variations of Hodge structure of maximum dimension.  However, to our knowledge, those that are global on the level of the period domain are totally geodesic subspaces that arise from an orbit of a subgroup of the group of the period domain. That is, they are defined by Lie theory rather than by algebraic geometry.  In this note, we give an example of a variation of maximum dimension which is nowhere tangent to a geodesic variation.  The period domain in question, which classifies weight two Hodge structures with $h^{2,0} = 2$ and $h^{1,1} = 28$, is of dimension $57$. The horizontal tangent bundle has codimension one, thus it is an example of a holomorphic contact structure, with local integral manifolds of dimension 28. The group of the period domain is $SO(4,28)$, and one can produce global integral manifolds as orbits of the action of subgroups isomorphic to $SU(2,14)$.  Our example is given by the variation of Hodge structure on the second cohomology of weighted projective hypersurfaces of degree $10$ in a weighted projective three-space with weights\n  $1, 1, 2, 5$\n  \\end{abstract}\n\n  \\section{Introduction}\n  \\label{sec:introduction}\n\n\n$$\n\\newcommand{\\C}{\\mathbb{C}}\n\\newcommand{\\P}{\\mathbb{P}}\n\\newcommand{\\Q}{\\mathbb{Q}}\n\\newcommand{\\R}{\\mathbb{R}}\n\\newcommand{\\bH}{\\mathbf{H}}\n\\newcommand{\\hodge}{\\mathcal{H}}\n\\newcommand{\\surfs}{\\mathcal{S}}\n\\newcommand{\\var}{\\mathcal{V}}\n\\newcommand{\\Hom}{\\text{Hom}}\n$$\n\n  Period domains $D = G/V$ for $G$ a (semi-simple, adjoint linear Lie group with a compact Cartan subgroup $T\\subset G$ and $V$ the centralizer of a sub-torus of $T$) occur in many interesting situations.  It is known that there is a unique maximal compact subgroup $K\\subset G$ containing $V$,\n  so that there is a fibration\n  \\begin{equation}\n  \\label{eq:fibration}\n  K/V \\longrightarrow  G/V \\buildrel \\pi \\over\\longrightarrow  G/K\n  \\end{equation}\n  of the homogeneous complex manifold $G/V$ onto the symmetric space $G/K$ with fiber the homogeneous projective variety $K/V$.  The tangent bundle $TD$ has a distinguished \\emph{horizontal sub-bundle} $T_h D$ (also called the \\emph{infinitesimal period relation}). It is a sub-bundle of the differential-geometric horizontal bundle (the orthogonal complement of the tangent bundle to the fibers). It usually, but not always a proper sub-bundle. When it is a proper sub-bundle, it is not integrable.  Typically, successive brackets of vector fields in $T_hD$ generate all of $ TD$.  We are interested in the case where the symmetric space $G/K$ is \\emph{not} Hermitian symmetric.  In that case, the complex manifold $D$ admits invariant pseudo-K\\\"ahler metrics, but no invariant K\\\"ahler metric.\n\n  These manifolds were introduced by Griffiths as a category of manifolds that contains the classifying spaces  of Hodge structures.  For example, if $(H, \\left< \\ , \\ \\right>)$ is a real vector space of dimension $2p+q$ with a symmetric bilinear form of signature $2p,q$,\n  the manifolds $SO(2p,q)/U(p)\\times SO(q)$ classify Hodge decompositions  of weight two. Thus, we\n  have a direct sum decomposition\n\n  \\begin{equation}\n  \\label{ eq:hodgedecomp}\n  H^\\C = H^{2,0}\\oplus H^{1,1}\\oplus H^{0,2}\n  \\end{equation}\n\n  with Hodge numbers (dimensions)  $h^{2,0} = h^{0,2} = p $, $h^{1,1} = q$, and polarized by $\\left< \\ , \\ \\right>$: The real points of $H^{2,0}\\oplus H^{0,2}$ form a maximal positive subspace, $H^{1,1}$ is the complexification of its  orthogonal complement\n  (a maximal negative subspace), and so $(H^{2.0})^\\perp = H^{2,0}\\oplus H^{1,1}$.   Therefore the filtration\n  \\begin{equation}\n  \\label{eq:hodgefiltration}\n  H^{2,0}\\subset (H^{2,0})^\\perp \\subset H^\\C\n  \\end{equation}\n  of $H^\\C$ is the same as the Hodge filtration.  Therefore $H^{2,0}$ determines the Hodge filtration, hence the Hodge decomposition.  Note that $\\left< u,\\overline{v} \\right>$ is a positive Hermitian inner product on $H^{2,0}$\n\n  The special orthogonal group of $\\left< \\ ,\\ \\right>$, isomorphic to $SO(2p,q)$, acts transitively on the choices of $H^{2,0}$, and the subgroup fixing one choice is isomorphic to $U(p)\\times SO(q)$.\n  Thus, the homogeneous complex manifold $D = SO(2p,q)/U(p)\\times SO(q)$ classifies polarized Hodge structures on a \\emph{fixed} vector space $(H, \\left< \\ ,\\  \\right>)$.  Over $D$, there are tautological Hodge bundles $\\hodge^{2,0},\\hodge^{1,1},\\hodge^{0,2}$.  The tangent bundle $TD$ and horizontal sub-bundle are\n\n  \\begin{equation}\n  \\label{eq:hodgebundles}\n  TD = Hom_{\\left< \\ ,\\ \\right>}(\\hodge^{2,0},\\hodge^{1,1}\\oplus \\hodge^{0,2}),\\ \\ T_hD = Hom(\\hodge^{2,0},\\hodge^{1,1}),\n  \\end{equation}\n\n  where $Hom_{\\left< \\ ,\\ \\right>}$ means homomorphisms $X$ which  preserving $\\left< \\  , \\  \\right>$ infinitesimally, that is, $\\left< Xu,v \\right> + \\left< u,Xv \\right> = 0$ for all $u,v \\in H^{2,0}$.  If $X:H^{2,0}\\to H^{1,1}$ this condition is vacuous, since $\\left< H^{2,0},H^{1,1} \\right> = 0$. Therefore $Hom_{\\left< \\ ,\\ \\right>}(\\hodge^{2,0},\\hodge^{1,1}) = Hom(\\hodge^{2,0},\\hodge^{1,1})$.\n\n  Whenever $p > 1$, the horizontal tangent bundle is a proper sub-bundle of the  tangent bundle.  The first interesting case is $p = 2$. If in addition $q = 2r$ is even, then the horizontal distribution locally a contact distribution, i.e., is the null space of a form $\\omega = dz - (x_1 dy_1 + \\cdots + x_r dy_r)$ in suitable local coordinates $(x,y,z)$.  Our example of weighted hypersurfaces yields a variation of Hodge structure of this type.\n\n  \\subsection{Construction of horizontal maps}\n  \\label{subsec:construction}\n\n\n  The  two main sources of horizontal holomorphic maps to period domains are\n\n\\emph{Totally geodesic maps}:  these come from Lie group theory, as orbits of suitable Lie subgroups of $G$.  For example, for the domains $SO(2p,2q)/U(p)\\times SO(2q)$, we can put a complex structure $J$  on the underlying $\\R$-vector space $H$, compatible with $< \\ , \\ >$.  Let $H^+, H^-$ denote the underlying real spaces of $H^{2,0}\\oplus H^{0,2}$ and $H^{1,1}$ respectively. Consider the variation in which all $H^+$ are $J$-invariant.  This gives an embedding\n\n     \\begin{equation}\n  \\label{ }\n  SU(p,q)/S(U(p)\\times U(q)) \\buildrel F \\over\\longrightarrow  SO(2p,2q)/U(p) \\nonumber\\times SO(2q)\n  \\end{equation}\n\n  of the Hermitian symmetric space $D_1$ for $SU(p,q)$ in the domain $D$.     Since $H^+$ always remains $J$-invariant, the tangent vector to its motion, an element of $Hom(H^+,H^-)$ commutes with $J$.  Let $V\\subset H^{1,1}$ be the space of $(1,0)$-vectors for $J$, that is, $V = \\{X - iJX \\ | X\\in H^{1,1}\\}$.   Then\n\n\n\\begin{equation}\n  dF:TD_1 \\to Hom(H^{2,0},V) \\subset Hom(H^{2,0},H^{1,1} )= T_hD \\nonumber\n\\end{equation}\n\nin particular $F$ is horizontal and holomorphic.\n\n\n\\emph{Periods of  families of algebraic varieties}  This may be called the geometric method.  We proceed to explain it by describing the special case of  $SO(2p,2q)$:}\n\n\n\n   Let $\\surfs \\to B$ be smooth algebraic family of smooth projective algebraic surfaces over a smooth connected algebraic base $B$, fix a base point $b_0\\in B$, and fix $(H, \\left<\\ , \\ \\right>)$ to be the pair ($H^2(\\surfs_{b_0},\\R)_{prim}$, intersection form).  For any $b\\in B$ and a path $\\lambda$ from $b_0$ to $b$, there is an isomorphism $\\lambda^\\#:H^2(\\surfs_b)\\to H^2(\\surfs_{b_0})$, where different paths give different isomorphisms related by an element of the image of the monodromy representation $\\rho:\\pi_1(B,b_0) \\to Aut(H^2_{prim}(\\surfs_{b_0}))$. The \\emph{period map} $F$  is defined by the rule:  $F(b)$ is the Hodge structure $\\lambda^\\#$(Hodge structure on $H^2(\\surfs_b)$).  In this way, $F(b)$ is a Hodge structure on a fixed vector space, hence an element of $D$, well defined up to the action of the monodromy group.  We could look at this as a function of $b$ and $\\lambda$, in which case we are lifting $F$ to a map $\\widetilde{F}$ on a covering space of $B$.   Thus we have two equivalent formulations $F, \\widetilde{F}$ of the period map related as follows:\n    \\begin{eqnarray}\n  \\begin{array}{ccc}\n  \\label{eq:periodmaps}\n      \\widetilde{B} &  \\buildrel \\widetilde{F} \\over\\longrightarrow  & D  \\\\\n  {p}\\Big\\downarrow & & \\Big\\downarrow   \\\\\n  B & \\buildrel F\\over \\longrightarrow & \\Gamma\\backslash D\n  \\end{array}\n  \\end{eqnarray}\n  where $p:\\widetilde{B}\\to B$ is the covering corresponding to the kernel of $\\rho$ and  $\\Gamma$ is a suitable monodromy group (containing the image of $\\rho$).     Locally, the two maps $F, \\widetilde{F}$ are the same, except when $F(b)$ is fixed by some non-identity element of $\\Gamma$.\n\n\n  Griffiths showed that \\emph{$F$ is holomorphic and horizontal}, in other words, $d\\widetilde{F}:T\\widetilde{B}\\to F^*T_h D \\subset T D$.  Under suitable assumptions, the closure  $\\overline{F(B)}$ is an analytic subvariety of $\\Gamma\\backslash D$, hence is a closed \\emph{horizontal analytic subvariety} of $\\Gamma\\backslash D$.\n\n  \\subsection{A concrete example}\n\n  The preceding discussion can be applied to the family of smooth hypersurfaces in $\\P^3$ of a fixed degree $d$.  In order to get non-constant variations and for the period domain not to be Hermitan symmetric we need to take $d\\ge 5$.\n\n  For $d=5$ we have that the Hodge numbers are $(4,44,4)$, hence $D = SO(8,44) / U(4)\\times SO(44)$ has dimension $182$, the horizontal tangent space has dimension $176$ and the maximum dimension of an integral submanifold is $88$, the dimension of the horizontal $SU(4,22)$ orbit, see \\cite{carlson}\n\n  We therefore find two horizontal maps:\n  \\begin{itemize}\n    \\item Horizontal $SU(4,22)$ orbits of maximum dimension $88$.\n    \\item Periods of quintic surfaces, a \\emph{maximal} integral manifold, see \\cite{carlsondonagi} of dimension $40$ (the dimension of the moduli space of quintic surfaces).\n  \\end{itemize}\n\n  In general, period domains, can have maximal integral manifolds of many different dimensions. Hypersurfaces generally yield integral manifolds of rather small dimension compared to the the maximum possible.  We would like to see geometric  examples of maximum, or close to maximum, dimension that come from geometry as opposed to Lie theory.   Hypersurfaces in weighted projective spaces provide such examples.\n\n  \\section{The example}\n  \\label{sec:example}\n\n  Let us consider the weighted projective space $\\P(1,1,2,5)$ with coordinates $x_1,x_2,x_3,x_4$ with weights $1,1,2,5$ respectively.  One may think of $\\P(1,1,2,5)$ as the quotient of $\\C^4$ by the $\\C^*$-action  $\\lambda\\in \\C^*$ which acts by\n  \\begin{equation}\n  \\label{eq:weightaction}\n  \\lambda \\cdot (x_1,x_2,x_3,x_4) \\longrightarrow (\\lambda x_1,\\lambda x_2, \\lambda^2 x_3, \\lambda^5 x_4)\n  \\end{equation}\n  A weighted homogeneous polynomial of degree $d$  is a linear combination of monomials\n  \\begin{equation}\n  \\label{eq:monomials}\n  x_1^{k_1} x_2^{k_2} x_3^{k_3}x_4^{k_4} \\text{ of total weighted degree } d = k_1 + k_2 + 2 k_3 + 5 k_4\n  \\end{equation}\n\n  For fixed $d$, the collection of weighted polynomials of degree $d$ forms a vector space that we will denote $S_d(1,1,2,5)$, or, simply $S_d$.   The direct sum $S(1,1,2,5) = \\oplus_d S_d(1,1,2,5)$ is the algebra of weighted homogeneous polynomials.\n\n  Any $f\\in S_d$ defines a subvariety $V_f\\subset P(1,1,2,5)$, namely $V_f = \\{(x_1:x_2:x_3:x_4) | f(x_1,x_2,x_3,x_4) = 0 \\}$.  If the only common solution of\n\n  \\begin{equation}\n  \\frac{\\partial f}{\\partial x_1} = 0,\\dots, \\frac{\\partial f}{\\partial x_4} =0  \\nonumber\n  \\end{equation}\n\n  is  $(0,0,0,0)$, then $V_f$ is called a \\emph{quasi-smooth} subvariety.  It is smooth except possibly for quotient singularities. Topologically it is a rational homology manifold, and in particular satisfies Poincar\\\'e duality over $\\Q$.  Its second cohomology has a pure Hodge structure of weight two, polarized by the intersection form.\n\n  Fix $d$ and let $S_d^0\\subset S_d$ denote the set, possibly empty, of all $f\\in S_d$ for which $V_f$ is quasi-smooth.  For example, if $f\\in S_4$, then no monomial in  $f$ can contain the variable $x_4$ of weight $5$, so $\\frac{\\partial f}{\\partial x_4} = 0$ for all $f\\in S_4$.  Therefore $S_4^0 =\\emptyset$ since $(0:0:0:1)$ is a singular point of all $f\\in S_4$.  On the other hand, a polynomial  in $S_d$ is a sum of powers of \\emph{all}  of the variables defines a Fermat hypersurface.   These are always quasi-smooth.  In our case, one has the Fermat surface\n\n  \\begin{equation}\n  \\label{eq:fermat}\n  f_0 (x_1,x_2,x_3,x_4) = x_1^{10} + x_2^{10}  + x_3^5 + x_4^2 \\in S_{10}^0,\n  \\end{equation}\n\n  It has a rich structure, and, in particular, is double cover of  the 2-dimensional weighted projective plane with weights $1, 1, 2$, branched over a curve of degree ten.\n\n  The complement $\\Delta_d = S_d \\setminus S_d^0$ is a subvariety of $S_d$.  It is a proper subvariety if $S_d^0\\ne \\emptyset$.\n\n\n  Assume $S_d^0\\ne\\emptyset $.  Then $\\Delta_d$ has complex codimension $1$ in $S_d$. Consequently, $S_d^0$ is connnected and we obtain a topologically locally trivial fibration $\\var\\to S_d^0$ where the fiber over $f$ is the variety $V_f$:\n  \\begin{eqnarray}\n  \\label{eq:universalfamily}\n  \\begin{array}{ccc}\n  \\var = \\{(f,x) | f(x) = 0\\} & \\subset  & S_d^0 \\times \\P(1,1,2,5) \\\\\n  \\Big\\downarrow& &\\Big\\downarrow \\\\\n  S_d^0  & = & S_d^0\n  \\end{array}\n  \\end{eqnarray}\n\n  Fix a base point  $f_0\\in S_d^0$.  Then there  is a monodromy representation $\\rho:\\pi_1(S_d^0,f_0) \\to Aut(H^2(V_{f_0}))$, where $Aut$ is the group of automorphisms respecting all topological structures, in particular, the intersection form.  As $f$ varies, we transport the Hodge structure on $H^2(V_f,\\C)_{prim} = H^{2,0}(V_f)\\oplus H^{1,1}(V_f)_{prim} \\oplus H^{0,2} (V_f)$ to $H^2(V_{f_0})_{prim}$, as explained in \\S \\ref{sec:introduction}, thus obtaining a point $F(f)\\in D$, well defined up to the action of the image of $\\rho$, where $D$ is the classifying space of Hodge structures on $H^2(V_{f_0})_{prim}$.   This defines   holomorphic period maps as in (\\ref{eq:periodmaps}), namely\n\n\n  \\begin{eqnarray}\n  \\begin{array}{ccc}\n  \\label{eq:universalperiodmaps}\n  \\widetilde{S_{d}^0} &  \\buildrel \\widetilde{F} \\over\\longrightarrow  & D  \\\\\n  {p}\\Big\\downarrow & & \\Big\\downarrow   \\\\\n  S_{d}^0 & \\buildrel F\\over \\longrightarrow & \\Gamma\\backslash D\n  \\end{array}\n  \\end{eqnarray}\n\n\n\n  where $\\Gamma$ denotes the image of the monodromy representation $\\rho$, and\n  which is \\emph{horizontal} in the sense that\n\n  \\begin{equation}\n  d\\widetilde{F} : T \\widetilde{S}_d^0 \\longrightarrow  \\widetilde{F}^* T_hD.\n  \\end{equation}\n\n  We  must look carefully at some local properties of the period map $F$.   Let $U$ be a simply connected neighborhood of the base point $f_0$.  The inverse image of $U$ in $\\widetilde{S^0_d}$\n  is a disjoint union of open sets isomorphic to $U$.  On such a  component of the inverse image, we can replace the  map $\\widetilde{F}$ of (\\ref{eq:universalperiodmaps}) by its restriction to a that connected component.  Identifying it with $U$, we may replace (\\ref{eq:universalperiodmaps}) by the simpler diagram\n  \\begin{eqnarray}\n  \\begin{array}{ccc}\n  \\label{eq:localuniversalperiodmaps}\n  &  & D  \\\\\n   &\\buildrel \\widetilde{F}  \\over \\nearrow & \\Big\\downarrow   \\\\\n  U & \\buildrel F\\over \\longrightarrow & \\Gamma\\backslash D\n  \\end{array}\n  \\end{eqnarray}\n  Thus the period map $F$ to $\\Gamma\\backslash D$ is \\emph{locally liftable} to $D$.  This is only an issue in the presence of fixed points.\n\n\n  Our example of a horizontal non-geodesic $V\\subset \\Gamma\\backslash D$ will be $\\overline{F(S_d^0)}$, the closure of the image of $F$, for suitable $d$.   We proceed to the necessary computations.\n\n\n  \\subsection{The Jacobian Ring}\n  \\label{subsec:jacobianring}\n\n  First of all,  choose $d = 10$, and  consider the space $S_{10}(1,1,2,5)$ of weighted homogeneous polynomials of degree $10$ with weights $(1,1,2,5)$.  Some computer experimentation led us to this choice. As noted above, the \\lq\\lq Fermat hypersurface\\rq\\rq  $V_{f_0}$ is defined by an element of $S_{10}$, and so  $S_{10}^0 \\ne\\emptyset$.\n  Given $f\\in S_{10}^0$, let\n\n\\begin{enumerate}\n\n\\item $J(f)\\subset S$ denote the \\emph{Jacobian ideal of $f$}, namely the ideal generated by the partial derivatives of $f$.\n\n\\item $R(f) = S/J(f)$ be the \\emph{Jacobian ring} of $f$.\n\n\\end{enumerate}\n\n\n\n  The Hodge decomposition and the differential of the period map have very explicit descriptions in terms of the graded ring $R(f)$ for $f\\in S_{10}^0$.  Since the dimensions of the graded components $R_k(f)$  are independent of $f$, we often write simply $R_k$ for $R_k(f)$.\n\n\\begin{proposition}\n\\label{prop:jacobiancomputations} Let $f\\in S_{10}^0$ and let $J$ and $R$ be as just defined.  Then\n\\end{proposition}\n\n\\begin{enumerate}\n\n\\item $R_1 \\cong H^{2,0}$\n\n\\item $R_{11} \\cong H^{1,1}$\n\n\\item $R_{21}\\cong H^{0,2}$\n\n\\item $R_{22}\\cong \\C$\n\nitem $R_k = 0$ for $k>22$\n\n\\item For $0\\le i \\le 22$, the pairing $R_i\\otimes R_{22-i}\\to R_{22}$ is non-degenerate.\n\n\\end{enumerate}\n\n\n    \\begin{proof}\n   Statements of this type for projective hypersurfaces are consequences of the Griffiths residue calculus.  The analogous statements  for weighted projective hypersurfaces are proved in Theorem 1 of \\cite{steenbrink} and in   \\S4.3 of  \\cite{dolgachev}.\n    \\end{proof}\n\n\n   Applying the above to our situation, and using the polynomial $f_0$ to do computations,\n   we find\n   \\begin{lemma}\n   \\label{lem:dimensions}\n   \\end{lemma}\n\n \\begin{enumerate}\n    \\item $h^{2,0} =2$, $h^{1,1} = 28$, $h^{0,2} = 2$\n    \\item $D = SO(4,28) /U(2) \\times SO(28)$\n    \\item $D$ has dimension $57$.\n   \\item  The horizontal sub-bundle $T_h D = Hom(\\hodge^{2,0},\\hodge^{1,1})$ has fiber dimension $56$, hence is a holomorphic contact structure on $D$.\n   \\end{enumerate}\n\n   \\strong{Proof}\n\n   Since the Hodge numbers are independent of $f$, we can compute them for $f_0$.  Using  Proposition \\ref{prop:jacobiancomputations}, this is the same as computing the spaces $R_k(f_0)$, which amounts to a straightforward exercise of counting monomials.  First of all, $J$ is the ideal generated by $x_1^9,x_2^9, x_3^4,x_4$.  We find that\n\n\\begin{enumerate}\n\n\\item $R_1 = S_1 = \\left< x_1,x_2 \\right> $ is the vector space with basis $x_1,x_2$, so that  $h^{2,0} = h^{0,2} = 2$.\n\n\\item $R_{11}$: to find a basis for this space, list all monomials that do not contain any of the above generators of $J$.  In particular, $x_4$ does not appear, so a basis consists of monomials in $x_1,x_2,x_3$ that do not contain $x_1^9, x_2^9,x_3^4$.  These can be conveniently grouped by powers of $x_3$:\n\n\\item $G_3 = \\left< x_1^ix_2^{5-i}x_3^3 | i = 0,\\dots 5 \\right>$ is six-dimensional\n\n    \\item $G_2 = \\left< x_1^ix_2^{7-i}x_3^2 | i = 0,\\dots 5 \\right>$ is eight-dimensional\n\n    \\item $G_1 = \\left< x_1^ix_2^{9-i}x_3 | i = 1,\\dots 8 \\right>$ is eight-dimensional\n\n    \\item $G_0 = \\left< x_1^ix_2^{11-i} | i = 3,\\dots 8 \\right>$  is six-dimensional\n\n\n\\end{enumerate}\n\n\\smallskip\n\n  Therefore $\\dim R_{11} = h^{1,1} = 28$\n\nIt follows that $D$ classifies polarized Hodge structures with Hodge numbers $2,28,2$.  From the discussion in the introduction, it follows that $D = SO(4,28)/U(2)\\times SO(28)$, which has dimension $57$ and  its  sub-bundle $T_hD = Hom(\\hodge^{2,0},\\hodge^{1,1})$ has fiber dimension $h^{2,0}h^{1,1} = 56$.  The easiest way to visualize $D$, and to see its dimension and the structure of the horizontal sub-bundle,  is to use its fibration (\\ref{eq:fibration}) over the symmetric space.  In this case the symmetric space has real dimension $4\\cdot 28$ and the fiber  is a projective line:\n\n      \\begin{eqnarray}\n      \\label{eq:fibrationD}\n    \\begin{array}{ccc}\n  SO(4)/U(2) & \\longrightarrow & SO(4,28)/ U(2)\\times SO(28) \\\\\n  & & \\Big\\downarrow {\\pi}      \\\\\n  & &  SO(4,28) / S(O(4)\\times O(28))\n  \\end{array}\n  \\end{eqnarray}\n\n\n  It is easy to see that $d\\pi$ maps the fibers of $T_h D$ isomorphically (as real vector spaces) to the tangent spaces to the symmetric space. Thus $T_hD$ coincides, in this case, with the differential-geometric horizontal bundle.\n\nTo see that $T_hD$ is a holomorphic contact structure, recall the identification (\\ref{eq:hodgebundles}), $TD \\cong Hom_{\\left< \\ , \\  \\right>}(\\hodge^{2,0},\\hodge^{1,1}\\oplus\\hodge^{0,2})$.  Under this identification, $T_hD$ is identified with $Hom(\\hodge^{2,0},\\hodge^{1,1})$ as the kernel of the projection to $Hom_{< \\ , \\  >}(\\hodge^{2,0},\\hodge^{0,2})$.   Since\n  $Hom_{\\left< \\ , \\  \\right>}(H^{2,0},H^{0,2})$ is a space of skew-symmetric en\\-do\\-mor\\-phisms,  and since  $\\dim H^{2,0}$  $= 2$,\n  we see that  $$\\dim Hom_{\\left< \\ ,\\ \\right>}(H^{2,0},H^{0,2}) = 1$$ The projection is a one-form $\\omega$ with values in the line bundle  $T_vD = Hom_{\\left< \\ , \\ \\right>}(H^{2,0},H^{0,2})$ whose kernel is $T_hD$.  Here $T_vD$ stands for the vertical bundle. To be a contact structure means that it is totally non-integrable.  This means the following: if $X,Y$ are horizontal vector fields, then, for all $p\\in D$,  $\\omega([X,Y])_p$ depends only on $X_p,Y_p$, hence defines a bundle map $\\Lambda^2 T_hD\\to T_vD$.  To be a contact structure then means that this is a non-degenerate pairing. In other words, the resulting map $T_h D\\to Hom(T_h D, T_v D)$ is an isomorphism.  This is a reformulation of the local coordinate condition $\\omega\\wedge (d\\omega)^{28}\\ne 0$ at every point.\n\n  Under our identification $T_h D \\cong Hom(\\hodge^{2,0},\\hodge^{1,1})$, it is easy to check that  $\\omega([X,Y])= X^t Y - Y^t X$, where the transpose is with respect to $< \\ , \\ >$, see \\S 6 of \\cite{carlsontoledotrans} for details.  One easily checks  that this paring is non-degenerate, so that we indeed have a contact structure.\n\n\n   Next, we  compute $dF$, where $F:S_{10}^0\\to \\Gamma\\backslash D$ is the period map of (\\ref{eq:universalperiodmaps}). The  group $G(1,1,2,5)$ of automorphisms of $P(1,1,2,5)$ acts on $S_{10}^0$ and  $F$ is  constant on orbits, so it should factor through  an appropriate quotient.  Since the group is not reductive, we avoid the technicalities of forming quotients, by working mostly on the  infinitesimal level.\n\n   Given $f\\in S_{10}^0$, the tangent space at $f$ to its $G(1,1,2,5)$-orbit is $J_{10}(f)$.  When we have a quotient, $R_{10}(f)$ can be identified with the tangent space to the quotient at the orbit of $f$.   We  use this fact as a guiding principle, relying on the fact that $d_fF$ vanishes on $J_{10}(f)$ and hence factors through $R_{10}(f)$. Thus we avoid working with the quotient directly.\n\n\n  To be more precise,  fix $f\\in S_{10}^0$ and a simply connected neighborhood $U$ of $f$.  Since $\\Gamma\\backslash D$ need not be a manifold (and will not be at points fixed by non-identity elements of $\\Gamma$), what we actually want to compute is $d_f\\widetilde{F}$, where $\\widetilde{F}:U\\to D$ is a local lift of $F$ as in (\\ref{eq:localuniversalperiodmaps}).\n\n\n\n\n  Since $U$ is an open subset of the vector space $S_{10}$, there is a canonical identification\n  \\begin{equation}\n  \\label{eq:identifytangents}\n  T_fU \\cong S_{10} \\ \\text{ by translation. }\n  \\end{equation}\n  Under this identification, $J_{10}(f)$ is the tangent space to the orbit of $f$. Consequently, $d_f\\widetilde{F}:S_{10}\\to T_hD$ vanishes on  $J_{10}(f)$, hence factors through $R_{10}(f)$.\n  Keeping in mind the  exact sequence\n   \\begin{equation}\n  \\label{eq:exactsequence}\n  0\\longrightarrow J_{10}(f) \\longrightarrow S_{10}\\buildrel p\\over\\longrightarrow R_{10}(f)\\longrightarrow 0,\n  \\end{equation}\n  we can state the main tool for computing differentials of period maps:\n\n\\begin{proposition}\n\n  \\label{prop:multiplication}\n  Under the isomorphisms of Proposition \\ref{prop:jacobiancomputations}, the isomorphism (\\ref{eq:identifytangents}), and $p$ as in (\\ref{eq:exactsequence}),  we have a commutative diagram\n\n  \\begin{eqnarray}\n  \\begin{array}{ccccc}\n  T_f U  &  &\\buildrel d_f\\widetilde{F} \\over \\longrightarrow & & T_hD \\cong Hom(H^{2,0},H^{1,1})\\\\\n  {\\cong}\\Big\\downarrow & & & & \\Big\\downarrow {\\cong} \\\\\n  S_{10} &\\buildrel p \\over \\longrightarrow & R_{10}(f)  & \\buildrel m \\over \\longrightarrow & Hom(R_1(f),R_{11}(f))\n  \\end{array}\n  \\end{eqnarray}\n\n  where, for $\\phi\\in R_{10}$,  $m(\\phi):R_1\\to R_{11} $ is multiplication by $\\phi$: if $x\\in R_1$, then $m(\\phi)(x) = \\phi x$\n\n\\end{proposition}\n\n  \\begin{proof} This is the content of the residue calculus.  The isomorphisms between holomorphic objects and elements of the Jacobian ring preserve all natural products and pairings.\n  \\end{proof}\n\n  The above proposition will allow us to compute the rank of $d\\widetilde{F}$ at the point $f_0$ of (\\ref{eq:fermat}).  We remark that, up to this point, the residue calculus and the corresponding algebraic facts about the Jacobian ring have closely paralleled the projective case.  But the failure of Macauley\'s theorem in the weighted projective case forces us to look carefully at the remaining statements.   Most results in the literature require assumptions on the weights, and on the degree, that are not satisfied for degree $10$ and weights $(1,1,2,5)$.  See the introduction and \\S 1 of \\cite{donagitu} for a general discussion of the possible difficulties that can appear in the weighted case.\n\n\\begin{proposition}\n  \\label{prop:rank}\n\n\\end{proposition}\n\n\\begin{enumerate}\n  \\item The rank of $d\\widetilde{F}$ at $f_0$ is $28$, which is the maximum possible rank of a horizontal holomorphic map.\n\n  \\item Let $W\\subset T_h D$ denote the image of $d\\widetilde{F}$.\n  Under the identification $T_hD \\cong Hom(H^{2,0},H^{1,1})$, we have:\n\n    \\item For each $v\\in H^{2,0}$, the subspace $Wv =_{def} \\{Xv\\  | \\  X\\in W\\}\\subset H^{1,1}$ has dimension $26$.\n\n    \\item $\\{Xv \\ | \\  v\\in H^{2,0}, X\\in W\\} = H^{1,1}$\n\n\\end{enumerate}\n\n\n\\strong{Proof}\n  By Proposition \\ref{prop:multiplication} we need to compute the multiplication map $R_{10}\\to Hom(R_1,R_{11})$.  In the proof of Lemma \\ref{lem:dimensions} we found  a basis for $R_{11}$, and we can do a similar calculation with $R_{10}$:  a basis will be given by the monomials $x_1^a,x_2^b,x_3^c$ of total weight $10$ with $0\\le a,b \\le 8$ and $0\\le c \\le 3$.  These can again be conveniently grouped by the powers of $x_3$:\n\n\n\\begin{enumerate}\n\n    \\item $G_3\' =\\left< x_1^ix_2^{4-i}x_3^3 | i = 0,\\dots 5 \\right>$ is five-dimensional\n    \\item $G_2\' =\\left< x_1^ix_2^{6-i}x_3^2 | i = 0,\\dots 5 \\right>$ is seven-dimensional\n    \\item $G_1\' =\\left< x_1^ix_2^{8-i}x_3 | i = 1,\\dots 8 \\right>$ is nine-dimensional\n    \\item $G_0\' =\\left< x_1^ix_2^{10-i} | i = 2,\\dots 8 \\right>$  is seven-dimensional\n\n\\end{enumerate}\n\n\n\\smallskip\n\n  Therefore $\\dim R_{10} = 28$, as claimed.\n\n  Next, we examine the map $m:R_{10}\\to Hom(R_1,R_{11})$, where $m(\\phi)$ is the homomorphism $m(\\phi)(x) = \\phi x$.  We claim that $m$  is injective.  Since $R_1=\\left< x_1,x_2 \\right>$, it suffices to show that if $\\phi\\in R_{10}$ and both $\\phi x_1 = \\phi x_2 = 0$, then $\\phi = 0$.  We have\n\n  \\begin{equation}\n  R_{10}=G_3\'\\oplus G_2\'\\oplus G_2\'\\oplus G_0\' \\ \\text{ and }\\  R_{11} = G_3\\oplus G_2 \\oplus G_1 \\oplus G_0,\n  \\end{equation}\n\n  it is easy to see that multiplication by $R_1$ maps $G_i\'$ to $G_i$, that multiplication by $x_1$ is injective for $i=2,3$, and that the same holds for multiplication by $x_2$.  Moreover multiplication by either $x_1$ or $x_2$ is surjective for $i=0,1$ and the intersection of their kernels is zero.  Writing $\\phi = \\phi_3 + \\dots + \\phi_0$ and applying this information we see that $\\phi x_1 =\\phi x_2 = 0$ implies $\\phi = 0$.\n\n  Combining these two facts, we see that $d_{f_0}\\widetilde{F}$ has rank $28$.  Since its image is an integral element of the holomorphic contact structure $T_hD$, its dimension can be at most half of $56$, the fiber dimension of $T_hD$.  Therefore $\\widetilde{F}$ has the highest possible rank of a horizontal holomorphic map, namely $28$.\n\n\n  The second part is easily verified using the above bases of monomials. For $v=x_1$ or $x_2$, both assertions are clear, and they are easily checked for linear combinations $v = a x_1  + b x_2$.\n\n\n\n\n\n\n  \\subsection{A closed horizontal subvariety of maximum dimension}\n\n  Consider now the horizontal holomorphic map $F:S_{10}^0 \\to \\Gamma\\backslash D$.  Following Griffiths (see \\S 9 of \\cite{griffiths}) we can embed $S_{10}^0 \\subset S\'$, where $S\'$  is a smooth complex manifold containing $S_{10}^0$ as the complement of an analytic subset. One does this by  compactifying with normal crossing divisors.  One can then  extend over the branches of the compactifying divisor for which the monodromy is finite to obtain a proper horizontal holomorphic map $F:S\'\\to\\Gamma\\backslash D$.  Then  $F(S\')$ is a closed analytic subvariety of $\\Gamma\\backslash D$ containing $F(S_{10}^0)$ as the complement  of an analytic subvariety.\n\n  At the point $f_0\\in S_{10}^0$, we found that a local lift $\\widetilde{F}:U\\to D$ has maximum rank $28$. Consequently, there is a neighborhood $U\'$ of $f_0$, where $U\'\\subset U$,  $\\widetilde{F}$ has rank $28$,   and $\\widetilde{F}|_{U\'}$ is a submersion onto its image.  Therefore  $\\widetilde{F}(U\')$ is a $28$-dimensional horizontal submanifold of $D$ containing $\\widetilde{F}(f_0)$.\n\n  We now examine the local structure of $\\Gamma\\backslash D$.  Since $f_0$ has symmetries, $\\widetilde{F}(f_0)$ is fixed by some element $\\gamma\\in \\Gamma, \\gamma\\ne id$.  Let $\\Gamma_0$ denote the subgroup of $\\Gamma$ fixing  $\\widetilde{F}(f_0)$.  It is necessarily a finite group. If $N$ is a $\\Gamma_0$-invariant neighborhood of $\\widetilde{F}(f_0)$, then $\\Gamma_0\\backslash N$ is an orbifold  neighborhood of $F(f_0)$ in the orbifold $\\Gamma\\backslash D$, and $F(f_0)$ is a singular point of this orbifold.  Strictly speaking, we do not have a tangent space at $F(f_0)$.  But we can move away from $f_0$ in the above neighborhood $U\'$ to find non-singular points:\n\n  \\begin{lemma}\n  \\label{lem:generic}\n  Let $W\\subset (T_h)_{\\widetilde{F}(f_0)} D$ denote the image of $d_{(f_0)}\\widetilde{F}$.  Then\n  \\end{lemma}\n\n\\begin{enumerate}\n    \\item $W$ is not fixed by any $\\gamma\\in\\Gamma_0$, $\\gamma\\ne id$.\n\n    \\item $W$ is not tangent to any horizontal geodesic embedding of  $SU(2,14)/S(U(2)\\times U(14))$ passing through $\\widetilde{F}(f_0)$.\n\n\\end{enumerate}\n\n  \\strong{Proof}\n\n  As usual, identify $T_hD$ with $Hom(H^{2,0},H^{1,1})$, and let $V = H^{2,0}$,   $V\' = H^{1,1}$.  The group $\\Gamma_0$ acts on $T_h D$ through the action of the isotropy group $U(2)\\times SO(28)$ of $\\widetilde{F}(f_0)$.  Namely $(A,B)$, where $A\\in U(2)$ and $B\\in SO(28)$ acts on $X\\in Hom(V,V\')$ by $X\\to BXA^{-1}$.\n\n\n  Let us prove the stronger statement that $W$ is not fixed by any element of $U(2)\\times SO(28)$:  Suppose $X$ is fixed by $(A,B)\\ne id$, say $A\\ne id$.  Then $BX = XA$.   Let $\\lambda_1,\\lambda_2$ be the eigenvalues of $A$ (roots  of unity), and assume, first, that $\\lambda_1\\ne \\lambda_2$ and neither eigenvalue is real.  Let  $V_1,V_2$ be the corresponding eigenspaces, it is easy to see that, for $v_i\\in V_i$, $Xv_i$ is an eigenvector for $B$ with eigenvalue $\\lambda_i$.  From this we see that $V\' = V_1\'\\oplus V_2\'\\oplus V_3\'$, where $V_1\',V_2\'$ are the eigenspaces of $B$ for $\\lambda_1,\\lambda_2$ respectively,  and $V_3\'$ is their orthogonal complement. If $X\\in W$, then $X(V_i)\\subset V_i\'$ for $i=1,2$.  In other words, $W\\subset Hom(V_1,V_1\')\\oplus Hom(V_2,V_2\')$.  Observe that  $\\dim V_1\', \\dim V_2\'\\le 14$, since $B$ is real and its eigenvalues come in complex conjugate pairs.  Therefore, if $v_1\\in V_1$,\n  $$\n  \\{Xv_1 \\ | \\ X\\in W\\} \\subset V_1\'.\n  $$\n  Since $\\dim V_1\'\\le 14$, this contradicts Proposition  \\ref{prop:rank}.  The remaining possibilities for $\\lambda_1,\\lambda_2$ are  handled by similar  arguments.  This proves that $W$ is not fixed by any element of the isotropy group of $\\widetilde{F}(f_0)$. The first part of the Lemma is proved.\n\n  For the second part, recall from \\S \\ref{subsec:construction} that the tangent space to a geodesic embedding of the symmetric space of $SU(2,14)$ through the point $V = H^{2,0}$ is determined by a complex structure $J$ on $V\' = H^{1,1}$ and is the subspace  of $X\\in Hom(V,V\')$ satisfying $JX = Xi$, in other words, the fixed point set of the element $(i,J)$ of $U(2)\\times SO(28)$, which we have  already excluded.\n\n\n\n  An immediate consequence of this lemma is that $\\widetilde{F}(U\')$ is not fixed by any $\\gamma\\in\\Gamma_0$, so there exist $f\\in U\'$ with $F(f)$ a smooth point of $\\Gamma\\backslash D$.  The same must be true in a neighborhood $U\'\'\\subset U\'$ of $f$, so $F|_{U\'\'}:U\'\'\\to (\\Gamma\\backslash D )^0$  (the regular points of $\\Gamma\\backslash D$) and rank of $dF$ must be $28$ on $U\'\'$.\n\n  In summary:\n  \\begin{theorem}\n  Let $S\'$, $F:S\'\\to \\Gamma\\backslash D$ and $\\widetilde{F}:\\widetilde{S_{10}^0} \\to D$  be as above.  Then\n  \\end{theorem}\n\n\\begin{enumerate}\n    \\item $F$ is a proper horizontal holomorphic map.\n    \\item There is a proper analytic subvariety $Z\\subset S\'$ so that, if $S\'\' = S\'\\setminus Z$,  then  $F|_{S\'\'}:S\'\' \\to (\\Gamma\\backslash D )^0$ and $dF$ has rank $28$ on $S\'\'$.\n    \\item $F(S\')$ is a closed horizontal subvariety of $\\Gamma\\backslash D$ of maximum possible dimension $28$.\n\n    \\item If $x\\in S\'\'$, the tangent space to $F(S\')$ at $F(x)$ is not the tangent space to any totally geodesic immersion of the symmetric space of $SU(2,14)$ in $\\Gamma\\backslash D$.\n\n    \\item Alternatively, if $x\\in \\widetilde{S_{10}^0}$ lies in the dense open set where $d_x \\widetilde{F}$ has maximum rank $28$,   the image of $d_x \\widetilde{F}$ is not the  tangent space to a geodesic embedding of the symmetric space  $SU(2,14)$ in $D$.\n\n\\end{enumerate}\n\n  \\section{Geodesic submanifolds and integral elements}\n  \\label{sec:integralelements}\n\n  We close with some remarks on integral elements of contact structures.  The period domains for which the horizontal bundle gives a contact structure are the twistor spaces of the quaternionic-K\\\"ahler symmetric spaces, also called the Wolf spaces, see \\cite{wolf} for their classification.  We briefly discuss two examples from this point of view: our example $D$, associated to the symmetric space $SO(4,28)/S(O(4)\\times O(28))$, and another example we call $D\'$ associated to quaternionic hyperbolic space.\n\n\n\n  Whenever the horizontal sub-bundle $T_hD$ of a domain $D$  is a contact structure,  we know that each fiber of $T_h D$ has a symplectic structure, and the integral elements in that fiber are the Lagrangian subspaces of this symplectic structure.  Lagrangian subspaces of a $2g$-dimensional symplectic space are parametrized by $Sp(g)/U(g)$, the compact dual of the Siegel upper half plane of genus $g$.\n\n  If $D = SO(4,28)/U(2)\\times SO(28)$ is the domain we have been studying, of dimension $57$, $T_hD$  of dimension $56$, the integral elements in a fiber of $T_hD$ are parametrized by $Sp(28)/U(28)$,  a manifold of complex dimension $(28 \\cdot 29)/2 = 406$.  On the other hand, the totally geodesic embeddings of $D_1$, the symmetric space for $SU(2,14)$ through a fixed point in $D$ are parametrized by the choice of complex structure $J$ on the space $H^+$ as in \\S \\ref{subsec:construction}.  These are in turn parametrized by the space $SO(28)/U(14)$ of dimension $28\\cdot 27 - 14^2 = 14\\cdot 13  = 182$.  Thus we see that the space of tangents to geodesic embeddings of $SU(2,14)$ is a rather small subset of the space of Lagrangian subspaces.  We therefore expect the generic horizontal map to miss these embeddings.  In a way, this is what made our example possible.\n\n  \\subsection{The quaternionic hyperbolic space}\n  \\label{subsec:quaternionic}\n\n  We conclude with a related problem, which was the motivation for writing this paper.   Consider the period domain $D\'$ associated to the quaternionic hyperbolic space, namely\n     \\begin{eqnarray}\n      \\label{eq:fibrationquat}\n    \\begin{array}{ccc}\n  Sp(1)/U(1) & \\longrightarrow & D\' = Sp(1,n)/ U(1)\\times Sp(n) \\\\\n  & & \\Big\\downarrow {\\pi}      \\\\\n  & &  Sp(1,n) / Sp(1)\\cdot Sp(n)\n  \\end{array}\n  \\end{eqnarray}\n  We can think of this domain as classifying Hodge structures on $\\R^{4n+4}\\cong \\bH^{n+1}$ with Hodge numbers $2,4n,2$ which are stable under right multiplication by quaternions.  Equivalently, we can think of points in this domain as pairs $L,J$ where $L\\subset \\bH^{n+1}$ is a positive right-quaternionic line and $J:L\\to L$ is a right quaternionic linear complex structure on $L$ orthogonal with respect to the polarizing form $\\left< \\ , \\ \\right>$.  Let $L^\\perp$ denote the orthogonal complement of $L$ in $\\bH^{n=1}$ and $L_\\C, L_\\C^\\perp$ their complexifications.  Then the horizontal tangent space to the domain $D\'$ is\n\n  \\begin{equation}\n  T_n D\' = _\\C\\Hom_\\bH (L^{1,0},L_\\C^\\perp)\\subset TD\' = _\\C\\Hom_\\bH (L^{1,0},L_\\C^\\perp\\oplus L^{0,1})  \\nonumber\n  \\end{equation}\n\n  where $_\\C\\Hom_\\bH$ denotes left $\\C$-linear and right $\\bH$-linear homomorphisms.  See \\S 6 of \\cite{carlsontoledo} for a more detailed discussion.\n\n  Once again, $D\'$ has complex dimension $2n+1$ and $T_h D\'$ has fiber dimension $2n$, so it is a holomorphic contact structure on $D\'$.\n  Each fiber  of $T_hD\'$ has a symplectic structure, and the integral elements of the contact structure in a fixed fiber coincide with the Lagrangians of this symplectic structure, and are therefore parametrized by $Sp(n)/U(n)$.\n\n  We also have horizontal totally geodesic embeddings of the symmetric space of $SU(1,n)$ in $D\'$, namely the unit ball or complex hyperbolic space $SU(1,n)/U(n)$.  The group $Sp(n)$ acts transitively on the  embeddings passing through a point $(L,J)$, corresponding to orthogonal right $\\bH$-linear  complex structures on $L^\\perp$, hence parametrized by the same homogeneous space $Sp(n)/U(n)$ that parametrizes the Lagrangians.  Thus, for $D\'$, every horizontal subvariety of maximum dimension $n$ is tangent, at each smooth point, to a horizontal totally geodesic  complex hyperbolic $n$-space.  (We used this fact in \\S 6 of \\cite{carlsontoledo} to give a structure theory for harmonic maps of K\\\"ahler manifolds to manifolds covered by quaternionic hyperbolic space).\n\n  \\begin{problem}\n  Find examples of discrete groups $\\Gamma\\subset Sp(1,n)$ and closed horizontal subvarieties $V\\subset \\Gamma\\backslash D\'$ that are not totally geodesic.\n  \\end{problem}\n\n\n\n\n\\begin{comment}\n\n\\begin{thebibliography}{PTW02}\n\n\n  \\bibitem[Ca86]{carlson} J. A. Carlson, \\emph{Bounds on the dimension of a variation of Hodge Structure}, Trans. AMS {\\bf 294} (1986), 45 -- 64.\n\n  \\bibitem[CD87]{carlsondonagi} J. A. Carlson and R. Donagi, \\emph{Hypersurface variations are maximal}, I, Invent. Math. {\\bf 89} (1987) 371--374.\n\n  \\bibitem[CT89a]{carlsontoledotrans} J. A. Carlson and D. Toledo, \\emph{Variations of Hodge structure, Legendre submanifolds, and accessibility}, Trans. AMS {\\bf 311} (1989), 391--411\n\n  \\bibitem[CT89b]{carlsontoledo} J.A. Carlson and D. Toledo, \\emph{Harmonic mappings of K\\\"ahler manifolds to locally symmetric spaces},  Pub. Maths. IHES {\\bf 69} (1989), 173--201.\n\n  \\bibitem[Do82]{dolgachev} I. Dolgachev, \\emph{Weighted projective varieties}, in Lecture Notes in Mathematics {\\bf 956}, 34--71, Springer, 1982.\n\n  \\bibitem[DT87]{donagitu}  R. Donagi and L. W. Tu, Generic Torelli for weighted hypersurfaces, Math. Annalen {\\bf 276} (1987), 399 -- 413.\n\n  \\bibitem[G70]{griffiths} P. A, Griffiths, Periods of integrals on algebraic manifolds, III, Pub. Maths. IHES, {\\bf 38} (1970), 125 --180.\n\n  \\bibitem[S77]{steenbrink}  J. Steenbrink, Intersection form for quasi-homogeneous singularities, Comp. Math. {\\bf 34} (1977), 211--223.\n\n  \\bibitem[W65]{wolf} J. A Wolf, Complex homogeneous contact manifolds and quaternionic symmetric spaces, Jour. Math. Mechanics {\\bf 14} (1965), 1033--1048.\n\n\\end{thebibliography}\n\n\\end{comment}\n\n';
+var _user$project$App_Source$weatherApp = '\n\\section{Weather App}\n\n\\image{http://noteimages.s3.amazonaws.com/jim_images/weatherAppColumbus.png}{}{float: right, width: 250}\n\nIn this section we will learn how to write an app that displays information about the weather  in any city on planet earth.   The data comes from a web server at \\href{http://openweathermap.org/}{openweathermap.org}; to access it, you will need a free API key, which is a long string of letters and numbers  that looks like \\code{a23b...ef5d4} and which functions as a kind password. To get an API key, follow this \\href{http://openweathermap.org/price}{link}.  Once you have an API key, you can try out a working copy of the app at \\href{https://jxxcarlson.github.io/app/weather.html}{jxxcarlson.github.io}.\n\n\\subheading{Framing Main}\n\nWe will build the app in a series of steps.  The first step is to build a skeleton that has all the needed structural parts, e.g, the view and update functions.    Part of this \"framing\" step is to define the data types that the app will use --- \\code{Model} and its various parts, and \\code{Msg}, a union type which determines which messages can be sent to the Elm Runtime.  Let\'s begin with \\code{main}, which looks like this:\n\n\\begin{verbatim}\nmain =\n    Html.program\n        { init = init\n        , view = view\n        , update = update\n        , subscriptions = subscriptions\n        }\n\\end{verbatim}\n\nThis is the structure, \\code{Html.program}, is used by $99\\%$ of all Elm programs.  It is a a record with four fields, the init, view, and update functions, and subscriptions, which will eventually be used to add date and time to the app. The init, view and update functions all work  with the model, so let\'s discuss that next.\n\n\\subheading{Model}\n\nEvery model has a type, and that type dictates what the model is able to represent.  In our case the \\code{Model} type, displayed below,  is a record with five fields: one for weather data, one for messages for the user, one for the location whose weather we retrieve, one for the API key discussed above, and one for the internet address of the server.  The first field has a special type which we discuss in a moment, while the other fields are strings.\n\n\n\\begin{verbatim}\ntype alias Model =\n    { weather : Maybe Weather\n    , message : String\n    , location : String\n    , apiKey : String\n    , serverAddress : String\n    }\n\\end{verbatim}\n\nThe type of the weather field has the form\n\n\\begin{verbatim}\nMaybe Weather = Nothing | Just Weather\n\\end{verbatim}\n\nThis means that a value of type \\code{Maybe Weather} can be either \\code{Nothing}, or a value of type \\code{Just Weather}.  The  first option handles the case in which  the app has not requested information from the server, has requested information but has received no reply, has requested information but received an error message, or, finally has received garbled information.  These are all very real possibilities, and in those cases, we literally know \\code{Nothing}.\n\nIn the case of valid weather information, \\code{weather} field has type \\code{Just Weather}, where \\code{Weather} is the record type listed below. The first, \\code{id}, is an integer which identifies the weather information in the openweather.org database.  We won\'t use it now.  The next, \\code{location}, is a string which in our examples is a city name, e.g., \"London.\"  The third, \\code{main}, is the \"main\" weather information for the given location.\n\n\\begin{verbatim}\ntype alias Weather =\n    { id : Int\n    , name : String\n    , main : Main\n    }\n\\end{verbatim}\n\nAnd what is the value of the field \\code{main}?  Well, it is a something of type \\code{Main}.  While we seem to be opening up a series of Russian dolls, this is the last data structure that we have to deal with.  \\code{Main} is a record  with five fields of type \\code{Float}\n\n\\begin{verbatim}\ntype alias Main =\n    { temp : Float\n    , humidity : Float\n    , pressure : Float\n    , temp_min : Float\n    , temp_max : Float\n    }\n\\end{verbatim}\n\n\\subheading{Filling out Main}\n\nThe code discussed so far is still not enough to define an app that will run, even if it does nothing.  To get to this point, we must implement the following functions and types:\n\n\\begin{enumerate}\n\\item \\code{init}, which sets jup the initial model.\n\\item \\code{Msg} The type messages the app can receive.\n\\item \\code{subscriptions}. There aren\'t any, but this has to be defined.\n\\item \\code{view} and some style information to make the view look good.\n\\item \\code{update}\n\\end{enumerate}\n\nTake a look at the Ellie below and run it to see if it works.  Then come back and we will go through the list above.  Once this is done, we can move on to making the app actaully do something.\n\n\\ellie{9CKgm5CQGa1/0}{Skeleton app}\n\n\\subheading{Finishing the skeleton}\n\nLet\'s finish the skeleton by filling in the items listed above.\n\n\\subheading{Init and Msg}\n\n\\begin{verbatim}\ninit : ( Model, Cmd Msg )\ninit =\n    ( { weather = Nothing\n      , message = \"app started\"\n      , location = \"london\"\n      , apiKey = \"\"\n      }\n    , Cmd.none\n    )\n\\end{verbatim}\n\n\nBelow is  \\code{init}. It is a value of type \\code{(Model, Cmd Msg)}.  The \\code{Msg} type\nis defined this way:\n\n\\begin{verbatim}\ntype Msg = NoOp\n\\end{verbatim}\n\nWe will have other Msg\'s later.  But when staring out, it is worth having a kind of \"zero\" in the world of messages -- a message which corresponds to \"no operation.\"\n\n\n\\subheading{Subscriptions}\n\nWe need to define \\code{subscription} even if there are no subscriptions to external data sources. Let\'s do it like this:\n\n\\begin{verbatim}\nsubscriptions model =\n    Sub.none\n\\end{verbatim}\n\n\\subheading{Update}\n\nThe update function handles our \\code{NoOp} message:\n\n\\begin{verbatim}\nupdate : Msg -> Model -> ( Model, Cmd Msg )\nupdate msg model =\n    case msg of\n        NoOp ->\n            ( model, Cmd.none )\n\\end{verbatim}\n\nLater, the case statment will be more complex, with one\n clause for each \\code{Msg} type.\n\n\n\\subheading{View}\n\n\\image{http://noteimages.s3.amazonaws.com/jim_images/weatheApp-0.png}{}{float: right, width: 150}\n\nThe \\code{view} function represents the state of the \\code{Model}\nto the outside world.  In the case at hand, it just displays a grey box\nas in the image on the right.\n\n\\begin{verbatim}\nview : Model -> Html Msg\nview model =\n    div [ mainStyle ]\n        [ div [ innerStyle ]\n            [ text \"Weather App\"\n            ]\n        ]\n\\end{verbatim}\n\n\\subheading{Style}\n\nTo set the stage for our working app, we use a small bit of styling:\n\n\\begin{verbatim}\nmainStyle =\n    style\n        [ ( \"margin\", \"15px\" )\n        , ( \"margin-top\", \"20px\" )\n        , ( \"background-color\", \"#eee\" )\n        , ( \"width\", \"200px\" )\n        ]\n\ninnerStyle =\n    style [ ( \"padding\", \"15px\" ) ]\n\\end{verbatim}\n\n\n\\image{http://noteimages.s3.amazonaws.com/jim_images/weatherApp-2.png}{}{float: right, width: 200}\n\n\n\\subsection{Getting the weather}\n\n\n\nLet\'s now work to make the app retrieve weather data.  There is a cycle of events which makes this happen.  First, the user clicks on the \"Get weather\" button, which is defined by\n\n\\begin{verbatim}\nbutton\n   [ onClick GetWeather ]\n   [ text \"Get weather\" ]\n\\end{verbatim}\n\nThe \\code{onClick} action causes the message \\code{GetWeather} to be sent.  The \\code{update} function listed below receives this message, matches it using its \\code{case msg of} statement to the function call  \\code{getWeather model}, and executes that call.\n\n\\begin{verbatim}\nupdate : Msg -> Model -> ( Model, Cmd Msg )\nupdate msg model =\n    case msg of\n        GetWeather ->\n            ( model, getWeather model )\n        NewWeather (Ok newData) ->\n            ( { model | weather = Just newData,\n                        message = \"Successful request\" },\n                Cmd.none\n             )\n        NewWeather (Err error) ->\n            ( { model | message = \"Error\" }, Cmd.none )\n\n\\end{verbatim}\n\nLet\'s look at the code for \\code{getWeather}.\n\n\\begin{verbatim}\ngetWeather : Model -> Cmd Msg\ngetWeather model =\n    Http.send NewWeather (dataRequest model)\n\\end{verbatim}\n\nWhen this function call is executed the following happen.  (1)  The request \\code{ dataRequest model} is made; (2)  Moments later the server responds with its \\code{reply}, also a string. This is a string which re[renset sdh dtdata  which is just a string.  It represent the if  (3) send the message \\code{NewWeather reply}, (4) the update function processes that message.  The message can be of two kinds.  If the request is successful, it is of form \\code{Ok newData} where \\code{NewData} carries the information sent by the server.  If the request is not successful, the reply has the form \\code{Error error}, where \\code{error} carries information about the error.\n\nLet\'s  look at the code for \\code{dataRequest} listed below                                              .  The function \\code{Http.get} takes two arguments.  The first is the function call \\code{url model}, which yields a string to be sent to the server m  It carries information such as the \"address\" of the server, the city whose weather we want to know about, and the API key that the server requires to grant access.  The second argument is a JSON decoder.  This is a black box which will translate the information send by the server into a form understood by Elm.\n\n\\begin{verbatim}\ndataRequest model =\n    Http.get (url model) weatherDecoder\n\\end{verbatim}\n\nThe code for the \\code{url} function simply puts information already present in the model into the form needed by the server:\n\n\\begin{verbatim}\nurl model =\n  model.urlPrefix ++ model.location ++ \"&APPID=\" ++ model.apiKey\n\\end{verbatim}\n\n\n\n\n\\ellie{chqbtP2Kfa1/1}\n\n\\section{IIIIIII}\n\n\\image{http://noteimages.s3.amazonaws.com/jim_images/weatherApp-1a.png}{}{float: right, width: 250}\n\n\n\\ellie{8Wrq8PbCDa1/1}\n\n\\subsection{A little more advanced}\n\n\\ellie{7t43vKJnda1/5}\n\n\n';
+var _user$project$App_Source$wavePackets = '\n\n\\title{Wave packets and the dispersion relation}\n\n\\maketitle\n\n\\tableofcontents\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/sinc2-bcbf.png}{Wave packet}{width: 250, float: right}\n\n\nAs we have seen with the sinc packet, wave packets can be localized in space.  A key feature of such packets is their \\italic{group velocity} $v_g$.  This is the velocity which which the \"body\" of the wave packet travels.  Now a wave packet is synthesized by superposing many plane waves, so the natural question is how is the group velocity of the packet related to the phase velocities of its constituent plane waves.  We will answer this first in the simplest possible situation -- a superposition of two sine waves.  Next, we will reconsider the case of the sinc packet.  Finally, we will study a more realistic approximation to actual wave packets which gives insight into the manner and speed with which wave packets change shape as they evolve in time.  We end by applying this to an electron in a thought experiment in which it has been momentarily confned to an atom-size box -- about one Angstrom, or $10^{-10}\\text{ meter}$.\n\n\\section{A two-frequency packet: beats}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/beats-eca1.png}{Two-frequency beats}{width: 350, float: right}\n\nConsider a wave\n$\\psi = \\psi_1 + \\psi_2$ which is the sum of two terms with slightly different frequencies.  If the waves are sound waves, then then what one will hear is a pitch that corresponding to the average of the two frequencies modulated in such a way that the volume goes up and down at a frequency corresponding to their difference.\n\nLet us analyze this phenomenon mathematically, setting\n\n\n\\begin{equation}\n\\psi_1(x,t)  = \\cos((k - \\Delta k/2)x - (\\omega - \\Delta \\omega/2)t)\n\\end{equation}\n\nand\n\n\\begin{equation}\n\\psi_2(x,t)  = \\cos((k + \\Delta k/2)x - (\\omega + \\Delta \\omega/2)t)\n\\end{equation}\n\nBy the addition law for the sine, this can be rewritten as\n\n\\begin{equation}\n\\psi(x,t) = 2\\sin(kx - \\omega t)\\sin((\\Delta k)x - (\\Delta \\omega)t)\n\\end{equation}\n\nThe resultant wave -- the sum -- consists of of a high-frequency sine wave oscillating according to the average of the component wave numbers and angular frequencies, modulated by a cosine factor that oscillates according to the difference of the wave numbers and the angular frequencies, respectively.  The velocity associated to the high frequency factor is\n\n\\begin{equation}\nv_{phase} = \\frac{\\omega}{k},\n\\end{equation}\n\nwhereas the velocity associated with the low-frequency factor is\n\n\\begin{equation}\nv_{group} = \\frac{\\Delta \\omega}{\\Delta k}\n\\end{equation}\n\nThis is the simplest situation in which one observes the phenomenon of the group velocity.  Take a look at this \\href{http://galileo.phys.virginia.edu/classes/109N/more_stuff/Applets/wavepacket/wavepacket.html}{animation}.\n\n\n\\section{Step function approximation}\n\nWe will now find an an approximation to\n\n\\begin{equation}\n\\psi(x,t) = \\int_{-\\infty}^\\infty a(k) e^{i(kx - \\omega(k)t)} dk\n\\end{equation}\n\nunder the assumption that $a(k)$ is nearly constant over an interval from $k_0 -\\Delta k/2$ to $k_0 + \\Delta k/2$ and that outside of that interval it approaches zero at a rapid rate.  In that case the Fourier integral is approximated by\n\n\\begin{equation}\n \\int_{k_0 - \\Delta k/2}^{k_0 + \\Delta k/2}  a(k_0)e^{i((k_0 + (k - k_0)x - (\\omega_0t + \\omega_0\'(k - k_0)t))}dk,\n\\end{equation}\n\nwhere $\\omega_0 = \\omega(k_0)$ and $\\omega_0\' = \\omega\'(k_0)$.\nThis integral can be written as a product $F(x,t)S(x,t)$, where the first factor is \"fast\" and the second is \"slow.\"  The fast factor is just\n\n\\begin{equation}\nF(x,t) = a(k_0)e^{ i(k_0x - \\omega(k_0)t) }\n\\end{equation}\n\nIt travels with velocity $v_{phase} = \\omega(k_0)/k_0$.  Setting $k; = k- k_0$, the slow factor is\n\n\\begin{equation}\nS(x,t) = \\int_{-\\Delta k/2}^{\\Delta k/2} e^{ik\'\\left(x - \\omega\'(k_0)t\\right)} dk\',\n\\end{equation}\n\nThe slow factor be evaluated explicitly:\n\n\\begin{equation}\nI = \\int_{-\\Delta k/2}^{\\Delta k/2} e^{ik\'u} dk\' = \\frac{1}{iu} e^{ik\'u}\\Big\\vert_{k\' = - \\Delta k/2}^{k\' = +\\Delta k/2}.\n\\end{equation}\n\nWe find that\n\n\\begin{equation}\nI = \\Delta k\\; \\text{sinc}\\frac{\\Delta k}{2}u\n\\end{equation}\n\nwhere $\\text{sinc } x = (\\sin x )/x$.  Thus the slow factor is\n\n\\begin{equation}\nS(x,t) = \\Delta k\\, \\text{sinc}(  (\\Delta k/2)(x - \\omega\'(k_0)t)  )\n\\end{equation}\n\n\nPutting this all together, we have\n\n\\begin{equation}\n\\psi(x,t) \\sim a(k_0)\\Delta k_0\\, e^{i(k_0x - \\omega(k_0)t)}\\text{sinc}(  (\\Delta k/2)(x - \\omega\'(k_0)t)  )\n\\end{equation}\n\nThus the body of the sinc packet moves steadily to the right at velocity $v_{group} = \\omega\'(k_0)$\n\n\n\\section{Gaussian approximation}\n\nThe approximation used in the preceding section is good enough to capture and explain the group velocity of a wave packet.  However, it is not enough to explain how wave packets change shape as they evolve with time.  To understand this phenomenon, we begin with  an arbitrary packet\n\n\\begin{equation}\n\\psi(x,t) = \\int_{\\infty}^\\infty a(k) e^{i\\phi(k)}\\,dk,\n\\end{equation}\n\nwhere $\\phi(k) = kx - \\omega(k)t$.  We shall assume that the spectrum $a(k)$ is has a maximum at $k = k_0$ and decays fairly rapidly away from the maximum.  Thus we assume that the Gaussian function\n\n\\begin{equation}\na(k) = e^{ -(k-k_0)^2/ 4(\\Delta k)^2}\n\\end{equation}\n\nis a good approximation.  To analyze the Fourier integral\n\n\\begin{equation}\n\\psi(x,t) = \\int_{-\\infty}^{\\infty} e^{ -(k-k_0)^2/ 4(\\Delta k)^2} e^{i(kx - \\omega(k) t)},\n\\end{equation}\n\nwe expand $\\omega(k)$ in a Taylor series up to order two, so that\n\n\\begin{equation}\n\\phi(k) = k_0x + (k - k_0)x - \\omega_0t - \\frac{d\\omega}{dk}(k_0) t- \\frac{1}{2}\\frac{ d^2\\omega }{ dk^2 }(k_0)( k - k_0)^2 t\n\\end{equation}\n\nWriting $\\phi(k) = k_0x - \\omega_0t + \\phi_2(k,x,t)$, we find that\n\n\\begin{equation}\n\\psi(x,t) = e^{i(k_0x - \\omega_0 t)} \\int_{-\\infty}^{\\infty} e^{ -(k-k_0)^2/ 4(\\Delta k)^2} e^{i\\phi_2(k,x,t)}.\n\\end{equation}\n\nMake the change of variables $k - k_0 = 2\\Delta k u$, and write $\\phi_2(k,x,t) = Q(u,x,t)$, where $Q$ is a quadratic polynomial in $u$ of the form $au + b$. One finds that\n\n\\begin{equation}\n  a = -(1 + 2i\\alpha t  (\\Delta k)^2),\n\\end{equation}\n\nwhere\n\n\\begin{equation}\n\\alpha = \\frac{ d^2\\omega }{ dk^2 }(k_0)\n\\end{equation}\n\nOne also finds that\n\n\\begin{equation}\n  b = 2i\\Delta k(x - v_g t),\n\\end{equation}\n\nwhere $v_g = d\\omega/dk$ is the group velocity.  The integral is a standard one, of the form\n\n\\begin{equation}\n\\int_{-\\infty}^\\infty e^{- au^2 + bu} = \\sqrt{\\frac{\\pi}{a}}\\; e^{ b^2/4a }.\n\\end{equation}\n\nUsing this integral  formula and the reciprocity $\\Delta x\\Delta k = 1/2$, which we may take as a definition of $\\Delta x$, we find, after some algebra, that\n\n\\begin{equation}\n\\psi(x,t) \\sim A e^{-B} \\,e^{i(k_0 - \\omega_0t)}\n,\n\\end{equation}\n\nwhere\n\n\\begin{equation}\nA = 2\\Delta k \\sqrt{\\frac{\\pi}{1 + 2i\\alpha \\Delta k^2 t}}\n\\end{equation}\n\nand\n\n\\begin{equation}\nB = \\frac{( x-v_gt )^2 (1 - 2i\\alpha \\Delta k^2 t)}{4\\sigma^2}\n\\end{equation}\n\nwith\n\n\\begin{equation}\n\\sigma^2 = \\Delta x^2 + \\frac{\\alpha^2 t^2}{4 \\Delta x^2}\n\\end{equation}\n\nLook at the expression $B$. The first factor in the numerator controls the motion of motion of the packet and is what guides it to move with group velocity $v_g$.  The second factor is generally a small real term and a much larger imaginary one, and so only affects the phase.  The denominator controls the width of the packet, and as we can see, it increases with $t$ so long as $\\alpha$, the second derivative of $\\omega(k)$ at the center of the packet, is nonzero.\n\n\\section{The electron}\n\nLet us apply what we have learned to an electron which has been confined to a box about the size of an atom, about $10^{-10}$ meters. That is, $\\Delta x \\sim 10^{-10}\\text{ m}$.  The extent of its wave packet will double when\n\n\\begin{equation}\n\\frac{\\alpha^2 t^2}{4 \\Delta x^2} \\sim \\Delta x^2,\n\\end{equation}\n\nthat is, after a time\n\n\\begin{equation}\nt_{double} \\sim \\frac{\\Delta x^2}{\\alpha}\n\\end{equation}\n\nThe dispersion relation for a free particle is\n\n\\begin{equation}\n  \\omega(k) = \\hbar \\frac{k^2}{2m},\n\\end{equation}\n\nso that $\\alpha = \\hbar/m$.  Then\n\n\\begin{equation}\nt_{double} \\sim \\frac{m}{h}\\, \\Delta x^2 .\n\\end{equation}\n\nIn the case of our electron, we find that $t_{double} \\sim 10^{-16}\\,\\text{sec}$.\n\n\\section{ Code}\n\n\n\n\\begin{verbatim}\n# jupyter/python\n\nmatplotlib inline\n\n# code for sinc(x)\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# sinc function\nx = np.arange(-30, 30, 0.1);\ny = np.sin(x)/x\nplt.plot(x, y)\n\n# beats\nx = np.arange(-50, 250, 0.1);\ny = np.cos(0.5*x) + np.sin(0.55*x)\nplt.plot(x, y)\n\\end{verbatim}\n\n\n\n\\section{References}\n\n\\href{https://www.eng.fsu.edu/~dommelen/quantum/style_a/packets.html}{Quantum Mechanics for Engineers: Wave Packets}\n\n\\href{http://users.physics.harvard.edu/~schwartz/15cFiles/Lecture11-WavePackets.pdf}{Wave Packets, Harvard Physics}\n\n\\href{http://ocw.mit.edu/courses/nuclear-engineering/22-02-introduction-to-applied-nuclear-physics-spring-2012/lecture-notes/MIT22_02S12_lec_ch6.pdf}{Time evolution in QM - MIT}\n\n';
+var _user$project$App_Source$report = '\n\\title{MiniLaTeX: Technical Report}\n\n\\author{James Carlson}\n\n\\email{jxxcarlson at gmail}\n\n\\date{October 29, 2017}\n\n\\revision{January 16, 2017}\n\n\n\n\\maketitle\n\n\n\\begin{abstract}\nThe aims of the MiniLaTeX project are (1) to establish a subset\nof LaTeX which can be rendered either as HTML (for the browser) or as PDF (for print and display), (2) to implement a reference parser and renderer for MiniLaTeX, (3) to provide an online editor/reader for MiniLaTeX documents using the parser/renderer.  As proof of concept, this document is written in MiniLaTeX  and is distributed via \\href{http://www.knode.io}{www.knode.io}, an implementation of (3).\nTo experiment with MiniLaTeX, take a look at the \\href{https://jxxcarlson.github.io/app/minilatex/src/index.html}{Demo App}.\n\\end{abstract}\n\n\n\\strong{Credits.} \\italic{I wish to acknowledge the generous help that I have received throughout this project from the community at } \\href{http://elmlang.slack.com}{elmlang.slack.com}, \\italic{with special thanks to Ilias van Peer.}\n\n\\tableofcontents\n\n\\section{Introduction}\n\n\nThe introduction of TeX by Donald Knuth, LaTeX by Leslie Lamport, and Postscript/PDF by John Warnock, supported by a vigorous open source community, have given mathematicians, physicists, computer scientists, and engineers the tools they need to produce well-structured documents  with mathematical notation typeset to the very highest esthetic standards.  For dissemination by print and PDF, the problem of mathematical communication is solved.\n\nThe Web, however, offers different challenges.  The MathJax project (\\href{http://www.mathjax.org}{www.mathjax.org}) addresses many of these challenges, and its use is now ubiquitous on platforms such as mathoverflow and on numerous blogs.  There is, however, a gap.  MathJax beautifully renders the purely mathematical part of the text, like the inline text $\\alpha^2 + \\beta^2 = \\gamma^2$, written as\n\n\\begin{verbatim}\n$ \\alpha^2 + \\beta^2 = \\gamma^2 $\n\\end{verbatim}\n\nor like the displayed text\n\n$$\n   \\int_0^1 x^n dx = \\frac{1}{n+1},\n$$\n\nwhich is written as\n\n\\begin{verbatim}\n$$\n   \\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\\end{verbatim}\n\nThere remains the rest: macros like \\code{emph}, \\code{section}, \\code{label}, \\code{eqref}, \\code{href}, etc., and a multitude of LaTeX environments from \\italic{theorem} and \\italic{definition} to  \\italic{equation}, \\italic{align}, \\italic{tabular}, \\italic{verbatim}, etc.\n\n It is the aim of this project is to develop a subset of LaTeX, which we call \\italic{MiniLaTeX}, that can be displayed in the browser by a suitable parser-renderer and which can also be run through standard LaTeX tools such as \\code{pdflatex}.\n\nAn experimental web app for using MiniLaTeX in the browser can be found at \\href{http://www.knode.io}{www.knode.io}.  For proof-of-concept examples,  see  the document \\xlinkPublic{445}{MiniLaTeX} on that site.\n\n\\strong{Note.} This document is written in a simplified version of MiniLaTeX (version 0.5).  Below, we describes the current state of the version under development for the planned 1.0 release.  Much of the discussion applies to version 0.5 as well.\n\n\\section{Technology}\n\nThe MiniLaTeX parser/renderer is written in Elm, the functional language with Haskell-like syntax created by Evan Czaplicki.  Elm is best known as language for building robust front-end apps for the web.  The fact that it also has powerful parser tools makes it an excellent choice for a project like MiniLatex, for which an editor/reader app is needed to make real-world use of the parser/renderer.  The app at \\href{http://www.knode.io}{www.knode.io} talks to a back-end app written using the Phoenix web framework for Elixir  (see \\href{https://elixir-lang.org/}{elixir-lang.org}).  Elixir is the functional programming language based on Erlang created by José Valim.\n\n\\section{Components and Strategy}\n\nThe overall flow of data in MiniLatex is\n\n$$\n\\text{MiniLaTeX source text} \\longrightarrow\n\\text{AST} \\longrightarrow\n\\text{HTML}\n$$\n\nwhere the \\code{AST} is an abstract syntax tree consisting of a \\code{LatexExpresssion}, to be defined below.  The parser consumes MiniLaTeX source text and produces an AST.\nThe renderer converts the AST into HTML.  Rendering takes two forms. In the first form, it transforms a single \\code{LatexExpression} into HTML.  In the second, the source text is broken into a list of paragraphs and an initial \\code{latexState} is defined.  As each paragraph is consumed by the processor, it is parsed, the  \\code{latexState} is updated, and the AST for the paragraph is rendered into HTML, with the result depending on the updated \\code{latexState}.  The result is a list of HTML strings that is concatenated to give the final HTML.  We will also discuss a \\code{differ}, which speeds up the the edit-save-render cycle as experienced by an author.  The idea is to keep track of changes to paragraphs and only re-render what has changed since the last edit.\n\n\n\n\n\\section{AST and Parser}\n\nThe core technology of MiniLaTeX is the parser.  It consumes MiniLaTeX source text and produces as output an abstract syntax tree (AST).  The AST  is a list of \\code{LatexExpressions}.  \\code{LatexExpressions} are defined recursively by the following Elm code:\n\n\\begin{verbatim}\ntype LatexExpression\n    = LXString String\n    | Comment String\n    | Item Int LatexExpression\n    | InlineMath String\n    | DisplayMath String\n    | Macro String (List LatexExpression)\n    | Environment String LatexExpression\n    | LatexList (List LatexExpression)\n\\end{verbatim}\n\nSource text of the form $ \\$ TEXT \\$ $ parses as $\\tt{InlineMath}\\ TEXT$,  and text of the form $ \\$\\$TEXT \\$\\$ $  parses as $\\tt{DisplayMath}\\ TEXT$\n\nSource of the form $\\backslash item\\ TEXT$ maps to $\\tt{Item\\ 1\\ TEXT}$, while\n $\\backslash itemitem\\ TEXT$ maps to $\\tt{Item\\ 2\\ TEXT}$, etc.\n\nA macro like $\\backslash foo\\{1\\}\\{bar\\}$ maps to $\\tt{Macro \"foo\" [\"1\", \"bar\"]}$ -- the string after Macro is the macro name, and this is followed by the argument list, which may be empty.\n\nFinally, an environment like\n\\begin{verbatim}\n\\begin{theorem}\nBODY\n\\end{theorem}\n\\end{verbatim}\n\nmaps to $\\tt{Environment\\ \"theorem\"\\ PARSE(BODY)}$,\nwhere $\\tt{PARSE(BODY)}$ is the $\\tt{LatexExpression}$ obtaining by parsing $\\tt{BODY}$.\n\nAs an example, consider the text below.\n\n\\begin{verbatim}\nThis is MiniLaTeX:\n\\begin{theorem}\n  This is a test: $\\alpha^2 = 7$ \\foo{1}\n \\begin{a}\n  la di dah\n\\end{a}\n\\end{theorem}\n\\end{verbatim}\n\nRunning \\code{MiniLatex.Parser.latexList} on this text results in the following AST:\n\n\\begin{verbatim}\nOk (LatexList (\n  LXString \"This is MiniLaTeX:\",\n  [Environment \"theorem\" (\n    LatexList ([\n         LXString \"This is a test:\",\n         InlineMath \"\\\\alpha^2 = 7\",\n         Macro \"foo\" [\"1\"],\n         Environment \"a\" (\n              LatexList ([LXString \"la di dah\"])\n     )]))]))\n\\end{verbatim}\n\nAt the top level it is a list of \\code{LatexExpressions} -- a string and an \\code{Environment}.\nThe body of the environment is a list of \\code{LatexExpressions} -- a string, an \\code{InlineMath} element, a \\code{Macro} with one argument, and another \\code{Environment},  This is a structure which \\code{MiniLatex.Render.render} can transform into HTML.\n\n\\subsection{Parser Combinators}\n\nThe MiniLaTeX parser, comprising 222 lines of code as of this writing, is built using parser combinators from Evan Czaplicki\'s \\href{https://github.com/elm-tools/parser}{elm-tools/parser} package.  The combinators are akin to those in the Haskell parsec package.  As as example, the main MiniLatex parsing function is\n\n\\begin{verbatim}\nparse : Parser LatexExpression\nparse =\n    oneOf\n        [ texComment\n        , lazy (\\_ -> environment)\n        , displayMathDollar\n        , displayMathBrackets\n        , inlineMath\n        , macro\n        , words\n        ]\n\\end{verbatim}\n\nThis function tries each of its component parsers in order until it finds one that\nmatches the input text.  The \\code{environment} parser is the most interesting. It captures the environment name and then passes it on to \\code{environmentOfType}.\n\n\n\\begin{verbatim}\nenvironment : Parser LatexExpression\nenvironment =\n    lazy (\\_ -> beginWord |> andThen environmentOfType)\n\\end{verbatim}\n\nThe \\code{environmentOfType}\nfunction acts as a switching yard, routing the action of the parser to the correct function. The \\italic{enumurate} and \\italic{itemize} environments need special handling, while others are handled by \\code{standardEnvironmentBody}.\n\n\\begin{verbatim}\nenvironmentOfType : String -> Parser LatexExpression\nenvironmentOfType envType =\n    let\n        endWord =\n            \"\\\\end{\" ++ envType ++ \"}\"\n    in\n    case envType of\n        \"enumerate\" ->\n            itemEnvironmentBody endWord envType\n        \"itemize\" ->\n            itemEnvironmentBody endWord envType\n        _ ->\n            standardEnvironmentBody endWord envType\n\\end{verbatim}\n\nA standard environment such as \\italic{theorem} or \\italic{align} is handled like this:\n\n\\begin{verbatim}\nstandardEnvironmentBody endWord envType =\n    succeed identity\n        |. ws\n        |= repeat zeroOrMore parse\n        |. ws\n        |. symbol endWord\n        |. ws\n        |> map LatexList\n        |> map (Environment envType)\n\\end{verbatim}\n\nNote the repeated calls to \\code{parse} in the body of \\code{standardEnvironmentBody}.  Thus an environment can contain a nested sequence of environments, or even a tree thereof..\nThe symbol $|.$ means \"use the following parser to recognize text but do not retain it.\"  Thus $|. \\text{ws}$ means \"recognize white space but ignore it.\"  The symbol  $|$= means \"use the following parse and retain what it yields.\"\n\n\\section{Rendering an AST to HTML}\n\nThis section addresses the second step in the pipelne\n\n$$\n\\text{MiniLaTeX source text} \\longrightarrow\n\\text{AST} \\longrightarrow\n\\text{HTML}\n$$\n\nCode for the second step is housed in the module \\code{MiniLatex.Render}. The primary function is\n\n\\begin{verbatim}\nrender : LatexState -> LatexExpression -> String\nrender latexState latexExpression =\n    case latexExpression of\n        Comment str ->\n            renderComment str\n        Macro name args ->\n            renderMacro latexState name args\n        Item level latexExpression ->\n            renderItem latexState level latexExpression\n        ETC...\n\\end{verbatim}\n\nThis function dispatches a given \\code{LatexExpression} to its handler, which then computes a string representing the HTML output.  That output depends on the current \\code{latexState} -- a data structure  which holds information about various counters such as section numbers as well as information about cross-references.  One can call \\code{render} on a default \\code{LateExpression} to convert it to HTML.  However, the usual process for rendering a MiniLaTeX document from scratch is to first transform it into logical paragraphs, i.e., a list of strings, then use the \\code{accumulator} function defined below to transform paragraphs one at a time into HTML, updating the \\code{latexState} with each paragraph.\n\nThe accumulator is a function of four variables, as indicated below.  The first argument, \\code{parse}, takes a string as input and parses it to produce a \\code{LatexExpression} as output.  The second, \\code{render}, takes a \\code{LatexExpression} and a \\code{LatexState} as input and produces HTML as output.  The third, \\code{updateState}, takes a \\code{LatexExpression} and a \\code{LatexState} as input and produces a new \\code{LatexState} as output.  The fourth and final argument, \\coce{input}, is the list of strings (logical paragraphs) to be rendered.  The output of the \\code{accumulator} is a tuple consisting of a list of strings, the rendered HTML, and the final \\code{latexState}.\n\n$$\n{\\bf accumulator\\ } \\text{parse render updateState inputList} \\longrightarrow (\\text{outputList}, latexState)\n$$\n\nThe \\code{accumulator} uses \\code{List.foldl} to build up the final list of rendered paragraphs one paragraph at a time, starting with an empty list.  The driver for this operation is the \\code{transformer} function, which we treat below.\n\n\n\\begin{verbatim}\naccumulator :\n    (String -> List LatexExpression)\n    -> (List LatexExpression -> LatexState -> String)\n    -> (List LatexExpression -> LatexState -> LatexState)\n    -> List String\n    -> ( List String, LatexState )\naccumulator parse render updateState inputList =\n    inputList\n        |> List.foldl (transformer parse render updateState) ( [], Render.emptyLatexState )\n\\end{verbatim}\n\nThe role of the \\code{transformer} function is to carry forward the current \\code{latexState}, updating it, and transforming \\code{LatexExpressions} into HTML. A kind of transducer, the \\code{transformer} is a function of five variables:\n\n$$\n{\\bf transformer\\ } \\text{parse render updateState input acc} \\longrightarrow\n(\\text{List renderedInput}, \\text{state})\n$$\n\nHere is the code:\n\n\\begin{verbatim}\ntransformer :\n    (input -> parsedInput)\n    -> (parsedInput -> state -> renderedInput)\n    -> (parsedInput -> state -> state)\n    -> input\n    -> ( List renderedInput, state )\n    -> ( List renderedInput, state )\ntransformer parse render updateState input acc =\n    let\n        ( outputList, state ) =\n            acc\n        parsedInput =\n            parse input\n        newState =\n            updateState parsedInput state\n    in\n        ( outputList ++ [ render parsedInput newState ], newState )\n\\end{verbatim}\n\nTo bundle all this code in convenient form, we also define a function\n\n$$\n{\\bf transformParagraphs\\ } \\text{List SourceText} \\longrightarrow  \\text{List HTMLText}\n$$\n\nthat maps a  list of paragraphs of MiniLatex source text to its rendition as list of HTML strings.  The \\code{transformParagraphs} function is defined in terms of the \\code{accumulator}:\n\n\\begin{verbatim}\ntransformParagraphs : List String -> List String\ntransformParagraphs paragraphs =\n    paragraphs\n        |> accumulator Render.parseParagraph renderParagraph updateState\n        |> Tuple.first\n\\end{verbatim}\n\n\n\\section{Differ: Speeding up the Edit Cycle}\n\nIn the previous section, we described in outline how a MiniLaTeX document is rendered into HTML.  In order to have a fast edit-render cycle, one which feels instantaneous or nearly so to an author, we need an additional construct.  The idea is this.  The app maintains a list $X$ of logical paragraphs for the document being edited, as well as a list $r(X)$ of rendered paragraphs. Suppose that the author makes some edits and pressed the update button.  The app computes a new list of logical paragraphs and compares it with the old.  The old list will have the form $X = \\alpha\\beta\\gamma$ and the new one will have the form $Y = \\alpha\\beta\'\\gamma$, where $\\alpha$ is the greatest common prefix and $\\gamma$ is the greatest common suffix.  By greatest common prefix, we mean the largest list $\\alpha$ of contiguous elements of the list $X$ that is also list of contiguous elements of the list $Y$, and such that the first element of $\\alpha$ is the same as the first element of $X$ and also of $Y$.  The largest common suffix is defined similarly.  Note that $r(X) = r(\\alpha)r(\\beta)r(\\gamma)$ and $r(Y) =  r(\\alpha)r(\\beta\')r(\\gamma)$.  Thus to compute $r(Y)$, we need only compute $r(\\beta\')$, relying on the previously computed $r(\\alpha)$ and $r(\\gamma)$.\n\nWhile the strategy just described is not the theoretically  most efficient, it aways works and in fact is quite fast in practice because of the typical behavior of authors -- make a few changes, or add a little text, then press the save/update button.  The point is that changes to the text are generally localized.  If  the author  adds, deletes, or changes a single paragraph, at most one paragraph has to be re-rendered.\n\nWe now discuss the core code for the strategy for diffing and rendering the list of logical paragraphs.  First comes the data structure to be maintained while editing:\n\n\\begin{verbatim}\ntype alias EditRecord =\n    { paragraphs : List String\n    , renderedParagraphs : List String\n    }\n\\end{verbatim}\n\nTo set up this structure when an author begins editing, we make use of the general \\code{initialize} function in module \\code{MiniLatex.Differ}:\n\n\\begin{verbatim}\ninitialize : (List String -> List String) -> String -> EditRecord\ninitialize transformParagraphs text =\n    let\n        paragraphs =\n            paragraphify text\n        renderedParagraphs =\n            transformParagraphs paragraphs\n    in\n        EditRecord paragraphs renderedParagraphs\n\\end{verbatim}\n\n\nTo make use of \\code{Differ.initialize}, we call it with \\code{Accumulator.transformParagraphs}:\n\n\\begin{verbatim}\neditRecord = Differ.initialize Accumulator.transformParagraphs\n\\end{verbatim}\n\n\\subsection{Inside the Differ}\n\nLet\'s take a quick look at the operation of the differ.  The basic data structure\nis the \\code{DiffRecord}\n\n\\begin{verbatim}\ntype alias DiffRecord =\n    { commonInitialSegment : List String\n    , commonTerminalSegment : List String\n    , middleSegmentInSource : List String\n    , middleSegmentInTarget : List String\n    }\n\\end{verbatim}\n\nThus $\\alpha = \\text{commonInitialSegment}$,  $\\beta = \\text{middleSegmentInSource}$,\n$\\gamma = \\text{commonTerminalSegment}$, and $\\beta\' = \\text{middleSegmentInTarget}$.\nThese are computed using the function \\code{diff}:\n\n\\begin{verbatim}\ndiff : List String -> List String -> DiffRecord\ndiff u v =\n    let\n        a = commonInitialSegment u v\n        b = commonTerminalSegment u v\n        la = List.length a\n        lb = List.length b\n        x =  u |> List.drop la |> dropLast lb\n        y = v |> List.drop la |> dropLast lb\n    in\n        DiffRecord a b x y\n\\end{verbatim}\n\nIn an edit cycle, we need to update the current \\code{EditRecord}, which we do using \\code{Differ.update}.\n\n$$\n{\\bf Diff.update\\ } \\text{transformer editRecord text} \\longrightarrow \\text{newEditRecord}\n$$\n\nThe \\code{Diff.update} function defined below breaks the \\code{text} into paragraphs, computes the \\code{diffRecord}, and returns an updated version of \\code{editRecord} by applying \\code{transformer} to $\\beta\'$.\n\n\\begin{verbatim}\nupdate : (String -> String) -> EditRecord -> String -> EditRecord\nupdate transformer editorRecord text =\n    let\n        newParagraphs =\n            paragraphify text\n        diffRecord =\n            diff editorRecord.paragraphs newParagraphs\n        newRenderedParagraphs =\n            renderDiff transformer diffRecord editorRecord.renderedParagraphs\n    in\n        EditRecord newParagraphs newRenderedParagraphs\n\\end{verbatim}\n\nHere is how \\code{renderDiff}, which is used to update the \\code{editRecord}, is defined:\n\n\\begin{verbatim}\nrenderDiff : (String -> String) -> DiffRecord -> List String -> List String\nrenderDiff renderer diffRecord renderedStringList =\n  let\n    ii = List.length diffRecord.commonInitialSegment\n    it = List.length diffRecord.commonTerminalSegment\n    initialSegmentRendered = List.take ii renderedStringList\n    terminalSegmentRendered = takeLast it renderedStringList\n    middleSegmentRendered = (renderList renderer) diffRecord.middleSegmentInTarget\n  in\n    initialSegmentRendered ++ middleSegmentRendered ++ terminalSegmentRendered\n\\end{verbatim}\n\n\n\\section{Status}\n\nMiniLaTeX is now at version 2.1.  It includes the following.\n\n\\begin{itemize}\n\n\\item \\strong{Environments:}  \\italic{align, center, enumerate, eqnarray, equation, itemize, macros, tabular}. The environments  \\italic{theorem, proposition, corollary, lemma, definition} are handled by a default mechanism.\n\n\\item \\strong{Macros}: \\italic{cite, code, ellie, emph, eqref, href, iframe, image, index, italic, label, maketitle, mdash, ndash, newcommand, ref, section, section*, strong, subheading, subsection, subsection*, subsubsection, subsubsection*, title, term, xlink, xlinkPublic}\n\\end{itemize}\n\nMost of the macro and environment renderers are in final or close to final form. A few, e.g. \\italic{tabular} need considerably more work, and a few more are dummies.\n\n\n\n\\comment{ Article by Ilias: https://github.com/zwilias/elm-json/blob/master/src/Json/Parser.elm}\n\n\n';
+var _user$project$App_Source$initialText = '\n\\title{MiniLaTeX Demo}\n\n\\author{James Carlson}\n\n\\email{jxxcarlson at gmail}\n\n\\date{November 13, 2017}\n\n\\revision{January 16, 2018}\n\n\\maketitle\n\n\\tableofcontents\n\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nTo see what MiniLaTeX can do, try the buttons on the lower left.\n\nFeel free to edit and re-render the text on the left and\nto experiment with the buttons above.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\nNote that in the \\italic{source} of the listing below,\nthere are no line numbers.\n\n\\strong{MiniLaTeX Abstract Syntax Tree (AST)}\n\n\\begin{listing}\ntype LatexExpression\n    = LXString String\n    | Comment String\n    | Item Int LatexExpression\n    | InlineMath String\n    | DisplayMath String\n    | Macro String (List LatexExpression)\n    | Environment String LatexExpression\n    | LatexList (List LatexExpression)\n\\end{listing}\n\nThe MiniLaTeX parser reads text and produces\nan AST.  A rendering function converts the AST\ninto HTML.  One could easily write\nfunctions \\code{render: LatexExpression -> String}\nto make other conversions.\n\n\\section{More about MiniLaTeX}\n\nArticles and code:\n\n\\begin{itemize}\n\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nContributions to help improve the open-source\nMiniLatex Parser-Renderer are most welcome.\nHere is the \\href{https://github.com/jxxcarlson/minilatex}{GitHub repository}.\nThe MiniLatex Demo as well as the app at knode.io are written in\n\\href{http://elm-lang.org/}{Elm}.  We also plan a Haskell version.\n\nPlease send comments, bug reports, etc. to jxxcarlson at gmail.\n\n\\section{Technical Note}\nThere is a \\italic{very rough} \\href{http://www.knode.io/#@public/628}{draft grammar}\nfor MiniLaTeX, written mostly in EBNF.  However, there are a few\nproductions, notably for enviroments, which are not context-free.\nRecall that in a context-free grammar, all productions are\nof the form $A \\Rightarrow \\beta$, where $A$ is a terminal symbol\nand $\\beta$ is a sequence of terminals and nonterminals.  There\nare some productions of the form $A\\beta \\Rightarrow \\gamma$,\nwhere $\\beta$ is a terminal symbol.  These are\ncontext-sensitive productions, with $\\beta$ providing the context.\n\n\n\n\\section{Restrictions, Limitations, and Todos}\n\nBelow\nare some of the current restrictions and limitations.\n\n\\begin{enumerate}\n\n\\item The enumerate and itemize environments cannot be nested (but can containe inline math and macros).\n\n\\item The tabular environment ignores formatting information\nand left-justifies everything in the cell.\n\n\\item We plan to make the table of contents entries into live links\nin the next few days.\n\n\\end{enumerate}\n\n\nWe are working on these and other issues  to expand the scope of MiniLatex.\nThe project is still in the R&D phase -- we welcome comments (jxxcarlson at gmail)\n\n\\bigskip\n\n\\image{https://cdn-images-1.medium.com/max/1200/1*HlpVE5TFBUp17ua1AdiKpw.gif}{The way we used to do it.}{align: center}\n\n';
 
 var _user$project$MiniLatex_Parser$notMacroSpecialCharacter = function (c) {
 	return !(_elm_lang$core$Native_Utils.eq(
@@ -13241,6 +13127,127 @@ var _user$project$MiniLatex_Parser$parse = function (text) {
 	}
 };
 
+var _user$project$MiniLatex_LatexState$initialCounters = _elm_lang$core$Dict$fromList(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 's1', _1: 0},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 's2', _1: 0},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 's3', _1: 0},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'tno', _1: 0},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'eqno', _1: 0},
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		}
+	});
+var _user$project$MiniLatex_LatexState$emptyLatexState = {
+	counters: _user$project$MiniLatex_LatexState$initialCounters,
+	crossReferences: _elm_lang$core$Dict$empty,
+	dictionary: _elm_lang$core$Dict$empty,
+	tableOfContents: {ctor: '[]'}
+};
+var _user$project$MiniLatex_LatexState$setDictionaryItem = F3(
+	function (key, value, latexState) {
+		var dictionary = latexState.dictionary;
+		var newDictionary = A2(
+			_elm_lang$core$Debug$log,
+			'newDictionay',
+			A3(_elm_lang$core$Dict$insert, key, value, dictionary));
+		return _elm_lang$core$Native_Utils.update(
+			latexState,
+			{dictionary: newDictionary});
+	});
+var _user$project$MiniLatex_LatexState$setCrossReference = F3(
+	function (label, value, latexState) {
+		var crossReferences = latexState.crossReferences;
+		var newCrossReferences = A3(_elm_lang$core$Dict$insert, label, value, crossReferences);
+		return _elm_lang$core$Native_Utils.update(
+			latexState,
+			{crossReferences: newCrossReferences});
+	});
+var _user$project$MiniLatex_LatexState$updateCounter = F3(
+	function (name, value, latexState) {
+		var maybeSet = _elm_lang$core$Maybe$map(
+			function (x) {
+				return value;
+			});
+		var newCounters = A3(_elm_lang$core$Dict$update, name, maybeSet, latexState.counters);
+		return _elm_lang$core$Native_Utils.update(
+			latexState,
+			{counters: newCounters});
+	});
+var _user$project$MiniLatex_LatexState$incrementCounter = F2(
+	function (name, latexState) {
+		var maybeInc = _elm_lang$core$Maybe$map(
+			function (x) {
+				return x + 1;
+			});
+		var newCounters = A3(_elm_lang$core$Dict$update, name, maybeInc, latexState.counters);
+		return _elm_lang$core$Native_Utils.update(
+			latexState,
+			{counters: newCounters});
+	});
+var _user$project$MiniLatex_LatexState$getDictionaryItem = F2(
+	function (key, latexState) {
+		var _p0 = A2(_elm_lang$core$Dict$get, key, latexState.dictionary);
+		if (_p0.ctor === 'Just') {
+			return _p0._0;
+		} else {
+			return '';
+		}
+	});
+var _user$project$MiniLatex_LatexState$getCrossReference = F2(
+	function (label, latexState) {
+		var _p1 = A2(_elm_lang$core$Dict$get, label, latexState.crossReferences);
+		if (_p1.ctor === 'Just') {
+			return _p1._0;
+		} else {
+			return '??';
+		}
+	});
+var _user$project$MiniLatex_LatexState$getCounter = F2(
+	function (name, latexState) {
+		var _p2 = A2(_elm_lang$core$Dict$get, name, latexState.counters);
+		if (_p2.ctor === 'Just') {
+			return _p2._0;
+		} else {
+			return 0;
+		}
+	});
+var _user$project$MiniLatex_LatexState$emptyDict = _elm_lang$core$Dict$empty;
+var _user$project$MiniLatex_LatexState$TocEntry = F3(
+	function (a, b, c) {
+		return {name: a, label: b, level: c};
+	});
+var _user$project$MiniLatex_LatexState$addSection = F4(
+	function (sectionName, label, level, latexState) {
+		var newEntry = A3(_user$project$MiniLatex_LatexState$TocEntry, sectionName, label, level);
+		var toc = A2(
+			_elm_lang$core$Basics_ops['++'],
+			latexState.tableOfContents,
+			{
+				ctor: '::',
+				_0: newEntry,
+				_1: {ctor: '[]'}
+			});
+		return _elm_lang$core$Native_Utils.update(
+			latexState,
+			{tableOfContents: toc});
+	});
+var _user$project$MiniLatex_LatexState$LatexState = F4(
+	function (a, b, c, d) {
+		return {counters: a, crossReferences: b, tableOfContents: c, dictionary: d};
+	});
+
 var _user$project$MiniLatex_Paragraph$paragraphify = function (text) {
 	return A2(
 		_elm_lang$core$List$map,
@@ -13636,6 +13643,37 @@ var _user$project$MiniLatex_Differ$update = F4(
 		var diffPacket = A5(_user$project$MiniLatex_Differ$renderDiff, seed, transformer, diffRecord, editorRecord, editorRecord.renderedParagraphs);
 		return A6(_user$project$MiniLatex_Differ$EditRecord, newParagraphs, diffPacket.renderedParagraphs, _user$project$MiniLatex_LatexState$emptyLatexState, diffPacket.idList, diffPacket.newIdsStart, diffPacket.newIdsEnd);
 	});
+
+var _user$project$App_Types$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {sourceText: a, parseResult: b, hasMathResult: c, editRecord: d, seed: e, configuration: f, lineViewStyle: g};
+	});
+var _user$project$App_Types$Grammar = {ctor: 'Grammar'};
+var _user$project$App_Types$MathPaper = {ctor: 'MathPaper'};
+var _user$project$App_Types$WeatherApp = {ctor: 'WeatherApp'};
+var _user$project$App_Types$WavePackets = {ctor: 'WavePackets'};
+var _user$project$App_Types$TechReport = {ctor: 'TechReport'};
+var _user$project$App_Types$SetVerticalView = {ctor: 'SetVerticalView'};
+var _user$project$App_Types$SetHorizontalView = {ctor: 'SetHorizontalView'};
+var _user$project$App_Types$ShowRawHtmlView = {ctor: 'ShowRawHtmlView'};
+var _user$project$App_Types$ShowParseResultsView = {ctor: 'ShowParseResultsView'};
+var _user$project$App_Types$ShowStandardView = {ctor: 'ShowStandardView'};
+var _user$project$App_Types$NewSeed = function (a) {
+	return {ctor: 'NewSeed', _0: a};
+};
+var _user$project$App_Types$GenerateSeed = {ctor: 'GenerateSeed'};
+var _user$project$App_Types$Restore = {ctor: 'Restore'};
+var _user$project$App_Types$Reset = {ctor: 'Reset'};
+var _user$project$App_Types$ReRender = {ctor: 'ReRender'};
+var _user$project$App_Types$GetContent = function (a) {
+	return {ctor: 'GetContent', _0: a};
+};
+var _user$project$App_Types$FastRender = {ctor: 'FastRender'};
+var _user$project$App_Types$Vertical = {ctor: 'Vertical'};
+var _user$project$App_Types$Horizontal = {ctor: 'Horizontal'};
+var _user$project$App_Types$RawHtmlView = {ctor: 'RawHtmlView'};
+var _user$project$App_Types$ParseResultsView = {ctor: 'ParseResultsView'};
+var _user$project$App_Types$StandardView = {ctor: 'StandardView'};
 
 var _user$project$MiniLatex_ParserTools$valueOfLXString = function (expr) {
 	var _p0 = expr;
@@ -16592,6 +16630,1074 @@ var _user$project$MiniLatex_Driver$render = F2(
 			A2(_user$project$MiniLatex_LatexDiffer$initialize, _user$project$MiniLatex_LatexState$emptyLatexState, text));
 	});
 
+var _user$project$App_View$textStyle2 = F4(
+	function (width, height, offset, color) {
+		return _elm_lang$html$Html_Attributes$style(
+			{
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'width', _1: width},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'height', _1: height},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'padding', _1: '15px'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '0'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'margin-left', _1: offset},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'background-color', _1: color},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'overflow', _1: 'scroll'},
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}
+			});
+	});
+var _user$project$App_View$textStyle = F4(
+	function (width, height, offset, color) {
+		return _elm_lang$html$Html_Attributes$style(
+			{
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'width', _1: width},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'height', _1: height},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'padding', _1: '15px'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'margin-left', _1: offset},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'background-color', _1: color},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'overflow', _1: 'scroll'},
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			});
+	});
+var _user$project$App_View$parseResultsStyle = A4(_user$project$App_View$textStyle2, '400px', '600px', '20px', '#eee');
+var _user$project$App_View$renderedSourceStyle = A4(_user$project$App_View$textStyle, '400px', '600px', '20px', '#eee');
+var _user$project$App_View$editorStyle = A4(_user$project$App_View$textStyle, '400px', '635px', '20px', '#eef');
+var _user$project$App_View$labelStyle = _elm_lang$html$Html_Attributes$style(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '5px'},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'margin-bottom', _1: '0px'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'font-style', _1: 'bold'},
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	});
+var _user$project$App_View$buttonStyle = F2(
+	function (color, width) {
+		var realWidth = function (x) {
+			return A2(_elm_lang$core$Basics_ops['++'], x, 'px');
+		}(
+			_elm_lang$core$Basics$toString(width + 0));
+		return _elm_lang$html$Html_Attributes$style(
+			{
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'backgroundColor', _1: color},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'width', _1: realWidth},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'height', _1: '25px'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'margin-right', _1: '8px'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'font-size', _1: '9pt'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'border', _1: 'none'},
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			});
+	});
+var _user$project$App_View$colorDark = '#444';
+var _user$project$App_View$colorLight = '#88a';
+var _user$project$App_View$colorBlue = 'rgb(100,100,200)';
+var _user$project$App_View$ribbonStyle = function (color) {
+	return _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'width', _1: '835px'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'height', _1: '20px'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'margin-bottom', _1: '-16px'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'padding', _1: '8px'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'clear', _1: 'left'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'background-color', _1: color},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'color', _1: '#eee'},
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$App_View$label = function (text_) {
+	return A2(
+		_elm_lang$html$Html$p,
+		{
+			ctor: '::',
+			_0: _user$project$App_View$labelStyle,
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(text_),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$App_View$spacer = function (n) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'height',
+						_1: A2(
+							_elm_lang$core$Basics_ops['++'],
+							_elm_lang$core$Basics$toString(n),
+							'px')
+					},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'clear', _1: 'left'},
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{ctor: '[]'});
+};
+var _user$project$App_View$viewLabel = F2(
+	function (text_, width) {
+		return A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorDark, width),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(text_),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$App_View$optionaViewTitleButton = F2(
+	function (model, width) {
+		var _p0 = model.configuration;
+		switch (_p0.ctor) {
+			case 'StandardView':
+				return A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorDark, width),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Basic'),
+						_1: {ctor: '[]'}
+					});
+			case 'ParseResultsView':
+				return A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorDark, width),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Parse results'),
+						_1: {ctor: '[]'}
+					});
+			default:
+				return A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorDark, width),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Raw HTML'),
+						_1: {ctor: '[]'}
+					});
+		}
+	});
+var _user$project$App_View$rawHtmlViewButton = F2(
+	function (model, width) {
+		return _elm_lang$core$Native_Utils.eq(model.configuration, _user$project$App_Types$RawHtmlView) ? A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$ShowRawHtmlView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorBlue, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Raw Html'),
+				_1: {ctor: '[]'}
+			}) : A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$ShowRawHtmlView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorLight, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Raw Html'),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$App_View$parseResultsViewButton = F2(
+	function (model, width) {
+		return _elm_lang$core$Native_Utils.eq(model.configuration, _user$project$App_Types$ParseResultsView) ? A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$ShowParseResultsView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorBlue, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Parse Results'),
+				_1: {ctor: '[]'}
+			}) : A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$ShowParseResultsView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorLight, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Parse Results'),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$App_View$standardViewButton = F2(
+	function (model, width) {
+		return _elm_lang$core$Native_Utils.eq(model.configuration, _user$project$App_Types$StandardView) ? A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$ShowStandardView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorBlue, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Basic'),
+				_1: {ctor: '[]'}
+			}) : A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$ShowStandardView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorLight, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Basic'),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$App_View$setVerticalViewButton = F2(
+	function (model, width) {
+		return _elm_lang$core$Native_Utils.eq(model.lineViewStyle, _user$project$App_Types$Vertical) ? A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$SetVerticalView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorBlue, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Vertical'),
+				_1: {ctor: '[]'}
+			}) : A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$SetVerticalView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorLight, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Vertical'),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$App_View$setHorizontalViewButton = F2(
+	function (model, width) {
+		return _elm_lang$core$Native_Utils.eq(model.lineViewStyle, _user$project$App_Types$Horizontal) ? A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$SetHorizontalView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorBlue, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Horizontal'),
+				_1: {ctor: '[]'}
+			}) : A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$SetHorizontalView),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorLight, width),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Horizontal'),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$App_View$mathPaperButton = function (width) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$MathPaper),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorBlue, width),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Math Paper'),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$App_View$weatherAppButton = function (width) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$WeatherApp),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorBlue, width),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Weather App'),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$App_View$wavePacketButton = function (width) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$WavePackets),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorBlue, width),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('WavePacket'),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$App_View$grammarButton = function (width) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$Grammar),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorBlue, width),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Grammar'),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$App_View$techReportButton = function (width) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$TechReport),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorBlue, width),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Tech Report'),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$App_View$restoreButton = function (width) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$Restore),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorBlue, width),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Restore'),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$App_View$resetButton = function (width) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$Reset),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorBlue, width),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Clear'),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$App_View$fastRenderButton = function (width) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$FastRender),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorBlue, width),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Fast Render'),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$App_View$reRenderButton = function (width) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$ReRender),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorBlue, width),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Render'),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$App_View$buttonBarParserResults = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '0'},
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(_user$project$App_View$optionaViewTitleButton, model, 190),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$App_View$setHorizontalViewButton, model, 90),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$App_View$setVerticalViewButton, model, 90),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$App_View$buttonBarRawHtmlResults = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '0'},
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(_user$project$App_View$optionaViewTitleButton, model, 190),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$App_View$buttonBarBottomLeft = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$style(
+			{
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _user$project$App_View$techReportButton(93),
+		_1: {
+			ctor: '::',
+			_0: _user$project$App_View$grammarButton(93),
+			_1: {
+				ctor: '::',
+				_0: _user$project$App_View$wavePacketButton(93),
+				_1: {
+					ctor: '::',
+					_0: _user$project$App_View$mathPaperButton(96),
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	});
+var _user$project$App_View$buttonBarRight = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(_user$project$App_View$viewLabel, 'View', 80),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$App_View$standardViewButton, model, 108),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$App_View$parseResultsViewButton, model, 108),
+					_1: {
+						ctor: '::',
+						_0: A2(_user$project$App_View$rawHtmlViewButton, model, 108),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
+var _user$project$App_View$buttonBarLeft = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$style(
+			{
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _user$project$App_View$resetButton(93),
+		_1: {
+			ctor: '::',
+			_0: _user$project$App_View$restoreButton(93),
+			_1: {
+				ctor: '::',
+				_0: _user$project$App_View$reRenderButton(93),
+				_1: {
+					ctor: '::',
+					_0: _user$project$App_View$fastRenderButton(96),
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	});
+var _user$project$App_View$renderedSourcePane = function (model) {
+	var renderedText = A2(_user$project$MiniLatex_Driver$getRenderedText, '', model.editRecord);
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _user$project$App_View$renderedSourceStyle,
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$id('renderedText'),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html_Attributes$property,
+						'innerHTML',
+						_elm_lang$core$Json_Encode$string(
+							A2(_elm_lang$core$Debug$log, 'RT', renderedText))),
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		{ctor: '[]'});
+};
+var _user$project$App_View$rawRenderedSourcePane = function (model) {
+	var renderedText = A2(_user$project$MiniLatex_Driver$getRenderedText, '', model.editRecord);
+	return A2(
+		_elm_lang$html$Html$pre,
+		{
+			ctor: '::',
+			_0: _user$project$App_View$parseResultsStyle,
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(renderedText),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$App_View$prettyPrint = F2(
+	function (lineViewStyle, parseResult) {
+		var _p1 = lineViewStyle;
+		if (_p1.ctor === 'Vertical') {
+			return A2(
+				_elm_lang$core$String$join,
+				'\n\n',
+				A2(
+					_elm_lang$core$List$map,
+					A2(_elm_community$string_extra$String_Extra$replace, ' ', '\n '),
+					A2(_elm_lang$core$List$map, _elm_lang$core$Basics$toString, parseResult)));
+		} else {
+			return A2(
+				_elm_lang$core$String$join,
+				'\n\n',
+				A2(_elm_lang$core$List$map, _elm_lang$core$Basics$toString, parseResult));
+		}
+	});
+var _user$project$App_View$parseResultPane = function (model) {
+	return A2(
+		_elm_lang$html$Html$pre,
+		{
+			ctor: '::',
+			_0: _user$project$App_View$parseResultsStyle,
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(
+				A2(_user$project$App_View$prettyPrint, model.lineViewStyle, model.parseResult)),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$App_View$showHtmlResult = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$App_View$spacer(20),
+			_1: {
+				ctor: '::',
+				_0: _user$project$App_View$buttonBarRawHtmlResults(model),
+				_1: {
+					ctor: '::',
+					_0: _user$project$App_View$spacer(5),
+					_1: {
+						ctor: '::',
+						_0: _user$project$App_View$rawRenderedSourcePane(model),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
+var _user$project$App_View$showParseResult = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$App_View$spacer(20),
+			_1: {
+				ctor: '::',
+				_0: _user$project$App_View$buttonBarParserResults(model),
+				_1: {
+					ctor: '::',
+					_0: _user$project$App_View$spacer(5),
+					_1: {
+						ctor: '::',
+						_0: _user$project$App_View$parseResultPane(model),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
+var _user$project$App_View$renderedSource = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$App_View$spacer(20),
+			_1: {
+				ctor: '::',
+				_0: _user$project$App_View$buttonBarRight(model),
+				_1: {
+					ctor: '::',
+					_0: _user$project$App_View$spacer(5),
+					_1: {
+						ctor: '::',
+						_0: _user$project$App_View$renderedSourcePane(model),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
+var _user$project$App_View$editorPane = function (model) {
+	return A2(
+		_elm_lang$html$Html$textarea,
+		{
+			ctor: '::',
+			_0: _user$project$App_View$editorStyle,
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onInput(_user$project$App_Types$GetContent),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$value(model.sourceText),
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(model.sourceText),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$App_View$editor = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$App_View$spacer(20),
+			_1: {
+				ctor: '::',
+				_0: _user$project$App_View$buttonBarLeft,
+				_1: {
+					ctor: '::',
+					_0: _user$project$App_View$spacer(5),
+					_1: {
+						ctor: '::',
+						_0: _user$project$App_View$editorPane(model),
+						_1: {
+							ctor: '::',
+							_0: _user$project$App_View$spacer(5),
+							_1: {
+								ctor: '::',
+								_0: _user$project$App_View$buttonBarBottomLeft,
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$App_View$link = F2(
+	function (url, linkText) {
+		return A2(
+			_elm_lang$html$Html$a,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('linkback'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$style(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'float', _1: 'right'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'margin-right', _1: '10px'},
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$href(url),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$target('_blank'),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(linkText),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$App_View$headerRibbon = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _user$project$App_View$ribbonStyle('#555'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$span,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$style(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '5px'},
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('MiniLatex Demo'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {
+			ctor: '::',
+			_0: A2(_user$project$App_View$link, 'http://www.knode.io', 'www.knode.io'),
+			_1: {ctor: '[]'}
+		}
+	});
+var _user$project$App_View$wordCount = function (str) {
+	return _elm_lang$core$List$length(
+		A2(_elm_lang$core$String$split, ' ', str));
+};
+var _user$project$App_View$textInfo = function (model) {
+	var cc = A2(
+		_elm_lang$core$Basics_ops['++'],
+		_elm_lang$core$Basics$toString(
+			_elm_lang$core$String$length(model.sourceText)),
+		' characters');
+	var wc = A2(
+		_elm_lang$core$Basics_ops['++'],
+		_elm_lang$core$Basics$toString(
+			_user$project$App_View$wordCount(model.sourceText)),
+		' words, ');
+	return A2(_elm_lang$core$Basics_ops['++'], wc, cc);
+};
+var _user$project$App_View$footerRibbon = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _user$project$App_View$ribbonStyle('#777'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(
+				_user$project$App_View$textInfo(model)),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$App_View$link, 'http://jxxcarlson.github.io', 'jxxcarlson.github.io'),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+
 var _user$project$MiniLatex_HasMath$hasMath = function (expr) {
 	hasMath:
 	while (true) {
@@ -16662,365 +17768,7 @@ var _user$project$MiniLatex_HasMath$listHasMath = function (list) {
 		list);
 };
 
-var _user$project$Main$initialSourceText = '\n\\title{MiniLaTeX Demo}\n\n\\author{James Carlson}\n\n\\email{jxxcarlson at gmail}\n\n\\date{November 13, 2017}\n\n\\revision{January 16, 2018}\n\n\\maketitle\n\n\\tableofcontents\n\n\\section{Introduction}\n\n\\italic{This a MiniLatex test document.}\nFor examples, see\n\\href{http://www.knode.io/#@public/559}{this article},\nor read the\n\\href{http://www.knode.io/#@public/525}{Technical Report}\nfor more information.\n\nFeel free to edit and re-render the text on the left and\nto experiment with the buttons above.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\nNote that in the \\italic{source} of the listing below,\nthere are no line numbers.\n\n\\strong{MiniLaTeX Abstract Syntax Tree (AST)}\n\n\\begin{listing}\ntype LatexExpression\n    = LXString String\n    | Comment String\n    | Item Int LatexExpression\n    | InlineMath String\n    | DisplayMath String\n    | Macro String (List LatexExpression)\n    | Environment String LatexExpression\n    | LatexList (List LatexExpression)\n\\end{listing}\n\nThe MiniLaTeX parser reads text and produces\nan AST.  A rendering function converts the AST\ninto HTML.  One could easily write\nfunctions \\code{render: LatexExpression -> String}\nto make other conversions.\n\n\\section{More about MiniLaTeX}\n\nArticles and code:\n\n\\begin{itemize}\n\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nContributions to help improve the open-source\nMiniLatex Parser-Renderer are most welcome.\nHere is the \\href{https://github.com/jxxcarlson/minilatex}{GitHub repository}.\nThe MiniLatex Demo as well as the app at knode.io are written in\n\\href{http://elm-lang.org/}{Elm}.  We also plan a Haskell version.\n\nPlease send comments, bug reports, etc. to jxxcarlson at gmail.\n\n\\section{Technical Note}\nThere is a \\italic{very rough} \\href{http://www.knode.io/#@public/628}{draft grammar}\nfor MiniLaTeX, written mostly in EBNF.  However, there are a few\nproductions, notably for enviroments, which are not context-free.\nRecall that in a context-free grammar, all productions are\nof the form $A \\Rightarrow \\beta$, where $A$ is a terminal symbol\nand $\\beta$ is a sequence of terminals and nonterminals.  There\nare some productions of the form $A\\beta \\Rightarrow \\gamma$,\nwhere $\\beta$ is a terminal symbol.  These are\ncontext-sensitive productions, with $\\beta$ providing the context.\n\n\n\n\\section{Restrictions, Limitations, and Todos}\n\nBelow\nare some of the current restrictions and limitations.\n\n\\begin{enumerate}\n\n\\item The enumerate and itemize environments cannot be nested (but can containe inline math and macros).\n\n\\item The tabular environment ignores formatting information\nand left-justifies everything in the cell.\n\n\\item We plan to make the table of contents entries into live links\nin the next few days.\n\n\\end{enumerate}\n\n\nWe are working on these and other issues  to expand the scope of MiniLatex.\nThe project is still in the R&D phase -- we welcome comments (jxxcarlson at gmail)\n\n\\bigskip\n\n\\image{https://cdn-images-1.medium.com/max/1200/1*HlpVE5TFBUp17ua1AdiKpw.gif}{The way we used to do it.}{align: center}\n\n';
-var _user$project$Main$textStyle2 = F4(
-	function (width, height, offset, color) {
-		return _elm_lang$html$Html_Attributes$style(
-			{
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'width', _1: width},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'height', _1: height},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'padding', _1: '15px'},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '0'},
-							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'margin-left', _1: offset},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'background-color', _1: color},
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'overflow', _1: 'scroll'},
-										_1: {ctor: '[]'}
-									}
-								}
-							}
-						}
-					}
-				}
-			});
-	});
-var _user$project$Main$textStyle = F4(
-	function (width, height, offset, color) {
-		return _elm_lang$html$Html_Attributes$style(
-			{
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'width', _1: width},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'height', _1: height},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'padding', _1: '15px'},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'margin-left', _1: offset},
-							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'background-color', _1: color},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'overflow', _1: 'scroll'},
-									_1: {ctor: '[]'}
-								}
-							}
-						}
-					}
-				}
-			});
-	});
-var _user$project$Main$parseResultsStyle = A4(_user$project$Main$textStyle2, '400px', '600px', '20px', '#eee');
-var _user$project$Main$renderedSourceStyle = A4(_user$project$Main$textStyle, '400px', '600px', '20px', '#eee');
-var _user$project$Main$editorStyle = A4(_user$project$Main$textStyle, '400px', '635px', '20px', '#eef');
-var _user$project$Main$labelStyle = _elm_lang$html$Html_Attributes$style(
-	{
-		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '5px'},
-		_1: {
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'margin-bottom', _1: '0px'},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'font-style', _1: 'bold'},
-					_1: {ctor: '[]'}
-				}
-			}
-		}
-	});
-var _user$project$Main$buttonStyle = F2(
-	function (color, width) {
-		var realWidth = function (x) {
-			return A2(_elm_lang$core$Basics_ops['++'], x, 'px');
-		}(
-			_elm_lang$core$Basics$toString(width + 0));
-		return _elm_lang$html$Html_Attributes$style(
-			{
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'backgroundColor', _1: color},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'width', _1: realWidth},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'height', _1: '25px'},
-							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'margin-right', _1: '8px'},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'font-size', _1: '9pt'},
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
-										_1: {
-											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'border', _1: 'none'},
-											_1: {ctor: '[]'}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			});
-	});
-var _user$project$Main$colorDark = '#444';
-var _user$project$Main$colorLight = '#88a';
-var _user$project$Main$colorBlue = 'rgb(100,100,200)';
-var _user$project$Main$ribbonStyle = function (color) {
-	return _elm_lang$html$Html_Attributes$style(
-		{
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'width', _1: '835px'},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'height', _1: '20px'},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'margin-bottom', _1: '-16px'},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'padding', _1: '8px'},
-							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'clear', _1: 'left'},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'background-color', _1: color},
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'color', _1: '#eee'},
-										_1: {ctor: '[]'}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		});
-};
-var _user$project$Main$label = function (text_) {
-	return A2(
-		_elm_lang$html$Html$p,
-		{
-			ctor: '::',
-			_0: _user$project$Main$labelStyle,
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text(text_),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$spacer = function (n) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {
-						ctor: '_Tuple2',
-						_0: 'height',
-						_1: A2(
-							_elm_lang$core$Basics_ops['++'],
-							_elm_lang$core$Basics$toString(n),
-							'px')
-					},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'clear', _1: 'left'},
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{ctor: '[]'});
-};
-var _user$project$Main$viewLabel = F2(
-	function (text_, width) {
-		return A2(
-			_elm_lang$html$Html$button,
-			{
-				ctor: '::',
-				_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorDark, width),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text(text_),
-				_1: {ctor: '[]'}
-			});
-	});
-var _user$project$Main$optionaViewTitleButton = F2(
-	function (model, width) {
-		var _p0 = model.configuration;
-		switch (_p0.ctor) {
-			case 'StandardView':
-				return A2(
-					_elm_lang$html$Html$button,
-					{
-						ctor: '::',
-						_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorDark, width),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Basic'),
-						_1: {ctor: '[]'}
-					});
-			case 'ParseResultsView':
-				return A2(
-					_elm_lang$html$Html$button,
-					{
-						ctor: '::',
-						_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorDark, width),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Parse results'),
-						_1: {ctor: '[]'}
-					});
-			default:
-				return A2(
-					_elm_lang$html$Html$button,
-					{
-						ctor: '::',
-						_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorDark, width),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Raw HTML'),
-						_1: {ctor: '[]'}
-					});
-		}
-	});
-var _user$project$Main$buttonBarRawHtmlResults = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '0'},
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(_user$project$Main$optionaViewTitleButton, model, 190),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$renderedSourcePane = function (model) {
-	var renderedText = A2(_user$project$MiniLatex_Driver$getRenderedText, '', model.editRecord);
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _user$project$Main$renderedSourceStyle,
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$id('renderedText'),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html_Attributes$property,
-						'innerHTML',
-						_elm_lang$core$Json_Encode$string(
-							A2(_elm_lang$core$Debug$log, 'RT', renderedText))),
-					_1: {ctor: '[]'}
-				}
-			}
-		},
-		{ctor: '[]'});
-};
-var _user$project$Main$rawRenderedSourcePane = function (model) {
-	var renderedText = A2(_user$project$MiniLatex_Driver$getRenderedText, '', model.editRecord);
-	return A2(
-		_elm_lang$html$Html$pre,
-		{
-			ctor: '::',
-			_0: _user$project$Main$parseResultsStyle,
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text(renderedText),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$prettyPrint = F2(
-	function (lineViewStyle, parseResult) {
-		var _p1 = lineViewStyle;
-		if (_p1.ctor === 'Vertical') {
-			return A2(
-				_elm_lang$core$String$join,
-				'\n\n',
-				A2(
-					_elm_lang$core$List$map,
-					A2(_elm_community$string_extra$String_Extra$replace, ' ', '\n '),
-					A2(_elm_lang$core$List$map, _elm_lang$core$Basics$toString, parseResult)));
-		} else {
-			return A2(
-				_elm_lang$core$String$join,
-				'\n\n',
-				A2(_elm_lang$core$List$map, _elm_lang$core$Basics$toString, parseResult));
-		}
-	});
-var _user$project$Main$parseResultPane = function (model) {
-	return A2(
-		_elm_lang$html$Html$pre,
-		{
-			ctor: '::',
-			_0: _user$project$Main$parseResultsStyle,
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text(
-				A2(_user$project$Main$prettyPrint, model.lineViewStyle, model.parseResult)),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$showHtmlResult = function (model) {
+var _user$project$Main$rawHtmlResultsView = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -17035,109 +17783,118 @@ var _user$project$Main$showHtmlResult = function (model) {
 		},
 		{
 			ctor: '::',
-			_0: _user$project$Main$spacer(20),
+			_0: _user$project$App_View$headerRibbon,
 			_1: {
 				ctor: '::',
-				_0: _user$project$Main$buttonBarRawHtmlResults(model),
+				_0: _user$project$App_View$editor(model),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Main$spacer(5),
+					_0: _user$project$App_View$renderedSource(model),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Main$rawRenderedSourcePane(model),
-						_1: {ctor: '[]'}
+						_0: _user$project$App_View$showHtmlResult(model),
+						_1: {
+							ctor: '::',
+							_0: _user$project$App_View$spacer(5),
+							_1: {
+								ctor: '::',
+								_0: _user$project$App_View$footerRibbon(model),
+								_1: {ctor: '[]'}
+							}
+						}
 					}
 				}
 			}
 		});
 };
-var _user$project$Main$link = F2(
-	function (url, linkText) {
-		return A2(
-			_elm_lang$html$Html$a,
-			{
+var _user$project$Main$parseResultsView = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$App_View$headerRibbon,
+			_1: {
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('linkback'),
+				_0: _user$project$App_View$editor(model),
 				_1: {
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$style(
-						{
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'float', _1: 'right'},
-							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'margin-right', _1: '10px'},
-								_1: {ctor: '[]'}
-							}
-						}),
+					_0: _user$project$App_View$renderedSource(model),
 					_1: {
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$href(url),
+						_0: _user$project$App_View$showParseResult(model),
 						_1: {
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$target('_blank'),
+							_0: _user$project$App_View$spacer(5),
+							_1: {
+								ctor: '::',
+								_0: _user$project$App_View$footerRibbon(model),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$Main$standardView = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$App_View$headerRibbon,
+			_1: {
+				ctor: '::',
+				_0: _user$project$App_View$editor(model),
+				_1: {
+					ctor: '::',
+					_0: _user$project$App_View$renderedSource(model),
+					_1: {
+						ctor: '::',
+						_0: _user$project$App_View$spacer(5),
+						_1: {
+							ctor: '::',
+							_0: _user$project$App_View$footerRibbon(model),
 							_1: {ctor: '[]'}
 						}
 					}
 				}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text(linkText),
-				_1: {ctor: '[]'}
-			});
-	});
-var _user$project$Main$footerRibbon = A2(
-	_elm_lang$html$Html$div,
-	{
-		ctor: '::',
-		_0: _user$project$Main$ribbonStyle('#777'),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html$text('Fast render updates only those paragraphs which have changed.'),
-		_1: {
-			ctor: '::',
-			_0: A2(_user$project$Main$link, 'http://jxxcarlson.github.io', 'jxxcarlson.github.io'),
-			_1: {ctor: '[]'}
-		}
-	});
-var _user$project$Main$headerRibbon = A2(
-	_elm_lang$html$Html$div,
-	{
-		ctor: '::',
-		_0: _user$project$Main$ribbonStyle('#555'),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$span,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$style(
-					{
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '5px'},
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('MiniLatex Demo'),
-				_1: {ctor: '[]'}
-			}),
-		_1: {
-			ctor: '::',
-			_0: A2(_user$project$Main$link, 'http://www.knode.io', 'www.knode.io'),
-			_1: {ctor: '[]'}
-		}
-	});
+			}
+		});
+};
+var _user$project$Main$mainView = function (model) {
+	var _p0 = model.configuration;
+	switch (_p0.ctor) {
+		case 'StandardView':
+			return _user$project$Main$standardView(model);
+		case 'ParseResultsView':
+			return _user$project$Main$parseResultsView(model);
+		default:
+			return _user$project$Main$rawHtmlResultsView(model);
+	}
+};
 var _user$project$Main$appWidth = function (configuration) {
-	var _p2 = configuration;
-	switch (_p2.ctor) {
+	var _p1 = configuration;
+	switch (_p1.ctor) {
 		case 'StandardView':
 			return '900px';
 		case 'ParseResultsView':
@@ -17146,11 +17903,38 @@ var _user$project$Main$appWidth = function (configuration) {
 			return '1350px';
 	}
 };
+var _user$project$Main$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'width',
+						_1: _user$project$Main$appWidth(model.configuration)
+					},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'margin', _1: 'auto'},
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Main$mainView(model),
+			_1: {ctor: '[]'}
+		});
+};
 var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
 var _user$project$Main$encodeData = F2(
-	function (mode, idList) {
+	function (model, idList) {
 		var idValueList = A2(
 			_elm_lang$core$Debug$log,
 			'idValueList',
@@ -17161,7 +17945,7 @@ var _user$project$Main$encodeData = F2(
 				_0: {
 					ctor: '_Tuple2',
 					_0: 'mode',
-					_1: _elm_lang$core$Json_Encode$string(mode)
+					_1: _elm_lang$core$Json_Encode$string(model)
 				},
 				_1: {
 					ctor: '::',
@@ -17174,349 +17958,55 @@ var _user$project$Main$encodeData = F2(
 				}
 			});
 	});
-var _user$project$Main$sendToJs = _elm_lang$core$Native_Platform.outgoingPort(
-	'sendToJs',
-	function (v) {
-		return v;
-	});
-var _user$project$Main$Model = F7(
-	function (a, b, c, d, e, f, g) {
-		return {sourceText: a, parseResult: b, hasMathResult: c, editRecord: d, seed: e, configuration: f, lineViewStyle: g};
-	});
-var _user$project$Main$RawHtmlView = {ctor: 'RawHtmlView'};
-var _user$project$Main$ParseResultsView = {ctor: 'ParseResultsView'};
-var _user$project$Main$StandardView = {ctor: 'StandardView'};
-var _user$project$Main$Vertical = {ctor: 'Vertical'};
-var _user$project$Main$Horizontal = {ctor: 'Horizontal'};
-var _user$project$Main$SetVerticalView = {ctor: 'SetVerticalView'};
-var _user$project$Main$setVerticalViewButton = F2(
-	function (model, width) {
-		return _elm_lang$core$Native_Utils.eq(model.lineViewStyle, _user$project$Main$Vertical) ? A2(
-			_elm_lang$html$Html$button,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$SetVerticalView),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Vertical'),
-				_1: {ctor: '[]'}
-			}) : A2(
-			_elm_lang$html$Html$button,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$SetVerticalView),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorLight, width),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Vertical'),
-				_1: {ctor: '[]'}
-			});
-	});
-var _user$project$Main$SetHorizontalView = {ctor: 'SetHorizontalView'};
-var _user$project$Main$setHorizontalViewButton = F2(
-	function (model, width) {
-		return _elm_lang$core$Native_Utils.eq(model.lineViewStyle, _user$project$Main$Horizontal) ? A2(
-			_elm_lang$html$Html$button,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$SetHorizontalView),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Horizontal'),
-				_1: {ctor: '[]'}
-			}) : A2(
-			_elm_lang$html$Html$button,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$SetHorizontalView),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorLight, width),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Horizontal'),
-				_1: {ctor: '[]'}
-			});
-	});
-var _user$project$Main$buttonBarParserResults = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '0'},
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(_user$project$Main$optionaViewTitleButton, model, 190),
-			_1: {
-				ctor: '::',
-				_0: A2(_user$project$Main$setHorizontalViewButton, model, 90),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$Main$setVerticalViewButton, model, 90),
-					_1: {ctor: '[]'}
-				}
-			}
-		});
-};
-var _user$project$Main$showParseResult = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _user$project$Main$spacer(20),
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$buttonBarParserResults(model),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Main$spacer(5),
-					_1: {
-						ctor: '::',
-						_0: _user$project$Main$parseResultPane(model),
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		});
-};
-var _user$project$Main$ShowRawHtmlView = {ctor: 'ShowRawHtmlView'};
-var _user$project$Main$rawHtmlViewButton = F2(
-	function (model, width) {
-		return _elm_lang$core$Native_Utils.eq(model.configuration, _user$project$Main$RawHtmlView) ? A2(
-			_elm_lang$html$Html$button,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ShowRawHtmlView),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Raw Html'),
-				_1: {ctor: '[]'}
-			}) : A2(
-			_elm_lang$html$Html$button,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ShowRawHtmlView),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorLight, width),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Raw Html'),
-				_1: {ctor: '[]'}
-			});
-	});
-var _user$project$Main$ShowParseResultsView = {ctor: 'ShowParseResultsView'};
-var _user$project$Main$parseResultsViewButton = F2(
-	function (model, width) {
-		return _elm_lang$core$Native_Utils.eq(model.configuration, _user$project$Main$ParseResultsView) ? A2(
-			_elm_lang$html$Html$button,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ShowParseResultsView),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Parse Results'),
-				_1: {ctor: '[]'}
-			}) : A2(
-			_elm_lang$html$Html$button,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ShowParseResultsView),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorLight, width),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Parse Results'),
-				_1: {ctor: '[]'}
-			});
-	});
-var _user$project$Main$ShowStandardView = {ctor: 'ShowStandardView'};
-var _user$project$Main$standardViewButton = F2(
-	function (model, width) {
-		return _elm_lang$core$Native_Utils.eq(model.configuration, _user$project$Main$StandardView) ? A2(
-			_elm_lang$html$Html$button,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ShowStandardView),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Basic'),
-				_1: {ctor: '[]'}
-			}) : A2(
-			_elm_lang$html$Html$button,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ShowStandardView),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorLight, width),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Basic'),
-				_1: {ctor: '[]'}
-			});
-	});
-var _user$project$Main$buttonBarRight = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(_user$project$Main$viewLabel, 'View', 80),
-			_1: {
-				ctor: '::',
-				_0: A2(_user$project$Main$standardViewButton, model, 108),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$Main$parseResultsViewButton, model, 108),
-					_1: {
-						ctor: '::',
-						_0: A2(_user$project$Main$rawHtmlViewButton, model, 108),
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		});
-};
-var _user$project$Main$renderedSource = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _user$project$Main$spacer(20),
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$buttonBarRight(model),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Main$spacer(5),
-					_1: {
-						ctor: '::',
-						_0: _user$project$Main$renderedSourcePane(model),
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		});
-};
-var _user$project$Main$NewSeed = function (a) {
-	return {ctor: 'NewSeed', _0: a};
-};
 var _user$project$Main$init = function () {
-	var parseResult = _user$project$MiniLatex_Driver$parse(_user$project$Main$initialSourceText);
+	var parseResult = _user$project$MiniLatex_Driver$parse(_user$project$App_Source$initialText);
 	var model = {
-		sourceText: _user$project$Main$initialSourceText,
-		editRecord: A2(_user$project$MiniLatex_Driver$setup, 0, _user$project$Main$initialSourceText),
+		sourceText: _user$project$App_Source$initialText,
+		editRecord: A2(_user$project$MiniLatex_Driver$setup, 0, _user$project$App_Source$initialText),
 		parseResult: parseResult,
 		hasMathResult: A2(
 			_elm_lang$core$Debug$log,
 			'hasMathResult',
 			A2(_elm_lang$core$List$map, _user$project$MiniLatex_HasMath$listHasMath, parseResult)),
 		seed: 0,
-		configuration: _user$project$Main$StandardView,
-		lineViewStyle: _user$project$Main$Horizontal
+		configuration: _user$project$App_Types$StandardView,
+		lineViewStyle: _user$project$App_Types$Horizontal
 	};
 	return {
 		ctor: '_Tuple2',
 		_0: model,
 		_1: A2(
 			_elm_lang$core$Random$generate,
-			_user$project$Main$NewSeed,
+			_user$project$App_Types$NewSeed,
 			A2(_elm_lang$core$Random$int, 1, 10000))
 	};
 }();
+var _user$project$Main$sendToJs = _elm_lang$core$Native_Platform.outgoingPort(
+	'sendToJs',
+	function (v) {
+		return v;
+	});
+var _user$project$Main$useSource = F2(
+	function (text, model) {
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{
+					sourceText: text,
+					editRecord: A2(_user$project$MiniLatex_Driver$setup, model.seed, text)
+				}),
+			_1: _user$project$Main$sendToJs(
+				A2(
+					_user$project$Main$encodeData,
+					'full',
+					{ctor: '[]'}))
+		};
+	});
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p3 = msg;
-		switch (_p3.ctor) {
+		var _p2 = msg;
+		switch (_p2.ctor) {
 			case 'FastRender':
 				var parseResult = _user$project$MiniLatex_Driver$parse(model.sourceText);
 				var hasMathResult = A2(
@@ -17538,7 +18028,7 @@ var _user$project$Main$update = F2(
 								ctor: '::',
 								_0: A2(
 									_elm_lang$core$Random$generate,
-									_user$project$Main$NewSeed,
+									_user$project$App_Types$NewSeed,
 									A2(_elm_lang$core$Random$int, 1, 10000)),
 								_1: {ctor: '[]'}
 							}
@@ -17546,7 +18036,7 @@ var _user$project$Main$update = F2(
 				};
 			case 'ReRender':
 				var editRecord = A2(_user$project$MiniLatex_Driver$setup, model.seed, model.sourceText);
-				var _p4 = A2(_elm_lang$core$Debug$log, 'TOC', editRecord.latexState.tableOfContents);
+				var _p3 = A2(_elm_lang$core$Debug$log, 'TOC', editRecord.latexState.tableOfContents);
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -17582,8 +18072,8 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							sourceText: _user$project$Main$initialSourceText,
-							editRecord: A2(_user$project$MiniLatex_Driver$setup, model.seed, _user$project$Main$initialSourceText)
+							sourceText: _user$project$App_Source$initialText,
+							editRecord: A2(_user$project$MiniLatex_Driver$setup, model.seed, _user$project$App_Source$initialText)
 						}),
 					_1: _user$project$Main$sendToJs(
 						A2(
@@ -17596,7 +18086,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{sourceText: _p3._0}),
+						{sourceText: _p2._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'GenerateSeed':
@@ -17605,7 +18095,7 @@ var _user$project$Main$update = F2(
 					_0: model,
 					_1: A2(
 						_elm_lang$core$Random$generate,
-						_user$project$Main$NewSeed,
+						_user$project$App_Types$NewSeed,
 						A2(_elm_lang$core$Random$int, 1, 10000))
 				};
 			case 'NewSeed':
@@ -17613,7 +18103,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{seed: _p3._0}),
+						{seed: _p2._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ShowStandardView':
@@ -17621,7 +18111,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{configuration: _user$project$Main$StandardView}),
+						{configuration: _user$project$App_Types$StandardView}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ShowParseResultsView':
@@ -17629,7 +18119,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{configuration: _user$project$Main$ParseResultsView}),
+						{configuration: _user$project$App_Types$ParseResultsView}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ShowRawHtmlView':
@@ -17637,7 +18127,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{configuration: _user$project$Main$RawHtmlView}),
+						{configuration: _user$project$App_Types$RawHtmlView}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SetHorizontalView':
@@ -17645,305 +18135,29 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{lineViewStyle: _user$project$Main$Horizontal}),
+						{lineViewStyle: _user$project$App_Types$Horizontal}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			default:
+			case 'SetVerticalView':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{lineViewStyle: _user$project$Main$Vertical}),
+						{lineViewStyle: _user$project$App_Types$Vertical}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			case 'TechReport':
+				return A2(_user$project$Main$useSource, _user$project$App_Source$report, model);
+			case 'WavePackets':
+				return A2(_user$project$Main$useSource, _user$project$App_Source$wavePackets, model);
+			case 'WeatherApp':
+				return A2(_user$project$Main$useSource, _user$project$App_Source$weatherApp, model);
+			case 'MathPaper':
+				return A2(_user$project$Main$useSource, _user$project$App_Source$nongeodesic, model);
+			default:
+				return A2(_user$project$Main$useSource, _user$project$App_Source$grammar, model);
 		}
 	});
-var _user$project$Main$GenerateSeed = {ctor: 'GenerateSeed'};
-var _user$project$Main$Restore = {ctor: 'Restore'};
-var _user$project$Main$restoreButton = function (width) {
-	return A2(
-		_elm_lang$html$Html$button,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Restore),
-			_1: {
-				ctor: '::',
-				_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('Restore'),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$Reset = {ctor: 'Reset'};
-var _user$project$Main$resetButton = function (width) {
-	return A2(
-		_elm_lang$html$Html$button,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Reset),
-			_1: {
-				ctor: '::',
-				_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('Clear'),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$ReRender = {ctor: 'ReRender'};
-var _user$project$Main$reRenderButton = function (width) {
-	return A2(
-		_elm_lang$html$Html$button,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ReRender),
-			_1: {
-				ctor: '::',
-				_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('Render'),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$GetContent = function (a) {
-	return {ctor: 'GetContent', _0: a};
-};
-var _user$project$Main$editorPane = function (model) {
-	return A2(
-		_elm_lang$html$Html$textarea,
-		{
-			ctor: '::',
-			_0: _user$project$Main$editorStyle,
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$GetContent),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$value(model.sourceText),
-					_1: {ctor: '[]'}
-				}
-			}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text(model.sourceText),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$FastRender = {ctor: 'FastRender'};
-var _user$project$Main$fastRenderButton = function (width) {
-	return A2(
-		_elm_lang$html$Html$button,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$FastRender),
-			_1: {
-				ctor: '::',
-				_0: A2(_user$project$Main$buttonStyle, _user$project$Main$colorBlue, width),
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('Fast Render'),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$buttonBarLeft = A2(
-	_elm_lang$html$Html$div,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$style(
-			{
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
-				_1: {ctor: '[]'}
-			}),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: _user$project$Main$resetButton(93),
-		_1: {
-			ctor: '::',
-			_0: _user$project$Main$restoreButton(93),
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$reRenderButton(93),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Main$fastRenderButton(96),
-					_1: {ctor: '[]'}
-				}
-			}
-		}
-	});
-var _user$project$Main$editor = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _user$project$Main$spacer(20),
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$buttonBarLeft,
-				_1: {
-					ctor: '::',
-					_0: _user$project$Main$spacer(5),
-					_1: {
-						ctor: '::',
-						_0: _user$project$Main$editorPane(model),
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		});
-};
-var _user$project$Main$standardView = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: _user$project$Main$headerRibbon,
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$editor(model),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Main$renderedSource(model),
-					_1: {
-						ctor: '::',
-						_0: _user$project$Main$spacer(5),
-						_1: {
-							ctor: '::',
-							_0: _user$project$Main$footerRibbon,
-							_1: {ctor: '[]'}
-						}
-					}
-				}
-			}
-		});
-};
-var _user$project$Main$parseResultsView = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: _user$project$Main$headerRibbon,
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$editor(model),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Main$renderedSource(model),
-					_1: {
-						ctor: '::',
-						_0: _user$project$Main$showParseResult(model),
-						_1: {
-							ctor: '::',
-							_0: _user$project$Main$spacer(5),
-							_1: {
-								ctor: '::',
-								_0: _user$project$Main$footerRibbon,
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				}
-			}
-		});
-};
-var _user$project$Main$rawHtmlResultsView = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: _user$project$Main$headerRibbon,
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$editor(model),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Main$renderedSource(model),
-					_1: {
-						ctor: '::',
-						_0: _user$project$Main$showHtmlResult(model),
-						_1: {
-							ctor: '::',
-							_0: _user$project$Main$spacer(5),
-							_1: {
-								ctor: '::',
-								_0: _user$project$Main$footerRibbon,
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				}
-			}
-		});
-};
-var _user$project$Main$mainView = function (model) {
-	var _p5 = model.configuration;
-	switch (_p5.ctor) {
-		case 'StandardView':
-			return _user$project$Main$standardView(model);
-		case 'ParseResultsView':
-			return _user$project$Main$parseResultsView(model);
-		default:
-			return _user$project$Main$rawHtmlResultsView(model);
-	}
-};
-var _user$project$Main$view = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {
-						ctor: '_Tuple2',
-						_0: 'width',
-						_1: _user$project$Main$appWidth(model.configuration)
-					},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'margin', _1: 'auto'},
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _user$project$Main$mainView(model),
-			_1: {ctor: '[]'}
-		});
-};
 var _user$project$Main$main = _elm_lang$html$Html$program(
 	{view: _user$project$Main$view, update: _user$project$Main$update, init: _user$project$Main$init, subscriptions: _user$project$Main$subscriptions})();
 
