@@ -12651,7 +12651,7 @@ var _user$project$App_Source$nongeodesic = '\n\n\n \\title{Non-geodesic variatio
 var _user$project$App_Source$weatherApp = '\n\\section{Weather App}\n\n\\image{http://noteimages.s3.amazonaws.com/jim_images/weatherAppColumbus.png}{}{float: right, width: 250}\n\nIn this section we will learn how to write an app that displays information about the weather  in any city on planet earth.   The data comes from a web server at \\href{http://openweathermap.org/}{openweathermap.org}; to access it, you will need a free API key, which is a long string of letters and numbers  that looks like \\code{a23b...ef5d4} and which functions as a kind password. To get an API key, follow this \\href{http://openweathermap.org/price}{link}.  Once you have an API key, you can try out a working copy of the app at \\href{https://jxxcarlson.github.io/app/weather.html}{jxxcarlson.github.io}.\n\n\\subheading{Framing Main}\n\nWe will build the app in a series of steps.  The first step is to build a skeleton that has all the needed structural parts, e.g, the view and update functions.    Part of this \"framing\" step is to define the data types that the app will use --- \\code{Model} and its various parts, and \\code{Msg}, a union type which determines which messages can be sent to the Elm Runtime.  Let\'s begin with \\code{main}, which looks like this:\n\n\\begin{verbatim}\nmain =\n    Html.program\n        { init = init\n        , view = view\n        , update = update\n        , subscriptions = subscriptions\n        }\n\\end{verbatim}\n\nThis is the structure, \\code{Html.program}, is used by $99\\%$ of all Elm programs.  It is a a record with four fields, the init, view, and update functions, and subscriptions, which will eventually be used to add date and time to the app. The init, view and update functions all work  with the model, so let\'s discuss that next.\n\n\\subheading{Model}\n\nEvery model has a type, and that type dictates what the model is able to represent.  In our case the \\code{Model} type, displayed below,  is a record with five fields: one for weather data, one for messages for the user, one for the location whose weather we retrieve, one for the API key discussed above, and one for the internet address of the server.  The first field has a special type which we discuss in a moment, while the other fields are strings.\n\n\n\\begin{verbatim}\ntype alias Model =\n    { weather : Maybe Weather\n    , message : String\n    , location : String\n    , apiKey : String\n    , serverAddress : String\n    }\n\\end{verbatim}\n\nThe type of the weather field has the form\n\n\\begin{verbatim}\nMaybe Weather = Nothing | Just Weather\n\\end{verbatim}\n\nThis means that a value of type \\code{Maybe Weather} can be either \\code{Nothing}, or a value of type \\code{Just Weather}.  The  first option handles the case in which  the app has not requested information from the server, has requested information but has received no reply, has requested information but received an error message, or, finally has received garbled information.  These are all very real possibilities, and in those cases, we literally know \\code{Nothing}.\n\nIn the case of valid weather information, \\code{weather} field has type \\code{Just Weather}, where \\code{Weather} is the record type listed below. The first, \\code{id}, is an integer which identifies the weather information in the openweather.org database.  We won\'t use it now.  The next, \\code{location}, is a string which in our examples is a city name, e.g., \"London.\"  The third, \\code{main}, is the \"main\" weather information for the given location.\n\n\\begin{verbatim}\ntype alias Weather =\n    { id : Int\n    , name : String\n    , main : Main\n    }\n\\end{verbatim}\n\nAnd what is the value of the field \\code{main}?  Well, it is a something of type \\code{Main}.  While we seem to be opening up a series of Russian dolls, this is the last data structure that we have to deal with.  \\code{Main} is a record  with five fields of type \\code{Float}\n\n\\begin{verbatim}\ntype alias Main =\n    { temp : Float\n    , humidity : Float\n    , pressure : Float\n    , temp_min : Float\n    , temp_max : Float\n    }\n\\end{verbatim}\n\n\\subheading{Filling out Main}\n\nThe code discussed so far is still not enough to define an app that will run, even if it does nothing.  To get to this point, we must implement the following functions and types:\n\n\\begin{enumerate}\n\\item \\code{init}, which sets jup the initial model.\n\\item \\code{Msg} The type messages the app can receive.\n\\item \\code{subscriptions}. There aren\'t any, but this has to be defined.\n\\item \\code{view} and some style information to make the view look good.\n\\item \\code{update}\n\\end{enumerate}\n\nTake a look at the Ellie below and run it to see if it works.  Then come back and we will go through the list above.  Once this is done, we can move on to making the app actaully do something.\n\n\\ellie{9CKgm5CQGa1/0}{Skeleton app}\n\n\\subheading{Finishing the skeleton}\n\nLet\'s finish the skeleton by filling in the items listed above.\n\n\\subheading{Init and Msg}\n\n\\begin{verbatim}\ninit : ( Model, Cmd Msg )\ninit =\n    ( { weather = Nothing\n      , message = \"app started\"\n      , location = \"london\"\n      , apiKey = \"\"\n      }\n    , Cmd.none\n    )\n\\end{verbatim}\n\n\nBelow is  \\code{init}. It is a value of type \\code{(Model, Cmd Msg)}.  The \\code{Msg} type\nis defined this way:\n\n\\begin{verbatim}\ntype Msg = NoOp\n\\end{verbatim}\n\nWe will have other Msg\'s later.  But when staring out, it is worth having a kind of \"zero\" in the world of messages -- a message which corresponds to \"no operation.\"\n\n\n\\subheading{Subscriptions}\n\nWe need to define \\code{subscription} even if there are no subscriptions to external data sources. Let\'s do it like this:\n\n\\begin{verbatim}\nsubscriptions model =\n    Sub.none\n\\end{verbatim}\n\n\\subheading{Update}\n\nThe update function handles our \\code{NoOp} message:\n\n\\begin{verbatim}\nupdate : Msg -> Model -> ( Model, Cmd Msg )\nupdate msg model =\n    case msg of\n        NoOp ->\n            ( model, Cmd.none )\n\\end{verbatim}\n\nLater, the case statment will be more complex, with one\n clause for each \\code{Msg} type.\n\n\n\\subheading{View}\n\n\\image{http://noteimages.s3.amazonaws.com/jim_images/weatheApp-0.png}{}{float: right, width: 150}\n\nThe \\code{view} function represents the state of the \\code{Model}\nto the outside world.  In the case at hand, it just displays a grey box\nas in the image on the right.\n\n\\begin{verbatim}\nview : Model -> Html Msg\nview model =\n    div [ mainStyle ]\n        [ div [ innerStyle ]\n            [ text \"Weather App\"\n            ]\n        ]\n\\end{verbatim}\n\n\\subheading{Style}\n\nTo set the stage for our working app, we use a small bit of styling:\n\n\\begin{verbatim}\nmainStyle =\n    style\n        [ ( \"margin\", \"15px\" )\n        , ( \"margin-top\", \"20px\" )\n        , ( \"background-color\", \"#eee\" )\n        , ( \"width\", \"200px\" )\n        ]\n\ninnerStyle =\n    style [ ( \"padding\", \"15px\" ) ]\n\\end{verbatim}\n\n\n\\image{http://noteimages.s3.amazonaws.com/jim_images/weatherApp-2.png}{}{float: right, width: 200}\n\n\n\\subsection{Getting the weather}\n\n\n\nLet\'s now work to make the app retrieve weather data.  There is a cycle of events which makes this happen.  First, the user clicks on the \"Get weather\" button, which is defined by\n\n\\begin{verbatim}\nbutton\n   [ onClick GetWeather ]\n   [ text \"Get weather\" ]\n\\end{verbatim}\n\nThe \\code{onClick} action causes the message \\code{GetWeather} to be sent.  The \\code{update} function listed below receives this message, matches it using its \\code{case msg of} statement to the function call  \\code{getWeather model}, and executes that call.\n\n\\begin{verbatim}\nupdate : Msg -> Model -> ( Model, Cmd Msg )\nupdate msg model =\n    case msg of\n        GetWeather ->\n            ( model, getWeather model )\n        NewWeather (Ok newData) ->\n            ( { model | weather = Just newData,\n                        message = \"Successful request\" },\n                Cmd.none\n             )\n        NewWeather (Err error) ->\n            ( { model | message = \"Error\" }, Cmd.none )\n\n\\end{verbatim}\n\nLet\'s look at the code for \\code{getWeather}.\n\n\\begin{verbatim}\ngetWeather : Model -> Cmd Msg\ngetWeather model =\n    Http.send NewWeather (dataRequest model)\n\\end{verbatim}\n\nWhen this function call is executed the following happen.  (1)  The request \\code{ dataRequest model} is made; (2)  Moments later the server responds with its \\code{reply}, also a string. This is a string which re[renset sdh dtdata  which is just a string.  It represent the if  (3) send the message \\code{NewWeather reply}, (4) the update function processes that message.  The message can be of two kinds.  If the request is successful, it is of form \\code{Ok newData} where \\code{NewData} carries the information sent by the server.  If the request is not successful, the reply has the form \\code{Error error}, where \\code{error} carries information about the error.\n\nLet\'s  look at the code for \\code{dataRequest} listed below                                              .  The function \\code{Http.get} takes two arguments.  The first is the function call \\code{url model}, which yields a string to be sent to the server m  It carries information such as the \"address\" of the server, the city whose weather we want to know about, and the API key that the server requires to grant access.  The second argument is a JSON decoder.  This is a black box which will translate the information send by the server into a form understood by Elm.\n\n\\begin{verbatim}\ndataRequest model =\n    Http.get (url model) weatherDecoder\n\\end{verbatim}\n\nThe code for the \\code{url} function simply puts information already present in the model into the form needed by the server:\n\n\\begin{verbatim}\nurl model =\n  model.urlPrefix ++ model.location ++ \"&APPID=\" ++ model.apiKey\n\\end{verbatim}\n\n\n\n\n\\ellie{chqbtP2Kfa1/1}\n\n\\section{IIIIIII}\n\n\\image{http://noteimages.s3.amazonaws.com/jim_images/weatherApp-1a.png}{}{float: right, width: 250}\n\n\n\\ellie{8Wrq8PbCDa1/1}\n\n\\subsection{A little more advanced}\n\n\\ellie{7t43vKJnda1/5}\n\n\n';
 var _user$project$App_Source$wavePackets = '\n\n\\title{Wave packets and the dispersion relation}\n\n\\maketitle\n\n\\tableofcontents\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/sinc2-bcbf.png}{Wave packet}{width: 250, float: right}\n\n\nAs we have seen with the sinc packet, wave packets can be localized in space.  A key feature of such packets is their \\italic{group velocity} $v_g$.  This is the velocity which which the \"body\" of the wave packet travels.  Now a wave packet is synthesized by superposing many plane waves, so the natural question is how is the group velocity of the packet related to the phase velocities of its constituent plane waves.  We will answer this first in the simplest possible situation -- a superposition of two sine waves.  Next, we will reconsider the case of the sinc packet.  Finally, we will study a more realistic approximation to actual wave packets which gives insight into the manner and speed with which wave packets change shape as they evolve in time.  We end by applying this to an electron in a thought experiment in which it has been momentarily confned to an atom-size box -- about one Angstrom, or $10^{-10}\\text{ meter}$.\n\n\\section{A two-frequency packet: beats}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/beats-eca1.png}{Two-frequency beats}{width: 350, float: right}\n\nConsider a wave\n$\\psi = \\psi_1 + \\psi_2$ which is the sum of two terms with slightly different frequencies.  If the waves are sound waves, then then what one will hear is a pitch that corresponding to the average of the two frequencies modulated in such a way that the volume goes up and down at a frequency corresponding to their difference.\n\nLet us analyze this phenomenon mathematically, setting\n\n\n\\begin{equation}\n\\psi_1(x,t)  = \\cos((k - \\Delta k/2)x - (\\omega - \\Delta \\omega/2)t)\n\\end{equation}\n\nand\n\n\\begin{equation}\n\\psi_2(x,t)  = \\cos((k + \\Delta k/2)x - (\\omega + \\Delta \\omega/2)t)\n\\end{equation}\n\nBy the addition law for the sine, this can be rewritten as\n\n\\begin{equation}\n\\psi(x,t) = 2\\sin(kx - \\omega t)\\sin((\\Delta k)x - (\\Delta \\omega)t)\n\\end{equation}\n\nThe resultant wave -- the sum -- consists of of a high-frequency sine wave oscillating according to the average of the component wave numbers and angular frequencies, modulated by a cosine factor that oscillates according to the difference of the wave numbers and the angular frequencies, respectively.  The velocity associated to the high frequency factor is\n\n\\begin{equation}\nv_{phase} = \\frac{\\omega}{k},\n\\end{equation}\n\nwhereas the velocity associated with the low-frequency factor is\n\n\\begin{equation}\nv_{group} = \\frac{\\Delta \\omega}{\\Delta k}\n\\end{equation}\n\nThis is the simplest situation in which one observes the phenomenon of the group velocity.  Take a look at this \\href{http://galileo.phys.virginia.edu/classes/109N/more_stuff/Applets/wavepacket/wavepacket.html}{animation}.\n\n\n\\section{Step function approximation}\n\nWe will now find an an approximation to\n\n\\begin{equation}\n\\psi(x,t) = \\int_{-\\infty}^\\infty a(k) e^{i(kx - \\omega(k)t)} dk\n\\end{equation}\n\nunder the assumption that $a(k)$ is nearly constant over an interval from $k_0 -\\Delta k/2$ to $k_0 + \\Delta k/2$ and that outside of that interval it approaches zero at a rapid rate.  In that case the Fourier integral is approximated by\n\n\\begin{equation}\n \\int_{k_0 - \\Delta k/2}^{k_0 + \\Delta k/2}  a(k_0)e^{i((k_0 + (k - k_0)x - (\\omega_0t + \\omega_0\'(k - k_0)t))}dk,\n\\end{equation}\n\nwhere $\\omega_0 = \\omega(k_0)$ and $\\omega_0\' = \\omega\'(k_0)$.\nThis integral can be written as a product $F(x,t)S(x,t)$, where the first factor is \"fast\" and the second is \"slow.\"  The fast factor is just\n\n\\begin{equation}\nF(x,t) = a(k_0)e^{ i(k_0x - \\omega(k_0)t) }\n\\end{equation}\n\nIt travels with velocity $v_{phase} = \\omega(k_0)/k_0$.  Setting $k; = k- k_0$, the slow factor is\n\n\\begin{equation}\nS(x,t) = \\int_{-\\Delta k/2}^{\\Delta k/2} e^{ik\'\\left(x - \\omega\'(k_0)t\\right)} dk\',\n\\end{equation}\n\nThe slow factor be evaluated explicitly:\n\n\\begin{equation}\nI = \\int_{-\\Delta k/2}^{\\Delta k/2} e^{ik\'u} dk\' = \\frac{1}{iu} e^{ik\'u}\\Big\\vert_{k\' = - \\Delta k/2}^{k\' = +\\Delta k/2}.\n\\end{equation}\n\nWe find that\n\n\\begin{equation}\nI = \\Delta k\\; \\text{sinc}\\frac{\\Delta k}{2}u\n\\end{equation}\n\nwhere $\\text{sinc } x = (\\sin x )/x$.  Thus the slow factor is\n\n\\begin{equation}\nS(x,t) = \\Delta k\\, \\text{sinc}(  (\\Delta k/2)(x - \\omega\'(k_0)t)  )\n\\end{equation}\n\n\nPutting this all together, we have\n\n\\begin{equation}\n\\psi(x,t) \\sim a(k_0)\\Delta k_0\\, e^{i(k_0x - \\omega(k_0)t)}\\text{sinc}(  (\\Delta k/2)(x - \\omega\'(k_0)t)  )\n\\end{equation}\n\nThus the body of the sinc packet moves steadily to the right at velocity $v_{group} = \\omega\'(k_0)$\n\n\n\\section{Gaussian approximation}\n\nThe approximation used in the preceding section is good enough to capture and explain the group velocity of a wave packet.  However, it is not enough to explain how wave packets change shape as they evolve with time.  To understand this phenomenon, we begin with  an arbitrary packet\n\n\\begin{equation}\n\\psi(x,t) = \\int_{\\infty}^\\infty a(k) e^{i\\phi(k)}\\,dk,\n\\end{equation}\n\nwhere $\\phi(k) = kx - \\omega(k)t$.  We shall assume that the spectrum $a(k)$ is has a maximum at $k = k_0$ and decays fairly rapidly away from the maximum.  Thus we assume that the Gaussian function\n\n\\begin{equation}\na(k) = e^{ -(k-k_0)^2/ 4(\\Delta k)^2}\n\\end{equation}\n\nis a good approximation.  To analyze the Fourier integral\n\n\\begin{equation}\n\\psi(x,t) = \\int_{-\\infty}^{\\infty} e^{ -(k-k_0)^2/ 4(\\Delta k)^2} e^{i(kx - \\omega(k) t)},\n\\end{equation}\n\nwe expand $\\omega(k)$ in a Taylor series up to order two, so that\n\n\\begin{equation}\n\\phi(k) = k_0x + (k - k_0)x - \\omega_0t - \\frac{d\\omega}{dk}(k_0) t- \\frac{1}{2}\\frac{ d^2\\omega }{ dk^2 }(k_0)( k - k_0)^2 t\n\\end{equation}\n\nWriting $\\phi(k) = k_0x - \\omega_0t + \\phi_2(k,x,t)$, we find that\n\n\\begin{equation}\n\\psi(x,t) = e^{i(k_0x - \\omega_0 t)} \\int_{-\\infty}^{\\infty} e^{ -(k-k_0)^2/ 4(\\Delta k)^2} e^{i\\phi_2(k,x,t)}.\n\\end{equation}\n\nMake the change of variables $k - k_0 = 2\\Delta k u$, and write $\\phi_2(k,x,t) = Q(u,x,t)$, where $Q$ is a quadratic polynomial in $u$ of the form $au + b$. One finds that\n\n\\begin{equation}\n  a = -(1 + 2i\\alpha t  (\\Delta k)^2),\n\\end{equation}\n\nwhere\n\n\\begin{equation}\n\\alpha = \\frac{ d^2\\omega }{ dk^2 }(k_0)\n\\end{equation}\n\nOne also finds that\n\n\\begin{equation}\n  b = 2i\\Delta k(x - v_g t),\n\\end{equation}\n\nwhere $v_g = d\\omega/dk$ is the group velocity.  The integral is a standard one, of the form\n\n\\begin{equation}\n\\int_{-\\infty}^\\infty e^{- au^2 + bu} = \\sqrt{\\frac{\\pi}{a}}\\; e^{ b^2/4a }.\n\\end{equation}\n\nUsing this integral  formula and the reciprocity $\\Delta x\\Delta k = 1/2$, which we may take as a definition of $\\Delta x$, we find, after some algebra, that\n\n\\begin{equation}\n\\psi(x,t) \\sim A e^{-B} \\,e^{i(k_0 - \\omega_0t)}\n,\n\\end{equation}\n\nwhere\n\n\\begin{equation}\nA = 2\\Delta k \\sqrt{\\frac{\\pi}{1 + 2i\\alpha \\Delta k^2 t}}\n\\end{equation}\n\nand\n\n\\begin{equation}\nB = \\frac{( x-v_gt )^2 (1 - 2i\\alpha \\Delta k^2 t)}{4\\sigma^2}\n\\end{equation}\n\nwith\n\n\\begin{equation}\n\\sigma^2 = \\Delta x^2 + \\frac{\\alpha^2 t^2}{4 \\Delta x^2}\n\\end{equation}\n\nLook at the expression $B$. The first factor in the numerator controls the motion of motion of the packet and is what guides it to move with group velocity $v_g$.  The second factor is generally a small real term and a much larger imaginary one, and so only affects the phase.  The denominator controls the width of the packet, and as we can see, it increases with $t$ so long as $\\alpha$, the second derivative of $\\omega(k)$ at the center of the packet, is nonzero.\n\n\\section{The electron}\n\nLet us apply what we have learned to an electron which has been confined to a box about the size of an atom, about $10^{-10}$ meters. That is, $\\Delta x \\sim 10^{-10}\\text{ m}$.  The extent of its wave packet will double when\n\n\\begin{equation}\n\\frac{\\alpha^2 t^2}{4 \\Delta x^2} \\sim \\Delta x^2,\n\\end{equation}\n\nthat is, after a time\n\n\\begin{equation}\nt_{double} \\sim \\frac{\\Delta x^2}{\\alpha}\n\\end{equation}\n\nThe dispersion relation for a free particle is\n\n\\begin{equation}\n  \\omega(k) = \\hbar \\frac{k^2}{2m},\n\\end{equation}\n\nso that $\\alpha = \\hbar/m$.  Then\n\n\\begin{equation}\nt_{double} \\sim \\frac{m}{h}\\, \\Delta x^2 .\n\\end{equation}\n\nIn the case of our electron, we find that $t_{double} \\sim 10^{-16}\\,\\text{sec}$.\n\n\\section{ Code}\n\n\n\n\\begin{verbatim}\n# jupyter/python\n\nmatplotlib inline\n\n# code for sinc(x)\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# sinc function\nx = np.arange(-30, 30, 0.1);\ny = np.sin(x)/x\nplt.plot(x, y)\n\n# beats\nx = np.arange(-50, 250, 0.1);\ny = np.cos(0.5*x) + np.sin(0.55*x)\nplt.plot(x, y)\n\\end{verbatim}\n\n\n\n\\section{References}\n\n\\href{https://www.eng.fsu.edu/~dommelen/quantum/style_a/packets.html}{Quantum Mechanics for Engineers: Wave Packets}\n\n\\href{http://users.physics.harvard.edu/~schwartz/15cFiles/Lecture11-WavePackets.pdf}{Wave Packets, Harvard Physics}\n\n\\href{http://ocw.mit.edu/courses/nuclear-engineering/22-02-introduction-to-applied-nuclear-physics-spring-2012/lecture-notes/MIT22_02S12_lec_ch6.pdf}{Time evolution in QM - MIT}\n\n';
 var _user$project$App_Source$report = '\n\\title{MiniLaTeX: Technical Report}\n\n\\author{James Carlson}\n\n\\email{jxxcarlson at gmail}\n\n\\date{October 29, 2017}\n\n\\revision{January 16, 2017}\n\n\n\n\\maketitle\n\n\n\\begin{abstract}\nThe aims of the MiniLaTeX project are (1) to establish a subset\nof LaTeX which can be rendered either as HTML (for the browser) or as PDF (for print and display), (2) to implement a reference parser and renderer for MiniLaTeX, (3) to provide an online editor/reader for MiniLaTeX documents using the parser/renderer.  As proof of concept, this document is written in MiniLaTeX  and is distributed via \\href{http://www.knode.io}{www.knode.io}, an implementation of (3).\nTo experiment with MiniLaTeX, take a look at the \\href{https://jxxcarlson.github.io/app/minilatex/src/index.html}{Demo App}.\n\\end{abstract}\n\n\n\\strong{Credits.} \\italic{I wish to acknowledge the generous help that I have received throughout this project from the community at } \\href{http://elmlang.slack.com}{elmlang.slack.com}, \\italic{with special thanks to Ilias van Peer.}\n\n\\tableofcontents\n\n\\section{Introduction}\n\n\nThe introduction of TeX by Donald Knuth, LaTeX by Leslie Lamport, and Postscript/PDF by John Warnock, supported by a vigorous open source community, have given mathematicians, physicists, computer scientists, and engineers the tools they need to produce well-structured documents  with mathematical notation typeset to the very highest esthetic standards.  For dissemination by print and PDF, the problem of mathematical communication is solved.\n\nThe Web, however, offers different challenges.  The MathJax project (\\href{http://www.mathjax.org}{www.mathjax.org}) addresses many of these challenges, and its use is now ubiquitous on platforms such as mathoverflow and on numerous blogs.  There is, however, a gap.  MathJax beautifully renders the purely mathematical part of the text, like the inline text $\\alpha^2 + \\beta^2 = \\gamma^2$, written as\n\n\\begin{verbatim}\n$ \\alpha^2 + \\beta^2 = \\gamma^2 $\n\\end{verbatim}\n\nor like the displayed text\n\n$$\n   \\int_0^1 x^n dx = \\frac{1}{n+1},\n$$\n\nwhich is written as\n\n\\begin{verbatim}\n$$\n   \\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\\end{verbatim}\n\nThere remains the rest: macros like \\code{emph}, \\code{section}, \\code{label}, \\code{eqref}, \\code{href}, etc., and a multitude of LaTeX environments from \\italic{theorem} and \\italic{definition} to  \\italic{equation}, \\italic{align}, \\italic{tabular}, \\italic{verbatim}, etc.\n\n It is the aim of this project is to develop a subset of LaTeX, which we call \\italic{MiniLaTeX}, that can be displayed in the browser by a suitable parser-renderer and which can also be run through standard LaTeX tools such as \\code{pdflatex}.\n\nAn experimental web app for using MiniLaTeX in the browser can be found at \\href{http://www.knode.io}{www.knode.io}.  For proof-of-concept examples,  see  the document \\xlinkPublic{445}{MiniLaTeX} on that site.\n\n\\strong{Note.} This document is written in a simplified version of MiniLaTeX (version 0.5).  Below, we describes the current state of the version under development for the planned 1.0 release.  Much of the discussion applies to version 0.5 as well.\n\n\\section{Technology}\n\nThe MiniLaTeX parser/renderer is written in Elm, the functional language with Haskell-like syntax created by Evan Czaplicki.  Elm is best known as language for building robust front-end apps for the web.  The fact that it also has powerful parser tools makes it an excellent choice for a project like MiniLatex, for which an editor/reader app is needed to make real-world use of the parser/renderer.  The app at \\href{http://www.knode.io}{www.knode.io} talks to a back-end app written using the Phoenix web framework for Elixir  (see \\href{https://elixir-lang.org/}{elixir-lang.org}).  Elixir is the functional programming language based on Erlang created by José Valim.\n\n\\section{Components and Strategy}\n\nThe overall flow of data in MiniLatex is\n\n$$\n\\text{MiniLaTeX source text} \\longrightarrow\n\\text{AST} \\longrightarrow\n\\text{HTML}\n$$\n\nwhere the \\code{AST} is an abstract syntax tree consisting of a \\code{LatexExpresssion}, to be defined below.  The parser consumes MiniLaTeX source text and produces an AST.\nThe renderer converts the AST into HTML.  Rendering takes two forms. In the first form, it transforms a single \\code{LatexExpression} into HTML.  In the second, the source text is broken into a list of paragraphs and an initial \\code{latexState} is defined.  As each paragraph is consumed by the processor, it is parsed, the  \\code{latexState} is updated, and the AST for the paragraph is rendered into HTML, with the result depending on the updated \\code{latexState}.  The result is a list of HTML strings that is concatenated to give the final HTML.  We will also discuss a \\code{differ}, which speeds up the the edit-save-render cycle as experienced by an author.  The idea is to keep track of changes to paragraphs and only re-render what has changed since the last edit.\n\n\n\n\n\\section{AST and Parser}\n\nThe core technology of MiniLaTeX is the parser.  It consumes MiniLaTeX source text and produces as output an abstract syntax tree (AST).  The AST  is a list of \\code{LatexExpressions}.  \\code{LatexExpressions} are defined recursively by the following Elm code:\n\n\\begin{verbatim}\ntype LatexExpression\n    = LXString String\n    | Comment String\n    | Item Int LatexExpression\n    | InlineMath String\n    | DisplayMath String\n    | Macro String (List LatexExpression)\n    | Environment String LatexExpression\n    | LatexList (List LatexExpression)\n\\end{verbatim}\n\nSource text of the form $ \\$ TEXT \\$ $ parses as $\\tt{InlineMath}\\ TEXT$,  and text of the form $ \\$\\$TEXT \\$\\$ $  parses as $\\tt{DisplayMath}\\ TEXT$\n\nSource of the form $\\backslash item\\ TEXT$ maps to $\\tt{Item\\ 1\\ TEXT}$, while\n $\\backslash itemitem\\ TEXT$ maps to $\\tt{Item\\ 2\\ TEXT}$, etc.\n\nA macro like $\\backslash foo\\{1\\}\\{bar\\}$ maps to $\\tt{Macro \"foo\" [\"1\", \"bar\"]}$ -- the string after Macro is the macro name, and this is followed by the argument list, which may be empty.\n\nFinally, an environment like\n\\begin{verbatim}\n\\begin{theorem}\nBODY\n\\end{theorem}\n\\end{verbatim}\n\nmaps to $\\tt{Environment\\ \"theorem\"\\ PARSE(BODY)}$,\nwhere $\\tt{PARSE(BODY)}$ is the $\\tt{LatexExpression}$ obtaining by parsing $\\tt{BODY}$.\n\nAs an example, consider the text below.\n\n\\begin{verbatim}\nThis is MiniLaTeX:\n\\begin{theorem}\n  This is a test: $\\alpha^2 = 7$ \\foo{1}\n \\begin{a}\n  la di dah\n\\end{a}\n\\end{theorem}\n\\end{verbatim}\n\nRunning \\code{MiniLatex.Parser.latexList} on this text results in the following AST:\n\n\\begin{verbatim}\nOk (LatexList (\n  LXString \"This is MiniLaTeX:\",\n  [Environment \"theorem\" (\n    LatexList ([\n         LXString \"This is a test:\",\n         InlineMath \"\\\\alpha^2 = 7\",\n         Macro \"foo\" [\"1\"],\n         Environment \"a\" (\n              LatexList ([LXString \"la di dah\"])\n     )]))]))\n\\end{verbatim}\n\nAt the top level it is a list of \\code{LatexExpressions} -- a string and an \\code{Environment}.\nThe body of the environment is a list of \\code{LatexExpressions} -- a string, an \\code{InlineMath} element, a \\code{Macro} with one argument, and another \\code{Environment},  This is a structure which \\code{MiniLatex.Render.render} can transform into HTML.\n\n\\subsection{Parser Combinators}\n\nThe MiniLaTeX parser, comprising 222 lines of code as of this writing, is built using parser combinators from Evan Czaplicki\'s \\href{https://github.com/elm-tools/parser}{elm-tools/parser} package.  The combinators are akin to those in the Haskell parsec package.  As as example, the main MiniLatex parsing function is\n\n\\begin{verbatim}\nparse : Parser LatexExpression\nparse =\n    oneOf\n        [ texComment\n        , lazy (\\_ -> environment)\n        , displayMathDollar\n        , displayMathBrackets\n        , inlineMath\n        , macro\n        , words\n        ]\n\\end{verbatim}\n\nThis function tries each of its component parsers in order until it finds one that\nmatches the input text.  The \\code{environment} parser is the most interesting. It captures the environment name and then passes it on to \\code{environmentOfType}.\n\n\n\\begin{verbatim}\nenvironment : Parser LatexExpression\nenvironment =\n    lazy (\\_ -> beginWord |> andThen environmentOfType)\n\\end{verbatim}\n\nThe \\code{environmentOfType}\nfunction acts as a switching yard, routing the action of the parser to the correct function. The \\italic{enumurate} and \\italic{itemize} environments need special handling, while others are handled by \\code{standardEnvironmentBody}.\n\n\\begin{verbatim}\nenvironmentOfType : String -> Parser LatexExpression\nenvironmentOfType envType =\n    let\n        endWord =\n            \"\\\\end{\" ++ envType ++ \"}\"\n    in\n    case envType of\n        \"enumerate\" ->\n            itemEnvironmentBody endWord envType\n        \"itemize\" ->\n            itemEnvironmentBody endWord envType\n        _ ->\n            standardEnvironmentBody endWord envType\n\\end{verbatim}\n\nA standard environment such as \\italic{theorem} or \\italic{align} is handled like this:\n\n\\begin{verbatim}\nstandardEnvironmentBody endWord envType =\n    succeed identity\n        |. ws\n        |= repeat zeroOrMore parse\n        |. ws\n        |. symbol endWord\n        |. ws\n        |> map LatexList\n        |> map (Environment envType)\n\\end{verbatim}\n\nNote the repeated calls to \\code{parse} in the body of \\code{standardEnvironmentBody}.  Thus an environment can contain a nested sequence of environments, or even a tree thereof..\nThe symbol $|.$ means \"use the following parser to recognize text but do not retain it.\"  Thus $|. \\text{ws}$ means \"recognize white space but ignore it.\"  The symbol  $|$= means \"use the following parse and retain what it yields.\"\n\n\\section{Rendering an AST to HTML}\n\nThis section addresses the second step in the pipelne\n\n$$\n\\text{MiniLaTeX source text} \\longrightarrow\n\\text{AST} \\longrightarrow\n\\text{HTML}\n$$\n\nCode for the second step is housed in the module \\code{MiniLatex.Render}. The primary function is\n\n\\begin{verbatim}\nrender : LatexState -> LatexExpression -> String\nrender latexState latexExpression =\n    case latexExpression of\n        Comment str ->\n            renderComment str\n        Macro name args ->\n            renderMacro latexState name args\n        Item level latexExpression ->\n            renderItem latexState level latexExpression\n        ETC...\n\\end{verbatim}\n\nThis function dispatches a given \\code{LatexExpression} to its handler, which then computes a string representing the HTML output.  That output depends on the current \\code{latexState} -- a data structure  which holds information about various counters such as section numbers as well as information about cross-references.  One can call \\code{render} on a default \\code{LateExpression} to convert it to HTML.  However, the usual process for rendering a MiniLaTeX document from scratch is to first transform it into logical paragraphs, i.e., a list of strings, then use the \\code{accumulator} function defined below to transform paragraphs one at a time into HTML, updating the \\code{latexState} with each paragraph.\n\nThe accumulator is a function of four variables, as indicated below.  The first argument, \\code{parse}, takes a string as input and parses it to produce a \\code{LatexExpression} as output.  The second, \\code{render}, takes a \\code{LatexExpression} and a \\code{LatexState} as input and produces HTML as output.  The third, \\code{updateState}, takes a \\code{LatexExpression} and a \\code{LatexState} as input and produces a new \\code{LatexState} as output.  The fourth and final argument, \\coce{input}, is the list of strings (logical paragraphs) to be rendered.  The output of the \\code{accumulator} is a tuple consisting of a list of strings, the rendered HTML, and the final \\code{latexState}.\n\n$$\n{\\bf accumulator\\ } \\text{parse render updateState inputList} \\longrightarrow (\\text{outputList}, latexState)\n$$\n\nThe \\code{accumulator} uses \\code{List.foldl} to build up the final list of rendered paragraphs one paragraph at a time, starting with an empty list.  The driver for this operation is the \\code{transformer} function, which we treat below.\n\n\n\\begin{verbatim}\naccumulator :\n    (String -> List LatexExpression)\n    -> (List LatexExpression -> LatexState -> String)\n    -> (List LatexExpression -> LatexState -> LatexState)\n    -> List String\n    -> ( List String, LatexState )\naccumulator parse render updateState inputList =\n    inputList\n        |> List.foldl (transformer parse render updateState) ( [], Render.emptyLatexState )\n\\end{verbatim}\n\nThe role of the \\code{transformer} function is to carry forward the current \\code{latexState}, updating it, and transforming \\code{LatexExpressions} into HTML. A kind of transducer, the \\code{transformer} is a function of five variables:\n\n$$\n{\\bf transformer\\ } \\text{parse render updateState input acc} \\longrightarrow\n(\\text{List renderedInput}, \\text{state})\n$$\n\nHere is the code:\n\n\\begin{verbatim}\ntransformer :\n    (input -> parsedInput)\n    -> (parsedInput -> state -> renderedInput)\n    -> (parsedInput -> state -> state)\n    -> input\n    -> ( List renderedInput, state )\n    -> ( List renderedInput, state )\ntransformer parse render updateState input acc =\n    let\n        ( outputList, state ) =\n            acc\n        parsedInput =\n            parse input\n        newState =\n            updateState parsedInput state\n    in\n        ( outputList ++ [ render parsedInput newState ], newState )\n\\end{verbatim}\n\nTo bundle all this code in convenient form, we also define a function\n\n$$\n{\\bf transformParagraphs\\ } \\text{List SourceText} \\longrightarrow  \\text{List HTMLText}\n$$\n\nthat maps a  list of paragraphs of MiniLatex source text to its rendition as list of HTML strings.  The \\code{transformParagraphs} function is defined in terms of the \\code{accumulator}:\n\n\\begin{verbatim}\ntransformParagraphs : List String -> List String\ntransformParagraphs paragraphs =\n    paragraphs\n        |> accumulator Render.parseParagraph renderParagraph updateState\n        |> Tuple.first\n\\end{verbatim}\n\n\n\\section{Differ: Speeding up the Edit Cycle}\n\nIn the previous section, we described in outline how a MiniLaTeX document is rendered into HTML.  In order to have a fast edit-render cycle, one which feels instantaneous or nearly so to an author, we need an additional construct.  The idea is this.  The app maintains a list $X$ of logical paragraphs for the document being edited, as well as a list $r(X)$ of rendered paragraphs. Suppose that the author makes some edits and pressed the update button.  The app computes a new list of logical paragraphs and compares it with the old.  The old list will have the form $X = \\alpha\\beta\\gamma$ and the new one will have the form $Y = \\alpha\\beta\'\\gamma$, where $\\alpha$ is the greatest common prefix and $\\gamma$ is the greatest common suffix.  By greatest common prefix, we mean the largest list $\\alpha$ of contiguous elements of the list $X$ that is also list of contiguous elements of the list $Y$, and such that the first element of $\\alpha$ is the same as the first element of $X$ and also of $Y$.  The largest common suffix is defined similarly.  Note that $r(X) = r(\\alpha)r(\\beta)r(\\gamma)$ and $r(Y) =  r(\\alpha)r(\\beta\')r(\\gamma)$.  Thus to compute $r(Y)$, we need only compute $r(\\beta\')$, relying on the previously computed $r(\\alpha)$ and $r(\\gamma)$.\n\nWhile the strategy just described is not the theoretically  most efficient, it aways works and in fact is quite fast in practice because of the typical behavior of authors -- make a few changes, or add a little text, then press the save/update button.  The point is that changes to the text are generally localized.  If  the author  adds, deletes, or changes a single paragraph, at most one paragraph has to be re-rendered.\n\nWe now discuss the core code for the strategy for diffing and rendering the list of logical paragraphs.  First comes the data structure to be maintained while editing:\n\n\\begin{verbatim}\ntype alias EditRecord =\n    { paragraphs : List String\n    , renderedParagraphs : List String\n    }\n\\end{verbatim}\n\nTo set up this structure when an author begins editing, we make use of the general \\code{initialize} function in module \\code{MiniLatex.Differ}:\n\n\\begin{verbatim}\ninitialize : (List String -> List String) -> String -> EditRecord\ninitialize transformParagraphs text =\n    let\n        paragraphs =\n            paragraphify text\n        renderedParagraphs =\n            transformParagraphs paragraphs\n    in\n        EditRecord paragraphs renderedParagraphs\n\\end{verbatim}\n\n\nTo make use of \\code{Differ.initialize}, we call it with \\code{Accumulator.transformParagraphs}:\n\n\\begin{verbatim}\neditRecord = Differ.initialize Accumulator.transformParagraphs\n\\end{verbatim}\n\n\\subsection{Inside the Differ}\n\nLet\'s take a quick look at the operation of the differ.  The basic data structure\nis the \\code{DiffRecord}\n\n\\begin{verbatim}\ntype alias DiffRecord =\n    { commonInitialSegment : List String\n    , commonTerminalSegment : List String\n    , middleSegmentInSource : List String\n    , middleSegmentInTarget : List String\n    }\n\\end{verbatim}\n\nThus $\\alpha = \\text{commonInitialSegment}$,  $\\beta = \\text{middleSegmentInSource}$,\n$\\gamma = \\text{commonTerminalSegment}$, and $\\beta\' = \\text{middleSegmentInTarget}$.\nThese are computed using the function \\code{diff}:\n\n\\begin{verbatim}\ndiff : List String -> List String -> DiffRecord\ndiff u v =\n    let\n        a = commonInitialSegment u v\n        b = commonTerminalSegment u v\n        la = List.length a\n        lb = List.length b\n        x =  u |> List.drop la |> dropLast lb\n        y = v |> List.drop la |> dropLast lb\n    in\n        DiffRecord a b x y\n\\end{verbatim}\n\nIn an edit cycle, we need to update the current \\code{EditRecord}, which we do using \\code{Differ.update}.\n\n$$\n{\\bf Diff.update\\ } \\text{transformer editRecord text} \\longrightarrow \\text{newEditRecord}\n$$\n\nThe \\code{Diff.update} function defined below breaks the \\code{text} into paragraphs, computes the \\code{diffRecord}, and returns an updated version of \\code{editRecord} by applying \\code{transformer} to $\\beta\'$.\n\n\\begin{verbatim}\nupdate : (String -> String) -> EditRecord -> String -> EditRecord\nupdate transformer editorRecord text =\n    let\n        newParagraphs =\n            paragraphify text\n        diffRecord =\n            diff editorRecord.paragraphs newParagraphs\n        newRenderedParagraphs =\n            renderDiff transformer diffRecord editorRecord.renderedParagraphs\n    in\n        EditRecord newParagraphs newRenderedParagraphs\n\\end{verbatim}\n\nHere is how \\code{renderDiff}, which is used to update the \\code{editRecord}, is defined:\n\n\\begin{verbatim}\nrenderDiff : (String -> String) -> DiffRecord -> List String -> List String\nrenderDiff renderer diffRecord renderedStringList =\n  let\n    ii = List.length diffRecord.commonInitialSegment\n    it = List.length diffRecord.commonTerminalSegment\n    initialSegmentRendered = List.take ii renderedStringList\n    terminalSegmentRendered = takeLast it renderedStringList\n    middleSegmentRendered = (renderList renderer) diffRecord.middleSegmentInTarget\n  in\n    initialSegmentRendered ++ middleSegmentRendered ++ terminalSegmentRendered\n\\end{verbatim}\n\n\n\\section{Status}\n\nMiniLaTeX is now at version 2.1.  It includes the following.\n\n\\begin{itemize}\n\n\\item \\strong{Environments:}  \\italic{align, center, enumerate, eqnarray, equation, itemize, macros, tabular}. The environments  \\italic{theorem, proposition, corollary, lemma, definition} are handled by a default mechanism.\n\n\\item \\strong{Macros}: \\italic{cite, code, ellie, emph, eqref, href, iframe, image, index, italic, label, maketitle, mdash, ndash, newcommand, ref, section, section*, strong, subheading, subsection, subsection*, subsubsection, subsubsection*, title, term, xlink, xlinkPublic}\n\\end{itemize}\n\nMost of the macro and environment renderers are in final or close to final form. A few, e.g. \\italic{tabular} need considerably more work, and a few more are dummies.\n\n\n\n\\comment{ Article by Ilias: https://github.com/zwilias/elm-json/blob/master/src/Json/Parser.elm}\n\n\n';
-var _user$project$App_Source$initialText = '\n\\title{MiniLaTeX Demo}\n\n\\author{James Carlson}\n\n\\email{jxxcarlson at gmail}\n\n\\date{November 13, 2017}\n\n\\revision{January 16, 2018}\n\n\\maketitle\n\n\\tableofcontents\n\n\\section{Introduction}\n\nMiniLaTeX is a subset of LaTeX which can be displayed in a web browser.  This document is written in MiniLatex; for additional examples, try the buttons on the lower left, or go to \\href{http://www.knode.io}{www.knode.io}\n\n\nFeel free to edit and re-render the text on the left and to experiment with the buttons above.  To export a rendered LaTeX file, click on the \"Export LaTeX\" button above, then press the \"Download HTML File\" button.  Your file will be downloaded as \"file.html\".\nPlease bear in mind that MiniLaTeX is still an R&D operation -- we are working hard to extend its scope.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\nNote that in the \\italic{source} of the listing below,\nthere are no line numbers.\n\n\\strong{MiniLaTeX Abstract Syntax Tree (AST)}\n\n\\begin{listing}\ntype LatexExpression\n    = LXString String\n    | Comment String\n    | Item Int LatexExpression\n    | InlineMath String\n    | DisplayMath String\n    | Macro String (List LatexExpression)\n    | Environment String LatexExpression\n    | LatexList (List LatexExpression)\n\\end{listing}\n\nThe MiniLaTeX parser reads text and produces\nan AST.  A rendering function converts the AST\ninto HTML.  One could easily write\nfunctions \\code{render: LatexExpression -> String}\nto make other conversions.\n\n\\section{More about MiniLaTeX}\n\nArticles and code:\n\n\\begin{itemize}\n\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nContributions to help improve the open-source\nMiniLatex Parser-Renderer are most welcome.\nHere is the \\href{https://github.com/jxxcarlson/minilatex}{GitHub repository}.\nThe MiniLatex Demo as well as the app at knode.io are written in\n\\href{http://elm-lang.org/}{Elm}.  We also plan a Haskell version.\n\nPlease send comments, bug reports, etc. to jxxcarlson at gmail.\n\n\\section{Technical Note}\nThere is a \\italic{very rough} \\href{http://www.knode.io/#@public/628}{draft grammar}\nfor MiniLaTeX, written mostly in EBNF.  However, there are a few\nproductions, notably for enviroments, which are not context-free.\nRecall that in a context-free grammar, all productions are\nof the form $A \\Rightarrow \\beta$, where $A$ is a terminal symbol\nand $\\beta$ is a sequence of terminals and nonterminals.  There\nare some productions of the form $A\\beta \\Rightarrow \\gamma$,\nwhere $\\beta$ is a terminal symbol.  These are\ncontext-sensitive productions, with $\\beta$ providing the context.\n\n\n\n\\section{Restrictions, Limitations, and Todos}\n\nBelow\nare some of the current restrictions and limitations.\n\n\\begin{enumerate}\n\n\\item The enumerate and itemize environments cannot be nested (but can containe inline math and macros).\n\n\\item The tabular environment ignores formatting information\nand left-justifies everything in the cell.\n\n\n\\end{enumerate}\n\n\nWe are working on these and other issues  to expand the scope of MiniLatex.\nThe project is still in the R&D phase -- we welcome comments (jxxcarlson at gmail)\n\n\\bigskip\n\n\\image{https://cdn-images-1.medium.com/max/1200/1*HlpVE5TFBUp17ua1AdiKpw.gif}{The way we used to do it.}{align: center}\n\n';
+var _user$project$App_Source$initialText = '\n\\title{MiniLaTeX Demo}\n\n\\author{James Carlson}\n\n\\email{jxxcarlson at gmail}\n\n\\date{November 13, 2017}\n\n\\revision{January 16, 2018}\n\n\\maketitle\n\n\\tableofcontents\n\n\\section{Introduction}\n\nMiniLaTeX is a subset of LaTeX which can be displayed in a web browser.  This document is written in MiniLatex; for additional examples, try the buttons on the lower left, or go to \\href{http://www.knode.io}{www.knode.io}\n\nFeel free to edit and re-render the text on the left and to experiment with the buttons above.  To export a rendered LaTeX file, simply click on the \"Export\" button above.  Your file will be downloaded as \"file.html\".\n\nPlease bear in mind that MiniLaTeX is still an R&D operation. We are working hard to extend its scope; we welcome bug reports, comments and suggestions.\n\nMiniLatex is written in Elm, the functional language for front-end web development that began with Evan Czaplicki\'s 2012 senior thesis. MiniLatex, does not, however, depend on any particular language.  Indeed, we plan a second implementation in Haskell.\n\n\\section{Examples}\n\nThe Pythagorean Theorem, $a^2 + b^2 = c^2$,\nis useful for computing distances.\n\n\nFormula \\eqref{integral}\nis one that you learned in Calculus class.\n\n\\begin{equation}\n\\label{integral}\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\\end{equation}\n\n\\begin{theorem}\nThere are infinitely many primes, and\neach satisfies $a^{p-1} \\equiv 1 \\text{ mod } p$, provided\nthat $p$ does not divide $a$.\n\\end{theorem}\n\n\\strong{Light Elements}\n\\begin{tabular}{l l l l}\nHydrogen & H & 1 & 1.008 \\\\\nHelium & He & 2 & 4.003 \\\\\nLithium & Li & 3 &  6.94 \\\\\nBeryllium & Be & 4 & 9.012 \\\\\n\\end{tabular}\n\n\\image{http://psurl.s3.amazonaws.com/images/jc/propagator_t=2-6feb.png}{Free particle propagator}{width: 300, align: center}\n\n\nNote that in the \\italic{source} of the listing below,\nthere are no line numbers.\n\n\\strong{MiniLaTeX Abstract Syntax Tree (AST)}\n\n\\begin{listing}\ntype LatexExpression\n    = LXString String\n    | Comment String\n    | Item Int LatexExpression\n    | InlineMath String\n    | DisplayMath String\n    | Macro String (List LatexExpression)\n    | Environment String LatexExpression\n    | LatexList (List LatexExpression)\n\\end{listing}\n\nThe MiniLaTeX parser reads text and produces\nan AST.  A rendering function converts the AST\ninto HTML.  One could easily write\nfunctions \\code{render: LatexExpression -> String}\nto make other conversions.\n\n\\section{Short Writer\'s Guide}\n\nWe plan a complete Writer\'s Guide for MiniLaTeX.  For now, however, just a few pointers.\n\n\\begin{itemize}\n\n\\item Make liberal use of blank lines. Your source text will be much easier to read, and the converter has optimizations that work especially well when this is done.\n\n\\item Equations and environments should have a blank line above one below.  Items in lists should be separated by blank lines.    This is not strictly necessary, but it helps the converter and it helps you.\n\n\\item  The begin-end pairs that delimit environments should begin at the left margin of the text.  For the moment this is mandatory.\n\n\\end{itemize}\n\n\\italic{Fast Render} is an optimization that speeds\nup parsing and rendering for long documents.\nOnly paragraphs which are changed are re-parsed\n(expensive) and re-rendered (inexpensive).\nHowever, to resolve section numbers, cross-references,\netc., a full render is necessary.\n\nAll of these operations will have a very significant speed-up\nwhen version 0.19 of the Elm compiler is released and\nwhen MathJax 3.0 is released and integrated into MiniLaTeX.\n\n\\section{More about MiniLaTeX}\n\nArticles and code:\n\n\\begin{itemize}\n\n\\item \\href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser}\n\n\\item \\href{https://github.com/jxxcarlson/minilatexDemo}{Code for the Demo App}\n\n\\item \\href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{The MiniLatex Elm Library}\n\n\\end{itemize}\n\nTo try out MiniLatex for real, sign up for a free account at\n \\href{http://www.knode.io}{www.knode.io}.  The app is still\n under development &mdash;  we need people to test it and give feedback.\nContributions to help improve the open-source\nMiniLatex Parser-Renderer are most welcome.\nHere is the \\href{https://github.com/jxxcarlson/minilatex}{GitHub repository}.\nThe MiniLatex Demo as well as the app at knode.io are written in\n\\href{http://elm-lang.org/}{Elm}.  We also plan a Haskell version.\n\nPlease send comments, bug reports, etc. to jxxcarlson at gmail.\n\n\\section{Technical Note}\nThere is a \\italic{very rough} \\href{http://www.knode.io/#@public/628}{draft grammar}\nfor MiniLaTeX, written mostly in EBNF.  However, there are a few\nproductions, notably for enviroments, which are not context-free.\nRecall that in a context-free grammar, all productions are\nof the form $A \\Rightarrow \\beta$, where $A$ is a terminal symbol\nand $\\beta$ is a sequence of terminals and nonterminals.  There\nare some productions of the form $A\\beta \\Rightarrow \\gamma$,\nwhere $\\beta$ is a terminal symbol.  These are\ncontext-sensitive productions, with $\\beta$ providing the context.\n\n\n\n\\section{Restrictions, Limitations, and Todos}\n\nBelow\nare some of the current restrictions and limitations.\n\n\\begin{enumerate}\n\n\\item The enumerate and itemize environments cannot be nested (but can contain inline math and macros).\n  In addition there is a parser bug which prevents the use of these environments within\n  other environments such as theorem.\n\n\\item The tabular environment ignores formatting information\nand left-justifies everything in the cell.\n\n\n\\end{enumerate}\n\n\nWe are working to fix known issues and to expand the scope of MiniLatex.\n\n\\bigskip\n\n\\image{https://cdn-images-1.medium.com/max/1200/1*HlpVE5TFBUp17ua1AdiKpw.gif}{}{align: center}\n\n';
 var _user$project$App_Source$htmlSuffix = '\n  </body>\n  </html>\n';
 var _user$project$App_Source$htmlPrefix = '\n  <html>\n  <head>\n\n    <meta charset=\"utf-8\" />\n\n    <style>\n     .code {font-family: \"Courier New\", Courier, monospace; background-color: #f5f5f5; font-weight: 300;}\n     .center {margin-left: auto; margin-right: auto;}\n     .indent {margin-left: 2em!important}\n     .italic {font-style: oblique!important}\n     .environment {margin-top: 1em; margin-bottom: 1em;}\n     .strong {font-weight: bold}\n     .subheading {margin-top: 0.75em; margin-bottom: 0.5em; font-weight: bold}\n     .verbatim {margin-top: 1em; margin-bottom: 1em; font-size: 10pt;}\n     td {padding-right: 10px;}\n\n       a.linkback:link { color: white;}\n       a.linkback:visited { color: white;}\n       a.hover:visited { color: red;}\n       a.hover:visited { color: blue;}\n\n\n     a:hover { color: red;}\n     a:active { color: blue;}\n\n     .errormessage {white-space: pre-wrap;}\n\n     .title { font-weight: bold; font-size: 1.7em; margin-bottom: 0px; padding-bottom: 0px;}\n     .smallskip {margin-top:0; margin-bottom: -12px;}\n\n     .item1 {margin-bottom: 6px;}\n\n     .verse { white-space: pre-line; margin-top:0}\n     .authorinfo { white-space: pre-line; margin-top:-8px}\n\n     .ListEnvironment { list-style-type: none; margin-left:8px; padding-left: 8px; margin-top: 0;margin-bottom:12px;}\n     .tocTitle { margin-bottom: 0; margin-top:12px; font-weight: bold;}\n     .sectionLevel1 {padding-left: 0; margin-left: 0; }\n     .sectionLevel2 {padding-left: 8px; margin-left: 8px; }\n     .sectionLevel3 {padding-left: 22px; margin-left: 22px; }\n\n    </style>\n\n    <script type=\"text/javascript\" async\n          src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\">\n    </script>\n\n    <title>MiniLaTeX Demo</title>\n\n  </head>\n\n  <body>\n\n      <script type=\"text/x-mathjax-config\">\n         MathJax.Hub.Config(\n           { tex2jax: {inlineMath: [[\'$\',\'$\'], [\'\\(\',\'\\)\']]},\n            processEscapes: true\n            }\n      );\n\n    </script>\n\n\n';
 
@@ -13521,10 +13521,7 @@ var _user$project$MiniLatex_LatexState$emptyLatexState = {
 var _user$project$MiniLatex_LatexState$setDictionaryItem = F3(
 	function (key, value, latexState) {
 		var dictionary = latexState.dictionary;
-		var newDictionary = A2(
-			_elm_lang$core$Debug$log,
-			'newDictionay',
-			A3(_elm_lang$core$Dict$insert, key, value, dictionary));
+		var newDictionary = A3(_elm_lang$core$Dict$insert, key, value, dictionary);
 		return _elm_lang$core$Native_Utils.update(
 			latexState,
 			{dictionary: newDictionary});
@@ -13889,14 +13886,11 @@ var _user$project$MiniLatex_Differ$renderDiff = F5(
 			_elm_lang$core$Basics_ops['++'],
 			idListInitial,
 			A2(_elm_lang$core$Basics_ops['++'], idListMiddle, idListTerminal));
-		var _p0 = A2(
-			_elm_lang$core$Debug$log,
-			'newId Info',
-			_elm_lang$core$Native_Utils.eq(nt, 0) ? {ctor: '_Tuple2', _0: _elm_lang$core$Maybe$Nothing, _1: _elm_lang$core$Maybe$Nothing} : {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Maybe$Just(ii),
-				_1: _elm_lang$core$Maybe$Just((ii + nt) - 1)
-			});
+		var _p0 = _elm_lang$core$Native_Utils.eq(nt, 0) ? {ctor: '_Tuple2', _0: _elm_lang$core$Maybe$Nothing, _1: _elm_lang$core$Maybe$Nothing} : {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Maybe$Just(ii),
+			_1: _elm_lang$core$Maybe$Just((ii + nt) - 1)
+		};
 		var newIdsStart = _p0._0;
 		var newIdsEnd = _p0._1;
 		return {
@@ -14009,12 +14003,11 @@ var _user$project$MiniLatex_Differ$update = F4(
 
 var _user$project$App_Types$Model = F9(
 	function (a, b, c, d, e, f, g, h, i) {
-		return {sourceText: a, parseResult: b, textToExport: c, inputString: d, hasMathResult: e, editRecord: f, seed: g, configuration: h, lineViewStyle: i};
+		return {counter: a, sourceText: b, parseResult: c, inputString: d, hasMathResult: e, editRecord: f, seed: g, configuration: h, lineViewStyle: i};
 	});
 var _user$project$App_Types$Input = function (a) {
 	return {ctor: 'Input', _0: a};
 };
-var _user$project$App_Types$ExportLatex = {ctor: 'ExportLatex'};
 var _user$project$App_Types$Grammar = {ctor: 'Grammar'};
 var _user$project$App_Types$MathPaper = {ctor: 'MathPaper'};
 var _user$project$App_Types$WeatherApp = {ctor: 'WeatherApp'};
@@ -14022,7 +14015,6 @@ var _user$project$App_Types$WavePackets = {ctor: 'WavePackets'};
 var _user$project$App_Types$TechReport = {ctor: 'TechReport'};
 var _user$project$App_Types$SetVerticalView = {ctor: 'SetVerticalView'};
 var _user$project$App_Types$SetHorizontalView = {ctor: 'SetHorizontalView'};
-var _user$project$App_Types$ShowExportLatexView = {ctor: 'ShowExportLatexView'};
 var _user$project$App_Types$ShowRawHtmlView = {ctor: 'ShowRawHtmlView'};
 var _user$project$App_Types$ShowParseResultsView = {ctor: 'ShowParseResultsView'};
 var _user$project$App_Types$ShowStandardView = {ctor: 'ShowStandardView'};
@@ -14039,7 +14031,6 @@ var _user$project$App_Types$GetContent = function (a) {
 var _user$project$App_Types$FastRender = {ctor: 'FastRender'};
 var _user$project$App_Types$Vertical = {ctor: 'Vertical'};
 var _user$project$App_Types$Horizontal = {ctor: 'Horizontal'};
-var _user$project$App_Types$ExportLatexView = {ctor: 'ExportLatexView'};
 var _user$project$App_Types$RawHtmlView = {ctor: 'RawHtmlView'};
 var _user$project$App_Types$ParseResultsView = {ctor: 'ParseResultsView'};
 var _user$project$App_Types$StandardView = {ctor: 'StandardView'};
@@ -14958,31 +14949,30 @@ var _user$project$MiniLatex_Render$renderLatexList = F2(
 	});
 var _user$project$MiniLatex_Render$render = F2(
 	function (latexState, latexExpression) {
-		var _p9 = A2(_elm_lang$core$Debug$log, 'latexState1', latexState);
-		var _p10 = latexExpression;
-		switch (_p10.ctor) {
+		var _p9 = latexExpression;
+		switch (_p9.ctor) {
 			case 'Comment':
-				return _user$project$MiniLatex_Render$renderComment(_p10._0);
+				return _user$project$MiniLatex_Render$renderComment(_p9._0);
 			case 'Macro':
-				return A3(_user$project$MiniLatex_Render$renderMacro, latexState, _p10._0, _p10._1);
+				return A3(_user$project$MiniLatex_Render$renderMacro, latexState, _p9._0, _p9._1);
 			case 'Item':
-				return A3(_user$project$MiniLatex_Render$renderItem, latexState, _p10._0, _p10._1);
+				return A3(_user$project$MiniLatex_Render$renderItem, latexState, _p9._0, _p9._1);
 			case 'InlineMath':
 				return A2(
 					_elm_lang$core$Basics_ops['++'],
 					'$',
-					A2(_elm_lang$core$Basics_ops['++'], _p10._0, '$'));
+					A2(_elm_lang$core$Basics_ops['++'], _p9._0, '$'));
 			case 'DisplayMath':
 				return A2(
 					_elm_lang$core$Basics_ops['++'],
 					'$$',
-					A2(_elm_lang$core$Basics_ops['++'], _p10._0, '$$'));
+					A2(_elm_lang$core$Basics_ops['++'], _p9._0, '$$'));
 			case 'Environment':
-				return A3(_user$project$MiniLatex_Render$renderEnvironment, latexState, _p10._0, _p10._1);
+				return A3(_user$project$MiniLatex_Render$renderEnvironment, latexState, _p9._0, _p9._1);
 			case 'LatexList':
-				return A2(_user$project$MiniLatex_Render$renderLatexList, latexState, _p10._0);
+				return A2(_user$project$MiniLatex_Render$renderLatexList, latexState, _p9._0);
 			default:
-				return _p10._0;
+				return _p9._0;
 		}
 	});
 var _user$project$MiniLatex_Render$renderEnvironment = F3(
@@ -14990,9 +14980,9 @@ var _user$project$MiniLatex_Render$renderEnvironment = F3(
 		return A3(_user$project$MiniLatex_Render$environmentRenderer, name, latexState, body);
 	});
 var _user$project$MiniLatex_Render$environmentRenderer = function (name) {
-	var _p11 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderEnvironmentDict);
-	if (_p11.ctor === 'Just') {
-		return _p11._0;
+	var _p10 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderEnvironmentDict);
+	if (_p10.ctor === 'Just') {
+		return _p10._0;
 	} else {
 		return _user$project$MiniLatex_Render$renderDefaultEnvironment(name);
 	}
@@ -15437,9 +15427,9 @@ var _user$project$MiniLatex_Render$renderMacro = F3(
 		return A3(_user$project$MiniLatex_Render$macroRenderer, name, latexState, args);
 	});
 var _user$project$MiniLatex_Render$macroRenderer = function (name) {
-	var _p12 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderMacroDict);
-	if (_p12.ctor === 'Just') {
-		return _p12._0;
+	var _p11 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_Render$renderMacroDict);
+	if (_p11.ctor === 'Just') {
+		return _p11._0;
 	} else {
 		return _user$project$MiniLatex_Render$reproduceMacro(name);
 	}
@@ -16406,14 +16396,14 @@ var _user$project$MiniLatex_Render$renderString = F3(
 	function (parser, latexState, str) {
 		var parserOutput = A2(_elm_tools$parser$Parser$run, parser, str);
 		var renderOutput = function () {
-			var _p13 = parserOutput;
-			if (_p13.ctor === 'Ok') {
-				return A2(_user$project$MiniLatex_Render$render, latexState, _p13._0);
+			var _p12 = parserOutput;
+			if (_p12.ctor === 'Ok') {
+				return A2(_user$project$MiniLatex_Render$render, latexState, _p12._0);
 			} else {
 				return A2(
 					_elm_lang$core$Basics_ops['++'],
 					'Error: ',
-					_elm_lang$core$Basics$toString(_p13._0));
+					_elm_lang$core$Basics$toString(_p12._0));
 			}
 		}();
 		return renderOutput;
@@ -16884,24 +16874,18 @@ var _user$project$MiniLatex_LatexDiffer$initialize = F2(
 		var _p0 = A2(_user$project$MiniLatex_Accumulator$parseParagraphs, _user$project$MiniLatex_LatexState$emptyLatexState, paragraphs);
 		var latexExpressionList = _p0._0;
 		var latexState1 = _p0._1;
-		var latexState2 = A2(
-			_elm_lang$core$Debug$log,
-			'latexState2',
-			_elm_lang$core$Native_Utils.update(
-				_user$project$MiniLatex_LatexState$emptyLatexState,
-				{crossReferences: latexState1.crossReferences, tableOfContents: latexState1.tableOfContents, dictionary: latexState1.dictionary}));
+		var latexState2 = _elm_lang$core$Native_Utils.update(
+			_user$project$MiniLatex_LatexState$emptyLatexState,
+			{crossReferences: latexState1.crossReferences, tableOfContents: latexState1.tableOfContents, dictionary: latexState1.dictionary});
 		var _p1 = A2(_user$project$MiniLatex_Accumulator$renderParagraphs, latexState2, latexExpressionList);
 		var renderedParagraphs = _p1._0;
 		var latexState3 = _p1._1;
 		var renderedParagraphs2 = renderedParagraphs;
 		var n = _elm_lang$core$List$length(paragraphs);
 		var idList = A2(
-			_elm_lang$core$Debug$log,
-			'idList in initialize',
-			A2(
-				_elm_lang$core$List$map,
-				_user$project$MiniLatex_Differ$prefixer(0),
-				A2(_elm_lang$core$List$range, 1, n)));
+			_elm_lang$core$List$map,
+			_user$project$MiniLatex_Differ$prefixer(0),
+			A2(_elm_lang$core$List$range, 1, n));
 		return A6(_user$project$MiniLatex_Differ$EditRecord, paragraphs, renderedParagraphs2, latexState2, idList, _elm_lang$core$Maybe$Nothing, _elm_lang$core$Maybe$Nothing);
 	});
 var _user$project$MiniLatex_LatexDiffer$safeUpdate = F3(
@@ -16953,12 +16937,7 @@ var _user$project$MiniLatex_Driver$pTags = function (editRecord) {
 };
 var _user$project$MiniLatex_Driver$getRenderedText = F2(
 	function (macroDefinitions, editRecord) {
-		var pTagList = A2(
-			_elm_lang$core$Debug$log,
-			'pTags',
-			_user$project$MiniLatex_Driver$pTags(editRecord));
-		var _p0 = A2(_elm_lang$core$Debug$log, 'latexState2', editRecord.latexState);
-		var _p1 = A2(_elm_lang$core$Debug$log, 'idList', editRecord.idList);
+		var pTagList = _user$project$MiniLatex_Driver$pTags(editRecord);
 		var paragraphs = editRecord.renderedParagraphs;
 		return function (x) {
 			return A2(
@@ -17259,19 +17238,6 @@ var _user$project$App_View$optionaViewTitleButton = F2(
 						_0: _elm_lang$html$Html$text('Parse results'),
 						_1: {ctor: '[]'}
 					});
-			case 'RawHtmlView':
-				return A2(
-					_elm_lang$html$Html$button,
-					{
-						ctor: '::',
-						_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorDark, width),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Raw HTML'),
-						_1: {ctor: '[]'}
-					});
 			default:
 				return A2(
 					_elm_lang$html$Html$button,
@@ -17282,7 +17248,7 @@ var _user$project$App_View$optionaViewTitleButton = F2(
 					},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('Exported LaTeX'),
+						_0: _elm_lang$html$Html$text('Raw HTML'),
 						_1: {ctor: '[]'}
 					});
 		}
@@ -17547,40 +17513,6 @@ var _user$project$App_View$techReportButton = function (width) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$App_View$exportLatexButton = F2(
-	function (model, width) {
-		return _elm_lang$core$Native_Utils.eq(model.configuration, _user$project$App_Types$ExportLatexView) ? A2(
-			_elm_lang$html$Html$button,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$ExportLatex),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorBlue, width),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Export LaTeX'),
-				_1: {ctor: '[]'}
-			}) : A2(
-			_elm_lang$html$Html$button,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Events$onClick(_user$project$App_Types$ExportLatex),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$App_View$buttonStyle, _user$project$App_View$colorLight, width),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Export LaTeX'),
-				_1: {ctor: '[]'}
-			});
-	});
 var _user$project$App_View$restoreButton = function (width) {
 	return A2(
 		_elm_lang$html$Html$button,
@@ -17751,37 +17683,6 @@ var _user$project$App_View$buttonBarBottomLeft = A2(
 			}
 		}
 	});
-var _user$project$App_View$buttonBarRight = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(_user$project$App_View$standardViewButton, model, 98),
-			_1: {
-				ctor: '::',
-				_0: A2(_user$project$App_View$parseResultsViewButton, model, 106),
-				_1: {
-					ctor: '::',
-					_0: A2(_user$project$App_View$rawHtmlViewButton, model, 106),
-					_1: {
-						ctor: '::',
-						_0: A2(_user$project$App_View$exportLatexButton, model, 93),
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		});
-};
 var _user$project$App_View$buttonBarLeft = A2(
 	_elm_lang$html$Html$div,
 	{
@@ -17826,8 +17727,7 @@ var _user$project$App_View$renderedSourcePane = function (model) {
 					_0: A2(
 						_elm_lang$html$Html_Attributes$property,
 						'innerHTML',
-						_elm_lang$core$Json_Encode$string(
-							A2(_elm_lang$core$Debug$log, 'RT', renderedText))),
+						_elm_lang$core$Json_Encode$string(renderedText)),
 					_1: {ctor: '[]'}
 				}
 			}
@@ -17905,29 +17805,27 @@ var _user$project$App_View$dataUrl = function (data) {
 var _user$project$App_View$downloadStyle = _elm_lang$html$Html_Attributes$style(
 	{
 		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '25px'},
-		_1: {ctor: '[]'}
-	});
-var _user$project$App_View$innerDownloadStyle = _elm_lang$html$Html_Attributes$style(
-	{
-		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
+		_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '0px'},
 		_1: {
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'padding', _1: '4px'},
+			_0: {ctor: '_Tuple2', _0: 'margin-right', _1: '8px'},
 			_1: {
 				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'padding-left', _1: '10px'},
+				_0: {ctor: '_Tuple2', _0: 'padding', _1: '4px'},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'padding-right', _1: '10px'},
+					_0: {ctor: '_Tuple2', _0: 'padding-left', _1: '10px'},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#aaa'},
+						_0: {ctor: '_Tuple2', _0: 'padding-right', _1: '10px'},
 						_1: {
 							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'font-size', _1: '11pt'},
-							_1: {ctor: '[]'}
+							_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#aaa'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'font-size', _1: '11pt'},
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				}
@@ -17944,7 +17842,48 @@ var _user$project$App_View$textAreaStyle = _elm_lang$html$Html_Attributes$style(
 			_1: {ctor: '[]'}
 		}
 	});
-var _user$project$App_View$showExportResult = function (model) {
+var _user$project$App_View$exporterLink = function (model) {
+	return A2(
+		_elm_lang$html$Html$a,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$href(
+				_user$project$App_View$dataUrl(model.inputString)),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$downloadAs('file.html'),
+				_1: {
+					ctor: '::',
+					_0: _user$project$App_View$downloadStyle,
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Export'),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$App_View$exporterTextArea = function (model) {
+	return A2(
+		_elm_lang$html$Html$textarea,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onInput(_user$project$App_Types$Input),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$value(model.inputString),
+				_1: {
+					ctor: '::',
+					_0: _user$project$App_View$textAreaStyle,
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		{ctor: '[]'});
+};
+var _user$project$App_View$buttonBarRight = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -17952,71 +17891,29 @@ var _user$project$App_View$showExportResult = function (model) {
 			_0: _elm_lang$html$Html_Attributes$style(
 				{
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
+					_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '20px'},
 					_1: {ctor: '[]'}
 				}),
 			_1: {ctor: '[]'}
 		},
 		{
 			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _user$project$App_View$downloadStyle,
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$textarea,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onInput(_user$project$App_Types$Input),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$value(model.inputString),
-								_1: {
-									ctor: '::',
-									_0: _user$project$App_View$textAreaStyle,
-									_1: {ctor: '[]'}
-								}
-							}
-						},
-						{ctor: '[]'}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$a,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$href(
-									_user$project$App_View$dataUrl(model.inputString)),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$downloadAs('file.html'),
-									_1: {
-										ctor: '::',
-										_0: _user$project$App_View$innerDownloadStyle,
-										_1: {ctor: '[]'}
-									}
-								}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('Download HTML File'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}),
+			_0: _user$project$App_View$exporterTextArea(model),
 			_1: {
 				ctor: '::',
-				_0: _user$project$App_View$spacer(8),
+				_0: _user$project$App_View$exporterLink(model),
 				_1: {
 					ctor: '::',
-					_0: _user$project$App_View$exportLatexPane(model),
-					_1: {ctor: '[]'}
+					_0: A2(_user$project$App_View$standardViewButton, model, 98),
+					_1: {
+						ctor: '::',
+						_0: A2(_user$project$App_View$parseResultsViewButton, model, 106),
+						_1: {
+							ctor: '::',
+							_0: A2(_user$project$App_View$rawHtmlViewButton, model, 106),
+							_1: {ctor: '[]'}
+						}
+					}
 				}
 			}
 		});
@@ -18123,8 +18020,9 @@ var _user$project$App_View$renderedSource = function (model) {
 		});
 };
 var _user$project$App_View$editorPane = function (model) {
-	return A2(
-		_elm_lang$html$Html$textarea,
+	return A3(
+		_elm_lang$html$Html_Keyed$node,
+		'textarea',
 		{
 			ctor: '::',
 			_0: _user$project$App_View$editorStyle,
@@ -18140,7 +18038,11 @@ var _user$project$App_View$editorPane = function (model) {
 		},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text(model.sourceText),
+			_0: {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Basics$toString(model.counter),
+				_1: _elm_lang$html$Html$text(model.sourceText)
+			},
 			_1: {ctor: '[]'}
 		});
 };
@@ -18251,6 +18153,17 @@ var _user$project$App_View$headerRibbon = A2(
 			_1: {ctor: '[]'}
 		}
 	});
+var _user$project$App_View$appWidth = function (configuration) {
+	var _p2 = configuration;
+	switch (_p2.ctor) {
+		case 'StandardView':
+			return '900px';
+		case 'ParseResultsView':
+			return '1350px';
+		default:
+			return '1350px';
+	}
+};
 var _user$project$App_View$wordCount = function (str) {
 	return _elm_lang$core$List$length(
 		A2(_elm_lang$core$String$split, ' ', str));
@@ -18358,45 +18271,6 @@ var _user$project$MiniLatex_HasMath$listHasMath = function (list) {
 		list);
 };
 
-var _user$project$Main$exportLatexView = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _user$project$App_View$headerRibbon,
-			_1: {
-				ctor: '::',
-				_0: _user$project$App_View$editor(model),
-				_1: {
-					ctor: '::',
-					_0: _user$project$App_View$renderedSource(model),
-					_1: {
-						ctor: '::',
-						_0: _user$project$App_View$showExportResult(model),
-						_1: {
-							ctor: '::',
-							_0: _user$project$App_View$spacer(5),
-							_1: {
-								ctor: '::',
-								_0: _user$project$App_View$footerRibbon(model),
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				}
-			}
-		});
-};
 var _user$project$Main$rawHtmlResultsView = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -18517,23 +18391,8 @@ var _user$project$Main$mainView = function (model) {
 			return _user$project$Main$standardView(model);
 		case 'ParseResultsView':
 			return _user$project$Main$parseResultsView(model);
-		case 'RawHtmlView':
+		default:
 			return _user$project$Main$rawHtmlResultsView(model);
-		default:
-			return _user$project$Main$exportLatexView(model);
-	}
-};
-var _user$project$Main$appWidth = function (configuration) {
-	var _p1 = configuration;
-	switch (_p1.ctor) {
-		case 'StandardView':
-			return '900px';
-		case 'ParseResultsView':
-			return '1350px';
-		case 'RawHtmlView':
-			return '1350px';
-		default:
-			return '1350px';
 	}
 };
 var _user$project$Main$view = function (model) {
@@ -18547,7 +18406,7 @@ var _user$project$Main$view = function (model) {
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'width',
-						_1: _user$project$Main$appWidth(model.configuration)
+						_1: _user$project$App_View$appWidth(model.configuration)
 					},
 					_1: {
 						ctor: '::',
@@ -18562,27 +18421,6 @@ var _user$project$Main$view = function (model) {
 			_0: _user$project$Main$mainView(model),
 			_1: {ctor: '[]'}
 		});
-};
-var _user$project$Main$exportLatex = function (model) {
-	var editRecord = A2(_user$project$MiniLatex_Driver$setup, model.seed, model.sourceText);
-	var renderedText = A2(_user$project$MiniLatex_Driver$getRenderedText, '', editRecord);
-	var textToExport = A2(
-		_elm_lang$core$Debug$log,
-		'EXPORT',
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			_user$project$App_Source$htmlPrefix,
-			A2(_elm_lang$core$Basics_ops['++'], renderedText, _user$project$App_Source$htmlSuffix)));
-	return {
-		ctor: '_Tuple2',
-		_0: _elm_lang$core$Native_Utils.update(
-			model,
-			{editRecord: editRecord, textToExport: textToExport, inputString: textToExport, configuration: _user$project$App_Types$ExportLatexView}),
-		_1: _elm_lang$core$Platform_Cmd$none
-	};
-};
-var _user$project$Main$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$none;
 };
 var _user$project$Main$encodeData = F2(
 	function (model, idList) {
@@ -18609,14 +18447,26 @@ var _user$project$Main$encodeData = F2(
 				}
 			});
 	});
+var _user$project$Main$exportLatex2Html = function (editRecord) {
+	return function (text) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			_user$project$App_Source$htmlPrefix,
+			A2(_elm_lang$core$Basics_ops['++'], text, _user$project$App_Source$htmlSuffix));
+	}(
+		A2(_user$project$MiniLatex_Driver$getRenderedText, '', editRecord));
+};
+var _user$project$Main$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
+};
 var _user$project$Main$init = function () {
 	var editRecord = A2(_user$project$MiniLatex_Driver$setup, 0, _user$project$App_Source$initialText);
 	var parseResult = _user$project$MiniLatex_Driver$parse(_user$project$App_Source$initialText);
 	var model = {
+		counter: 0,
 		sourceText: _user$project$App_Source$initialText,
 		editRecord: editRecord,
-		textToExport: '',
-		inputString: '',
+		inputString: _user$project$Main$exportLatex2Html(editRecord),
 		parseResult: parseResult,
 		hasMathResult: A2(
 			_elm_lang$core$Debug$log,
@@ -18642,13 +18492,17 @@ var _user$project$Main$sendToJs = _elm_lang$core$Native_Platform.outgoingPort(
 	});
 var _user$project$Main$useSource = F2(
 	function (text, model) {
+		var editRecord = A2(_user$project$MiniLatex_Driver$setup, model.seed, text);
 		return {
 			ctor: '_Tuple2',
 			_0: _elm_lang$core$Native_Utils.update(
 				model,
 				{
+					counter: model.counter + 1,
 					sourceText: text,
-					editRecord: A2(_user$project$MiniLatex_Driver$setup, model.seed, text)
+					editRecord: editRecord,
+					parseResult: _user$project$MiniLatex_Driver$parse(text),
+					inputString: _user$project$Main$exportLatex2Html(editRecord)
 				}),
 			_1: _user$project$Main$sendToJs(
 				A2(
@@ -18659,8 +18513,8 @@ var _user$project$Main$useSource = F2(
 	});
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p2 = msg;
-		switch (_p2.ctor) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
 			case 'FastRender':
 				var parseResult = _user$project$MiniLatex_Driver$parse(model.sourceText);
 				var hasMathResult = A2(
@@ -18672,7 +18526,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{editRecord: newEditRecord, parseResult: parseResult, hasMathResult: hasMathResult}),
+						{counter: model.counter + 1, editRecord: newEditRecord, parseResult: parseResult, hasMathResult: hasMathResult}),
 					_1: _elm_lang$core$Platform_Cmd$batch(
 						{
 							ctor: '::',
@@ -18689,28 +18543,14 @@ var _user$project$Main$update = F2(
 						})
 				};
 			case 'ReRender':
-				var editRecord = A2(_user$project$MiniLatex_Driver$setup, model.seed, model.sourceText);
-				var _p3 = A2(_elm_lang$core$Debug$log, 'TOC', editRecord.latexState.tableOfContents);
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							editRecord: editRecord,
-							parseResult: _user$project$MiniLatex_Driver$parse(model.sourceText)
-						}),
-					_1: _user$project$Main$sendToJs(
-						A2(
-							_user$project$Main$encodeData,
-							'full',
-							{ctor: '[]'}))
-				};
+				return A2(_user$project$Main$useSource, model.sourceText, model);
 			case 'Reset':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
+							counter: model.counter + 1,
 							sourceText: '',
 							editRecord: A2(_user$project$MiniLatex_Driver$setup, model.seed, '')
 						}),
@@ -18726,6 +18566,7 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
+							counter: model.counter + 1,
 							sourceText: _user$project$App_Source$initialText,
 							editRecord: A2(_user$project$MiniLatex_Driver$setup, model.seed, _user$project$App_Source$initialText)
 						}),
@@ -18740,7 +18581,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{sourceText: _p2._0}),
+						{sourceText: _p1._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'GenerateSeed':
@@ -18757,7 +18598,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{seed: _p2._0}),
+						{seed: _p1._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ShowStandardView':
@@ -18782,14 +18623,6 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{configuration: _user$project$App_Types$RawHtmlView}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'ShowExportLatexView':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{configuration: _user$project$App_Types$ExportLatexView}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SetHorizontalView':
@@ -18818,14 +18651,12 @@ var _user$project$Main$update = F2(
 				return A2(_user$project$Main$useSource, _user$project$App_Source$nongeodesic, model);
 			case 'Grammar':
 				return A2(_user$project$Main$useSource, _user$project$App_Source$grammar, model);
-			case 'ExportLatex':
-				return _user$project$Main$exportLatex(model);
 			default:
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{inputString: _p2._0}),
+						{inputString: _p1._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 		}
