@@ -17077,7 +17077,7 @@ var _user$project$MiniLatex_RenderToLatex$renderMacro = F2(
 	function (name, args) {
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
-			'\\',
+			' \\',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
 				name,
@@ -17277,7 +17277,7 @@ var _user$project$MiniLatex_RenderLatexForExport$renderLatexList = function (arg
 		_elm_lang$core$List$foldl,
 		F2(
 			function (x, acc) {
-				return A2(_elm_lang$core$Basics_ops['++'], x, acc);
+				return A2(_elm_lang$core$Basics_ops['++'], acc, x);
 			}),
 		'',
 		A2(_elm_lang$core$List$map, _user$project$MiniLatex_RenderLatexForExport$render, args));
@@ -17341,7 +17341,7 @@ var _user$project$MiniLatex_RenderLatexForExport$reproduceMacro = F2(
 		var _p3 = _elm_lang$core$Debug$log('reproduceMacro');
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
-			'\\',
+			' \\',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
 				name,
