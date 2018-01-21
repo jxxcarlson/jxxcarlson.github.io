@@ -17019,7 +17019,7 @@ var _user$project$MiniLatex_RenderToLatex$render = function (latexExpression) {
 		case 'InlineMath':
 			return A2(
 				_elm_lang$core$Basics_ops['++'],
-				'$',
+				' $',
 				A2(_elm_lang$core$Basics_ops['++'], _p0._0, '$'));
 		case 'DisplayMath':
 			return A2(
@@ -17064,7 +17064,13 @@ var _user$project$MiniLatex_RenderToLatex$renderItem = F2(
 				'\n\n'));
 	});
 var _user$project$MiniLatex_RenderToLatex$renderLatexList = function (args) {
-	return _user$project$MiniLatex_JoinStrings$joinList(
+	return A3(
+		_elm_lang$core$List$foldl,
+		F2(
+			function (item, acc) {
+				return A2(_elm_lang$core$Basics_ops['++'], acc, item);
+			}),
+		'',
 		A2(_elm_lang$core$List$map, _user$project$MiniLatex_RenderToLatex$render, args));
 };
 var _user$project$MiniLatex_RenderToLatex$renderMacro = F2(
@@ -17091,22 +17097,6 @@ var _user$project$MiniLatex_RenderToLatex$renderArgList = function (args) {
 			},
 			A2(_elm_lang$core$List$map, _user$project$MiniLatex_RenderToLatex$render, args)));
 };
-var _user$project$MiniLatex_RenderToLatex$renderString = F2(
-	function (parser, str) {
-		var parserOutput = A2(_elm_tools$parser$Parser$run, parser, str);
-		var renderOutput = function () {
-			var _p1 = parserOutput;
-			if (_p1.ctor === 'Ok') {
-				return _user$project$MiniLatex_RenderToLatex$render(_p1._0);
-			} else {
-				return A2(
-					_elm_lang$core$Basics_ops['++'],
-					'Error: ',
-					_elm_lang$core$Basics$toString(_p1._0));
-			}
-		}();
-		return renderOutput;
-	});
 var _user$project$MiniLatex_RenderToLatex$renderBackToLatex = function (str) {
 	return A3(
 		_elm_lang$core$List$foldl,
@@ -17139,6 +17129,256 @@ var _user$project$MiniLatex_RenderToLatex$renderBackToLatexTestModSpace = functi
 			' ',
 			'',
 			_user$project$MiniLatex_RenderToLatex$renderBackToLatex(str)));
+};
+
+var _user$project$MiniLatex_RenderLatexForExport$getElement = F2(
+	function (k, list) {
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			_user$project$MiniLatex_Parser$LXString('xxx'),
+			A2(_elm_community$list_extra$List_Extra$getAt, k, list));
+	});
+var _user$project$MiniLatex_RenderLatexForExport$imageAlignCenter = F3(
+	function (exportUrl, label, width) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'\\imagecenter{',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				exportUrl,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'}{',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						label,
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'}{',
+							A2(_elm_lang$core$Basics_ops['++'], width, '}'))))));
+	});
+var _user$project$MiniLatex_RenderLatexForExport$imageFloatRight = F3(
+	function (exportUrl, label, width) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'\\imagefloatright{',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				exportUrl,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'}{',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						label,
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'}{',
+							A2(_elm_lang$core$Basics_ops['++'], width, '}'))))));
+	});
+var _user$project$MiniLatex_RenderLatexForExport$imageFloatLeft = F3(
+	function (exportUrl, label, width) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'\\imagefloatleft{',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				exportUrl,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'}{',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						label,
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'}{',
+							A2(_elm_lang$core$Basics_ops['++'], width, '}'))))));
+	});
+var _user$project$MiniLatex_RenderLatexForExport$getExportUrl = function (url) {
+	var parts = A2(_elm_lang$core$String$split, '/', url);
+	var n = _elm_lang$core$List$length(parts);
+	var lastPart = A2(
+		_elm_lang$core$Maybe$withDefault,
+		'xxx',
+		_elm_lang$core$List$head(
+			A2(_elm_lang$core$List$drop, n - 1, parts)));
+	return A2(_elm_lang$core$Basics_ops['++'], 'image/', lastPart);
+};
+var _user$project$MiniLatex_RenderLatexForExport$renderComment = function (str) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		'% ',
+		A2(_elm_lang$core$Basics_ops['++'], str, '\n'));
+};
+var _user$project$MiniLatex_RenderLatexForExport$render = function (latexExpression) {
+	var _p0 = latexExpression;
+	switch (_p0.ctor) {
+		case 'Comment':
+			return _user$project$MiniLatex_RenderLatexForExport$renderComment(_p0._0);
+		case 'Macro':
+			return A2(_user$project$MiniLatex_RenderLatexForExport$renderMacro, _p0._0, _p0._1);
+		case 'Item':
+			return A2(_user$project$MiniLatex_RenderLatexForExport$renderItem, _p0._0, _p0._1);
+		case 'InlineMath':
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				' $',
+				A2(_elm_lang$core$Basics_ops['++'], _p0._0, '$ '));
+		case 'DisplayMath':
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				'$$',
+				A2(_elm_lang$core$Basics_ops['++'], _p0._0, '$$'));
+		case 'Environment':
+			return A2(_user$project$MiniLatex_RenderLatexForExport$renderEnvironment, _p0._0, _p0._1);
+		case 'LatexList':
+			return _user$project$MiniLatex_RenderLatexForExport$renderLatexList(_p0._0);
+		default:
+			return _p0._0;
+	}
+};
+var _user$project$MiniLatex_RenderLatexForExport$renderEnvironment = F2(
+	function (name, body) {
+		var slimBody = A2(
+			_elm_lang$core$Debug$log,
+			'body',
+			_elm_lang$core$String$trim(
+				_user$project$MiniLatex_RenderLatexForExport$render(body)));
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'\\begin{',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				name,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'}\n',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						slimBody,
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'\n\\end{',
+							A2(_elm_lang$core$Basics_ops['++'], name, '}\n\n'))))));
+	});
+var _user$project$MiniLatex_RenderLatexForExport$renderItem = F2(
+	function (level, latexExpression) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'\\item ',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_user$project$MiniLatex_RenderLatexForExport$render(latexExpression),
+				'\n\n'));
+	});
+var _user$project$MiniLatex_RenderLatexForExport$renderLatexList = function (args) {
+	return A3(
+		_elm_lang$core$List$foldl,
+		F2(
+			function (x, acc) {
+				return A2(_elm_lang$core$Basics_ops['++'], x, acc);
+			}),
+		'',
+		A2(_elm_lang$core$List$map, _user$project$MiniLatex_RenderLatexForExport$render, args));
+};
+var _user$project$MiniLatex_RenderLatexForExport$renderMacro = F2(
+	function (name, args) {
+		return A2(_user$project$MiniLatex_RenderLatexForExport$macroRenderer, name, args);
+	});
+var _user$project$MiniLatex_RenderLatexForExport$macroRenderer = function (name) {
+	var _p1 = A2(_elm_lang$core$Dict$get, name, _user$project$MiniLatex_RenderLatexForExport$renderMacroDict);
+	if (_p1.ctor === 'Just') {
+		return _p1._0;
+	} else {
+		return _user$project$MiniLatex_RenderLatexForExport$reproduceMacro(name);
+	}
+};
+var _user$project$MiniLatex_RenderLatexForExport$renderMacroDict = _elm_lang$core$Dict$fromList(
+	{
+		ctor: '::',
+		_0: {
+			ctor: '_Tuple2',
+			_0: 'image',
+			_1: function (x) {
+				return _user$project$MiniLatex_RenderLatexForExport$renderImage(x);
+			}
+		},
+		_1: {ctor: '[]'}
+	});
+var _user$project$MiniLatex_RenderLatexForExport$renderImage = function (args) {
+	var attributeString = A2(_user$project$MiniLatex_RenderLatexForExport$renderArg, 2, args);
+	var imageAttrs = _user$project$MiniLatex_Image$parseImageAttributes(attributeString);
+	var width = A2(
+		_elm_lang$core$Basics_ops['++'],
+		_elm_lang$core$Basics$toString(imageAttrs.width),
+		'px');
+	var label = A2(_user$project$MiniLatex_RenderLatexForExport$renderArg, 1, args);
+	var url = A2(_user$project$MiniLatex_RenderLatexForExport$renderArg, 0, args);
+	var exportUrl = _user$project$MiniLatex_RenderLatexForExport$getExportUrl(url);
+	var _p2 = {ctor: '_Tuple2', _0: imageAttrs.$float, _1: imageAttrs.align};
+	switch (_p2._0) {
+		case 'left':
+			return A3(_user$project$MiniLatex_RenderLatexForExport$imageFloatLeft, exportUrl, label, width);
+		case 'right':
+			return A3(_user$project$MiniLatex_RenderLatexForExport$imageFloatRight, exportUrl, label, width);
+		default:
+			if (_p2._1 === 'center') {
+				return A3(_user$project$MiniLatex_RenderLatexForExport$imageAlignCenter, exportUrl, label, width);
+			} else {
+				return A3(_user$project$MiniLatex_RenderLatexForExport$imageAlignCenter, exportUrl, label, width);
+			}
+	}
+};
+var _user$project$MiniLatex_RenderLatexForExport$renderArg = F2(
+	function (k, args) {
+		return _elm_lang$core$String$trim(
+			_user$project$MiniLatex_RenderLatexForExport$render(
+				A2(_user$project$MiniLatex_RenderLatexForExport$getElement, k, args)));
+	});
+var _user$project$MiniLatex_RenderLatexForExport$reproduceMacro = F2(
+	function (name, args) {
+		var _p3 = _elm_lang$core$Debug$log('reproduceMacro');
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'\\',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				name,
+				_user$project$MiniLatex_RenderLatexForExport$renderArgList(args)));
+	});
+var _user$project$MiniLatex_RenderLatexForExport$renderArgList = function (args) {
+	return A2(
+		_elm_lang$core$String$join,
+		'',
+		A2(
+			_elm_lang$core$List$map,
+			function (x) {
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					'{',
+					A2(_elm_lang$core$Basics_ops['++'], x, '}'));
+			},
+			A2(_elm_lang$core$List$map, _user$project$MiniLatex_RenderLatexForExport$render, args)));
+};
+var _user$project$MiniLatex_RenderLatexForExport$renderLatexForExport = function (str) {
+	return A3(
+		_elm_lang$core$List$foldl,
+		F2(
+			function (par, acc) {
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					acc,
+					A2(_elm_lang$core$Basics_ops['++'], par, '\n\n'));
+			}),
+		'',
+		A2(
+			_elm_lang$core$List$map,
+			_user$project$MiniLatex_RenderLatexForExport$renderLatexList,
+			A2(
+				_elm_lang$core$List$map,
+				_user$project$MiniLatex_Parser$parse,
+				_user$project$MiniLatex_Paragraph$logicalParagraphify(str))));
 };
 
 var _user$project$App_View$textStyle3 = F4(
