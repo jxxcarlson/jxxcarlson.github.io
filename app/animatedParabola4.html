@@ -9372,6 +9372,16 @@ var _user$project$BouncingBallModel$sourceRect = {
 	size: A2(_user$project$Vector$Vector, 100, 100)
 };
 var _user$project$BouncingBallModel$coefficients = A2(_user$project$Affine$make, _user$project$BouncingBallModel$sourceRect, _user$project$BouncingBallModel$targetRect);
+var _user$project$BouncingBallModel$trajectory = function (maxSteps) {
+	return A2(
+		_elm_lang$core$List$map,
+		_user$project$Particle$transform(_user$project$BouncingBallModel$coefficients),
+		A3(
+			_user$project$Particle$orbit,
+			maxSteps,
+			A2(_user$project$Particle$update, 0.6, _user$project$BouncingBallModel$field),
+			_user$project$BouncingBallModel$ball));
+};
 var _user$project$BouncingBallModel$svgTrajectory = function (particleList) {
 	return A2(
 		_elm_lang$svg$Svg$g,
@@ -9390,19 +9400,13 @@ var _user$project$BouncingBallModel$svgTrajectory = function (particleList) {
 				_1: {ctor: '[]'}
 			}));
 };
-var _user$project$BouncingBallModel$trajectory = function (maxSteps) {
-	return A2(
-		_elm_lang$core$List$map,
-		_user$project$Particle$transform(_user$project$BouncingBallModel$coefficients),
-		A3(
-			_user$project$Particle$orbit,
-			maxSteps,
-			A2(_user$project$Particle$update, 0.6, _user$project$BouncingBallModel$field),
-			_user$project$BouncingBallModel$ball));
-};
-var _user$project$BouncingBallModel$viewModel = function (model) {
+var _user$project$BouncingBallModel$viewModel1 = function (model) {
 	var particleList = A2(_elm_lang$core$List$drop, model.maxSteps - model.count, model.trajectory);
 	return A2(_elm_lang$svg$Svg_Lazy$lazy, _user$project$BouncingBallModel$svgTrajectory, particleList);
+};
+var _user$project$BouncingBallModel$viewModel = function (model) {
+	return _user$project$BouncingBallModel$svgTrajectory(
+		A2(_elm_lang$core$List$drop, model.maxSteps - model.count, model.trajectory));
 };
 var _user$project$Style$labelStyle = _elm_lang$html$Html_Attributes$style(
 	{
