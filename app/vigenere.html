@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html><head><meta charset="UTF-8"><title>CaesarApp</title><style>html,head,body { padding:0; margin:0; }
+<html><head><meta charset="UTF-8"><title>VigenereApp</title><style>html,head,body { padding:0; margin:0; }
 body { font-family: calibri, helvetica, arial, sans-serif; }</style><script type="text/javascript">
 (function() {
 'use strict';
@@ -8231,11 +8231,26 @@ var _elm_lang$html$Html_Events$Options = F2(
 	function (a, b) {
 		return {stopPropagation: a, preventDefault: b};
 	});
-var _user$project$CaesarCipher$shift = F2(
-	function (k, n) {
-		return A2(_elm_lang$core$Basics_ops['%'], k + n, 26);
+var _user$project$VigenereCipher$extend = F2(
+	function (key, str) {
+		var k = _elm_lang$core$String$length(key);
+		var n = _elm_lang$core$String$length(str);
+		var r = ((n / k) | 0) + 1;
+		var longkey = A2(
+			_elm_lang$core$String$join,
+			'',
+			A2(_elm_lang$core$List$repeat, r, key));
+		return A3(_elm_lang$core$String$slice, 0, n, longkey);
 	});
-var _user$project$CaesarCipher$intListToString = function (intList) {
+var _user$project$VigenereCipher$sub = F2(
+	function (x, y) {
+		return A2(_elm_lang$core$Basics_ops['%'], x - y, 26);
+	});
+var _user$project$VigenereCipher$add = F2(
+	function (x, y) {
+		return A2(_elm_lang$core$Basics_ops['%'], x + y, 26);
+	});
+var _user$project$VigenereCipher$intListToString = function (intList) {
 	return _elm_lang$core$String$fromList(
 		A2(
 			_elm_lang$core$List$map,
@@ -8247,7 +8262,7 @@ var _user$project$CaesarCipher$intListToString = function (intList) {
 				},
 				intList)));
 };
-var _user$project$CaesarCipher$stringToIntList = function (string) {
+var _user$project$VigenereCipher$stringToIntList = function (string) {
 	return A2(
 		_elm_lang$core$List$map,
 		function (c) {
@@ -8259,19 +8274,26 @@ var _user$project$CaesarCipher$stringToIntList = function (string) {
 			_elm_lang$core$String$toList(
 				_elm_lang$core$String$toUpper(string))));
 };
-var _user$project$CaesarCipher$encryptWithCaesar = F2(
-	function (k, str) {
-		return _user$project$CaesarCipher$intListToString(
-			A2(
-				_elm_lang$core$List$map,
-				_user$project$CaesarCipher$shift(k),
-				_user$project$CaesarCipher$stringToIntList(
-					_elm_lang$core$String$toUpper(str))));
+var _user$project$VigenereCipher$longKeyEncrypt = F2(
+	function (key, text) {
+		var textVector = _user$project$VigenereCipher$stringToIntList(text);
+		var longKey = _user$project$VigenereCipher$stringToIntList(
+			A2(_user$project$VigenereCipher$extend, key, text));
+		var newVector = A3(_elm_lang$core$List$map2, _user$project$VigenereCipher$add, textVector, longKey);
+		return _user$project$VigenereCipher$intListToString(newVector);
 	});
-var _user$project$CaesarApp$labeStyle = _elm_lang$html$Html_Attributes$style(
+var _user$project$VigenereCipher$longKeyDecrypt = F2(
+	function (key, text) {
+		var textVector = _user$project$VigenereCipher$stringToIntList(text);
+		var longKey = _user$project$VigenereCipher$stringToIntList(
+			A2(_user$project$VigenereCipher$extend, key, text));
+		var newVector = A3(_elm_lang$core$List$map2, _user$project$VigenereCipher$sub, textVector, longKey);
+		return _user$project$VigenereCipher$intListToString(newVector);
+	});
+var _user$project$VigenereStyle$legendStyle = _elm_lang$html$Html_Attributes$style(
 	{
 		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'width', _1: '210px'},
+		_0: {ctor: '_Tuple2', _0: 'width', _1: '350px'},
 		_1: {
 			ctor: '::',
 			_0: {ctor: '_Tuple2', _0: 'height', _1: '32px'},
@@ -8283,7 +8305,7 @@ var _user$project$CaesarApp$labeStyle = _elm_lang$html$Html_Attributes$style(
 					_0: {ctor: '_Tuple2', _0: 'padding', _1: '4px'},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'padding-top', _1: '40px'},
+						_0: {ctor: '_Tuple2', _0: 'padding-top', _1: '20px'},
 						_1: {
 							ctor: '::',
 							_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
@@ -8294,22 +8316,50 @@ var _user$project$CaesarApp$labeStyle = _elm_lang$html$Html_Attributes$style(
 			}
 		}
 	});
-var _user$project$CaesarApp$encryptedTextStyle = _elm_lang$html$Html_Attributes$style(
+var _user$project$VigenereStyle$numberDisplayStyle = _elm_lang$html$Html_Attributes$style(
 	{
 		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'width', _1: '210px'},
+		_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '10px'},
 		_1: {
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'height', _1: '32px'},
+			_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
+			_1: {ctor: '[]'}
+		}
+	});
+var _user$project$VigenereStyle$keyInputStyle = _elm_lang$html$Html_Attributes$style(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'width', _1: '350px'},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'font-family', _1: 'monospace'},
 			_1: {
 				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'font-size', _1: '18pt'},
+				_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '15px'},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'padding', _1: '4px'},
+					_0: {ctor: '_Tuple2', _0: 'font-size', _1: '14pt'},
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	});
+var _user$project$VigenereStyle$cipherTextStyle = _elm_lang$html$Html_Attributes$style(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'width', _1: '350px'},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'height', _1: '30px'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'font-size', _1: '14pt'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'font-family', _1: 'monospace'},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '15px'},
+						_0: {ctor: '_Tuple2', _0: 'padding', _1: '4px'},
 						_1: {
 							ctor: '::',
 							_0: {ctor: '_Tuple2', _0: 'background-color', _1: 'rgb(160, 110, 110)'},
@@ -8324,13 +8374,13 @@ var _user$project$CaesarApp$encryptedTextStyle = _elm_lang$html$Html_Attributes$
 			}
 		}
 	});
-var _user$project$CaesarApp$keyInputStyle = _elm_lang$html$Html_Attributes$style(
+var _user$project$VigenereStyle$inputStyle = _elm_lang$html$Html_Attributes$style(
 	{
 		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'width', _1: '65px'},
+		_0: {ctor: '_Tuple2', _0: 'width', _1: '350px'},
 		_1: {
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '15px'},
+			_0: {ctor: '_Tuple2', _0: 'font-family', _1: 'monospace'},
 			_1: {
 				ctor: '::',
 				_0: {ctor: '_Tuple2', _0: 'font-size', _1: '14pt'},
@@ -8338,17 +8388,7 @@ var _user$project$CaesarApp$keyInputStyle = _elm_lang$html$Html_Attributes$style
 			}
 		}
 	});
-var _user$project$CaesarApp$plainTextInputStyle = _elm_lang$html$Html_Attributes$style(
-	{
-		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'width', _1: '150x'},
-		_1: {
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'font-size', _1: '14pt'},
-			_1: {ctor: '[]'}
-		}
-	});
-var _user$project$CaesarApp$headingStyle = _elm_lang$html$Html_Attributes$style(
+var _user$project$VigenereStyle$headingStyle = _elm_lang$html$Html_Attributes$style(
 	{
 		ctor: '::',
 		_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
@@ -8358,13 +8398,13 @@ var _user$project$CaesarApp$headingStyle = _elm_lang$html$Html_Attributes$style(
 			_1: {ctor: '[]'}
 		}
 	});
-var _user$project$CaesarApp$mainStyle = _elm_lang$html$Html_Attributes$style(
+var _user$project$VigenereStyle$mainStyle = _elm_lang$html$Html_Attributes$style(
 	{
 		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'width', _1: '300px'},
+		_0: {ctor: '_Tuple2', _0: 'width', _1: '400px'},
 		_1: {
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'height', _1: '300px'},
+			_0: {ctor: '_Tuple2', _0: 'height', _1: '360px'},
 			_1: {
 				ctor: '::',
 				_0: {ctor: '_Tuple2', _0: 'padding', _1: '15px'},
@@ -8380,157 +8420,290 @@ var _user$project$CaesarApp$mainStyle = _elm_lang$html$Html_Attributes$style(
 			}
 		}
 	});
-var _user$project$CaesarApp$message = A2(
-	_elm_lang$html$Html$div,
+var _user$project$VigenereTypes$Key = function (a) {
+	return {ctor: 'Key', _0: a};
+};
+var _user$project$VigenereTypes$InputText = function (a) {
+	return {ctor: 'InputText', _0: a};
+};
+var _user$project$VigenereView$legend = A2(
+	_elm_lang$html$Html$p,
 	{
 		ctor: '::',
-		_0: _user$project$CaesarApp$labeStyle,
+		_0: _user$project$VigenereStyle$legendStyle,
 		_1: {ctor: '[]'}
 	},
 	{
 		ctor: '::',
-		_0: _elm_lang$html$Html$text('Enter a word in \'Plain text\' and an integer in \'key\''),
+		_0: _elm_lang$html$Html$text('Enter text in \'Input text\' and a string in \'key\'. Use ALL CAPS, no spaces, numbers, or punctuation marks.'),
 		_1: {ctor: '[]'}
 	});
-var _user$project$CaesarApp$cipherTextDisplay = function (model) {
+var _user$project$VigenereView$decipheredTextDisplay = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _user$project$CaesarApp$encryptedTextStyle,
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '15px'},
+					_1: {ctor: '[]'}
+				}),
 			_1: {ctor: '[]'}
 		},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text(model.cipherText),
-			_1: {ctor: '[]'}
+			_0: A2(
+				_elm_lang$html$Html$span,
+				{
+					ctor: '::',
+					_0: _user$project$VigenereStyle$cipherTextStyle,
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(model.decipheredText),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$span,
+					{
+						ctor: '::',
+						_0: _user$project$VigenereStyle$numberDisplayStyle,
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_elm_lang$core$Basics$toString(
+								_elm_lang$core$String$length(model.decipheredText))),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
 		});
 };
-var _user$project$CaesarApp$heading = A2(
+var _user$project$VigenereView$cipherTextDisplay = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '15px'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$span,
+				{
+					ctor: '::',
+					_0: _user$project$VigenereStyle$cipherTextStyle,
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(model.cipherText),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$span,
+					{
+						ctor: '::',
+						_0: _user$project$VigenereStyle$numberDisplayStyle,
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_elm_lang$core$Basics$toString(
+								_elm_lang$core$String$length(model.cipherText))),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$VigenereView$keyInput = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$input,
+				{
+					ctor: '::',
+					_0: _user$project$VigenereStyle$keyInputStyle,
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$type_('text'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$placeholder('key'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onInput(_user$project$VigenereTypes$Key),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$span,
+					{
+						ctor: '::',
+						_0: _user$project$VigenereStyle$numberDisplayStyle,
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_elm_lang$core$Basics$toString(
+								_elm_lang$core$String$length(model.key))),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$VigenereView$textInput = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$input,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$type_('text'),
+					_1: {
+						ctor: '::',
+						_0: _user$project$VigenereStyle$inputStyle,
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$placeholder('Input text'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onInput(_user$project$VigenereTypes$InputText),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$span,
+					{
+						ctor: '::',
+						_0: _user$project$VigenereStyle$numberDisplayStyle,
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_elm_lang$core$Basics$toString(
+								_elm_lang$core$String$length(model.inputText))),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$VigenereView$heading = A2(
 	_elm_lang$html$Html$h1,
 	{
 		ctor: '::',
-		_0: _user$project$CaesarApp$headingStyle,
+		_0: _user$project$VigenereStyle$headingStyle,
 		_1: {ctor: '[]'}
 	},
 	{
 		ctor: '::',
-		_0: _elm_lang$html$Html$text('Caesar cipher'),
+		_0: _elm_lang$html$Html$text('Vigenère cipher'),
 		_1: {ctor: '[]'}
 	});
-var _user$project$CaesarApp$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		switch (_p0.ctor) {
-			case 'PlainText':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{plainText: _p0._0});
-			case 'CipherText':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{cipherText: _p0._0});
-			default:
-				var key = A2(
-					_elm_lang$core$Result$withDefault,
-					0,
-					_elm_lang$core$String$toInt(_p0._0));
-				var cipherText = A2(_user$project$CaesarCipher$encryptWithCaesar, key, model.plainText);
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{key: key, cipherText: cipherText});
-		}
-	});
-var _user$project$CaesarApp$model = {plainText: '', cipherText: '', key: 0};
-var _user$project$CaesarApp$Model = F3(
-	function (a, b, c) {
-		return {plainText: a, cipherText: b, key: c};
-	});
-var _user$project$CaesarApp$Key = function (a) {
-	return {ctor: 'Key', _0: a};
-};
-var _user$project$CaesarApp$keyInput = A2(
-	_elm_lang$html$Html$input,
-	{
-		ctor: '::',
-		_0: _user$project$CaesarApp$keyInputStyle,
-		_1: {
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$type_('text'),
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$placeholder('key'),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onInput(_user$project$CaesarApp$Key),
-					_1: {ctor: '[]'}
-				}
-			}
-		}
-	},
-	{ctor: '[]'});
-var _user$project$CaesarApp$CipherText = function (a) {
-	return {ctor: 'CipherText', _0: a};
-};
-var _user$project$CaesarApp$PlainText = function (a) {
-	return {ctor: 'PlainText', _0: a};
-};
-var _user$project$CaesarApp$textInput = A2(
-	_elm_lang$html$Html$input,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$type_('text'),
-		_1: {
-			ctor: '::',
-			_0: _user$project$CaesarApp$plainTextInputStyle,
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$placeholder('Plain text'),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onInput(_user$project$CaesarApp$PlainText),
-					_1: {ctor: '[]'}
-				}
-			}
-		}
-	},
-	{ctor: '[]'});
-var _user$project$CaesarApp$view = function (model) {
+var _user$project$VigenereApp$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _user$project$CaesarApp$mainStyle,
+			_0: _user$project$VigenereStyle$mainStyle,
 			_1: {ctor: '[]'}
 		},
 		{
 			ctor: '::',
-			_0: _user$project$CaesarApp$heading,
+			_0: _user$project$VigenereView$heading,
 			_1: {
 				ctor: '::',
-				_0: _user$project$CaesarApp$textInput,
+				_0: _user$project$VigenereView$textInput(model),
 				_1: {
 					ctor: '::',
-					_0: _user$project$CaesarApp$keyInput,
+					_0: _user$project$VigenereView$keyInput(model),
 					_1: {
 						ctor: '::',
-						_0: _user$project$CaesarApp$cipherTextDisplay(model),
+						_0: _user$project$VigenereView$cipherTextDisplay(model),
 						_1: {
 							ctor: '::',
-							_0: _user$project$CaesarApp$message,
-							_1: {ctor: '[]'}
+							_0: _user$project$VigenereView$decipheredTextDisplay(model),
+							_1: {
+								ctor: '::',
+								_0: _user$project$VigenereView$legend,
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				}
 			}
 		});
 };
-var _user$project$CaesarApp$main = _elm_lang$html$Html$beginnerProgram(
-	{model: _user$project$CaesarApp$model, view: _user$project$CaesarApp$view, update: _user$project$CaesarApp$update})();
+var _user$project$VigenereApp$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		if (_p0.ctor === 'InputText') {
+			var _p1 = _p0._0;
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{
+					inputText: _p1,
+					cipherText: A2(_user$project$VigenereCipher$longKeyEncrypt, model.key, _p1),
+					decipheredText: A2(_user$project$VigenereCipher$longKeyDecrypt, model.key, _p1)
+				});
+		} else {
+			var _p2 = _p0._0;
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{
+					cipherText: A2(_user$project$VigenereCipher$longKeyEncrypt, _p2, model.inputText),
+					decipheredText: A2(_user$project$VigenereCipher$longKeyDecrypt, _p2, model.inputText),
+					key: _p2
+				});
+		}
+	});
+var _user$project$VigenereApp$Model = F4(
+	function (a, b, c, d) {
+		return {inputText: a, cipherText: b, decipheredText: c, key: d};
+	});
+var _user$project$VigenereApp$model = A4(_user$project$VigenereApp$Model, '', '', '', '');
+var _user$project$VigenereApp$main = _elm_lang$html$Html$beginnerProgram(
+	{model: _user$project$VigenereApp$model, view: _user$project$VigenereApp$view, update: _user$project$VigenereApp$update})();
 var Elm = {};
-Elm['CaesarApp'] = Elm['CaesarApp'] || {};
-if (typeof _user$project$CaesarApp$main !== 'undefined') {
-    _user$project$CaesarApp$main(Elm['CaesarApp'], 'CaesarApp', undefined);
+Elm['VigenereApp'] = Elm['VigenereApp'] || {};
+if (typeof _user$project$VigenereApp$main !== 'undefined') {
+    _user$project$VigenereApp$main(Elm['VigenereApp'], 'VigenereApp', undefined);
 }
 
 if (typeof define === "function" && define['amd'])
@@ -8562,4 +8735,4 @@ for (var publicModule in Elm)
 }
 
 }).call(this);
-</script></head><body><script type="text/javascript">Elm.CaesarApp.fullscreen()</script></body></html>
+</script></head><body><script type="text/javascript">Elm.VigenereApp.fullscreen()</script></body></html>
