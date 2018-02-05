@@ -89,20 +89,48 @@ I've been using it on a daily basis for both long and short writing projects.
 <h2><a name="elm">Elm demo apps and code</h2>
 
 
+
+
+
+
 <h3><a name="physics"> Physics Simulations</a></h3>
+
+<a href="app/animatedParabola4.html"><img src="image/shortrangeRepulsiveForce.png" style="float: right; margin-top:-20px" width=300></a>
+
+
+<strong><a href="app/animatedParabola4.html">Bouncing Ball</a></strong>
+
+
+<p>
+  In the Bouncing Ball demo, a particle is set in motion and is then left to move
+  under the influence of two forces.  The first is the downward force of gravity.
+  The second is a short range repulsive force exerted by the floor.  Think of
+  an elastic surface such as wood.  We model this by an upward force which decays
+  exponentially with height.
+</p>
+
+<p>
+  The idea here is not to cheat by just reversing the velocity vector when the
+  ball hits the floor, but rather to use forces.  The force should
+  have very short range, since the ball does not "feel" the
+  floor until it is very, very near.  Exponential decay of the repulsive
+  force models the idea of "short range."
+</p>
+
+<p><a href="https://github.com/jxxcarlson/elmbyexample/blob/master/src/physics101/app/BouncingBall.elm">Code</a></p>
+
+
+
+
 
 <img src="image/brownian_motion.png" style="float: right" width=300>
 
 
 
-
-<p>Click on the links below to use the app.  Some of these
-will be discussed in the <a href="http://www.knode.io#@public/480">Elm by Example</a></p>
-
-
-
-
 <strong><a href="app/brownianMotion.html">Brownian Motion</a></strong>
+
+
+
 
 <p> Simulate Brownian motion.  A particle, represented by a colored disk, takes random steps to
   the left and right, up and down.  Its color also varies randomly,
@@ -112,6 +140,7 @@ will be discussed in the <a href="http://www.knode.io#@public/480">Elm by Exampl
   the spatial ones.
     <a href="https://github.com/jxxcarlson/brownianMotion.elm" target="_blank">Code</a>
 </p>
+
 
 
 <strong><a href="app/billiards.html">Billiards</a></strong>
