@@ -8423,9 +8423,11 @@ var _user$project$CaesarApp$update = F2(
 		var _p0 = msg;
 		switch (_p0.ctor) {
 			case 'PlainText':
+				var _p1 = _p0._0;
+				var cipherText = A2(_user$project$CaesarCipher$encryptWithCaesar, model.key, _p1);
 				return _elm_lang$core$Native_Utils.update(
 					model,
-					{plainText: _p0._0});
+					{plainText: _p1, cipherText: cipherText});
 			case 'CipherText':
 				return _elm_lang$core$Native_Utils.update(
 					model,
