@@ -14314,19 +14314,18 @@ var _user$project$MiniLatex_ErrorMessages$stateProblem = function (error) {
 var _user$project$MiniLatex_ErrorMessages$handleSecondWord = F2(
 	function (error, secondWord) {
 		var lead = _user$project$MiniLatex_ErrorMessages$leadErrorDescription(error);
-		var _p1 = A2(_elm_lang$core$Debug$log, 'secondWord', secondWord);
 		return A2(_elm_lang$core$String$startsWith, 'end{', secondWord) ? 'You seem to have a mismatched begin-end pair.' : (A2(_elm_lang$core$String$startsWith, '}', secondWord) ? 'You need a closing brance -- macro argument?' : ((_elm_lang$core$Native_Utils.eq(secondWord, '') && _elm_lang$core$Native_Utils.eq(lead, 'item')) ? 'Is an \"\\item\" misspelled?' : _user$project$MiniLatex_ErrorMessages$stateProblem(error)));
 	});
 var _user$project$MiniLatex_ErrorMessages$handleExpectingSymbol = F2(
 	function (error, errorWords) {
 		var maybeErrorSecondWord = _elm_lang$core$List$head(
 			A2(_elm_lang$core$List$drop, 1, errorWords));
-		var _p2 = maybeErrorSecondWord;
-		if (_p2.ctor === 'Just') {
+		var _p1 = maybeErrorSecondWord;
+		if (_p1.ctor === 'Just') {
 			return A2(
 				_user$project$MiniLatex_ErrorMessages$handleSecondWord,
 				error,
-				_user$project$MiniLatex_ErrorMessages$normalize(_p2._0));
+				_user$project$MiniLatex_ErrorMessages$normalize(_p1._0));
 		} else {
 			return _user$project$MiniLatex_ErrorMessages$stateProblem(error);
 		}
@@ -14339,11 +14338,11 @@ var _user$project$MiniLatex_ErrorMessages$explanation = function (error) {
 	var errorWords = _elm_lang$core$String$words(
 		_elm_lang$core$Basics$toString(error.problem));
 	var errorHead = _elm_lang$core$List$head(errorWords);
-	var _p3 = errorHead;
+	var _p2 = errorHead;
 	_v2_2:
 	do {
-		if (_p3.ctor === 'Just') {
-			switch (_p3._0) {
+		if (_p2.ctor === 'Just') {
+			switch (_p2._0) {
 				case 'ExpectingSymbol':
 					return A2(_user$project$MiniLatex_ErrorMessages$handleExpectingSymbol, error, errorWords);
 				case 'ExpectingClosing':
@@ -17086,24 +17085,15 @@ var _user$project$MiniLatex_StateReducerHelpers$setTheoremNumber = F2(
 	});
 var _user$project$MiniLatex_StateReducerHelpers$setBibItemXRef = F2(
 	function (latexInfo, latexState) {
-		var value = _user$project$MiniLatex_ParserTools$unpackString(latexInfo.options);
-		var label = A2(
-			_elm_lang$core$Basics_ops['++'],
-			'bibitem:',
-			_user$project$MiniLatex_ParserTools$unpackString(latexInfo.value));
-		var _p3 = A2(
-			_elm_lang$core$Debug$log,
-			'setBibItemXRef',
-			{
-				ctor: '::',
-				_0: label,
-				_1: {
-					ctor: '::',
-					_0: value,
-					_1: {ctor: '[]'}
-				}
-			});
-		return A3(_user$project$MiniLatex_LatexState$setDictionaryItem, label, value, latexState);
+		var label = _user$project$MiniLatex_ParserTools$unpackString(latexInfo.value);
+		var value = _elm_lang$core$Native_Utils.eq(
+			latexInfo.options,
+			{ctor: '[]'}) ? label : _user$project$MiniLatex_ParserTools$unpackString(latexInfo.options);
+		return A3(
+			_user$project$MiniLatex_LatexState$setDictionaryItem,
+			A2(_elm_lang$core$Basics_ops['++'], 'bibitem:', label),
+			value,
+			latexState);
 	});
 var _user$project$MiniLatex_StateReducerHelpers$setDictionaryItemForMacro = F2(
 	function (latexInfo, latexState) {
@@ -17523,7 +17513,6 @@ var _user$project$MiniLatex_Accumulator$latexStateReducer = F2(
 				_elm_lang$core$Maybe$map,
 				_user$project$MiniLatex_Accumulator$info,
 				_elm_lang$core$List$head(parsedParagraph)));
-		var _p6 = A2(_elm_lang$core$Debug$log, 'headElement', headElement);
 		return A3(
 			_user$project$MiniLatex_Accumulator$latexStateReducerDispatcher,
 			{ctor: '_Tuple2', _0: headElement.typ, _1: headElement.name},
