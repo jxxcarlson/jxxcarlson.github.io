@@ -12265,12 +12265,15 @@ var author$project$Main$standardView = function (model) {
 			[
 				author$project$View$headerRibbon,
 				author$project$View$editor(model),
-				A2(
-				elm$html$Html$div,
+				A3(
+				elm$html$Html$Keyed$node,
+				'div',
 				author$project$View$renderedLatexStyle,
 				_List_fromArray(
 					[
-						author$project$View$renderedSource(model)
+						_Utils_Tuple2(
+						elm$core$String$fromInt(model.counter),
+						author$project$View$renderedSource(model))
 					])),
 				author$project$View$spacer(5),
 				author$project$View$footerRibbon(model)
