@@ -1,238 +1,258 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<style>
-body {
-   margin:50px;
-   font-family: Arial, Helvetica, sans-serif;
-   background-color: #eee;
-}
-p { font-size: 10pt; line-height: 14pt; }
-</style>
+  <style>
+    body {
+      margin: 50px;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #eee;
+    }
+
+    p {
+      font-size: 10pt;
+      line-height: 14pt;
+    }
+  </style>
 
 </head>
+
 <body>
 
 
-<div style="width:600px; margin:0 auto;">
+  <div style="width:600px; margin:0 auto;">
 
 
-<h1>jxxcarlson.github.io</h1>
+    <h1>jxxcarlson.github.io</h1>
 
-<h2>Contents</h2>
+    <h2>Contents</h2>
 
-<ul>
-<li><a href="#minilatex">MiniLatex</a></li>
-  <ul>
+    <ul>
+      <li><a href="#minilatex">MiniLatex</a></li>
+      <ul>
+        <!--
     <li><a href="https://jxxcarlson.github.io/app/minilatex/src/index.html" target="_blank">Demo App</a></li>
   
     <li><a href="https://jxxcarlson.github.io/app/meenylatexdemo2/index.html" target="_blank">Demo App II</a></li>
 
-    <li><a href="https://jxxcarlson.github.io/app/miniLatexLive/index.html" target="_blank">MiniLatex Live</a>
-    </li>
+    -->
 
-  </ul>
-  <li><a href="#elm">Elm apps</a></li>
-  <ul>
-    <li><a href="#physics">Physics Simulations</a></li>
-    <li><a href="#gameoflife">Game of Life</a></li>
-    <li><a href="#art">Art</a></li>
-    <li><a href="#crypt">Cryptography</a></li>
-    <li><a href="#weather">Weather</a></li>
-  </ul>
-</ul>
+        <li><a href="https://jxxcarlson.github.io/app/miniLatexLive/index.html" target="_blank">MiniLatex Live</a>
+        </li>
 
-<p><a href="http://www.knode.io/#@public/137" target="_blank">James Carlson</a>: @jxxcarlson on elmlang.slack.com, or at gmail</p>
-<i><a href="http://www.meetup.com/Columbus-STEAM-Elm-Meetup/">STEAM Factory Elm Meetup</a></i>
-| <i><a href="http://www.knode.io/#@public/558" target="_blank">Jim's Elm Meetup Page</a></i>
-<h2><a name="minilatex">MiniLatex</a></h2>
+        <li><a href="https://minilatex.gitbook.io/project/" target="_blank">MiniLatex Technical Report</a>
+        </li>
 
-<p>MiniLatex is an experimental project to render a subset of LaTeX in <thead>
-  browser.  It relies on MathJax to render matheamtical text &mdash; $ .. $ and $$ .. $$
-  &mdash; and adds constructs such as section numbers, a set of macros, e.g., \emph,
-  and a variety of environments e.g., theorem, equation, align, tabular, and verbatim.
-  The aim is to be able to write things like lecture notes that can rendered in the
-  browser by processing with MiniLatex or into PDF by standard tools such as
-  <code>pdflatex</code>.
+        <li><a href="https//knode.io">knode.io</a></li>
 
+      </ul>
+      <li><a href="#elm">Elm apps</a></li>
+      <ul>
+        <li><a href="#physics">Physics Simulations</a></li>
+        <li><a href="#gameoflife">Game of Life</a></li>
+        <li><a href="#art">Art</a></li>
+        <li><a href="#crypt">Cryptography</a></li>
+        <li><a href="#weather">Weather</a></li>
+      </ul>
+    </ul>
 
-</p>
+    <p><a href="http://www.knode.io/#@public/137" target="_blank">James Carlson</a>: @jxxcarlson on elmlang.slack.com,
+      or at gmail</p>
+    <i><a href="http://www.meetup.com/Columbus-STEAM-Elm-Meetup/">STEAM Factory Elm Meetup</a></i>
+    | <i><a href="http://www.knode.io/#@public/558" target="_blank">Jim's Elm Meetup Page</a></i>
+    <h2><a name="minilatex">MiniLatex</a></h2>
 
-<p>
-  Some links (1) a web app, <a href="http://www.knode.io/">www.knode.io</a>,
-  where you can create,  edit and distribute MiniLaTeX documents, (2) A fuller
-  description of MiniLaTeX, (3) A demo app for trying out MiniLatex, (4)
-  open-source code.
-  <ol>
-    <li><a href="http://www.knode.io/" target="_blank">www.knode.io</a></li>
-    <li><a href="http://www.knode.io/#@public/445" target="_blank">MiniLatex on the web</a> </li>
-    <li><a href="https://jxxcarlson.github.io/app/minilatex/src/index.html" target="_blank">Demo App</a></li>
-    <li><a href="https://github.com/jxxcarlson/minilatexDemo" target="_blank">Demo App Code</a></li>
-  </ol>
-</p>
-
-<p>
-Although it is still under development, the site at <a href="http://www.knode.io/">www.knode.io</a> is working pretty well &mdash;
-I've been using it on a daily basis for both long and short writing projects.
-</p>
-
-<p>The Demo App and the
-  <a href="http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest" target="_blank">MiniLatex Library</a>
-  are written in <a href="http://elm-lang.org" target="_blank">Elm</a>. Code is open source and contributions
-  to it are welcome. See <a href="https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08"  target="_blank">Towards
-  LaTeX in the Browser</a> for more information.
-</p>
+    <p>MiniLatex is an experimental project to render a subset of LaTeX in <thead>
+        browser. It relies on MathJax to render matheamtical text &mdash; $ .. $ and $$ .. $$
+        &mdash; and adds constructs such as section numbers, a set of macros, e.g., \emph,
+        and a variety of environments e.g., theorem, equation, align, tabular, and verbatim.
+        The aim is to be able to write things like lecture notes that can rendered in the
+        browser by processing with MiniLatex or into PDF by standard tools such as
+        <code>pdflatex</code>.
 
 
-<!--
+    </p>
+
+    <p>
+      Some links (1) a web app, <a href="http://www.knode.io/">www.knode.io</a>,
+      where you can create, edit and distribute MiniLaTeX documents, (2) A fuller
+      description of MiniLaTeX, (3) A demo app for trying out MiniLatex, (4)
+      open-source code.
+      <ol>
+        <li><a href="http://www.knode.io/" target="_blank">www.knode.io</a></li>
+        <li><a href="http://www.knode.io/#@public/445" target="_blank">MiniLatex on the web</a> </li>
+        <li><a href="https://jxxcarlson.github.io/app/minilatex/src/index.html" target="_blank">Demo App</a></li>
+        <li><a href="https://github.com/jxxcarlson/minilatexDemo" target="_blank">Demo App Code</a></li>
+      </ol>
+    </p>
+
+    <p>
+      Although it is still under development, the site at <a href="http://www.knode.io/">www.knode.io</a> is working
+      pretty well &mdash;
+      I've been using it on a daily basis for both long and short writing projects.
+    </p>
+
+    <p>The Demo App and the
+      <a href="http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest" target="_blank">MiniLatex Library</a>
+      are written in <a href="http://elm-lang.org" target="_blank">Elm</a>. Code is open source and contributions
+      to it are welcome. See <a href="https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08" target="_blank">Towards
+        LaTeX in the Browser</a> for more information.
+    </p>
+
+
+    <!--
 <center><img src="image/dyson_series2.png" width=300></center>
 -->
 
 
 
 
-<h2><a name="elm">Elm demo apps and code</h2>
+    <h2><a name="elm">Elm demo apps and code</h2>
 
 
 
 
 
 
-<h3><a name="physics"> Physics Simulations</a></h3>
+    <h3><a name="physics"> Physics Simulations</a></h3>
 
-<a href="app/animatedParabola4.html"><img src="image/shortRangeRepulsiveForce.png" style="float: right; margin-top:-20px" width=300></a>
-
-
-<strong><a href="app/animatedParabola4.html">Bouncing Ball</a></strong>
+    <a href="app/animatedParabola4.html"><img src="image/shortRangeRepulsiveForce.png" style="float: right; margin-top:-20px"
+        width=300></a>
 
 
-<p>
-  In the Bouncing Ball demo, a particle is set in motion and is then left to move
-  under the influence of two forces.  The first is the downward force of gravity.
-  The second is a short range repulsive force exerted by the floor.  Think of
-  an elastic surface such as wood.  We model this by an upward force which decays
-  exponentially with height.
-</p>
-
-<p>
-  The idea here is not to cheat by just reflecting the velocity vector when the
-  ball hits the floor, but rather to use forces.  The force should
-  have very short range, since the ball does not "feel" the
-  floor until it is very, very near.  Exponential decay of the repulsive
-  force models the idea of "short range."
-</p>
-
-<p><a href="https://github.com/jxxcarlson/elmbyexample/blob/master/src/physics101/app/BouncingBall.elm">Code</a></p>
+    <strong><a href="app/animatedParabola4.html">Bouncing Ball</a></strong>
 
 
+    <p>
+      In the Bouncing Ball demo, a particle is set in motion and is then left to move
+      under the influence of two forces. The first is the downward force of gravity.
+      The second is a short range repulsive force exerted by the floor. Think of
+      an elastic surface such as wood. We model this by an upward force which decays
+      exponentially with height.
+    </p>
 
+    <p>
+      The idea here is not to cheat by just reflecting the velocity vector when the
+      ball hits the floor, but rather to use forces. The force should
+      have very short range, since the ball does not "feel" the
+      floor until it is very, very near. Exponential decay of the repulsive
+      force models the idea of "short range."
+    </p>
 
-
-<img src="image/brownian_motion.png" style="float: right" width=300>
-
-
-
-<strong><a href="app/brownianMotion.html">Brownian Motion</a></strong>
+    <p><a href="https://github.com/jxxcarlson/elmbyexample/blob/master/src/physics101/app/BouncingBall.elm">Code</a></p>
 
 
 
 
-<p> Simulate Brownian motion.  A particle, represented by a colored disk, takes random steps to
-  the left and right, up and down.  Its color also varies randomly,
-  with the red and blue values changing by small random increments.  Thus the underlying
-  process is really a 4-dimensional random walk with two spatial dimensions and two color
-  dimensions.  A little bit like string theory, since the color dimensions are small compared to
-  the spatial ones.
-    <a href="https://github.com/jxxcarlson/brownianMotion.elm" target="_blank">Code</a>
-</p>
+
+    <img src="image/brownian_motion.png" style="float: right" width=300>
 
 
 
-<strong><a href="app/billiards.html">Billiards</a></strong>
-
-<p> Watch billiard balls bounce off
-  walls of a rectangular container and occasionally off each other: angle of reflection
-  equals angle of incidence.  <a href="https://github.com/jxxcarlson/billiards" target="_blank">Code</a>
-</p>
-
-
-<strong><a href="app/randomWalk.html">Random Walk</a></strong>
-
-<p> Simulate one of the simplest (and fairest) gambling games. You start of with a stake
-  of $4.  Then you roll a die. If it is even, you win one dollar.  If it is odd, you
-  lose one dollar. You repeat this process until either you go broke or you decide to stop.
-  See how long you can play before going broke!
-    <a href="https://github.com/jxxcarlson/randomWalk" target="_blank">Code</a>
-</p>
-
-
-<h3> <a name="gameoflife"><a href="app/gameoflife.html">Game of Life</a></h3>
-
-<center>
-<a href="http://jxxcarlson.github.io/app/gameoflife.html"><img src="image/gameoflife.png" width=400></a>
-<p><a href="https://github.com/jxxcarlson/gameoflife" target="_blank">Code</a></p>
-<p>Click on app image to run it.</p>
-</center>
-
-<h3> <a name="art">Art</a></h3>
-
-<center>
-<img src="image/compostion1.png" width=400>
-<p><a href="https://github.com/jxxcarlson/composition1" target="_blank">Code I</a>,
-<a href="https://github.com/jxxcarlson/elm-drawing" target="_blank">Code II</a></p>
-</center>
-
-
-
-<h3> <a name="crypt">Cryptography</a></h3>
-
-
-<strong><a href="app/caesar.html" target="_blank">Caesar Cipher</a></strong>
-
-<p> Play with the Caesar Cipher at
-  <a href="https://ellie-app.com/gMfHXzF2sa1/0" target="_blank">Ellie</a>
-</p>
-
-<a href="app/caesar.html" target="_blank">
-<img src="http://noteimages.s3.amazonaws.com/uploads/caesar_cipher.png"  width=300 float=right>
-</>
-
-<p><a href="https://github.com/jxxcarlson/elmbyexample/tree/master/src/crypt">Code</a></p>
+    <strong><a href="app/brownianMotion.html">Brownian Motion</a></strong>
 
 
 
 
-<strong><a href="app/vigenere.html" target="_blank">Vigenere App</a></strong>
+    <p> Simulate Brownian motion. A particle, represented by a colored disk, takes random steps to
+      the left and right, up and down. Its color also varies randomly,
+      with the red and blue values changing by small random increments. Thus the underlying
+      process is really a 4-dimensional random walk with two spatial dimensions and two color
+      dimensions. A little bit like string theory, since the color dimensions are small compared to
+      the spatial ones.
+      <a href="https://github.com/jxxcarlson/brownianMotion.elm" target="_blank">Code</a>
+    </p>
 
-<p>Make the key longer for more security, as in the images below.  Or make it as long as the message.  Then each letter of the message is shifted
-  independently, making the Caesar cipher into a one-time pad.
-  See <a href="http://www.knode.io/#@public/488">Elm by Example, Caesar Code</a> and the
-  <a href="http://www.knode.io/#@public/493">section</a> following it.</p>
 
-<a href="app/vigenere.html" target="_blank">
-<img src="image/vigenereApp.png"  width=300>
-</a>
 
-<p><a href="https://github.com/jxxcarlson/elmbyexample/tree/master/src/crypt">Code</a></p>
+    <strong><a href="app/billiards.html">Billiards</a></strong>
 
-<br><br>
-<br><br>
+    <p> Watch billiard balls bounce off
+      walls of a rectangular container and occasionally off each other: angle of reflection
+      equals angle of incidence. <a href="https://github.com/jxxcarlson/billiards" target="_blank">Code</a>
+    </p>
 
-<h3> <a name="weather"><a href="http://jxxcarlson.github.io/app/weather.html"  target="_blank">Weather</a></a></h3>
 
-<a href= "http://jxxcarlson.github.io/app/weather.html" target="_blank">
-  <img src="http://noteimages.s3.amazonaws.com/jim_images/weatherApp.png" width="200">
-</a>
+    <strong><a href="app/randomWalk.html">Random Walk</a></strong>
 
-<p><a href="https://github.com/jxxcarlson/weather">Code</a></p>
+    <p> Simulate one of the simplest (and fairest) gambling games. You start of with a stake
+      of $4. Then you roll a die. If it is even, you win one dollar. If it is odd, you
+      lose one dollar. You repeat this process until either you go broke or you decide to stop.
+      See how long you can play before going broke!
+      <a href="https://github.com/jxxcarlson/randomWalk" target="_blank">Code</a>
+    </p>
 
-<p>You will need to get a free API key
-  from <a href="https://openweathermap.org/price">openweathermap.org</a>
-  to use this app.</p><p>  Click on app image to run it.</p>
 
-</div>
+    <h3> <a name="gameoflife"><a href="app/gameoflife.html">Game of Life</a></h3>
+
+    <center>
+      <a href="http://jxxcarlson.github.io/app/gameoflife.html"><img src="image/gameoflife.png" width=400></a>
+      <p><a href="https://github.com/jxxcarlson/gameoflife" target="_blank">Code</a></p>
+      <p>Click on app image to run it.</p>
+    </center>
+
+    <h3> <a name="art">Art</a></h3>
+
+    <center>
+      <img src="image/compostion1.png" width=400>
+      <p><a href="https://github.com/jxxcarlson/composition1" target="_blank">Code I</a>,
+        <a href="https://github.com/jxxcarlson/elm-drawing" target="_blank">Code II</a></p>
+    </center>
+
+
+
+    <h3> <a name="crypt">Cryptography</a></h3>
+
+
+    <strong><a href="app/caesar.html" target="_blank">Caesar Cipher</a></strong>
+
+    <p> Play with the Caesar Cipher at
+      <a href="https://ellie-app.com/gMfHXzF2sa1/0" target="_blank">Ellie</a>
+    </p>
+
+    <a href="app/caesar.html" target="_blank">
+      <img src="http://noteimages.s3.amazonaws.com/uploads/caesar_cipher.png" width=300 float=right>
+      </>
+
+      <p><a href="https://github.com/jxxcarlson/elmbyexample/tree/master/src/crypt">Code</a></p>
+
+
+
+
+      <strong><a href="app/vigenere.html" target="_blank">Vigenere App</a></strong>
+
+      <p>Make the key longer for more security, as in the images below. Or make it as long as the message. Then each
+        letter of the message is shifted
+        independently, making the Caesar cipher into a one-time pad.
+        See <a href="http://www.knode.io/#@public/488">Elm by Example, Caesar Code</a> and the
+        <a href="http://www.knode.io/#@public/493">section</a> following it.</p>
+
+      <a href="app/vigenere.html" target="_blank">
+        <img src="image/vigenereApp.png" width=300>
+      </a>
+
+      <p><a href="https://github.com/jxxcarlson/elmbyexample/tree/master/src/crypt">Code</a></p>
+
+      <br><br>
+      <br><br>
+
+      <h3> <a name="weather"><a href="http://jxxcarlson.github.io/app/weather.html" target="_blank">Weather</a></a></h3>
+
+      <a href="http://jxxcarlson.github.io/app/weather.html" target="_blank">
+        <img src="http://noteimages.s3.amazonaws.com/jim_images/weatherApp.png" width="200">
+      </a>
+
+      <p><a href="https://github.com/jxxcarlson/weather">Code</a></p>
+
+      <p>You will need to get a free API key
+        from <a href="https://openweathermap.org/price">openweathermap.org</a>
+        to use this app.</p>
+      <p> Click on app image to run it.</p>
+
+  </div>
 
 
 </body>
+
 </html>
