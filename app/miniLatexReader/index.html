@@ -22,12 +22,13 @@
 				);
 </script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
-	<script src="Main.min.js" charset="utf-8"></script>
+<script src="Main.js" charset="utf-8"></script>
+
 </head>
 
-<body style="background-color: #e1e6e8; margin: 20px; height: 700px; width: 700px;">
+<body style="background-color: #e1e6e8; margin: 20px; height: 700px; width: 800px;">
 
 <div id="source" style="display:none">
 
@@ -39,7 +40,7 @@ $$
 \newcommand{\id}{\mathbb{\,I\,}}
 $$
 
-\title{MiniLatex Live}
+\title{MiniLatex Demo}
 % \author{James Carlson}
 % \email{jxxcarlson@gmail.com}
 % \date{August 5, 2018}s
@@ -63,70 +64,90 @@ rendered text.
 \section{Introduction}
 
 MiniLatex is a subset of LaTeX that can be
-rendered live in the browser. Feel free to
-experiment with MiniLatex using this app
-\mdash you can change the text in the
-left-hand window, or clear it and enter
-your own text.
+rendered live in the browser, as demonstrated
+by this app.   For a simple MiniLatex editor, see
+\href{https://jxxcarlson.github.io/app/miniLatexLive/index.html}{MiniLatex Live}.
+For a full content-management system based on MiniLatex,
+see \href{https://knode.io}{knode.io}.
 
 MiniLatex is still a research project, albeit
 advancing rapidly.  I need your feedback to make
-it better: jxxcarlson at gmail.  See \cite{H},
-\cite{T} below for articles on the design of
-MiniLatex.  The source code is at \cite{S}.
-We are using an experimental version of the
-code here that will be released in the
-Fall of 2018.
+it better: jxxcarlson at gmail.
+The design of
+MiniLatexSee is discussed in \cite{H}
+and \cite{T}, and the source code is found at \cite{S}.
 
-For a searchable repository of MiniLatex documents,
-see \href{https://knode.io}{knode.io}.
-You can create, edit, and disseminate documents
-using \strong{knode}.  For an example of a long
+For an example of a long
 MiniLatex document, see
 \href{https://www.knode.io/424}{QF Notes}
-\mdash then click on the title.
+\mdash then click on the  document title, which
+you will find in \blue{blue}, to see
+the table of contents.
 
 
 \section{Formulas}
 
-\italic{Try editing formula below.}
+% \italic{Try editing formula \eqref{integral:xn} or \eqref{integral:exp} below.}
 
-The most basic integral:
+Some math formulas, beginning with the most basic integral:
 
 \begin{equation}
+% \label{integral:xn}
 \int_0^1 x^n dx = \frac{1}{n+1}
 \end{equation}
 
 An improper integral:
 
 \begin{equation}
+% \label{integral:exp}
 \int_0^\infty e^{-x} dx = 1
 \end{equation}
 
 \section{Math-mode Macros}
 
-A little Dirac notation \cite{D} from quantum mechanics:
+It is easy to define new math-mode macros
+in MiniLatex:
+
+\begin{verbatim}
+$$
+\newcommand{\bra}{\langle}
+\newcommand{\ket}{\rangle}
+\newcommand{\set}[1]{\{\ #1 \ \}}
+\newcommand{\sett}[2]{\{\ #1 \ |\ #2 \}}
+$$
+\end{verbatim}
+
+Thus, if we say
+
+\begin{verbatim}
+$$
+  \bra x | y \ket = \bra y | x \ket.
+$$
+\end{verbatim}
+
+then we get this:
 
 $$
   \bra x | y \ket = \bra y | x \ket.
 $$
 
-The \strong{bra} and \strong{ket} macros are defined
-in the panel on the right.  You can always define and
-use math-mode macros in MiniLatex.
+And if we say
 
-More macros \mdash see the right-hand panel for their
-definitions:
+\begin{verbatim}
+$A = \set{a \in Z, a \equiv 1\ mod\ 2}$
+
+$B = \sett{a,b,c}{a,b,c \in Z}$
+\end{verbatim}
+
+then we get the following:
 
 $A = \set{a \in Z, a \equiv 1\ mod\ 2}$
 
 $B = \sett{a,b,c}{a,b,c \in Z}$
 
-Note that you can easily write
-about Tex in MiniLatex.
-Thus the  \code{\backslash{bra }}
-macro is defined as
-\code{\backslash{newcommand}\texarg{\backslash{bra}}\texarg{\backslash{langle}}}.
+
+
+
 
 \section{Text-mode Macros}
 
@@ -255,8 +276,6 @@ Briefly, \href{https://www.mathjax.org/}{MathJax} is used inside dollar signs, a
 
 \begin{thebibliography}
 
-\bibitem{D} \href{https://ocw.mit.edu/courses/physics/8-05-quantum-physics-ii-fall-2013/lecture-notes/MIT8_05F13_Chap_04.pdf}{On Dirac's bra-ket notation}, MIT Courseware.
-
 \bibitem{G} James Carlson, \href{https://knode.io/628}{MiniLaTeX Grammar},
 
 \bibitem{H} James Carlson, \href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser }, Hackernoon
@@ -271,19 +290,15 @@ Briefly, \href{https://www.mathjax.org/}{MathJax} is used inside dollar signs, a
   <h1 style="background-color: #e1e6e8; margin-left: 40px;">MiniLatex Reader</h1>
 
 	<div id="comments" style="background-color: #e1e6e8; margin-left: 40px;">
-<p>MiniLatexReader is a simple app for displaying LaTeX in a web browser.
-	Just put the LaTeX source text in the div with id = 'source'. You can
-	see how this is done by doing Option-Cmd-U to look at the source text
-	of this web page. One needs (1) a copy of the source text
-	of this web page, 'index.html', (2) 'body.js' and (3) 'Main.min.js'. Of the two javascript
-	files, the first is quite small (1.8K). The second is
-	the compiled Elm app (74K). All the these files, plus the source code for the Elm app
-	can be found on <a href="https://github.com/jxxcarlson/MiniLatexReader">GitHub</a>.
-  Note that the text below scrolls.</p>
-
-	<p>Note: when you edit the LaTeX source text, make sure that your editor does
-		not indent it. </p>
-</div>
+   <p>MiniLatexReader is a simple app for displaying LaTeX in a web browser.
+	 Just put the LaTeX source text in the div with id = 'source'.  You can
+   see how this is done by doing Option-Cmd-U to look at the source text
+   of this web page.  All that is required is (1) a copy of the source text
+   of this web page, (2) the files 'body.js' and (3) 'Main.js'. The first
+   is a normal javascript file. The second is the compiled Elm app.
+   The source code for the Elm app is
+	 on <a href="https://github.com/jxxcarlson/MiniLatexReader">GitHub</a></p>
+	</div>
 
 
 	<div id="main"></div>
