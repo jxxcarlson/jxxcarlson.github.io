@@ -8,27 +8,15 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/custom-elements/1.1.1/custom-elements.min.js"></script>
 
-	<script type="text/x-mathjax-config">
-		MathJax.Hub.Config(
-			{ tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
-			processEscapes: true,
-			messageStyle: "none",
-			processSectionDelay: 0,
-			processUpdateTime: 0,
-			TeX: { equationNumbers: {autoNumber: "AMS"},
-					 noErrors: {disabled: true}
-					}
-			}
-				);
-</script>
+	<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+	<script src="mj3-tex2html-simple.dist.js"></script>
 
-<script src="Main.min.js" charset="utf-8"></script>
+	<script src="Main.min.js" charset="utf-8"></script>
 
 </head>
 
-<body style="background-color: #e1e6e8; margin: 20px; height: 700px; width: 800px;">
+<body style="background-color: #e1e6e8; margin: 20px; height: 700px; width: 600px;">
 
 <div id="source" style="display:none">
 
@@ -65,13 +53,13 @@ rendered text.
 
 MiniLatex is a subset of LaTeX that can be
 rendered live in the browser, as demonstrated
-by this app.   For a simple MiniLatex editor, see
+by this app. For a simple MiniLatex editor, see
 \href{https://jxxcarlson.github.io/app/miniLatexLive/index.html}{MiniLatex Live}.
 For a full content-management system based on MiniLatex,
 see \href{https://knode.io}{knode.io}.
 
 MiniLatex is still a research project, albeit
-advancing rapidly.  I need your feedback to make
+advancing rapidly. I need your feedback to make
 it better: jxxcarlson at gmail.
 The design of
 MiniLatexSee is discussed in \cite{H}
@@ -80,7 +68,7 @@ and \cite{T}, and the source code is found at \cite{S}.
 For an example of a long
 MiniLatex document, see
 \href{https://www.knode.io/424}{QF Notes}
-\mdash then click on the  document title, which
+\mdash then click on the document title, which
 you will find in \blue{blue}, to see
 the table of contents.
 
@@ -121,14 +109,14 @@ Thus, if we say
 
 \begin{verbatim}
 $$
-  \bra x | y \ket = \bra y | x \ket.
+\bra x | y \ket = \bra y | x \ket.
 $$
 \end{verbatim}
 
 then we get this:
 
 $$
-  \bra x | y \ket = \bra y | x \ket.
+\bra x | y \ket = \bra y | x \ket.
 $$
 
 And if we say
@@ -180,7 +168,7 @@ Likewise, if one says
 \end{verbatim}
 
 then the macro \backslash{hello}\texarg{John} renders as \hello{John}
-For one more example,  make the definition
+For one more example, make the definition
 
 \begin{verbatim}
 \newcommand{\reverseconcat}[3]{#3#2#1}
@@ -197,7 +185,7 @@ We also plan to add a feature so that authors can define new environments.
 
 \section{MiniLatex Macros}
 
-MiniLatex has a number of macros of its own,  For
+MiniLatex has a number of macros of its own, For
 example, text can be rendered in various colors, \red{such as red}
 and \blue{blue}. Text can \highlight{be highlighted}
 and can \strike{also be struck}. Here are the macros:
@@ -223,7 +211,8 @@ $p$ such that $p \equiv 1\ mod\ 4$.
 
 \section{Images}
 
-\image{http://psurl.s3.amazonaws.com/images/jc/beats-eca1.png}{Figure 1. Two-frequency beats}{width: 350, align: center}
+\image{http://psurl.s3.amazonaws.com/images/jc/beats-eca1.png}{Figure 1. Two-frequency beats}{width: 350, align:
+center}
 
 \section{Lists and Tables}
 
@@ -261,8 +250,9 @@ Beryllium& Be& 4& 9.012 \\
 \section{Technology}
 
 MiniLatex is written in \href{http://elm-lang.org}{Elm}, the statically typed functional
-programming language created by Evan Czaplicki.  Because of its excellent
-\href{http://package.elm-lang.org/packages/elm-tools/parser/latest}{parser combinator library}, Elm is an ideal choice for a project like the present one.
+programming language created by Evan Czaplicki. Because of its excellent
+\href{http://package.elm-lang.org/packages/elm-tools/parser/latest}{parser combinator library}, Elm is an ideal
+choice for a project like the present one.
 
 
 For an overview of the design of MiniLatex, see
@@ -278,7 +268,8 @@ Briefly, \href{https://www.mathjax.org/}{MathJax} is used inside dollar signs, a
 
 \bibitem{G} James Carlson, \href{https://knode.io/628}{MiniLaTeX Grammar},
 
-\bibitem{H} James Carlson, \href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in the Browser }, Hackernoon
+\bibitem{H} James Carlson, \href{https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08}{Towards LaTeX in
+the Browser }, Hackernoon
 
 \bibitem{S} \href{http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest}{Source code}
 
@@ -287,95 +278,93 @@ Briefly, \href{https://www.mathjax.org/}{MathJax} is used inside dollar signs, a
 \end{thebibliography}
 </div>
 
-  <h1 style="background-color: #e1e6e8; margin-left: 40px;">MiniLatex Reader</h1>
+	<h1 style="margin-left: 40px;">MiniLatex Reader</h1>
 
 	<div id="comments" style="background-color: #e1e6e8; margin-left: 40px;">
 		<p>MiniLatex Reader is a simple app for displaying LaTeX in a web browser.
-			To display your own text, replace the contents of
-			the div with id="source"
-			in index.html with your own content. Make sure that your editor does not indent the text.
-		  To run MiniLatex Reader, you (1) a copy of the source text
-			of this web page, 'index.html', (2) 'Main.min.js'.  These files,
-			plus the source code for the Elm app, along with directions for compilation
-			and customization,
+			To display your own content, replace the current text in the div with
+			id = 'source' by your text. To run MiniLatex Reader, you need two files,
+		  (1) 'index.html' and (2) 'Main.min.js'. These files,
+			plus the source code for the Elm app, and some directions,
 			can be found on <a href="https://github.com/jxxcarlson/MiniLatexReader">GitHub</a>.
-		  Note that the text below scrolls.</p>
-		</div>
+			Note that the text below scrolls.</p>
 
+		<p><b>Note.</b> MiniLatex Reader is running under MathJax 3.0 beta 2</p>
+	</div>
 
 	<div id="main"></div>
 
 
-  <script>
+	<script>
 		var sourceDiv = document.getElementById("source");
 
 		var root = document.getElementById("main");
 		var app = Elm.Main.init({
-		  node: root,
-		  flags: {
-		    sourceText: sourceDiv.textContent
-		  }
+			node: root,
+			flags: {
+				sourceText: sourceDiv.textContent
+			}
 		});
 
 		var typesetTimeout = null;
 		var typesetQueue = [];
 		function enqueueTypeset(el) {
-		  typesetQueue.push(el);
-		  clearTimeout(typesetTimeout);
-		  typesetTimeout = setTimeout(function() {
-		    var toTypeset = typesetQueue;
-		    MathJax.Hub.Queue(["resetEquationNumbers", MathJax.InputJax.TeX]);
-		    MathJax.Hub.Queue(["Typeset", MathJax.Hub, typesetQueue], function(arg) {
-		      toTypeset.forEach(function(el) {
-		        el.style.opacity = 1;
-		      });
-		    });
-		    typesetQueue = [];
-		  }, 1);
+			typesetQueue.push(el);
+			clearTimeout(typesetTimeout);
+			typesetTimeout = setTimeout(function () {
+				var toTypeset = typesetQueue;
+				MathJax.Hub.Queue(["resetEquationNumbers", MathJax.InputJax.TeX]);
+				MathJax.Hub.Queue(["Typeset", MathJax.Hub, typesetQueue], function (arg) {
+					toTypeset.forEach(function (el) {
+						el.style.opacity = 1;
+					});
+				});
+				typesetQueue = [];
+			}, 1);
 		}
 
 		var updateQueue = [];
 		var updateTimeout = null;
 		function enqueueUpdate(el) {
-		  updateQueue.push(el);
-		  clearTimeout(updateTimeout);
-		  updateTimeout = setTimeout(function() {
-		    MathJax.Hub.Queue(["Update", MathJax.Hub, updateQueue]);
-		    updateQueue = [];
-		  }, 0);
+			updateQueue.push(el);
+			clearTimeout(updateTimeout);
+			updateTimeout = setTimeout(function () {
+				MathJax.Hub.Queue(["Update", MathJax.Hub, updateQueue]);
+				updateQueue = [];
+			}, 0);
 		}
 
 		customElements.define(
-		  "math-text",
-		  class extends HTMLElement {
-		    constructor() {
-		      super();
-		      this._content = this.content;
-		    }
+			"math-text",
+			class extends HTMLElement {
+				constructor() {
+					super();
+					this._content = this.content;
+				}
 
-		    get content() {
-		      return this._content;
-		    }
+				get content() {
+					return this._content;
+				}
 
-		    set content(value) {
-		      if (this._content === value) return;
-		      this._content = value;
-		      var jaxScript = this.querySelector("script");
-		      if (!jaxScript) return;
-		      jaxScript.textContent = this._content;
-		      enqueueUpdate(this);
-		    }
+				set content(value) {
+					if (this._content === value) return;
+					this._content = value;
+					var jaxScript = this.querySelector("script");
+					if (!jaxScript) return;
+					jaxScript.textContent = this._content;
+					enqueueUpdate(this);
+				}
 
-		    connectedCallback() {
-		      this.textContent = this._content;
-		      this._connected = true;
-		      this.style.opacity = 1;
-		      this.style.display = "inline";
-		      enqueueTypeset(this);
-		    }
-		  }
+				connectedCallback() {
+					this.textContent = this._content;
+					this._connected = true;
+					this.style.opacity = 1;
+					this.style.display = "inline";
+					enqueueTypeset(this);
+				}
+			}
 		);
- </script>
+	</script>
 
 </body>
 
