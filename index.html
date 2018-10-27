@@ -68,13 +68,13 @@
     | <i><a href="https:/knode.io/558" target="_blank">Jim's Elm Meetup Page</a></i>
     <h2><a name="minilatex">MiniLatex</a></h2>
 
-    <p>MiniLatex is an experimental project to render a subset of LaTeX in <thead>
-        browser. It relies on MathJax to render matheamtical text &mdash; $ .. $ and $$ .. $$
-        &mdash; and adds constructs such as section numbers, a set of macros, e.g., \emph,
-        and a variety of environments e.g., theorem, equation, align, tabular, and verbatim.
-        The aim is to be able to write things like lecture notes that can rendered in the
-        browser by processing with MiniLatex or into PDF by standard tools such as
-        <code>pdflatex</code>.
+    <p>MiniLatex is an experimental project to render a subset of LaTeX in the
+      browser. It relies on MathJax to render matheamtical text &mdash; $ .. $ and $$ .. $$
+      &mdash; and adds constructs such as section numbers, a set of macros, e.g., \emph,
+      and a variety of environments e.g., theorem, equation, align, tabular, and verbatim.
+      The aim is to be able to write things like lecture notes that can rendered in the
+      browser by processing with MiniLatex or into PDF by standard tools such as
+      <code>pdflatex</code>.
 
 
     </p>
@@ -87,22 +87,26 @@
       <ol>
         <li><a href="https://knode.io/" target="_blank">knode.io</a></li>
         <li><a href="https://knode.io/445" target="_blank">MiniLatex on the web</a> </li>
-        <li><a href="https://jxxcarlson.github.io/app/minilatex/src/index.html" target="_blank">Demo App</a></li>
-        <li><a href="https://github.com/jxxcarlson/minilatexDemo" target="_blank">Demo App Code</a></li>
+        <li><a href="https://jxxcarlson.github.io/app/miniLatexLive/index.html" target="_blank">MiniLatex Live</a> </li>
+        <li><a href="https://jxxcarlson.github.io/app/miniLatexReader/index.html" target="_blank">MiniLatex Reader</a></li>
       </ol>
     </p>
 
     <p>
-      Although it is still under development, the site at <a href="http://www.knode.io/">www.knode.io</a> is working
+      Although it is still under development, the site at <a href="https://knode.io/">knode.io</a> is working
       pretty well &mdash;
       I've been using it on a daily basis for both long and short writing projects.
     </p>
 
-    <p>The Demo App and the
-      <a href="http://package.elm-lang.org/packages/jxxcarlson/minilatex/latest" target="_blank">MiniLatex Library</a>
-      are written in <a href="http://elm-lang.org" target="_blank">Elm</a>. Code is open source and contributions
-      to it are welcome. See <a href="https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08" target="_blank">Towards
-        LaTeX in the Browser</a> for more information.
+    <p>All of the MiniLatex apps rely on the
+      <a href="https://package.elm-lang.org/packages/jxxcarlson/meenylatex/latest/" target="_blank">MiniLatex
+        parser-renderer package</a>. It, in turn relies on Evan Czapicki's
+      <a href="https://package.elm-lang.org/packages/elm/parser/latest/">elm/parser</a> library.
+      It is a parser combinator library along the lines of Haskell's Parsec.
+      <a href="http://elm-lang.org" target="_blank">Elm</a> is a statically typed functional
+      language. For more information on MiniLatex, see <a href="https://hackernoon.com/towards-latex-in-the-browser-2ff4d94a0c08"
+        target="_blank">Towards
+        LaTeX in the Browser</a>.
     </p>
 
 
