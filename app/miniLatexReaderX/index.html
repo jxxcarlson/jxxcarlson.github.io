@@ -8,15 +8,34 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/custom-elements/1.1.1/custom-elements.min.js"></script>
 
-	<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Config(
+			elements: ["#renderedtext", "#renderthis"],
+			{ tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+			processEscapes: true,
+			messageStyle: "none",
+			processSectionDelay: 0,
+			processUpdateTime: 0,
+			TeX: { equationNumbers: {autoNumber: "AMS"},
+					 noErrors: {disabled: true}
+					}
+			}
+		)
+  </script>
 
 	<script src="mj3-tex2html-simple.dist.js"></script>
+
+	<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
 
   <script src="Main.min.js" charset="utf-8"></script>
 
 </head>
 
 <body style="background-color: #e1e6e8; margin: 20px; height: 700px; width: 600px;">
+
+<p id="renderthis">TEST (RENDER): $a^2 + b^2 = c^2$</p>
+<p id="dontrenderthis">TEST (DON'T RENDER): $a^3 + b^3 = c^3$</p>
 
 <div id="source" style="display:none">
 
@@ -275,19 +294,20 @@ Briefly, \href{https://www.mathjax.org/}{MathJax} is used inside dollar signs, a
 \end{thebibliography}
 </div>
 
-  <h1 style="margin-left: 40px;">MiniLatex Reader X</h1>
+  <h1 style="margin-left: 40px;">MiniLatex Reader</h1>
 
-	<div id="comments" style="background-color: #e1e6e8; margin-left: 40px;">
-		<p>MiniLatex Reader is a simple app for displaying LaTeX in a web browser.
-			To display your own content, replace the current text in the div with
-			id = 'source' by your text. To run MiniLatex Reader, you need two files,
-		  (1) 'index.html' and (2) 'Main.min.js'. These files,
-			plus the source code for the Elm app, and some directions,
-			can be found on <a href="https://github.com/jxxcarlson/MiniLatexReader">GitHub</a>.
-			Note that the text below scrolls.</p>
 
-		<p><b>Note.</b> MiniLatex Reader is running under MathJax 3.0 beta 2</p>
-	</div>
+		<div id="comments" style="background-color: #e1e6e8; margin-left: 40px;">
+				<p>MiniLatex Reader is a simple app for displaying LaTeX in a web browser.
+					To display your own content, replace the current text in the div with
+					id = 'source' by your text. To run MiniLatex Reader, you need two files,
+				  (1) 'index.html' and (2) 'Main.min.js'. These files,
+					plus the source code for the Elm app, and some directions,
+					can be found on <a href="https://github.com/jxxcarlson/MiniLatexReader">GitHub</a>.
+					Note that the text below scrolls.</p>
+
+				<p><b>Note.</b> MiniLatex Reader is running under MathJax 3.0 beta 2</p>
+			</div>
 
 	<div id="main"></div>
 
