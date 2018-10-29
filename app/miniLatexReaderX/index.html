@@ -4,18 +4,26 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width" />
-	<title>MiniLatex Reader X</title>
+	<title>MiniLatexs</title>
 </head>
 
 
-<body style="margin: 100px; width=350px;">
+<body style="margin: 100px; width: 400px;">
 
-  <p><a href="index-x1.html" target="_blank">Reader X1:</a> Uses <code>elements: ["#renderedtext", "#renderthis"]</code>, in
+  <h2>Tests  of Reader</h2>
+
+  <p><a href="index-x1.html" target="_blank">Reader X1:</a>
+    Uses <code>elements: ["#renderedtext", "#renderthis"]</code>, in
   MathJax.Hub.  Nothing is typeset</p>
 
-  <p><a href="index-x2.html" target="_blank">Reader X2:</a> Does not use <code>elements</code>.  Everything is typese.</p>
+  <p><a href="index-x2.html" target="_blank">Reader X2:</a>
+    Does not use <code>elements</code>.  Everything is typeset.</p>
 
-  </ol>
+  <p>The intent in X1 is to use <code>"#renderedtext"</code> and
+    <code>"#renderthis"</code> to restrict typesetting to the elements
+    with the corresponding ids.  This will prevent labels from
+    being multiply defined, as happens in X2.  However, X1 does
+    not work according to plan</p>
 
 
 </body>
