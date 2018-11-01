@@ -5832,11 +5832,11 @@ var author$project$Network$edgeName = function (_n0) {
 	var initialNode_ = _n0.a;
 	var terminalNode_ = _n0.b;
 	var flowRate = _n0.c;
-	return author$project$Network$name(initialNode_) + ('->' + author$project$Network$name(terminalNode_));
+	return author$project$Network$name(initialNode_) + ('–' + author$project$Network$name(terminalNode_));
 };
 var elm$core$String$fromFloat = _String_fromNumber;
 var author$project$Network$edgeNameWithFlow = function (edge) {
-	return author$project$Network$edgeName(edge) + (': ' + elm$core$String$fromFloat(
+	return author$project$Network$edgeName(edge) + (' ' + elm$core$String$fromFloat(
 		author$project$Network$edgeFlow(edge)));
 };
 var author$project$Network$listEdgesWithFlow = function (_n0) {
