@@ -11359,6 +11359,14 @@ var author$project$FlowModel$summarize = function (network) {
 				author$project$Network$edgeCount(network))
 		},
 			{
+			label: 'Total flow',
+			value: elm$core$String$fromFloat(
+				A2(
+					author$project$Flow$roundTo,
+					0,
+					author$project$Network$totalFlow(network)))
+		},
+			{
 			label: 'Efficiency',
 			value: elm$core$String$fromFloat(
 				A2(
