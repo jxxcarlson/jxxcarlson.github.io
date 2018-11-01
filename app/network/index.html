@@ -5611,12 +5611,17 @@ var author$project$NetworkParser$unique = function (list) {
 	return A4(author$project$NetworkParser$uniqueHelp, elm$core$Basics$identity, elm$core$Set$empty, list, _List_Nil);
 };
 var elm$core$Basics$append = _Utils_append;
+var elm$core$List$sortBy = _List_sortBy;
+var elm$core$List$sort = function (xs) {
+	return A2(elm$core$List$sortBy, elm$core$Basics$identity, xs);
+};
 var author$project$NetworkParser$nodeNamesFromString = function (str) {
 	var simpleEdgeList = author$project$NetworkParser$simpleEdgeListFromString(str);
 	var sinkNodeNames = A2(elm$core$List$map, author$project$Network$sinkNameOfSimpleEdge, simpleEdgeList);
 	var sourceNodeNames = A2(elm$core$List$map, author$project$Network$sourceNameOfSimpleEdge, simpleEdgeList);
-	return author$project$NetworkParser$unique(
-		_Utils_ap(sourceNodeNames, sinkNodeNames));
+	return elm$core$List$sort(
+		author$project$NetworkParser$unique(
+			_Utils_ap(sourceNodeNames, sinkNodeNames)));
 };
 var author$project$NetworkParser$nodesFromString = function (str) {
 	return A2(
@@ -11093,7 +11098,8 @@ var author$project$FlowModel$displayEdges = function (network) {
 						mdgriffith$elm_ui$Element$text(edge)
 					]));
 		},
-		author$project$Network$listEdgesWithFlow(network));
+		elm$core$List$sort(
+			author$project$Network$listEdgesWithFlow(network)));
 };
 var mdgriffith$elm_ui$Element$el = F2(
 	function (attrs, child) {
@@ -11148,7 +11154,8 @@ var author$project$FlowModel$displayNodes = function (network) {
 						mdgriffith$elm_ui$Element$text(node)
 					]));
 		},
-		author$project$Network$listNodes(network));
+		elm$core$List$sort(
+			author$project$Network$listNodes(network)));
 };
 var mdgriffith$elm_ui$Internal$Model$AlignX = function (a) {
 	return {$: 'AlignX', a: a};
