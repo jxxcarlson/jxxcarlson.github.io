@@ -4463,6 +4463,7 @@ function _Browser_load(url)
 		}
 	}));
 }
+var author$project$Main$initialNetworkString = 'U1, U4, 30; U1, U2, 90.4; U4, U3, 22; U2, U3, 31.4;\nV1, V4, 30; V1, V2, 90.4; V4, V3, 22; V2, V3, 31.4;\nU1, V1, 30;\n';
 var author$project$Network$Network = F2(
 	function (a, b) {
 		return {$: 'Network', a: a, b: b};
@@ -5571,7 +5572,7 @@ var elm$core$Set$member = F2(
 		var dict = _n0.a;
 		return A2(elm$core$Dict$member, key, dict);
 	});
-var author$project$NetworkParser$uniqueHelp = F4(
+var author$project$Tools$uniqueHelp = F4(
 	function (f, existing, remaining, accumulator) {
 		uniqueHelp:
 		while (true) {
@@ -5607,8 +5608,8 @@ var author$project$NetworkParser$uniqueHelp = F4(
 	});
 var elm$core$Dict$empty = elm$core$Dict$RBEmpty_elm_builtin;
 var elm$core$Set$empty = elm$core$Set$Set_elm_builtin(elm$core$Dict$empty);
-var author$project$NetworkParser$unique = function (list) {
-	return A4(author$project$NetworkParser$uniqueHelp, elm$core$Basics$identity, elm$core$Set$empty, list, _List_Nil);
+var author$project$Tools$unique = function (list) {
+	return A4(author$project$Tools$uniqueHelp, elm$core$Basics$identity, elm$core$Set$empty, list, _List_Nil);
 };
 var elm$core$Basics$append = _Utils_append;
 var elm$core$List$sortBy = _List_sortBy;
@@ -5620,7 +5621,7 @@ var author$project$NetworkParser$nodeNamesFromString = function (str) {
 	var sinkNodeNames = A2(elm$core$List$map, author$project$Network$sinkNameOfSimpleEdge, simpleEdgeList);
 	var sourceNodeNames = A2(elm$core$List$map, author$project$Network$sourceNameOfSimpleEdge, simpleEdgeList);
 	return elm$core$List$sort(
-		author$project$NetworkParser$unique(
+		author$project$Tools$unique(
 			_Utils_ap(sourceNodeNames, sinkNodeNames)));
 };
 var author$project$NetworkParser$nodesFromString = function (str) {
@@ -5637,8 +5638,8 @@ var author$project$NetworkParser$networkFromString = function (str) {
 };
 var author$project$Main$initialModel = {
 	message: 'Hello!',
-	network: author$project$NetworkParser$networkFromString('U1, U4, 30; U1, U2, 90.4; U4, U3, 22; U2, U3, 31.4;'),
-	networkAsString: 'U1, U4, 30; U1, U2, 90.4; U4, U3, 22; U2, U3, 31.4;'
+	network: author$project$NetworkParser$networkFromString(author$project$Main$initialNetworkString),
+	networkAsString: author$project$Main$initialNetworkString
 };
 var elm$core$Result$isOk = function (result) {
 	if (result.$ === 'Ok') {
@@ -11724,6 +11725,477 @@ var author$project$Main$dataColumnStyle = _List_fromArray(
 		mdgriffith$elm_ui$Element$height(
 		mdgriffith$elm_ui$Element$px(300))
 	]);
+var author$project$Display$nodeIndex = F2(
+	function (dict, nodeName) {
+		return A2(
+			elm$core$Maybe$withDefault,
+			-1,
+			A2(elm$core$Dict$get, nodeName, dict));
+	});
+var author$project$Display$graphEdgeFromNetworkEdge = F2(
+	function (dict, _n0) {
+		var from = _n0.a;
+		var to = _n0.b;
+		var t = A2(
+			author$project$Display$nodeIndex,
+			dict,
+			author$project$Network$name(to));
+		var f = A2(
+			author$project$Display$nodeIndex,
+			dict,
+			author$project$Network$name(from));
+		return _Utils_Tuple2(f, t);
+	});
+var author$project$Display$graphEdgesFromNetwork = F2(
+	function (dict, _n0) {
+		var nodes = _n0.a;
+		var edges = _n0.b;
+		return A2(
+			elm$core$List$map,
+			author$project$Display$graphEdgeFromNetworkEdge(dict),
+			edges);
+	});
+var elm$core$Dict$fromList = function (assocs) {
+	return A3(
+		elm$core$List$foldl,
+		F2(
+			function (_n0, dict) {
+				var key = _n0.a;
+				var value = _n0.b;
+				return A3(elm$core$Dict$insert, key, value, dict);
+			}),
+		elm$core$Dict$empty,
+		assocs);
+};
+var author$project$Display$makeNodeDicionary = function (network) {
+	return elm$core$Dict$fromList(
+		A2(
+			elm$core$List$indexedMap,
+			F2(
+				function (index, label) {
+					return _Utils_Tuple2(label, index + 1);
+				}),
+			author$project$Network$listNodes(network)));
+};
+var author$project$Display$vertexList = function (network) {
+	return A2(
+		elm$core$List$indexedMap,
+		F2(
+			function (index, name) {
+				return {id: index + 1, label: name};
+			}),
+		author$project$Network$listNodes(network));
+};
+var author$project$Display$graphFromNetwork = function (network) {
+	var vertices = author$project$Display$vertexList(network);
+	var dict = author$project$Display$makeNodeDicionary(network);
+	var edges = A2(author$project$Display$graphEdgesFromNetwork, dict, network);
+	return {edges: edges, vertices: vertices};
+};
+var author$project$ColorRecord$ColorRecord = F4(
+	function (r, g, b, a) {
+		return {a: a, b: b, g: g, r: r};
+	});
+var author$project$DisplayGraph$boundingBoxColor = A4(author$project$ColorRecord$ColorRecord, 0, 0, 255, 0.15);
+var author$project$DisplayGraph$lineSegmentColor = A4(author$project$ColorRecord$ColorRecord, 0, 0, 0, 1.0);
+var author$project$Vector$Vector = F2(
+	function (x, y) {
+		return {x: x, y: y};
+	});
+var author$project$DisplayGraph$boundingBoxData = {
+	center: A2(author$project$Vector$Vector, 100, 0),
+	dimensions: A2(author$project$Vector$Vector, 2, 2),
+	fillColor: author$project$DisplayGraph$boundingBoxColor,
+	strokeColor: author$project$DisplayGraph$lineSegmentColor
+};
+var author$project$Shape$Rect = function (a) {
+	return {$: 'Rect', a: a};
+};
+var author$project$ColorRecord$rgba = function (color) {
+	return 'rgba(' + (elm$core$String$fromInt(color.r) + (',' + (elm$core$String$fromInt(color.g) + (',' + (elm$core$String$fromInt(color.b) + (',' + (elm$core$String$fromFloat(color.a) + ')')))))));
+};
+var elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
+var elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
+var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
+var elm$svg$Svg$Attributes$ry = _VirtualDom_attribute('ry');
+var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
+var author$project$Shape$svgEllipseAttributes = function (data_) {
+	return _List_fromArray(
+		[
+			elm$svg$Svg$Attributes$fill(
+			author$project$ColorRecord$rgba(data_.fillColor)),
+			elm$svg$Svg$Attributes$stroke(
+			author$project$ColorRecord$rgba(data_.fillColor)),
+			elm$svg$Svg$Attributes$cx(
+			elm$core$String$fromFloat(data_.center.x)),
+			elm$svg$Svg$Attributes$cy(
+			elm$core$String$fromFloat(data_.center.y)),
+			elm$svg$Svg$Attributes$rx(
+			elm$core$String$fromFloat(data_.dimensions.x)),
+			elm$svg$Svg$Attributes$ry(
+			elm$core$String$fromFloat(data_.dimensions.y))
+		]);
+};
+var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
+var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
+var elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
+var elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
+var author$project$Shape$svgRectAttributes = function (data_) {
+	return _List_fromArray(
+		[
+			elm$svg$Svg$Attributes$fill(
+			author$project$ColorRecord$rgba(data_.fillColor)),
+			elm$svg$Svg$Attributes$stroke(
+			author$project$ColorRecord$rgba(data_.fillColor)),
+			elm$svg$Svg$Attributes$x(
+			elm$core$String$fromFloat(data_.center.x - (data_.dimensions.x / 2))),
+			elm$svg$Svg$Attributes$y(
+			elm$core$String$fromFloat(data_.center.y - (data_.dimensions.y / 2))),
+			elm$svg$Svg$Attributes$width(
+			elm$core$String$fromFloat(data_.dimensions.x)),
+			elm$svg$Svg$Attributes$height(
+			elm$core$String$fromFloat(data_.dimensions.y))
+		]);
+};
+var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var elm$svg$Svg$ellipse = elm$svg$Svg$trustedNode('ellipse');
+var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
+var author$project$Shape$draw = function (shape) {
+	if (shape.$ === 'Rect') {
+		var data_ = shape.a;
+		return A2(
+			elm$svg$Svg$rect,
+			author$project$Shape$svgRectAttributes(data_),
+			_List_Nil);
+	} else {
+		var data_ = shape.a;
+		return A2(
+			elm$svg$Svg$ellipse,
+			author$project$Shape$svgEllipseAttributes(data_),
+			_List_Nil);
+	}
+};
+var author$project$Shape$Ellipse = function (a) {
+	return {$: 'Ellipse', a: a};
+};
+var author$project$Shape$data = function (shape) {
+	if (shape.$ === 'Rect') {
+		var data_ = shape.a;
+		return data_;
+	} else {
+		var data_ = shape.a;
+		return data_;
+	}
+};
+var author$project$Shape$moveBy = F2(
+	function (displacement, shape) {
+		var shapeData = author$project$Shape$data(shape);
+		var center = shapeData.center;
+		var newCenter = _Utils_update(
+			center,
+			{x: displacement.x + center.x, y: displacement.y + center.y});
+		var newShapeData = _Utils_update(
+			shapeData,
+			{center: newCenter});
+		if (shape.$ === 'Rect') {
+			return author$project$Shape$Rect(newShapeData);
+		} else {
+			return author$project$Shape$Ellipse(newShapeData);
+		}
+	});
+var author$project$Shape$scaleBy = F2(
+	function (factor, shape) {
+		var shapeData = author$project$Shape$data(shape);
+		var dimensions = shapeData.dimensions;
+		var newDimensions = _Utils_update(
+			dimensions,
+			{x: factor * dimensions.x, y: factor * dimensions.y});
+		var center = shapeData.center;
+		var newCenter = _Utils_update(
+			center,
+			{x: factor * center.x, y: factor * center.y});
+		var newShapeData = _Utils_update(
+			shapeData,
+			{center: newCenter, dimensions: newDimensions});
+		if (shape.$ === 'Rect') {
+			return author$project$Shape$Rect(newShapeData);
+		} else {
+			return author$project$Shape$Ellipse(newShapeData);
+		}
+	});
+var author$project$DisplayGraph$boundingBox = function (scale) {
+	return author$project$Shape$draw(
+		A2(
+			author$project$Shape$moveBy,
+			A2(author$project$Vector$Vector, scale, scale),
+			A2(
+				author$project$Shape$scaleBy,
+				1.2 * scale,
+				author$project$Shape$Rect(author$project$DisplayGraph$boundingBoxData))));
+};
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var author$project$DisplayGraph$getPoint = F2(
+	function (indexedPoints, id) {
+		return A2(
+			elm$core$Maybe$map,
+			elm$core$Tuple$second,
+			elm$core$List$head(
+				A2(
+					elm$core$List$filter,
+					function (item) {
+						return _Utils_eq(item.a, id);
+					},
+					indexedPoints)));
+	});
+var author$project$Vector$DirectedSegment = F2(
+	function (a, b) {
+		return {a: a, b: b};
+	});
+var author$project$DisplayGraph$edgeToSegment = F2(
+	function (indexedPoints, edge) {
+		var maybeB = A2(author$project$DisplayGraph$getPoint, indexedPoints, edge.b);
+		var maybeA = A2(author$project$DisplayGraph$getPoint, indexedPoints, edge.a);
+		var _n0 = _Utils_Tuple2(maybeA, maybeB);
+		if ((_n0.a.$ === 'Just') && (_n0.b.$ === 'Just')) {
+			var a = _n0.a.a;
+			var b = _n0.b.a;
+			return elm$core$Maybe$Just(
+				A2(author$project$Vector$DirectedSegment, a, b));
+		} else {
+			return elm$core$Maybe$Nothing;
+		}
+	});
+var elm$core$Basics$cos = _Basics_cos;
+var elm$core$Basics$sin = _Basics_sin;
+var author$project$Vector$rotate = F2(
+	function (theta, v) {
+		var y = v.y;
+		var x = v.x;
+		var xx = (elm$core$Basics$cos(theta) * x) - (elm$core$Basics$sin(theta) * y);
+		var yy = (elm$core$Basics$sin(theta) * x) + (elm$core$Basics$cos(theta) * y);
+		return A2(author$project$Vector$Vector, xx, yy);
+	});
+var author$project$DisplayGraph$rotate = F3(
+	function (vector, angle, k) {
+		return A2(author$project$Vector$rotate, k * angle, vector);
+	});
+var author$project$DisplayGraph$getPoints = function (graph) {
+	var points = _List_Nil;
+	var n = elm$core$List$length(graph.vertices);
+	var theta = (2 * 3.14159265) / n;
+	var point = A2(
+		author$project$DisplayGraph$rotate,
+		A2(author$project$Vector$Vector, 1, 0),
+		theta);
+	return A3(
+		elm$core$List$foldl,
+		F2(
+			function (k, acc) {
+				return _Utils_ap(
+					acc,
+					_List_fromArray(
+						[
+							point(k)
+						]));
+			}),
+		_List_Nil,
+		A2(elm$core$List$range, 0, n - 1));
+};
+var elm$core$Tuple$pair = F2(
+	function (a, b) {
+		return _Utils_Tuple2(a, b);
+	});
+var author$project$DisplayGraph$zip = elm$core$List$map2(elm$core$Tuple$pair);
+var author$project$DisplayGraph$getIndexedPoints = function (graph) {
+	var points = author$project$DisplayGraph$getPoints(graph);
+	var ids = A2(
+		elm$core$List$map,
+		function ($) {
+			return $.id;
+		},
+		graph.vertices);
+	return A2(author$project$DisplayGraph$zip, ids, points);
+};
+var author$project$DisplayGraph$vertexColor = A4(author$project$ColorRecord$ColorRecord, 0, 50, 255, 0.8);
+var author$project$Shape$ShapeData = F4(
+	function (center, dimensions, strokeColor, fillColor) {
+		return {center: center, dimensions: dimensions, fillColor: fillColor, strokeColor: strokeColor};
+	});
+var author$project$DisplayGraph$makeCircle = F2(
+	function (size, center) {
+		var shapeData = A4(
+			author$project$Shape$ShapeData,
+			center,
+			A2(author$project$Vector$Vector, size, size),
+			author$project$DisplayGraph$vertexColor,
+			author$project$DisplayGraph$vertexColor);
+		return author$project$Shape$Ellipse(shapeData);
+	});
+var author$project$DisplayGraph$renderPoints = function (centers) {
+	var size = 0.5 / elm$core$List$length(centers);
+	return A2(
+		elm$core$List$map,
+		function (center) {
+			return A2(author$project$DisplayGraph$makeCircle, size, center);
+		},
+		centers);
+};
+var author$project$LineSegment$LineSegment = F5(
+	function (a, b, width, strokeColor, fillColor) {
+		return {a: a, b: b, fillColor: fillColor, strokeColor: strokeColor, width: width};
+	});
+var author$project$DisplayGraph$makeLine = function (segment) {
+	return A5(author$project$LineSegment$LineSegment, segment.a, segment.b, 2.5, author$project$DisplayGraph$lineSegmentColor, author$project$DisplayGraph$lineSegmentColor);
+};
+var author$project$DisplayGraph$renderSegments = function (directedSegments) {
+	return A2(
+		elm$core$List$map,
+		function (edge) {
+			return author$project$DisplayGraph$makeLine(edge);
+		},
+		directedSegments);
+};
+var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
+var elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
+var elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
+var elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
+var elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
+var author$project$LineSegment$lineAttributes = function (lineSegment) {
+	return _List_fromArray(
+		[
+			elm$svg$Svg$Attributes$fill(
+			author$project$ColorRecord$rgba(lineSegment.fillColor)),
+			elm$svg$Svg$Attributes$stroke(
+			author$project$ColorRecord$rgba(lineSegment.fillColor)),
+			elm$svg$Svg$Attributes$x1(
+			elm$core$String$fromFloat(lineSegment.a.x)),
+			elm$svg$Svg$Attributes$y1(
+			elm$core$String$fromFloat(lineSegment.a.y)),
+			elm$svg$Svg$Attributes$x2(
+			elm$core$String$fromFloat(lineSegment.b.x)),
+			elm$svg$Svg$Attributes$y2(
+			elm$core$String$fromFloat(lineSegment.b.y)),
+			elm$svg$Svg$Attributes$strokeWidth(
+			elm$core$String$fromFloat(lineSegment.width))
+		]);
+};
+var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
+var author$project$LineSegment$draw = function (segment) {
+	return A2(
+		elm$svg$Svg$line,
+		author$project$LineSegment$lineAttributes(segment),
+		_List_Nil);
+};
+var author$project$Vector$add = F2(
+	function (v, w) {
+		return A2(author$project$Vector$Vector, v.x + w.x, v.y + w.y);
+	});
+var author$project$LineSegment$moveBy = F2(
+	function (displacement, lineSegment) {
+		var newB = A2(author$project$Vector$add, displacement, lineSegment.b);
+		var newA = A2(author$project$Vector$add, displacement, lineSegment.a);
+		return _Utils_update(
+			lineSegment,
+			{a: newA, b: newB});
+	});
+var author$project$Vector$mul = F2(
+	function (c, v) {
+		return A2(author$project$Vector$Vector, c * v.x, c * v.y);
+	});
+var author$project$LineSegment$scaleBy = F2(
+	function (factor, lineSegment) {
+		var newB = A2(author$project$Vector$mul, factor, lineSegment.b);
+		var newA = A2(author$project$Vector$mul, factor, lineSegment.a);
+		return _Utils_update(
+			lineSegment,
+			{a: newA, b: newB});
+	});
+var author$project$DisplayGraph$graphDisplay = F2(
+	function (scale, graph) {
+		var points = author$project$DisplayGraph$getPoints(graph);
+		var kk = 0.92;
+		var k = 0.8;
+		var renderedPoints = A2(
+			elm$core$List$map,
+			author$project$Shape$draw,
+			A2(
+				elm$core$List$map,
+				author$project$Shape$moveBy(
+					A2(author$project$Vector$Vector, kk * scale, scale)),
+				A2(
+					elm$core$List$map,
+					author$project$Shape$scaleBy(k * scale),
+					author$project$DisplayGraph$renderPoints(points))));
+		var indexedPoints = author$project$DisplayGraph$getIndexedPoints(graph);
+		var segments = A2(
+			elm$core$List$filterMap,
+			elm$core$Basics$identity,
+			A2(
+				elm$core$List$map,
+				author$project$DisplayGraph$edgeToSegment(indexedPoints),
+				graph.edges));
+		var renderedSegments = A2(
+			elm$core$List$map,
+			author$project$LineSegment$draw,
+			A2(
+				elm$core$List$map,
+				author$project$LineSegment$moveBy(
+					A2(author$project$Vector$Vector, kk * scale, scale)),
+				A2(
+					elm$core$List$map,
+					author$project$LineSegment$scaleBy(k * scale),
+					author$project$DisplayGraph$renderSegments(segments))));
+		return _Utils_ap(
+			renderedSegments,
+			_Utils_ap(
+				renderedPoints,
+				_List_fromArray(
+					[
+						author$project$DisplayGraph$boundingBox(scale)
+					])));
+	});
+var author$project$Display$networkDisplay = F2(
+	function (scale, network) {
+		return A2(
+			author$project$DisplayGraph$graphDisplay,
+			scale,
+			author$project$Display$graphFromNetwork(network));
+	});
+var elm$html$Html$Attributes$height = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'height',
+		elm$core$String$fromInt(n));
+};
+var elm$html$Html$Attributes$width = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'width',
+		elm$core$String$fromInt(n));
+};
+var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
+var mdgriffith$elm_ui$Internal$Model$unstyled = A2(elm$core$Basics$composeL, mdgriffith$elm_ui$Internal$Model$Unstyled, elm$core$Basics$always);
+var mdgriffith$elm_ui$Element$html = mdgriffith$elm_ui$Internal$Model$unstyled;
+var author$project$Main$displayNetwork = function (model) {
+	return mdgriffith$elm_ui$Element$html(
+		A2(
+			elm$svg$Svg$svg,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$width(400),
+					elm$html$Html$Attributes$height(400)
+				]),
+			A2(author$project$Display$networkDisplay, 200, model.network)));
+};
 var mdgriffith$elm_ui$Internal$Model$AsColumn = {$: 'AsColumn'};
 var mdgriffith$elm_ui$Internal$Model$asColumn = mdgriffith$elm_ui$Internal$Model$AsColumn;
 var mdgriffith$elm_ui$Element$column = F2(
@@ -11747,6 +12219,14 @@ var mdgriffith$elm_ui$Element$column = F2(
 var author$project$Main$networkDisplay = function (model) {
 	return _List_fromArray(
 		[
+			A2(
+			mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[mdgriffith$elm_ui$Element$centerX, mdgriffith$elm_ui$Element$alignTop]),
+			_List_fromArray(
+				[
+					author$project$Main$displayNetwork(model)
+				])),
 			A2(
 			mdgriffith$elm_ui$Element$column,
 			author$project$Main$dataColumnStyle,
@@ -12278,7 +12758,6 @@ var mdgriffith$elm_ui$Internal$Model$isContent = function (len) {
 		}
 	}
 };
-var mdgriffith$elm_ui$Internal$Model$unstyled = A2(elm$core$Basics$composeL, mdgriffith$elm_ui$Internal$Model$Unstyled, elm$core$Basics$always);
 var mdgriffith$elm_ui$Element$Input$textHelper = F3(
 	function (textInput, attrs, textOptions) {
 		var forNearby = function (attr) {
