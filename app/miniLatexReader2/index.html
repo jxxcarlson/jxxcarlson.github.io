@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>MiniLatex Reader II</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/custom-elements/1.1.1/custom-elements.min.js"></script>
+
+
+    <script type="text/x-mathjax-config">
+		MathJax.Hub.Config(
+			// elements: ["#renderedtext", "#renderthis"],
+			{ tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+			processEscapes: true,
+			messageStyle: "none",
+			processSectionDelay: 0,
+			processUpdateTime: 0,
+			TeX: { equationNumbers: {autoNumber: "AMS"},
+					 noErrors: {disabled: true}
+					}
+			}
+		)
+  </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    <script src="Main.min.js" charset="utf-8"></script>
+
+</head>
+
+<body style="background-color: #e1e6e8; margin: 20px; height: 700px; width: 600px;">
+
+    <div id="leftcolumn">
+        <h3 style="margin-left: 40px; margin-bottom: 10px;">MiniLatex Reader II</h3>
+
+        <div id="main"></div>
+    </div>
+
+    <div id="rightcolumn" style="position: absolute; left: 650px; top: 20px; width: 400px; height: 700px; overflow: scroll">
+
+        <h3>Notes</h3>
+
+        <p>The MiniLatex Reader II is a small app that you can use to display
+            MiniLatex source text on a web page. It can be configured
+            to point to any web server (the <b>host</b>) which provides documents according
+            to the MiniLatex Docuument Protocol (MDP), which we will
+            describe in separate document. MiniLatex documents are retrieved
+            by an integer id. The id for the document shown on start up
+            is configuread as described below.
+        </p>
+
+        <h4>Configuration </h4>
+        <p>The host is configured by editing the text
+            shown below, which you will find in <code>index.html</code>.
+        </p>
+
+        <code>flags: {
+            host: "https://nshost.herokuapp.com",
+            documentId: 427
+        }</code>
+
+
+        <h4>Plans</h4>
+
+        <p>The present version of MiniLatex Reader II retrieves
+            documents from the host using the document ID. We plan various
+            experiments &mdash; a simple search interface, e.g., search by title,
+            a configurable &quot;reading list&quot; that presents a series
+            of documents that can be read by clicking on the document title.</p>
+
+
+
+        <h4>Source Code and Contact</h4>
+
+        <p>Source code and installation instructions for this project is on <a href="https://github.com/jxxcarlson/MiniLatexReaderII">GitHub</a>
+            The project is open-source, so you can modify it for your own needs.
+            Please contact me at jxxcarlson@gmail.com if you have comments
+            or questions.
+        </p>
+
+
+    </div>
+
+
+    <script>
+        var sourceDiv = document.getElementById("source");
+
+        var root = document.getElementById("main");
+        var app = Elm.Main.init({
+            node: root,
+            flags: {
+                host: "https://nshost.herokuapp.com",
+                documentId: 427
+            }
+        });
+
+
+        var typesetTimeout = null;
+        var typesetQueue = [];
+        function enqueueTypeset(el) {
+            typesetQueue.push(el);
+            clearTimeout(typesetTimeout);
+            typesetTimeout = setTimeout(function () {
+                var toTypeset = typesetQueue;
+                MathJax.Hub.Queue(["resetEquationNumbers", MathJax.InputJax.TeX]);
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub, typesetQueue], function (arg) {
+                    toTypeset.forEach(function (el) {
+                        el.style.opacity = 1;
+                    });
+                });
+                typesetQueue = [];
+            }, 1);
+        }
+
+        var updateQueue = [];
+        var updateTimeout = null;
+        function enqueueUpdate(el) {
+            updateQueue.push(el);
+            clearTimeout(updateTimeout);
+            updateTimeout = setTimeout(function () {
+                MathJax.Hub.Queue(["Update", MathJax.Hub, updateQueue]);
+                updateQueue = [];
+            }, 0);
+        }
+
+        customElements.define(
+            "math-text",
+            class extends HTMLElement {
+                constructor() {
+                    super();
+                    this._content = this.content;
+                }
+
+                get content() {
+                    return this._content;
+                }
+
+                set content(value) {
+                    if (this._content === value) return;
+                    this._content = value;
+                    var jaxScript = this.querySelector("script");
+                    if (!jaxScript) return;
+                    jaxScript.textContent = this._content;
+                    enqueueUpdate(this);
+                }
+
+                connectedCallback() {
+                    this.textContent = this._content;
+                    this._connected = true;
+                    this.style.opacity = 1;
+                    this.style.display = "inline";
+                    enqueueTypeset(this);
+                }
+            }
+        );
+    </script>
+
+</body>
+
+</html>
