@@ -12395,8 +12395,13 @@ var elm$svg$Svg$text = elm$virtual_dom$VirtualDom$text;
 var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var elm$svg$Svg$text_ = elm$svg$Svg$trustedNode('text');
 var elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
-var author$project$SvgText$textDisplay = F4(
-	function (fontSize_, x_, y_, content) {
+var elm$svg$Svg$Attributes$transform = _VirtualDom_attribute('transform');
+var author$project$SvgText$textDisplay = F5(
+	function (fontSize_, x_, y_, theta_, content) {
+		var yrr_ = elm$core$String$fromFloat(y_);
+		var xrr_ = elm$core$String$fromFloat(x_);
+		var angle = elm$core$String$fromFloat(theta_);
+		var rotate_ = 'rotate(' + (angle + (' ' + (xrr_ + (' ' + (yrr_ + ')')))));
 		return A2(
 			elm$svg$Svg$text_,
 			_List_fromArray(
@@ -12406,7 +12411,8 @@ var author$project$SvgText$textDisplay = F4(
 					elm$svg$Svg$Attributes$y(
 					elm$core$String$fromFloat(y_)),
 					elm$svg$Svg$Attributes$fontSize(
-					elm$core$String$fromInt(fontSize_))
+					elm$core$String$fromInt(fontSize_)),
+					elm$svg$Svg$Attributes$transform(rotate_)
 				]),
 			_List_fromArray(
 				[
@@ -12416,8 +12422,8 @@ var author$project$SvgText$textDisplay = F4(
 var elm$svg$Svg$ellipse = elm$svg$Svg$trustedNode('ellipse');
 var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
 var author$project$Shape$draw = function (shape) {
-	var deltaY = 15;
-	var deltaX = 15;
+	var deltaY = 30;
+	var deltaX = -8;
 	if (shape.$ === 'Rect') {
 		var data_ = shape.a;
 		return _List_fromArray(
@@ -12426,7 +12432,7 @@ var author$project$Shape$draw = function (shape) {
 				elm$svg$Svg$rect,
 				author$project$Shape$svgRectAttributes(data_),
 				_List_Nil),
-				A4(author$project$SvgText$textDisplay, 14, data_.center.x + deltaX, data_.center.y + deltaY, data_.label)
+				A5(author$project$SvgText$textDisplay, 14, data_.center.x + deltaX, data_.center.y + deltaY, 0, data_.label)
 			]);
 	} else {
 		var data_ = shape.a;
@@ -12436,7 +12442,7 @@ var author$project$Shape$draw = function (shape) {
 				elm$svg$Svg$ellipse,
 				author$project$Shape$svgEllipseAttributes(data_),
 				_List_Nil),
-				A4(author$project$SvgText$textDisplay, 14, data_.center.x + deltaX, data_.center.y + deltaY, data_.label)
+				A5(author$project$SvgText$textDisplay, 14, data_.center.x + deltaX, data_.center.y + deltaY, 0, data_.label)
 			]);
 	}
 };
@@ -12698,17 +12704,20 @@ var author$project$LineSegment$draw = function (segment) {
 	var normSquared = (n_x * n_x) + (n_y * n_y);
 	var norm = elm$core$Basics$sqrt(normSquared);
 	var un_y = n_y / norm;
+	var unn_y = (un_y > 0) ? un_y : (-un_y);
 	var un_x = n_x / norm;
+	var unn_x = (un_y > 0) ? un_x : (-un_x);
 	var k = -15;
-	var x_mid = ((segment.a.x + segment.b.x) / 2) + (k * un_x);
-	var y_mid = ((segment.a.y + segment.b.y) / 2) + (k * un_y);
+	var x_mid = ((segment.a.x + segment.b.x) / 2) + (k * unn_x);
+	var y_mid = ((segment.a.y + segment.b.y) / 2) + (k * unn_y);
+	var angle = 0;
 	return _List_fromArray(
 		[
 			A2(
 			elm$svg$Svg$line,
 			author$project$LineSegment$lineAttributes(segment),
 			_List_Nil),
-			A4(author$project$SvgText$textDisplay, 12, x_mid, y_mid, segment.label)
+			A5(author$project$SvgText$textDisplay, 12, x_mid, y_mid, angle, segment.label)
 		]);
 };
 var author$project$Vector$add = F2(
