@@ -12696,6 +12696,7 @@ var author$project$LineSegment$lineAttributes = function (lineSegment) {
 			elm$core$String$fromFloat(lineSegment.width))
 		]);
 };
+var elm$core$Basics$acos = _Basics_acos;
 var elm$core$Basics$sqrt = _Basics_sqrt;
 var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
 var author$project$LineSegment$draw = function (segment) {
@@ -12705,12 +12706,17 @@ var author$project$LineSegment$draw = function (segment) {
 	var norm = elm$core$Basics$sqrt(normSquared);
 	var un_y = n_y / norm;
 	var unn_y = (un_y > 0) ? un_y : (-un_y);
+	var ut_x = (segment.b.x - segment.a.x) / norm;
+	var utt_x = (ut_x > 0) ? ut_x : (-ut_x);
+	var ut_y = (segment.b.y - segment.a.y) / norm;
 	var un_x = n_x / norm;
 	var unn_x = (un_y > 0) ? un_x : (-un_x);
-	var k = -15;
-	var x_mid = ((segment.a.x + segment.b.x) / 2) + (k * unn_x);
-	var y_mid = ((segment.a.y + segment.b.y) / 2) + (k * unn_y);
-	var angle = 0;
+	var utt_y = (un_x > 0) ? ut_y : (-ut_y);
+	var b = 0;
+	var angle = (57.29564553 * elm$core$Basics$acos(unn_x)) - 90;
+	var a = -8;
+	var x_mid = (((segment.a.x + segment.b.x) / 2) + (a * unn_x)) + (b * utt_x);
+	var y_mid = (((segment.a.y + segment.b.y) / 2) + (a * unn_y)) + (b * utt_y);
 	return _List_fromArray(
 		[
 			A2(
