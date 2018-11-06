@@ -12330,14 +12330,15 @@ var author$project$ColorRecord$ColorRecord = F4(
 	});
 var author$project$DisplayGraph$boundingBoxColor = A4(author$project$ColorRecord$ColorRecord, 0, 0, 255, 0.15);
 var author$project$DisplayGraph$lineSegmentColor = A4(author$project$ColorRecord$ColorRecord, 0, 0, 0, 1.0);
-var author$project$Vector$Vector = F2(
-	function (x, y) {
-		return {x: x, y: y};
+var author$project$Vector$Vector = F3(
+	function (x, y, label) {
+		return {label: label, x: x, y: y};
 	});
 var author$project$DisplayGraph$boundingBoxData = {
-	center: A2(author$project$Vector$Vector, 100, 0),
-	dimensions: A2(author$project$Vector$Vector, 2, 2),
+	center: A3(author$project$Vector$Vector, 100, 0, ''),
+	dimensions: A3(author$project$Vector$Vector, 2, 2, ''),
 	fillColor: author$project$DisplayGraph$boundingBoxColor,
+	label: '',
 	strokeColor: author$project$DisplayGraph$lineSegmentColor
 };
 var author$project$Shape$Rect = function (a) {
@@ -12390,22 +12391,53 @@ var author$project$Shape$svgRectAttributes = function (data_) {
 			elm$core$String$fromFloat(data_.dimensions.y))
 		]);
 };
+var elm$svg$Svg$text = elm$virtual_dom$VirtualDom$text;
 var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var elm$svg$Svg$text_ = elm$svg$Svg$trustedNode('text');
+var elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
+var author$project$SvgText$textDisplay = F4(
+	function (fontSize_, x_, y_, content) {
+		return A2(
+			elm$svg$Svg$text_,
+			_List_fromArray(
+				[
+					elm$svg$Svg$Attributes$x(
+					elm$core$String$fromFloat(x_)),
+					elm$svg$Svg$Attributes$y(
+					elm$core$String$fromFloat(y_)),
+					elm$svg$Svg$Attributes$fontSize(
+					elm$core$String$fromInt(fontSize_))
+				]),
+			_List_fromArray(
+				[
+					elm$svg$Svg$text(content)
+				]));
+	});
 var elm$svg$Svg$ellipse = elm$svg$Svg$trustedNode('ellipse');
 var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
 var author$project$Shape$draw = function (shape) {
+	var deltaY = 15;
+	var deltaX = 15;
 	if (shape.$ === 'Rect') {
 		var data_ = shape.a;
-		return A2(
-			elm$svg$Svg$rect,
-			author$project$Shape$svgRectAttributes(data_),
-			_List_Nil);
+		return _List_fromArray(
+			[
+				A2(
+				elm$svg$Svg$rect,
+				author$project$Shape$svgRectAttributes(data_),
+				_List_Nil),
+				A4(author$project$SvgText$textDisplay, 14, data_.center.x + deltaX, data_.center.y + deltaY, data_.label)
+			]);
 	} else {
 		var data_ = shape.a;
-		return A2(
-			elm$svg$Svg$ellipse,
-			author$project$Shape$svgEllipseAttributes(data_),
-			_List_Nil);
+		return _List_fromArray(
+			[
+				A2(
+				elm$svg$Svg$ellipse,
+				author$project$Shape$svgEllipseAttributes(data_),
+				_List_Nil),
+				A4(author$project$SvgText$textDisplay, 14, data_.center.x + deltaX, data_.center.y + deltaY, data_.label)
+			]);
 	}
 };
 var author$project$Shape$Ellipse = function (a) {
@@ -12460,7 +12492,7 @@ var author$project$DisplayGraph$boundingBox = function (scale) {
 	return author$project$Shape$draw(
 		A2(
 			author$project$Shape$moveBy,
-			A2(author$project$Vector$Vector, scale, scale),
+			A3(author$project$Vector$Vector, scale, scale, ''),
 			A2(
 				author$project$Shape$scaleBy,
 				1.2 * scale,
@@ -12536,21 +12568,26 @@ var author$project$Vector$rotate = F2(
 		var x = v.x;
 		var xx = (elm$core$Basics$cos(theta) * x) - (elm$core$Basics$sin(theta) * y);
 		var yy = (elm$core$Basics$sin(theta) * x) + (elm$core$Basics$cos(theta) * y);
-		return A2(author$project$Vector$Vector, xx, yy);
+		return A3(author$project$Vector$Vector, xx, yy, v.label);
 	});
 var author$project$DisplayGraph$rotate = F3(
 	function (vector, angle, k) {
 		return A2(author$project$Vector$rotate, k * angle, vector);
 	});
 var author$project$DisplayGraph$getPoints = function (graph) {
-	var points = _List_Nil;
+	var vertexLabels = A2(
+		elm$core$List$map,
+		function ($) {
+			return $.label;
+		},
+		graph.vertices);
 	var n = elm$core$List$length(graph.vertices);
 	var theta = (2 * 3.14159265) / n;
 	var point = A2(
 		author$project$DisplayGraph$rotate,
-		A2(author$project$Vector$Vector, 1, 0),
+		A3(author$project$Vector$Vector, 1, 0, ''),
 		theta);
-	return A3(
+	var points = A3(
 		elm$core$List$foldl,
 		F2(
 			function (k, acc) {
@@ -12563,6 +12600,16 @@ var author$project$DisplayGraph$getPoints = function (graph) {
 			}),
 		_List_Nil,
 		A2(elm$core$List$range, 0, n - 1));
+	return A3(
+		elm$core$List$map2,
+		F2(
+			function (point_, label) {
+				return _Utils_update(
+					point_,
+					{label: label});
+			}),
+		points,
+		vertexLabels);
 };
 var elm$core$Tuple$pair = F2(
 	function (a, b) {
@@ -12580,18 +12627,19 @@ var author$project$DisplayGraph$getIndexedPoints = function (graph) {
 	return A2(author$project$DisplayGraph$zip, ids, points);
 };
 var author$project$DisplayGraph$vertexColor = A4(author$project$ColorRecord$ColorRecord, 0, 50, 255, 0.8);
-var author$project$Shape$ShapeData = F4(
-	function (center, dimensions, strokeColor, fillColor) {
-		return {center: center, dimensions: dimensions, fillColor: fillColor, strokeColor: strokeColor};
+var author$project$Shape$ShapeData = F5(
+	function (center, dimensions, strokeColor, fillColor, label) {
+		return {center: center, dimensions: dimensions, fillColor: fillColor, label: label, strokeColor: strokeColor};
 	});
 var author$project$DisplayGraph$makeCircle = F2(
 	function (size, center) {
-		var shapeData = A4(
+		var shapeData = A5(
 			author$project$Shape$ShapeData,
 			center,
-			A2(author$project$Vector$Vector, size, size),
+			A3(author$project$Vector$Vector, size, size, ''),
 			author$project$DisplayGraph$vertexColor,
-			author$project$DisplayGraph$vertexColor);
+			author$project$DisplayGraph$vertexColor,
+			center.label);
 		return author$project$Shape$Ellipse(shapeData);
 	});
 var author$project$DisplayGraph$renderPoints = function (centers) {
@@ -12642,27 +12690,6 @@ var author$project$LineSegment$lineAttributes = function (lineSegment) {
 			elm$core$String$fromFloat(lineSegment.width))
 		]);
 };
-var elm$svg$Svg$text = elm$virtual_dom$VirtualDom$text;
-var elm$svg$Svg$text_ = elm$svg$Svg$trustedNode('text');
-var elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
-var author$project$SvgText$textDisplay = F4(
-	function (fontSize_, x_, y_, content) {
-		return A2(
-			elm$svg$Svg$text_,
-			_List_fromArray(
-				[
-					elm$svg$Svg$Attributes$x(
-					elm$core$String$fromFloat(x_)),
-					elm$svg$Svg$Attributes$y(
-					elm$core$String$fromFloat(y_)),
-					elm$svg$Svg$Attributes$fontSize(
-					elm$core$String$fromInt(fontSize_))
-				]),
-			_List_fromArray(
-				[
-					elm$svg$Svg$text(content)
-				]));
-	});
 var elm$core$Basics$sqrt = _Basics_sqrt;
 var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
 var author$project$LineSegment$draw = function (segment) {
@@ -12686,7 +12713,11 @@ var author$project$LineSegment$draw = function (segment) {
 };
 var author$project$Vector$add = F2(
 	function (v, w) {
-		return A2(author$project$Vector$Vector, v.x + w.x, v.y + w.y);
+		return A3(
+			author$project$Vector$Vector,
+			v.x + w.x,
+			v.y + w.y,
+			_Utils_ap(v.label, w.label));
 	});
 var author$project$LineSegment$moveBy = F2(
 	function (displacement, lineSegment) {
@@ -12698,7 +12729,7 @@ var author$project$LineSegment$moveBy = F2(
 	});
 var author$project$Vector$mul = F2(
 	function (c, v) {
-		return A2(author$project$Vector$Vector, c * v.x, c * v.y);
+		return A3(author$project$Vector$Vector, c * v.x, c * v.y, v.label);
 	});
 var author$project$LineSegment$scaleBy = F2(
 	function (factor, lineSegment) {
@@ -12713,17 +12744,18 @@ var author$project$DisplayGraph$graphDisplay = F2(
 		var points = author$project$DisplayGraph$getPoints(graph);
 		var kk = 0.92;
 		var k = 0.8;
-		var renderedPoints = A2(
-			elm$core$List$map,
-			author$project$Shape$draw,
+		var renderedPoints = elm$core$List$concat(
 			A2(
 				elm$core$List$map,
-				author$project$Shape$moveBy(
-					A2(author$project$Vector$Vector, kk * scale, scale)),
+				author$project$Shape$draw,
 				A2(
 					elm$core$List$map,
-					author$project$Shape$scaleBy(k * scale),
-					author$project$DisplayGraph$renderPoints(points))));
+					author$project$Shape$moveBy(
+						A3(author$project$Vector$Vector, kk * scale, scale, '')),
+					A2(
+						elm$core$List$map,
+						author$project$Shape$scaleBy(k * scale),
+						author$project$DisplayGraph$renderPoints(points)))));
 		var indexedPoints = author$project$DisplayGraph$getIndexedPoints(graph);
 		var segments = A2(
 			elm$core$List$filterMap,
@@ -12739,7 +12771,7 @@ var author$project$DisplayGraph$graphDisplay = F2(
 				A2(
 					elm$core$List$map,
 					author$project$LineSegment$moveBy(
-						A2(author$project$Vector$Vector, kk * scale, scale)),
+						A3(author$project$Vector$Vector, kk * scale, scale, '')),
 					A2(
 						elm$core$List$map,
 						author$project$LineSegment$scaleBy(k * scale),
@@ -12748,10 +12780,7 @@ var author$project$DisplayGraph$graphDisplay = F2(
 			renderedSegments,
 			_Utils_ap(
 				renderedPoints,
-				_List_fromArray(
-					[
-						author$project$DisplayGraph$boundingBox(scale)
-					])));
+				author$project$DisplayGraph$boundingBox(scale)));
 	});
 var author$project$Display$networkDisplay = F2(
 	function (scale, network) {
