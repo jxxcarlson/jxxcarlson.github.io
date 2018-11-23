@@ -6614,6 +6614,12 @@ var author$project$Main$update = F2(
 						{networkAsString: str}),
 					elm$core$Platform$Cmd$none);
 			case 'UpdateNetwork':
+				var updateNetwork = F2(
+					function (_n1, network_) {
+						var nodeName = _n1.a;
+						var imageUrl = _n1.b;
+						return A3(author$project$Network$changeNodeInfoInNetwork, nodeName, imageUrl, network_);
+					});
 				var newEdgeFlow = A2(
 					elm$core$Maybe$withDefault,
 					0,
@@ -6630,15 +6636,17 @@ var author$project$Main$update = F2(
 						model.sourceNode,
 						model.targetNode,
 						author$project$NetworkParser$simpleEdgeListFromString(model.networkAsString))) : model.networkAsString);
-				var newNetwork = A3(
-					author$project$Network$changeNodeInfoInNetwork,
-					'AA',
-					'https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg',
-					author$project$NetworkParser$networkFromString(newNetworkAsString));
+				var newNetwork = author$project$NetworkParser$networkFromString(newNetworkAsString);
+				var avatarList = _List_fromArray(
+					[
+						_Utils_Tuple2('AA', 'https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg'),
+						_Utils_Tuple2('BB', 'https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg')
+					]);
+				var newNetwork2 = A3(elm$core$List$foldl, updateNetwork, newNetwork, avatarList);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{network: newNetwork, networkAsString: newNetworkAsString}),
+						{network: newNetwork2, networkAsString: newNetworkAsString}),
 					elm$core$Platform$Cmd$none);
 			case 'InputSourceNode':
 				var str = msg.a;
