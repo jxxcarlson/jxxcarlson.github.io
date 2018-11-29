@@ -13597,7 +13597,12 @@ var author$project$Main$networkDisplay = function (model) {
 			A2(
 			mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
-				[mdgriffith$elm_ui$Element$centerX, mdgriffith$elm_ui$Element$alignTop]),
+				[
+					mdgriffith$elm_ui$Element$centerX,
+					mdgriffith$elm_ui$Element$alignTop,
+					mdgriffith$elm_ui$Element$paddingEach(
+					{bottom: 0, left: 40, right: 0, top: 0})
+				]),
 			_List_fromArray(
 				[
 					author$project$FlowModel$report(model.network)
