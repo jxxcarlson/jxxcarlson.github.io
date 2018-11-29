@@ -5653,9 +5653,102 @@ var author$project$CSV$networkFromString = function (str) {
 		author$project$CSV$edgeListFromCSV(str));
 };
 var author$project$Main$CSV = {$: 'CSV'};
+var author$project$Main$NetworkDisplay = {$: 'NetworkDisplay'};
+var author$project$Main$initialAvatarCSV = 'AA,https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg\nBB,https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg\n';
+var author$project$NetworkParser$NodeUrl = F2(
+	function (a, b) {
+		return {$: 'NodeUrl', a: a, b: b};
+	});
+var author$project$NetworkParser$StringPair = F2(
+	function (a, b) {
+		return {$: 'StringPair', a: a, b: b};
+	});
+var elm$core$Basics$neq = _Utils_notEqual;
+var author$project$NetworkParser$anyString = elm$parser$Parser$getChompedString(
+	A2(
+		elm$parser$Parser$ignorer,
+		A2(
+			elm$parser$Parser$ignorer,
+			elm$parser$Parser$succeed(_Utils_Tuple0),
+			elm$parser$Parser$chompIf(author$project$NetworkParser$isStartChar)),
+		elm$parser$Parser$chompWhile(
+			function (_char) {
+				return (!_Utils_eq(
+					_char,
+					_Utils_chr(' '))) && (!_Utils_eq(
+					_char,
+					_Utils_chr('\n')));
+			})));
+var author$project$NetworkParser$stringFromStringPair = function (_n0) {
+	var prefix = _n0.a;
+	var root = _n0.b;
+	return _Utils_ap(prefix, root);
+};
+var author$project$NetworkParser$word = function (str) {
+	return A2(
+		elm$parser$Parser$map,
+		function (_n0) {
+			return str;
+		},
+		elm$parser$Parser$symbol(str));
+};
+var author$project$NetworkParser$url = A2(
+	elm$parser$Parser$map,
+	function (stringPair) {
+		return author$project$NetworkParser$stringFromStringPair(stringPair);
+	},
+	A2(
+		elm$parser$Parser$keeper,
+		A2(
+			elm$parser$Parser$keeper,
+			A2(
+				elm$parser$Parser$ignorer,
+				elm$parser$Parser$succeed(author$project$NetworkParser$StringPair),
+				elm$parser$Parser$spaces),
+			elm$parser$Parser$oneOf(
+				_List_fromArray(
+					[
+						author$project$NetworkParser$word('http://'),
+						author$project$NetworkParser$word('https://'),
+						author$project$NetworkParser$word('ipfs://')
+					]))),
+		author$project$NetworkParser$anyString));
+var author$project$CSV$avatarParser = A2(
+	elm$parser$Parser$keeper,
+	A2(
+		elm$parser$Parser$keeper,
+		elm$parser$Parser$succeed(author$project$NetworkParser$NodeUrl),
+		A2(
+			elm$parser$Parser$ignorer,
+			A2(
+				elm$parser$Parser$ignorer,
+				author$project$NetworkParser$identifier,
+				elm$parser$Parser$symbol(',')),
+			elm$parser$Parser$spaces)),
+	A2(
+		elm$parser$Parser$ignorer,
+		author$project$NetworkParser$url,
+		elm$parser$Parser$symbol('\n')));
+var author$project$CSV$avatarListParser = Punie$elm_parser_extras$Parser$Extras$many(author$project$CSV$avatarParser);
+var author$project$CSV$getAvatarList = function (csv) {
+	var _n0 = A2(
+		elm$parser$Parser$run,
+		author$project$CSV$avatarListParser,
+		author$project$CSV$normalize(csv));
+	if (_n0.$ === 'Ok') {
+		var result = _n0.a;
+		return result;
+	} else {
+		return _List_Nil;
+	}
+};
+var author$project$Main$initialAvatarList = author$project$CSV$getAvatarList(author$project$Main$initialAvatarCSV);
 var author$project$Main$initialNetworkAsCSV = 'Lucca, Pablo, 30\nLucca, Karla, 90.4\nPablo, Ranulfo, 22\nKarla, Luz, 40\nKarla, Maria, 55\nKarla, Ranulfo, 31.4\nJim, Karla, 30\nJim, Ranulfo, 20\nPablo, Karla, 34\nRanulfo, Lucca, 20\nLuz, Maria, 22\nGeorge, Maria, 31.4\nLucca, Jim, 30\n';
 var author$project$Main$initialModel = {
+	avatarCSV: author$project$Main$initialAvatarCSV,
+	avatarList: author$project$Main$initialAvatarList,
 	dataFormat: author$project$Main$CSV,
+	displayMode: author$project$Main$NetworkDisplay,
 	edgeFlow: '',
 	message: 'Hello!',
 	network: author$project$CSV$networkFromString(author$project$Main$initialNetworkAsCSV),
@@ -6008,6 +6101,7 @@ var author$project$CSV$csvFromEdgeList = function (sel) {
 		'',
 		A2(elm$core$List$map, author$project$CSV$csvOfSimpleEdge, sel));
 };
+var author$project$Main$AvatarDisplay = {$: 'AvatarDisplay'};
 var author$project$NetworkParser$simpleEdgeParser = A2(
 	elm$parser$Parser$keeper,
 	A2(
@@ -6080,7 +6174,6 @@ var author$project$Network$changeNodeInfoInNetwork = F3(
 			A3(author$project$Network$changeNodeInfoInList, nodeName, nodeInfo, nodeList),
 			edgeList);
 	});
-var elm$core$Basics$neq = _Utils_notEqual;
 var author$project$Network$simpleEdgeDoesNotMatch = F3(
 	function (name1, name2, _n0) {
 		var node1 = _n0.a;
@@ -6121,10 +6214,6 @@ var author$project$Network$replaceSimpleEdge = F4(
 			flow,
 			A3(author$project$Network$deleteSimpleEdge, sourceNode, targetNode, edgeList));
 	});
-var author$project$NetworkParser$NodeUrl = F2(
-	function (a, b) {
-		return {$: 'NodeUrl', a: a, b: b};
-	});
 var elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -6145,6 +6234,13 @@ var author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{networkAsString: str}),
+					elm$core$Platform$Cmd$none);
+			case 'InputAvatarString':
+				var str = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{avatarCSV: str}),
 					elm$core$Platform$Cmd$none);
 			case 'UpdateNetwork':
 				var updateNetwork = F2(
@@ -6170,16 +6266,12 @@ var author$project$Main$update = F2(
 						model.targetNode,
 						A2(author$project$Main$simpleEdgeListFromString, model.dataFormat, model.networkAsString))) : model.networkAsString);
 				var newNetwork = author$project$CSV$networkFromString(newNetworkAsString);
-				var avatarList = _List_fromArray(
-					[
-						A2(author$project$NetworkParser$NodeUrl, 'AA', 'https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg'),
-						A2(author$project$NetworkParser$NodeUrl, 'BB', 'https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg')
-					]);
-				var newNetwork2 = A3(elm$core$List$foldl, updateNetwork, newNetwork, avatarList);
+				var newAvatarList = author$project$CSV$getAvatarList(model.avatarCSV);
+				var newNetwork2 = A3(elm$core$List$foldl, updateNetwork, newNetwork, newAvatarList);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{network: newNetwork2, networkAsString: newNetworkAsString}),
+						{avatarList: newAvatarList, network: newNetwork2, networkAsString: newNetworkAsString}),
 					elm$core$Platform$Cmd$none);
 			case 'InputSourceNode':
 				var str = msg.a;
@@ -6195,13 +6287,28 @@ var author$project$Main$update = F2(
 						model,
 						{targetNode: str}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'InputEdgeFlow':
 				var str = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{edgeFlow: str}),
 					elm$core$Platform$Cmd$none);
+			default:
+				var _n2 = model.displayMode;
+				if (_n2.$ === 'NetworkDisplay') {
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{displayMode: author$project$Main$AvatarDisplay}),
+						elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{displayMode: author$project$Main$NetworkDisplay}),
+						elm$core$Platform$Cmd$none);
+				}
 		}
 	});
 var mdgriffith$elm_ui$Internal$Model$Height = function (a) {
@@ -11400,296 +11507,27 @@ var author$project$FlowModel$displayListWithTitle = F2(
 				]),
 			list);
 	});
-var author$project$Network$name = function (_n0) {
-	var name_ = _n0.a;
-	var info_ = _n0.b;
-	return name_;
+var author$project$Main$InputAvatarString = function (a) {
+	return {$: 'InputAvatarString', a: a};
 };
-var author$project$Network$listNodes = function (_n0) {
-	var nodes = _n0.a;
-	var edges = _n0.b;
-	return A2(elm$core$List$map, author$project$Network$name, nodes);
+var mdgriffith$elm_ui$Internal$Flag$moveY = mdgriffith$elm_ui$Internal$Flag$flag(26);
+var mdgriffith$elm_ui$Internal$Model$MoveY = function (a) {
+	return {$: 'MoveY', a: a};
 };
-var mdgriffith$elm_ui$Internal$Model$AsRow = {$: 'AsRow'};
-var mdgriffith$elm_ui$Internal$Model$asRow = mdgriffith$elm_ui$Internal$Model$AsRow;
-var mdgriffith$elm_ui$Internal$Model$Attr = function (a) {
-	return {$: 'Attr', a: a};
-};
-var mdgriffith$elm_ui$Internal$Model$htmlClass = function (cls) {
-	return mdgriffith$elm_ui$Internal$Model$Attr(
-		elm$html$Html$Attributes$class(cls));
-};
-var mdgriffith$elm_ui$Element$row = F2(
-	function (attrs, children) {
-		return A4(
-			mdgriffith$elm_ui$Internal$Model$element,
-			mdgriffith$elm_ui$Internal$Model$asRow,
-			mdgriffith$elm_ui$Internal$Model$div,
-			A2(
-				elm$core$List$cons,
-				mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.contentLeft + (' ' + mdgriffith$elm_ui$Internal$Style$classes.contentCenterY)),
-				A2(
-					elm$core$List$cons,
-					mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$shrink),
-					A2(
-						elm$core$List$cons,
-						mdgriffith$elm_ui$Element$height(mdgriffith$elm_ui$Element$shrink),
-						attrs))),
-			mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
+var mdgriffith$elm_ui$Internal$Model$TransformComponent = F2(
+	function (a, b) {
+		return {$: 'TransformComponent', a: a, b: b};
 	});
-var author$project$FlowModel$displayNodes = function (network) {
+var mdgriffith$elm_ui$Element$moveUp = function (y) {
 	return A2(
-		elm$core$List$map,
-		function (node) {
-			return A2(
-				mdgriffith$elm_ui$Element$row,
-				_List_Nil,
-				_List_fromArray(
-					[
-						mdgriffith$elm_ui$Element$text(node)
-					]));
-		},
-		elm$core$List$sort(
-			author$project$Network$listNodes(network)));
+		mdgriffith$elm_ui$Internal$Model$TransformComponent,
+		mdgriffith$elm_ui$Internal$Flag$moveY,
+		mdgriffith$elm_ui$Internal$Model$MoveY(-y));
 };
-var mdgriffith$elm_ui$Internal$Model$AlignX = function (a) {
-	return {$: 'AlignX', a: a};
-};
-var mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
-var mdgriffith$elm_ui$Element$alignRight = mdgriffith$elm_ui$Internal$Model$AlignX(mdgriffith$elm_ui$Internal$Model$Right);
 var mdgriffith$elm_ui$Internal$Model$Px = function (a) {
 	return {$: 'Px', a: a};
 };
 var mdgriffith$elm_ui$Element$px = mdgriffith$elm_ui$Internal$Model$Px;
-var author$project$FlowModel$alignRightElement = F2(
-	function (width_, str) {
-		return A2(
-			mdgriffith$elm_ui$Element$el,
-			_List_fromArray(
-				[
-					mdgriffith$elm_ui$Element$width(
-					mdgriffith$elm_ui$Element$px(width_))
-				]),
-			A2(
-				mdgriffith$elm_ui$Element$el,
-				_List_fromArray(
-					[mdgriffith$elm_ui$Element$alignRight]),
-				mdgriffith$elm_ui$Element$text(str)));
-	});
-var elm$core$Basics$pow = _Basics_pow;
-var author$project$Flow$roundTo = F2(
-	function (places, quantity) {
-		var factor = A2(elm$core$Basics$pow, 10, places);
-		var ff = factor;
-		var q2 = ff * quantity;
-		var q3 = elm$core$Basics$round(q2);
-		return q3 / ff;
-	});
-var author$project$Network$edgeFlow = function (_n0) {
-	var sourceNode = _n0.a;
-	var sinkNode = _n0.b;
-	var flow = _n0.c;
-	return flow;
-};
-var author$project$Network$equalNodes = F2(
-	function (node1, node2) {
-		return _Utils_eq(
-			author$project$Network$name(node1),
-			author$project$Network$name(node2));
-	});
-var author$project$Network$terminalNode = function (_n0) {
-	var initialNode_ = _n0.a;
-	var terminalNode_ = _n0.b;
-	return terminalNode_;
-};
-var author$project$Network$edgeHasTerminalNode = F2(
-	function (node, edge) {
-		return A2(
-			author$project$Network$equalNodes,
-			node,
-			author$project$Network$terminalNode(edge));
-	});
-var author$project$Network$incomingEdges = F2(
-	function (_n0, node) {
-		var nodes = _n0.a;
-		var edges = _n0.b;
-		return A2(
-			elm$core$List$filter,
-			author$project$Network$edgeHasTerminalNode(node),
-			edges);
-	});
-var elm$core$List$sum = function (numbers) {
-	return A3(elm$core$List$foldl, elm$core$Basics$add, 0, numbers);
-};
-var author$project$Network$inflowToNode = F2(
-	function (network, node) {
-		return elm$core$List$sum(
-			A2(
-				elm$core$List$map,
-				author$project$Network$edgeFlow,
-				A2(author$project$Network$incomingEdges, network, node)));
-	});
-var author$project$Network$initialNode = function (_n0) {
-	var initialNode_ = _n0.a;
-	var terminalNode_ = _n0.b;
-	return initialNode_;
-};
-var author$project$Network$edgeHasOrigin = F2(
-	function (node, edge) {
-		return A2(
-			author$project$Network$equalNodes,
-			node,
-			author$project$Network$initialNode(edge));
-	});
-var author$project$Network$outgoingEdges = F2(
-	function (_n0, node) {
-		var nodes = _n0.a;
-		var edges = _n0.b;
-		return A2(
-			elm$core$List$filter,
-			author$project$Network$edgeHasOrigin(node),
-			edges);
-	});
-var author$project$Network$outflowFromNode = F2(
-	function (network, node) {
-		return elm$core$List$sum(
-			A2(
-				elm$core$List$map,
-				author$project$Network$edgeFlow,
-				A2(author$project$Network$outgoingEdges, network, node)));
-	});
-var author$project$Flow$efficiencyOfEdge = F3(
-	function (totalFlow_, network, _n0) {
-		var sourceNode = _n0.a;
-		var sinkNode = _n0.b;
-		var flow = _n0.c;
-		var edge = A3(author$project$Network$Edge, sourceNode, sinkNode, flow);
-		var edgeFlow_ = author$project$Network$edgeFlow(edge);
-		var numerator = edgeFlow_ * totalFlow_;
-		var denominator = A2(author$project$Network$outflowFromNode, network, sourceNode) * A2(author$project$Network$inflowToNode, network, sinkNode);
-		var logRatio = elm$core$Basics$logBase(2)(numerator / denominator);
-		return A2(author$project$Flow$roundTo, 3, edgeFlow_ * logRatio);
-	});
-var author$project$Network$totalFlow = function (_n0) {
-	var nodes = _n0.a;
-	var edges = _n0.b;
-	var network = A2(author$project$Network$Network, nodes, edges);
-	return elm$core$List$sum(
-		A2(elm$core$List$map, author$project$Network$edgeFlow, edges));
-};
-var author$project$Flow$efficiency = function (_n0) {
-	var nodes = _n0.a;
-	var edges = _n0.b;
-	var network = A2(author$project$Network$Network, nodes, edges);
-	var totalFlow_ = author$project$Network$totalFlow(network);
-	return function (x) {
-		return A2(author$project$Flow$roundTo, 3, x);
-	}(
-		elm$core$List$sum(
-			A2(
-				elm$core$List$map,
-				A2(author$project$Flow$efficiencyOfEdge, totalFlow_, network),
-				edges)));
-};
-var author$project$Flow$resilienceOfEdge = F3(
-	function (totalFlow_, network, _n0) {
-		var sourceNode = _n0.a;
-		var sinkNode = _n0.b;
-		var flow = _n0.c;
-		var edge = A3(author$project$Network$Edge, sourceNode, sinkNode, flow);
-		var edgeFlow_ = author$project$Network$edgeFlow(edge);
-		var numerator = edgeFlow_ * edgeFlow_;
-		var denominator = A2(author$project$Network$outflowFromNode, network, sourceNode) * A2(author$project$Network$inflowToNode, network, sinkNode);
-		var logRatio = elm$core$Basics$logBase(2)(numerator / denominator);
-		return edgeFlow_ * logRatio;
-	});
-var author$project$Flow$resilience = function (_n0) {
-	var nodes = _n0.a;
-	var edges = _n0.b;
-	var network = A2(author$project$Network$Network, nodes, edges);
-	var totalFlow_ = author$project$Network$totalFlow(network);
-	return function (x) {
-		return -A2(author$project$Flow$roundTo, 3, x);
-	}(
-		elm$core$List$sum(
-			A2(
-				elm$core$List$map,
-				A2(author$project$Flow$resilienceOfEdge, totalFlow_, network),
-				edges)));
-};
-var author$project$Flow$alpha = function (network) {
-	var ratio = 1 + (author$project$Flow$resilience(network) / author$project$Flow$efficiency(network));
-	return 1 / ratio;
-};
-var author$project$Flow$sustainability = function (network) {
-	var a = author$project$Flow$alpha(network);
-	var aa = A2(elm$core$Basics$pow, a, 1.288);
-	var s = ((-1.844) * aa) * A2(elm$core$Basics$logBase, 2, aa);
-	return A2(author$project$Flow$roundTo, 4, s);
-};
-var author$project$Flow$sustainabilityPercentage = function (network) {
-	return A2(
-		author$project$Flow$roundTo,
-		2,
-		100 * author$project$Flow$sustainability(network));
-};
-var author$project$Network$edgeCount = function (_n0) {
-	var nodes = _n0.a;
-	var edges = _n0.b;
-	return elm$core$List$length(edges);
-};
-var author$project$Network$nodeCount = function (_n0) {
-	var nodes = _n0.a;
-	var edges = _n0.b;
-	return elm$core$List$length(nodes);
-};
-var author$project$FlowModel$summarize = function (network) {
-	return _List_fromArray(
-		[
-			{
-			label: 'Nodes',
-			value: elm$core$String$fromInt(
-				author$project$Network$nodeCount(network))
-		},
-			{
-			label: 'Edges',
-			value: elm$core$String$fromInt(
-				author$project$Network$edgeCount(network))
-		},
-			{
-			label: 'Total flow',
-			value: elm$core$String$fromFloat(
-				A2(
-					author$project$Flow$roundTo,
-					0,
-					author$project$Network$totalFlow(network)))
-		},
-			{
-			label: 'Efficiency',
-			value: elm$core$String$fromFloat(
-				A2(
-					author$project$Flow$roundTo,
-					0,
-					author$project$Flow$efficiency(network)))
-		},
-			{
-			label: 'Resilience',
-			value: elm$core$String$fromFloat(
-				A2(
-					author$project$Flow$roundTo,
-					0,
-					author$project$Flow$resilience(network)))
-		},
-			{
-			label: 'Sustainability',
-			value: elm$core$String$fromFloat(
-				A2(
-					author$project$Flow$roundTo,
-					0,
-					author$project$Flow$sustainabilityPercentage(network)))
-		}
-		]);
-};
 var mdgriffith$elm_ui$Internal$Flag$spacing = mdgriffith$elm_ui$Internal$Flag$flag(3);
 var mdgriffith$elm_ui$Internal$Model$SpacingStyle = F3(
 	function (a, b, c) {
@@ -11713,276 +11551,915 @@ var mdgriffith$elm_ui$Element$spacing = function (x) {
 			x,
 			x));
 };
-var mdgriffith$elm_ui$Element$InternalColumn = function (a) {
-	return {$: 'InternalColumn', a: a};
+var mdgriffith$elm_ui$Internal$Flag$fontSize = mdgriffith$elm_ui$Internal$Flag$flag(4);
+var mdgriffith$elm_ui$Internal$Model$FontSize = function (a) {
+	return {$: 'FontSize', a: a};
 };
+var mdgriffith$elm_ui$Element$Font$size = function (i) {
+	return A2(
+		mdgriffith$elm_ui$Internal$Model$StyleClass,
+		mdgriffith$elm_ui$Internal$Flag$fontSize,
+		mdgriffith$elm_ui$Internal$Model$FontSize(i));
+};
+var mdgriffith$elm_ui$Element$Input$Above = {$: 'Above'};
+var mdgriffith$elm_ui$Element$Input$Label = F3(
+	function (a, b, c) {
+		return {$: 'Label', a: a, b: b, c: c};
+	});
+var mdgriffith$elm_ui$Element$Input$labelAbove = mdgriffith$elm_ui$Element$Input$Label(mdgriffith$elm_ui$Element$Input$Above);
+var mdgriffith$elm_ui$Element$Input$TextArea = {$: 'TextArea'};
 var elm$core$Basics$composeL = F3(
 	function (g, f, x) {
 		return g(
 			f(x));
 	});
-var elm$core$List$all = F2(
-	function (isOkay, list) {
-		return !A2(
-			elm$core$List$any,
-			A2(elm$core$Basics$composeL, elm$core$Basics$not, isOkay),
-			list);
+var elm$html$Html$Attributes$type_ = elm$html$Html$Attributes$stringProperty('type');
+var elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
 	});
-var elm$core$List$repeatHelp = F3(
-	function (result, n, value) {
-		repeatHelp:
-		while (true) {
-			if (n <= 0) {
-				return result;
-			} else {
-				var $temp$result = A2(elm$core$List$cons, value, result),
-					$temp$n = n - 1,
-					$temp$value = value;
-				result = $temp$result;
-				n = $temp$n;
-				value = $temp$value;
-				continue repeatHelp;
-			}
-		}
+var elm$json$Json$Decode$field = _Json_decodeField;
+var elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
 	});
-var elm$core$List$repeat = F2(
-	function (n, value) {
-		return A3(elm$core$List$repeatHelp, _List_Nil, n, value);
+var elm$json$Json$Decode$string = _Json_decodeString;
+var elm$html$Html$Events$targetValue = A2(
+	elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	elm$json$Json$Decode$string);
+var elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			elm$json$Json$Decode$map,
+			elm$html$Html$Events$alwaysStop,
+			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
+};
+var mdgriffith$elm_ui$Internal$Flag$transparency = mdgriffith$elm_ui$Internal$Flag$flag(0);
+var mdgriffith$elm_ui$Internal$Model$Transparency = F2(
+	function (a, b) {
+		return {$: 'Transparency', a: a, b: b};
 	});
+var mdgriffith$elm_ui$Element$alpha = function (o) {
+	var transparency = function (x) {
+		return 1 - x;
+	}(
+		A2(
+			elm$core$Basics$min,
+			1.0,
+			A2(elm$core$Basics$max, 0.0, o)));
+	return A2(
+		mdgriffith$elm_ui$Internal$Model$StyleClass,
+		mdgriffith$elm_ui$Internal$Flag$transparency,
+		A2(
+			mdgriffith$elm_ui$Internal$Model$Transparency,
+			'transparency-' + mdgriffith$elm_ui$Internal$Model$floatClass(transparency),
+			transparency));
+};
 var mdgriffith$elm_ui$Internal$Model$Fill = function (a) {
 	return {$: 'Fill', a: a};
 };
 var mdgriffith$elm_ui$Element$fill = mdgriffith$elm_ui$Internal$Model$Fill(1);
-var mdgriffith$elm_ui$Internal$Flag$gridPosition = mdgriffith$elm_ui$Internal$Flag$flag(35);
-var mdgriffith$elm_ui$Internal$Flag$gridTemplate = mdgriffith$elm_ui$Internal$Flag$flag(34);
-var mdgriffith$elm_ui$Internal$Model$Empty = {$: 'Empty'};
-var mdgriffith$elm_ui$Internal$Model$GridPosition = function (a) {
-	return {$: 'GridPosition', a: a};
-};
-var mdgriffith$elm_ui$Internal$Model$GridTemplateStyle = function (a) {
-	return {$: 'GridTemplateStyle', a: a};
-};
-var mdgriffith$elm_ui$Internal$Model$AsGrid = {$: 'AsGrid'};
-var mdgriffith$elm_ui$Internal$Model$asGrid = mdgriffith$elm_ui$Internal$Model$AsGrid;
-var mdgriffith$elm_ui$Internal$Model$getSpacing = F2(
-	function (attrs, _default) {
-		return A2(
-			elm$core$Maybe$withDefault,
-			_default,
-			A3(
-				elm$core$List$foldr,
-				F2(
-					function (attr, acc) {
-						if (acc.$ === 'Just') {
-							var x = acc.a;
-							return elm$core$Maybe$Just(x);
-						} else {
-							if ((attr.$ === 'StyleClass') && (attr.b.$ === 'SpacingStyle')) {
-								var _n2 = attr.b;
-								var x = _n2.b;
-								var y = _n2.c;
-								return elm$core$Maybe$Just(
-									_Utils_Tuple2(x, y));
-							} else {
-								return elm$core$Maybe$Nothing;
-							}
-						}
-					}),
-				elm$core$Maybe$Nothing,
-				attrs));
+var mdgriffith$elm_ui$Internal$Model$InFront = {$: 'InFront'};
+var mdgriffith$elm_ui$Internal$Model$Nearby = F2(
+	function (a, b) {
+		return {$: 'Nearby', a: a, b: b};
 	});
-var mdgriffith$elm_ui$Element$tableHelper = F2(
-	function (attrs, config) {
-		var onGrid = F3(
-			function (rowLevel, columnLevel, elem) {
-				return A4(
-					mdgriffith$elm_ui$Internal$Model$element,
-					mdgriffith$elm_ui$Internal$Model$asEl,
-					mdgriffith$elm_ui$Internal$Model$div,
+var mdgriffith$elm_ui$Element$inFront = function (element) {
+	return A2(mdgriffith$elm_ui$Internal$Model$Nearby, mdgriffith$elm_ui$Internal$Model$InFront, element);
+};
+var mdgriffith$elm_ui$Internal$Flag$padding = mdgriffith$elm_ui$Internal$Flag$flag(2);
+var mdgriffith$elm_ui$Internal$Model$PaddingStyle = F5(
+	function (a, b, c, d, e) {
+		return {$: 'PaddingStyle', a: a, b: b, c: c, d: d, e: e};
+	});
+var mdgriffith$elm_ui$Internal$Model$paddingName = F4(
+	function (top, right, bottom, left) {
+		return 'pad-' + (elm$core$String$fromInt(top) + ('-' + (elm$core$String$fromInt(right) + ('-' + (elm$core$String$fromInt(bottom) + ('-' + elm$core$String$fromInt(left)))))));
+	});
+var mdgriffith$elm_ui$Element$paddingEach = function (_n0) {
+	var top = _n0.top;
+	var right = _n0.right;
+	var bottom = _n0.bottom;
+	var left = _n0.left;
+	return (_Utils_eq(top, right) && (_Utils_eq(top, bottom) && _Utils_eq(top, left))) ? A2(
+		mdgriffith$elm_ui$Internal$Model$StyleClass,
+		mdgriffith$elm_ui$Internal$Flag$padding,
+		A5(
+			mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+			'p-' + elm$core$String$fromInt(top),
+			top,
+			top,
+			top,
+			top)) : A2(
+		mdgriffith$elm_ui$Internal$Model$StyleClass,
+		mdgriffith$elm_ui$Internal$Flag$padding,
+		A5(
+			mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+			A4(mdgriffith$elm_ui$Internal$Model$paddingName, top, right, bottom, left),
+			top,
+			right,
+			bottom,
+			left));
+};
+var mdgriffith$elm_ui$Internal$Model$Rgba = F4(
+	function (a, b, c, d) {
+		return {$: 'Rgba', a: a, b: b, c: c, d: d};
+	});
+var mdgriffith$elm_ui$Element$rgba = mdgriffith$elm_ui$Internal$Model$Rgba;
+var mdgriffith$elm_ui$Internal$Flag$bgColor = mdgriffith$elm_ui$Internal$Flag$flag(8);
+var mdgriffith$elm_ui$Internal$Model$Colored = F3(
+	function (a, b, c) {
+		return {$: 'Colored', a: a, b: b, c: c};
+	});
+var mdgriffith$elm_ui$Internal$Model$formatColorClass = function (_n0) {
+	var red = _n0.a;
+	var green = _n0.b;
+	var blue = _n0.c;
+	var alpha = _n0.d;
+	return mdgriffith$elm_ui$Internal$Model$floatClass(red) + ('-' + (mdgriffith$elm_ui$Internal$Model$floatClass(green) + ('-' + (mdgriffith$elm_ui$Internal$Model$floatClass(blue) + ('-' + mdgriffith$elm_ui$Internal$Model$floatClass(alpha))))));
+};
+var mdgriffith$elm_ui$Element$Background$color = function (clr) {
+	return A2(
+		mdgriffith$elm_ui$Internal$Model$StyleClass,
+		mdgriffith$elm_ui$Internal$Flag$bgColor,
+		A3(
+			mdgriffith$elm_ui$Internal$Model$Colored,
+			'bg-' + mdgriffith$elm_ui$Internal$Model$formatColorClass(clr),
+			'background-color',
+			clr));
+};
+var mdgriffith$elm_ui$Internal$Flag$borderColor = mdgriffith$elm_ui$Internal$Flag$flag(28);
+var mdgriffith$elm_ui$Element$Border$color = function (clr) {
+	return A2(
+		mdgriffith$elm_ui$Internal$Model$StyleClass,
+		mdgriffith$elm_ui$Internal$Flag$borderColor,
+		A3(
+			mdgriffith$elm_ui$Internal$Model$Colored,
+			'bc-' + mdgriffith$elm_ui$Internal$Model$formatColorClass(clr),
+			'border-color',
+			clr));
+};
+var mdgriffith$elm_ui$Internal$Flag$fontColor = mdgriffith$elm_ui$Internal$Flag$flag(14);
+var mdgriffith$elm_ui$Element$Font$color = function (fontColor) {
+	return A2(
+		mdgriffith$elm_ui$Internal$Model$StyleClass,
+		mdgriffith$elm_ui$Internal$Flag$fontColor,
+		A3(
+			mdgriffith$elm_ui$Internal$Model$Colored,
+			'fc-' + mdgriffith$elm_ui$Internal$Model$formatColorClass(fontColor),
+			'color',
+			fontColor));
+};
+var mdgriffith$elm_ui$Element$Input$Padding = F4(
+	function (a, b, c, d) {
+		return {$: 'Padding', a: a, b: b, c: c, d: d};
+	});
+var mdgriffith$elm_ui$Internal$Model$AsColumn = {$: 'AsColumn'};
+var mdgriffith$elm_ui$Internal$Model$asColumn = mdgriffith$elm_ui$Internal$Model$AsColumn;
+var mdgriffith$elm_ui$Internal$Model$AsRow = {$: 'AsRow'};
+var mdgriffith$elm_ui$Internal$Model$asRow = mdgriffith$elm_ui$Internal$Model$AsRow;
+var mdgriffith$elm_ui$Element$Input$applyLabel = F3(
+	function (attrs, label, input) {
+		if (label.$ === 'HiddenLabel') {
+			var labelText = label.a;
+			return A4(
+				mdgriffith$elm_ui$Internal$Model$element,
+				mdgriffith$elm_ui$Internal$Model$asColumn,
+				mdgriffith$elm_ui$Internal$Model$NodeName('label'),
+				attrs,
+				mdgriffith$elm_ui$Internal$Model$Unkeyed(
 					_List_fromArray(
-						[
-							A2(
-							mdgriffith$elm_ui$Internal$Model$StyleClass,
-							mdgriffith$elm_ui$Internal$Flag$gridPosition,
-							mdgriffith$elm_ui$Internal$Model$GridPosition(
-								{col: columnLevel, height: 1, row: rowLevel, width: 1}))
-						]),
-					mdgriffith$elm_ui$Internal$Model$Unkeyed(
-						_List_fromArray(
-							[elem])));
-			});
-		var columnWidth = function (col) {
-			if (col.$ === 'InternalIndexedColumn') {
-				var colConfig = col.a;
-				return colConfig.width;
-			} else {
-				var colConfig = col.a;
-				return colConfig.width;
+						[input])));
+		} else {
+			var position = label.a;
+			var labelAttrs = label.b;
+			var labelChild = label.c;
+			var labelElement = A4(
+				mdgriffith$elm_ui$Internal$Model$element,
+				mdgriffith$elm_ui$Internal$Model$asEl,
+				mdgriffith$elm_ui$Internal$Model$div,
+				labelAttrs,
+				mdgriffith$elm_ui$Internal$Model$Unkeyed(
+					_List_fromArray(
+						[labelChild])));
+			switch (position.$) {
+				case 'Above':
+					return A4(
+						mdgriffith$elm_ui$Internal$Model$element,
+						mdgriffith$elm_ui$Internal$Model$asColumn,
+						mdgriffith$elm_ui$Internal$Model$NodeName('label'),
+						attrs,
+						mdgriffith$elm_ui$Internal$Model$Unkeyed(
+							_List_fromArray(
+								[labelElement, input])));
+				case 'Below':
+					return A4(
+						mdgriffith$elm_ui$Internal$Model$element,
+						mdgriffith$elm_ui$Internal$Model$asColumn,
+						mdgriffith$elm_ui$Internal$Model$NodeName('label'),
+						attrs,
+						mdgriffith$elm_ui$Internal$Model$Unkeyed(
+							_List_fromArray(
+								[input, labelElement])));
+				case 'OnRight':
+					return A4(
+						mdgriffith$elm_ui$Internal$Model$element,
+						mdgriffith$elm_ui$Internal$Model$asRow,
+						mdgriffith$elm_ui$Internal$Model$NodeName('label'),
+						attrs,
+						mdgriffith$elm_ui$Internal$Model$Unkeyed(
+							_List_fromArray(
+								[input, labelElement])));
+				default:
+					return A4(
+						mdgriffith$elm_ui$Internal$Model$element,
+						mdgriffith$elm_ui$Internal$Model$asRow,
+						mdgriffith$elm_ui$Internal$Model$NodeName('label'),
+						attrs,
+						mdgriffith$elm_ui$Internal$Model$Unkeyed(
+							_List_fromArray(
+								[labelElement, input])));
 			}
-		};
-		var columnHeader = function (col) {
-			if (col.$ === 'InternalIndexedColumn') {
-				var colConfig = col.a;
-				return colConfig.header;
-			} else {
-				var colConfig = col.a;
-				return colConfig.header;
+		}
+	});
+var elm$html$Html$Attributes$attribute = elm$virtual_dom$VirtualDom$attribute;
+var mdgriffith$elm_ui$Internal$Model$Attr = function (a) {
+	return {$: 'Attr', a: a};
+};
+var mdgriffith$elm_ui$Element$Input$autofill = A2(
+	elm$core$Basics$composeL,
+	mdgriffith$elm_ui$Internal$Model$Attr,
+	elm$html$Html$Attributes$attribute('autocomplete'));
+var mdgriffith$elm_ui$Element$rgb = F3(
+	function (r, g, b) {
+		return A4(mdgriffith$elm_ui$Internal$Model$Rgba, r, g, b, 1);
+	});
+var mdgriffith$elm_ui$Element$Input$charcoal = A3(mdgriffith$elm_ui$Element$rgb, 136 / 255, 138 / 255, 133 / 255);
+var mdgriffith$elm_ui$Internal$Flag$borderRound = mdgriffith$elm_ui$Internal$Flag$flag(17);
+var mdgriffith$elm_ui$Element$Border$rounded = function (radius) {
+	return A2(
+		mdgriffith$elm_ui$Internal$Model$StyleClass,
+		mdgriffith$elm_ui$Internal$Flag$borderRound,
+		A3(
+			mdgriffith$elm_ui$Internal$Model$Single,
+			'br-' + elm$core$String$fromInt(radius),
+			'border-radius',
+			elm$core$String$fromInt(radius) + 'px'));
+};
+var mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
+	function (a, b, c, d, e) {
+		return {$: 'BorderWidth', a: a, b: b, c: c, d: d, e: e};
+	});
+var mdgriffith$elm_ui$Element$Border$width = function (v) {
+	return A2(
+		mdgriffith$elm_ui$Internal$Model$StyleClass,
+		mdgriffith$elm_ui$Internal$Flag$borderWidth,
+		A5(
+			mdgriffith$elm_ui$Internal$Model$BorderWidth,
+			'b-' + elm$core$String$fromInt(v),
+			v,
+			v,
+			v,
+			v));
+};
+var mdgriffith$elm_ui$Element$Input$darkGrey = A3(mdgriffith$elm_ui$Element$rgb, 186 / 255, 189 / 255, 182 / 255);
+var mdgriffith$elm_ui$Element$paddingXY = F2(
+	function (x, y) {
+		return _Utils_eq(x, y) ? A2(
+			mdgriffith$elm_ui$Internal$Model$StyleClass,
+			mdgriffith$elm_ui$Internal$Flag$padding,
+			A5(
+				mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+				'p-' + elm$core$String$fromInt(x),
+				x,
+				x,
+				x,
+				x)) : A2(
+			mdgriffith$elm_ui$Internal$Model$StyleClass,
+			mdgriffith$elm_ui$Internal$Flag$padding,
+			A5(
+				mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+				'p-' + (elm$core$String$fromInt(x) + ('-' + elm$core$String$fromInt(y))),
+				y,
+				x,
+				y,
+				x));
+	});
+var mdgriffith$elm_ui$Element$Input$defaultTextPadding = A2(mdgriffith$elm_ui$Element$paddingXY, 12, 12);
+var mdgriffith$elm_ui$Element$Input$white = A3(mdgriffith$elm_ui$Element$rgb, 1, 1, 1);
+var mdgriffith$elm_ui$Element$Input$defaultTextBoxStyle = _List_fromArray(
+	[
+		mdgriffith$elm_ui$Element$Input$defaultTextPadding,
+		mdgriffith$elm_ui$Element$Border$rounded(3),
+		mdgriffith$elm_ui$Element$Border$color(mdgriffith$elm_ui$Element$Input$darkGrey),
+		mdgriffith$elm_ui$Element$Background$color(mdgriffith$elm_ui$Element$Input$white),
+		mdgriffith$elm_ui$Element$Border$width(1),
+		mdgriffith$elm_ui$Element$spacing(3),
+		mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$fill)
+	]);
+var mdgriffith$elm_ui$Element$Input$hasFocusStyle = function (attr) {
+	if (((attr.$ === 'StyleClass') && (attr.b.$ === 'PseudoSelector')) && (attr.b.a.$ === 'Focus')) {
+		var _n1 = attr.b;
+		var _n2 = _n1.a;
+		return true;
+	} else {
+		return false;
+	}
+};
+var mdgriffith$elm_ui$Internal$Model$NoAttribute = {$: 'NoAttribute'};
+var mdgriffith$elm_ui$Internal$Model$htmlClass = function (cls) {
+	return mdgriffith$elm_ui$Internal$Model$Attr(
+		elm$html$Html$Attributes$class(cls));
+};
+var mdgriffith$elm_ui$Element$Input$focusDefault = function (attrs) {
+	return A2(elm$core$List$any, mdgriffith$elm_ui$Element$Input$hasFocusStyle, attrs) ? mdgriffith$elm_ui$Internal$Model$NoAttribute : mdgriffith$elm_ui$Internal$Model$htmlClass('focusable');
+};
+var mdgriffith$elm_ui$Internal$Model$Describe = function (a) {
+	return {$: 'Describe', a: a};
+};
+var mdgriffith$elm_ui$Internal$Model$Label = function (a) {
+	return {$: 'Label', a: a};
+};
+var mdgriffith$elm_ui$Element$Input$hiddenLabelAttribute = function (label) {
+	if (label.$ === 'HiddenLabel') {
+		var textLabel = label.a;
+		return mdgriffith$elm_ui$Internal$Model$Describe(
+			mdgriffith$elm_ui$Internal$Model$Label(textLabel));
+	} else {
+		return mdgriffith$elm_ui$Internal$Model$NoAttribute;
+	}
+};
+var mdgriffith$elm_ui$Element$Input$inheritablePlaceholderAttributes = function (attr) {
+	_n0$3:
+	while (true) {
+		if (attr.$ === 'StyleClass') {
+			switch (attr.b.$) {
+				case 'PaddingStyle':
+					var _n1 = attr.b;
+					return true;
+				case 'BorderWidth':
+					var _n2 = attr.b;
+					return true;
+				case 'Transform':
+					return true;
+				default:
+					break _n0$3;
 			}
+		} else {
+			break _n0$3;
+		}
+	}
+	return false;
+};
+var mdgriffith$elm_ui$Element$Input$isHiddenLabel = function (label) {
+	if (label.$ === 'HiddenLabel') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var elm$json$Json$Encode$bool = _Json_wrap;
+var elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$bool(bool));
+	});
+var elm$html$Html$Attributes$spellcheck = elm$html$Html$Attributes$boolProperty('spellcheck');
+var mdgriffith$elm_ui$Element$Input$spellcheck = A2(elm$core$Basics$composeL, mdgriffith$elm_ui$Internal$Model$Attr, elm$html$Html$Attributes$spellcheck);
+var elm$core$String$lines = _String_lines;
+var mdgriffith$elm_ui$Internal$Flag$heightTextAreaContent = mdgriffith$elm_ui$Internal$Flag$flag(47);
+var mdgriffith$elm_ui$Element$Input$textHeightContent = F4(
+	function (textValue, spacing, maybePadding, maybeBorder) {
+		var topBottom = function (_n0) {
+			var t = _n0.a;
+			var b = _n0.c;
+			return t + b;
 		};
-		var maybeHeaders = function (headers) {
-			return A2(
-				elm$core$List$all,
-				elm$core$Basics$eq(mdgriffith$elm_ui$Internal$Model$Empty),
-				headers) ? elm$core$Maybe$Nothing : elm$core$Maybe$Just(
-				A2(
-					elm$core$List$indexedMap,
-					F2(
-						function (col, header) {
-							return A3(onGrid, 1, col + 1, header);
-						}),
-					headers));
+		var newlineCount = function (x) {
+			return (x < 1) ? 1 : x;
 		}(
-			A2(elm$core$List$map, columnHeader, config.columns));
-		var add = F3(
-			function (cell, columnConfig, cursor) {
-				if (columnConfig.$ === 'InternalIndexedColumn') {
-					var col = columnConfig.a;
-					return _Utils_update(
-						cursor,
-						{
-							column: cursor.column + 1,
-							elements: A2(
-								elm$core$List$cons,
-								A3(
-									onGrid,
-									cursor.row,
-									cursor.column,
-									A2(
-										col.view,
-										_Utils_eq(maybeHeaders, elm$core$Maybe$Nothing) ? (cursor.row - 1) : (cursor.row - 2),
-										cell)),
-								cursor.elements)
-						});
+			elm$core$List$length(
+				elm$core$String$lines(textValue)));
+		var additionalSpacing = (((newlineCount - 1) * spacing) + A2(
+			elm$core$Maybe$withDefault,
+			0,
+			A2(elm$core$Maybe$map, topBottom, maybePadding))) + A2(
+			elm$core$Maybe$withDefault,
+			0,
+			A2(elm$core$Maybe$map, topBottom, maybeBorder));
+		var heightValue = function (count) {
+			return 'calc(' + (elm$core$String$fromInt(count) + ('em + ' + (elm$core$String$fromInt(additionalSpacing) + 'px) !important')));
+		};
+		return A2(
+			mdgriffith$elm_ui$Internal$Model$StyleClass,
+			mdgriffith$elm_ui$Internal$Flag$heightTextAreaContent,
+			A3(
+				mdgriffith$elm_ui$Internal$Model$Single,
+				'textarea-height-' + elm$core$String$fromInt(newlineCount),
+				'height',
+				heightValue(newlineCount)));
+	});
+var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
+var mdgriffith$elm_ui$Element$Input$value = A2(elm$core$Basics$composeL, mdgriffith$elm_ui$Internal$Model$Attr, elm$html$Html$Attributes$value);
+var mdgriffith$elm_ui$Internal$Model$LivePolite = {$: 'LivePolite'};
+var mdgriffith$elm_ui$Element$Region$announce = mdgriffith$elm_ui$Internal$Model$Describe(mdgriffith$elm_ui$Internal$Model$LivePolite);
+var mdgriffith$elm_ui$Internal$Flag$cursor = mdgriffith$elm_ui$Internal$Flag$flag(21);
+var mdgriffith$elm_ui$Internal$Model$filter = function (attrs) {
+	return A3(
+		elm$core$List$foldr,
+		F2(
+			function (x, _n0) {
+				var found = _n0.a;
+				var has = _n0.b;
+				switch (x.$) {
+					case 'NoAttribute':
+						return _Utils_Tuple2(found, has);
+					case 'Class':
+						var key = x.a;
+						return _Utils_Tuple2(
+							A2(elm$core$List$cons, x, found),
+							has);
+					case 'Attr':
+						var attr = x.a;
+						return _Utils_Tuple2(
+							A2(elm$core$List$cons, x, found),
+							has);
+					case 'StyleClass':
+						var style = x.b;
+						return _Utils_Tuple2(
+							A2(elm$core$List$cons, x, found),
+							has);
+					case 'Width':
+						var width = x.a;
+						return A2(elm$core$Set$member, 'width', has) ? _Utils_Tuple2(found, has) : _Utils_Tuple2(
+							A2(elm$core$List$cons, x, found),
+							A2(elm$core$Set$insert, 'width', has));
+					case 'Height':
+						var height = x.a;
+						return A2(elm$core$Set$member, 'height', has) ? _Utils_Tuple2(found, has) : _Utils_Tuple2(
+							A2(elm$core$List$cons, x, found),
+							A2(elm$core$Set$insert, 'height', has));
+					case 'Describe':
+						var description = x.a;
+						return A2(elm$core$Set$member, 'described', has) ? _Utils_Tuple2(found, has) : _Utils_Tuple2(
+							A2(elm$core$List$cons, x, found),
+							A2(elm$core$Set$insert, 'described', has));
+					case 'Nearby':
+						var location = x.a;
+						var elem = x.b;
+						return _Utils_Tuple2(
+							A2(elm$core$List$cons, x, found),
+							has);
+					case 'AlignX':
+						return A2(elm$core$Set$member, 'align-x', has) ? _Utils_Tuple2(found, has) : _Utils_Tuple2(
+							A2(elm$core$List$cons, x, found),
+							A2(elm$core$Set$insert, 'align-x', has));
+					case 'AlignY':
+						return A2(elm$core$Set$member, 'align-y', has) ? _Utils_Tuple2(found, has) : _Utils_Tuple2(
+							A2(elm$core$List$cons, x, found),
+							A2(elm$core$Set$insert, 'align-y', has));
+					default:
+						return A2(elm$core$Set$member, 'transform', has) ? _Utils_Tuple2(found, has) : _Utils_Tuple2(
+							A2(elm$core$List$cons, x, found),
+							A2(elm$core$Set$insert, 'transform', has));
+				}
+			}),
+		_Utils_Tuple2(_List_Nil, elm$core$Set$empty),
+		attrs).a;
+};
+var mdgriffith$elm_ui$Internal$Model$get = F2(
+	function (attrs, isAttr) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, found) {
+					return isAttr(x) ? A2(elm$core$List$cons, x, found) : found;
+				}),
+			_List_Nil,
+			mdgriffith$elm_ui$Internal$Model$filter(attrs));
+	});
+var mdgriffith$elm_ui$Internal$Model$isContent = function (len) {
+	isContent:
+	while (true) {
+		switch (len.$) {
+			case 'Content':
+				return true;
+			case 'Max':
+				var l = len.b;
+				var $temp$len = l;
+				len = $temp$len;
+				continue isContent;
+			case 'Min':
+				var l = len.b;
+				var $temp$len = l;
+				len = $temp$len;
+				continue isContent;
+			default:
+				return false;
+		}
+	}
+};
+var mdgriffith$elm_ui$Internal$Model$unstyled = A2(elm$core$Basics$composeL, mdgriffith$elm_ui$Internal$Model$Unstyled, elm$core$Basics$always);
+var mdgriffith$elm_ui$Element$Input$textHelper = F3(
+	function (textInput, attrs, textOptions) {
+		var forNearby = function (attr) {
+			if (attr.$ === 'Nearby') {
+				return true;
+			} else {
+				return false;
+			}
+		};
+		var behavior = _List_fromArray(
+			[
+				mdgriffith$elm_ui$Internal$Model$Attr(
+				elm$html$Html$Events$onInput(textOptions.onChange))
+			]);
+		var attributes = _Utils_ap(mdgriffith$elm_ui$Element$Input$defaultTextBoxStyle, attrs);
+		var attributesFromChild = A2(
+			mdgriffith$elm_ui$Internal$Model$get,
+			attributes,
+			function (attr) {
+				_n21$7:
+				while (true) {
+					switch (attr.$) {
+						case 'Width':
+							if (attr.a.$ === 'Fill') {
+								return true;
+							} else {
+								break _n21$7;
+							}
+						case 'Height':
+							if (attr.a.$ === 'Fill') {
+								return true;
+							} else {
+								break _n21$7;
+							}
+						case 'AlignX':
+							return true;
+						case 'AlignY':
+							return true;
+						case 'StyleClass':
+							switch (attr.b.$) {
+								case 'SpacingStyle':
+									var _n22 = attr.b;
+									return true;
+								case 'FontSize':
+									return true;
+								case 'FontFamily':
+									var _n23 = attr.b;
+									return true;
+								default:
+									break _n21$7;
+							}
+						default:
+							break _n21$7;
+					}
+				}
+				return false;
+			});
+		var forPlaceholder = A2(elm$core$List$filter, mdgriffith$elm_ui$Element$Input$inheritablePlaceholderAttributes, attributes);
+		var heightFillFromChild = A2(
+			mdgriffith$elm_ui$Internal$Model$get,
+			attributes,
+			function (attr) {
+				if ((attr.$ === 'Height') && (attr.a.$ === 'Fill')) {
+					return true;
 				} else {
-					var col = columnConfig.a;
-					return {
-						column: cursor.column + 1,
-						elements: A2(
-							elm$core$List$cons,
-							A3(
-								onGrid,
-								cursor.row,
-								cursor.column,
-								col.view(cell)),
-							cursor.elements),
-						row: cursor.row
-					};
+					return false;
 				}
 			});
-		var build = F3(
-			function (columns, rowData, cursor) {
-				var newCursor = A3(
-					elm$core$List$foldl,
-					add(rowData),
-					cursor,
-					columns);
-				return {column: 1, elements: newCursor.elements, row: cursor.row + 1};
+		var inputPadding = A2(
+			mdgriffith$elm_ui$Internal$Model$get,
+			attributes,
+			function (attr) {
+				if ((attr.$ === 'StyleClass') && (attr.b.$ === 'PaddingStyle')) {
+					var _n19 = attr.b;
+					return true;
+				} else {
+					return false;
+				}
 			});
-		var children = A3(
-			elm$core$List$foldl,
-			build(config.columns),
-			{
-				column: 1,
-				elements: _List_Nil,
-				row: _Utils_eq(maybeHeaders, elm$core$Maybe$Nothing) ? 1 : 2
-			},
-			config.data);
-		var _n0 = A2(
-			mdgriffith$elm_ui$Internal$Model$getSpacing,
-			attrs,
-			_Utils_Tuple2(0, 0));
-		var sX = _n0.a;
-		var sY = _n0.b;
-		var template = A2(
-			mdgriffith$elm_ui$Internal$Model$StyleClass,
-			mdgriffith$elm_ui$Internal$Flag$gridTemplate,
-			mdgriffith$elm_ui$Internal$Model$GridTemplateStyle(
-				{
-					columns: A2(elm$core$List$map, columnWidth, config.columns),
-					rows: A2(
-						elm$core$List$repeat,
-						elm$core$List$length(config.data),
-						mdgriffith$elm_ui$Internal$Model$Content),
-					spacing: _Utils_Tuple2(
-						mdgriffith$elm_ui$Element$px(sX),
-						mdgriffith$elm_ui$Element$px(sY))
-				}));
-		return A4(
+		var nearbys = A2(
+			mdgriffith$elm_ui$Internal$Model$get,
+			attributes,
+			function (attr) {
+				if (attr.$ === 'Nearby') {
+					return true;
+				} else {
+					return false;
+				}
+			});
+		var noNearbys = A2(
+			elm$core$List$filter,
+			A2(elm$core$Basics$composeL, elm$core$Basics$not, forNearby),
+			attributes);
+		var _n0 = function () {
+			var _n1 = textInput.type_;
+			if (_n1.$ === 'TextInputNode') {
+				var inputType = _n1.a;
+				return _Utils_Tuple3(
+					'input',
+					_Utils_ap(
+						_List_fromArray(
+							[
+								mdgriffith$elm_ui$Element$Input$value(textOptions.text),
+								mdgriffith$elm_ui$Internal$Model$Attr(
+								elm$html$Html$Attributes$type_(inputType)),
+								mdgriffith$elm_ui$Element$Input$spellcheck(textInput.spellchecked),
+								mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.inputText),
+								function () {
+								var _n2 = textInput.autofill;
+								if (_n2.$ === 'Nothing') {
+									return mdgriffith$elm_ui$Internal$Model$NoAttribute;
+								} else {
+									var fill = _n2.a;
+									return mdgriffith$elm_ui$Element$Input$autofill(fill);
+								}
+							}()
+							]),
+						noNearbys),
+					_List_Nil);
+			} else {
+				var _n3 = A3(
+					elm$core$List$foldr,
+					F2(
+						function (attr, found) {
+							_n4$5:
+							while (true) {
+								switch (attr.$) {
+									case 'Describe':
+										return found;
+									case 'Height':
+										var len = attr.a;
+										var _n5 = found.heightContent;
+										if (_n5.$ === 'Nothing') {
+											return _Utils_update(
+												found,
+												{
+													adjustedAttributes: A2(elm$core$List$cons, attr, found.adjustedAttributes),
+													heightContent: elm$core$Maybe$Just(
+														mdgriffith$elm_ui$Internal$Model$isContent(len))
+												});
+										} else {
+											return found;
+										}
+									case 'StyleClass':
+										switch (attr.b.$) {
+											case 'BorderWidth':
+												var _n6 = attr.b;
+												var t = _n6.b;
+												var r = _n6.c;
+												var b = _n6.d;
+												var l = _n6.e;
+												var _n7 = found.maybeBorder;
+												if (_n7.$ === 'Nothing') {
+													return _Utils_update(
+														found,
+														{
+															adjustedAttributes: A2(elm$core$List$cons, attr, found.adjustedAttributes),
+															maybeBorder: elm$core$Maybe$Just(
+																A4(mdgriffith$elm_ui$Element$Input$Padding, t, r, b, l))
+														});
+												} else {
+													return found;
+												}
+											case 'PaddingStyle':
+												var _n8 = attr.b;
+												var t = _n8.b;
+												var r = _n8.c;
+												var b = _n8.d;
+												var l = _n8.e;
+												var _n9 = found.maybePadding;
+												if (_n9.$ === 'Nothing') {
+													return _Utils_update(
+														found,
+														{
+															adjustedAttributes: found.adjustedAttributes,
+															maybePadding: elm$core$Maybe$Just(
+																A4(mdgriffith$elm_ui$Element$Input$Padding, t, r, b, l))
+														});
+												} else {
+													return found;
+												}
+											case 'SpacingStyle':
+												var _n10 = attr.b;
+												var x = _n10.b;
+												var y = _n10.c;
+												var _n11 = found.maybeSpacing;
+												if (_n11.$ === 'Nothing') {
+													return _Utils_update(
+														found,
+														{
+															adjustedAttributes: A2(elm$core$List$cons, attr, found.adjustedAttributes),
+															maybeSpacing: elm$core$Maybe$Just(y)
+														});
+												} else {
+													return found;
+												}
+											default:
+												break _n4$5;
+										}
+									default:
+										break _n4$5;
+								}
+							}
+							return _Utils_update(
+								found,
+								{
+									adjustedAttributes: A2(elm$core$List$cons, attr, found.adjustedAttributes)
+								});
+						}),
+					{adjustedAttributes: _List_Nil, heightContent: elm$core$Maybe$Nothing, maybeBorder: elm$core$Maybe$Nothing, maybePadding: elm$core$Maybe$Nothing, maybeSpacing: elm$core$Maybe$Nothing},
+					attributes);
+				var maybePadding = _n3.maybePadding;
+				var heightContent = _n3.heightContent;
+				var maybeSpacing = _n3.maybeSpacing;
+				var adjustedAttributes = _n3.adjustedAttributes;
+				var maybeBorder = _n3.maybeBorder;
+				var spacing = A2(elm$core$Maybe$withDefault, 5, maybeSpacing);
+				return _Utils_Tuple3(
+					'textarea',
+					_Utils_ap(
+						_List_fromArray(
+							[
+								mdgriffith$elm_ui$Element$Input$spellcheck(textInput.spellchecked),
+								mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.inputMultiline),
+								A2(
+								elm$core$Maybe$withDefault,
+								mdgriffith$elm_ui$Internal$Model$NoAttribute,
+								A2(elm$core$Maybe$map, mdgriffith$elm_ui$Element$Input$autofill, textInput.autofill)),
+								function () {
+								if (maybePadding.$ === 'Nothing') {
+									return mdgriffith$elm_ui$Internal$Model$NoAttribute;
+								} else {
+									var _n13 = maybePadding.a;
+									var t = _n13.a;
+									var r = _n13.b;
+									var b = _n13.c;
+									var l = _n13.d;
+									return mdgriffith$elm_ui$Element$paddingEach(
+										{
+											bottom: A2(elm$core$Basics$max, 0, b - ((spacing / 2) | 0)),
+											left: l,
+											right: r,
+											top: A2(elm$core$Basics$max, 0, t - ((spacing / 2) | 0))
+										});
+								}
+							}(),
+								function () {
+								if (heightContent.$ === 'Nothing') {
+									return mdgriffith$elm_ui$Internal$Model$NoAttribute;
+								} else {
+									if (heightContent.a) {
+										return A4(mdgriffith$elm_ui$Element$Input$textHeightContent, textOptions.text, spacing, maybePadding, maybeBorder);
+									} else {
+										return mdgriffith$elm_ui$Internal$Model$NoAttribute;
+									}
+								}
+							}()
+							]),
+						adjustedAttributes),
+					_List_fromArray(
+						[
+							mdgriffith$elm_ui$Internal$Model$unstyled(
+							elm$html$Html$text(textOptions.text))
+						]));
+			}
+		}();
+		var inputNode = _n0.a;
+		var inputAttrs = _n0.b;
+		var inputChildren = _n0.c;
+		var inputElement = A4(
 			mdgriffith$elm_ui$Internal$Model$element,
-			mdgriffith$elm_ui$Internal$Model$asGrid,
+			mdgriffith$elm_ui$Internal$Model$asEl,
 			mdgriffith$elm_ui$Internal$Model$div,
 			A2(
 				elm$core$List$cons,
 				mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$fill),
-				A2(elm$core$List$cons, template, attrs)),
+				elm$core$List$concat(
+					_List_fromArray(
+						[
+							nearbys,
+							heightFillFromChild,
+							function () {
+							var _n15 = textOptions.placeholder;
+							if (_n15.$ === 'Nothing') {
+								return _List_Nil;
+							} else {
+								var _n16 = _n15.a;
+								var placeholderAttrs = _n16.a;
+								var placeholderEl = _n16.b;
+								return _List_fromArray(
+									[
+										mdgriffith$elm_ui$Element$inFront(
+										A2(
+											mdgriffith$elm_ui$Element$el,
+											A2(
+												elm$core$List$cons,
+												mdgriffith$elm_ui$Element$Input$defaultTextPadding,
+												_Utils_ap(
+													forPlaceholder,
+													_Utils_ap(
+														_List_fromArray(
+															[
+																mdgriffith$elm_ui$Element$Font$color(mdgriffith$elm_ui$Element$Input$charcoal),
+																mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.noTextSelection + (' ' + mdgriffith$elm_ui$Internal$Style$classes.passPointerEvents)),
+																mdgriffith$elm_ui$Element$Border$color(
+																A4(mdgriffith$elm_ui$Element$rgba, 0, 0, 0, 0)),
+																mdgriffith$elm_ui$Element$Background$color(
+																A4(mdgriffith$elm_ui$Element$rgba, 0, 0, 0, 0)),
+																mdgriffith$elm_ui$Element$height(mdgriffith$elm_ui$Element$fill),
+																mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$fill),
+																mdgriffith$elm_ui$Element$alpha(
+																(textOptions.text === '') ? 1 : 0)
+															]),
+														placeholderAttrs))),
+											placeholderEl))
+									]);
+							}
+						}()
+						]))),
 			mdgriffith$elm_ui$Internal$Model$Unkeyed(
-				function () {
-					if (maybeHeaders.$ === 'Nothing') {
-						return children.elements;
-					} else {
-						var renderedHeaders = maybeHeaders.a;
-						return _Utils_ap(
-							renderedHeaders,
-							elm$core$List$reverse(children.elements));
-					}
-				}()));
+				_List_fromArray(
+					[
+						A4(
+						mdgriffith$elm_ui$Internal$Model$element,
+						mdgriffith$elm_ui$Internal$Model$asEl,
+						mdgriffith$elm_ui$Internal$Model$NodeName(inputNode),
+						elm$core$List$concat(
+							_List_fromArray(
+								[
+									_List_fromArray(
+									[
+										mdgriffith$elm_ui$Element$Input$focusDefault(attrs),
+										mdgriffith$elm_ui$Element$Input$hiddenLabelAttribute(textOptions.label)
+									]),
+									inputAttrs,
+									behavior
+								])),
+						mdgriffith$elm_ui$Internal$Model$Unkeyed(inputChildren))
+					])));
+		return A3(
+			mdgriffith$elm_ui$Element$Input$applyLabel,
+			A2(
+				elm$core$List$cons,
+				A2(mdgriffith$elm_ui$Internal$Model$Class, mdgriffith$elm_ui$Internal$Flag$cursor, mdgriffith$elm_ui$Internal$Style$classes.cursorText),
+				A2(
+					elm$core$List$cons,
+					mdgriffith$elm_ui$Element$Input$isHiddenLabel(textOptions.label) ? mdgriffith$elm_ui$Internal$Model$NoAttribute : mdgriffith$elm_ui$Element$spacing(5),
+					A2(elm$core$List$cons, mdgriffith$elm_ui$Element$Region$announce, attributesFromChild))),
+			textOptions.label,
+			inputElement);
 	});
-var mdgriffith$elm_ui$Element$table = F2(
-	function (attrs, config) {
-		return A2(
-			mdgriffith$elm_ui$Element$tableHelper,
+var mdgriffith$elm_ui$Element$Input$multiline = F2(
+	function (attrs, multi) {
+		return A3(
+			mdgriffith$elm_ui$Element$Input$textHelper,
+			{autofill: elm$core$Maybe$Nothing, spellchecked: multi.spellcheck, type_: mdgriffith$elm_ui$Element$Input$TextArea},
 			attrs,
-			{
-				columns: A2(elm$core$List$map, mdgriffith$elm_ui$Element$InternalColumn, config.columns),
-				data: config.data
-			});
+			{label: multi.label, onChange: multi.onChange, placeholder: multi.placeholder, text: multi.text});
 	});
-var author$project$FlowModel$report = function (network) {
+var author$project$Main$avatarInput = function (model) {
 	return A2(
-		mdgriffith$elm_ui$Element$table,
+		mdgriffith$elm_ui$Element$Input$multiline,
 		_List_fromArray(
 			[
-				mdgriffith$elm_ui$Element$spacing(10),
 				mdgriffith$elm_ui$Element$width(
-				mdgriffith$elm_ui$Element$px(160))
+				mdgriffith$elm_ui$Element$px(300)),
+				mdgriffith$elm_ui$Element$height(
+				mdgriffith$elm_ui$Element$px(400)),
+				mdgriffith$elm_ui$Element$spacing(12),
+				mdgriffith$elm_ui$Element$moveUp(15)
 			]),
 		{
-			columns: _List_fromArray(
-				[
-					{
-					header: A2(
-						mdgriffith$elm_ui$Element$el,
-						_List_fromArray(
-							[mdgriffith$elm_ui$Element$Font$bold]),
-						mdgriffith$elm_ui$Element$text('Measure')),
-					view: function (datum) {
-						return mdgriffith$elm_ui$Element$text(datum.label);
-					},
-					width: mdgriffith$elm_ui$Element$px(40)
-				},
-					{
-					header: A2(
-						mdgriffith$elm_ui$Element$el,
-						_List_fromArray(
-							[mdgriffith$elm_ui$Element$Font$bold]),
-						A2(author$project$FlowModel$alignRightElement, 90, 'Value')),
-					view: function (datum) {
-						return A2(author$project$FlowModel$alignRightElement, 90, datum.value);
-					},
-					width: mdgriffith$elm_ui$Element$px(90)
-				}
-				]),
-			data: author$project$FlowModel$summarize(network)
+			label: A2(
+				mdgriffith$elm_ui$Element$Input$labelAbove,
+				_List_fromArray(
+					[
+						mdgriffith$elm_ui$Element$Font$size(0),
+						mdgriffith$elm_ui$Element$Font$bold
+					]),
+				mdgriffith$elm_ui$Element$text('avatarParser')),
+			onChange: author$project$Main$InputAvatarString,
+			placeholder: elm$core$Maybe$Nothing,
+			spellcheck: false,
+			text: model.avatarCSV
 		});
 };
 var mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
@@ -11990,6 +12467,9 @@ var mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
 };
 var mdgriffith$elm_ui$Internal$Model$Top = {$: 'Top'};
 var mdgriffith$elm_ui$Element$alignTop = mdgriffith$elm_ui$Internal$Model$AlignY(mdgriffith$elm_ui$Internal$Model$Top);
+var mdgriffith$elm_ui$Internal$Model$AlignX = function (a) {
+	return {$: 'AlignX', a: a};
+};
 var mdgriffith$elm_ui$Internal$Model$CenterX = {$: 'CenterX'};
 var mdgriffith$elm_ui$Element$centerX = mdgriffith$elm_ui$Internal$Model$AlignX(mdgriffith$elm_ui$Internal$Model$CenterX);
 var mdgriffith$elm_ui$Internal$Flag$overflow = mdgriffith$elm_ui$Internal$Flag$flag(20);
@@ -12014,6 +12494,11 @@ var author$project$Edge$Edge = F3(
 	function (a, b, c) {
 		return {$: 'Edge', a: a, b: b, c: c};
 	});
+var author$project$Network$name = function (_n0) {
+	var name_ = _n0.a;
+	var info_ = _n0.b;
+	return name_;
+};
 var author$project$Display$graphEdgeFromNetworkEdge = F2(
 	function (dict, _n0) {
 		var from = _n0.a;
@@ -12042,6 +12527,11 @@ var author$project$Display$graphEdgesFromNetwork = F2(
 			author$project$Display$graphEdgeFromNetworkEdge(dict),
 			edges);
 	});
+var author$project$Network$listNodes = function (_n0) {
+	var nodes = _n0.a;
+	var edges = _n0.b;
+	return A2(elm$core$List$map, author$project$Network$name, nodes);
+};
 var elm$core$Dict$fromList = function (assocs) {
 	return A3(
 		elm$core$List$foldl,
@@ -12621,7 +13111,6 @@ var elm$html$Html$Attributes$width = function (n) {
 		elm$core$String$fromInt(n));
 };
 var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
-var mdgriffith$elm_ui$Internal$Model$unstyled = A2(elm$core$Basics$composeL, mdgriffith$elm_ui$Internal$Model$Unstyled, elm$core$Basics$always);
 var mdgriffith$elm_ui$Element$html = mdgriffith$elm_ui$Internal$Model$unstyled;
 var author$project$Main$displayNetwork = function (model) {
 	return mdgriffith$elm_ui$Element$html(
@@ -12634,888 +13123,582 @@ var author$project$Main$displayNetwork = function (model) {
 				]),
 			A2(author$project$Display$networkDisplay, 200, model.network)));
 };
-var author$project$Main$InputNetworkString = function (a) {
-	return {$: 'InputNetworkString', a: a};
-};
-var mdgriffith$elm_ui$Internal$Flag$moveY = mdgriffith$elm_ui$Internal$Flag$flag(26);
-var mdgriffith$elm_ui$Internal$Model$MoveY = function (a) {
-	return {$: 'MoveY', a: a};
-};
-var mdgriffith$elm_ui$Internal$Model$TransformComponent = F2(
-	function (a, b) {
-		return {$: 'TransformComponent', a: a, b: b};
+var mdgriffith$elm_ui$Element$column = F2(
+	function (attrs, children) {
+		return A4(
+			mdgriffith$elm_ui$Internal$Model$element,
+			mdgriffith$elm_ui$Internal$Model$asColumn,
+			mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				elm$core$List$cons,
+				mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.contentTop + (' ' + mdgriffith$elm_ui$Internal$Style$classes.contentLeft)),
+				A2(
+					elm$core$List$cons,
+					mdgriffith$elm_ui$Element$height(mdgriffith$elm_ui$Element$shrink),
+					A2(
+						elm$core$List$cons,
+						mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$shrink),
+						attrs))),
+			mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
-var mdgriffith$elm_ui$Element$moveUp = function (y) {
-	return A2(
-		mdgriffith$elm_ui$Internal$Model$TransformComponent,
-		mdgriffith$elm_ui$Internal$Flag$moveY,
-		mdgriffith$elm_ui$Internal$Model$MoveY(-y));
+var author$project$Main$avatarDisplay = function (model) {
+	return _List_fromArray(
+		[
+			A2(
+			mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					mdgriffith$elm_ui$Element$centerX,
+					mdgriffith$elm_ui$Element$alignTop,
+					mdgriffith$elm_ui$Element$paddingEach(
+					{bottom: 0, left: 0, right: 80, top: 0})
+				]),
+			_List_fromArray(
+				[
+					author$project$Main$displayNetwork(model)
+				])),
+			A2(
+			mdgriffith$elm_ui$Element$column,
+			author$project$Main$dataColumnStyle,
+			A2(
+				author$project$FlowModel$displayListWithTitle,
+				'Avatars',
+				_List_fromArray(
+					[
+						author$project$Main$avatarInput(model)
+					])))
+		]);
 };
-var mdgriffith$elm_ui$Internal$Flag$fontSize = mdgriffith$elm_ui$Internal$Flag$flag(4);
-var mdgriffith$elm_ui$Internal$Model$FontSize = function (a) {
-	return {$: 'FontSize', a: a};
-};
-var mdgriffith$elm_ui$Element$Font$size = function (i) {
-	return A2(
-		mdgriffith$elm_ui$Internal$Model$StyleClass,
-		mdgriffith$elm_ui$Internal$Flag$fontSize,
-		mdgriffith$elm_ui$Internal$Model$FontSize(i));
-};
-var mdgriffith$elm_ui$Element$Input$Above = {$: 'Above'};
-var mdgriffith$elm_ui$Element$Input$Label = F3(
-	function (a, b, c) {
-		return {$: 'Label', a: a, b: b, c: c};
+var mdgriffith$elm_ui$Element$row = F2(
+	function (attrs, children) {
+		return A4(
+			mdgriffith$elm_ui$Internal$Model$element,
+			mdgriffith$elm_ui$Internal$Model$asRow,
+			mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				elm$core$List$cons,
+				mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.contentLeft + (' ' + mdgriffith$elm_ui$Internal$Style$classes.contentCenterY)),
+				A2(
+					elm$core$List$cons,
+					mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$shrink),
+					A2(
+						elm$core$List$cons,
+						mdgriffith$elm_ui$Element$height(mdgriffith$elm_ui$Element$shrink),
+						attrs))),
+			mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
-var mdgriffith$elm_ui$Element$Input$labelAbove = mdgriffith$elm_ui$Element$Input$Label(mdgriffith$elm_ui$Element$Input$Above);
-var mdgriffith$elm_ui$Element$Input$TextArea = {$: 'TextArea'};
-var elm$html$Html$Attributes$type_ = elm$html$Html$Attributes$stringProperty('type');
-var elm$html$Html$Events$alwaysStop = function (x) {
-	return _Utils_Tuple2(x, true);
+var author$project$FlowModel$displayNodes = function (network) {
+	return A2(
+		elm$core$List$map,
+		function (node) {
+			return A2(
+				mdgriffith$elm_ui$Element$row,
+				_List_Nil,
+				_List_fromArray(
+					[
+						mdgriffith$elm_ui$Element$text(node)
+					]));
+		},
+		elm$core$List$sort(
+			author$project$Network$listNodes(network)));
 };
-var elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 'MayStopPropagation', a: a};
-};
-var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var elm$html$Html$Events$stopPropagationOn = F2(
-	function (event, decoder) {
+var mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
+var mdgriffith$elm_ui$Element$alignRight = mdgriffith$elm_ui$Internal$Model$AlignX(mdgriffith$elm_ui$Internal$Model$Right);
+var author$project$FlowModel$alignRightElement = F2(
+	function (width_, str) {
 		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+			mdgriffith$elm_ui$Element$el,
+			_List_fromArray(
+				[
+					mdgriffith$elm_ui$Element$width(
+					mdgriffith$elm_ui$Element$px(width_))
+				]),
+			A2(
+				mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[mdgriffith$elm_ui$Element$alignRight]),
+				mdgriffith$elm_ui$Element$text(str)));
 	});
-var elm$json$Json$Decode$field = _Json_decodeField;
-var elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
+var elm$core$Basics$pow = _Basics_pow;
+var author$project$Flow$roundTo = F2(
+	function (places, quantity) {
+		var factor = A2(elm$core$Basics$pow, 10, places);
+		var ff = factor;
+		var q2 = ff * quantity;
+		var q3 = elm$core$Basics$round(q2);
+		return q3 / ff;
 	});
-var elm$json$Json$Decode$string = _Json_decodeString;
-var elm$html$Html$Events$targetValue = A2(
-	elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	elm$json$Json$Decode$string);
-var elm$html$Html$Events$onInput = function (tagger) {
-	return A2(
-		elm$html$Html$Events$stopPropagationOn,
-		'input',
-		A2(
-			elm$json$Json$Decode$map,
-			elm$html$Html$Events$alwaysStop,
-			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
+var author$project$Network$edgeFlow = function (_n0) {
+	var sourceNode = _n0.a;
+	var sinkNode = _n0.b;
+	var flow = _n0.c;
+	return flow;
 };
-var mdgriffith$elm_ui$Internal$Flag$transparency = mdgriffith$elm_ui$Internal$Flag$flag(0);
-var mdgriffith$elm_ui$Internal$Model$Transparency = F2(
-	function (a, b) {
-		return {$: 'Transparency', a: a, b: b};
+var author$project$Network$equalNodes = F2(
+	function (node1, node2) {
+		return _Utils_eq(
+			author$project$Network$name(node1),
+			author$project$Network$name(node2));
 	});
-var mdgriffith$elm_ui$Element$alpha = function (o) {
-	var transparency = function (x) {
-		return 1 - x;
-	}(
-		A2(
-			elm$core$Basics$min,
-			1.0,
-			A2(elm$core$Basics$max, 0.0, o)));
-	return A2(
-		mdgriffith$elm_ui$Internal$Model$StyleClass,
-		mdgriffith$elm_ui$Internal$Flag$transparency,
-		A2(
-			mdgriffith$elm_ui$Internal$Model$Transparency,
-			'transparency-' + mdgriffith$elm_ui$Internal$Model$floatClass(transparency),
-			transparency));
+var author$project$Network$terminalNode = function (_n0) {
+	var initialNode_ = _n0.a;
+	var terminalNode_ = _n0.b;
+	return terminalNode_;
 };
-var mdgriffith$elm_ui$Internal$Model$InFront = {$: 'InFront'};
-var mdgriffith$elm_ui$Internal$Model$Nearby = F2(
-	function (a, b) {
-		return {$: 'Nearby', a: a, b: b};
-	});
-var mdgriffith$elm_ui$Element$inFront = function (element) {
-	return A2(mdgriffith$elm_ui$Internal$Model$Nearby, mdgriffith$elm_ui$Internal$Model$InFront, element);
-};
-var mdgriffith$elm_ui$Internal$Flag$padding = mdgriffith$elm_ui$Internal$Flag$flag(2);
-var mdgriffith$elm_ui$Internal$Model$PaddingStyle = F5(
-	function (a, b, c, d, e) {
-		return {$: 'PaddingStyle', a: a, b: b, c: c, d: d, e: e};
-	});
-var mdgriffith$elm_ui$Internal$Model$paddingName = F4(
-	function (top, right, bottom, left) {
-		return 'pad-' + (elm$core$String$fromInt(top) + ('-' + (elm$core$String$fromInt(right) + ('-' + (elm$core$String$fromInt(bottom) + ('-' + elm$core$String$fromInt(left)))))));
-	});
-var mdgriffith$elm_ui$Element$paddingEach = function (_n0) {
-	var top = _n0.top;
-	var right = _n0.right;
-	var bottom = _n0.bottom;
-	var left = _n0.left;
-	return (_Utils_eq(top, right) && (_Utils_eq(top, bottom) && _Utils_eq(top, left))) ? A2(
-		mdgriffith$elm_ui$Internal$Model$StyleClass,
-		mdgriffith$elm_ui$Internal$Flag$padding,
-		A5(
-			mdgriffith$elm_ui$Internal$Model$PaddingStyle,
-			'p-' + elm$core$String$fromInt(top),
-			top,
-			top,
-			top,
-			top)) : A2(
-		mdgriffith$elm_ui$Internal$Model$StyleClass,
-		mdgriffith$elm_ui$Internal$Flag$padding,
-		A5(
-			mdgriffith$elm_ui$Internal$Model$PaddingStyle,
-			A4(mdgriffith$elm_ui$Internal$Model$paddingName, top, right, bottom, left),
-			top,
-			right,
-			bottom,
-			left));
-};
-var mdgriffith$elm_ui$Internal$Model$Rgba = F4(
-	function (a, b, c, d) {
-		return {$: 'Rgba', a: a, b: b, c: c, d: d};
-	});
-var mdgriffith$elm_ui$Element$rgba = mdgriffith$elm_ui$Internal$Model$Rgba;
-var mdgriffith$elm_ui$Internal$Flag$bgColor = mdgriffith$elm_ui$Internal$Flag$flag(8);
-var mdgriffith$elm_ui$Internal$Model$Colored = F3(
-	function (a, b, c) {
-		return {$: 'Colored', a: a, b: b, c: c};
-	});
-var mdgriffith$elm_ui$Internal$Model$formatColorClass = function (_n0) {
-	var red = _n0.a;
-	var green = _n0.b;
-	var blue = _n0.c;
-	var alpha = _n0.d;
-	return mdgriffith$elm_ui$Internal$Model$floatClass(red) + ('-' + (mdgriffith$elm_ui$Internal$Model$floatClass(green) + ('-' + (mdgriffith$elm_ui$Internal$Model$floatClass(blue) + ('-' + mdgriffith$elm_ui$Internal$Model$floatClass(alpha))))));
-};
-var mdgriffith$elm_ui$Element$Background$color = function (clr) {
-	return A2(
-		mdgriffith$elm_ui$Internal$Model$StyleClass,
-		mdgriffith$elm_ui$Internal$Flag$bgColor,
-		A3(
-			mdgriffith$elm_ui$Internal$Model$Colored,
-			'bg-' + mdgriffith$elm_ui$Internal$Model$formatColorClass(clr),
-			'background-color',
-			clr));
-};
-var mdgriffith$elm_ui$Internal$Flag$borderColor = mdgriffith$elm_ui$Internal$Flag$flag(28);
-var mdgriffith$elm_ui$Element$Border$color = function (clr) {
-	return A2(
-		mdgriffith$elm_ui$Internal$Model$StyleClass,
-		mdgriffith$elm_ui$Internal$Flag$borderColor,
-		A3(
-			mdgriffith$elm_ui$Internal$Model$Colored,
-			'bc-' + mdgriffith$elm_ui$Internal$Model$formatColorClass(clr),
-			'border-color',
-			clr));
-};
-var mdgriffith$elm_ui$Internal$Flag$fontColor = mdgriffith$elm_ui$Internal$Flag$flag(14);
-var mdgriffith$elm_ui$Element$Font$color = function (fontColor) {
-	return A2(
-		mdgriffith$elm_ui$Internal$Model$StyleClass,
-		mdgriffith$elm_ui$Internal$Flag$fontColor,
-		A3(
-			mdgriffith$elm_ui$Internal$Model$Colored,
-			'fc-' + mdgriffith$elm_ui$Internal$Model$formatColorClass(fontColor),
-			'color',
-			fontColor));
-};
-var mdgriffith$elm_ui$Element$Input$Padding = F4(
-	function (a, b, c, d) {
-		return {$: 'Padding', a: a, b: b, c: c, d: d};
-	});
-var mdgriffith$elm_ui$Internal$Model$AsColumn = {$: 'AsColumn'};
-var mdgriffith$elm_ui$Internal$Model$asColumn = mdgriffith$elm_ui$Internal$Model$AsColumn;
-var mdgriffith$elm_ui$Element$Input$applyLabel = F3(
-	function (attrs, label, input) {
-		if (label.$ === 'HiddenLabel') {
-			var labelText = label.a;
-			return A4(
-				mdgriffith$elm_ui$Internal$Model$element,
-				mdgriffith$elm_ui$Internal$Model$asColumn,
-				mdgriffith$elm_ui$Internal$Model$NodeName('label'),
-				attrs,
-				mdgriffith$elm_ui$Internal$Model$Unkeyed(
-					_List_fromArray(
-						[input])));
-		} else {
-			var position = label.a;
-			var labelAttrs = label.b;
-			var labelChild = label.c;
-			var labelElement = A4(
-				mdgriffith$elm_ui$Internal$Model$element,
-				mdgriffith$elm_ui$Internal$Model$asEl,
-				mdgriffith$elm_ui$Internal$Model$div,
-				labelAttrs,
-				mdgriffith$elm_ui$Internal$Model$Unkeyed(
-					_List_fromArray(
-						[labelChild])));
-			switch (position.$) {
-				case 'Above':
-					return A4(
-						mdgriffith$elm_ui$Internal$Model$element,
-						mdgriffith$elm_ui$Internal$Model$asColumn,
-						mdgriffith$elm_ui$Internal$Model$NodeName('label'),
-						attrs,
-						mdgriffith$elm_ui$Internal$Model$Unkeyed(
-							_List_fromArray(
-								[labelElement, input])));
-				case 'Below':
-					return A4(
-						mdgriffith$elm_ui$Internal$Model$element,
-						mdgriffith$elm_ui$Internal$Model$asColumn,
-						mdgriffith$elm_ui$Internal$Model$NodeName('label'),
-						attrs,
-						mdgriffith$elm_ui$Internal$Model$Unkeyed(
-							_List_fromArray(
-								[input, labelElement])));
-				case 'OnRight':
-					return A4(
-						mdgriffith$elm_ui$Internal$Model$element,
-						mdgriffith$elm_ui$Internal$Model$asRow,
-						mdgriffith$elm_ui$Internal$Model$NodeName('label'),
-						attrs,
-						mdgriffith$elm_ui$Internal$Model$Unkeyed(
-							_List_fromArray(
-								[input, labelElement])));
-				default:
-					return A4(
-						mdgriffith$elm_ui$Internal$Model$element,
-						mdgriffith$elm_ui$Internal$Model$asRow,
-						mdgriffith$elm_ui$Internal$Model$NodeName('label'),
-						attrs,
-						mdgriffith$elm_ui$Internal$Model$Unkeyed(
-							_List_fromArray(
-								[labelElement, input])));
-			}
-		}
-	});
-var elm$html$Html$Attributes$attribute = elm$virtual_dom$VirtualDom$attribute;
-var mdgriffith$elm_ui$Element$Input$autofill = A2(
-	elm$core$Basics$composeL,
-	mdgriffith$elm_ui$Internal$Model$Attr,
-	elm$html$Html$Attributes$attribute('autocomplete'));
-var mdgriffith$elm_ui$Element$rgb = F3(
-	function (r, g, b) {
-		return A4(mdgriffith$elm_ui$Internal$Model$Rgba, r, g, b, 1);
-	});
-var mdgriffith$elm_ui$Element$Input$charcoal = A3(mdgriffith$elm_ui$Element$rgb, 136 / 255, 138 / 255, 133 / 255);
-var mdgriffith$elm_ui$Internal$Flag$borderRound = mdgriffith$elm_ui$Internal$Flag$flag(17);
-var mdgriffith$elm_ui$Element$Border$rounded = function (radius) {
-	return A2(
-		mdgriffith$elm_ui$Internal$Model$StyleClass,
-		mdgriffith$elm_ui$Internal$Flag$borderRound,
-		A3(
-			mdgriffith$elm_ui$Internal$Model$Single,
-			'br-' + elm$core$String$fromInt(radius),
-			'border-radius',
-			elm$core$String$fromInt(radius) + 'px'));
-};
-var mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
-	function (a, b, c, d, e) {
-		return {$: 'BorderWidth', a: a, b: b, c: c, d: d, e: e};
-	});
-var mdgriffith$elm_ui$Element$Border$width = function (v) {
-	return A2(
-		mdgriffith$elm_ui$Internal$Model$StyleClass,
-		mdgriffith$elm_ui$Internal$Flag$borderWidth,
-		A5(
-			mdgriffith$elm_ui$Internal$Model$BorderWidth,
-			'b-' + elm$core$String$fromInt(v),
-			v,
-			v,
-			v,
-			v));
-};
-var mdgriffith$elm_ui$Element$Input$darkGrey = A3(mdgriffith$elm_ui$Element$rgb, 186 / 255, 189 / 255, 182 / 255);
-var mdgriffith$elm_ui$Element$paddingXY = F2(
-	function (x, y) {
-		return _Utils_eq(x, y) ? A2(
-			mdgriffith$elm_ui$Internal$Model$StyleClass,
-			mdgriffith$elm_ui$Internal$Flag$padding,
-			A5(
-				mdgriffith$elm_ui$Internal$Model$PaddingStyle,
-				'p-' + elm$core$String$fromInt(x),
-				x,
-				x,
-				x,
-				x)) : A2(
-			mdgriffith$elm_ui$Internal$Model$StyleClass,
-			mdgriffith$elm_ui$Internal$Flag$padding,
-			A5(
-				mdgriffith$elm_ui$Internal$Model$PaddingStyle,
-				'p-' + (elm$core$String$fromInt(x) + ('-' + elm$core$String$fromInt(y))),
-				y,
-				x,
-				y,
-				x));
-	});
-var mdgriffith$elm_ui$Element$Input$defaultTextPadding = A2(mdgriffith$elm_ui$Element$paddingXY, 12, 12);
-var mdgriffith$elm_ui$Element$Input$white = A3(mdgriffith$elm_ui$Element$rgb, 1, 1, 1);
-var mdgriffith$elm_ui$Element$Input$defaultTextBoxStyle = _List_fromArray(
-	[
-		mdgriffith$elm_ui$Element$Input$defaultTextPadding,
-		mdgriffith$elm_ui$Element$Border$rounded(3),
-		mdgriffith$elm_ui$Element$Border$color(mdgriffith$elm_ui$Element$Input$darkGrey),
-		mdgriffith$elm_ui$Element$Background$color(mdgriffith$elm_ui$Element$Input$white),
-		mdgriffith$elm_ui$Element$Border$width(1),
-		mdgriffith$elm_ui$Element$spacing(3),
-		mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$fill)
-	]);
-var mdgriffith$elm_ui$Element$Input$hasFocusStyle = function (attr) {
-	if (((attr.$ === 'StyleClass') && (attr.b.$ === 'PseudoSelector')) && (attr.b.a.$ === 'Focus')) {
-		var _n1 = attr.b;
-		var _n2 = _n1.a;
-		return true;
-	} else {
-		return false;
-	}
-};
-var mdgriffith$elm_ui$Internal$Model$NoAttribute = {$: 'NoAttribute'};
-var mdgriffith$elm_ui$Element$Input$focusDefault = function (attrs) {
-	return A2(elm$core$List$any, mdgriffith$elm_ui$Element$Input$hasFocusStyle, attrs) ? mdgriffith$elm_ui$Internal$Model$NoAttribute : mdgriffith$elm_ui$Internal$Model$htmlClass('focusable');
-};
-var mdgriffith$elm_ui$Internal$Model$Describe = function (a) {
-	return {$: 'Describe', a: a};
-};
-var mdgriffith$elm_ui$Internal$Model$Label = function (a) {
-	return {$: 'Label', a: a};
-};
-var mdgriffith$elm_ui$Element$Input$hiddenLabelAttribute = function (label) {
-	if (label.$ === 'HiddenLabel') {
-		var textLabel = label.a;
-		return mdgriffith$elm_ui$Internal$Model$Describe(
-			mdgriffith$elm_ui$Internal$Model$Label(textLabel));
-	} else {
-		return mdgriffith$elm_ui$Internal$Model$NoAttribute;
-	}
-};
-var mdgriffith$elm_ui$Element$Input$inheritablePlaceholderAttributes = function (attr) {
-	_n0$3:
-	while (true) {
-		if (attr.$ === 'StyleClass') {
-			switch (attr.b.$) {
-				case 'PaddingStyle':
-					var _n1 = attr.b;
-					return true;
-				case 'BorderWidth':
-					var _n2 = attr.b;
-					return true;
-				case 'Transform':
-					return true;
-				default:
-					break _n0$3;
-			}
-		} else {
-			break _n0$3;
-		}
-	}
-	return false;
-};
-var mdgriffith$elm_ui$Element$Input$isHiddenLabel = function (label) {
-	if (label.$ === 'HiddenLabel') {
-		return true;
-	} else {
-		return false;
-	}
-};
-var elm$json$Json$Encode$bool = _Json_wrap;
-var elm$html$Html$Attributes$boolProperty = F2(
-	function (key, bool) {
+var author$project$Network$edgeHasTerminalNode = F2(
+	function (node, edge) {
 		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$bool(bool));
+			author$project$Network$equalNodes,
+			node,
+			author$project$Network$terminalNode(edge));
 	});
-var elm$html$Html$Attributes$spellcheck = elm$html$Html$Attributes$boolProperty('spellcheck');
-var mdgriffith$elm_ui$Element$Input$spellcheck = A2(elm$core$Basics$composeL, mdgriffith$elm_ui$Internal$Model$Attr, elm$html$Html$Attributes$spellcheck);
-var elm$core$String$lines = _String_lines;
-var mdgriffith$elm_ui$Internal$Flag$heightTextAreaContent = mdgriffith$elm_ui$Internal$Flag$flag(47);
-var mdgriffith$elm_ui$Element$Input$textHeightContent = F4(
-	function (textValue, spacing, maybePadding, maybeBorder) {
-		var topBottom = function (_n0) {
-			var t = _n0.a;
-			var b = _n0.c;
-			return t + b;
-		};
-		var newlineCount = function (x) {
-			return (x < 1) ? 1 : x;
-		}(
-			elm$core$List$length(
-				elm$core$String$lines(textValue)));
-		var additionalSpacing = (((newlineCount - 1) * spacing) + A2(
-			elm$core$Maybe$withDefault,
-			0,
-			A2(elm$core$Maybe$map, topBottom, maybePadding))) + A2(
-			elm$core$Maybe$withDefault,
-			0,
-			A2(elm$core$Maybe$map, topBottom, maybeBorder));
-		var heightValue = function (count) {
-			return 'calc(' + (elm$core$String$fromInt(count) + ('em + ' + (elm$core$String$fromInt(additionalSpacing) + 'px) !important')));
-		};
+var author$project$Network$incomingEdges = F2(
+	function (_n0, node) {
+		var nodes = _n0.a;
+		var edges = _n0.b;
 		return A2(
-			mdgriffith$elm_ui$Internal$Model$StyleClass,
-			mdgriffith$elm_ui$Internal$Flag$heightTextAreaContent,
-			A3(
-				mdgriffith$elm_ui$Internal$Model$Single,
-				'textarea-height-' + elm$core$String$fromInt(newlineCount),
-				'height',
-				heightValue(newlineCount)));
-	});
-var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
-var mdgriffith$elm_ui$Element$Input$value = A2(elm$core$Basics$composeL, mdgriffith$elm_ui$Internal$Model$Attr, elm$html$Html$Attributes$value);
-var mdgriffith$elm_ui$Internal$Model$LivePolite = {$: 'LivePolite'};
-var mdgriffith$elm_ui$Element$Region$announce = mdgriffith$elm_ui$Internal$Model$Describe(mdgriffith$elm_ui$Internal$Model$LivePolite);
-var mdgriffith$elm_ui$Internal$Flag$cursor = mdgriffith$elm_ui$Internal$Flag$flag(21);
-var mdgriffith$elm_ui$Internal$Model$filter = function (attrs) {
-	return A3(
-		elm$core$List$foldr,
-		F2(
-			function (x, _n0) {
-				var found = _n0.a;
-				var has = _n0.b;
-				switch (x.$) {
-					case 'NoAttribute':
-						return _Utils_Tuple2(found, has);
-					case 'Class':
-						var key = x.a;
-						return _Utils_Tuple2(
-							A2(elm$core$List$cons, x, found),
-							has);
-					case 'Attr':
-						var attr = x.a;
-						return _Utils_Tuple2(
-							A2(elm$core$List$cons, x, found),
-							has);
-					case 'StyleClass':
-						var style = x.b;
-						return _Utils_Tuple2(
-							A2(elm$core$List$cons, x, found),
-							has);
-					case 'Width':
-						var width = x.a;
-						return A2(elm$core$Set$member, 'width', has) ? _Utils_Tuple2(found, has) : _Utils_Tuple2(
-							A2(elm$core$List$cons, x, found),
-							A2(elm$core$Set$insert, 'width', has));
-					case 'Height':
-						var height = x.a;
-						return A2(elm$core$Set$member, 'height', has) ? _Utils_Tuple2(found, has) : _Utils_Tuple2(
-							A2(elm$core$List$cons, x, found),
-							A2(elm$core$Set$insert, 'height', has));
-					case 'Describe':
-						var description = x.a;
-						return A2(elm$core$Set$member, 'described', has) ? _Utils_Tuple2(found, has) : _Utils_Tuple2(
-							A2(elm$core$List$cons, x, found),
-							A2(elm$core$Set$insert, 'described', has));
-					case 'Nearby':
-						var location = x.a;
-						var elem = x.b;
-						return _Utils_Tuple2(
-							A2(elm$core$List$cons, x, found),
-							has);
-					case 'AlignX':
-						return A2(elm$core$Set$member, 'align-x', has) ? _Utils_Tuple2(found, has) : _Utils_Tuple2(
-							A2(elm$core$List$cons, x, found),
-							A2(elm$core$Set$insert, 'align-x', has));
-					case 'AlignY':
-						return A2(elm$core$Set$member, 'align-y', has) ? _Utils_Tuple2(found, has) : _Utils_Tuple2(
-							A2(elm$core$List$cons, x, found),
-							A2(elm$core$Set$insert, 'align-y', has));
-					default:
-						return A2(elm$core$Set$member, 'transform', has) ? _Utils_Tuple2(found, has) : _Utils_Tuple2(
-							A2(elm$core$List$cons, x, found),
-							A2(elm$core$Set$insert, 'transform', has));
-				}
-			}),
-		_Utils_Tuple2(_List_Nil, elm$core$Set$empty),
-		attrs).a;
-};
-var mdgriffith$elm_ui$Internal$Model$get = F2(
-	function (attrs, isAttr) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, found) {
-					return isAttr(x) ? A2(elm$core$List$cons, x, found) : found;
-				}),
-			_List_Nil,
-			mdgriffith$elm_ui$Internal$Model$filter(attrs));
-	});
-var mdgriffith$elm_ui$Internal$Model$isContent = function (len) {
-	isContent:
-	while (true) {
-		switch (len.$) {
-			case 'Content':
-				return true;
-			case 'Max':
-				var l = len.b;
-				var $temp$len = l;
-				len = $temp$len;
-				continue isContent;
-			case 'Min':
-				var l = len.b;
-				var $temp$len = l;
-				len = $temp$len;
-				continue isContent;
-			default:
-				return false;
-		}
-	}
-};
-var mdgriffith$elm_ui$Element$Input$textHelper = F3(
-	function (textInput, attrs, textOptions) {
-		var forNearby = function (attr) {
-			if (attr.$ === 'Nearby') {
-				return true;
-			} else {
-				return false;
-			}
-		};
-		var behavior = _List_fromArray(
-			[
-				mdgriffith$elm_ui$Internal$Model$Attr(
-				elm$html$Html$Events$onInput(textOptions.onChange))
-			]);
-		var attributes = _Utils_ap(mdgriffith$elm_ui$Element$Input$defaultTextBoxStyle, attrs);
-		var attributesFromChild = A2(
-			mdgriffith$elm_ui$Internal$Model$get,
-			attributes,
-			function (attr) {
-				_n21$7:
-				while (true) {
-					switch (attr.$) {
-						case 'Width':
-							if (attr.a.$ === 'Fill') {
-								return true;
-							} else {
-								break _n21$7;
-							}
-						case 'Height':
-							if (attr.a.$ === 'Fill') {
-								return true;
-							} else {
-								break _n21$7;
-							}
-						case 'AlignX':
-							return true;
-						case 'AlignY':
-							return true;
-						case 'StyleClass':
-							switch (attr.b.$) {
-								case 'SpacingStyle':
-									var _n22 = attr.b;
-									return true;
-								case 'FontSize':
-									return true;
-								case 'FontFamily':
-									var _n23 = attr.b;
-									return true;
-								default:
-									break _n21$7;
-							}
-						default:
-							break _n21$7;
-					}
-				}
-				return false;
-			});
-		var forPlaceholder = A2(elm$core$List$filter, mdgriffith$elm_ui$Element$Input$inheritablePlaceholderAttributes, attributes);
-		var heightFillFromChild = A2(
-			mdgriffith$elm_ui$Internal$Model$get,
-			attributes,
-			function (attr) {
-				if ((attr.$ === 'Height') && (attr.a.$ === 'Fill')) {
-					return true;
-				} else {
-					return false;
-				}
-			});
-		var inputPadding = A2(
-			mdgriffith$elm_ui$Internal$Model$get,
-			attributes,
-			function (attr) {
-				if ((attr.$ === 'StyleClass') && (attr.b.$ === 'PaddingStyle')) {
-					var _n19 = attr.b;
-					return true;
-				} else {
-					return false;
-				}
-			});
-		var nearbys = A2(
-			mdgriffith$elm_ui$Internal$Model$get,
-			attributes,
-			function (attr) {
-				if (attr.$ === 'Nearby') {
-					return true;
-				} else {
-					return false;
-				}
-			});
-		var noNearbys = A2(
 			elm$core$List$filter,
-			A2(elm$core$Basics$composeL, elm$core$Basics$not, forNearby),
-			attributes);
-		var _n0 = function () {
-			var _n1 = textInput.type_;
-			if (_n1.$ === 'TextInputNode') {
-				var inputType = _n1.a;
-				return _Utils_Tuple3(
-					'input',
-					_Utils_ap(
-						_List_fromArray(
-							[
-								mdgriffith$elm_ui$Element$Input$value(textOptions.text),
-								mdgriffith$elm_ui$Internal$Model$Attr(
-								elm$html$Html$Attributes$type_(inputType)),
-								mdgriffith$elm_ui$Element$Input$spellcheck(textInput.spellchecked),
-								mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.inputText),
-								function () {
-								var _n2 = textInput.autofill;
-								if (_n2.$ === 'Nothing') {
-									return mdgriffith$elm_ui$Internal$Model$NoAttribute;
-								} else {
-									var fill = _n2.a;
-									return mdgriffith$elm_ui$Element$Input$autofill(fill);
-								}
-							}()
-							]),
-						noNearbys),
-					_List_Nil);
+			author$project$Network$edgeHasTerminalNode(node),
+			edges);
+	});
+var elm$core$List$sum = function (numbers) {
+	return A3(elm$core$List$foldl, elm$core$Basics$add, 0, numbers);
+};
+var author$project$Network$inflowToNode = F2(
+	function (network, node) {
+		return elm$core$List$sum(
+			A2(
+				elm$core$List$map,
+				author$project$Network$edgeFlow,
+				A2(author$project$Network$incomingEdges, network, node)));
+	});
+var author$project$Network$initialNode = function (_n0) {
+	var initialNode_ = _n0.a;
+	var terminalNode_ = _n0.b;
+	return initialNode_;
+};
+var author$project$Network$edgeHasOrigin = F2(
+	function (node, edge) {
+		return A2(
+			author$project$Network$equalNodes,
+			node,
+			author$project$Network$initialNode(edge));
+	});
+var author$project$Network$outgoingEdges = F2(
+	function (_n0, node) {
+		var nodes = _n0.a;
+		var edges = _n0.b;
+		return A2(
+			elm$core$List$filter,
+			author$project$Network$edgeHasOrigin(node),
+			edges);
+	});
+var author$project$Network$outflowFromNode = F2(
+	function (network, node) {
+		return elm$core$List$sum(
+			A2(
+				elm$core$List$map,
+				author$project$Network$edgeFlow,
+				A2(author$project$Network$outgoingEdges, network, node)));
+	});
+var author$project$Flow$efficiencyOfEdge = F3(
+	function (totalFlow_, network, _n0) {
+		var sourceNode = _n0.a;
+		var sinkNode = _n0.b;
+		var flow = _n0.c;
+		var edge = A3(author$project$Network$Edge, sourceNode, sinkNode, flow);
+		var edgeFlow_ = author$project$Network$edgeFlow(edge);
+		var numerator = edgeFlow_ * totalFlow_;
+		var denominator = A2(author$project$Network$outflowFromNode, network, sourceNode) * A2(author$project$Network$inflowToNode, network, sinkNode);
+		var logRatio = elm$core$Basics$logBase(2)(numerator / denominator);
+		return A2(author$project$Flow$roundTo, 3, edgeFlow_ * logRatio);
+	});
+var author$project$Network$totalFlow = function (_n0) {
+	var nodes = _n0.a;
+	var edges = _n0.b;
+	var network = A2(author$project$Network$Network, nodes, edges);
+	return elm$core$List$sum(
+		A2(elm$core$List$map, author$project$Network$edgeFlow, edges));
+};
+var author$project$Flow$efficiency = function (_n0) {
+	var nodes = _n0.a;
+	var edges = _n0.b;
+	var network = A2(author$project$Network$Network, nodes, edges);
+	var totalFlow_ = author$project$Network$totalFlow(network);
+	return function (x) {
+		return A2(author$project$Flow$roundTo, 3, x);
+	}(
+		elm$core$List$sum(
+			A2(
+				elm$core$List$map,
+				A2(author$project$Flow$efficiencyOfEdge, totalFlow_, network),
+				edges)));
+};
+var author$project$Flow$resilienceOfEdge = F3(
+	function (totalFlow_, network, _n0) {
+		var sourceNode = _n0.a;
+		var sinkNode = _n0.b;
+		var flow = _n0.c;
+		var edge = A3(author$project$Network$Edge, sourceNode, sinkNode, flow);
+		var edgeFlow_ = author$project$Network$edgeFlow(edge);
+		var numerator = edgeFlow_ * edgeFlow_;
+		var denominator = A2(author$project$Network$outflowFromNode, network, sourceNode) * A2(author$project$Network$inflowToNode, network, sinkNode);
+		var logRatio = elm$core$Basics$logBase(2)(numerator / denominator);
+		return edgeFlow_ * logRatio;
+	});
+var author$project$Flow$resilience = function (_n0) {
+	var nodes = _n0.a;
+	var edges = _n0.b;
+	var network = A2(author$project$Network$Network, nodes, edges);
+	var totalFlow_ = author$project$Network$totalFlow(network);
+	return function (x) {
+		return -A2(author$project$Flow$roundTo, 3, x);
+	}(
+		elm$core$List$sum(
+			A2(
+				elm$core$List$map,
+				A2(author$project$Flow$resilienceOfEdge, totalFlow_, network),
+				edges)));
+};
+var author$project$Flow$alpha = function (network) {
+	var ratio = 1 + (author$project$Flow$resilience(network) / author$project$Flow$efficiency(network));
+	return 1 / ratio;
+};
+var author$project$Flow$sustainability = function (network) {
+	var a = author$project$Flow$alpha(network);
+	var aa = A2(elm$core$Basics$pow, a, 1.288);
+	var s = ((-1.844) * aa) * A2(elm$core$Basics$logBase, 2, aa);
+	return A2(author$project$Flow$roundTo, 4, s);
+};
+var author$project$Flow$sustainabilityPercentage = function (network) {
+	return A2(
+		author$project$Flow$roundTo,
+		2,
+		100 * author$project$Flow$sustainability(network));
+};
+var author$project$Network$edgeCount = function (_n0) {
+	var nodes = _n0.a;
+	var edges = _n0.b;
+	return elm$core$List$length(edges);
+};
+var author$project$Network$nodeCount = function (_n0) {
+	var nodes = _n0.a;
+	var edges = _n0.b;
+	return elm$core$List$length(nodes);
+};
+var author$project$FlowModel$summarize = function (network) {
+	return _List_fromArray(
+		[
+			{
+			label: 'Nodes',
+			value: elm$core$String$fromInt(
+				author$project$Network$nodeCount(network))
+		},
+			{
+			label: 'Edges',
+			value: elm$core$String$fromInt(
+				author$project$Network$edgeCount(network))
+		},
+			{
+			label: 'Total flow',
+			value: elm$core$String$fromFloat(
+				A2(
+					author$project$Flow$roundTo,
+					0,
+					author$project$Network$totalFlow(network)))
+		},
+			{
+			label: 'Efficiency',
+			value: elm$core$String$fromFloat(
+				A2(
+					author$project$Flow$roundTo,
+					0,
+					author$project$Flow$efficiency(network)))
+		},
+			{
+			label: 'Resilience',
+			value: elm$core$String$fromFloat(
+				A2(
+					author$project$Flow$roundTo,
+					0,
+					author$project$Flow$resilience(network)))
+		},
+			{
+			label: 'Sustainability',
+			value: elm$core$String$fromFloat(
+				A2(
+					author$project$Flow$roundTo,
+					0,
+					author$project$Flow$sustainabilityPercentage(network)))
+		}
+		]);
+};
+var mdgriffith$elm_ui$Element$InternalColumn = function (a) {
+	return {$: 'InternalColumn', a: a};
+};
+var elm$core$List$all = F2(
+	function (isOkay, list) {
+		return !A2(
+			elm$core$List$any,
+			A2(elm$core$Basics$composeL, elm$core$Basics$not, isOkay),
+			list);
+	});
+var elm$core$List$repeatHelp = F3(
+	function (result, n, value) {
+		repeatHelp:
+		while (true) {
+			if (n <= 0) {
+				return result;
 			} else {
-				var _n3 = A3(
-					elm$core$List$foldr,
-					F2(
-						function (attr, found) {
-							_n4$5:
-							while (true) {
-								switch (attr.$) {
-									case 'Describe':
-										return found;
-									case 'Height':
-										var len = attr.a;
-										var _n5 = found.heightContent;
-										if (_n5.$ === 'Nothing') {
-											return _Utils_update(
-												found,
-												{
-													adjustedAttributes: A2(elm$core$List$cons, attr, found.adjustedAttributes),
-													heightContent: elm$core$Maybe$Just(
-														mdgriffith$elm_ui$Internal$Model$isContent(len))
-												});
-										} else {
-											return found;
-										}
-									case 'StyleClass':
-										switch (attr.b.$) {
-											case 'BorderWidth':
-												var _n6 = attr.b;
-												var t = _n6.b;
-												var r = _n6.c;
-												var b = _n6.d;
-												var l = _n6.e;
-												var _n7 = found.maybeBorder;
-												if (_n7.$ === 'Nothing') {
-													return _Utils_update(
-														found,
-														{
-															adjustedAttributes: A2(elm$core$List$cons, attr, found.adjustedAttributes),
-															maybeBorder: elm$core$Maybe$Just(
-																A4(mdgriffith$elm_ui$Element$Input$Padding, t, r, b, l))
-														});
-												} else {
-													return found;
-												}
-											case 'PaddingStyle':
-												var _n8 = attr.b;
-												var t = _n8.b;
-												var r = _n8.c;
-												var b = _n8.d;
-												var l = _n8.e;
-												var _n9 = found.maybePadding;
-												if (_n9.$ === 'Nothing') {
-													return _Utils_update(
-														found,
-														{
-															adjustedAttributes: found.adjustedAttributes,
-															maybePadding: elm$core$Maybe$Just(
-																A4(mdgriffith$elm_ui$Element$Input$Padding, t, r, b, l))
-														});
-												} else {
-													return found;
-												}
-											case 'SpacingStyle':
-												var _n10 = attr.b;
-												var x = _n10.b;
-												var y = _n10.c;
-												var _n11 = found.maybeSpacing;
-												if (_n11.$ === 'Nothing') {
-													return _Utils_update(
-														found,
-														{
-															adjustedAttributes: A2(elm$core$List$cons, attr, found.adjustedAttributes),
-															maybeSpacing: elm$core$Maybe$Just(y)
-														});
-												} else {
-													return found;
-												}
-											default:
-												break _n4$5;
-										}
-									default:
-										break _n4$5;
-								}
+				var $temp$result = A2(elm$core$List$cons, value, result),
+					$temp$n = n - 1,
+					$temp$value = value;
+				result = $temp$result;
+				n = $temp$n;
+				value = $temp$value;
+				continue repeatHelp;
+			}
+		}
+	});
+var elm$core$List$repeat = F2(
+	function (n, value) {
+		return A3(elm$core$List$repeatHelp, _List_Nil, n, value);
+	});
+var mdgriffith$elm_ui$Internal$Flag$gridPosition = mdgriffith$elm_ui$Internal$Flag$flag(35);
+var mdgriffith$elm_ui$Internal$Flag$gridTemplate = mdgriffith$elm_ui$Internal$Flag$flag(34);
+var mdgriffith$elm_ui$Internal$Model$Empty = {$: 'Empty'};
+var mdgriffith$elm_ui$Internal$Model$GridPosition = function (a) {
+	return {$: 'GridPosition', a: a};
+};
+var mdgriffith$elm_ui$Internal$Model$GridTemplateStyle = function (a) {
+	return {$: 'GridTemplateStyle', a: a};
+};
+var mdgriffith$elm_ui$Internal$Model$AsGrid = {$: 'AsGrid'};
+var mdgriffith$elm_ui$Internal$Model$asGrid = mdgriffith$elm_ui$Internal$Model$AsGrid;
+var mdgriffith$elm_ui$Internal$Model$getSpacing = F2(
+	function (attrs, _default) {
+		return A2(
+			elm$core$Maybe$withDefault,
+			_default,
+			A3(
+				elm$core$List$foldr,
+				F2(
+					function (attr, acc) {
+						if (acc.$ === 'Just') {
+							var x = acc.a;
+							return elm$core$Maybe$Just(x);
+						} else {
+							if ((attr.$ === 'StyleClass') && (attr.b.$ === 'SpacingStyle')) {
+								var _n2 = attr.b;
+								var x = _n2.b;
+								var y = _n2.c;
+								return elm$core$Maybe$Just(
+									_Utils_Tuple2(x, y));
+							} else {
+								return elm$core$Maybe$Nothing;
 							}
-							return _Utils_update(
-								found,
-								{
-									adjustedAttributes: A2(elm$core$List$cons, attr, found.adjustedAttributes)
-								});
-						}),
-					{adjustedAttributes: _List_Nil, heightContent: elm$core$Maybe$Nothing, maybeBorder: elm$core$Maybe$Nothing, maybePadding: elm$core$Maybe$Nothing, maybeSpacing: elm$core$Maybe$Nothing},
-					attributes);
-				var maybePadding = _n3.maybePadding;
-				var heightContent = _n3.heightContent;
-				var maybeSpacing = _n3.maybeSpacing;
-				var adjustedAttributes = _n3.adjustedAttributes;
-				var maybeBorder = _n3.maybeBorder;
-				var spacing = A2(elm$core$Maybe$withDefault, 5, maybeSpacing);
-				return _Utils_Tuple3(
-					'textarea',
-					_Utils_ap(
-						_List_fromArray(
-							[
-								mdgriffith$elm_ui$Element$Input$spellcheck(textInput.spellchecked),
-								mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.inputMultiline),
-								A2(
-								elm$core$Maybe$withDefault,
-								mdgriffith$elm_ui$Internal$Model$NoAttribute,
-								A2(elm$core$Maybe$map, mdgriffith$elm_ui$Element$Input$autofill, textInput.autofill)),
-								function () {
-								if (maybePadding.$ === 'Nothing') {
-									return mdgriffith$elm_ui$Internal$Model$NoAttribute;
-								} else {
-									var _n13 = maybePadding.a;
-									var t = _n13.a;
-									var r = _n13.b;
-									var b = _n13.c;
-									var l = _n13.d;
-									return mdgriffith$elm_ui$Element$paddingEach(
-										{
-											bottom: A2(elm$core$Basics$max, 0, b - ((spacing / 2) | 0)),
-											left: l,
-											right: r,
-											top: A2(elm$core$Basics$max, 0, t - ((spacing / 2) | 0))
-										});
-								}
-							}(),
-								function () {
-								if (heightContent.$ === 'Nothing') {
-									return mdgriffith$elm_ui$Internal$Model$NoAttribute;
-								} else {
-									if (heightContent.a) {
-										return A4(mdgriffith$elm_ui$Element$Input$textHeightContent, textOptions.text, spacing, maybePadding, maybeBorder);
-									} else {
-										return mdgriffith$elm_ui$Internal$Model$NoAttribute;
-									}
-								}
-							}()
-							]),
-						adjustedAttributes),
+						}
+					}),
+				elm$core$Maybe$Nothing,
+				attrs));
+	});
+var mdgriffith$elm_ui$Element$tableHelper = F2(
+	function (attrs, config) {
+		var onGrid = F3(
+			function (rowLevel, columnLevel, elem) {
+				return A4(
+					mdgriffith$elm_ui$Internal$Model$element,
+					mdgriffith$elm_ui$Internal$Model$asEl,
+					mdgriffith$elm_ui$Internal$Model$div,
 					_List_fromArray(
 						[
-							mdgriffith$elm_ui$Internal$Model$unstyled(
-							elm$html$Html$text(textOptions.text))
-						]));
+							A2(
+							mdgriffith$elm_ui$Internal$Model$StyleClass,
+							mdgriffith$elm_ui$Internal$Flag$gridPosition,
+							mdgriffith$elm_ui$Internal$Model$GridPosition(
+								{col: columnLevel, height: 1, row: rowLevel, width: 1}))
+						]),
+					mdgriffith$elm_ui$Internal$Model$Unkeyed(
+						_List_fromArray(
+							[elem])));
+			});
+		var columnWidth = function (col) {
+			if (col.$ === 'InternalIndexedColumn') {
+				var colConfig = col.a;
+				return colConfig.width;
+			} else {
+				var colConfig = col.a;
+				return colConfig.width;
 			}
-		}();
-		var inputNode = _n0.a;
-		var inputAttrs = _n0.b;
-		var inputChildren = _n0.c;
-		var inputElement = A4(
+		};
+		var columnHeader = function (col) {
+			if (col.$ === 'InternalIndexedColumn') {
+				var colConfig = col.a;
+				return colConfig.header;
+			} else {
+				var colConfig = col.a;
+				return colConfig.header;
+			}
+		};
+		var maybeHeaders = function (headers) {
+			return A2(
+				elm$core$List$all,
+				elm$core$Basics$eq(mdgriffith$elm_ui$Internal$Model$Empty),
+				headers) ? elm$core$Maybe$Nothing : elm$core$Maybe$Just(
+				A2(
+					elm$core$List$indexedMap,
+					F2(
+						function (col, header) {
+							return A3(onGrid, 1, col + 1, header);
+						}),
+					headers));
+		}(
+			A2(elm$core$List$map, columnHeader, config.columns));
+		var add = F3(
+			function (cell, columnConfig, cursor) {
+				if (columnConfig.$ === 'InternalIndexedColumn') {
+					var col = columnConfig.a;
+					return _Utils_update(
+						cursor,
+						{
+							column: cursor.column + 1,
+							elements: A2(
+								elm$core$List$cons,
+								A3(
+									onGrid,
+									cursor.row,
+									cursor.column,
+									A2(
+										col.view,
+										_Utils_eq(maybeHeaders, elm$core$Maybe$Nothing) ? (cursor.row - 1) : (cursor.row - 2),
+										cell)),
+								cursor.elements)
+						});
+				} else {
+					var col = columnConfig.a;
+					return {
+						column: cursor.column + 1,
+						elements: A2(
+							elm$core$List$cons,
+							A3(
+								onGrid,
+								cursor.row,
+								cursor.column,
+								col.view(cell)),
+							cursor.elements),
+						row: cursor.row
+					};
+				}
+			});
+		var build = F3(
+			function (columns, rowData, cursor) {
+				var newCursor = A3(
+					elm$core$List$foldl,
+					add(rowData),
+					cursor,
+					columns);
+				return {column: 1, elements: newCursor.elements, row: cursor.row + 1};
+			});
+		var children = A3(
+			elm$core$List$foldl,
+			build(config.columns),
+			{
+				column: 1,
+				elements: _List_Nil,
+				row: _Utils_eq(maybeHeaders, elm$core$Maybe$Nothing) ? 1 : 2
+			},
+			config.data);
+		var _n0 = A2(
+			mdgriffith$elm_ui$Internal$Model$getSpacing,
+			attrs,
+			_Utils_Tuple2(0, 0));
+		var sX = _n0.a;
+		var sY = _n0.b;
+		var template = A2(
+			mdgriffith$elm_ui$Internal$Model$StyleClass,
+			mdgriffith$elm_ui$Internal$Flag$gridTemplate,
+			mdgriffith$elm_ui$Internal$Model$GridTemplateStyle(
+				{
+					columns: A2(elm$core$List$map, columnWidth, config.columns),
+					rows: A2(
+						elm$core$List$repeat,
+						elm$core$List$length(config.data),
+						mdgriffith$elm_ui$Internal$Model$Content),
+					spacing: _Utils_Tuple2(
+						mdgriffith$elm_ui$Element$px(sX),
+						mdgriffith$elm_ui$Element$px(sY))
+				}));
+		return A4(
 			mdgriffith$elm_ui$Internal$Model$element,
-			mdgriffith$elm_ui$Internal$Model$asEl,
+			mdgriffith$elm_ui$Internal$Model$asGrid,
 			mdgriffith$elm_ui$Internal$Model$div,
 			A2(
 				elm$core$List$cons,
 				mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$fill),
-				elm$core$List$concat(
-					_List_fromArray(
-						[
-							nearbys,
-							heightFillFromChild,
-							function () {
-							var _n15 = textOptions.placeholder;
-							if (_n15.$ === 'Nothing') {
-								return _List_Nil;
-							} else {
-								var _n16 = _n15.a;
-								var placeholderAttrs = _n16.a;
-								var placeholderEl = _n16.b;
-								return _List_fromArray(
-									[
-										mdgriffith$elm_ui$Element$inFront(
-										A2(
-											mdgriffith$elm_ui$Element$el,
-											A2(
-												elm$core$List$cons,
-												mdgriffith$elm_ui$Element$Input$defaultTextPadding,
-												_Utils_ap(
-													forPlaceholder,
-													_Utils_ap(
-														_List_fromArray(
-															[
-																mdgriffith$elm_ui$Element$Font$color(mdgriffith$elm_ui$Element$Input$charcoal),
-																mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.noTextSelection + (' ' + mdgriffith$elm_ui$Internal$Style$classes.passPointerEvents)),
-																mdgriffith$elm_ui$Element$Border$color(
-																A4(mdgriffith$elm_ui$Element$rgba, 0, 0, 0, 0)),
-																mdgriffith$elm_ui$Element$Background$color(
-																A4(mdgriffith$elm_ui$Element$rgba, 0, 0, 0, 0)),
-																mdgriffith$elm_ui$Element$height(mdgriffith$elm_ui$Element$fill),
-																mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$fill),
-																mdgriffith$elm_ui$Element$alpha(
-																(textOptions.text === '') ? 1 : 0)
-															]),
-														placeholderAttrs))),
-											placeholderEl))
-									]);
-							}
-						}()
-						]))),
+				A2(elm$core$List$cons, template, attrs)),
 			mdgriffith$elm_ui$Internal$Model$Unkeyed(
-				_List_fromArray(
-					[
-						A4(
-						mdgriffith$elm_ui$Internal$Model$element,
-						mdgriffith$elm_ui$Internal$Model$asEl,
-						mdgriffith$elm_ui$Internal$Model$NodeName(inputNode),
-						elm$core$List$concat(
-							_List_fromArray(
-								[
-									_List_fromArray(
-									[
-										mdgriffith$elm_ui$Element$Input$focusDefault(attrs),
-										mdgriffith$elm_ui$Element$Input$hiddenLabelAttribute(textOptions.label)
-									]),
-									inputAttrs,
-									behavior
-								])),
-						mdgriffith$elm_ui$Internal$Model$Unkeyed(inputChildren))
-					])));
-		return A3(
-			mdgriffith$elm_ui$Element$Input$applyLabel,
-			A2(
-				elm$core$List$cons,
-				A2(mdgriffith$elm_ui$Internal$Model$Class, mdgriffith$elm_ui$Internal$Flag$cursor, mdgriffith$elm_ui$Internal$Style$classes.cursorText),
-				A2(
-					elm$core$List$cons,
-					mdgriffith$elm_ui$Element$Input$isHiddenLabel(textOptions.label) ? mdgriffith$elm_ui$Internal$Model$NoAttribute : mdgriffith$elm_ui$Element$spacing(5),
-					A2(elm$core$List$cons, mdgriffith$elm_ui$Element$Region$announce, attributesFromChild))),
-			textOptions.label,
-			inputElement);
+				function () {
+					if (maybeHeaders.$ === 'Nothing') {
+						return children.elements;
+					} else {
+						var renderedHeaders = maybeHeaders.a;
+						return _Utils_ap(
+							renderedHeaders,
+							elm$core$List$reverse(children.elements));
+					}
+				}()));
 	});
-var mdgriffith$elm_ui$Element$Input$multiline = F2(
-	function (attrs, multi) {
-		return A3(
-			mdgriffith$elm_ui$Element$Input$textHelper,
-			{autofill: elm$core$Maybe$Nothing, spellchecked: multi.spellcheck, type_: mdgriffith$elm_ui$Element$Input$TextArea},
+var mdgriffith$elm_ui$Element$table = F2(
+	function (attrs, config) {
+		return A2(
+			mdgriffith$elm_ui$Element$tableHelper,
 			attrs,
-			{label: multi.label, onChange: multi.onChange, placeholder: multi.placeholder, text: multi.text});
+			{
+				columns: A2(elm$core$List$map, mdgriffith$elm_ui$Element$InternalColumn, config.columns),
+				data: config.data
+			});
 	});
+var author$project$FlowModel$report = function (network) {
+	return A2(
+		mdgriffith$elm_ui$Element$table,
+		_List_fromArray(
+			[
+				mdgriffith$elm_ui$Element$spacing(10),
+				mdgriffith$elm_ui$Element$width(
+				mdgriffith$elm_ui$Element$px(160))
+			]),
+		{
+			columns: _List_fromArray(
+				[
+					{
+					header: A2(
+						mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[mdgriffith$elm_ui$Element$Font$bold]),
+						mdgriffith$elm_ui$Element$text('Measure')),
+					view: function (datum) {
+						return mdgriffith$elm_ui$Element$text(datum.label);
+					},
+					width: mdgriffith$elm_ui$Element$px(40)
+				},
+					{
+					header: A2(
+						mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[mdgriffith$elm_ui$Element$Font$bold]),
+						A2(author$project$FlowModel$alignRightElement, 90, 'Value')),
+					view: function (datum) {
+						return A2(author$project$FlowModel$alignRightElement, 90, datum.value);
+					},
+					width: mdgriffith$elm_ui$Element$px(90)
+				}
+				]),
+			data: author$project$FlowModel$summarize(network)
+		});
+};
+var author$project$Main$InputNetworkString = function (a) {
+	return {$: 'InputNetworkString', a: a};
+};
 var author$project$Main$networkInput = function (model) {
 	return A2(
 		mdgriffith$elm_ui$Element$Input$multiline,
@@ -13543,24 +13726,6 @@ var author$project$Main$networkInput = function (model) {
 			text: model.networkAsString
 		});
 };
-var mdgriffith$elm_ui$Element$column = F2(
-	function (attrs, children) {
-		return A4(
-			mdgriffith$elm_ui$Internal$Model$element,
-			mdgriffith$elm_ui$Internal$Model$asColumn,
-			mdgriffith$elm_ui$Internal$Model$div,
-			A2(
-				elm$core$List$cons,
-				mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.contentTop + (' ' + mdgriffith$elm_ui$Internal$Style$classes.contentLeft)),
-				A2(
-					elm$core$List$cons,
-					mdgriffith$elm_ui$Element$height(mdgriffith$elm_ui$Element$shrink),
-					A2(
-						elm$core$List$cons,
-						mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$shrink),
-						attrs))),
-			mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
-	});
 var author$project$Main$networkDisplay = function (model) {
 	return _List_fromArray(
 		[
@@ -13608,6 +13773,14 @@ var author$project$Main$networkDisplay = function (model) {
 					author$project$FlowModel$report(model.network)
 				]))
 		]);
+};
+var author$project$Main$display = function (model) {
+	var _n0 = model.displayMode;
+	if (_n0.$ === 'NetworkDisplay') {
+		return author$project$Main$networkDisplay(model);
+	} else {
+		return author$project$Main$avatarDisplay(model);
+	}
 };
 var author$project$Main$InputEdgeFlow = function (a) {
 	return {$: 'InputEdgeFlow', a: a};
@@ -14010,6 +14183,30 @@ var author$project$Main$networkEntryForm = function (model) {
 				author$project$Main$updateNetworkButton(model)
 			]));
 };
+var author$project$Main$ToggleDisplayMode = {$: 'ToggleDisplayMode'};
+var author$project$Main$toggleDisplayTitle = function (model) {
+	var _n0 = model.displayMode;
+	if (_n0.$ === 'AvatarDisplay') {
+		return 'Display: Avatar List';
+	} else {
+		return 'Display: Network';
+	}
+};
+var author$project$Main$toggleDisplayModeButton = function (model) {
+	return A2(
+		mdgriffith$elm_ui$Element$Input$button,
+		_Utils_ap(
+			author$project$Widget$buttonStyle,
+			_List_fromArray(
+				[
+					mdgriffith$elm_ui$Element$moveDown(7.5)
+				])),
+		{
+			label: mdgriffith$elm_ui$Element$text(
+				author$project$Main$toggleDisplayTitle(model)),
+			onPress: elm$core$Maybe$Just(author$project$Main$ToggleDisplayMode)
+		});
+};
 var mdgriffith$elm_ui$Internal$Model$CenterY = {$: 'CenterY'};
 var mdgriffith$elm_ui$Element$centerY = mdgriffith$elm_ui$Internal$Model$AlignY(mdgriffith$elm_ui$Internal$Model$CenterY);
 var author$project$Main$mainRow = function (model) {
@@ -14044,18 +14241,30 @@ var author$project$Main$mainRow = function (model) {
 						mdgriffith$elm_ui$Element$centerX,
 						mdgriffith$elm_ui$Element$spacing(20)
 					]),
-				author$project$Main$networkDisplay(model)),
+				author$project$Main$display(model)),
 				A2(
 				mdgriffith$elm_ui$Element$row,
 				_List_fromArray(
 					[
 						mdgriffith$elm_ui$Element$centerX,
 						mdgriffith$elm_ui$Element$paddingEach(
-						{bottom: 80, left: 0, right: 0, top: 20})
+						{bottom: 8, left: 0, right: 0, top: 20})
 					]),
 				_List_fromArray(
 					[
 						author$project$Main$networkEntryForm(model)
+					])),
+				A2(
+				mdgriffith$elm_ui$Element$row,
+				_List_fromArray(
+					[
+						mdgriffith$elm_ui$Element$centerX,
+						mdgriffith$elm_ui$Element$paddingEach(
+						{bottom: 80, left: 0, right: 0, top: 0})
+					]),
+				_List_fromArray(
+					[
+						author$project$Main$toggleDisplayModeButton(model)
 					]))
 			]));
 };
