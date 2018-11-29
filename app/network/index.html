@@ -5654,7 +5654,7 @@ var author$project$CSV$networkFromString = function (str) {
 };
 var author$project$Main$CSV = {$: 'CSV'};
 var author$project$Main$NetworkDisplay = {$: 'NetworkDisplay'};
-var author$project$Main$initialAvatarCSV = 'AA,https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg\nBB,https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg\n';
+var author$project$Main$initialAvatarCSV = 'AA, https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg\nBB, https://s3.amazonaws.com/noteimages/jxxcarlson/hello.jpg\n';
 var author$project$NetworkParser$NodeUrl = F2(
 	function (a, b) {
 		return {$: 'NodeUrl', a: a, b: b};
@@ -6093,7 +6093,7 @@ var author$project$CSV$csvOfSimpleEdge = function (_n0) {
 	var sourceNode = _n0.a;
 	var targetNode = _n0.b;
 	var flow = _n0.c;
-	return sourceNode + (',' + (targetNode + (',' + (elm$core$String$fromFloat(flow) + '\n'))));
+	return sourceNode + (', ' + (targetNode + (', ' + (elm$core$String$fromFloat(flow) + '\n'))));
 };
 var author$project$CSV$csvFromEdgeList = function (sel) {
 	return A2(
