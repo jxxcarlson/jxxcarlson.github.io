@@ -5786,6 +5786,29 @@ var author$project$Stat$statistics = function (data) {
 			{b: b, leftDataPoint: leftDataPoint, leftRegressionPoint: leftRegressionPoint, m: m, n: nn, r2: r2, rightDataPoint: rightDataPoint, rightRegressionPoint: rightRegressionPoint, xMax: xMax, xMean: xMean, xMin: xMin, xStdev: xStdev, yMean: yMean, yStdev: yStdev});
 	}
 };
+var author$project$Main$recompute = function (model) {
+	var numericalData = function () {
+		var _n1 = model.csvData;
+		if (_n1.$ === 'Nothing') {
+			return _List_Nil;
+		} else {
+			var data = _n1.a;
+			return A2(
+				author$project$Stat$filterData,
+				{xMax: model.xMax, xMin: model.xMin},
+				A3(author$project$CsvData$toPointList, 0, 1, data));
+		}
+	}();
+	var statistics = function () {
+		if (!numericalData.b) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var dataList = numericalData;
+			return author$project$Stat$statistics(dataList);
+		}
+	}();
+	return _Utils_Tuple2(numericalData, statistics);
+};
 var elm$core$Maybe$map = F2(
 	function (f, maybe) {
 		if (maybe.$ === 'Just') {
@@ -5945,32 +5968,21 @@ var author$project$Main$update = F2(
 						author$project$Main$CsvLoaded,
 						elm$file$File$toString(file)));
 			case 'Reset':
+				var nextModel = _Utils_update(
+					model,
+					{xMax: model.xMaxOriginal, xMin: model.xMinOriginal});
+				var _n1 = author$project$Main$recompute(nextModel);
+				var numericalData = _n1.a;
+				var statistics = _n1.b;
 				return _Utils_Tuple2(
 					_Utils_update(
-						model,
-						{xMax: model.xMaxOriginal, xMin: model.xMinOriginal}),
+						nextModel,
+						{data: numericalData, statistics: statistics}),
 					elm$core$Platform$Cmd$none);
 			case 'Recompute':
-				var numericalData = function () {
-					var _n2 = model.csvData;
-					if (_n2.$ === 'Nothing') {
-						return _List_Nil;
-					} else {
-						var data = _n2.a;
-						return A2(
-							author$project$Stat$filterData,
-							{xMax: model.xMax, xMin: model.xMin},
-							A3(author$project$CsvData$toPointList, 0, 1, data));
-					}
-				}();
-				var statistics = function () {
-					if (!numericalData.b) {
-						return elm$core$Maybe$Nothing;
-					} else {
-						var dataList = numericalData;
-						return author$project$Stat$statistics(dataList);
-					}
-				}();
+				var _n2 = author$project$Main$recompute(model);
+				var numericalData = _n2.a;
+				var statistics = _n2.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
