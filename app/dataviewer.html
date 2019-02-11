@@ -5652,12 +5652,13 @@ var author$project$Stat$minimum = F2(
 var elm$core$Basics$negate = function (n) {
 	return -n;
 };
+var elm$core$Basics$sqrt = _Basics_sqrt;
 var elm$core$List$sum = function (numbers) {
 	return A3(elm$core$List$foldl, elm$core$Basics$add, 0, numbers);
 };
 var author$project$Stat$statistics = function (data) {
-	var m = elm$core$List$length(data);
-	var _n0 = m < 2;
+	var nn = elm$core$List$length(data);
+	var _n0 = nn < 2;
 	if (_n0) {
 		return elm$core$Maybe$Nothing;
 	} else {
@@ -5720,7 +5721,7 @@ var author$project$Stat$statistics = function (data) {
 							xMax);
 					},
 					data)));
-		var n = m;
+		var n = nn;
 		var xMean = xSum / n;
 		var xDeltaSquaredSum = elm$core$List$sum(
 			A2(
@@ -5729,6 +5730,7 @@ var author$project$Stat$statistics = function (data) {
 					return square(x - xMean);
 				},
 				xs));
+		var xStdev = elm$core$Basics$sqrt(xDeltaSquaredSum / (n - 1));
 		var yMean = ySum / n;
 		var ssTot = elm$core$List$sum(
 			A2(
@@ -5737,6 +5739,14 @@ var author$project$Stat$statistics = function (data) {
 					return square(y - yMean);
 				},
 				ys));
+		var yDeltaSquaredSum = elm$core$List$sum(
+			A2(
+				elm$core$List$map,
+				function (y) {
+					return square(y - yMean);
+				},
+				ys));
+		var yStdev = elm$core$Basics$sqrt(yDeltaSquaredSum / (n - 1));
 		var leftDataPoint = A2(
 			elm$core$Maybe$withDefault,
 			origin,
@@ -5752,12 +5762,12 @@ var author$project$Stat$statistics = function (data) {
 					},
 					data)));
 		var determinant = n * xDeltaSquaredSum;
+		var m = (1 / determinant) * ((n * xySum) - (xSum * ySum));
 		var b = (1 / determinant) * (((-xSum) * xySum) + (xsSquared * ySum));
-		var a = (1 / determinant) * ((n * xySum) - (xSum * ySum));
 		var fs = A2(
 			elm$core$List$map,
 			function (x) {
-				return (a * x) + b;
+				return (m * x) + b;
 			},
 			xs);
 		var ssRes = elm$core$List$sum(
@@ -5770,9 +5780,10 @@ var author$project$Stat$statistics = function (data) {
 				fs,
 				ys));
 		var r2 = 1 - (ssRes / ssTot);
-		var regressionPoint = {x: rightDataPoint.x, y: (a * rightDataPoint.x) + b};
+		var leftRegressionPoint = {x: leftDataPoint.x, y: (m * leftDataPoint.x) + b};
+		var rightRegressionPoint = {x: rightDataPoint.x, y: (m * rightDataPoint.x) + b};
 		return elm$core$Maybe$Just(
-			{a: a, b: b, leftDataPoint: leftDataPoint, r2: r2, regressionPoint: regressionPoint, rightDataPoint: rightDataPoint, xMax: xMax, xMin: xMin});
+			{b: b, leftDataPoint: leftDataPoint, leftRegressionPoint: leftRegressionPoint, m: m, n: nn, r2: r2, rightDataPoint: rightDataPoint, rightRegressionPoint: rightRegressionPoint, xMax: xMax, xMean: xMean, xMin: xMin, xStdev: xStdev, yMean: yMean, yStdev: yStdev});
 	}
 };
 var elm$core$Maybe$map = F2(
@@ -14660,7 +14671,6 @@ var terezka$line_charts$Internal$Legends$viewFrees = F3(
 				data));
 	});
 var elm$core$Basics$pi = _Basics_pi;
-var elm$core$Basics$sqrt = _Basics_sqrt;
 var elm$svg$Svg$Attributes$strokeOpacity = _VirtualDom_attribute('stroke-opacity');
 var terezka$line_charts$Internal$Dots$varietyAttributes = F2(
 	function (color, variety) {
@@ -16504,7 +16514,7 @@ var author$project$Main$chart = function (model) {
 					terezka$line_charts$LineChart$Dots$none,
 					'Regression',
 					_List_fromArray(
-						[stats.leftDataPoint, stats.regressionPoint]))
+						[stats.leftRegressionPoint, stats.rightRegressionPoint]))
 				]));
 	}
 };
@@ -16588,7 +16598,7 @@ var author$project$Display$correlationInfo = function (data) {
 					mdgriffith$elm_ui$Element$el,
 					_List_Nil,
 					mdgriffith$elm_ui$Element$text(
-						'm: ' + author$project$Display$stringOfFloat(stats.a))),
+						'm: ' + author$project$Display$stringOfFloat(stats.m))),
 					A2(
 					mdgriffith$elm_ui$Element$el,
 					_List_Nil,
