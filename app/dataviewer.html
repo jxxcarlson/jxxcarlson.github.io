@@ -5526,7 +5526,7 @@ var author$project$CsvData$makeSeries = function (str) {
 			elm$core$List$indexedMap,
 			F2(
 				function (n, x) {
-					return elm$core$String$fromInt(n) + (',' + x);
+					return elm$core$String$fromInt(n + 1) + (',' + x);
 				}),
 			elm$core$String$lines(str)));
 	return author$project$CsvData$get('n,value\n' + str2);
