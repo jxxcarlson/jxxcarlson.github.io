@@ -2324,6 +2324,136 @@ function _Platform_mergeExportsDebug(moduleName, obj, exports)
 
 
 
+
+// STRINGS
+
+
+var _Parser_isSubString = F5(function(smallString, offset, row, col, bigString)
+{
+	var smallLength = smallString.length;
+	var isGood = offset + smallLength <= bigString.length;
+
+	for (var i = 0; isGood && i < smallLength; )
+	{
+		var code = bigString.charCodeAt(offset);
+		isGood =
+			smallString[i++] === bigString[offset++]
+			&& (
+				code === 0x000A /* \n */
+					? ( row++, col=1 )
+					: ( col++, (code & 0xF800) === 0xD800 ? smallString[i++] === bigString[offset++] : 1 )
+			)
+	}
+
+	return _Utils_Tuple3(isGood ? offset : -1, row, col);
+});
+
+
+
+// CHARS
+
+
+var _Parser_isSubChar = F3(function(predicate, offset, string)
+{
+	return (
+		string.length <= offset
+			? -1
+			:
+		(string.charCodeAt(offset) & 0xF800) === 0xD800
+			? (predicate(_Utils_chr(string.substr(offset, 2))) ? offset + 2 : -1)
+			:
+		(predicate(_Utils_chr(string[offset]))
+			? ((string[offset] === '\n') ? -2 : (offset + 1))
+			: -1
+		)
+	);
+});
+
+
+var _Parser_isAsciiCode = F3(function(code, offset, string)
+{
+	return string.charCodeAt(offset) === code;
+});
+
+
+
+// NUMBERS
+
+
+var _Parser_chompBase10 = F2(function(offset, string)
+{
+	for (; offset < string.length; offset++)
+	{
+		var code = string.charCodeAt(offset);
+		if (code < 0x30 || 0x39 < code)
+		{
+			return offset;
+		}
+	}
+	return offset;
+});
+
+
+var _Parser_consumeBase = F3(function(base, offset, string)
+{
+	for (var total = 0; offset < string.length; offset++)
+	{
+		var digit = string.charCodeAt(offset) - 0x30;
+		if (digit < 0 || base <= digit) break;
+		total = base * total + digit;
+	}
+	return _Utils_Tuple2(offset, total);
+});
+
+
+var _Parser_consumeBase16 = F2(function(offset, string)
+{
+	for (var total = 0; offset < string.length; offset++)
+	{
+		var code = string.charCodeAt(offset);
+		if (0x30 <= code && code <= 0x39)
+		{
+			total = 16 * total + code - 0x30;
+		}
+		else if (0x41 <= code && code <= 0x46)
+		{
+			total = 16 * total + code - 55;
+		}
+		else if (0x61 <= code && code <= 0x66)
+		{
+			total = 16 * total + code - 87;
+		}
+		else
+		{
+			break;
+		}
+	}
+	return _Utils_Tuple2(offset, total);
+});
+
+
+
+// FIND STRING
+
+
+var _Parser_findSubString = F5(function(smallString, offset, row, col, bigString)
+{
+	var newOffset = bigString.indexOf(smallString, offset);
+	var target = newOffset < 0 ? bigString.length : newOffset + smallString.length;
+
+	while (offset < target)
+	{
+		var code = bigString.charCodeAt(offset++);
+		code === 0x000A /* \n */
+			? ( col=1, row++ )
+			: ( col++, (code & 0xF800) === 0xD800 && offset++ )
+	}
+
+	return _Utils_Tuple3(newOffset, row, col);
+});
+
+
+
 // DECODER
 
 var _File_decoder = _Json_decodePrim(function(value) {
@@ -4505,6 +4635,9 @@ function _Browser_load(url)
 	}));
 }
 var author$project$Main$TimeSeries = {$: 'TimeSeries'};
+var elm$core$Maybe$Just = function (a) {
+	return {$: 'Just', a: a};
+};
 var elm$core$Maybe$Nothing = {$: 'Nothing'};
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
@@ -4766,9 +4899,6 @@ var elm$core$Array$initialize = F2(
 			return A5(elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
 		}
 	});
-var elm$core$Maybe$Just = function (a) {
-	return {$: 'Just', a: a};
-};
 var elm$core$Result$Err = function (a) {
 	return {$: 'Err', a: a};
 };
@@ -4984,7 +5114,25 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$init = function (flags) {
 	return _Utils_Tuple2(
-		{csvData: elm$core$Maybe$Nothing, csvText: elm$core$Maybe$Nothing, data: _List_Nil, filename: 'no file yet', header: elm$core$Maybe$Nothing, output: 'Ready!', plotType: author$project$Main$TimeSeries, statistics: elm$core$Maybe$Nothing, xLabel: elm$core$Maybe$Nothing, xMax: elm$core$Maybe$Nothing, xMaxOriginal: elm$core$Maybe$Nothing, xMin: elm$core$Maybe$Nothing, xMinOriginal: elm$core$Maybe$Nothing, yLabel: elm$core$Maybe$Nothing},
+		{
+			data: _List_Nil,
+			dataText: elm$core$Maybe$Nothing,
+			fileSize: elm$core$Maybe$Nothing,
+			filename: elm$core$Maybe$Nothing,
+			header: elm$core$Maybe$Nothing,
+			output: 'Ready!',
+			plotType: author$project$Main$TimeSeries,
+			rawData: elm$core$Maybe$Nothing,
+			statistics: elm$core$Maybe$Nothing,
+			xColumn: elm$core$Maybe$Just(0),
+			xLabel: elm$core$Maybe$Nothing,
+			xMax: elm$core$Maybe$Nothing,
+			xMaxOriginal: elm$core$Maybe$Nothing,
+			xMin: elm$core$Maybe$Nothing,
+			xMinOriginal: elm$core$Maybe$Nothing,
+			yColumn: elm$core$Maybe$Just(1),
+			yLabel: elm$core$Maybe$Nothing
+		},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -4992,9 +5140,12 @@ var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var author$project$Main$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
-var author$project$CsvData$HeaderMissing = {$: 'HeaderMissing'};
-var author$project$CsvData$HeaderPresent = {$: 'HeaderPresent'};
-var author$project$CsvData$HeaderUndetermined = {$: 'HeaderUndetermined'};
+var author$project$Main$FileLoaded = function (a) {
+	return {$: 'FileLoaded', a: a};
+};
+var author$project$Main$FileSelected = function (a) {
+	return {$: 'FileSelected', a: a};
+};
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -5064,248 +5215,16 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
-var elm$core$Basics$identity = function (x) {
-	return x;
-};
-var elm$core$List$sortBy = _List_sortBy;
-var elm$core$List$sort = function (xs) {
-	return A2(elm$core$List$sortBy, elm$core$Basics$identity, xs);
-};
-var elm$core$String$indices = _String_indexes;
-var elm$core$String$lines = _String_lines;
-var elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
-var elm$core$Dict$empty = elm$core$Dict$RBEmpty_elm_builtin;
-var elm$core$Set$Set_elm_builtin = function (a) {
-	return {$: 'Set_elm_builtin', a: a};
-};
-var elm$core$Set$empty = elm$core$Set$Set_elm_builtin(elm$core$Dict$empty);
-var elm$core$Dict$Black = {$: 'Black'};
-var elm$core$Dict$RBNode_elm_builtin = F5(
-	function (a, b, c, d, e) {
-		return {$: 'RBNode_elm_builtin', a: a, b: b, c: c, d: d, e: e};
-	});
-var elm$core$Basics$compare = _Utils_compare;
-var elm$core$Dict$Red = {$: 'Red'};
-var elm$core$Dict$balance = F5(
-	function (color, key, value, left, right) {
-		if ((right.$ === 'RBNode_elm_builtin') && (right.a.$ === 'Red')) {
-			var _n1 = right.a;
-			var rK = right.b;
-			var rV = right.c;
-			var rLeft = right.d;
-			var rRight = right.e;
-			if ((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) {
-				var _n3 = left.a;
-				var lK = left.b;
-				var lV = left.c;
-				var lLeft = left.d;
-				var lRight = left.e;
-				return A5(
-					elm$core$Dict$RBNode_elm_builtin,
-					elm$core$Dict$Red,
-					key,
-					value,
-					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, lK, lV, lLeft, lRight),
-					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, rK, rV, rLeft, rRight));
-			} else {
-				return A5(
-					elm$core$Dict$RBNode_elm_builtin,
-					color,
-					rK,
-					rV,
-					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, key, value, left, rLeft),
-					rRight);
-			}
+var elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
 		} else {
-			if ((((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) && (left.d.$ === 'RBNode_elm_builtin')) && (left.d.a.$ === 'Red')) {
-				var _n5 = left.a;
-				var lK = left.b;
-				var lV = left.c;
-				var _n6 = left.d;
-				var _n7 = _n6.a;
-				var llK = _n6.b;
-				var llV = _n6.c;
-				var llLeft = _n6.d;
-				var llRight = _n6.e;
-				var lRight = left.e;
-				return A5(
-					elm$core$Dict$RBNode_elm_builtin,
-					elm$core$Dict$Red,
-					lK,
-					lV,
-					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, llK, llV, llLeft, llRight),
-					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, key, value, lRight, right));
-			} else {
-				return A5(elm$core$Dict$RBNode_elm_builtin, color, key, value, left, right);
-			}
+			return elm$core$Maybe$Nothing;
 		}
 	});
-var elm$core$Dict$insertHelp = F3(
-	function (key, value, dict) {
-		if (dict.$ === 'RBEmpty_elm_builtin') {
-			return A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, key, value, elm$core$Dict$RBEmpty_elm_builtin, elm$core$Dict$RBEmpty_elm_builtin);
-		} else {
-			var nColor = dict.a;
-			var nKey = dict.b;
-			var nValue = dict.c;
-			var nLeft = dict.d;
-			var nRight = dict.e;
-			var _n1 = A2(elm$core$Basics$compare, key, nKey);
-			switch (_n1.$) {
-				case 'LT':
-					return A5(
-						elm$core$Dict$balance,
-						nColor,
-						nKey,
-						nValue,
-						A3(elm$core$Dict$insertHelp, key, value, nLeft),
-						nRight);
-				case 'EQ':
-					return A5(elm$core$Dict$RBNode_elm_builtin, nColor, nKey, value, nLeft, nRight);
-				default:
-					return A5(
-						elm$core$Dict$balance,
-						nColor,
-						nKey,
-						nValue,
-						nLeft,
-						A3(elm$core$Dict$insertHelp, key, value, nRight));
-			}
-		}
-	});
-var elm$core$Dict$insert = F3(
-	function (key, value, dict) {
-		var _n0 = A3(elm$core$Dict$insertHelp, key, value, dict);
-		if ((_n0.$ === 'RBNode_elm_builtin') && (_n0.a.$ === 'Red')) {
-			var _n1 = _n0.a;
-			var k = _n0.b;
-			var v = _n0.c;
-			var l = _n0.d;
-			var r = _n0.e;
-			return A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, k, v, l, r);
-		} else {
-			var x = _n0;
-			return x;
-		}
-	});
-var elm$core$Set$insert = F2(
-	function (key, _n0) {
-		var dict = _n0.a;
-		return elm$core$Set$Set_elm_builtin(
-			A3(elm$core$Dict$insert, key, _Utils_Tuple0, dict));
-	});
-var elm$core$Dict$get = F2(
-	function (targetKey, dict) {
-		get:
-		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
-				return elm$core$Maybe$Nothing;
-			} else {
-				var key = dict.b;
-				var value = dict.c;
-				var left = dict.d;
-				var right = dict.e;
-				var _n1 = A2(elm$core$Basics$compare, targetKey, key);
-				switch (_n1.$) {
-					case 'LT':
-						var $temp$targetKey = targetKey,
-							$temp$dict = left;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-					case 'EQ':
-						return elm$core$Maybe$Just(value);
-					default:
-						var $temp$targetKey = targetKey,
-							$temp$dict = right;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-				}
-			}
-		}
-	});
-var elm$core$Dict$member = F2(
-	function (key, dict) {
-		var _n0 = A2(elm$core$Dict$get, key, dict);
-		if (_n0.$ === 'Just') {
-			return true;
-		} else {
-			return false;
-		}
-	});
-var elm$core$Set$member = F2(
-	function (key, _n0) {
-		var dict = _n0.a;
-		return A2(elm$core$Dict$member, key, dict);
-	});
-var elm_community$list_extra$List$Extra$uniqueHelp = F4(
-	function (f, existing, remaining, accumulator) {
-		uniqueHelp:
-		while (true) {
-			if (!remaining.b) {
-				return elm$core$List$reverse(accumulator);
-			} else {
-				var first = remaining.a;
-				var rest = remaining.b;
-				var computedFirst = f(first);
-				if (A2(elm$core$Set$member, computedFirst, existing)) {
-					var $temp$f = f,
-						$temp$existing = existing,
-						$temp$remaining = rest,
-						$temp$accumulator = accumulator;
-					f = $temp$f;
-					existing = $temp$existing;
-					remaining = $temp$remaining;
-					accumulator = $temp$accumulator;
-					continue uniqueHelp;
-				} else {
-					var $temp$f = f,
-						$temp$existing = A2(elm$core$Set$insert, computedFirst, existing),
-						$temp$remaining = rest,
-						$temp$accumulator = A2(elm$core$List$cons, first, accumulator);
-					f = $temp$f;
-					existing = $temp$existing;
-					remaining = $temp$remaining;
-					accumulator = $temp$accumulator;
-					continue uniqueHelp;
-				}
-			}
-		}
-	});
-var elm_community$list_extra$List$Extra$unique = function (list) {
-	return A4(elm_community$list_extra$List$Extra$uniqueHelp, elm$core$Basics$identity, elm$core$Set$empty, list, _List_Nil);
-};
-var author$project$CsvData$spectrum = F2(
-	function (sep, str) {
-		return elm$core$List$sort(
-			elm_community$list_extra$List$Extra$unique(
-				A2(
-					elm$core$List$map,
-					elm$core$List$length,
-					A2(
-						elm$core$List$map,
-						elm$core$String$indices(sep),
-						elm$core$String$lines(str)))));
-	});
-var elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return elm$core$Maybe$Just(x);
-	} else {
-		return elm$core$Maybe$Nothing;
-	}
-};
-var elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
+var elm$core$String$toFloat = _String_toFloat;
 var elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -5327,45 +5246,83 @@ var elm$core$List$drop = F2(
 			}
 		}
 	});
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
 var elm_community$list_extra$List$Extra$getAt = F2(
 	function (idx, xs) {
 		return (idx < 0) ? elm$core$Maybe$Nothing : elm$core$List$head(
 			A2(elm$core$List$drop, idx, xs));
 	});
-var author$project$CsvData$dataState = F2(
-	function (sep, str) {
-		var spectrum_ = A2(author$project$CsvData$spectrum, sep, str);
-		var _n0 = elm$core$List$length(spectrum_);
-		switch (_n0) {
-			case 0:
-				return elm$core$Maybe$Nothing;
-			case 1:
-				var columns = A2(
-					elm$core$Maybe$withDefault,
-					0,
-					elm$core$List$head(spectrum_)) + 1;
-				if (columns === 1) {
-					return elm$core$Maybe$Just(
-						{columns: columns, headerStatus: author$project$CsvData$HeaderUndetermined, sep: sep});
-				} else {
-					return elm$core$Maybe$Just(
-						{columns: columns, headerStatus: author$project$CsvData$HeaderMissing, sep: sep});
-				}
-			case 2:
-				var lo = A2(
-					elm$core$Maybe$withDefault,
-					0,
-					A2(elm_community$list_extra$List$Extra$getAt, 0, spectrum_));
-				var columns = A2(
-					elm$core$Maybe$withDefault,
-					0,
-					A2(elm_community$list_extra$List$Extra$getAt, 1, spectrum_)) + 1;
-				return ((!lo) && (columns > 0)) ? elm$core$Maybe$Just(
-					{columns: columns, headerStatus: author$project$CsvData$HeaderPresent, sep: sep}) : elm$core$Maybe$Nothing;
-			default:
-				return elm$core$Maybe$Nothing;
+var elm$core$Basics$identity = function (x) {
+	return x;
+};
+var elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return elm$core$Maybe$Nothing;
 		}
 	});
+var elm_community$maybe_extra$Maybe$Extra$traverse = function (f) {
+	var step = F2(
+		function (e, acc) {
+			var _n0 = f(e);
+			if (_n0.$ === 'Nothing') {
+				return elm$core$Maybe$Nothing;
+			} else {
+				var x = _n0.a;
+				return A2(
+					elm$core$Maybe$map,
+					elm$core$List$cons(x),
+					acc);
+			}
+		});
+	return A2(
+		elm$core$List$foldr,
+		step,
+		elm$core$Maybe$Just(_List_Nil));
+};
+var elm_community$maybe_extra$Maybe$Extra$combine = elm_community$maybe_extra$Maybe$Extra$traverse(elm$core$Basics$identity);
+var author$project$RawData$columnAsFloats = F2(
+	function (k, rawData_) {
+		return elm_community$maybe_extra$Maybe$Extra$combine(
+			A2(
+				elm$core$List$map,
+				elm$core$Maybe$andThen(elm$core$String$toFloat),
+				A2(
+					elm$core$List$map,
+					elm_community$list_extra$List$Extra$getAt(k),
+					rawData_)));
+	});
+var author$project$Stat$Point = F2(
+	function (x, y) {
+		return {x: x, y: y};
+	});
+var author$project$RawData$getData = F3(
+	function (i, j, rawData_) {
+		var ys = A2(author$project$RawData$columnAsFloats, j, rawData_.data);
+		var xs = A2(author$project$RawData$columnAsFloats, i, rawData_.data);
+		var _n0 = _Utils_Tuple2(xs, ys);
+		if ((_n0.a.$ === 'Just') && (_n0.b.$ === 'Just')) {
+			var xss = _n0.a.a;
+			var yss = _n0.b.a;
+			return elm$core$Maybe$Just(
+				A3(elm$core$List$map2, author$project$Stat$Point, xss, yss));
+		} else {
+			return elm$core$Maybe$Nothing;
+		}
+	});
+var elm$core$Basics$ge = _Utils_ge;
 var elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -5377,229 +5334,7 @@ var elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
-var elm$core$String$contains = _String_contains;
-var author$project$CsvData$filter = function (str) {
-	return A2(
-		elm$core$String$join,
-		'\n',
-		A2(
-			elm$core$List$filter,
-			function (x) {
-				return A2(elm$core$String$contains, ',', x);
-			},
-			elm$core$String$lines(str)));
-};
-var elm$core$Basics$not = _Basics_not;
-var elm$core$String$isEmpty = function (string) {
-	return string === '';
-};
-var elm$core$Basics$neq = _Utils_notEqual;
-var elm$core$List$tail = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return elm$core$Maybe$Just(xs);
-	} else {
-		return elm$core$Maybe$Nothing;
-	}
-};
-var elm$core$String$length = _String_length;
-var elm$core$String$slice = _String_slice;
-var elm$core$String$dropLeft = F2(
-	function (n, string) {
-		return (n < 1) ? string : A3(
-			elm$core$String$slice,
-			n,
-			elm$core$String$length(string),
-			string);
-	});
-var elm$core$String$startsWith = _String_startsWith;
-var zgohr$elm_csv$Helper$parseRemaining = F4(
-	function (separator, quoted, remaining, done) {
-		parseRemaining:
-		while (true) {
-			if (remaining === '') {
-				return done;
-			} else {
-				if ((separator !== '') && ((!quoted) && A2(elm$core$String$startsWith, separator, remaining))) {
-					var nextChars = A2(
-						elm$core$String$dropLeft,
-						elm$core$String$length(separator),
-						remaining);
-					var newQuoted = false;
-					var $temp$separator = separator,
-						$temp$quoted = false,
-						$temp$remaining = nextChars,
-						$temp$done = A2(elm$core$List$cons, '', done);
-					separator = $temp$separator;
-					quoted = $temp$quoted;
-					remaining = $temp$remaining;
-					done = $temp$done;
-					continue parseRemaining;
-				} else {
-					var others = A2(
-						elm$core$Maybe$withDefault,
-						_List_Nil,
-						elm$core$List$tail(done));
-					var nextNextChar = A3(elm$core$String$slice, 1, 2, remaining);
-					var nextChar = A3(elm$core$String$slice, 0, 1, remaining);
-					var isEscapedQuote = (!quoted) && (((nextChar === '\\') || (nextChar === '\"')) && (nextNextChar === '\"'));
-					var nextChars = A2(
-						elm$core$String$dropLeft,
-						isEscapedQuote ? 2 : 1,
-						remaining);
-					var endQuote = quoted && ((nextChar === '\"') && (!isEscapedQuote));
-					var current = A2(
-						elm$core$Maybe$withDefault,
-						'',
-						elm$core$List$head(done));
-					var startQuote = (nextChar === '\"') && ((nextNextChar !== '\"') && (current === ''));
-					var newChar = isEscapedQuote ? '\"' : ((startQuote || endQuote) ? '' : nextChar);
-					var newDone = A2(
-						elm$core$List$cons,
-						_Utils_ap(current, newChar),
-						others);
-					var newQuoted = (quoted && (!endQuote)) || startQuote;
-					var $temp$separator = separator,
-						$temp$quoted = newQuoted,
-						$temp$remaining = nextChars,
-						$temp$done = newDone;
-					separator = $temp$separator;
-					quoted = $temp$quoted;
-					remaining = $temp$remaining;
-					done = $temp$done;
-					continue parseRemaining;
-				}
-			}
-		}
-	});
-var zgohr$elm_csv$Helper$splitLineWith = F2(
-	function (separator, line) {
-		return elm$core$List$reverse(
-			A4(zgohr$elm_csv$Helper$parseRemaining, separator, false, line, _List_Nil));
-	});
-var zgohr$elm_csv$Csv$splitWith = F2(
-	function (separator, lines) {
-		var values = A2(
-			elm$core$List$filter,
-			function (x) {
-				return !elm$core$String$isEmpty(x);
-			},
-			elm$core$String$lines(lines));
-		return A2(
-			elm$core$List$map,
-			zgohr$elm_csv$Helper$splitLineWith(separator),
-			values);
-	});
-var zgohr$elm_csv$Csv$parseWith = F2(
-	function (separator, lines) {
-		var values = A2(zgohr$elm_csv$Csv$splitWith, separator, lines);
-		var records = A2(elm$core$List$drop, 1, values);
-		var headers = A2(
-			elm$core$Maybe$withDefault,
-			_List_Nil,
-			elm$core$List$head(values));
-		return {headers: headers, records: records};
-	});
-var zgohr$elm_csv$Csv$parse = zgohr$elm_csv$Csv$parseWith(',');
-var author$project$CsvData$get = function (str) {
-	return elm$core$Maybe$Just(
-		zgohr$elm_csv$Csv$parse(
-			author$project$CsvData$filter(str)));
-};
-var author$project$CsvData$getHeader = function (str) {
-	return A2(
-		elm$core$String$join,
-		'\n',
-		A2(
-			elm$core$List$filter,
-			function (x) {
-				return !A2(elm$core$String$contains, ',', x);
-			},
-			elm$core$String$lines(str)));
-};
-var author$project$CsvData$makeSeries = function (str) {
-	var str2 = A2(
-		elm$core$String$join,
-		'\n',
-		A2(
-			elm$core$List$indexedMap,
-			F2(
-				function (n, x) {
-					return elm$core$String$fromInt(n + 1) + (',' + x);
-				}),
-			elm$core$String$lines(str)));
-	return author$project$CsvData$get('n,value\n' + str2);
-};
-var author$project$CsvData$intelligentGet = F2(
-	function (sep, str) {
-		var _n0 = A2(author$project$CsvData$dataState, sep, str);
-		if (_n0.$ === 'Nothing') {
-			return _Utils_Tuple2(elm$core$Maybe$Nothing, elm$core$Maybe$Nothing);
-		} else {
-			var dataState_ = _n0.a;
-			return (dataState_.columns === 1) ? _Utils_Tuple2(
-				author$project$CsvData$makeSeries(str),
-				elm$core$Maybe$Nothing) : _Utils_Tuple2(
-				author$project$CsvData$get(str),
-				elm$core$Maybe$Just(
-					author$project$CsvData$getHeader(str)));
-		}
-	});
-var elm$core$Basics$composeL = F3(
-	function (g, f, x) {
-		return g(
-			f(x));
-	});
-var elm$core$Maybe$andThen = F2(
-	function (callback, maybeValue) {
-		if (maybeValue.$ === 'Just') {
-			var value = maybeValue.a;
-			return callback(value);
-		} else {
-			return elm$core$Maybe$Nothing;
-		}
-	});
-var elm$core$String$toFloat = _String_toFloat;
-var elm_community$maybe_extra$Maybe$Extra$foldrValues = F2(
-	function (item, list) {
-		if (item.$ === 'Nothing') {
-			return list;
-		} else {
-			var v = item.a;
-			return A2(elm$core$List$cons, v, list);
-		}
-	});
-var elm_community$maybe_extra$Maybe$Extra$values = A2(elm$core$List$foldr, elm_community$maybe_extra$Maybe$Extra$foldrValues, _List_Nil);
-var author$project$CsvData$getColumnAsFloats = F2(
-	function (k, csv) {
-		return elm_community$maybe_extra$Maybe$Extra$values(
-			A2(
-				elm$core$List$map,
-				A2(
-					elm$core$Basics$composeL,
-					elm$core$Maybe$andThen(elm$core$String$toFloat),
-					elm_community$list_extra$List$Extra$getAt(k)),
-				csv.records));
-	});
-var author$project$Stat$Point = F2(
-	function (x, y) {
-		return {x: x, y: y};
-	});
-var author$project$CsvData$toPointList = F3(
-	function (i, j, csv) {
-		var ys = A2(author$project$CsvData$getColumnAsFloats, j, csv);
-		var xs = A2(author$project$CsvData$getColumnAsFloats, i, csv);
-		return A3(elm$core$List$map2, author$project$Stat$Point, xs, ys);
-	});
-var author$project$Main$CsvLoaded = function (a) {
-	return {$: 'CsvLoaded', a: a};
-};
-var author$project$Main$CsvSelected = function (a) {
-	return {$: 'CsvSelected', a: a};
-};
-var elm$core$Basics$ge = _Utils_ge;
-var author$project$Stat$filterData = F2(
+var author$project$Stat$restrictXRange = F2(
 	function (filter, data) {
 		var _n0 = _Utils_Tuple2(filter.xMin, filter.xMax);
 		if ((_n0.a.$ === 'Just') && (_n0.b.$ === 'Just')) {
@@ -5614,6 +5349,10 @@ var author$project$Stat$filterData = F2(
 		} else {
 			return data;
 		}
+	});
+var author$project$Stat$filterData = F2(
+	function (filter, data) {
+		return A2(author$project$Stat$restrictXRange, filter, data);
 	});
 var elm$core$List$maximum = function (list) {
 	if (list.b) {
@@ -5656,6 +5395,15 @@ var elm$core$Basics$sqrt = _Basics_sqrt;
 var elm$core$List$sum = function (numbers) {
 	return A3(elm$core$List$foldl, elm$core$Basics$add, 0, numbers);
 };
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var author$project$Stat$statistics = function (data) {
 	var nn = elm$core$List$length(data);
 	var _n0 = nn < 2;
@@ -5786,39 +5534,1195 @@ var author$project$Stat$statistics = function (data) {
 			{b: b, leftDataPoint: leftDataPoint, leftRegressionPoint: leftRegressionPoint, m: m, n: nn, r2: r2, rightDataPoint: rightDataPoint, rightRegressionPoint: rightRegressionPoint, xMax: xMax, xMean: xMean, xMin: xMin, xStdev: xStdev, yMean: yMean, yStdev: yStdev});
 	}
 };
+var elm$core$Debug$log = _Debug_log;
 var author$project$Main$recompute = function (model) {
-	var numericalData = function () {
-		var _n1 = model.csvData;
-		if (_n1.$ === 'Nothing') {
-			return _List_Nil;
-		} else {
-			var data = _n1.a;
-			return A2(
-				author$project$Stat$filterData,
-				{xMax: model.xMax, xMin: model.xMin},
-				A3(author$project$CsvData$toPointList, 0, 1, data));
-		}
-	}();
+	var data = A2(
+		elm$core$Debug$log,
+		'FINAL DATA',
+		function () {
+			var _n1 = model.rawData;
+			if (_n1.$ === 'Nothing') {
+				return _List_Nil;
+			} else {
+				var rawData = _n1.a;
+				var j = A2(elm$core$Maybe$withDefault, 1, model.yColumn);
+				var i = A2(elm$core$Maybe$withDefault, 0, model.xColumn);
+				return A2(
+					author$project$Stat$filterData,
+					{xMax: model.xMax, xMin: model.xMin},
+					A2(
+						elm$core$Maybe$withDefault,
+						_List_Nil,
+						A2(
+							elm$core$Debug$log,
+							'DATA',
+							A3(author$project$RawData$getData, i, j, rawData))));
+			}
+		}());
 	var statistics = function () {
-		if (!numericalData.b) {
+		if (!data.b) {
 			return elm$core$Maybe$Nothing;
 		} else {
-			var dataList = numericalData;
+			var dataList = data;
 			return author$project$Stat$statistics(dataList);
 		}
 	}();
-	return _Utils_Tuple2(numericalData, statistics);
+	return _Utils_Tuple2(data, statistics);
 };
-var elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return elm$core$Maybe$Nothing;
+var author$project$RawData$CommaDelimited = {$: 'CommaDelimited'};
+var author$project$RawData$SpaceDelimited = {$: 'SpaceDelimited'};
+var author$project$RawData$TabDelimited = {$: 'TabDelimited'};
+var elm$core$String$indices = _String_indexes;
+var author$project$RawData$delimiterProfile = function (str) {
+	return {
+		commas: elm$core$List$length(
+			A2(elm$core$String$indices, ',', str)),
+		spaces: elm$core$List$length(
+			A2(elm$core$String$indices, ' ', str)),
+		tabs: elm$core$List$length(
+			A2(elm$core$String$indices, '\t', str))
+	};
+};
+var author$project$RawData$dataType = function (str) {
+	var p = author$project$RawData$delimiterProfile(str);
+	return ((_Utils_cmp(p.tabs, p.spaces) > 0) && (_Utils_cmp(p.tabs, p.spaces) > 0)) ? author$project$RawData$TabDelimited : (((_Utils_cmp(p.commas, p.spaces) > 0) && (_Utils_cmp(p.commas, p.tabs) > 0)) ? author$project$RawData$CommaDelimited : author$project$RawData$SpaceDelimited);
+};
+var author$project$RawData$delimiter = function (str) {
+	var _n0 = author$project$RawData$dataType(str);
+	switch (_n0.$) {
+		case 'SpaceDelimited':
+			return _Utils_chr(' ');
+		case 'TabDelimited':
+			return _Utils_chr('\t');
+		default:
+			return _Utils_chr(',');
+	}
+};
+var elm$core$Basics$neq = _Utils_notEqual;
+var elm$core$String$slice = _String_slice;
+var elm$core$String$trim = _String_trim;
+var elm$parser$Parser$UnexpectedChar = {$: 'UnexpectedChar'};
+var elm$parser$Parser$Advanced$Bad = F2(
+	function (a, b) {
+		return {$: 'Bad', a: a, b: b};
+	});
+var elm$parser$Parser$Advanced$Good = F3(
+	function (a, b, c) {
+		return {$: 'Good', a: a, b: b, c: c};
+	});
+var elm$parser$Parser$Advanced$Parser = function (a) {
+	return {$: 'Parser', a: a};
+};
+var elm$parser$Parser$Advanced$AddRight = F2(
+	function (a, b) {
+		return {$: 'AddRight', a: a, b: b};
+	});
+var elm$parser$Parser$Advanced$DeadEnd = F4(
+	function (row, col, problem, contextStack) {
+		return {col: col, contextStack: contextStack, problem: problem, row: row};
+	});
+var elm$parser$Parser$Advanced$Empty = {$: 'Empty'};
+var elm$parser$Parser$Advanced$fromState = F2(
+	function (s, x) {
+		return A2(
+			elm$parser$Parser$Advanced$AddRight,
+			elm$parser$Parser$Advanced$Empty,
+			A4(elm$parser$Parser$Advanced$DeadEnd, s.row, s.col, x, s.context));
+	});
+var elm$parser$Parser$Advanced$isSubChar = _Parser_isSubChar;
+var elm$parser$Parser$Advanced$chompIf = F2(
+	function (isGood, expecting) {
+		return elm$parser$Parser$Advanced$Parser(
+			function (s) {
+				var newOffset = A3(elm$parser$Parser$Advanced$isSubChar, isGood, s.offset, s.src);
+				return _Utils_eq(newOffset, -1) ? A2(
+					elm$parser$Parser$Advanced$Bad,
+					false,
+					A2(elm$parser$Parser$Advanced$fromState, s, expecting)) : (_Utils_eq(newOffset, -2) ? A3(
+					elm$parser$Parser$Advanced$Good,
+					true,
+					_Utils_Tuple0,
+					{col: 1, context: s.context, indent: s.indent, offset: s.offset + 1, row: s.row + 1, src: s.src}) : A3(
+					elm$parser$Parser$Advanced$Good,
+					true,
+					_Utils_Tuple0,
+					{col: s.col + 1, context: s.context, indent: s.indent, offset: newOffset, row: s.row, src: s.src}));
+			});
+	});
+var elm$parser$Parser$chompIf = function (isGood) {
+	return A2(elm$parser$Parser$Advanced$chompIf, isGood, elm$parser$Parser$UnexpectedChar);
+};
+var elm$parser$Parser$Advanced$chompWhileHelp = F5(
+	function (isGood, offset, row, col, s0) {
+		chompWhileHelp:
+		while (true) {
+			var newOffset = A3(elm$parser$Parser$Advanced$isSubChar, isGood, offset, s0.src);
+			if (_Utils_eq(newOffset, -1)) {
+				return A3(
+					elm$parser$Parser$Advanced$Good,
+					_Utils_cmp(s0.offset, offset) < 0,
+					_Utils_Tuple0,
+					{col: col, context: s0.context, indent: s0.indent, offset: offset, row: row, src: s0.src});
+			} else {
+				if (_Utils_eq(newOffset, -2)) {
+					var $temp$isGood = isGood,
+						$temp$offset = offset + 1,
+						$temp$row = row + 1,
+						$temp$col = 1,
+						$temp$s0 = s0;
+					isGood = $temp$isGood;
+					offset = $temp$offset;
+					row = $temp$row;
+					col = $temp$col;
+					s0 = $temp$s0;
+					continue chompWhileHelp;
+				} else {
+					var $temp$isGood = isGood,
+						$temp$offset = newOffset,
+						$temp$row = row,
+						$temp$col = col + 1,
+						$temp$s0 = s0;
+					isGood = $temp$isGood;
+					offset = $temp$offset;
+					row = $temp$row;
+					col = $temp$col;
+					s0 = $temp$s0;
+					continue chompWhileHelp;
+				}
+			}
 		}
 	});
+var elm$parser$Parser$Advanced$chompWhile = function (isGood) {
+	return elm$parser$Parser$Advanced$Parser(
+		function (s) {
+			return A5(elm$parser$Parser$Advanced$chompWhileHelp, isGood, s.offset, s.row, s.col, s);
+		});
+};
+var elm$parser$Parser$chompWhile = elm$parser$Parser$Advanced$chompWhile;
+var elm$parser$Parser$Advanced$getOffset = elm$parser$Parser$Advanced$Parser(
+	function (s) {
+		return A3(elm$parser$Parser$Advanced$Good, false, s.offset, s);
+	});
+var elm$parser$Parser$getOffset = elm$parser$Parser$Advanced$getOffset;
+var elm$parser$Parser$Advanced$getSource = elm$parser$Parser$Advanced$Parser(
+	function (s) {
+		return A3(elm$parser$Parser$Advanced$Good, false, s.src, s);
+	});
+var elm$parser$Parser$getSource = elm$parser$Parser$Advanced$getSource;
+var elm$core$Basics$always = F2(
+	function (a, _n0) {
+		return a;
+	});
+var elm$parser$Parser$Advanced$map2 = F3(
+	function (func, _n0, _n1) {
+		var parseA = _n0.a;
+		var parseB = _n1.a;
+		return elm$parser$Parser$Advanced$Parser(
+			function (s0) {
+				var _n2 = parseA(s0);
+				if (_n2.$ === 'Bad') {
+					var p = _n2.a;
+					var x = _n2.b;
+					return A2(elm$parser$Parser$Advanced$Bad, p, x);
+				} else {
+					var p1 = _n2.a;
+					var a = _n2.b;
+					var s1 = _n2.c;
+					var _n3 = parseB(s1);
+					if (_n3.$ === 'Bad') {
+						var p2 = _n3.a;
+						var x = _n3.b;
+						return A2(elm$parser$Parser$Advanced$Bad, p1 || p2, x);
+					} else {
+						var p2 = _n3.a;
+						var b = _n3.b;
+						var s2 = _n3.c;
+						return A3(
+							elm$parser$Parser$Advanced$Good,
+							p1 || p2,
+							A2(func, a, b),
+							s2);
+					}
+				}
+			});
+	});
+var elm$parser$Parser$Advanced$ignorer = F2(
+	function (keepParser, ignoreParser) {
+		return A3(elm$parser$Parser$Advanced$map2, elm$core$Basics$always, keepParser, ignoreParser);
+	});
+var elm$parser$Parser$ignorer = elm$parser$Parser$Advanced$ignorer;
+var elm$parser$Parser$Advanced$keeper = F2(
+	function (parseFunc, parseArg) {
+		return A3(elm$parser$Parser$Advanced$map2, elm$core$Basics$apL, parseFunc, parseArg);
+	});
+var elm$parser$Parser$keeper = elm$parser$Parser$Advanced$keeper;
+var elm$parser$Parser$Advanced$map = F2(
+	function (func, _n0) {
+		var parse = _n0.a;
+		return elm$parser$Parser$Advanced$Parser(
+			function (s0) {
+				var _n1 = parse(s0);
+				if (_n1.$ === 'Good') {
+					var p = _n1.a;
+					var a = _n1.b;
+					var s1 = _n1.c;
+					return A3(
+						elm$parser$Parser$Advanced$Good,
+						p,
+						func(a),
+						s1);
+				} else {
+					var p = _n1.a;
+					var x = _n1.b;
+					return A2(elm$parser$Parser$Advanced$Bad, p, x);
+				}
+			});
+	});
+var elm$parser$Parser$map = elm$parser$Parser$Advanced$map;
+var elm$parser$Parser$Advanced$succeed = function (a) {
+	return elm$parser$Parser$Advanced$Parser(
+		function (s) {
+			return A3(elm$parser$Parser$Advanced$Good, false, a, s);
+		});
+};
+var elm$parser$Parser$succeed = elm$parser$Parser$Advanced$succeed;
+var author$project$RawData$field = function (sepChar) {
+	return A2(
+		elm$parser$Parser$map,
+		elm$core$String$trim,
+		A2(
+			elm$parser$Parser$keeper,
+			A2(
+				elm$parser$Parser$keeper,
+				A2(
+					elm$parser$Parser$keeper,
+					elm$parser$Parser$succeed(elm$core$String$slice),
+					A2(
+						elm$parser$Parser$ignorer,
+						A2(
+							elm$parser$Parser$ignorer,
+							A2(
+								elm$parser$Parser$ignorer,
+								elm$parser$Parser$getOffset,
+								elm$parser$Parser$chompWhile(
+									function (c) {
+										return _Utils_eq(c, sepChar);
+									})),
+							elm$parser$Parser$chompIf(
+								function (c) {
+									return (!_Utils_eq(c, sepChar)) && (!_Utils_eq(
+										c,
+										_Utils_chr('\n')));
+								})),
+						elm$parser$Parser$chompWhile(
+							function (c) {
+								return (!_Utils_eq(c, sepChar)) && (!_Utils_eq(
+									c,
+									_Utils_chr('\n')));
+							}))),
+				elm$parser$Parser$getOffset),
+			elm$parser$Parser$getSource));
+};
+var elm$parser$Parser$Done = function (a) {
+	return {$: 'Done', a: a};
+};
+var elm$parser$Parser$Loop = function (a) {
+	return {$: 'Loop', a: a};
+};
+var elm$parser$Parser$Advanced$Append = F2(
+	function (a, b) {
+		return {$: 'Append', a: a, b: b};
+	});
+var elm$parser$Parser$Advanced$oneOfHelp = F3(
+	function (s0, bag, parsers) {
+		oneOfHelp:
+		while (true) {
+			if (!parsers.b) {
+				return A2(elm$parser$Parser$Advanced$Bad, false, bag);
+			} else {
+				var parse = parsers.a.a;
+				var remainingParsers = parsers.b;
+				var _n1 = parse(s0);
+				if (_n1.$ === 'Good') {
+					var step = _n1;
+					return step;
+				} else {
+					var step = _n1;
+					var p = step.a;
+					var x = step.b;
+					if (p) {
+						return step;
+					} else {
+						var $temp$s0 = s0,
+							$temp$bag = A2(elm$parser$Parser$Advanced$Append, bag, x),
+							$temp$parsers = remainingParsers;
+						s0 = $temp$s0;
+						bag = $temp$bag;
+						parsers = $temp$parsers;
+						continue oneOfHelp;
+					}
+				}
+			}
+		}
+	});
+var elm$parser$Parser$Advanced$oneOf = function (parsers) {
+	return elm$parser$Parser$Advanced$Parser(
+		function (s) {
+			return A3(elm$parser$Parser$Advanced$oneOfHelp, s, elm$parser$Parser$Advanced$Empty, parsers);
+		});
+};
+var elm$parser$Parser$oneOf = elm$parser$Parser$Advanced$oneOf;
+var author$project$RawData$recordGofer = F2(
+	function (fieldParser, revFields) {
+		return elm$parser$Parser$oneOf(
+			_List_fromArray(
+				[
+					A2(
+					elm$parser$Parser$keeper,
+					elm$parser$Parser$succeed(
+						function (s) {
+							return elm$parser$Parser$Loop(
+								A2(elm$core$List$cons, s, revFields));
+						}),
+					fieldParser),
+					A2(
+					elm$parser$Parser$map,
+					function (_n0) {
+						return elm$parser$Parser$Done(
+							elm$core$List$reverse(revFields));
+					},
+					elm$parser$Parser$succeed(_Utils_Tuple0))
+				]));
+	});
+var elm$parser$Parser$Advanced$Done = function (a) {
+	return {$: 'Done', a: a};
+};
+var elm$parser$Parser$Advanced$Loop = function (a) {
+	return {$: 'Loop', a: a};
+};
+var elm$parser$Parser$toAdvancedStep = function (step) {
+	if (step.$ === 'Loop') {
+		var s = step.a;
+		return elm$parser$Parser$Advanced$Loop(s);
+	} else {
+		var a = step.a;
+		return elm$parser$Parser$Advanced$Done(a);
+	}
+};
+var elm$parser$Parser$Advanced$loopHelp = F4(
+	function (p, state, callback, s0) {
+		loopHelp:
+		while (true) {
+			var _n0 = callback(state);
+			var parse = _n0.a;
+			var _n1 = parse(s0);
+			if (_n1.$ === 'Good') {
+				var p1 = _n1.a;
+				var step = _n1.b;
+				var s1 = _n1.c;
+				if (step.$ === 'Loop') {
+					var newState = step.a;
+					var $temp$p = p || p1,
+						$temp$state = newState,
+						$temp$callback = callback,
+						$temp$s0 = s1;
+					p = $temp$p;
+					state = $temp$state;
+					callback = $temp$callback;
+					s0 = $temp$s0;
+					continue loopHelp;
+				} else {
+					var result = step.a;
+					return A3(elm$parser$Parser$Advanced$Good, p || p1, result, s1);
+				}
+			} else {
+				var p1 = _n1.a;
+				var x = _n1.b;
+				return A2(elm$parser$Parser$Advanced$Bad, p || p1, x);
+			}
+		}
+	});
+var elm$parser$Parser$Advanced$loop = F2(
+	function (state, callback) {
+		return elm$parser$Parser$Advanced$Parser(
+			function (s) {
+				return A4(elm$parser$Parser$Advanced$loopHelp, false, state, callback, s);
+			});
+	});
+var elm$parser$Parser$loop = F2(
+	function (state, callback) {
+		return A2(
+			elm$parser$Parser$Advanced$loop,
+			state,
+			function (s) {
+				return A2(
+					elm$parser$Parser$map,
+					elm$parser$Parser$toAdvancedStep,
+					callback(s));
+			});
+	});
+var author$project$RawData$record = function (fieldParser) {
+	return A2(
+		elm$parser$Parser$loop,
+		_List_Nil,
+		author$project$RawData$recordGofer(fieldParser));
+};
+var elm$parser$Parser$ExpectingSymbol = function (a) {
+	return {$: 'ExpectingSymbol', a: a};
+};
+var elm$parser$Parser$Advanced$Token = F2(
+	function (a, b) {
+		return {$: 'Token', a: a, b: b};
+	});
+var elm$core$Basics$not = _Basics_not;
+var elm$core$String$isEmpty = function (string) {
+	return string === '';
+};
+var elm$parser$Parser$Advanced$isSubString = _Parser_isSubString;
+var elm$parser$Parser$Advanced$token = function (_n0) {
+	var str = _n0.a;
+	var expecting = _n0.b;
+	var progress = !elm$core$String$isEmpty(str);
+	return elm$parser$Parser$Advanced$Parser(
+		function (s) {
+			var _n1 = A5(elm$parser$Parser$Advanced$isSubString, str, s.offset, s.row, s.col, s.src);
+			var newOffset = _n1.a;
+			var newRow = _n1.b;
+			var newCol = _n1.c;
+			return _Utils_eq(newOffset, -1) ? A2(
+				elm$parser$Parser$Advanced$Bad,
+				false,
+				A2(elm$parser$Parser$Advanced$fromState, s, expecting)) : A3(
+				elm$parser$Parser$Advanced$Good,
+				progress,
+				_Utils_Tuple0,
+				{col: newCol, context: s.context, indent: s.indent, offset: newOffset, row: newRow, src: s.src});
+		});
+};
+var elm$parser$Parser$Advanced$symbol = elm$parser$Parser$Advanced$token;
+var elm$parser$Parser$symbol = function (str) {
+	return elm$parser$Parser$Advanced$symbol(
+		A2(
+			elm$parser$Parser$Advanced$Token,
+			str,
+			elm$parser$Parser$ExpectingSymbol(str)));
+};
+var author$project$RawData$rawDataGofer = F2(
+	function (fieldParser, revFields) {
+		return elm$parser$Parser$oneOf(
+			_List_fromArray(
+				[
+					A2(
+					elm$parser$Parser$keeper,
+					elm$parser$Parser$succeed(
+						function (s) {
+							return elm$parser$Parser$Loop(
+								A2(elm$core$List$cons, s, revFields));
+						}),
+					A2(
+						elm$parser$Parser$ignorer,
+						author$project$RawData$record(fieldParser),
+						elm$parser$Parser$symbol('\n'))),
+					A2(
+					elm$parser$Parser$map,
+					function (_n0) {
+						return elm$parser$Parser$Done(
+							elm$core$List$reverse(revFields));
+					},
+					elm$parser$Parser$succeed(_Utils_Tuple0))
+				]));
+	});
+var author$project$RawData$rawData = function (fieldParser) {
+	return A2(
+		elm$parser$Parser$loop,
+		_List_Nil,
+		author$project$RawData$rawDataGofer(fieldParser));
+};
+var elm$parser$Parser$DeadEnd = F3(
+	function (row, col, problem) {
+		return {col: col, problem: problem, row: row};
+	});
+var elm$parser$Parser$problemToDeadEnd = function (p) {
+	return A3(elm$parser$Parser$DeadEnd, p.row, p.col, p.problem);
+};
+var elm$parser$Parser$Advanced$bagToList = F2(
+	function (bag, list) {
+		bagToList:
+		while (true) {
+			switch (bag.$) {
+				case 'Empty':
+					return list;
+				case 'AddRight':
+					var bag1 = bag.a;
+					var x = bag.b;
+					var $temp$bag = bag1,
+						$temp$list = A2(elm$core$List$cons, x, list);
+					bag = $temp$bag;
+					list = $temp$list;
+					continue bagToList;
+				default:
+					var bag1 = bag.a;
+					var bag2 = bag.b;
+					var $temp$bag = bag1,
+						$temp$list = A2(elm$parser$Parser$Advanced$bagToList, bag2, list);
+					bag = $temp$bag;
+					list = $temp$list;
+					continue bagToList;
+			}
+		}
+	});
+var elm$parser$Parser$Advanced$run = F2(
+	function (_n0, src) {
+		var parse = _n0.a;
+		var _n1 = parse(
+			{col: 1, context: _List_Nil, indent: 1, offset: 0, row: 1, src: src});
+		if (_n1.$ === 'Good') {
+			var value = _n1.b;
+			return elm$core$Result$Ok(value);
+		} else {
+			var bag = _n1.b;
+			return elm$core$Result$Err(
+				A2(elm$parser$Parser$Advanced$bagToList, bag, _List_Nil));
+		}
+	});
+var elm$parser$Parser$run = F2(
+	function (parser, source) {
+		var _n0 = A2(elm$parser$Parser$Advanced$run, parser, source);
+		if (_n0.$ === 'Ok') {
+			var a = _n0.a;
+			return elm$core$Result$Ok(a);
+		} else {
+			var problems = _n0.a;
+			return elm$core$Result$Err(
+				A2(elm$core$List$map, elm$parser$Parser$problemToDeadEnd, problems));
+		}
+	});
+var elm$core$String$lines = _String_lines;
+var elm$core$List$tail = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(xs);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var elm$core$String$length = _String_length;
+var elm$core$String$dropLeft = F2(
+	function (n, string) {
+		return (n < 1) ? string : A3(
+			elm$core$String$slice,
+			n,
+			elm$core$String$length(string),
+			string);
+	});
+var elm$core$String$startsWith = _String_startsWith;
+var zgohr$elm_csv$Helper$parseRemaining = F4(
+	function (separator, quoted, remaining, done) {
+		parseRemaining:
+		while (true) {
+			if (remaining === '') {
+				return done;
+			} else {
+				if ((separator !== '') && ((!quoted) && A2(elm$core$String$startsWith, separator, remaining))) {
+					var nextChars = A2(
+						elm$core$String$dropLeft,
+						elm$core$String$length(separator),
+						remaining);
+					var newQuoted = false;
+					var $temp$separator = separator,
+						$temp$quoted = false,
+						$temp$remaining = nextChars,
+						$temp$done = A2(elm$core$List$cons, '', done);
+					separator = $temp$separator;
+					quoted = $temp$quoted;
+					remaining = $temp$remaining;
+					done = $temp$done;
+					continue parseRemaining;
+				} else {
+					var others = A2(
+						elm$core$Maybe$withDefault,
+						_List_Nil,
+						elm$core$List$tail(done));
+					var nextNextChar = A3(elm$core$String$slice, 1, 2, remaining);
+					var nextChar = A3(elm$core$String$slice, 0, 1, remaining);
+					var isEscapedQuote = (!quoted) && (((nextChar === '\\') || (nextChar === '\"')) && (nextNextChar === '\"'));
+					var nextChars = A2(
+						elm$core$String$dropLeft,
+						isEscapedQuote ? 2 : 1,
+						remaining);
+					var endQuote = quoted && ((nextChar === '\"') && (!isEscapedQuote));
+					var current = A2(
+						elm$core$Maybe$withDefault,
+						'',
+						elm$core$List$head(done));
+					var startQuote = (nextChar === '\"') && ((nextNextChar !== '\"') && (current === ''));
+					var newChar = isEscapedQuote ? '\"' : ((startQuote || endQuote) ? '' : nextChar);
+					var newDone = A2(
+						elm$core$List$cons,
+						_Utils_ap(current, newChar),
+						others);
+					var newQuoted = (quoted && (!endQuote)) || startQuote;
+					var $temp$separator = separator,
+						$temp$quoted = newQuoted,
+						$temp$remaining = nextChars,
+						$temp$done = newDone;
+					separator = $temp$separator;
+					quoted = $temp$quoted;
+					remaining = $temp$remaining;
+					done = $temp$done;
+					continue parseRemaining;
+				}
+			}
+		}
+	});
+var zgohr$elm_csv$Helper$splitLineWith = F2(
+	function (separator, line) {
+		return elm$core$List$reverse(
+			A4(zgohr$elm_csv$Helper$parseRemaining, separator, false, line, _List_Nil));
+	});
+var zgohr$elm_csv$Csv$splitWith = F2(
+	function (separator, lines) {
+		var values = A2(
+			elm$core$List$filter,
+			function (x) {
+				return !elm$core$String$isEmpty(x);
+			},
+			elm$core$String$lines(lines));
+		return A2(
+			elm$core$List$map,
+			zgohr$elm_csv$Helper$splitLineWith(separator),
+			values);
+	});
+var zgohr$elm_csv$Csv$parseWith = F2(
+	function (separator, lines) {
+		var values = A2(zgohr$elm_csv$Csv$splitWith, separator, lines);
+		var records = A2(elm$core$List$drop, 1, values);
+		var headers = A2(
+			elm$core$Maybe$withDefault,
+			_List_Nil,
+			elm$core$List$head(values));
+		return {headers: headers, records: records};
+	});
+var zgohr$elm_csv$Csv$parse = zgohr$elm_csv$Csv$parseWith(',');
+var author$project$RawData$get1 = F2(
+	function (sepChar, str) {
+		if (_Utils_eq(
+			sepChar,
+			_Utils_chr(','))) {
+			return function (csv) {
+				return _Utils_ap(
+					_List_fromArray(
+						[csv.headers]),
+					csv.records);
+			}(
+				zgohr$elm_csv$Csv$parse(str));
+		} else {
+			var _n0 = A2(
+				elm$parser$Parser$run,
+				author$project$RawData$rawData(
+					author$project$RawData$field(sepChar)),
+				str);
+			if (_n0.$ === 'Ok') {
+				var data_ = _n0.a;
+				return data_;
+			} else {
+				return _List_Nil;
+			}
+		}
+	});
+var elm$core$List$sortBy = _List_sortBy;
+var elm$core$List$sort = function (xs) {
+	return A2(elm$core$List$sortBy, elm$core$Basics$identity, xs);
+};
+var author$project$RawData$spectrum2 = function (data_) {
+	return elm$core$List$sort(
+		A2(elm$core$List$map, elm$core$List$length, data_));
+};
+var elm$core$Basics$compare = _Utils_compare;
+var elm$core$Dict$get = F2(
+	function (targetKey, dict) {
+		get:
+		while (true) {
+			if (dict.$ === 'RBEmpty_elm_builtin') {
+				return elm$core$Maybe$Nothing;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var _n1 = A2(elm$core$Basics$compare, targetKey, key);
+				switch (_n1.$) {
+					case 'LT':
+						var $temp$targetKey = targetKey,
+							$temp$dict = left;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+					case 'EQ':
+						return elm$core$Maybe$Just(value);
+					default:
+						var $temp$targetKey = targetKey,
+							$temp$dict = right;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+				}
+			}
+		}
+	});
+var elm$core$Dict$Black = {$: 'Black'};
+var elm$core$Dict$RBNode_elm_builtin = F5(
+	function (a, b, c, d, e) {
+		return {$: 'RBNode_elm_builtin', a: a, b: b, c: c, d: d, e: e};
+	});
+var elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
+var elm$core$Dict$Red = {$: 'Red'};
+var elm$core$Dict$balance = F5(
+	function (color, key, value, left, right) {
+		if ((right.$ === 'RBNode_elm_builtin') && (right.a.$ === 'Red')) {
+			var _n1 = right.a;
+			var rK = right.b;
+			var rV = right.c;
+			var rLeft = right.d;
+			var rRight = right.e;
+			if ((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) {
+				var _n3 = left.a;
+				var lK = left.b;
+				var lV = left.c;
+				var lLeft = left.d;
+				var lRight = left.e;
+				return A5(
+					elm$core$Dict$RBNode_elm_builtin,
+					elm$core$Dict$Red,
+					key,
+					value,
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, lK, lV, lLeft, lRight),
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, rK, rV, rLeft, rRight));
+			} else {
+				return A5(
+					elm$core$Dict$RBNode_elm_builtin,
+					color,
+					rK,
+					rV,
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, key, value, left, rLeft),
+					rRight);
+			}
+		} else {
+			if ((((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) && (left.d.$ === 'RBNode_elm_builtin')) && (left.d.a.$ === 'Red')) {
+				var _n5 = left.a;
+				var lK = left.b;
+				var lV = left.c;
+				var _n6 = left.d;
+				var _n7 = _n6.a;
+				var llK = _n6.b;
+				var llV = _n6.c;
+				var llLeft = _n6.d;
+				var llRight = _n6.e;
+				var lRight = left.e;
+				return A5(
+					elm$core$Dict$RBNode_elm_builtin,
+					elm$core$Dict$Red,
+					lK,
+					lV,
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, llK, llV, llLeft, llRight),
+					A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, key, value, lRight, right));
+			} else {
+				return A5(elm$core$Dict$RBNode_elm_builtin, color, key, value, left, right);
+			}
+		}
+	});
+var elm$core$Dict$insertHelp = F3(
+	function (key, value, dict) {
+		if (dict.$ === 'RBEmpty_elm_builtin') {
+			return A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Red, key, value, elm$core$Dict$RBEmpty_elm_builtin, elm$core$Dict$RBEmpty_elm_builtin);
+		} else {
+			var nColor = dict.a;
+			var nKey = dict.b;
+			var nValue = dict.c;
+			var nLeft = dict.d;
+			var nRight = dict.e;
+			var _n1 = A2(elm$core$Basics$compare, key, nKey);
+			switch (_n1.$) {
+				case 'LT':
+					return A5(
+						elm$core$Dict$balance,
+						nColor,
+						nKey,
+						nValue,
+						A3(elm$core$Dict$insertHelp, key, value, nLeft),
+						nRight);
+				case 'EQ':
+					return A5(elm$core$Dict$RBNode_elm_builtin, nColor, nKey, value, nLeft, nRight);
+				default:
+					return A5(
+						elm$core$Dict$balance,
+						nColor,
+						nKey,
+						nValue,
+						nLeft,
+						A3(elm$core$Dict$insertHelp, key, value, nRight));
+			}
+		}
+	});
+var elm$core$Dict$insert = F3(
+	function (key, value, dict) {
+		var _n0 = A3(elm$core$Dict$insertHelp, key, value, dict);
+		if ((_n0.$ === 'RBNode_elm_builtin') && (_n0.a.$ === 'Red')) {
+			var _n1 = _n0.a;
+			var k = _n0.b;
+			var v = _n0.c;
+			var l = _n0.d;
+			var r = _n0.e;
+			return A5(elm$core$Dict$RBNode_elm_builtin, elm$core$Dict$Black, k, v, l, r);
+		} else {
+			var x = _n0;
+			return x;
+		}
+	});
+var author$project$Stat$addToTable = F2(
+	function (item, dict) {
+		var _n0 = A2(elm$core$Dict$get, item, dict);
+		if (_n0.$ === 'Nothing') {
+			return A3(elm$core$Dict$insert, item, 1, dict);
+		} else {
+			var f = _n0.a;
+			return A3(elm$core$Dict$insert, item, f + 1, dict);
+		}
+	});
+var elm$core$Dict$empty = elm$core$Dict$RBEmpty_elm_builtin;
+var author$project$Stat$buildTable = function (list) {
+	return A3(
+		elm$core$List$foldl,
+		F2(
+			function (item, dict) {
+				return A2(author$project$Stat$addToTable, item, dict);
+			}),
+		elm$core$Dict$empty,
+		list);
+};
+var author$project$Stat$combineTuple = function (_n0) {
+	var aa = _n0.a;
+	var bb = _n0.b;
+	var _n1 = _Utils_Tuple2(aa, bb);
+	if ((_n1.a.$ === 'Just') && (_n1.b.$ === 'Just')) {
+		var k = _n1.a.a;
+		var v = _n1.b.a;
+		return elm$core$Maybe$Just(
+			_Utils_Tuple2(k, v));
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var elm$core$Dict$values = function (dict) {
+	return A3(
+		elm$core$Dict$foldr,
+		F3(
+			function (key, value, valueList) {
+				return A2(elm$core$List$cons, value, valueList);
+			}),
+		_List_Nil,
+		dict);
+};
+var author$project$Stat$mode = function (list) {
+	var frequencyTable = author$project$Stat$buildTable(list);
+	var kvList = elm$core$Dict$toList(frequencyTable);
+	var maxValue = elm$core$List$maximum(
+		elm$core$Dict$values(frequencyTable));
+	return author$project$Stat$combineTuple(
+		function (x) {
+			return _Utils_Tuple2(x, maxValue);
+		}(
+			A2(
+				elm$core$Maybe$map,
+				elm$core$Tuple$first,
+				elm$core$List$head(
+					A2(
+						elm$core$List$filter,
+						function (_n0) {
+							var k = _n0.a;
+							var v = _n0.b;
+							return _Utils_eq(
+								elm$core$Maybe$Just(v),
+								maxValue);
+						},
+						kvList)))));
+};
+var elm$core$List$takeReverse = F3(
+	function (n, list, kept) {
+		takeReverse:
+		while (true) {
+			if (n <= 0) {
+				return kept;
+			} else {
+				if (!list.b) {
+					return kept;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs,
+						$temp$kept = A2(elm$core$List$cons, x, kept);
+					n = $temp$n;
+					list = $temp$list;
+					kept = $temp$kept;
+					continue takeReverse;
+				}
+			}
+		}
+	});
+var elm$core$List$takeTailRec = F2(
+	function (n, list) {
+		return elm$core$List$reverse(
+			A3(elm$core$List$takeReverse, n, list, _List_Nil));
+	});
+var elm$core$List$takeFast = F3(
+	function (ctr, n, list) {
+		if (n <= 0) {
+			return _List_Nil;
+		} else {
+			var _n0 = _Utils_Tuple2(n, list);
+			_n0$1:
+			while (true) {
+				_n0$5:
+				while (true) {
+					if (!_n0.b.b) {
+						return list;
+					} else {
+						if (_n0.b.b.b) {
+							switch (_n0.a) {
+								case 1:
+									break _n0$1;
+								case 2:
+									var _n2 = _n0.b;
+									var x = _n2.a;
+									var _n3 = _n2.b;
+									var y = _n3.a;
+									return _List_fromArray(
+										[x, y]);
+								case 3:
+									if (_n0.b.b.b.b) {
+										var _n4 = _n0.b;
+										var x = _n4.a;
+										var _n5 = _n4.b;
+										var y = _n5.a;
+										var _n6 = _n5.b;
+										var z = _n6.a;
+										return _List_fromArray(
+											[x, y, z]);
+									} else {
+										break _n0$5;
+									}
+								default:
+									if (_n0.b.b.b.b && _n0.b.b.b.b.b) {
+										var _n7 = _n0.b;
+										var x = _n7.a;
+										var _n8 = _n7.b;
+										var y = _n8.a;
+										var _n9 = _n8.b;
+										var z = _n9.a;
+										var _n10 = _n9.b;
+										var w = _n10.a;
+										var tl = _n10.b;
+										return (ctr > 1000) ? A2(
+											elm$core$List$cons,
+											x,
+											A2(
+												elm$core$List$cons,
+												y,
+												A2(
+													elm$core$List$cons,
+													z,
+													A2(
+														elm$core$List$cons,
+														w,
+														A2(elm$core$List$takeTailRec, n - 4, tl))))) : A2(
+											elm$core$List$cons,
+											x,
+											A2(
+												elm$core$List$cons,
+												y,
+												A2(
+													elm$core$List$cons,
+													z,
+													A2(
+														elm$core$List$cons,
+														w,
+														A3(elm$core$List$takeFast, ctr + 1, n - 4, tl)))));
+									} else {
+										break _n0$5;
+									}
+							}
+						} else {
+							if (_n0.a === 1) {
+								break _n0$1;
+							} else {
+								break _n0$5;
+							}
+						}
+					}
+				}
+				return list;
+			}
+			var _n1 = _n0.b;
+			var x = _n1.a;
+			return _List_fromArray(
+				[x]);
+		}
+	});
+var elm$core$List$take = F2(
+	function (n, list) {
+		return A3(elm$core$List$takeFast, 0, n, list);
+	});
+var author$project$RawData$get2 = F2(
+	function (sepChar, str) {
+		var _n0 = A2(author$project$RawData$get1, sepChar, str);
+		if (!_n0.b) {
+			return _Utils_Tuple2(_List_Nil, _List_Nil);
+		} else {
+			var data_ = _n0;
+			var _n1 = author$project$Stat$mode(
+				author$project$RawData$spectrum2(data_));
+			if (_n1.$ === 'Nothing') {
+				return _Utils_Tuple2(_List_Nil, _List_Nil);
+			} else {
+				var _n2 = _n1.a;
+				var numberOfFields = _n2.a;
+				var numberOfRecords = _n2.b;
+				var n = elm$core$List$length(data_);
+				var goodData = A2(
+					elm$core$List$filter,
+					function (rec) {
+						return _Utils_eq(
+							elm$core$List$length(rec),
+							numberOfFields);
+					},
+					data_);
+				var k = elm$core$List$length(goodData);
+				var headerData = A2(
+					elm$core$List$map,
+					elm$core$String$join(' '),
+					A2(elm$core$List$take, n - k, data_));
+				return _Utils_Tuple2(headerData, goodData);
+			}
+		}
+	});
+var author$project$RawData$combineMaybe = function (_n0) {
+	var x = _n0.a;
+	var y = _n0.b;
+	var _n1 = _Utils_Tuple2(x, y);
+	if ((_n1.a.$ === 'Just') && (_n1.b.$ === 'Just')) {
+		var a = _n1.a.a;
+		var b = _n1.b.a;
+		return elm$core$Maybe$Just(
+			_Utils_Tuple2(a, b));
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var author$project$RawData$drop = F2(
+	function (k, rawData_) {
+		return A2(elm$core$List$drop, k, rawData_);
+	});
+var author$project$RawData$column = F2(
+	function (k, rawData_) {
+		return elm_community$maybe_extra$Maybe$Extra$combine(
+			A2(
+				elm$core$List$map,
+				function (rec) {
+					return A2(elm_community$list_extra$List$Extra$getAt, k, rec);
+				},
+				rawData_));
+	});
+var author$project$RawData$indexOfLastNonNumericalFieldAt = F2(
+	function (k, rawData_) {
+		return A2(
+			elm$core$Maybe$map,
+			elm$core$Tuple$first,
+			elm$core$List$head(
+				elm$core$List$reverse(
+					A2(
+						elm$core$List$filter,
+						function (_n0) {
+							var x = _n0.a;
+							var y = _n0.b;
+							return _Utils_eq(y, elm$core$Maybe$Nothing);
+						},
+						A2(
+							elm$core$List$indexedMap,
+							F2(
+								function (i, s) {
+									return _Utils_Tuple2(
+										i,
+										elm$core$String$toFloat(s));
+								}),
+							A2(
+								elm$core$Maybe$withDefault,
+								_List_Nil,
+								A2(author$project$RawData$column, k, rawData_)))))));
+	});
+var elm_community$maybe_extra$Maybe$Extra$join = function (mx) {
+	if (mx.$ === 'Just') {
+		var x = mx.a;
+		return x;
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var author$project$RawData$indexOfLastNonNumericalField = function (rawData_) {
+	var _n0 = A2(
+		elm$core$Maybe$map,
+		elm$core$List$length,
+		A2(elm_community$list_extra$List$Extra$getAt, 0, rawData_));
+	if (_n0.$ === 'Nothing') {
+		return elm$core$Maybe$Nothing;
+	} else {
+		var numberOfFields = _n0.a;
+		return elm_community$maybe_extra$Maybe$Extra$join(
+			A2(
+				elm$core$Maybe$map,
+				elm$core$List$maximum,
+				elm_community$maybe_extra$Maybe$Extra$combine(
+					A2(
+						elm$core$List$map,
+						function (k) {
+							return A2(author$project$RawData$indexOfLastNonNumericalFieldAt, k, rawData_);
+						},
+						A2(elm$core$List$range, 0, numberOfFields - 1)))));
+	}
+};
+var author$project$RawData$getDataAndHeader = function (rawData_) {
+	var _n0 = author$project$RawData$indexOfLastNonNumericalField(rawData_);
+	if (_n0.$ === 'Nothing') {
+		return elm$core$Maybe$Nothing;
+	} else {
+		var k = _n0.a;
+		return author$project$RawData$combineMaybe(
+			_Utils_Tuple2(
+				A2(elm_community$list_extra$List$Extra$getAt, k, rawData_),
+				elm$core$Maybe$Just(
+					A2(author$project$RawData$drop, k + 1, rawData_))));
+	}
+};
+var author$project$RawData$get = function (str) {
+	var _n0 = A2(
+		author$project$RawData$get2,
+		author$project$RawData$delimiter(str),
+		str);
+	var metadata = _n0.a;
+	var goodData = _n0.b;
+	var _n1 = author$project$RawData$getDataAndHeader(goodData);
+	if (_n1.$ === 'Nothing') {
+		return elm$core$Maybe$Nothing;
+	} else {
+		var _n2 = _n1.a;
+		var columnHeaders = _n2.a;
+		var clearData = _n2.b;
+		return elm$core$Maybe$Just(
+			{columnHeaders: columnHeaders, data: clearData, metadata: metadata});
+	}
+};
+var elm$core$String$toInt = _String_toInt;
 var elm$core$Task$Perform = function (a) {
 	return {$: 'Perform', a: a};
 };
@@ -5902,6 +6806,8 @@ var elm$time$Time$Posix = function (a) {
 	return {$: 'Posix', a: a};
 };
 var elm$time$Time$millisToPosix = elm$time$Time$Posix;
+var elm$file$File$name = _File_name;
+var elm$file$File$size = _File_size;
 var elm$file$File$toString = _File_toString;
 var elm$file$File$Select$file = F2(
 	function (mimes, toMsg) {
@@ -5951,21 +6857,46 @@ var author$project$Main$update = F2(
 							xMax: elm$core$String$toFloat(str)
 						}),
 					elm$core$Platform$Cmd$none);
-			case 'CsvRequested':
+			case 'InputI':
+				var str = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							xColumn: elm$core$String$toInt(str)
+						}),
+					elm$core$Platform$Cmd$none);
+			case 'InputJ':
+				var str = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							yColumn: elm$core$String$toInt(str)
+						}),
+					elm$core$Platform$Cmd$none);
+			case 'FileRequested':
 				return _Utils_Tuple2(
 					model,
 					A2(
 						elm$file$File$Select$file,
 						_List_fromArray(
-							['text/csvText']),
-						author$project$Main$CsvSelected));
-			case 'CsvSelected':
+							['text/*']),
+						author$project$Main$FileSelected));
+			case 'FileSelected':
 				var file = msg.a;
 				return _Utils_Tuple2(
-					model,
+					_Utils_update(
+						model,
+						{
+							fileSize: elm$core$Maybe$Just(
+								elm$file$File$size(file)),
+							filename: elm$core$Maybe$Just(
+								elm$file$File$name(file))
+						}),
 					A2(
 						elm$core$Task$perform,
-						author$project$Main$CsvLoaded,
+						author$project$Main$FileLoaded,
 						elm$file$File$toString(file)));
 			case 'Reset':
 				var nextModel = _Utils_update(
@@ -5990,15 +6921,32 @@ var author$project$Main$update = F2(
 					elm$core$Platform$Cmd$none);
 			default:
 				var content = msg.a;
-				var _n3 = A2(author$project$CsvData$intelligentGet, ',', content);
-				var csvData = _n3.a;
-				var header = _n3.b;
+				var rawData = author$project$RawData$get(content);
+				var xLabel = function () {
+					if (rawData.$ === 'Nothing') {
+						return elm$core$Maybe$Nothing;
+					} else {
+						var data = rawData.a;
+						return A2(elm_community$list_extra$List$Extra$getAt, 0, data.columnHeaders);
+					}
+				}();
+				var yLabel = function () {
+					if (rawData.$ === 'Nothing') {
+						return elm$core$Maybe$Nothing;
+					} else {
+						var data = rawData.a;
+						return A2(elm_community$list_extra$List$Extra$getAt, 1, data.columnHeaders);
+					}
+				}();
 				var numericalData = function () {
-					if (csvData.$ === 'Nothing') {
+					if (rawData.$ === 'Nothing') {
 						return _List_Nil;
 					} else {
-						var data = csvData.a;
-						return A3(author$project$CsvData$toPointList, 0, 1, data);
+						var rawData_ = rawData.a;
+						return A2(
+							elm$core$Maybe$withDefault,
+							_List_Nil,
+							A3(author$project$RawData$getData, 0, 1, rawData_));
 					}
 				}();
 				var statistics = function () {
@@ -6009,30 +6957,25 @@ var author$project$Main$update = F2(
 						return author$project$Stat$statistics(dataList);
 					}
 				}();
-				var xLabel = function () {
-					if (csvData.$ === 'Nothing') {
-						return elm$core$Maybe$Nothing;
-					} else {
-						var data = csvData.a;
-						return A2(elm_community$list_extra$List$Extra$getAt, 0, data.headers);
-					}
-				}();
-				var yLabel = function () {
-					if (csvData.$ === 'Nothing') {
-						return elm$core$Maybe$Nothing;
-					} else {
-						var data = csvData.a;
-						return A2(elm_community$list_extra$List$Extra$getAt, 1, data.headers);
-					}
-				}();
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							csvData: csvData,
-							csvText: elm$core$Maybe$Just(content),
 							data: numericalData,
-							header: header,
+							dataText: elm$core$Maybe$Just(content),
+							header: A2(
+								elm$core$Maybe$map,
+								elm$core$String$join('\n'),
+								A2(
+									elm$core$Maybe$map,
+									elm$core$List$take(5),
+									A2(
+										elm$core$Maybe$map,
+										function ($) {
+											return $.metadata;
+										},
+										rawData))),
+							rawData: rawData,
 							statistics: statistics,
 							xLabel: xLabel,
 							xMax: A2(
@@ -6062,6 +7005,15 @@ var author$project$Main$update = F2(
 							yLabel: yLabel
 						}),
 					elm$core$Platform$Cmd$none);
+		}
+	});
+var author$project$Display$label = F2(
+	function (defaultLabel, maybeLabel) {
+		if (maybeLabel.$ === 'Nothing') {
+			return defaultLabel;
+		} else {
+			var str = maybeLabel.a;
+			return (str === '') ? defaultLabel : str;
 		}
 	});
 var mdgriffith$elm_ui$Internal$Model$Rgba = F4(
@@ -6317,10 +7269,34 @@ var mdgriffith$elm_ui$Internal$Flag$present = F2(
 	});
 var mdgriffith$elm_ui$Internal$Flag$widthBetween = mdgriffith$elm_ui$Internal$Flag$flag(44);
 var mdgriffith$elm_ui$Internal$Flag$widthFill = mdgriffith$elm_ui$Internal$Flag$flag(39);
+var elm$core$Set$Set_elm_builtin = function (a) {
+	return {$: 'Set_elm_builtin', a: a};
+};
+var elm$core$Set$empty = elm$core$Set$Set_elm_builtin(elm$core$Dict$empty);
 var elm$core$Tuple$second = function (_n0) {
 	var y = _n0.b;
 	return y;
 };
+var elm$core$Set$insert = F2(
+	function (key, _n0) {
+		var dict = _n0.a;
+		return elm$core$Set$Set_elm_builtin(
+			A3(elm$core$Dict$insert, key, _Utils_Tuple0, dict));
+	});
+var elm$core$Dict$member = F2(
+	function (key, dict) {
+		var _n0 = A2(elm$core$Dict$get, key, dict);
+		if (_n0.$ === 'Just') {
+			return true;
+		} else {
+			return false;
+		}
+	});
+var elm$core$Set$member = F2(
+	function (key, _n0) {
+		var dict = _n0.a;
+		return A2(elm$core$Dict$member, key, dict);
+	});
 var mdgriffith$elm_ui$Internal$Model$lengthClassName = function (x) {
 	switch (x.$) {
 		case 'Px':
@@ -11305,6 +12281,29 @@ var author$project$Main$downloadSampleCsvFile = A2(
 			mdgriffith$elm_ui$Element$text('Download sample data.csv file')),
 		url: 'https://jxxcarlson.github.io/app/temperature-anomalies.csv'
 	});
+var elm$core$Maybe$map2 = F3(
+	function (func, ma, mb) {
+		if (ma.$ === 'Nothing') {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var a = ma.a;
+			if (mb.$ === 'Nothing') {
+				return elm$core$Maybe$Nothing;
+			} else {
+				var b = mb.a;
+				return elm$core$Maybe$Just(
+					A2(func, a, b));
+			}
+		}
+	});
+var author$project$Main$fileSizeString = function (k) {
+	var maybeSize = A3(
+		elm$core$Maybe$map2,
+		elm$core$Basics$append,
+		A2(elm$core$Maybe$map, elm$core$String$fromInt, k),
+		elm$core$Maybe$Just(' bytes'));
+	return 'Size: ' + A2(author$project$Display$label, '-', maybeSize);
+};
 var mdgriffith$elm_ui$Internal$Model$Fill = function (a) {
 	return {$: 'Fill', a: a};
 };
@@ -11344,6 +12343,25 @@ var mdgriffith$elm_ui$Element$rgb255 = F3(
 	function (red, green, blue) {
 		return A4(mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, 1);
 	});
+var mdgriffith$elm_ui$Internal$Flag$spacing = mdgriffith$elm_ui$Internal$Flag$flag(3);
+var mdgriffith$elm_ui$Internal$Model$SpacingStyle = F3(
+	function (a, b, c) {
+		return {$: 'SpacingStyle', a: a, b: b, c: c};
+	});
+var mdgriffith$elm_ui$Internal$Model$spacingName = F2(
+	function (x, y) {
+		return 'spacing-' + (elm$core$String$fromInt(x) + ('-' + elm$core$String$fromInt(y)));
+	});
+var mdgriffith$elm_ui$Element$spacing = function (x) {
+	return A2(
+		mdgriffith$elm_ui$Internal$Model$StyleClass,
+		mdgriffith$elm_ui$Internal$Flag$spacing,
+		A3(
+			mdgriffith$elm_ui$Internal$Model$SpacingStyle,
+			A2(mdgriffith$elm_ui$Internal$Model$spacingName, x, x),
+			x,
+			x));
+};
 var mdgriffith$elm_ui$Internal$Flag$bgColor = mdgriffith$elm_ui$Internal$Flag$flag(8);
 var mdgriffith$elm_ui$Element$Background$color = function (clr) {
 	return A2(
@@ -11375,7 +12393,8 @@ var author$project$Style$footer = _List_fromArray(
 		A2(mdgriffith$elm_ui$Element$paddingXY, 20, 5),
 		mdgriffith$elm_ui$Element$height(
 		mdgriffith$elm_ui$Element$px(30)),
-		mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$fill)
+		mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$fill),
+		mdgriffith$elm_ui$Element$spacing(18)
 	]);
 var mdgriffith$elm_ui$Internal$Model$AsRow = {$: 'AsRow'};
 var mdgriffith$elm_ui$Internal$Model$asRow = mdgriffith$elm_ui$Internal$Model$AsRow;
@@ -11402,7 +12421,19 @@ var author$project$Main$footer = function (model) {
 		mdgriffith$elm_ui$Element$row,
 		author$project$Style$footer,
 		_List_fromArray(
-			[author$project$Main$downloadSampleCsvFile]));
+			[
+				author$project$Main$downloadSampleCsvFile,
+				A2(
+				mdgriffith$elm_ui$Element$el,
+				_List_Nil,
+				mdgriffith$elm_ui$Element$text(
+					'File: ' + A2(author$project$Display$label, '-', model.filename))),
+				A2(
+				mdgriffith$elm_ui$Element$el,
+				_List_Nil,
+				mdgriffith$elm_ui$Element$text(
+					author$project$Main$fileSizeString(model.fileSize)))
+			]));
 };
 var author$project$Main$InputXLabel = function (a) {
 	return {$: 'InputXLabel', a: a};
@@ -11430,6 +12461,11 @@ var mdgriffith$elm_ui$Element$Input$labelLeft = mdgriffith$elm_ui$Element$Input$
 var mdgriffith$elm_ui$Element$Input$TextInputNode = function (a) {
 	return {$: 'TextInputNode', a: a};
 };
+var elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
 var elm$html$Html$Attributes$type_ = elm$html$Html$Attributes$stringProperty('type');
 var elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
@@ -11524,25 +12560,6 @@ var mdgriffith$elm_ui$Element$paddingEach = function (_n0) {
 			left));
 };
 var mdgriffith$elm_ui$Element$rgba = mdgriffith$elm_ui$Internal$Model$Rgba;
-var mdgriffith$elm_ui$Internal$Flag$spacing = mdgriffith$elm_ui$Internal$Flag$flag(3);
-var mdgriffith$elm_ui$Internal$Model$SpacingStyle = F3(
-	function (a, b, c) {
-		return {$: 'SpacingStyle', a: a, b: b, c: c};
-	});
-var mdgriffith$elm_ui$Internal$Model$spacingName = F2(
-	function (x, y) {
-		return 'spacing-' + (elm$core$String$fromInt(x) + ('-' + elm$core$String$fromInt(y)));
-	});
-var mdgriffith$elm_ui$Element$spacing = function (x) {
-	return A2(
-		mdgriffith$elm_ui$Internal$Model$StyleClass,
-		mdgriffith$elm_ui$Internal$Flag$spacing,
-		A3(
-			mdgriffith$elm_ui$Internal$Model$SpacingStyle,
-			A2(mdgriffith$elm_ui$Internal$Model$spacingName, x, x),
-			x,
-			x));
-};
 var mdgriffith$elm_ui$Internal$Flag$borderColor = mdgriffith$elm_ui$Internal$Flag$flag(28);
 var mdgriffith$elm_ui$Element$Border$color = function (clr) {
 	return A2(
@@ -11873,10 +12890,6 @@ var mdgriffith$elm_ui$Internal$Model$isContent = function (len) {
 		}
 	}
 };
-var elm$core$Basics$always = F2(
-	function (a, _n0) {
-		return a;
-	});
 var mdgriffith$elm_ui$Internal$Model$unstyled = A2(elm$core$Basics$composeL, mdgriffith$elm_ui$Internal$Model$Unstyled, elm$core$Basics$always);
 var mdgriffith$elm_ui$Element$Input$textHelper = F3(
 	function (textInput, attrs, textOptions) {
@@ -12310,7 +13323,7 @@ var author$project$Main$inputYLabel = function (model) {
 			text: labelText
 		});
 };
-var author$project$Main$CsvRequested = {$: 'CsvRequested'};
+var author$project$Main$FileRequested = {$: 'FileRequested'};
 var mdgriffith$elm_ui$Internal$Model$AlignX = function (a) {
 	return {$: 'AlignX', a: a};
 };
@@ -12453,19 +13466,10 @@ var author$project$Main$openFileButton = A2(
 				label: A2(
 					mdgriffith$elm_ui$Element$el,
 					_List_Nil,
-					mdgriffith$elm_ui$Element$text('Open CSV file')),
-				onPress: elm$core$Maybe$Just(author$project$Main$CsvRequested)
+					mdgriffith$elm_ui$Element$text('Open data file')),
+				onPress: elm$core$Maybe$Just(author$project$Main$FileRequested)
 			})
 		]));
-var author$project$Display$label = F2(
-	function (defaultLabel, maybeLabel) {
-		if (maybeLabel.$ === 'Nothing') {
-			return defaultLabel;
-		} else {
-			var str = maybeLabel.a;
-			return (str === '') ? defaultLabel : str;
-		}
-	});
 var elm$core$String$left = F2(
 	function (n, string) {
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
@@ -13037,7 +14041,6 @@ var myrho$elm_round$Round$splitComma = function (str) {
 		return _Utils_Tuple2('0', '0');
 	}
 };
-var elm$core$String$toInt = _String_toInt;
 var myrho$elm_round$Round$toDecimal = function (fl) {
 	var _n0 = A2(
 		elm$core$String$split,
@@ -16738,6 +17741,74 @@ var author$project$Display$info = F4(
 						A2(author$project$Display$displayMaximum, selector, data)))
 				]));
 	});
+var author$project$Main$InputI = function (a) {
+	return {$: 'InputI', a: a};
+};
+var author$project$Main$inputI = function (model) {
+	return A2(
+		mdgriffith$elm_ui$Element$Input$text,
+		_List_fromArray(
+			[
+				mdgriffith$elm_ui$Element$width(
+				mdgriffith$elm_ui$Element$px(36)),
+				mdgriffith$elm_ui$Element$height(
+				mdgriffith$elm_ui$Element$px(18)),
+				mdgriffith$elm_ui$Element$Font$size(12),
+				A2(mdgriffith$elm_ui$Element$paddingXY, 8, 0)
+			]),
+		{
+			label: A2(
+				mdgriffith$elm_ui$Element$Input$labelLeft,
+				_List_fromArray(
+					[
+						mdgriffith$elm_ui$Element$moveDown(4)
+					]),
+				A2(
+					mdgriffith$elm_ui$Element$el,
+					_List_Nil,
+					mdgriffith$elm_ui$Element$text('i:'))),
+			onChange: author$project$Main$InputI,
+			placeholder: elm$core$Maybe$Nothing,
+			text: A2(
+				author$project$Display$label,
+				'column i',
+				A2(elm$core$Maybe$map, elm$core$String$fromInt, model.xColumn))
+		});
+};
+var author$project$Main$InputJ = function (a) {
+	return {$: 'InputJ', a: a};
+};
+var author$project$Main$inputJ = function (model) {
+	return A2(
+		mdgriffith$elm_ui$Element$Input$text,
+		_List_fromArray(
+			[
+				mdgriffith$elm_ui$Element$width(
+				mdgriffith$elm_ui$Element$px(36)),
+				mdgriffith$elm_ui$Element$height(
+				mdgriffith$elm_ui$Element$px(18)),
+				mdgriffith$elm_ui$Element$Font$size(12),
+				A2(mdgriffith$elm_ui$Element$paddingXY, 8, 0)
+			]),
+		{
+			label: A2(
+				mdgriffith$elm_ui$Element$Input$labelLeft,
+				_List_fromArray(
+					[
+						mdgriffith$elm_ui$Element$moveDown(4)
+					]),
+				A2(
+					mdgriffith$elm_ui$Element$el,
+					_List_Nil,
+					mdgriffith$elm_ui$Element$text('j:'))),
+			onChange: author$project$Main$InputJ,
+			placeholder: elm$core$Maybe$Nothing,
+			text: A2(
+				author$project$Display$label,
+				'column j',
+				A2(elm$core$Maybe$map, elm$core$String$fromInt, model.yColumn))
+		});
+};
 var author$project$Main$InputXMax = function (a) {
 	return {$: 'InputXMax', a: a};
 };
@@ -16802,14 +17873,9 @@ var author$project$Main$inputXMin = function (model) {
 				A2(elm$core$Maybe$map, elm$core$String$fromFloat, model.xMin))
 		});
 };
-var author$project$Main$numberOfRecordsString = function (maybeCsvData) {
-	if (maybeCsvData.$ === 'Nothing') {
-		return 'No records yet';
-	} else {
-		var data = maybeCsvData.a;
-		return 'Records: ' + elm$core$String$fromInt(
-			elm$core$List$length(data.records));
-	}
+var author$project$Main$numberOfRecordsString = function (data) {
+	return 'Records: ' + elm$core$String$fromInt(
+		elm$core$List$length(data));
 };
 var author$project$Main$plotTypeAsString = function (plotType) {
 	if (plotType.$ === 'TimeSeries') {
@@ -16944,7 +18010,7 @@ var author$project$Main$statisticsPanel = function (model) {
 				mdgriffith$elm_ui$Element$el,
 				_List_Nil,
 				mdgriffith$elm_ui$Element$text(
-					author$project$Main$numberOfRecordsString(model.csvData))),
+					author$project$Main$numberOfRecordsString(model.data))),
 				A2(
 				mdgriffith$elm_ui$Element$el,
 				_List_Nil,
@@ -16952,11 +18018,11 @@ var author$project$Main$statisticsPanel = function (model) {
 					author$project$Main$plotTypeAsString(model.plotType))),
 				A2(
 				author$project$Main$showIfNot,
-				_Utils_eq(model.csvData, elm$core$Maybe$Nothing),
+				_Utils_eq(model.rawData, elm$core$Maybe$Nothing),
 				author$project$Main$xInfoDisplay(model)),
 				A2(
 				author$project$Main$showIfNot,
-				_Utils_eq(model.csvData, elm$core$Maybe$Nothing),
+				_Utils_eq(model.rawData, elm$core$Maybe$Nothing),
 				A4(
 					author$project$Display$info,
 					'y',
@@ -16967,23 +18033,42 @@ var author$project$Main$statisticsPanel = function (model) {
 					model.data)),
 				A2(
 				author$project$Main$showIfNot,
-				_Utils_eq(model.csvData, elm$core$Maybe$Nothing),
+				_Utils_eq(model.rawData, elm$core$Maybe$Nothing),
 				author$project$Display$correlationInfo(model.data)),
 				A2(
 				author$project$Main$showIfNot,
-				_Utils_eq(model.csvData, elm$core$Maybe$Nothing),
+				_Utils_eq(model.rawData, elm$core$Maybe$Nothing),
 				author$project$Main$inputXMin(model)),
 				A2(
 				author$project$Main$showIfNot,
-				_Utils_eq(model.csvData, elm$core$Maybe$Nothing),
+				_Utils_eq(model.rawData, elm$core$Maybe$Nothing),
 				author$project$Main$inputXMax(model)),
 				A2(
 				author$project$Main$showIfNot,
-				_Utils_eq(model.csvData, elm$core$Maybe$Nothing),
+				_Utils_eq(model.rawData, elm$core$Maybe$Nothing),
+				A2(
+					mdgriffith$elm_ui$Element$row,
+					_List_fromArray(
+						[
+							mdgriffith$elm_ui$Element$spacing(12)
+						]),
+					_List_fromArray(
+						[
+							A2(
+							mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[mdgriffith$elm_ui$Element$Font$bold]),
+							mdgriffith$elm_ui$Element$text('Column')),
+							author$project$Main$inputI(model),
+							author$project$Main$inputJ(model)
+						]))),
+				A2(
+				author$project$Main$showIfNot,
+				_Utils_eq(model.rawData, elm$core$Maybe$Nothing),
 				author$project$Main$recomputeButton),
 				A2(
 				author$project$Main$showIfNot,
-				_Utils_eq(model.csvData, elm$core$Maybe$Nothing),
+				_Utils_eq(model.rawData, elm$core$Maybe$Nothing),
 				author$project$Main$resetButton)
 			]));
 };
@@ -17298,6 +18383,7 @@ var elm$core$Basics$never = function (_n0) {
 var elm$url$Url$Http = {$: 'Http'};
 var elm$url$Url$Https = {$: 'Https'};
 var elm$core$String$indexes = _String_indexes;
+var elm$core$String$contains = _String_contains;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
 		return {fragment: fragment, host: host, path: path, port_: port_, protocol: protocol, query: query};
