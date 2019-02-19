@@ -5146,6 +5146,45 @@ var author$project$Main$FileLoaded = function (a) {
 var author$project$Main$FileSelected = function (a) {
 	return {$: 'FileSelected', a: a};
 };
+var author$project$Data$Point = F2(
+	function (x, y) {
+		return {x: x, y: y};
+	});
+var elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var author$project$Utility$listGetAt = F2(
+	function (idx, xs) {
+		return (idx < 0) ? elm$core$Maybe$Nothing : elm$core$List$head(
+			A2(elm$core$List$drop, idx, xs));
+	});
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -5201,6 +5240,39 @@ var elm$core$List$foldr = F3(
 	function (fn, acc, ls) {
 		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
 	});
+var elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return elm$core$Maybe$Nothing;
+		}
+	});
+var author$project$Utility$traverse = function (f) {
+	var step = F2(
+		function (e, acc) {
+			var _n0 = f(e);
+			if (_n0.$ === 'Nothing') {
+				return elm$core$Maybe$Nothing;
+			} else {
+				var x = _n0.a;
+				return A2(
+					elm$core$Maybe$map,
+					elm$core$List$cons(x),
+					acc);
+			}
+		});
+	return A2(
+		elm$core$List$foldr,
+		step,
+		elm$core$Maybe$Just(_List_Nil));
+};
+var elm$core$Basics$identity = function (x) {
+	return x;
+};
+var author$project$Utility$maybeCombine = author$project$Utility$traverse(elm$core$Basics$identity);
 var elm$core$List$map = F2(
 	function (f, xs) {
 		return A3(
@@ -5225,99 +5297,27 @@ var elm$core$Maybe$andThen = F2(
 		}
 	});
 var elm$core$String$toFloat = _String_toFloat;
-var elm$core$List$drop = F2(
-	function (n, list) {
-		drop:
-		while (true) {
-			if (n <= 0) {
-				return list;
-			} else {
-				if (!list.b) {
-					return list;
-				} else {
-					var x = list.a;
-					var xs = list.b;
-					var $temp$n = n - 1,
-						$temp$list = xs;
-					n = $temp$n;
-					list = $temp$list;
-					continue drop;
-				}
-			}
-		}
-	});
-var elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return elm$core$Maybe$Just(x);
-	} else {
-		return elm$core$Maybe$Nothing;
-	}
-};
-var elm_community$list_extra$List$Extra$getAt = F2(
-	function (idx, xs) {
-		return (idx < 0) ? elm$core$Maybe$Nothing : elm$core$List$head(
-			A2(elm$core$List$drop, idx, xs));
-	});
-var elm$core$Basics$identity = function (x) {
-	return x;
-};
-var elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return elm$core$Maybe$Nothing;
-		}
-	});
-var elm_community$maybe_extra$Maybe$Extra$traverse = function (f) {
-	var step = F2(
-		function (e, acc) {
-			var _n0 = f(e);
-			if (_n0.$ === 'Nothing') {
-				return elm$core$Maybe$Nothing;
-			} else {
-				var x = _n0.a;
-				return A2(
-					elm$core$Maybe$map,
-					elm$core$List$cons(x),
-					acc);
-			}
-		});
-	return A2(
-		elm$core$List$foldr,
-		step,
-		elm$core$Maybe$Just(_List_Nil));
-};
-var elm_community$maybe_extra$Maybe$Extra$combine = elm_community$maybe_extra$Maybe$Extra$traverse(elm$core$Basics$identity);
-var author$project$RawData$columnAsFloats = F2(
-	function (k, rawData_) {
-		return elm_community$maybe_extra$Maybe$Extra$combine(
+var author$project$Table$getColumnAsFloats = F2(
+	function (k, table) {
+		return author$project$Utility$maybeCombine(
 			A2(
 				elm$core$List$map,
 				elm$core$Maybe$andThen(elm$core$String$toFloat),
 				A2(
 					elm$core$List$map,
-					elm_community$list_extra$List$Extra$getAt(k),
-					rawData_)));
+					author$project$Utility$listGetAt(k),
+					table)));
 	});
-var author$project$Stat$Point = F2(
-	function (x, y) {
-		return {x: x, y: y};
-	});
-var author$project$RawData$getData = F3(
+var author$project$RawData$toData = F3(
 	function (i, j, rawData_) {
-		var ys = A2(author$project$RawData$columnAsFloats, j, rawData_.data);
-		var xs = A2(author$project$RawData$columnAsFloats, i, rawData_.data);
+		var ys = A2(author$project$Table$getColumnAsFloats, j, rawData_.data);
+		var xs = A2(author$project$Table$getColumnAsFloats, i, rawData_.data);
 		var _n0 = _Utils_Tuple2(xs, ys);
 		if ((_n0.a.$ === 'Just') && (_n0.b.$ === 'Just')) {
 			var xss = _n0.a.a;
 			var yss = _n0.b.a;
 			return elm$core$Maybe$Just(
-				A3(elm$core$List$map2, author$project$Stat$Point, xss, yss));
+				A3(elm$core$List$map2, author$project$Data$Point, xss, yss));
 		} else {
 			return elm$core$Maybe$Nothing;
 		}
@@ -5335,8 +5335,8 @@ var elm$core$List$filter = F2(
 			list);
 	});
 var author$project$Stat$restrictXRange = F2(
-	function (filter, data) {
-		var _n0 = _Utils_Tuple2(filter.xMin, filter.xMax);
+	function (filter_, data) {
+		var _n0 = _Utils_Tuple2(filter_.xMin, filter_.xMax);
 		if ((_n0.a.$ === 'Just') && (_n0.b.$ === 'Just')) {
 			var xMin = _n0.a.a;
 			var xMax = _n0.b.a;
@@ -5350,9 +5350,9 @@ var author$project$Stat$restrictXRange = F2(
 			return data;
 		}
 	});
-var author$project$Stat$filterData = F2(
-	function (filter, data) {
-		return A2(author$project$Stat$restrictXRange, filter, data);
+var author$project$Stat$filter = F2(
+	function (filter_, data) {
+		return A2(author$project$Stat$restrictXRange, filter_, data);
 	});
 var elm$core$List$maximum = function (list) {
 	if (list.b) {
@@ -5454,7 +5454,7 @@ var author$project$Stat$statistics = function (data) {
 		var square = function (x) {
 			return x * x;
 		};
-		var origin = A2(author$project$Stat$Point, 0, 0);
+		var origin = A2(author$project$Data$Point, 0, 0);
 		var rightDataPoint = A2(
 			elm$core$Maybe$withDefault,
 			origin,
@@ -5548,7 +5548,7 @@ var author$project$Main$recompute = function (model) {
 				var j = A2(elm$core$Maybe$withDefault, 1, model.yColumn);
 				var i = A2(elm$core$Maybe$withDefault, 0, model.xColumn);
 				return A2(
-					author$project$Stat$filterData,
+					author$project$Stat$filter,
 					{xMax: model.xMax, xMin: model.xMin},
 					A2(
 						elm$core$Maybe$withDefault,
@@ -5556,7 +5556,7 @@ var author$project$Main$recompute = function (model) {
 						A2(
 							elm$core$Debug$log,
 							'DATA',
-							A3(author$project$RawData$getData, i, j, rawData))));
+							A3(author$project$RawData$toData, i, j, rawData))));
 			}
 		}());
 	var statistics = function () {
@@ -5573,18 +5573,18 @@ var author$project$RawData$CommaDelimited = {$: 'CommaDelimited'};
 var author$project$RawData$SpaceDelimited = {$: 'SpaceDelimited'};
 var author$project$RawData$TabDelimited = {$: 'TabDelimited'};
 var elm$core$String$indices = _String_indexes;
-var author$project$RawData$delimiterProfile = function (str) {
+var author$project$RawData$delimiterProfile = function (dataString) {
 	return {
 		commas: elm$core$List$length(
-			A2(elm$core$String$indices, ',', str)),
+			A2(elm$core$String$indices, ',', dataString)),
 		spaces: elm$core$List$length(
-			A2(elm$core$String$indices, ' ', str)),
+			A2(elm$core$String$indices, ' ', dataString)),
 		tabs: elm$core$List$length(
-			A2(elm$core$String$indices, '\t', str))
+			A2(elm$core$String$indices, '\t', dataString))
 	};
 };
-var author$project$RawData$dataType = function (str) {
-	var p = author$project$RawData$delimiterProfile(str);
+var author$project$RawData$dataType = function (dataString) {
+	var p = author$project$RawData$delimiterProfile(dataString);
 	return ((_Utils_cmp(p.tabs, p.spaces) > 0) && (_Utils_cmp(p.tabs, p.spaces) > 0)) ? author$project$RawData$TabDelimited : (((_Utils_cmp(p.commas, p.spaces) > 0) && (_Utils_cmp(p.commas, p.tabs) > 0)) ? author$project$RawData$CommaDelimited : author$project$RawData$SpaceDelimited);
 };
 var author$project$RawData$delimiter = function (str) {
@@ -6626,11 +6626,11 @@ var author$project$RawData$drop = F2(
 	});
 var author$project$RawData$column = F2(
 	function (k, rawData_) {
-		return elm_community$maybe_extra$Maybe$Extra$combine(
+		return author$project$Utility$maybeCombine(
 			A2(
 				elm$core$List$map,
 				function (rec) {
-					return A2(elm_community$list_extra$List$Extra$getAt, k, rec);
+					return A2(author$project$Utility$listGetAt, k, rec);
 				},
 				rawData_));
 	});
@@ -6661,7 +6661,7 @@ var author$project$RawData$indexOfLastNonNumericalFieldAt = F2(
 								_List_Nil,
 								A2(author$project$RawData$column, k, rawData_)))))));
 	});
-var elm_community$maybe_extra$Maybe$Extra$join = function (mx) {
+var author$project$Utility$maybeJoin = function (mx) {
 	if (mx.$ === 'Just') {
 		var x = mx.a;
 		return x;
@@ -6673,16 +6673,16 @@ var author$project$RawData$indexOfLastNonNumericalField = function (rawData_) {
 	var _n0 = A2(
 		elm$core$Maybe$map,
 		elm$core$List$length,
-		A2(elm_community$list_extra$List$Extra$getAt, 0, rawData_));
+		A2(author$project$Utility$listGetAt, 0, rawData_));
 	if (_n0.$ === 'Nothing') {
 		return elm$core$Maybe$Nothing;
 	} else {
 		var numberOfFields = _n0.a;
-		return elm_community$maybe_extra$Maybe$Extra$join(
+		return author$project$Utility$maybeJoin(
 			A2(
 				elm$core$Maybe$map,
 				elm$core$List$maximum,
-				elm_community$maybe_extra$Maybe$Extra$combine(
+				author$project$Utility$maybeCombine(
 					A2(
 						elm$core$List$map,
 						function (k) {
@@ -6699,7 +6699,7 @@ var author$project$RawData$getDataAndHeader = function (rawData_) {
 		var k = _n0.a;
 		return author$project$RawData$combineMaybe(
 			_Utils_Tuple2(
-				A2(elm_community$list_extra$List$Extra$getAt, k, rawData_),
+				A2(author$project$Utility$listGetAt, k, rawData_),
 				elm$core$Maybe$Just(
 					A2(author$project$RawData$drop, k + 1, rawData_))));
 	}
@@ -6937,7 +6937,7 @@ var author$project$Main$update = F2(
 						return elm$core$Maybe$Nothing;
 					} else {
 						var data = rawData.a;
-						return A2(elm_community$list_extra$List$Extra$getAt, 0, data.columnHeaders);
+						return A2(author$project$Utility$listGetAt, 0, data.columnHeaders);
 					}
 				}();
 				var yLabel = function () {
@@ -6945,7 +6945,7 @@ var author$project$Main$update = F2(
 						return elm$core$Maybe$Nothing;
 					} else {
 						var data = rawData.a;
-						return A2(elm_community$list_extra$List$Extra$getAt, 1, data.columnHeaders);
+						return A2(author$project$Utility$listGetAt, 1, data.columnHeaders);
 					}
 				}();
 				var numericalData = function () {
@@ -6956,7 +6956,7 @@ var author$project$Main$update = F2(
 						return A2(
 							elm$core$Maybe$withDefault,
 							_List_Nil,
-							A3(author$project$RawData$getData, 0, 1, rawData_));
+							A3(author$project$RawData$toData, 0, 1, rawData_));
 					}
 				}();
 				var statistics = function () {
@@ -17673,7 +17673,7 @@ var author$project$Display$correlationInfo = function (data) {
 				]));
 	}
 };
-var author$project$Stat$average = F2(
+var author$project$Stat$mean = F2(
 	function (selector, dataList) {
 		var values = A2(elm$core$List$map, selector, dataList);
 		var sum = elm$core$List$sum(values);
@@ -17687,12 +17687,12 @@ var author$project$Stat$average = F2(
 	});
 var author$project$Display$displayAverage = F2(
 	function (selector, data) {
-		var _n0 = A2(author$project$Stat$average, selector, data);
+		var _n0 = A2(author$project$Stat$mean, selector, data);
 		if (_n0.$ === 'Nothing') {
-			return 'average: ?';
+			return 'mean: ?';
 		} else {
 			var value = _n0.a;
-			return 'average: ' + author$project$Display$stringOfFloat(value);
+			return 'mean: ' + author$project$Display$stringOfFloat(value);
 		}
 	});
 var author$project$Display$displayMaximum = F2(
@@ -17725,14 +17725,14 @@ var author$project$Stat$stdev = F2(
 			var square = function (x) {
 				return x * x;
 			};
-			var mean = A2(
+			var mean_ = A2(
 				elm$core$Maybe$withDefault,
 				0,
-				A2(author$project$Stat$average, selector, dataList));
+				A2(author$project$Stat$mean, selector, dataList));
 			var squaredDifferences = A2(
 				elm$core$List$map,
 				function (x) {
-					return square(x - mean);
+					return square(x - mean_);
 				},
 				A2(elm$core$List$map, selector, dataList));
 			return elm$core$Maybe$Just(
