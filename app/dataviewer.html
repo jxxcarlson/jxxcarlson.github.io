@@ -5150,9 +5150,9 @@ var author$project$Main$FileSelected = function (a) {
 	return {$: 'FileSelected', a: a};
 };
 var author$project$Main$WithRegression = {$: 'WithRegression'};
-var author$project$Data$Point = F2(
+var author$project$Data$makePoint = F2(
 	function (x, y) {
-		return {x: x, y: y};
+		return _Utils_Tuple2(x, y);
 	});
 var elm$core$List$drop = F2(
 	function (n, list) {
@@ -5321,11 +5321,16 @@ var author$project$RawData$toData = F3(
 			var xss = _n0.a.a;
 			var yss = _n0.b.a;
 			return elm$core$Maybe$Just(
-				A3(elm$core$List$map2, author$project$Data$Point, xss, yss));
+				A3(elm$core$List$map2, author$project$Data$makePoint, xss, yss));
 		} else {
 			return elm$core$Maybe$Nothing;
 		}
 	});
+var author$project$Data$xCoord = function (_n0) {
+	var x = _n0.a;
+	var y = _n0.b;
+	return x;
+};
 var elm$core$Basics$ge = _Utils_ge;
 var elm$core$List$filter = F2(
 	function (isGood, list) {
@@ -5347,7 +5352,11 @@ var author$project$Stat$restrictXRange = F2(
 			return A2(
 				elm$core$List$filter,
 				function (point) {
-					return (_Utils_cmp(point.x, xMin) > -1) && (_Utils_cmp(point.x, xMax) < 1);
+					return (_Utils_cmp(
+						author$project$Data$xCoord(point),
+						xMin) > -1) && (_Utils_cmp(
+						author$project$Data$xCoord(point),
+						xMax) < 1);
 				},
 				data);
 		} else {
@@ -5358,6 +5367,11 @@ var author$project$Stat$filter = F2(
 	function (filter_, data) {
 		return A2(author$project$Stat$restrictXRange, filter_, data);
 	});
+var author$project$Data$yCoord = function (_n0) {
+	var x = _n0.a;
+	var y = _n0.b;
+	return y;
+};
 var elm$core$List$maximum = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -5414,19 +5428,9 @@ var author$project$Stat$statistics = function (data) {
 	if (_n0) {
 		return elm$core$Maybe$Nothing;
 	} else {
-		var ys = A2(
-			elm$core$List$map,
-			function ($) {
-				return $.y;
-			},
-			data);
+		var ys = A2(elm$core$List$map, author$project$Data$yCoord, data);
 		var ySum = elm$core$List$sum(ys);
-		var xs = A2(
-			elm$core$List$map,
-			function ($) {
-				return $.x;
-			},
-			data);
+		var xs = A2(elm$core$List$map, author$project$Data$xCoord, data);
 		var xsSquared = elm$core$List$sum(
 			A2(
 				elm$core$List$map,
@@ -5440,25 +5444,15 @@ var author$project$Stat$statistics = function (data) {
 		var xMin = A2(
 			elm$core$Maybe$withDefault,
 			0,
-			A2(
-				author$project$Stat$minimum,
-				function ($) {
-					return $.x;
-				},
-				data));
+			A2(author$project$Stat$minimum, author$project$Data$xCoord, data));
 		var xMax = A2(
 			elm$core$Maybe$withDefault,
 			0,
-			A2(
-				author$project$Stat$maximum,
-				function ($) {
-					return $.x;
-				},
-				data));
+			A2(author$project$Stat$maximum, author$project$Data$xCoord, data));
 		var square = function (x) {
 			return x * x;
 		};
-		var origin = A2(author$project$Data$Point, 0, 0);
+		var origin = _Utils_Tuple2(0, 0);
 		var rightDataPoint = A2(
 			elm$core$Maybe$withDefault,
 			origin,
@@ -5467,9 +5461,7 @@ var author$project$Stat$statistics = function (data) {
 					elm$core$List$filter,
 					function (point) {
 						return _Utils_eq(
-							function ($) {
-								return $.x;
-							}(point),
+							author$project$Data$xCoord(point),
 							xMax);
 					},
 					data)));
@@ -5507,9 +5499,7 @@ var author$project$Stat$statistics = function (data) {
 					elm$core$List$filter,
 					function (point) {
 						return _Utils_eq(
-							function ($) {
-								return $.x;
-							}(point),
+							author$project$Data$xCoord(point),
 							xMin);
 					},
 					data)));
@@ -5532,8 +5522,12 @@ var author$project$Stat$statistics = function (data) {
 				fs,
 				ys));
 		var r2 = 1 - (ssRes / ssTot);
-		var leftRegressionPoint = {x: leftDataPoint.x, y: (m * leftDataPoint.x) + b};
-		var rightRegressionPoint = {x: rightDataPoint.x, y: (m * rightDataPoint.x) + b};
+		var leftRegressionPoint = _Utils_Tuple2(
+			author$project$Data$xCoord(leftDataPoint),
+			(m * author$project$Data$xCoord(leftDataPoint)) + b);
+		var rightRegressionPoint = _Utils_Tuple2(
+			author$project$Data$xCoord(rightDataPoint),
+			(m * author$project$Data$xCoord(rightDataPoint)) + b);
 		return elm$core$Maybe$Just(
 			{b: b, leftDataPoint: leftDataPoint, leftRegressionPoint: leftRegressionPoint, m: m, n: nn, r2: r2, rightDataPoint: rightDataPoint, rightRegressionPoint: rightRegressionPoint, xMax: xMax, xMean: xMean, xMin: xMin, xStdev: xStdev, yMean: yMean, yStdev: yStdev});
 	}
@@ -13776,7 +13770,8 @@ var author$project$Main$rawDataDisplay = function (model) {
 						A2(author$project$Display$label, 'x', model.xLabel)),
 					view: function (point) {
 						return mdgriffith$elm_ui$Element$text(
-							author$project$Display$stringOfFloat(point.x));
+							author$project$Display$stringOfFloat(
+								author$project$Data$xCoord(point)));
 					},
 					width: mdgriffith$elm_ui$Element$fill
 				},
@@ -13785,7 +13780,8 @@ var author$project$Main$rawDataDisplay = function (model) {
 						A2(author$project$Display$label, 'y', model.yLabel)),
 					view: function (point) {
 						return mdgriffith$elm_ui$Element$text(
-							author$project$Display$stringOfFloat(point.y));
+							author$project$Display$stringOfFloat(
+								author$project$Data$yCoord(point)));
 					},
 					width: mdgriffith$elm_ui$Element$fill
 				}
@@ -13998,53 +13994,27 @@ var author$project$Chart$boundingBox = function (data) {
 		xMax: A2(
 			elm$core$Maybe$withDefault,
 			1,
-			A2(
-				author$project$Stat$maximum,
-				function ($) {
-					return $.x;
-				},
-				data)),
+			A2(author$project$Stat$maximum, author$project$Data$xCoord, data)),
 		xMin: A2(
 			elm$core$Maybe$withDefault,
 			0,
-			A2(
-				author$project$Stat$minimum,
-				function ($) {
-					return $.x;
-				},
-				data)),
+			A2(author$project$Stat$minimum, author$project$Data$xCoord, data)),
 		yMax: A2(
 			elm$core$Maybe$withDefault,
 			1,
-			A2(
-				author$project$Stat$maximum,
-				function ($) {
-					return $.y;
-				},
-				data)),
+			A2(author$project$Stat$maximum, author$project$Data$yCoord, data)),
 		yMin: A2(
 			elm$core$Maybe$withDefault,
 			0,
-			A2(
-				author$project$Stat$minimum,
-				function ($) {
-					return $.y;
-				},
-				data))
+			A2(author$project$Stat$minimum, author$project$Data$yCoord, data))
 	};
-};
-var author$project$Data$toBarePoint = function (p) {
-	return _Utils_Tuple2(p.x, p.y);
-};
-var author$project$Data$toBareData = function (data) {
-	return A2(elm$core$List$map, author$project$Data$toBarePoint, data);
 };
 var author$project$Chart$graph = F5(
 	function (graphType, r, g, b, data) {
 		return {
 			b: b,
 			boundingBox: author$project$Chart$boundingBox(data),
-			data: author$project$Data$toBareData(data),
+			data: data,
 			g: g,
 			graphType: graphType,
 			r: r
@@ -16317,23 +16287,9 @@ var author$project$Display$smallInfo = F4(
 var author$project$Main$xInfoDisplay = function (model) {
 	var _n0 = model.plotType;
 	if (_n0.$ === 'Line') {
-		return A4(
-			author$project$Display$smallInfo,
-			'x',
-			model.xLabel,
-			function ($) {
-				return $.x;
-			},
-			model.data);
+		return A4(author$project$Display$smallInfo, 'x', model.xLabel, author$project$Data$xCoord, model.data);
 	} else {
-		return A4(
-			author$project$Display$info,
-			'x',
-			model.xLabel,
-			function ($) {
-				return $.x;
-			},
-			model.data);
+		return A4(author$project$Display$info, 'x', model.xLabel, author$project$Data$xCoord, model.data);
 	}
 };
 var author$project$Main$statisticsPanel = function (model) {
@@ -16371,14 +16327,7 @@ var author$project$Main$statisticsPanel = function (model) {
 				A2(
 				author$project$Main$showIfNot,
 				_Utils_eq(model.rawData, elm$core$Maybe$Nothing),
-				A4(
-					author$project$Display$info,
-					'y',
-					model.yLabel,
-					function ($) {
-						return $.y;
-					},
-					model.data)),
+				A4(author$project$Display$info, 'y', model.yLabel, author$project$Data$yCoord, model.data)),
 				A2(
 				author$project$Main$showIfNot,
 				_Utils_eq(model.rawData, elm$core$Maybe$Nothing),
