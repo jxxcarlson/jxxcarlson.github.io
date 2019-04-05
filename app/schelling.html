@@ -610,11 +610,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.aY.ae === region.ba.ae)
+	if (region.aY.af === region.ba.af)
 	{
-		return 'on line ' + region.aY.ae;
+		return 'on line ' + region.aY.af;
 	}
-	return 'on lines ' + region.aY.ae + ' through ' + region.ba.ae;
+	return 'on lines ' + region.aY.af + ' through ' + region.ba.af;
 }
 
 
@@ -4016,7 +4016,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		impl.dz,
 		impl.dg,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.af && impl.af(sendToApp)
+			var divertHrefToApp = impl.ag && impl.ag(sendToApp)
 			var view = impl.dA;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -4091,7 +4091,7 @@ function _Browser_application(impl)
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		af: function(sendToApp)
+		ag: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4284,7 +4284,7 @@ function _Browser_getViewport()
 		bU: {
 			aF: _Browser_window.pageXOffset,
 			aG: _Browser_window.pageYOffset,
-			ab: _Browser_doc.documentElement.clientWidth,
+			ac: _Browser_doc.documentElement.clientWidth,
 			V: _Browser_doc.documentElement.clientHeight
 		}
 	};
@@ -4295,7 +4295,7 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		ab: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		ac: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
 		V: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
@@ -4320,13 +4320,13 @@ function _Browser_getViewportOf(id)
 	{
 		return {
 			bK: {
-				ab: node.scrollWidth,
+				ac: node.scrollWidth,
 				V: node.scrollHeight
 			},
 			bU: {
 				aF: node.scrollLeft,
 				aG: node.scrollTop,
-				ab: node.clientWidth,
+				ac: node.clientWidth,
 				V: node.clientHeight
 			}
 		};
@@ -4361,13 +4361,13 @@ function _Browser_getElement(id)
 			bU: {
 				aF: x,
 				aG: y,
-				ab: _Browser_doc.documentElement.clientWidth,
+				ac: _Browser_doc.documentElement.clientWidth,
 				V: _Browser_doc.documentElement.clientHeight
 			},
 			cw: {
 				aF: x + rect.left,
 				aG: y + rect.top,
-				ab: rect.width,
+				ac: rect.width,
 				V: rect.height
 			}
 		};
@@ -6646,7 +6646,7 @@ var mdgriffith$elm_ui$Internal$Flag$Field = F2(
 	});
 var mdgriffith$elm_ui$Internal$Flag$none = A2(mdgriffith$elm_ui$Internal$Flag$Field, 0, 0);
 var mdgriffith$elm_ui$Internal$Model$NoNearbyChildren = {$: 0};
-var mdgriffith$elm_ui$Internal$Style$classes = {bY: 'a', aH: 'atv', b_: 'ab', b$: 'cx', b0: 'cy', b1: 'acb', b2: 'accx', b3: 'accy', b4: 'acr', a2: 'al', a3: 'ar', b5: 'at', aI: 'ah', aJ: 'av', b7: 's', cb: 'bh', cc: 'b', ce: 'w7', cg: 'bd', ch: 'bdt', am: 'bn', ci: 'bs', an: 'cpe', cn: 'cp', co: 'cpx', cp: 'cpy', z: 'c', ap: 'ctr', aq: 'cb', ar: 'ccx', A: 'ccy', ad: 'cl', as: 'cr', cr: 'ct', cs: 'cptr', ct: 'ctxt', cA: 'fcs', cB: 'fs', cC: 'g', aO: 'hbh', aw: 'hc', aP: 'hf', bf: 'hfp', cE: 'hv', cG: 'ic', cI: 'fr', cK: 'iml', cL: 'it', cM: 'i', W: 'nb', bo: 'notxt', cQ: 'ol', cR: 'or', N: 'oq', cV: 'oh', bu: 'pg', bv: 'p', cW: 'ppe', cZ: 'ui', q: 'r', c$: 'sb', c0: 'sbx', c1: 'sby', c2: 'sbt', c5: 'e', c6: 'cap', c7: 'sev', de: 'sk', bP: 't', dh: 'tc', di: 'w8', dj: 'w2', dk: 'w9', dl: 'tj', aD: 'tja', dm: 'tl', dn: 'w3', $7: 'w5', dp: 'w4', dq: 'tr', dr: 'w6', ds: 'w1', dt: 'tun', bR: 'ts', P: 'clr', dy: 'u', a_: 'wc', bV: 'we', a$: 'wf', bW: 'wfp', a0: 'wrp'};
+var mdgriffith$elm_ui$Internal$Style$classes = {bY: 'a', aH: 'atv', b_: 'ab', b$: 'cx', b0: 'cy', b1: 'acb', b2: 'accx', b3: 'accy', b4: 'acr', a2: 'al', a3: 'ar', b5: 'at', aI: 'ah', aJ: 'av', b7: 's', cb: 'bh', cc: 'b', ce: 'w7', cg: 'bd', ch: 'bdt', am: 'bn', ci: 'bs', an: 'cpe', cn: 'cp', co: 'cpx', cp: 'cpy', z: 'c', ap: 'ctr', aq: 'cb', ar: 'ccx', A: 'ccy', ae: 'cl', as: 'cr', cr: 'ct', cs: 'cptr', ct: 'ctxt', cA: 'fcs', cB: 'fs', cC: 'g', aO: 'hbh', aw: 'hc', aP: 'hf', bf: 'hfp', cE: 'hv', cG: 'ic', cI: 'fr', cK: 'iml', cL: 'it', cM: 'i', W: 'nb', bo: 'notxt', cQ: 'ol', cR: 'or', N: 'oq', cV: 'oh', bu: 'pg', bv: 'p', cW: 'ppe', cZ: 'ui', q: 'r', c$: 'sb', c0: 'sbx', c1: 'sby', c2: 'sbt', c5: 'e', c6: 'cap', c7: 'sev', de: 'sk', bP: 't', dh: 'tc', di: 'w8', dj: 'w2', dk: 'w9', dl: 'tj', aD: 'tja', dm: 'tl', dn: 'w3', $7: 'w5', dp: 'w4', dq: 'tr', dr: 'w6', ds: 'w1', dt: 'tun', bR: 'ts', P: 'clr', dy: 'u', a_: 'wc', bV: 'we', a$: 'wf', bW: 'wfp', a0: 'wrp'};
 var mdgriffith$elm_ui$Internal$Model$columnClass = mdgriffith$elm_ui$Internal$Style$classes.b7 + (' ' + mdgriffith$elm_ui$Internal$Style$classes.z);
 var mdgriffith$elm_ui$Internal$Model$gridClass = mdgriffith$elm_ui$Internal$Style$classes.b7 + (' ' + mdgriffith$elm_ui$Internal$Style$classes.cC);
 var mdgriffith$elm_ui$Internal$Model$pageClass = mdgriffith$elm_ui$Internal$Style$classes.b7 + (' ' + mdgriffith$elm_ui$Internal$Style$classes.bu);
@@ -6932,7 +6932,7 @@ var mdgriffith$elm_ui$Internal$Model$getStyleName = function (style) {
 				A2(elm$core$List$map, mdgriffith$elm_ui$Internal$Model$lengthClassName, template.t)) + ('-space-x-' + (mdgriffith$elm_ui$Internal$Model$lengthClassName(template.c8.a) + ('-space-y-' + mdgriffith$elm_ui$Internal$Model$lengthClassName(template.c8.b)))))));
 		case 9:
 			var pos = style.a;
-			return 'gp grid-pos-' + (elm$core$String$fromInt(pos.q) + ('-' + (elm$core$String$fromInt(pos.cq) + ('-' + (elm$core$String$fromInt(pos.ab) + ('-' + elm$core$String$fromInt(pos.V)))))));
+			return 'gp grid-pos-' + (elm$core$String$fromInt(pos.q) + ('-' + (elm$core$String$fromInt(pos.cq) + ('-' + (elm$core$String$fromInt(pos.ac) + ('-' + elm$core$String$fromInt(pos.V)))))));
 		case 11:
 			var selector = style.a;
 			var subStyle = style.b;
@@ -7168,7 +7168,7 @@ var mdgriffith$elm_ui$Internal$Style$contentName = function (desc) {
 			return mdgriffith$elm_ui$Internal$Style$dot(mdgriffith$elm_ui$Internal$Style$classes.as);
 		case 3:
 			var _n4 = desc;
-			return mdgriffith$elm_ui$Internal$Style$dot(mdgriffith$elm_ui$Internal$Style$classes.ad);
+			return mdgriffith$elm_ui$Internal$Style$dot(mdgriffith$elm_ui$Internal$Style$classes.ae);
 		case 4:
 			var _n5 = desc;
 			return mdgriffith$elm_ui$Internal$Style$dot(mdgriffith$elm_ui$Internal$Style$classes.ar);
@@ -9819,7 +9819,7 @@ var mdgriffith$elm_ui$Internal$Model$toStyleSheetString = F2(
 									'-ms-grid-row: ' + (elm$core$String$fromInt(position.q) + ';'),
 									'-ms-grid-row-span: ' + (elm$core$String$fromInt(position.V) + ';'),
 									'-ms-grid-column: ' + (elm$core$String$fromInt(position.cq) + ';'),
-									'-ms-grid-column-span: ' + (elm$core$String$fromInt(position.ab) + ';')
+									'-ms-grid-column-span: ' + (elm$core$String$fromInt(position.ac) + ';')
 								]));
 						var modernPosition = A2(
 							elm$core$String$join,
@@ -9827,9 +9827,9 @@ var mdgriffith$elm_ui$Internal$Model$toStyleSheetString = F2(
 							_List_fromArray(
 								[
 									'grid-row: ' + (elm$core$String$fromInt(position.q) + (' / ' + (elm$core$String$fromInt(position.q + position.V) + ';'))),
-									'grid-column: ' + (elm$core$String$fromInt(position.cq) + (' / ' + (elm$core$String$fromInt(position.cq + position.ab) + ';')))
+									'grid-column: ' + (elm$core$String$fromInt(position.cq) + (' / ' + (elm$core$String$fromInt(position.cq + position.ac) + ';')))
 								]));
-						var _class = '.grid-pos-' + (elm$core$String$fromInt(position.q) + ('-' + (elm$core$String$fromInt(position.cq) + ('-' + (elm$core$String$fromInt(position.ab) + ('-' + elm$core$String$fromInt(position.V)))))));
+						var _class = '.grid-pos-' + (elm$core$String$fromInt(position.q) + ('-' + (elm$core$String$fromInt(position.cq) + ('-' + (elm$core$String$fromInt(position.ac) + ('-' + elm$core$String$fromInt(position.V)))))));
 						var modernGrid = _class + ('{' + (modernPosition + '}'));
 						var supports = '@supports (display:grid) {' + (modernGrid + '}');
 						var base = _class + ('{' + (msPosition + '}'));
@@ -9874,13 +9874,13 @@ var mdgriffith$elm_ui$Internal$Model$toStyleSheetString = F2(
 					aC: _Utils_ap(
 						rendered.aC,
 						A2(renderStyleRule, style, elm$core$Maybe$Nothing)),
-					ai: function () {
+					aj: function () {
 						var _n14 = mdgriffith$elm_ui$Internal$Model$topLevelValue(style);
 						if (_n14.$ === 1) {
-							return rendered.ai;
+							return rendered.aj;
 						} else {
 							var topLevel = _n14.a;
-							return A2(elm$core$List$cons, topLevel, rendered.ai);
+							return A2(elm$core$List$cons, topLevel, rendered.aj);
 						}
 					}()
 				};
@@ -9888,9 +9888,9 @@ var mdgriffith$elm_ui$Internal$Model$toStyleSheetString = F2(
 		var _n13 = A3(
 			elm$core$List$foldl,
 			combine,
-			{aC: '', ai: _List_Nil},
+			{aC: '', aj: _List_Nil},
 			stylesheet);
-		var topLevel = _n13.ai;
+		var topLevel = _n13.aj;
 		var rules = _n13.aC;
 		return _Utils_ap(
 			mdgriffith$elm_ui$Internal$Model$renderTopLevelValues(topLevel),
@@ -11788,7 +11788,7 @@ var mdgriffith$elm_ui$Element$row = F2(
 			mdgriffith$elm_ui$Internal$Model$div,
 			A2(
 				elm$core$List$cons,
-				mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.ad + (' ' + mdgriffith$elm_ui$Internal$Style$classes.A)),
+				mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.ae + (' ' + mdgriffith$elm_ui$Internal$Style$classes.A)),
 				A2(
 					elm$core$List$cons,
 					mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$shrink),
@@ -12974,7 +12974,7 @@ var mdgriffith$elm_ui$Element$column = F2(
 			mdgriffith$elm_ui$Internal$Model$div,
 			A2(
 				elm$core$List$cons,
-				mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.cr + (' ' + mdgriffith$elm_ui$Internal$Style$classes.ad)),
+				mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.cr + (' ' + mdgriffith$elm_ui$Internal$Style$classes.ae)),
 				A2(
 					elm$core$List$cons,
 					mdgriffith$elm_ui$Element$height(mdgriffith$elm_ui$Element$shrink),
@@ -13102,7 +13102,7 @@ var elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
 var elm$html$Html$Attributes$target = elm$html$Html$Attributes$stringProperty('target');
 var mdgriffith$elm_ui$Element$newTabLink = F2(
 	function (attrs, _n0) {
-		var url = _n0.al;
+		var url = _n0.aa;
 		var label = _n0.ax;
 		return A4(
 			mdgriffith$elm_ui$Internal$Model$element,
@@ -13183,7 +13183,7 @@ var author$project$Text$panel = A2(
 			_List_Nil,
 			_List_fromArray(
 				[
-					mdgriffith$elm_ui$Element$text('In 1971 Thomas Schelling formulated what is now called an agent-based model\n                   in an attempt to understand patterns of racial segregation. The model can be\n                   thought of in terms of a game.  There are two kinds of players, which are green and yellow\n                   in the case of the app on the left.  The players are distributed on grid,\n                   with certain percentage of the squares vacant — indicated in dark brown in the\n                   case of the app.  The players can be distributed in any way whatsoever; we have\n                   distributed them at random.\n                   ')
+					mdgriffith$elm_ui$Element$text('In 1971, the economist Thomas Schelling formulated a simple model\n                   to help understand patterns of racial segregation. It can be\n                   thought of in terms of a game.  There are two kinds of players — green and yellow\n                   in the case of the app on the left.  The players are distributed on a grid,\n                   witha  certain percentage of the squares vacant — indicated here in dark reddish brown.\n                   The players can be distributed in any way whatsoever. We have\n                   placed them at random.\n                   ')
 				])),
 			A2(
 			mdgriffith$elm_ui$Element$paragraph,
@@ -13195,7 +13195,15 @@ var author$project$Text$panel = A2(
 					_List_fromArray(
 						[mdgriffith$elm_ui$Element$Font$bold]),
 					mdgriffith$elm_ui$Element$text('Rules of the game. ')),
-					mdgriffith$elm_ui$Element$text('Each player prefers that a certain percentage of his neighbors to be "like" him — perhaps\n                20% or 40%, for example.  If the percentage of neighbors like a given players,\n                 is too small, the player becomes "uncomfortable"\n                and will move to a vacant square when his turn comes.  In one round of the game, each player\n                (at random) asseses his comfort level and either moves or stays in place.  There is no cooperation\n                among players and there is no central control; each acts independently according simple rules.\n                 In the case at hand the rule depends on a single number, the percentage of neighbors like him.\n                 Perhaps surprisingly,\n                these "micro" behaviors can lead to "macro" effect, e.g, spontaneous formation of homogeneous\n                neighborhoods.\n                  ')
+					mdgriffith$elm_ui$Element$text('Each player prefers that a certain percentage of his neighbors be "like" him — perhaps\n                20% or 40%, for example.  If the percentage of neighbors like a given players\n                 is too small (under the threshold), the player becomes "uncomfortable"\n                and will move to a vacant square when his turn comes.  A round of the game is played by first\n                lining up the players in a random order, then having them play in turn.\n                Each player  determines his comfort level and either\n                moves or stays in place.  There is no cooperation\n                among players and there is no central control; each player acts independently according simple rules.\n                 In the case at hand the rule depends only on the identities of a player\'s neighbors.\n                 Perhaps surprisingly,\n                these "micro" behaviors can produce "macro" effects, e.g, spontaneous formation of homogeneous\n                neighborhoods.\n                  '),
+					A2(
+					mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							mdgriffith$elm_ui$Element$Font$color(
+							A3(mdgriffith$elm_ui$Element$rgb, 0, 0, 1))
+						]),
+					mdgriffith$elm_ui$Element$text(' <Scroll down>'))
 				])),
 			A2(
 			mdgriffith$elm_ui$Element$paragraph,
@@ -13206,8 +13214,8 @@ var author$project$Text$panel = A2(
 					mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
 						[mdgriffith$elm_ui$Element$Font$bold]),
-					mdgriffith$elm_ui$Element$text('The app')),
-					mdgriffith$elm_ui$Element$text('Tha app is based on simple notion of "neighbors." Unless a player is on the edge of the board,\n                    he has eight immediate neighbors.  Players are distributed on a 40x40 grid.  There are two full\n                    rounds of play each second.  It is written in Elm, a language of pure functions.\n                                     ')
+					mdgriffith$elm_ui$Element$text('The app. ')),
+					mdgriffith$elm_ui$Element$text('Neighbors are those players living immediately to the North, South, East,\n                    and West of a given player, plus those in the adjacent corners.\n                    Players are distributed on a 40x40 grid, and two full\n                    rounds are played each second.  Schelling played his first "game" on a large\n                    cardboard grid with coins that were moved around according the to rules.\n                    The game took months to play.  The app you see on the left is written in Elm,\n                    a language of pure functions.\n                                     ')
 				])),
 			A2(
 			mdgriffith$elm_ui$Element$paragraph,
@@ -13237,7 +13245,7 @@ var author$project$Text$panel = A2(
 								mdgriffith$elm_ui$Element$el,
 								_List_Nil,
 								mdgriffith$elm_ui$Element$text('Wikipedia article on Thomas Schelling')),
-							al: 'https://en.wikipedia.org/wiki/Thomas_Schelling'
+							aa: 'https://en.wikipedia.org/wiki/Thomas_Schelling'
 						})),
 					A2(
 					mdgriffith$elm_ui$Element$el,
@@ -13254,7 +13262,7 @@ var author$project$Text$panel = A2(
 								mdgriffith$elm_ui$Element$el,
 								_List_Nil,
 								mdgriffith$elm_ui$Element$text('The Schelling Model of Ethnic Residential Dynamics')),
-							al: 'http://jasss.soc.surrey.ac.uk/15/1/6.html'
+							aa: 'http://jasss.soc.surrey.ac.uk/15/1/6.html'
 						})),
 					A2(
 					mdgriffith$elm_ui$Element$el,
@@ -13271,7 +13279,7 @@ var author$project$Text$panel = A2(
 								mdgriffith$elm_ui$Element$el,
 								_List_Nil,
 								mdgriffith$elm_ui$Element$text('The Schelling\'s Model of Segregation')),
-							al: 'http://nifty.stanford.edu/2014/mccown-schelling-model-segregation/'
+							aa: 'http://nifty.stanford.edu/2014/mccown-schelling-model-segregation/'
 						})),
 					A2(
 					mdgriffith$elm_ui$Element$el,
@@ -13288,7 +13296,7 @@ var author$project$Text$panel = A2(
 								mdgriffith$elm_ui$Element$el,
 								_List_Nil,
 								mdgriffith$elm_ui$Element$text('Schelling\'s original article')),
-							al: 'https://www.stat.berkeley.edu/%7Ealdous/157/Papers/Schelling_Seg_Models.pdf'
+							aa: 'https://www.stat.berkeley.edu/%7Ealdous/157/Papers/Schelling_Seg_Models.pdf'
 						})),
 					A2(
 					mdgriffith$elm_ui$Element$el,
@@ -13305,7 +13313,24 @@ var author$project$Text$panel = A2(
 								mdgriffith$elm_ui$Element$el,
 								_List_Nil,
 								mdgriffith$elm_ui$Element$text('Elm-lang.org')),
-							al: 'https://elm-lang.ord'
+							aa: 'https://elm-lang.ord'
+						})),
+					A2(
+					mdgriffith$elm_ui$Element$el,
+					_List_Nil,
+					A2(
+						mdgriffith$elm_ui$Element$newTabLink,
+						_List_fromArray(
+							[
+								mdgriffith$elm_ui$Element$Font$color(
+								A3(mdgriffith$elm_ui$Element$rgb, 0, 0, 1))
+							]),
+						{
+							ax: A2(
+								mdgriffith$elm_ui$Element$el,
+								_List_Nil,
+								mdgriffith$elm_ui$Element$text('Code on GitHub')),
+							aa: 'https://github.com/jxxcarlson/schelling'
 						}))
 				]))
 		]));
