@@ -5307,8 +5307,8 @@ var author$project$Main$init = function (flags) {
 			at: 0.1,
 			au: '10',
 			bi: 'App started',
+			aB: '3',
 			aT: 'App started',
-			aB: '40',
 			bE: 0,
 			aE: 0.4,
 			_: 0
@@ -6184,7 +6184,7 @@ var author$project$Schelling$nextEmotionalState = F2(
 			author$project$Schelling$neighbors,
 			_Utils_Tuple2(row, col),
 			array);
-		var numberOfNeihbors = elm$core$List$length(nbs);
+		var numberOfNeighbors = elm$core$List$length(nbs);
 		var me = A2(
 			author$project$Schelling$get,
 			_Utils_Tuple2(row, col),
@@ -6199,9 +6199,9 @@ var author$project$Schelling$nextEmotionalState = F2(
 			},
 			nbs);
 		var sizeOfMyTribe = elm$core$List$length(myTribe);
-		var ratio_ = sizeOfMyTribe / numberOfNeihbors;
+		var ratioOfLikeMe = sizeOfMyTribe / numberOfNeighbors;
 		var myThreshold = author$project$Schelling$threshold(me);
-		var _n1 = _Utils_cmp(ratio_, myThreshold) < 0;
+		var _n1 = _Utils_cmp(ratioOfLikeMe, myThreshold) < 0;
 		if (_n1) {
 			return 1;
 		} else {
@@ -6410,13 +6410,13 @@ var author$project$Main$update = F2(
 			case 0:
 				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 			case 1:
-				var preferenceString = msg.a;
+				var numberLikeMeString = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							aB: preferenceString,
-							aE: A2(author$project$Main$stringToFloat, preferenceString, 40) / 100.0
+							aB: numberLikeMeString,
+							aE: A2(author$project$Main$stringToFloat, numberLikeMeString, 0) / 8.0
 						}),
 					elm$core$Platform$Cmd$none);
 			case 2:
@@ -12830,7 +12830,7 @@ var author$project$Main$inputTreshold = function (model) {
 						[
 							mdgriffith$elm_ui$Element$moveDown(8)
 						]),
-					mdgriffith$elm_ui$Element$text('Similar (%): '))),
+					mdgriffith$elm_ui$Element$text('Like me   (1-8): '))),
 			bq: author$project$Main$InputThreshold,
 			by: elm$core$Maybe$Nothing,
 			bP: model.aB
@@ -13195,7 +13195,7 @@ var author$project$Text$panel = A2(
 					_List_fromArray(
 						[mdgriffith$elm_ui$Element$Font$bold]),
 					mdgriffith$elm_ui$Element$text('Rules of the game. ')),
-					mdgriffith$elm_ui$Element$text('Each player prefers that a certain percentage of his neighbors be "like" him — perhaps\n                20% or 40%, for example.  If the percentage of neighbors like a given players\n                 is too small (under the threshold), the player becomes "uncomfortable"\n                and will move to a vacant square when his turn comes.  A round of the game is played by first\n                lining up the players in a random order, then having them play in turn.\n                Each player  determines his comfort level and either\n                moves or stays in place.  There is no cooperation\n                among players and there is no central control; each player acts independently according simple rules.\n                 In the case at hand the rule depends only on the identities of a player\'s neighbors.\n                 Perhaps surprisingly,\n                these "micro" behaviors can produce "macro" effects, e.g, spontaneous formation of homogeneous\n                neighborhoods.\n                  '),
+					mdgriffith$elm_ui$Element$text('Each player prefers that a certain number of his neighbors be "like" him — perhaps\n                2 or 3, for example.  If the number of neighbors like a given players\n                 is too small (under the threshold), the player becomes "uncomfortable"\n                and will move to a vacant square when his turn comes.  A round of the game is played by first\n                lining up the players in a random order, then having them play in turn.\n                Each player  determines his comfort level and either\n                moves or stays in place.  There is no cooperation\n                among players and there is no central control; each player acts independently according simple rules.\n                 In the case at hand the rule depends only on the identities of a player\'s neighbors.\n                 Perhaps surprisingly,\n                these "micro" behaviors can produce "macro" effects, e.g, spontaneous formation of homogeneous\n                neighborhoods.\n                  '),
 					A2(
 					mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
@@ -13216,18 +13216,6 @@ var author$project$Text$panel = A2(
 						[mdgriffith$elm_ui$Element$Font$bold]),
 					mdgriffith$elm_ui$Element$text('The app. ')),
 					mdgriffith$elm_ui$Element$text('Neighbors are those players living immediately to the North, South, East,\n                    and West of a given player, plus those in the adjacent corners.\n                    Players are distributed on a 40x40 grid, and two full\n                    rounds are played each second.  Schelling played his first "game" on a large\n                    cardboard grid with coins that were moved around according the to rules.\n                    The game took months to play.  The app you see on the left is written in Elm,\n                    a language of pure functions.\n                                     ')
-				])),
-			A2(
-			mdgriffith$elm_ui$Element$paragraph,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					mdgriffith$elm_ui$Element$el,
-					_List_fromArray(
-						[mdgriffith$elm_ui$Element$Font$bold]),
-					mdgriffith$elm_ui$Element$text('Comments. ')),
-					mdgriffith$elm_ui$Element$text('Consider the ratio "number of neighbors like me divided by number of neighbors."\n                         Multiply by 100 to get the "similarity index" — the percentage that a player looks\n                         at to determine whether he is comfortable or not.\n                         Except for edge and corner cases, the values of this index are multiples of 12.5 =\n                         100 x (1/8).  These are the "critical values" of the system — 12.5, 25.0, 37.5, etc.\n                         Thus, if you set the "Similar" field in the app to 13, you will get the same behavior\n                         as do if you set it to 18 or 24.  But if you set it to 26, the behavior will be different.\n                                                 ')
 				])),
 			A2(
 			mdgriffith$elm_ui$Element$paragraph,
@@ -13325,7 +13313,7 @@ var author$project$Text$panel = A2(
 								mdgriffith$elm_ui$Element$el,
 								_List_Nil,
 								mdgriffith$elm_ui$Element$text('Elm-lang.org')),
-							aa: 'https://elm-lang.ord'
+							aa: 'https://elm-lang.org'
 						})),
 					A2(
 					mdgriffith$elm_ui$Element$el,
