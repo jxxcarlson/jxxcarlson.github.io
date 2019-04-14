@@ -5811,13 +5811,13 @@ var author$project$GamblersRuin$update = F2(
 					elm$core$Platform$Cmd$none);
 		}
 	});
-var author$project$SimpleChart$Color = function (a) {
+var author$project$Graph$Color = function (a) {
 	return {$: 'Color', a: a};
 };
-var author$project$SimpleChart$XTickmarks = function (a) {
+var author$project$Graph$XTickmarks = function (a) {
 	return {$: 'XTickmarks', a: a};
 };
-var author$project$SimpleChart$YTickmarks = function (a) {
+var author$project$Graph$YTickmarks = function (a) {
 	return {$: 'YTickmarks', a: a};
 };
 var author$project$GamblersRuin$lineGraphAttributes = {
@@ -5825,9 +5825,9 @@ var author$project$GamblersRuin$lineGraphAttributes = {
 	graphWidth: 400,
 	options: _List_fromArray(
 		[
-			author$project$SimpleChart$Color('blue'),
-			author$project$SimpleChart$YTickmarks(8),
-			author$project$SimpleChart$XTickmarks(5)
+			author$project$Graph$Color('blue'),
+			author$project$Graph$YTickmarks(8),
+			author$project$Graph$XTickmarks(5)
 		])
 };
 var mdgriffith$elm_ui$Internal$Model$Fill = function (a) {
@@ -11493,7 +11493,7 @@ var author$project$GamblersRuin$title = function (str) {
 				mdgriffith$elm_ui$Element$text(str)
 			]));
 };
-var author$project$SimpleChart$findMap = F2(
+var author$project$Graph$findMap = F2(
 	function (f, list) {
 		findMap:
 		while (true) {
@@ -11516,7 +11516,7 @@ var author$project$SimpleChart$findMap = F2(
 			}
 		}
 	});
-var author$project$SimpleChart$xTickmarks_ = function (option) {
+var author$project$Graph$xTickmarks_ = function (option) {
 	if (option.$ === 'XTickmarks') {
 		var k = option.a;
 		return elm$core$Maybe$Just(k);
@@ -11524,13 +11524,13 @@ var author$project$SimpleChart$xTickmarks_ = function (option) {
 		return elm$core$Maybe$Nothing;
 	}
 };
-var author$project$SimpleChart$xTickmarks = function (options) {
+var author$project$Graph$xTickmarks = function (options) {
 	return A2(
 		elm$core$Maybe$withDefault,
 		0,
-		A2(author$project$SimpleChart$findMap, author$project$SimpleChart$xTickmarks_, options));
+		A2(author$project$Graph$findMap, author$project$Graph$xTickmarks_, options));
 };
-var author$project$SimpleChart$yTickmarks_ = function (option) {
+var author$project$Graph$yTickmarks_ = function (option) {
 	if (option.$ === 'YTickmarks') {
 		var k = option.a;
 		return elm$core$Maybe$Just(k);
@@ -11538,17 +11538,17 @@ var author$project$SimpleChart$yTickmarks_ = function (option) {
 		return elm$core$Maybe$Nothing;
 	}
 };
-var author$project$SimpleChart$yTickmarks = function (options) {
+var author$project$Graph$yTickmarks = function (options) {
 	return A2(
 		elm$core$Maybe$withDefault,
 		0,
-		A2(author$project$SimpleChart$findMap, author$project$SimpleChart$yTickmarks_, options));
+		A2(author$project$Graph$findMap, author$project$Graph$yTickmarks_, options));
 };
-var author$project$SimpleChart$boundingBox = F2(
+var author$project$Graph$boundingBox = F2(
 	function (options, dw) {
 		var _n0 = _Utils_Tuple2(
-			author$project$SimpleChart$xTickmarks(options),
-			author$project$SimpleChart$yTickmarks(options));
+			author$project$Graph$xTickmarks(options),
+			author$project$Graph$yTickmarks(options));
 		if ((!_n0.a) && (!_n0.b)) {
 			return _List_Nil;
 		} else {
@@ -11562,13 +11562,13 @@ var author$project$SimpleChart$boundingBox = F2(
 				]);
 		}
 	});
-var author$project$SimpleChart$getScaleFactor = F2(
+var author$project$Graph$getScaleFactor = F2(
 	function (dataWindow, gA) {
 		var ky = gA.graphHeight / (dataWindow.yMax - dataWindow.yMin);
 		var kx = gA.graphWidth / (dataWindow.xMax - dataWindow.xMin);
 		return _Utils_Tuple2(kx, ky);
 	});
-var author$project$SimpleChart$roundTo = F2(
+var author$project$Graph$roundTo = F2(
 	function (k, x) {
 		var kk = k;
 		return function (y) {
@@ -11584,12 +11584,12 @@ var elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
 var elm$svg$Svg$Attributes$transform = _VirtualDom_attribute('transform');
 var elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
 var elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var author$project$SimpleChart$makeXLabel = F3(
+var author$project$Graph$makeXLabel = F3(
 	function (_n0, dw, x) {
 		var kx = _n0.a;
 		var ky = _n0.b;
 		var label = elm$core$String$fromFloat(
-			A2(author$project$SimpleChart$roundTo, 1, x));
+			A2(author$project$Graph$roundTo, 1, x));
 		var dx = elm$core$String$fromFloat(kx * (x - dw.xMin));
 		return A2(
 			elm$svg$Svg$text_,
@@ -11606,7 +11606,7 @@ var author$project$SimpleChart$makeXLabel = F3(
 				]));
 	});
 var elm$svg$Svg$g = elm$svg$Svg$trustedNode('g');
-var author$project$SimpleChart$makeXLabels = F3(
+var author$project$Graph$makeXLabels = F3(
 	function (_n0, dw, n) {
 		var kx = _n0.a;
 		var ky = _n0.b;
@@ -11620,7 +11620,7 @@ var author$project$SimpleChart$makeXLabels = F3(
 				A2(
 					elm$core$List$map,
 					A2(
-						author$project$SimpleChart$makeXLabel,
+						author$project$Graph$makeXLabel,
 						_Utils_Tuple2(kx, ky),
 						dw),
 					A2(
@@ -11631,16 +11631,16 @@ var author$project$SimpleChart$makeXLabels = F3(
 						A2(elm$core$List$range, 0, n - 1))));
 		}
 	});
-var author$project$SimpleChart$tickMarkLength = 7.5;
-var author$project$SimpleChart$makeXTickMark = F3(
+var author$project$Graph$tickMarkLength = 7.5;
+var author$project$Graph$makeXTickMark = F3(
 	function (ky, dw, x) {
 		return _List_fromArray(
 			[
 				_Utils_Tuple2(x, dw.yMin),
-				_Utils_Tuple2(x, dw.yMin - (author$project$SimpleChart$tickMarkLength / ky))
+				_Utils_Tuple2(x, dw.yMin - (author$project$Graph$tickMarkLength / ky))
 			]);
 	});
-var author$project$SimpleChart$translate = F2(
+var author$project$Graph$translate = F2(
 	function (_n0, data) {
 		var dx = _n0.a;
 		var dy = _n0.b;
@@ -11653,7 +11653,7 @@ var author$project$SimpleChart$translate = F2(
 			},
 			data);
 	});
-var author$project$SimpleChart$makeXTickMarks = F4(
+var author$project$Graph$makeXTickMarks = F4(
 	function (_n0, render, dw, n) {
 		var kx = _n0.a;
 		var ky = _n0.b;
@@ -11672,11 +11672,11 @@ var author$project$SimpleChart$makeXTickMarks = F4(
 					render,
 					A2(
 						elm$core$List$map,
-						author$project$SimpleChart$translate(
+						author$project$Graph$translate(
 							_Utils_Tuple2(dw.xMin, 0)),
 						A2(
 							elm$core$List$map,
-							A2(author$project$SimpleChart$makeXTickMark, ky, dw),
+							A2(author$project$Graph$makeXTickMark, ky, dw),
 							A2(
 								elm$core$List$map,
 								function (k) {
@@ -11685,12 +11685,12 @@ var author$project$SimpleChart$makeXTickMarks = F4(
 								A2(elm$core$List$range, 0, n - 1))))));
 		}
 	});
-var author$project$SimpleChart$makeYLabel = F3(
+var author$project$Graph$makeYLabel = F3(
 	function (_n0, dw, y) {
 		var kx = _n0.a;
 		var ky = _n0.b;
 		var label = elm$core$String$fromFloat(
-			A2(author$project$SimpleChart$roundTo, 1, y));
+			A2(author$project$Graph$roundTo, 1, y));
 		var dy = elm$core$String$fromFloat((ky * (y - dw.yMin)) - 3);
 		return A2(
 			elm$svg$Svg$text_,
@@ -11707,7 +11707,7 @@ var author$project$SimpleChart$makeYLabel = F3(
 					elm$svg$Svg$text(label)
 				]));
 	});
-var author$project$SimpleChart$makeYLabels = F3(
+var author$project$Graph$makeYLabels = F3(
 	function (_n0, dw, n) {
 		var kx = _n0.a;
 		var ky = _n0.b;
@@ -11721,7 +11721,7 @@ var author$project$SimpleChart$makeYLabels = F3(
 				A2(
 					elm$core$List$map,
 					A2(
-						author$project$SimpleChart$makeYLabel,
+						author$project$Graph$makeYLabel,
 						_Utils_Tuple2(kx, ky),
 						dw),
 					A2(
@@ -11732,15 +11732,15 @@ var author$project$SimpleChart$makeYLabels = F3(
 						A2(elm$core$List$range, 0, n - 1))));
 		}
 	});
-var author$project$SimpleChart$makeYTickMark = F3(
+var author$project$Graph$makeYTickMark = F3(
 	function (kx, dw, y) {
 		return _List_fromArray(
 			[
 				_Utils_Tuple2(dw.xMin, y),
-				_Utils_Tuple2(dw.xMin - (author$project$SimpleChart$tickMarkLength / kx), y)
+				_Utils_Tuple2(dw.xMin - (author$project$Graph$tickMarkLength / kx), y)
 			]);
 	});
-var author$project$SimpleChart$makeYTickMarks = F4(
+var author$project$Graph$makeYTickMarks = F4(
 	function (_n0, render, dw, n) {
 		var kx = _n0.a;
 		var ky = _n0.b;
@@ -11759,11 +11759,11 @@ var author$project$SimpleChart$makeYTickMarks = F4(
 					render,
 					A2(
 						elm$core$List$map,
-						author$project$SimpleChart$translate(
+						author$project$Graph$translate(
 							_Utils_Tuple2(0, dw.yMin)),
 						A2(
 							elm$core$List$map,
-							A2(author$project$SimpleChart$makeYTickMark, kx, dw),
+							A2(author$project$Graph$makeYTickMark, kx, dw),
 							A2(
 								elm$core$List$map,
 								function (k) {
@@ -11772,7 +11772,7 @@ var author$project$SimpleChart$makeYTickMarks = F4(
 								A2(elm$core$List$range, 0, n - 1))))));
 		}
 	});
-var author$project$SimpleChart$rescale = F2(
+var author$project$Graph$rescale = F2(
 	function (_n0, data) {
 		var kx = _n0.a;
 		var ky = _n0.b;
@@ -11810,7 +11810,7 @@ var elm$core$Tuple$pair = F2(
 	function (a, b) {
 		return _Utils_Tuple2(a, b);
 	});
-var author$project$SimpleChart$segments = function (list) {
+var author$project$Graph$segments = function (list) {
 	var n = elm$core$List$length(list);
 	return A3(
 		elm$core$List$map2,
@@ -11818,7 +11818,7 @@ var author$project$SimpleChart$segments = function (list) {
 		A2(elm$core$List$take, n - 1, list),
 		A2(elm$core$List$drop, 1, list));
 };
-var author$project$SimpleChart$lineColor_ = function (option) {
+var author$project$Graph$lineColor_ = function (option) {
 	if (option.$ === 'Color') {
 		var str = option.a;
 		return elm$core$Maybe$Just(str);
@@ -11826,11 +11826,11 @@ var author$project$SimpleChart$lineColor_ = function (option) {
 		return elm$core$Maybe$Nothing;
 	}
 };
-var author$project$SimpleChart$lineColor = function (options) {
+var author$project$Graph$lineColor = function (options) {
 	return A2(
 		elm$core$Maybe$withDefault,
 		'rgb(40, 40, 40)',
-		A2(author$project$SimpleChart$findMap, author$project$SimpleChart$lineColor_, options));
+		A2(author$project$Graph$findMap, author$project$Graph$lineColor_, options));
 };
 var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
 var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
@@ -11839,7 +11839,7 @@ var elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
 var elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
 var elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
 var elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
-var author$project$SimpleChart$segmentToSVG = F2(
+var author$project$Graph$segmentToSVG = F2(
 	function (options, _n0) {
 		var _n1 = _n0.a;
 		var x1 = _n1.a;
@@ -11860,69 +11860,69 @@ var author$project$SimpleChart$segmentToSVG = F2(
 					elm$svg$Svg$Attributes$y2(
 					elm$core$String$fromFloat(y2)),
 					elm$svg$Svg$Attributes$stroke(
-					author$project$SimpleChart$lineColor(options)),
+					author$project$Graph$lineColor(options)),
 					elm$svg$Svg$Attributes$strokeWidth('1')
 				]),
 			_List_Nil);
 	});
-var author$project$SimpleChart$segmentsToSVG = F2(
+var author$project$Graph$segmentsToSVG = F2(
 	function (options, segmentList) {
 		return function (x) {
 			return A2(elm$svg$Svg$g, _List_Nil, x);
 		}(
 			A2(
 				elm$core$List$map,
-				author$project$SimpleChart$segmentToSVG(options),
+				author$project$Graph$segmentToSVG(options),
 				segmentList));
 	});
-var author$project$SimpleChart$lineChartAsSVGWithDataWindow = F3(
+var author$project$Graph$lineChartAsSVGWithDataWindow = F3(
 	function (dw, ga, data) {
-		var scaleFactor = A2(author$project$SimpleChart$getScaleFactor, dw, ga);
+		var scaleFactor = A2(author$project$Graph$getScaleFactor, dw, ga);
 		var xLabels = A3(
-			author$project$SimpleChart$makeXLabels,
+			author$project$Graph$makeXLabels,
 			scaleFactor,
 			dw,
-			author$project$SimpleChart$xTickmarks(ga.options));
+			author$project$Graph$xTickmarks(ga.options));
 		var yLabels = A3(
-			author$project$SimpleChart$makeYLabels,
+			author$project$Graph$makeYLabels,
 			scaleFactor,
 			dw,
-			author$project$SimpleChart$yTickmarks(ga.options));
+			author$project$Graph$yTickmarks(ga.options));
 		var renderPlain = function (data_) {
 			return A2(
-				author$project$SimpleChart$segmentsToSVG,
+				author$project$Graph$segmentsToSVG,
 				_List_Nil,
-				author$project$SimpleChart$segments(
+				author$project$Graph$segments(
 					A2(
-						author$project$SimpleChart$rescale,
+						author$project$Graph$rescale,
 						scaleFactor,
 						A2(
-							author$project$SimpleChart$translate,
+							author$project$Graph$translate,
 							_Utils_Tuple2(-dw.xMin, -dw.yMin),
 							data_))));
 		};
 		var xTickMarks_ = A4(
-			author$project$SimpleChart$makeXTickMarks,
+			author$project$Graph$makeXTickMarks,
 			scaleFactor,
 			renderPlain,
 			dw,
-			author$project$SimpleChart$xTickmarks(ga.options));
+			author$project$Graph$xTickmarks(ga.options));
 		var yTickMarks_ = A4(
-			author$project$SimpleChart$makeYTickMarks,
+			author$project$Graph$makeYTickMarks,
 			scaleFactor,
 			renderPlain,
 			dw,
-			author$project$SimpleChart$yTickmarks(ga.options));
+			author$project$Graph$yTickmarks(ga.options));
 		var render = function (data_) {
 			return A2(
-				author$project$SimpleChart$segmentsToSVG,
+				author$project$Graph$segmentsToSVG,
 				ga.options,
-				author$project$SimpleChart$segments(
+				author$project$Graph$segments(
 					A2(
-						author$project$SimpleChart$rescale,
+						author$project$Graph$rescale,
 						scaleFactor,
 						A2(
-							author$project$SimpleChart$translate,
+							author$project$Graph$translate,
 							_Utils_Tuple2(-dw.xMin, -dw.yMin),
 							data_))));
 		};
@@ -11934,7 +11934,7 @@ var author$project$SimpleChart$lineChartAsSVGWithDataWindow = F3(
 					_Utils_Tuple2(dw.xMin, dw.yMax)
 				]));
 		var boundingBox_ = renderPlain(
-			A2(author$project$SimpleChart$boundingBox, ga.options, dw));
+			A2(author$project$Graph$boundingBox, ga.options, dw));
 		var abscissa = renderPlain(
 			_List_fromArray(
 				[
@@ -11951,7 +11951,7 @@ var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
 var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
-var author$project$SimpleChart$lineChartWithDataWindow = F3(
+var author$project$Graph$lineChartWithDataWindow = F3(
 	function (dw, ga, data) {
 		return A2(
 			elm$svg$Svg$svg,
@@ -11967,7 +11967,7 @@ var author$project$SimpleChart$lineChartWithDataWindow = F3(
 				]),
 			_List_fromArray(
 				[
-					A3(author$project$SimpleChart$lineChartAsSVGWithDataWindow, dw, ga, data)
+					A3(author$project$Graph$lineChartAsSVGWithDataWindow, dw, ga, data)
 				]));
 	});
 var mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
@@ -12058,7 +12058,7 @@ var author$project$GamblersRuin$mainColumn = function (model) {
 								_List_fromArray(
 									[
 										mdgriffith$elm_ui$Element$text(
-										'Get to ' + (elm$core$String$fromFloat(author$project$GamblersRuin$maximumWinnings) + ' points for a 1000 dollar bonus'))
+										'Get to ' + (elm$core$String$fromFloat(author$project$GamblersRuin$maximumWinnings) + ' points for a 100 dollar bonus'))
 									]))
 							])),
 						A2(
@@ -12067,7 +12067,7 @@ var author$project$GamblersRuin$mainColumn = function (model) {
 						_List_fromArray(
 							[
 								mdgriffith$elm_ui$Element$html(
-								A3(author$project$SimpleChart$lineChartWithDataWindow, author$project$GamblersRuin$dataWindow, author$project$GamblersRuin$lineGraphAttributes, model.timeSeries))
+								A3(author$project$Graph$lineChartWithDataWindow, author$project$GamblersRuin$dataWindow, author$project$GamblersRuin$lineGraphAttributes, model.timeSeries))
 							])),
 						A2(
 						mdgriffith$elm_ui$Element$row,
