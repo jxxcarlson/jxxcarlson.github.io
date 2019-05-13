@@ -6231,7 +6231,7 @@ var author$project$Main$gray = function (g) {
 	return A3(mdgriffith$elm_ui$Element$rgb, g, g, g);
 };
 var author$project$Main$dark = author$project$Main$gray(0.1);
-var author$project$Main$gridDisplayWidth = 500.0;
+var author$project$Main$gridDisplayWidth = 450.0;
 var avh4$elm_color$Color$RgbaSpace = F4(
 	function (a, b, c, d) {
 		return {$: 0, a: a, b: b, c: c, d: d};
@@ -12978,7 +12978,7 @@ var author$project$Main$mainColumn = function (model) {
 						_List_fromArray(
 							[mdgriffith$elm_ui$Element$centerX]),
 						mdgriffith$elm_ui$Element$html(
-							A4(jxxcarlson$elm_cell_grid$CellGrid$renderAsHtml, 400, 400, author$project$Main$cellrenderer, model.z))),
+							A4(jxxcarlson$elm_cell_grid$CellGrid$renderAsHtml, author$project$Main$gridDisplayWidth, author$project$Main$gridDisplayWidth, author$project$Main$cellrenderer, model.z))),
 						A2(
 						mdgriffith$elm_ui$Element$row,
 						_List_fromArray(
