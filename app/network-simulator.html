@@ -5256,7 +5256,7 @@ var author$project$Grid$empty = F2(
 				A2(
 					elm$core$List$repeat,
 					rows * columns,
-					{id: -1, name: 'X', status: author$project$Grid$Vacant})));
+					{id: -1, name: '', status: author$project$Grid$Vacant})));
 	});
 var author$project$CellGrid$index = F2(
 	function (nRows, _n0) {
@@ -19335,38 +19335,74 @@ var author$project$CellGrid$renderCell = F3(
 		var i = _n0.a;
 		var j = _n0.b;
 		var size = cr.cellSize;
+		var xCoordinate = size * i;
+		var yCoordinate = size * j;
+		var cell = A2(
+			author$project$CellGrid$cellAtMatrixIndex,
+			_Utils_Tuple2(i, j),
+			cellGrid);
 		var color = A2(
 			elm$core$Maybe$withDefault,
 			cr.defaultColor,
-			A2(
-				elm$core$Maybe$map,
-				cr.cellColorizer,
-				A2(
-					author$project$CellGrid$cellAtMatrixIndex,
-					_Utils_Tuple2(i, j),
-					cellGrid)));
+			A2(elm$core$Maybe$map, cr.cellColorizer, cell));
+		var txt = function () {
+			var _n1 = cr.text;
+			if (_n1.$ === 'Nothing') {
+				return '';
+			} else {
+				var textMap = _n1.a;
+				return A2(
+					elm$core$Maybe$withDefault,
+					'',
+					A2(elm$core$Maybe$map, textMap, cell));
+			}
+		}();
 		return A2(
-			elm_community$typed_svg$TypedSvg$rect,
+			elm_community$typed_svg$TypedSvg$g,
+			_List_Nil,
 			_List_fromArray(
 				[
-					elm_community$typed_svg$TypedSvg$Attributes$InPx$width(size),
-					elm_community$typed_svg$TypedSvg$Attributes$InPx$height(size),
-					elm_community$typed_svg$TypedSvg$Attributes$InPx$x(size * i),
-					elm_community$typed_svg$TypedSvg$Attributes$InPx$y(size * j),
-					elm_community$typed_svg$TypedSvg$Attributes$fill(
-					elm_community$typed_svg$TypedSvg$Types$Fill(color)),
-					mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$onDown(
 					A2(
-						elm$core$Basics$composeR,
-						function ($) {
-							return $.clientPos;
-						},
-						author$project$CellGrid$MouseClick(
-							_Utils_Tuple2(i, j)))),
-					elm_community$typed_svg$TypedSvg$Attributes$InPx$strokeWidth(cr.gridLineWidth),
-					elm_community$typed_svg$TypedSvg$Attributes$stroke(cr.gridLineColor)
-				]),
-			_List_Nil);
+					elm_community$typed_svg$TypedSvg$rect,
+					_List_fromArray(
+						[
+							elm_community$typed_svg$TypedSvg$Attributes$InPx$width(size),
+							elm_community$typed_svg$TypedSvg$Attributes$InPx$height(size),
+							elm_community$typed_svg$TypedSvg$Attributes$InPx$x(xCoordinate),
+							elm_community$typed_svg$TypedSvg$Attributes$InPx$y(yCoordinate),
+							elm_community$typed_svg$TypedSvg$Attributes$fill(
+							elm_community$typed_svg$TypedSvg$Types$Fill(color)),
+							mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$onDown(
+							A2(
+								elm$core$Basics$composeR,
+								function ($) {
+									return $.clientPos;
+								},
+								author$project$CellGrid$MouseClick(
+									_Utils_Tuple2(i, j)))),
+							elm_community$typed_svg$TypedSvg$Attributes$InPx$strokeWidth(cr.gridLineWidth),
+							elm_community$typed_svg$TypedSvg$Attributes$stroke(cr.gridLineColor)
+						]),
+					_List_Nil),
+					A2(
+					elm_community$typed_svg$TypedSvg$text_,
+					_List_fromArray(
+						[
+							elm_community$typed_svg$TypedSvg$Attributes$transform(
+							_List_fromArray(
+								[
+									A2(elm_community$typed_svg$TypedSvg$Types$Translate, xCoordinate + 7, yCoordinate + 14)
+								])),
+							elm_community$typed_svg$TypedSvg$Attributes$fontSize(
+							elm_community$typed_svg$TypedSvg$Types$Px(9)),
+							elm_community$typed_svg$TypedSvg$Attributes$stroke(
+							A4(avh4$elm_color$Color$rgba, 1, 1, 1, 1))
+						]),
+					_List_fromArray(
+						[
+							elm_community$typed_svg$TypedSvg$Core$text(txt)
+						]))
+				]));
 	});
 var author$project$CellGrid$renderAsSvg = F2(
 	function (cr, cellGrid) {
@@ -19415,7 +19451,11 @@ var author$project$Main$cellRenderer = {
 	cellSize: 25,
 	defaultColor: A3(avh4$elm_color$Color$rgb, 0, 0, 0),
 	gridLineColor: A3(avh4$elm_color$Color$rgb, 0.5, 0.5, 0.5),
-	gridLineWidth: 0.5
+	gridLineWidth: 0.5,
+	text: elm$core$Maybe$Just(
+		function (cell) {
+			return cell.name;
+		})
 };
 var author$project$Main$viewGrid = F3(
 	function (model, w, h) {
