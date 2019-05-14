@@ -5210,6 +5210,9 @@ var author$project$CellGrid$fromList = F3(
 		}
 	});
 var author$project$Grid$Vacant = {$: 'Vacant'};
+var elm$core$Basics$negate = function (n) {
+	return -n;
+};
 var elm$core$Basics$le = _Utils_le;
 var elm$core$List$repeatHelp = F3(
 	function (result, n, value) {
@@ -5253,7 +5256,7 @@ var author$project$Grid$empty = F2(
 				A2(
 					elm$core$List$repeat,
 					rows * columns,
-					{name: 'X', status: author$project$Grid$Vacant})));
+					{id: -1, name: 'X', status: author$project$Grid$Vacant})));
 	});
 var author$project$CellGrid$index = F2(
 	function (nRows, _n0) {
@@ -5340,9 +5343,9 @@ var author$project$Grid$cellFromEntity = function (entity) {
 	var nodeState_ = author$project$Network$nodeState(entity);
 	var _n0 = nodeState_.status;
 	if (_n0.$ === 'Recruited') {
-		return {name: nodeState_.name, status: author$project$Grid$Recruited};
+		return {id: entity.id, name: nodeState_.name, status: author$project$Grid$Recruited};
 	} else {
-		return {name: nodeState_.name, status: author$project$Grid$NotRecruited};
+		return {id: entity.id, name: nodeState_.name, status: author$project$Grid$NotRecruited};
 	}
 };
 var author$project$Grid$insertNode = F2(
@@ -5585,9 +5588,6 @@ var elm_community$intdict$IntDict$inner = F3(
 	});
 var elm$core$Basics$neq = _Utils_notEqual;
 var elm$core$Bitwise$xor = _Bitwise_xor;
-var elm$core$Basics$negate = function (n) {
-	return -n;
-};
 var elm$core$Bitwise$complement = _Bitwise_complement;
 var elm$core$Bitwise$or = _Bitwise_or;
 var elm_community$intdict$IntDict$highestBitSet = function (n) {
@@ -11494,6 +11494,22 @@ var author$project$Main$subscriptions = function (model) {
 				A2(elm$time$Time$every, author$project$Main$gameTimeInterval, author$project$Main$GameTick)
 			]));
 };
+var author$project$CellGrid$cellAtMatrixIndex = F2(
+	function (_n0, grid) {
+		var i = _n0.a;
+		var j = _n0.b;
+		var _n1 = grid;
+		var _n2 = _n1.a;
+		var nRows = _n2.a;
+		var array = _n1.b;
+		return A2(
+			elm$core$Array$get,
+			A2(
+				author$project$CellGrid$index,
+				nRows,
+				_Utils_Tuple2(i, j)),
+			array);
+	});
 var author$project$Main$Drag = F3(
 	function (start, current, index) {
 		return {current: current, index: index, start: start};
@@ -13016,11 +13032,34 @@ var author$project$Main$update = F2(
 				var _n16 = msg_.b;
 				var x = _n16.a;
 				var y = _n16.b;
-				var message = '(i,j) = (' + (elm$core$String$fromInt(i) + (', ' + (elm$core$String$fromInt(j) + ')')));
+				var index = function () {
+					var _n17 = A2(
+						author$project$CellGrid$cellAtMatrixIndex,
+						_Utils_Tuple2(i, j),
+						model.grid);
+					if (_n17.$ === 'Nothing') {
+						return -1;
+					} else {
+						var cell = _n17.a;
+						return cell.id;
+					}
+				}();
+				var message = 'node = ' + (elm$core$String$fromInt(index) + (', (i,j) = (' + (elm$core$String$fromInt(i) + (', ' + (elm$core$String$fromInt(j) + ')')))));
+				var associatedOutgoingNodeIds = A2(author$project$Network$outGoingNodeIds, index, model.hiddenGraph);
+				var newGraph = A3(
+					author$project$Network$connectNodeToNodeInList,
+					model.recruiter,
+					associatedOutgoingNodeIds,
+					A3(
+						author$project$Network$connect,
+						model.recruiter,
+						index,
+						A3(author$project$Network$setStatus, index, author$project$Network$Recruited, model.graph)));
+				var newGrid = A2(author$project$Grid$cellGridFromGraph, author$project$Main$gridWidth, newGraph);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{message: message}),
+						{graph: newGraph, grid: newGrid, message: message}),
 					elm$core$Platform$Cmd$none);
 		}
 	});
@@ -18684,6 +18723,19 @@ var author$project$Main$infoPanel = function (model) {
 					[
 						author$project$Main$displayGraphButton(model),
 						author$project$Main$displayGridButton(model)
+					])),
+				A2(
+				mdgriffith$elm_ui$Element$row,
+				_List_fromArray(
+					[
+						mdgriffith$elm_ui$Element$Font$size(12)
+					]),
+				_List_fromArray(
+					[
+						A2(
+						mdgriffith$elm_ui$Element$el,
+						_List_Nil,
+						mdgriffith$elm_ui$Element$text(model.message))
 					]))
 			]));
 };
@@ -19236,22 +19288,6 @@ var author$project$CellGrid$matrixIndices = function (_n0) {
 var author$project$CellGrid$MouseClick = F2(
 	function (a, b) {
 		return {$: 'MouseClick', a: a, b: b};
-	});
-var author$project$CellGrid$cellAtMatrixIndex = F2(
-	function (_n0, grid) {
-		var i = _n0.a;
-		var j = _n0.b;
-		var _n1 = grid;
-		var _n2 = _n1.a;
-		var nRows = _n2.a;
-		var array = _n1.b;
-		return A2(
-			elm$core$Array$get,
-			A2(
-				author$project$CellGrid$index,
-				nRows,
-				_Utils_Tuple2(i, j)),
-			array);
 	});
 var elm_community$typed_svg$TypedSvg$rect = elm_community$typed_svg$TypedSvg$Core$node('rect');
 var elm_community$typed_svg$TypedSvg$Attributes$height = function (length) {
