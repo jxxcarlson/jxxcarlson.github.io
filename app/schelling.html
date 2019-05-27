@@ -13123,29 +13123,44 @@ var author$project$Schelling$fractionLikeMe = F3(
 	function (model, _n0, array) {
 		var row = _n0.a;
 		var col = _n0.b;
-		var nbs = A3(
-			author$project$Schelling$neighbors,
-			model,
-			_Utils_Tuple2(row, col),
-			array);
-		var numberOfNeighbors = elm$core$List$length(nbs);
 		var me = A3(
 			author$project$Schelling$get,
 			model,
 			_Utils_Tuple2(row, col),
 			array);
-		var myIdentity = author$project$Schelling$identity(me);
-		var myTribe = A2(
-			elm$core$List$filter,
-			function (cell) {
-				return _Utils_eq(
-					author$project$Schelling$identity(cell),
-					myIdentity);
-			},
-			nbs);
-		var sizeOfMyTribe = elm$core$List$length(myTribe);
-		return sizeOfMyTribe / numberOfNeighbors;
+		var _n1 = author$project$Schelling$occupied(me);
+		if (!_n1) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var nbs = A3(
+				author$project$Schelling$neighbors,
+				model,
+				_Utils_Tuple2(row, col),
+				array);
+			var numberOfNeighbors = elm$core$List$length(nbs);
+			var myIdentity = author$project$Schelling$identity(me);
+			var myTribe = A2(
+				elm$core$List$filter,
+				function (cell) {
+					return _Utils_eq(
+						author$project$Schelling$identity(cell),
+						myIdentity);
+				},
+				nbs);
+			var sizeOfMyTribe = elm$core$List$length(myTribe);
+			return elm$core$Maybe$Just(sizeOfMyTribe / numberOfNeighbors);
+		}
 	});
+var elm_community$maybe_extra$Maybe$Extra$foldrValues = F2(
+	function (item, list) {
+		if (item.$ === 1) {
+			return list;
+		} else {
+			var v = item.a;
+			return A2(elm$core$List$cons, v, list);
+		}
+	});
+var elm_community$maybe_extra$Maybe$Extra$values = A2(elm$core$List$foldr, elm_community$maybe_extra$Maybe$Extra$foldrValues, _List_Nil);
 var author$project$Schelling$listFractionLikeMe = F2(
 	function (model, cellArray) {
 		var n = elm$core$Array$length(cellArray);
@@ -13154,22 +13169,13 @@ var author$project$Schelling$listFractionLikeMe = F2(
 			elm$core$List$map,
 			author$project$Schelling$matrixIndex(model),
 			indices);
-		return A2(
-			elm$core$List$map,
-			function (tuple) {
-				return A3(author$project$Schelling$fractionLikeMe, model, tuple, cellArray);
-			},
-			tuples);
-	});
-var elm$core$List$sum = function (numbers) {
-	return A3(elm$core$List$foldl, elm$core$Basics$add, 0, numbers);
-};
-var author$project$Schelling$aggregateFractionLikeMe = F2(
-	function (model, cellArray) {
-		var ratios = A2(author$project$Schelling$listFractionLikeMe, model, cellArray);
-		var sumOfRatios = elm$core$List$sum(ratios);
-		var n = elm$core$List$length(ratios);
-		return sumOfRatios / n;
+		return elm_community$maybe_extra$Maybe$Extra$values(
+			A2(
+				elm$core$List$map,
+				function (tuple) {
+					return A3(author$project$Schelling$fractionLikeMe, model, tuple, cellArray);
+				},
+				tuples));
 	});
 var elm$core$Elm$JsArray$foldl = _JsArray_foldl;
 var elm$core$Array$foldl = F3(
@@ -13191,6 +13197,23 @@ var elm$core$Array$foldl = F3(
 			func,
 			A3(elm$core$Elm$JsArray$foldl, helper, baseCase, tree),
 			tail);
+	});
+var author$project$Schelling$numberOccupied = function (cellArray) {
+	var folder = F2(
+		function (cell, count) {
+			return author$project$Schelling$occupied(cell) ? (1 + count) : count;
+		});
+	return A3(elm$core$Array$foldl, folder, 0, cellArray);
+};
+var elm$core$List$sum = function (numbers) {
+	return A3(elm$core$List$foldl, elm$core$Basics$add, 0, numbers);
+};
+var author$project$Schelling$aggregateFractionLikeMe = F2(
+	function (model, cellArray) {
+		var ratios = A2(author$project$Schelling$listFractionLikeMe, model, cellArray);
+		var sumOfRatios = elm$core$List$sum(ratios);
+		var n = author$project$Schelling$numberOccupied(cellArray);
+		return sumOfRatios / n;
 	});
 var author$project$Schelling$fractionSatisfied = function (cellArray) {
 	var folder = F2(
@@ -13533,7 +13556,7 @@ var author$project$Text$panel = A2(
 			_List_Nil,
 			_List_fromArray(
 				[
-					mdgriffith$elm_ui$Element$text('In 1971, the economist Thomas Schelling formulated a simple model\n                   to help understand patterns of racial segregation. It can be\n                   thought of in terms of a game.  There are two kinds of players — light and dark blue\n                   in the case of the app on the left.  The players are distributed on a grid,\n                   with  certain fraction of the squares vacant — indicated here in a shade of black.\n                   The players can be distributed in any way whatsoever. We have\n                   placed them at random.\n                   ')
+					mdgriffith$elm_ui$Element$text('In 1971, the economist Thomas Schelling formulated a simple model\n                   to help understand patterns of racial segregation. It can be\n                   thought of in terms of a game.  There are two kinds of players — vermillion and blue\n                   in the case of the app on the left.  The players are distributed on a grid,\n                   with  certain fraction of the squares vacant — indicated here in a shade of black.\n                   The players can be distributed in any way whatsoever. We have\n                   placed them at random.\n                   ')
 				])),
 			A2(
 			mdgriffith$elm_ui$Element$paragraph,
