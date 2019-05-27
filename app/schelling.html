@@ -13119,6 +13119,7 @@ var author$project$Main$display = function (model) {
 				A2(author$project$Schelling$renderAsHtml, model.D, model.M))
 			]));
 };
+var author$project$Main$numberDisplayWidth = 95;
 var author$project$Schelling$fractionLikeMe = F3(
 	function (model, _n0, array) {
 		var row = _n0.a;
@@ -13255,7 +13256,9 @@ var author$project$Main$indicators = function (model) {
 		mdgriffith$elm_ui$Element$row,
 		_List_fromArray(
 			[
-				mdgriffith$elm_ui$Element$spacing(18)
+				mdgriffith$elm_ui$Element$spacing(18),
+				mdgriffith$elm_ui$Element$width(
+				mdgriffith$elm_ui$Element$px(430))
 			]),
 		_List_fromArray(
 			[
@@ -13263,7 +13266,9 @@ var author$project$Main$indicators = function (model) {
 				mdgriffith$elm_ui$Element$el,
 				_List_fromArray(
 					[
-						mdgriffith$elm_ui$Element$Font$size(14)
+						mdgriffith$elm_ui$Element$Font$size(14),
+						mdgriffith$elm_ui$Element$width(
+						mdgriffith$elm_ui$Element$px(55))
 					]),
 				mdgriffith$elm_ui$Element$text(
 					'cycle: ' + elm$core$String$fromInt(model.ao))),
@@ -13271,7 +13276,9 @@ var author$project$Main$indicators = function (model) {
 				mdgriffith$elm_ui$Element$el,
 				_List_fromArray(
 					[
-						mdgriffith$elm_ui$Element$Font$size(14)
+						mdgriffith$elm_ui$Element$Font$size(14),
+						mdgriffith$elm_ui$Element$width(
+						mdgriffith$elm_ui$Element$px(author$project$Main$numberDisplayWidth))
 					]),
 				mdgriffith$elm_ui$Element$text(
 					'satisfied: ' + (elm$core$String$fromFloat(
@@ -13283,7 +13290,9 @@ var author$project$Main$indicators = function (model) {
 				mdgriffith$elm_ui$Element$el,
 				_List_fromArray(
 					[
-						mdgriffith$elm_ui$Element$Font$size(14)
+						mdgriffith$elm_ui$Element$Font$size(14),
+						mdgriffith$elm_ui$Element$width(
+						mdgriffith$elm_ui$Element$px(author$project$Main$numberDisplayWidth))
 					]),
 				mdgriffith$elm_ui$Element$text(
 					'threshold: ' + (elm$core$String$fromFloat(
@@ -13292,7 +13301,9 @@ var author$project$Main$indicators = function (model) {
 				mdgriffith$elm_ui$Element$el,
 				_List_fromArray(
 					[
-						mdgriffith$elm_ui$Element$Font$size(14)
+						mdgriffith$elm_ui$Element$Font$size(14),
+						mdgriffith$elm_ui$Element$width(
+						mdgriffith$elm_ui$Element$px(author$project$Main$numberDisplayWidth))
 					]),
 				mdgriffith$elm_ui$Element$text(
 					'similar: ' + (elm$core$String$fromFloat(
