@@ -5081,7 +5081,7 @@ var elm_community$intdict$IntDict$lcp = F2(
 		var branchingBit = elm_community$intdict$IntDict$highestBitSet(x ^ y);
 		var mask = elm_community$intdict$IntDict$higherBitMask(branchingBit);
 		var prefixBits = x & mask;
-		return {aT: branchingBit, Y: prefixBits};
+		return {aT: branchingBit, Z: prefixBits};
 	});
 var elm_community$intdict$IntDict$Leaf = function (a) {
 	return {$: 1, a: a};
@@ -5095,7 +5095,7 @@ var elm_community$intdict$IntDict$prefixMatches = F2(
 	function (p, n) {
 		return _Utils_eq(
 			n & elm_community$intdict$IntDict$higherBitMask(p.aT),
-			p.Y);
+			p.Z);
 	});
 var elm_community$intdict$IntDict$update = F3(
 	function (key, alter, dict) {
@@ -5144,7 +5144,7 @@ var elm_community$intdict$IntDict$update = F3(
 					_Utils_Tuple2(
 						key,
 						alteredNode(elm$core$Maybe$Nothing)),
-					_Utils_Tuple2(i.g.Y, dict));
+					_Utils_Tuple2(i.g.Z, dict));
 		}
 	});
 var elm_community$intdict$IntDict$insert = F3(
@@ -5353,8 +5353,8 @@ var gampleman$elm_visualization$Force$entity = F2(
 		return {
 			a$: index,
 			cr: a,
-			_: 0.0,
 			aa: 0.0,
+			ab: 0.0,
 			bO: radius * elm$core$Basics$cos(angle),
 			bP: radius * elm$core$Basics$sin(angle)
 		};
@@ -6719,12 +6719,12 @@ var author$project$NetworkSimulator$init = function (_n0) {
 		{
 			aU: 0,
 			aW: 1,
-			ac: elm$core$Maybe$Nothing,
+			ad: elm$core$Maybe$Nothing,
 			W: 0,
 			v: 0,
 			k: graph,
 			aZ: 0,
-			ae: A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, graph),
+			X: A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, graph),
 			aF: hiddenGraph,
 			cc: 'No message yet',
 			$7: _List_Nil,
@@ -7472,7 +7472,7 @@ var mpizenberg$elm_pointer_events$Internal$Decode$screenPos = A3(
 	A2(elm$json$Json$Decode$field, 'screenY', elm$json$Json$Decode$float));
 var mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$eventDecoder = A7(elm$json$Json$Decode$map6, mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$Event, mpizenberg$elm_pointer_events$Internal$Decode$keys, mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$buttonDecoder, mpizenberg$elm_pointer_events$Internal$Decode$clientPos, mpizenberg$elm_pointer_events$Internal$Decode$offsetPos, mpizenberg$elm_pointer_events$Internal$Decode$pagePos, mpizenberg$elm_pointer_events$Internal$Decode$screenPos);
 var author$project$NetworkSimulator$simulationSubscription = function (model) {
-	var _n0 = model.ac;
+	var _n0 = model.ad;
 	if (_n0.$ === 1) {
 		return gampleman$elm_visualization$Force$isCompleted(model.P) ? elm$core$Platform$Sub$none : elm$browser$Browser$Events$onAnimationFrame(author$project$NetworkSimulator$Tick);
 	} else {
@@ -7735,6 +7735,38 @@ var author$project$CellGrid$cellAtMatrixIndex = F2(
 				_Utils_Tuple2(i, j)),
 			array);
 	});
+var elm$core$Elm$JsArray$foldl = _JsArray_foldl;
+var elm$core$Array$foldl = F3(
+	function (func, baseCase, _n0) {
+		var tree = _n0.c;
+		var tail = _n0.d;
+		var helper = F2(
+			function (node, acc) {
+				if (!node.$) {
+					var subTree = node.a;
+					return A3(elm$core$Elm$JsArray$foldl, helper, acc, subTree);
+				} else {
+					var values = node.a;
+					return A3(elm$core$Elm$JsArray$foldl, func, acc, values);
+				}
+			});
+		return A3(
+			elm$core$Elm$JsArray$foldl,
+			func,
+			A3(elm$core$Elm$JsArray$foldl, helper, baseCase, tree),
+			tail);
+	});
+var author$project$Grid$recruitedCount = function (_n0) {
+	var cellArray = _n0.b;
+	return A3(
+		elm$core$Array$foldl,
+		F2(
+			function (cell, acc) {
+				return (!cell.bg) ? (acc + 1) : acc;
+			}),
+		0,
+		cellArray);
+};
 var author$project$Network$alterLink = function (_n0) {
 	var from = _n0.a;
 	var to = _n0.b;
@@ -8073,13 +8105,19 @@ var author$project$Network$recruitNodes = F4(
 				A3(author$project$Network$connect, recruiterNode, newNodeId, currentGraph));
 		}
 	});
+var author$project$NetworkSimulator$Chirp = 1;
+var author$project$NetworkSimulator$Coo = 2;
 var author$project$NetworkSimulator$Drag = F3(
 	function (start, current, index) {
 		return {d3: current, b3: index, dD: start};
 	});
-var author$project$NetworkSimulator$GameOver = 3;
+var author$project$NetworkSimulator$GameEnding = 3;
+var author$project$NetworkSimulator$GameOver = 4;
+var author$project$NetworkSimulator$LongChirp = 3;
 var author$project$NetworkSimulator$Paused = 2;
 var author$project$NetworkSimulator$Running = 1;
+var author$project$NetworkSimulator$Silence = 0;
+var author$project$NetworkSimulator$VeryLongChirp = 4;
 var author$project$NetworkSimulator$GotRandomNumbers = function (a) {
 	return {$: 11, a: a};
 };
@@ -8231,6 +8269,26 @@ var author$project$NetworkSimulator$putCmd = F2(
 		return _Utils_Tuple2(model, cmd);
 	});
 var author$project$NetworkSimulator$searchForInfluencersInterval = 4;
+var elm$json$Json$Encode$string = _Json_wrap;
+var author$project$NetworkSimulator$encodeAudioMessage = function (msg) {
+	switch (msg) {
+		case 0:
+			return elm$json$Json$Encode$string('silence');
+		case 1:
+			return elm$json$Json$Encode$string('chirp');
+		case 2:
+			return elm$json$Json$Encode$string('coo');
+		case 3:
+			return elm$json$Json$Encode$string('longChirp');
+		default:
+			return elm$json$Json$Encode$string('veryLongChirp');
+	}
+};
+var author$project$NetworkSimulator$sendMessage = _Platform_outgoingPort('sendMessage', elm$core$Basics$identity);
+var author$project$NetworkSimulator$sendAudioMessage = function (audioMsg) {
+	return author$project$NetworkSimulator$sendMessage(
+		author$project$NetworkSimulator$encodeAudioMessage(audioMsg));
+};
 var author$project$Network$updateContextWithValue = F2(
 	function (nodeCtx, value) {
 		var node = nodeCtx.a9;
@@ -8896,7 +8954,7 @@ var gampleman$elm_visualization$Force$ManyBody$wrapper = F4(
 					return elm$core$Maybe$Just(
 						_Utils_update(
 							point,
-							{_: point._ + dvx, aa: point.aa + dvy}));
+							{aa: point.aa + dvx, ab: point.ab + dvy}));
 				}
 			});
 		var newVertices = A3(gampleman$elm_visualization$Force$ManyBody$manyBody, alpha, theta, vertices);
@@ -8962,8 +9020,8 @@ var gampleman$elm_visualization$Force$applyForce = F3(
 							if ((!_n6.a.$) && (!_n6.b.$)) {
 								var sourceNode = _n6.a.a;
 								var targetNode = _n6.b.a;
-								var y = ((targetNode.bP + targetNode.aa) - sourceNode.bP) - sourceNode.aa;
-								var x = ((targetNode.bO + targetNode._) - sourceNode.bO) - sourceNode._;
+								var y = ((targetNode.bP + targetNode.ab) - sourceNode.bP) - sourceNode.ab;
+								var x = ((targetNode.bO + targetNode.aa) - sourceNode.bO) - sourceNode.aa;
 								var d = elm$core$Basics$sqrt(
 									A2(elm$core$Basics$pow, x, 2) + A2(elm$core$Basics$pow, y, 2));
 								var l = (((d - distance) / d) * alpha) * strength;
@@ -8974,7 +9032,7 @@ var gampleman$elm_visualization$Force$applyForce = F3(
 										function (tn) {
 											return _Utils_update(
 												tn,
-												{_: tn._ + ((x * l) * (1 - bias)), aa: tn.aa + ((y * l) * (1 - bias))});
+												{aa: tn.aa + ((x * l) * (1 - bias)), ab: tn.ab + ((y * l) * (1 - bias))});
 										}),
 									A3(
 										elm$core$Dict$update,
@@ -8983,7 +9041,7 @@ var gampleman$elm_visualization$Force$applyForce = F3(
 											function (sn) {
 												return _Utils_update(
 													sn,
-													{_: sn._ - ((x * l) * bias), aa: sn.aa - ((y * l) * bias)});
+													{aa: sn.aa - ((x * l) * bias), ab: sn.ab - ((y * l) * bias)});
 											}),
 										ents));
 							} else {
@@ -9011,7 +9069,7 @@ var gampleman$elm_visualization$Force$tick = F2(
 		var updateEntity = function (ent) {
 			return _Utils_update(
 				ent,
-				{_: ent._ * state.bN, aa: ent.aa * state.bN, bO: ent.bO + (ent._ * state.bN), bP: ent.bP + (ent.aa * state.bN)});
+				{aa: ent.aa * state.bN, ab: ent.ab * state.bN, bO: ent.bO + (ent.aa * state.bN), bP: ent.bP + (ent.ab * state.bN)});
 		};
 		var dictNodes = A3(
 			elm$core$List$foldl,
@@ -9051,7 +9109,7 @@ var author$project$NetworkSimulator$update = F2(
 						elm_community$graph$Graph$nodes(model.k)));
 				var newState = _n1.a;
 				var list = _n1.b;
-				var _n2 = model.ac;
+				var _n2 = model.ad;
 				if (_n2.$ === 1) {
 					return A2(
 						author$project$NetworkSimulator$putCmd,
@@ -9100,7 +9158,7 @@ var author$project$NetworkSimulator$update = F2(
 					_Utils_update(
 						model,
 						{
-							ac: elm$core$Maybe$Just(
+							ad: elm$core$Maybe$Just(
 								A3(author$project$NetworkSimulator$Drag, xy, xy, index))
 						}));
 			case 1:
@@ -9127,12 +9185,12 @@ var author$project$NetworkSimulator$update = F2(
 						{
 							aU: model.aU + 1,
 							k: newGraph,
-							ae: newGrid,
+							X: newGrid,
 							P: gampleman$elm_visualization$Force$simulation(forces)
 						}));
 			case 2:
 				var xy = msg.a;
-				var _n4 = model.ac;
+				var _n4 = model.ad;
 				if (!_n4.$) {
 					var start = _n4.a.dD;
 					var index = _n4.a.b3;
@@ -9142,7 +9200,7 @@ var author$project$NetworkSimulator$update = F2(
 						_Utils_update(
 							model,
 							{
-								ac: elm$core$Maybe$Just(
+								ad: elm$core$Maybe$Just(
 									A3(author$project$NetworkSimulator$Drag, start, xy, index)),
 								k: A3(
 									elm_community$graph$Graph$update,
@@ -9157,7 +9215,7 @@ var author$project$NetworkSimulator$update = F2(
 				}
 			case 3:
 				var xy = msg.a;
-				var _n5 = model.ac;
+				var _n5 = model.ad;
 				if (!_n5.$) {
 					var start = _n5.a.dD;
 					var index = _n5.a.b3;
@@ -9167,7 +9225,7 @@ var author$project$NetworkSimulator$update = F2(
 						_Utils_update(
 							model,
 							{
-								ac: elm$core$Maybe$Nothing,
+								ad: elm$core$Maybe$Nothing,
 								k: A3(
 									elm_community$graph$Graph$update,
 									index,
@@ -9196,12 +9254,14 @@ var author$project$NetworkSimulator$update = F2(
 							return 2;
 						case 2:
 							return 1;
+						case 4:
+							return 4;
 						default:
-							return 1;
+							return 4;
 					}
 				}();
 				var _n6 = model.v;
-				if (_n6 === 3) {
+				if (_n6 === 4) {
 					var _n7 = author$project$Network$setupGraph(author$project$Network$testGraph);
 					var forces = _n7.a;
 					var graph = _n7.b;
@@ -9215,7 +9275,7 @@ var author$project$NetworkSimulator$update = F2(
 								W: 0,
 								v: newGameState,
 								k: graph,
-								ae: A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, graph),
+								X: A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, graph),
 								P: gampleman$elm_visualization$Force$simulation(forces)
 							}));
 				} else {
@@ -9239,19 +9299,20 @@ var author$project$NetworkSimulator$update = F2(
 				return _Utils_Tuple2(model, author$project$NetworkSimulator$getRandomNumbers);
 			case 11:
 				var numbers = msg.a;
+				var recruitCount1 = author$project$Grid$recruitedCount(model.X);
 				var newGraph1 = function () {
-					var _n12 = (model.v === 1) && (!A2(elm$core$Basics$modBy, author$project$NetworkSimulator$searchForInfluencersInterval, model.W));
-					if (_n12) {
+					var _n17 = (model.v === 1) && (!A2(elm$core$Basics$modBy, author$project$NetworkSimulator$searchForInfluencersInterval, model.W));
+					if (_n17) {
 						return A4(author$project$Network$recruitNodes, numbers, model.z, model.k, model.aF);
 					} else {
 						return model.k;
 					}
 				}();
 				var newGraph2 = function () {
-					var _n10 = (model.v === 1) && ((!A2(elm$core$Basics$modBy, 41, model.W)) && (!_Utils_eq(
+					var _n15 = (model.v === 1) && ((!A2(elm$core$Basics$modBy, 41, model.W)) && (!_Utils_eq(
 						A2(author$project$Network$influencees, model.z, newGraph1),
 						_List_Nil)));
-					if (!_n10) {
+					if (!_n15) {
 						return newGraph1;
 					} else {
 						var rn2 = A2(elm_community$list_extra$List$Extra$getAt, 2, numbers);
@@ -9276,22 +9337,58 @@ var author$project$NetworkSimulator$update = F2(
 					}
 				}();
 				var newGrid = A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, newGraph2);
+				var recruitCount2 = author$project$Grid$recruitedCount(newGrid);
 				var newGameState = function () {
-					var _n9 = _Utils_eq(
+					var everyoneRecruited = _Utils_eq(
 						elm$core$List$length(
 							A2(author$project$Network$influencees, model.z, newGraph2)),
 						elm_community$graph$Graph$size(newGraph2) - 1);
-					if (_n9) {
-						return 3;
-					} else {
-						return model.v;
+					var _n12 = _Utils_Tuple2(model.v, everyoneRecruited);
+					_n12$2:
+					while (true) {
+						switch (_n12.a) {
+							case 1:
+								if (_n12.b) {
+									var _n13 = _n12.a;
+									return 3;
+								} else {
+									break _n12$2;
+								}
+							case 3:
+								var _n14 = _n12.a;
+								return 4;
+							default:
+								break _n12$2;
+						}
 					}
+					return model.v;
+				}();
+				var audioMsg = function () {
+					var _n9 = _Utils_Tuple2(newGameState, (recruitCount2 - recruitCount1) > 0);
+					_n9$2:
+					while (true) {
+						switch (_n9.a) {
+							case 3:
+								var _n10 = _n9.a;
+								return 4;
+							case 1:
+								if (_n9.b) {
+									var _n11 = _n9.a;
+									return 2;
+								} else {
+									break _n9$2;
+								}
+							default:
+								break _n9$2;
+						}
+					}
+					return 0;
 				}();
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{v: newGameState, k: newGraph2, ae: newGrid, $7: numbers}),
-					elm$core$Platform$Cmd$none);
+						{v: newGameState, k: newGraph2, X: newGrid, $7: numbers}),
+					author$project$NetworkSimulator$sendAudioMessage(audioMsg));
 			case 12:
 				var displayMode = msg.a;
 				return _Utils_Tuple2(
@@ -9300,9 +9397,9 @@ var author$project$NetworkSimulator$update = F2(
 						{aW: displayMode}),
 					elm$core$Platform$Cmd$none);
 			case 9:
-				var _n13 = author$project$Network$setupGraph(author$project$Network$testGraph);
-				var forces = _n13.a;
-				var graph = _n13.b;
+				var _n18 = author$project$Network$setupGraph(author$project$Network$testGraph);
+				var forces = _n18.a;
+				var graph = _n18.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -9310,31 +9407,39 @@ var author$project$NetworkSimulator$update = F2(
 							W: 0,
 							v: 0,
 							k: graph,
-							ae: A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, graph)
+							X: A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, graph)
 						}),
 					elm$core$Platform$Cmd$none);
 			default:
 				var msg_ = msg.a;
-				var _n15 = msg_.a;
-				var i = _n15.a;
-				var j = _n15.b;
-				var _n16 = msg_.b;
-				var x = _n16.a;
-				var y = _n16.b;
+				var _n20 = msg_.a;
+				var i = _n20.a;
+				var j = _n20.b;
+				var _n21 = msg_.b;
+				var x = _n21.a;
+				var y = _n21.b;
 				var index = function () {
-					var _n17 = A2(
+					var _n23 = A2(
 						author$project$CellGrid$cellAtMatrixIndex,
 						_Utils_Tuple2(i, j),
-						model.ae);
-					if (_n17.$ === 1) {
+						model.X);
+					if (_n23.$ === 1) {
 						return -1;
 					} else {
-						var cell = _n17.a;
+						var cell = _n23.a;
 						return cell.a$;
 					}
 				}();
-				var message = 'Grid, node = ' + (elm$core$String$fromInt(index) + (', (i,j) = (' + (elm$core$String$fromInt(i) + (', ' + (elm$core$String$fromInt(j) + ')')))));
+				var message = 'CHIRP1, Grid, node = ' + (elm$core$String$fromInt(index) + (', (i,j) = (' + (elm$core$String$fromInt(i) + (', ' + (elm$core$String$fromInt(j) + ')')))));
 				var associatedOutgoingNodeIds = A2(author$project$Network$outGoingNodeIds, index, model.aF);
+				var audioMsg = function () {
+					var _n22 = !elm$core$List$length(associatedOutgoingNodeIds);
+					if (_n22) {
+						return 1;
+					} else {
+						return 3;
+					}
+				}();
 				var newGraph = A3(
 					author$project$Network$connectNodeToNodeInList,
 					model.z,
@@ -9348,8 +9453,8 @@ var author$project$NetworkSimulator$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{k: newGraph, ae: newGrid, cc: message}),
-					elm$core$Platform$Cmd$none);
+						{k: newGraph, X: newGrid, cc: message}),
+					author$project$NetworkSimulator$sendAudioMessage(audioMsg));
 		}
 	});
 var mdgriffith$elm_ui$Internal$Model$Height = function (a) {
@@ -9375,9 +9480,9 @@ var mdgriffith$elm_ui$Internal$Flag$Field = F2(
 	});
 var mdgriffith$elm_ui$Internal$Flag$none = A2(mdgriffith$elm_ui$Internal$Flag$Field, 0, 0);
 var mdgriffith$elm_ui$Internal$Model$NoNearbyChildren = {$: 0};
-var mdgriffith$elm_ui$Internal$Style$classes = {fw: 'a', ct: 'atv', fy: 'ab', fz: 'cx', fA: 'cy', fB: 'acb', fC: 'accx', fD: 'accy', fE: 'acr', dS: 'al', dT: 'ar', fF: 'at', cu: 'ah', cv: 'av', fI: 's', fN: 'bh', fO: 'b', fQ: 'w7', fS: 'bd', fT: 'bdt', bQ: 'bn', fU: 'bs', bU: 'cpe', f1: 'cp', f2: 'cpx', f3: 'cpy', ap: 'c', bW: 'ctr', bX: 'cb', bY: 'ccx', aq: 'ccy', bp: 'cl', bZ: 'cr', f7: 'ct', ga: 'cptr', gb: 'ctxt', gt: 'fcs', gv: 'fs', ae: 'g', cK: 'hbh', b2: 'hc', cL: 'hf', el: 'hfp', gy: 'hv', gB: 'ic', gD: 'fr', gH: 'iml', gI: 'it', gL: 'i', a7: 'nb', eI: 'notxt', gZ: 'ol', g_: 'or', aI: 'oq', g4: 'oh', eR: 'pg', eS: 'p', g6: 'ppe', he: 'ui', e4: 'r', hj: 'sb', hk: 'sbx', hl: 'sby', hn: 'sbt', hq: 'e', hr: 'cap', ht: 'sev', hA: 'sk', ff: 't', hH: 'tc', hI: 'w8', hJ: 'w2', hK: 'w9', hL: 'tj', cm: 'tja', hM: 'tl', hN: 'w3', hO: 'w5', hP: 'w4', hQ: 'tr', hR: 'w6', hS: 'w1', hT: 'tun', fj: 'ts', aO: 'clr', h3: 'u', dM: 'wc', fr: 'we', dN: 'wf', fs: 'wfp', dO: 'wrp'};
+var mdgriffith$elm_ui$Internal$Style$classes = {fw: 'a', ct: 'atv', fy: 'ab', fz: 'cx', fA: 'cy', fB: 'acb', fC: 'accx', fD: 'accy', fE: 'acr', dS: 'al', dT: 'ar', fF: 'at', cu: 'ah', cv: 'av', fI: 's', fN: 'bh', fO: 'b', fQ: 'w7', fS: 'bd', fT: 'bdt', bQ: 'bn', fU: 'bs', bU: 'cpe', f1: 'cp', f2: 'cpx', f3: 'cpy', ap: 'c', bW: 'ctr', bX: 'cb', bY: 'ccx', aq: 'ccy', bp: 'cl', bZ: 'cr', f7: 'ct', ga: 'cptr', gb: 'ctxt', gt: 'fcs', gv: 'fs', X: 'g', cK: 'hbh', b2: 'hc', cL: 'hf', el: 'hfp', gy: 'hv', gB: 'ic', gD: 'fr', gH: 'iml', gI: 'it', gL: 'i', a7: 'nb', eI: 'notxt', gZ: 'ol', g_: 'or', aI: 'oq', g4: 'oh', eR: 'pg', eS: 'p', g6: 'ppe', he: 'ui', e4: 'r', hj: 'sb', hk: 'sbx', hl: 'sby', hn: 'sbt', hq: 'e', hr: 'cap', ht: 'sev', hA: 'sk', ff: 't', hH: 'tc', hI: 'w8', hJ: 'w2', hK: 'w9', hL: 'tj', cm: 'tja', hM: 'tl', hN: 'w3', hO: 'w5', hP: 'w4', hQ: 'tr', hR: 'w6', hS: 'w1', hT: 'tun', fj: 'ts', aO: 'clr', h3: 'u', dM: 'wc', fr: 'we', dN: 'wf', fs: 'wfp', dO: 'wrp'};
 var mdgriffith$elm_ui$Internal$Model$columnClass = mdgriffith$elm_ui$Internal$Style$classes.fI + (' ' + mdgriffith$elm_ui$Internal$Style$classes.ap);
-var mdgriffith$elm_ui$Internal$Model$gridClass = mdgriffith$elm_ui$Internal$Style$classes.fI + (' ' + mdgriffith$elm_ui$Internal$Style$classes.ae);
+var mdgriffith$elm_ui$Internal$Model$gridClass = mdgriffith$elm_ui$Internal$Style$classes.fI + (' ' + mdgriffith$elm_ui$Internal$Style$classes.X);
 var mdgriffith$elm_ui$Internal$Model$pageClass = mdgriffith$elm_ui$Internal$Style$classes.fI + (' ' + mdgriffith$elm_ui$Internal$Style$classes.eR);
 var mdgriffith$elm_ui$Internal$Model$paragraphClass = mdgriffith$elm_ui$Internal$Style$classes.fI + (' ' + mdgriffith$elm_ui$Internal$Style$classes.eS);
 var mdgriffith$elm_ui$Internal$Model$rowClass = mdgriffith$elm_ui$Internal$Style$classes.fI + (' ' + mdgriffith$elm_ui$Internal$Style$classes.e4);
@@ -9485,7 +9590,6 @@ var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$p = _VirtualDom_node('p');
 var elm$html$Html$s = _VirtualDom_node('s');
 var elm$html$Html$u = _VirtualDom_node('u');
-var elm$json$Json$Encode$string = _Json_wrap;
 var elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -9656,7 +9760,7 @@ var mdgriffith$elm_ui$Internal$Model$getStyleName = function (style) {
 				A2(elm$core$List$map, mdgriffith$elm_ui$Internal$Model$lengthClassName, template.hf)) + ('-cols-' + (A2(
 				elm$core$String$join,
 				'-',
-				A2(elm$core$List$map, mdgriffith$elm_ui$Internal$Model$lengthClassName, template.ab)) + ('-space-x-' + (mdgriffith$elm_ui$Internal$Model$lengthClassName(template.hu.a) + ('-space-y-' + mdgriffith$elm_ui$Internal$Model$lengthClassName(template.hu.b)))))));
+				A2(elm$core$List$map, mdgriffith$elm_ui$Internal$Model$lengthClassName, template.ac)) + ('-space-x-' + (mdgriffith$elm_ui$Internal$Model$lengthClassName(template.hu.a) + ('-space-y-' + mdgriffith$elm_ui$Internal$Model$lengthClassName(template.hu.b)))))));
 		case 9:
 			var pos = style.a;
 			return 'gp grid-pos-' + (elm$core$String$fromInt(pos.e4) + ('-' + (elm$core$String$fromInt(pos.d0) + ('-' + (elm$core$String$fromInt(pos.bl) + ('-' + elm$core$String$fromInt(pos.a_)))))));
@@ -10990,7 +11094,7 @@ var mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				mdgriffith$elm_ui$Internal$Style$Descriptor,
-				mdgriffith$elm_ui$Internal$Style$dot(mdgriffith$elm_ui$Internal$Style$classes.ae),
+				mdgriffith$elm_ui$Internal$Style$dot(mdgriffith$elm_ui$Internal$Style$classes.X),
 				_List_fromArray(
 					[
 						A2(mdgriffith$elm_ui$Internal$Style$Prop, 'display', '-ms-grid'),
@@ -11235,7 +11339,7 @@ var mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						mdgriffith$elm_ui$Internal$Style$Child,
-						mdgriffith$elm_ui$Internal$Style$dot(mdgriffith$elm_ui$Internal$Style$classes.ae),
+						mdgriffith$elm_ui$Internal$Style$dot(mdgriffith$elm_ui$Internal$Style$classes.X),
 						_List_fromArray(
 							[
 								A2(mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'inline-grid')
@@ -12454,14 +12558,14 @@ var mdgriffith$elm_ui$Internal$Model$toStyleSheetString = F2(
 							A2(
 								elm$core$String$join,
 								ySpacing,
-								A2(elm$core$List$map, toGridLength, template.ab)));
+								A2(elm$core$List$map, toGridLength, template.ac)));
 						var msColumns = function (x) {
 							return '-ms-grid-columns: ' + (x + ';');
 						}(
 							A2(
 								elm$core$String$join,
 								ySpacing,
-								A2(elm$core$List$map, toGridLength, template.ab)));
+								A2(elm$core$List$map, toGridLength, template.ac)));
 						var gapY = 'grid-row-gap:' + (toGridLength(template.hu.b) + ';');
 						var gapX = 'grid-column-gap:' + (toGridLength(template.hu.a) + ';');
 						var columns = function (x) {
@@ -12470,14 +12574,14 @@ var mdgriffith$elm_ui$Internal$Model$toStyleSheetString = F2(
 							A2(
 								elm$core$String$join,
 								' ',
-								A2(elm$core$List$map, toGridLength, template.ab)));
+								A2(elm$core$List$map, toGridLength, template.ac)));
 						var _class = '.grid-rows-' + (A2(
 							elm$core$String$join,
 							'-',
 							A2(elm$core$List$map, mdgriffith$elm_ui$Internal$Model$lengthClassName, template.hf)) + ('-cols-' + (A2(
 							elm$core$String$join,
 							'-',
-							A2(elm$core$List$map, mdgriffith$elm_ui$Internal$Model$lengthClassName, template.ab)) + ('-space-x-' + (mdgriffith$elm_ui$Internal$Model$lengthClassName(template.hu.a) + ('-space-y-' + mdgriffith$elm_ui$Internal$Model$lengthClassName(template.hu.b)))))));
+							A2(elm$core$List$map, mdgriffith$elm_ui$Internal$Model$lengthClassName, template.ac)) + ('-space-x-' + (mdgriffith$elm_ui$Internal$Model$lengthClassName(template.hu.a) + ('-space-y-' + mdgriffith$elm_ui$Internal$Model$lengthClassName(template.hu.b)))))));
 						var modernGrid = _class + ('{' + (columns + (rows + (gapX + (gapY + '}')))));
 						var supports = '@supports (display:grid) {' + (modernGrid + '}');
 						var base = _class + ('{' + (msColumns + (msRows + '}')));
@@ -14471,7 +14575,7 @@ var mdgriffith$elm_ui$Element$Font$size = function (i) {
 };
 var author$project$NetworkSimulator$clockIndicator = function (model) {
 	var _n0 = model.v;
-	if (_n0 === 3) {
+	if (_n0 === 4) {
 		return A2(
 			mdgriffith$elm_ui$Element$el,
 			_List_fromArray(
@@ -14797,6 +14901,8 @@ var author$project$NetworkSimulator$controlButtonTitle = function (model) {
 			return 'Running';
 		case 2:
 			return 'Paused';
+		case 3:
+			return 'Game ending';
 		default:
 			return 'Play again';
 	}
@@ -15780,7 +15886,7 @@ var author$project$NetworkSimulator$viewGrid = F3(
 		return A2(
 			elm$html$Html$map,
 			author$project$NetworkSimulator$CellGrid,
-			A4(author$project$CellGrid$renderAsHtml, 500, 500, author$project$NetworkSimulator$cellRenderer, model.ae));
+			A4(author$project$CellGrid$renderAsHtml, 500, 500, author$project$NetworkSimulator$cellRenderer, model.X));
 	});
 var mdgriffith$elm_ui$Internal$Model$unstyled = A2(elm$core$Basics$composeL, mdgriffith$elm_ui$Internal$Model$Unstyled, elm$core$Basics$always);
 var mdgriffith$elm_ui$Element$html = mdgriffith$elm_ui$Internal$Model$unstyled;

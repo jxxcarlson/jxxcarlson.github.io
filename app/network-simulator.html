@@ -20,5 +20,39 @@
      }
    });
 
+   app.ports.sendMessage.subscribe(msg => handleMessage(msg))
+
+   var handleMessage = function(msg) {
+
+     switch(msg) {
+
+        case "chirp":
+             console.log("Chirp")
+             var audio = new Audio('audio/chirp1.wav');
+             audio.play();
+             break;
+
+        case "longChirp":
+             console.log("Long Chirp")
+             var audio = new Audio('audio/chirp2.wav');
+             audio.play();
+             break;
+
+        case "veryLongChirp":
+            console.log("Very Long Chirp")
+            var audio = new Audio('audio/ending.wav');
+            audio.play();
+            break;
+
+        case "coo":
+             console.log("Coo")
+             var audio = new Audio('audio/lowRise.wav');
+             audio.play();
+             break;
+        }
+
+     }
+
+
 </script>
 </body>
