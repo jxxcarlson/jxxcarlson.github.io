@@ -9486,6 +9486,7 @@ var author$project$NetworkSimulator$update = F2(
 					var _n20 = msg_.b;
 					var x = _n20.a;
 					var y = _n20.b;
+					var message = '';
 					var index = function () {
 						var _n22 = A2(
 							author$project$CellGrid$cellAtMatrixIndex,
@@ -9498,7 +9499,6 @@ var author$project$NetworkSimulator$update = F2(
 							return cell.a0;
 						}
 					}();
-					var message = 'CHIRP1, Grid, node = ' + (elm$core$String$fromInt(index) + (', (i,j) = (' + (elm$core$String$fromInt(i) + (', ' + (elm$core$String$fromInt(j) + ')')))));
 					var associatedOutgoingNodeIds = A2(author$project$Network$outGoingNodeIds, index, model.aF);
 					var audioMsg = function () {
 						var _n21 = !elm$core$List$length(associatedOutgoingNodeIds);
@@ -14665,19 +14665,6 @@ var author$project$NetworkSimulator$clockIndicator = function (model) {
 				'Clock: ' + elm$core$String$fromInt(model.X)));
 	}
 };
-var author$project$NetworkSimulator$influenceesDisplay = function (model) {
-	var ii = A2(
-		elm$core$String$join,
-		', ',
-		A2(
-			elm$core$List$map,
-			elm$core$String$fromInt,
-			A2(author$project$Network$influencees, model.P, model.j)));
-	return A2(
-		mdgriffith$elm_ui$Element$el,
-		_List_Nil,
-		mdgriffith$elm_ui$Element$text('Influencees: ' + ii));
-};
 var author$project$NetworkSimulator$recruitedDisplay = function (model) {
 	var n = elm$core$String$fromInt(
 		author$project$Grid$recruitedCount(model.L) - 1);
@@ -15106,8 +15093,7 @@ var author$project$NetworkSimulator$controlPanel = function (model) {
 					[
 						author$project$NetworkSimulator$startOverButton(model),
 						author$project$NetworkSimulator$resetButton(model)
-					])),
-				author$project$NetworkSimulator$influenceesDisplay(model)
+					]))
 			]));
 };
 var author$project$NetworkSimulator$DisplayGraph = 0;
@@ -15192,20 +15178,6 @@ var author$project$NetworkSimulator$infoPanel = function (model) {
 						mdgriffith$elm_ui$Element$Font$size(14)
 					]),
 				mdgriffith$elm_ui$Element$text('Click on nodes to \'recruit\' them.')),
-				A2(
-				mdgriffith$elm_ui$Element$el,
-				_List_fromArray(
-					[
-						mdgriffith$elm_ui$Element$Font$size(14)
-					]),
-				mdgriffith$elm_ui$Element$text('Clicking certain nodes will automatically recruit others.')),
-				A2(
-				mdgriffith$elm_ui$Element$el,
-				_List_fromArray(
-					[
-						mdgriffith$elm_ui$Element$Font$size(14)
-					]),
-				mdgriffith$elm_ui$Element$text('Why?')),
 				A2(
 				mdgriffith$elm_ui$Element$row,
 				_List_fromArray(
