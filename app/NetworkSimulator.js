@@ -4596,7 +4596,7 @@ var elm$core$Array$builderToArray = F2(
 			var treeLen = builder.n * elm$core$Array$branchFactor;
 			var depth = elm$core$Basics$floor(
 				A2(elm$core$Basics$logBase, elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? elm$core$List$reverse(builder.s) : builder.s;
+			var correctNodeList = reverseNodeList ? elm$core$List$reverse(builder.t) : builder.t;
 			var tree = A2(elm$core$Array$treeFromBuilder, correctNodeList, builder.n);
 			return A4(
 				elm$core$Array$Array_elm_builtin,
@@ -4621,7 +4621,7 @@ var elm$core$Array$fromListHelp = F3(
 				return A2(
 					elm$core$Array$builderToArray,
 					true,
-					{s: nodeList, n: nodeListSize, r: jsArray});
+					{t: nodeList, n: nodeListSize, r: jsArray});
 			} else {
 				var $temp$list = remainingItems,
 					$temp$nodeList = A2(
@@ -6467,7 +6467,7 @@ var elm$core$Array$initializeHelp = F5(
 				return A2(
 					elm$core$Array$builderToArray,
 					false,
-					{s: nodeList, n: (len / elm$core$Array$branchFactor) | 0, r: tail});
+					{t: nodeList, n: (len / elm$core$Array$branchFactor) | 0, r: tail});
 			} else {
 				var leaf = elm$core$Array$Leaf(
 					A3(elm$core$Elm$JsArray$initialize, elm$core$Array$branchFactor, fromIndex, fn));
@@ -6721,7 +6721,7 @@ var author$project$NetworkSimulator$init = function (_n0) {
 			aW: 1,
 			ad: elm$core$Maybe$Nothing,
 			W: 0,
-			v: 0,
+			s: 0,
 			k: graph,
 			aZ: 0,
 			X: A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, graph),
@@ -9139,7 +9139,7 @@ var author$project$NetworkSimulator$update = F2(
 				}
 			case 5:
 				var t = msg.a;
-				var _n3 = model.v;
+				var _n3 = model.s;
 				if (_n3 === 1) {
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -9164,30 +9164,34 @@ var author$project$NetworkSimulator$update = F2(
 			case 1:
 				var index = msg.a;
 				var xy = msg.b;
-				var associatedOutgoingNodeIds = A2(author$project$Network$outGoingNodeIds, index, model.aF);
-				var newGraph = A3(
-					author$project$Network$connectNodeToNodeInList,
-					model.z,
-					associatedOutgoingNodeIds,
-					A3(
-						author$project$Network$connect,
+				if (model.s !== 1) {
+					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				} else {
+					var associatedOutgoingNodeIds = A2(author$project$Network$outGoingNodeIds, index, model.aF);
+					var newGraph = A3(
+						author$project$Network$connectNodeToNodeInList,
 						model.z,
-						index,
-						A3(author$project$Network$setStatus, index, 0, model.k)));
-				var forces = author$project$Network$computeForces(newGraph);
-				var newGrid = A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, newGraph);
-				var associatedIncomingNodeIds = A2(author$project$Network$inComingNodeIds, index, model.aF);
-				return A2(
-					author$project$NetworkSimulator$putCmd,
-					elm$core$Platform$Cmd$none,
-					_Utils_update(
-						model,
-						{
-							aU: model.aU + 1,
-							k: newGraph,
-							X: newGrid,
-							P: gampleman$elm_visualization$Force$simulation(forces)
-						}));
+						associatedOutgoingNodeIds,
+						A3(
+							author$project$Network$connect,
+							model.z,
+							index,
+							A3(author$project$Network$setStatus, index, 0, model.k)));
+					var forces = author$project$Network$computeForces(newGraph);
+					var newGrid = A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, newGraph);
+					var associatedIncomingNodeIds = A2(author$project$Network$inComingNodeIds, index, model.aF);
+					return A2(
+						author$project$NetworkSimulator$putCmd,
+						elm$core$Platform$Cmd$none,
+						_Utils_update(
+							model,
+							{
+								aU: model.aU + 1,
+								k: newGraph,
+								X: newGrid,
+								P: gampleman$elm_visualization$Force$simulation(forces)
+							}));
+				}
 			case 2:
 				var xy = msg.a;
 				var _n4 = model.ad;
@@ -9246,7 +9250,7 @@ var author$project$NetworkSimulator$update = F2(
 						{aZ: behavior}));
 			case 8:
 				var newGameState = function () {
-					var _n8 = model.v;
+					var _n8 = model.s;
 					switch (_n8) {
 						case 0:
 							return 1;
@@ -9260,7 +9264,7 @@ var author$project$NetworkSimulator$update = F2(
 							return 4;
 					}
 				}();
-				var _n6 = model.v;
+				var _n6 = model.s;
 				if (_n6 === 4) {
 					var _n7 = author$project$Network$setupGraph(author$project$Network$testGraph);
 					var forces = _n7.a;
@@ -9273,7 +9277,7 @@ var author$project$NetworkSimulator$update = F2(
 							{
 								aU: 0,
 								W: 0,
-								v: newGameState,
+								s: newGameState,
 								k: graph,
 								X: A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, graph),
 								P: gampleman$elm_visualization$Force$simulation(forces)
@@ -9284,7 +9288,7 @@ var author$project$NetworkSimulator$update = F2(
 						elm$core$Platform$Cmd$none,
 						_Utils_update(
 							model,
-							{v: newGameState}));
+							{s: newGameState}));
 				}
 			case 7:
 				return A2(
@@ -9301,7 +9305,7 @@ var author$project$NetworkSimulator$update = F2(
 				var numbers = msg.a;
 				var recruitCount1 = author$project$Grid$recruitedCount(model.X);
 				var newGraph1 = function () {
-					var _n17 = (model.v === 1) && (!A2(elm$core$Basics$modBy, author$project$NetworkSimulator$searchForInfluencersInterval, model.W));
+					var _n17 = (model.s === 1) && (!A2(elm$core$Basics$modBy, author$project$NetworkSimulator$searchForInfluencersInterval, model.W));
 					if (_n17) {
 						return A4(author$project$Network$recruitNodes, numbers, model.z, model.k, model.aF);
 					} else {
@@ -9309,7 +9313,7 @@ var author$project$NetworkSimulator$update = F2(
 					}
 				}();
 				var newGraph2 = function () {
-					var _n15 = (model.v === 1) && ((!A2(elm$core$Basics$modBy, 41, model.W)) && (!_Utils_eq(
+					var _n15 = (model.s === 1) && ((!A2(elm$core$Basics$modBy, 41, model.W)) && (!_Utils_eq(
 						A2(author$project$Network$influencees, model.z, newGraph1),
 						_List_Nil)));
 					if (!_n15) {
@@ -9343,7 +9347,7 @@ var author$project$NetworkSimulator$update = F2(
 						elm$core$List$length(
 							A2(author$project$Network$influencees, model.z, newGraph2)),
 						elm_community$graph$Graph$size(newGraph2) - 1);
-					var _n12 = _Utils_Tuple2(model.v, everyoneRecruited);
+					var _n12 = _Utils_Tuple2(model.s, everyoneRecruited);
 					_n12$2:
 					while (true) {
 						switch (_n12.a) {
@@ -9361,7 +9365,7 @@ var author$project$NetworkSimulator$update = F2(
 								break _n12$2;
 						}
 					}
-					return model.v;
+					return model.s;
 				}();
 				var audioMsg = function () {
 					var _n9 = _Utils_Tuple2(newGameState, (recruitCount2 - recruitCount1) > 0);
@@ -9387,7 +9391,7 @@ var author$project$NetworkSimulator$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{v: newGameState, k: newGraph2, X: newGrid, $7: numbers}),
+						{s: newGameState, k: newGraph2, X: newGrid, $7: numbers}),
 					author$project$NetworkSimulator$sendAudioMessage(audioMsg));
 			case 12:
 				var displayMode = msg.a;
@@ -9405,56 +9409,60 @@ var author$project$NetworkSimulator$update = F2(
 						model,
 						{
 							W: 0,
-							v: 0,
+							s: 0,
 							k: graph,
 							X: A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, graph)
 						}),
 					elm$core$Platform$Cmd$none);
 			default:
 				var msg_ = msg.a;
-				var _n20 = msg_.a;
-				var i = _n20.a;
-				var j = _n20.b;
-				var _n21 = msg_.b;
-				var x = _n21.a;
-				var y = _n21.b;
-				var index = function () {
-					var _n23 = A2(
-						author$project$CellGrid$cellAtMatrixIndex,
-						_Utils_Tuple2(i, j),
-						model.X);
-					if (_n23.$ === 1) {
-						return -1;
-					} else {
-						var cell = _n23.a;
-						return cell.a$;
-					}
-				}();
-				var message = 'CHIRP1, Grid, node = ' + (elm$core$String$fromInt(index) + (', (i,j) = (' + (elm$core$String$fromInt(i) + (', ' + (elm$core$String$fromInt(j) + ')')))));
-				var associatedOutgoingNodeIds = A2(author$project$Network$outGoingNodeIds, index, model.aF);
-				var audioMsg = function () {
-					var _n22 = !elm$core$List$length(associatedOutgoingNodeIds);
-					if (_n22) {
-						return 1;
-					} else {
-						return 3;
-					}
-				}();
-				var newGraph = A3(
-					author$project$Network$connectNodeToNodeInList,
-					model.z,
-					associatedOutgoingNodeIds,
-					A3(
-						author$project$Network$connect,
+				if (model.s !== 1) {
+					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				} else {
+					var _n20 = msg_.a;
+					var i = _n20.a;
+					var j = _n20.b;
+					var _n21 = msg_.b;
+					var x = _n21.a;
+					var y = _n21.b;
+					var index = function () {
+						var _n23 = A2(
+							author$project$CellGrid$cellAtMatrixIndex,
+							_Utils_Tuple2(i, j),
+							model.X);
+						if (_n23.$ === 1) {
+							return -1;
+						} else {
+							var cell = _n23.a;
+							return cell.a$;
+						}
+					}();
+					var message = 'CHIRP1, Grid, node = ' + (elm$core$String$fromInt(index) + (', (i,j) = (' + (elm$core$String$fromInt(i) + (', ' + (elm$core$String$fromInt(j) + ')')))));
+					var associatedOutgoingNodeIds = A2(author$project$Network$outGoingNodeIds, index, model.aF);
+					var audioMsg = function () {
+						var _n22 = !elm$core$List$length(associatedOutgoingNodeIds);
+						if (_n22) {
+							return 1;
+						} else {
+							return 3;
+						}
+					}();
+					var newGraph = A3(
+						author$project$Network$connectNodeToNodeInList,
 						model.z,
-						index,
-						A3(author$project$Network$setStatus, index, 0, model.k)));
-				var newGrid = A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, newGraph);
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{k: newGraph, X: newGrid, cc: message}),
-					author$project$NetworkSimulator$sendAudioMessage(audioMsg));
+						associatedOutgoingNodeIds,
+						A3(
+							author$project$Network$connect,
+							model.z,
+							index,
+							A3(author$project$Network$setStatus, index, 0, model.k)));
+					var newGrid = A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, newGraph);
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{k: newGraph, X: newGrid, cc: message}),
+						author$project$NetworkSimulator$sendAudioMessage(audioMsg));
+				}
 		}
 	});
 var mdgriffith$elm_ui$Internal$Model$Height = function (a) {
@@ -14574,7 +14582,7 @@ var mdgriffith$elm_ui$Element$Font$size = function (i) {
 		mdgriffith$elm_ui$Internal$Model$FontSize(i));
 };
 var author$project$NetworkSimulator$clockIndicator = function (model) {
-	var _n0 = model.v;
+	var _n0 = model.s;
 	if (_n0 === 4) {
 		return A2(
 			mdgriffith$elm_ui$Element$el,
@@ -14893,7 +14901,7 @@ var author$project$NetworkSimulator$scoreIndicator = function (model) {
 };
 var author$project$NetworkSimulator$AdvanceGameState = {$: 8};
 var author$project$NetworkSimulator$controlButtonTitle = function (model) {
-	var _n0 = model.v;
+	var _n0 = model.s;
 	switch (_n0) {
 		case 0:
 			return 'Ready';
