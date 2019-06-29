@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Drum App</title>
+  <script src="Drum.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/13.0.1/Tone.min.js" ></script>
+</head>
+
+<body>
+  <div id="elm"></div>
+  <script>
+      var app = Elm.Drum.init({
+        node: document.getElementById('elm')
+      });
+
+      const synth = new Tone.MembraneSynth().toMaster();
+
+      app.ports.sendNotes.subscribe(function(notes) {
+        console.log(notes)
+
+        var makeRest = function(str) {
+            if (str == "Rest") {
+              return null
+            } else {
+              return str
+            }
+        }
+        const synthPart = new Tone.Sequence(
+          function(time, note) {
+            synth.triggerAttackRelease(note, "20hz", time);
+          },
+          notes.map(makeRest),
+          // ["C3", "Eb3", null, null, null, "G3", "Bb3"],
+          "4n"
+        );
+
+        // Setup the synth to be ready to play on beat 1
+        synthPart.start();
+
+        Tone.Transport.loopEnd = '1m'
+        Tone.Transport.loop = false
+        Tone.Transport.bpm.value = 320
+        Tone.Transport.start();
+        Tone.Transport.loop = false
+      });
+
+      app.ports.sendCommand.subscribe(function(command) {
+          if (command == "stop") {
+            Tone.Transport.stop();
+          }
+        });
+
+  </script>
+
+  <script>
+    //create a synth and connect it to the master output (your speakers)
+    // create a synth
+    //  const synth = new Tone.MembraneSynth().toMaster();
+
+
+
+    // create an array of notes to be played
+    // const notes = ["C3", "Eb3", "G3", "Bb3"];
+
+    // create a new sequence with the synth and notes
+    // const synthPart = new Tone.Sequence(
+    //   function(time, note) {
+    //     synth.triggerAttackRelease(note, "20hz", time);
+    //   },
+    //   notes,
+    //   "4n"
+    // );
+    //
+    // // Setup the synth to be ready to play on beat 1
+    // synthPart.start();
+
+
+
+    // Note that if you pass a time into the start method
+    // you can specify when the synth part starts
+    // e.g. .start('8n') will start after 1 eighth note
+
+    // start the transport which controls the main timeline
+
+
+
+    // Tone.Transport.start();
+
+  //  document.querySelector('button').addEventListener('click', () => Tone.start())
+
+  </script>
+</body>
+</html>
