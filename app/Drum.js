@@ -12144,7 +12144,11 @@ var mdgriffith$elm_ui$Element$layout = mdgriffith$elm_ui$Element$layoutWith(
 var author$project$Drum$view = function (model) {
 	return A2(
 		mdgriffith$elm_ui$Element$layout,
-		_List_Nil,
+		_List_fromArray(
+			[
+				mdgriffith$elm_ui$Element$Background$color(
+				A3(mdgriffith$elm_ui$Element$rgb255, 40, 40, 40))
+			]),
 		author$project$Drum$mainColumn(model));
 };
 var elm$browser$Browser$External = function (a) {
