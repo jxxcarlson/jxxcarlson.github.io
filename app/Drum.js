@@ -11915,7 +11915,7 @@ var author$project$Drum$mainColumn = function (model) {
 					]),
 				_List_fromArray(
 					[
-						author$project$Drum$title('Drum Language App'),
+						author$project$Drum$title('Techno Drum Language App'),
 						author$project$Drum$inputText(model),
 						author$project$Drum$outputDisplay(model),
 						author$project$Drum$appButtons(model)
