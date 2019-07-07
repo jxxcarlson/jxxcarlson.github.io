@@ -16,10 +16,10 @@
 
       var bpm = 320
 
-      const synth = new Tone.MembraneSynth().toMaster();
+      var synth0 = new Tone.MembraneSynth().toMaster();
+      var synth1 = new Tone.MembraneSynth().toMaster();
 
-      app.ports.sendNotes.subscribe(function(notes) {
-        console.log("RECEIVED: " + notes)
+      app.ports.sendPiece.subscribe(function(piece) {
 
         var makeRest = function(str) {
             if (str == "Rest") {
@@ -28,24 +28,37 @@
               return str
             }
         }
-        const synthPart = new Tone.Sequence(
+        const synthPart0 = new Tone.Sequence(
           function(time, note) {
-            synth.triggerAttackRelease(note, "60hz", time);
+            synth0.triggerAttackRelease(note, "60hz", time);
           },
-          notes.map(makeRest),
+          piece.parts[0].melody.map(makeRest),
           // ["C3", "Eb3", null, null, null, "G3", "Bb3"],
           "4n"
+        ); // end: app.ports.sendMusic.subscribe(function(notes)
+
+        const synthPart1 = new Tone.Sequence(
+          function(time, note) {
+            synth1.triggerAttackRelease(note, "60hz", time);
+          },
+          piece.parts[1].melody.map(makeRest),
+          // ["C3", "Eb3", null, null, null, "G3", "Bb3"],
+          "8n"
         );
-
         // Setup the synth to be ready to play on beat 1
-        synthPart.start();
+        synthPart0.start();
+        synthPart1.start()
 
+
+        Tone.Transport.reset
         Tone.Transport.loopEnd = '1m'
         Tone.Transport.loop = false
-        Tone.Transport.bpm.value = bpm
+        Tone.Transport.bpm.value = piece.bpm
         Tone.Transport.start();
         Tone.Transport.loop = false
-      });
+
+
+      })
 
       app.ports.sendCommand.subscribe(function(command) {
 
@@ -64,42 +77,5 @@
 
   </script>
 
-  <script>
-    //create a synth and connect it to the master output (your speakers)
-    // create a synth
-    //  const synth = new Tone.MembraneSynth().toMaster();
-
-
-
-    // create an array of notes to be played
-    // const notes = ["C3", "Eb3", "G3", "Bb3"];
-
-    // create a new sequence with the synth and notes
-    // const synthPart = new Tone.Sequence(
-    //   function(time, note) {
-    //     synth.triggerAttackRelease(note, "20hz", time);
-    //   },
-    //   notes,
-    //   "4n"
-    // );
-    //
-    // // Setup the synth to be ready to play on beat 1
-    // synthPart.start();
-
-
-
-    // Note that if you pass a time into the start method
-    // you can specify when the synth part starts
-    // e.g. .start('8n') will start after 1 eighth note
-
-    // start the transport which controls the main timeline
-
-
-
-    // Tone.Transport.start();
-
-  //  document.querySelector('button').addEventListener('click', () => Tone.start())
-
-  </script>
 </body>
 </html>
