@@ -4870,8 +4870,8 @@ function _Browser_load(url)
 		}
 	}));
 }
-var author$project$Drum$initialTextVoice1 = 'This app turns text into a kind of techno-music by imitating\nthe princples of African drum languages.  Things to try: (1) put text\nin this box and press "Play".  (2) Alter the tempo (beats per minute).\n(3) Try patterns, e.g., "Wawachaachaadadadada,,"  Here spaces and\ncommas both give one beat rests. (4) It is fun to experiment with\npatterns like palindromes: What is si tahW is si sii sii,,,,\nrepetition, etc.\n';
-var author$project$Drum$initialTextVoice2 = 'Note that there are two voices.  The first (above) is playing\nin quater notes, while the second (here) is playing in eight notes.\n';
+var author$project$Songs$initialTextVoice1 = 'This app turns text into a kind of techno-music by imitating\nthe princples of African drum languages.  Things to try: (1) put text\nin this box and press "Play".  (2) Alter the tempo (beats per minute).\n(3) Try patterns, e.g., "Wawachaachaadadadada,,"  Here spaces and\ncommas both give one beat rests. (4) It is fun to experiment with\npatterns like palindromes: What is si tahW is si sii sii,,,,\nrepetition, etc.\n';
+var author$project$Songs$initialTextVoice2 = 'Note that there are two voices.  The first (above) is playing\nin quarter notes, while the second (here) is playing in eight notes.\n\nTo my ear, Sample 2 is the most interesting.  Note that the two\nparts have lengths 36 and 11, in quarter and eight notes, respectively.\nCounted in eighth notes, the lengths are 72 and 11.  Thus the song\nrepeats itself every 72 x 11 = 792 beats.\n';
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
 var elm$core$Result$isOk = function (result) {
@@ -5351,7 +5351,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Drum$init = function (flags) {
 	return _Utils_Tuple2(
-		{bpmString: '160', notesForVoice1: '', notesForVoice2: '', voice1String: author$project$Drum$initialTextVoice1, voice2String: author$project$Drum$initialTextVoice2},
+		{bpmString: '160', notesForVoice1: '', notesForVoice2: '', voice1String: author$project$Songs$initialTextVoice1, voice2String: author$project$Songs$initialTextVoice2},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5359,51 +5359,12 @@ var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var author$project$Drum$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
-var author$project$Drum$sample1TextVoice1 = 'What is si tahW is si sii sii,,,,';
-var author$project$Drum$sample1TextVoice2 = 'dtaattddttaa,';
-var author$project$Drum$sample2TextVoice1 = 'MississipiipississiM';
-var author$project$Drum$sample2TextVoice2 = 'Wawachaachaadadadada,,';
 var elm$json$Json$Encode$string = _Json_wrap;
 var author$project$Drum$sendCommand = _Platform_outgoingPort('sendCommand', elm$json$Json$Encode$string);
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
 var author$project$Drum$sendPiece = _Platform_outgoingPort('sendPiece', elm$core$Basics$identity);
-var author$project$Pitch$Bb = {$: 'Bb'};
-var author$project$Pitch$C = {$: 'C'};
-var author$project$Pitch$D = {$: 'D'};
-var author$project$Pitch$E = {$: 'E'};
-var author$project$Pitch$F = {$: 'F'};
-var author$project$Pitch$G = {$: 'G'};
-var author$project$Pitch$Pitch = F2(
-	function (a, b) {
-		return {$: 'Pitch', a: a, b: b};
-	});
-var author$project$Pitch$Rest = {$: 'Rest'};
-var author$project$Melody$pitchOfPhonemeClass = function (pc) {
-	switch (pc.$) {
-		case 'Vowel':
-			return A2(author$project$Pitch$Pitch, author$project$Pitch$G, 2);
-		case 'Approximant':
-			return A2(author$project$Pitch$Pitch, author$project$Pitch$C, 3);
-		case 'Nasal':
-			return A2(author$project$Pitch$Pitch, author$project$Pitch$E, 3);
-		case 'VoicedFricative':
-			return A2(author$project$Pitch$Pitch, author$project$Pitch$F, 3);
-		case 'Fricative':
-			return A2(author$project$Pitch$Pitch, author$project$Pitch$G, 3);
-		case 'VoicedPlosive':
-			return A2(author$project$Pitch$Pitch, author$project$Pitch$Bb, 3);
-		case 'Plosive':
-			return A2(author$project$Pitch$Pitch, author$project$Pitch$D, 4);
-		case 'Silence':
-			return author$project$Pitch$Rest;
-		case 'Punctuation':
-			return A2(author$project$Pitch$Pitch, author$project$Pitch$C, 2);
-		default:
-			return A2(author$project$Pitch$Pitch, author$project$Pitch$G, 1);
-	}
-};
 var author$project$Phoneme$Unknown = {$: 'Unknown'};
 var author$project$Phoneme$Approximant = {$: 'Approximant'};
 var author$project$Phoneme$Fricative = {$: 'Fricative'};
@@ -5466,52 +5427,127 @@ var elm$core$List$member = F2(
 var author$project$Phoneme$phonemeClassOfString = function (str) {
 	return A2(elm$core$List$member, str, author$project$Phoneme$vowels) ? author$project$Phoneme$Vowel : (A2(elm$core$List$member, str, author$project$Phoneme$plosives) ? author$project$Phoneme$Plosive : (A2(elm$core$List$member, str, author$project$Phoneme$voicedPlosives) ? author$project$Phoneme$VoicedPlosive : (A2(elm$core$List$member, str, author$project$Phoneme$fricatives) ? author$project$Phoneme$Fricative : (A2(elm$core$List$member, str, author$project$Phoneme$voicedFricatives) ? author$project$Phoneme$VoicedFricative : (A2(elm$core$List$member, str, author$project$Phoneme$nasals) ? author$project$Phoneme$Nasal : (A2(elm$core$List$member, str, author$project$Phoneme$approximants) ? author$project$Phoneme$Approximant : (A2(elm$core$List$member, str, author$project$Phoneme$xs) ? author$project$Phoneme$X : (A2(elm$core$List$member, str, author$project$Phoneme$punctuationSymbols) ? author$project$Phoneme$Punctuation : (((str === ' ') || (str === ',')) ? author$project$Phoneme$Silence : author$project$Phoneme$Unknown)))))))));
 };
+var author$project$Rational$R = F2(
+	function (a, b) {
+		return {$: 'R', a: a, b: b};
+	});
+var author$project$Duration$qn = A2(author$project$Rational$R, 1, 4);
+var author$project$Pitch$Bf = {$: 'Bf'};
+var author$project$Pitch$C = {$: 'C'};
+var author$project$Pitch$D = {$: 'D'};
+var author$project$Pitch$E = {$: 'E'};
+var author$project$Pitch$F = {$: 'F'};
+var author$project$Pitch$G = {$: 'G'};
+var author$project$Primitive$Note = F2(
+	function (a, b) {
+		return {$: 'Note', a: a, b: b};
+	});
+var author$project$Primitive$Rest = function (a) {
+	return {$: 'Rest', a: a};
+};
+var author$project$Phoneme$primitiveOfPhonemeClass3 = function (pc) {
+	switch (pc.$) {
+		case 'Vowel':
+			return A2(
+				author$project$Primitive$Note,
+				author$project$Duration$qn,
+				_Utils_Tuple2(author$project$Pitch$C, 3));
+		case 'Nasal':
+			return A2(
+				author$project$Primitive$Note,
+				author$project$Duration$qn,
+				_Utils_Tuple2(author$project$Pitch$E, 3));
+		case 'VoicedFricative':
+			return A2(
+				author$project$Primitive$Note,
+				author$project$Duration$qn,
+				_Utils_Tuple2(author$project$Pitch$F, 3));
+		case 'Fricative':
+			return A2(
+				author$project$Primitive$Note,
+				author$project$Duration$qn,
+				_Utils_Tuple2(author$project$Pitch$G, 3));
+		case 'VoicedPlosive':
+			return A2(
+				author$project$Primitive$Note,
+				author$project$Duration$qn,
+				_Utils_Tuple2(author$project$Pitch$Bf, 3));
+		case 'Plosive':
+			return A2(
+				author$project$Primitive$Note,
+				author$project$Duration$qn,
+				_Utils_Tuple2(author$project$Pitch$C, 4));
+		case 'Approximant':
+			return A2(
+				author$project$Primitive$Note,
+				author$project$Duration$qn,
+				_Utils_Tuple2(author$project$Pitch$D, 4));
+		case 'Silence':
+			return author$project$Primitive$Rest(author$project$Duration$qn);
+		case 'Punctuation':
+			return A2(
+				author$project$Primitive$Note,
+				author$project$Duration$qn,
+				_Utils_Tuple2(author$project$Pitch$C, 2));
+		default:
+			return A2(
+				author$project$Primitive$Note,
+				author$project$Duration$qn,
+				_Utils_Tuple2(author$project$Pitch$G, 4));
+	}
+};
 var author$project$Pitch$stringOfPitchClass = function (pitchClass) {
 	switch (pitchClass.$) {
 		case 'C':
 			return 'C';
 		case 'Cs':
 			return 'C#';
-		case 'Db':
-			return 'Db';
+		case 'Df':
+			return 'Df';
 		case 'D':
 			return 'D';
 		case 'Ds':
 			return 'D#';
-		case 'Eb':
-			return 'Eb';
+		case 'Ef':
+			return 'Ef';
 		case 'E':
 			return 'E';
 		case 'F':
 			return 'F';
 		case 'Fs':
 			return 'F#';
-		case 'Gb':
-			return 'Gb';
+		case 'Gf':
+			return 'Gf';
 		case 'G':
 			return 'G';
 		case 'Gs':
 			return 'Gs';
-		case 'Ab':
-			return 'Ab';
+		case 'Af':
+			return 'Af';
 		case 'A':
 			return 'A';
 		case 'As':
 			return 'A#';
-		case 'Bb':
-			return 'Bb';
+		case 'Bf':
+			return 'Bf';
 		default:
 			return 'B';
 	}
 };
-var author$project$Pitch$stringOfPitch = function (pitch) {
-	if (pitch.$ === 'Pitch') {
-		var pitchClass = pitch.a;
-		var octave = pitch.b;
-		return _Utils_ap(
-			author$project$Pitch$stringOfPitchClass(pitchClass),
-			elm$core$String$fromInt(octave));
+var author$project$Pitch$stringOfPitch = function (_n0) {
+	var pitchClass = _n0.a;
+	var octave = _n0.b;
+	return _Utils_ap(
+		author$project$Pitch$stringOfPitchClass(pitchClass),
+		elm$core$String$fromInt(octave));
+};
+var author$project$Primitive$stringOfPrimitive = function (primitive) {
+	if (primitive.$ === 'Note') {
+		var dur = primitive.a;
+		var pitch = primitive.b;
+		return author$project$Pitch$stringOfPitch(pitch);
 	} else {
+		var dur = primitive.a;
 		return 'Rest';
 	}
 };
@@ -5597,13 +5633,13 @@ var elm$core$List$map = F2(
 			xs);
 	});
 var elm$core$String$toLower = _String_toLower;
-var author$project$Melody$fromString = function (str) {
+var author$project$Phoneme$toPitchNameList = function (str) {
 	return A2(
 		elm$core$List$map,
-		author$project$Pitch$stringOfPitch,
+		author$project$Primitive$stringOfPrimitive,
 		A2(
 			elm$core$List$map,
-			author$project$Melody$pitchOfPhonemeClass,
+			author$project$Phoneme$primitiveOfPhonemeClass3,
 			A2(
 				elm$core$List$filter,
 				function (s) {
@@ -5697,6 +5733,10 @@ var author$project$Player$partFromMelody = F3(
 			velocity: A2(elm$core$List$repeat, beats, velocity)
 		};
 	});
+var author$project$Songs$sample1TextVoice1 = 'What is si tahW is si sii sii,,,,';
+var author$project$Songs$sample1TextVoice2 = 'dtaattddttaa,';
+var author$project$Songs$sample2TextVoice1 = 'MississipiipississiM,,,,,,,,,,,,,,,,';
+var author$project$Songs$sample2TextVoice2 = 'Wawacha,,,,';
 var elm$core$List$takeReverse = F3(
 	function (n, list, kept) {
 		takeReverse:
@@ -5842,19 +5882,19 @@ var author$project$Drum$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{voice1String: author$project$Drum$initialTextVoice1, voice2String: author$project$Drum$initialTextVoice2}),
+						{voice1String: author$project$Songs$initialTextVoice1, voice2String: author$project$Songs$initialTextVoice2}),
 					elm$core$Platform$Cmd$none);
 			case 'Sample1':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{voice1String: author$project$Drum$sample1TextVoice1, voice2String: author$project$Drum$sample1TextVoice2}),
+						{voice1String: author$project$Songs$sample1TextVoice1, voice2String: author$project$Songs$sample1TextVoice2}),
 					elm$core$Platform$Cmd$none);
 			case 'Sample2':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{voice1String: author$project$Drum$sample2TextVoice1, voice2String: author$project$Drum$sample2TextVoice2}),
+						{voice1String: author$project$Songs$sample2TextVoice1, voice2String: author$project$Songs$sample2TextVoice2}),
 					elm$core$Platform$Cmd$none);
 			case 'ReadVoice1':
 				var str = msg.a;
@@ -5882,9 +5922,9 @@ var author$project$Drum$update = F2(
 					model,
 					author$project$Drum$sendCommand('tempo:' + model.bpmString));
 			case 'Play':
-				var noteList2 = author$project$Melody$fromString(model.voice2String);
+				var noteList2 = author$project$Phoneme$toPitchNameList(model.voice2String);
 				var part2 = A3(author$project$Player$partFromMelody, '4n', '0.4', noteList2);
-				var noteList1 = author$project$Melody$fromString(model.voice1String);
+				var noteList1 = author$project$Phoneme$toPitchNameList(model.voice1String);
 				var part1 = A3(author$project$Player$partFromMelody, '4n', '0.8', noteList1);
 				var piece = {
 					bpm: A2(
@@ -12456,7 +12496,7 @@ var author$project$Drum$ReadVoice1 = function (a) {
 	return {$: 'ReadVoice1', a: a};
 };
 var author$project$Drum$displayVoice = function (notes) {
-	var noteList = author$project$Melody$fromString(notes);
+	var noteList = author$project$Phoneme$toPitchNameList(notes);
 	var tag = (elm$core$List$length(noteList) > 20) ? ' ...' : '';
 	var noteLisAsString = A2(
 		elm$core$String$join,
