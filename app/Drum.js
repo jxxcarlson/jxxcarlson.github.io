@@ -5351,7 +5351,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Drum$init = function (flags) {
 	return _Utils_Tuple2(
-		{bpmString: '160', notesForVoice1: '', notesForVoice2: '', voice1String: author$project$Songs$initialTextVoice1, voice2String: author$project$Songs$initialTextVoice2},
+		{bpmString: '165', notesForVoice1: '', notesForVoice2: '', voice1String: author$project$Songs$initialTextVoice1, voice2String: author$project$Songs$initialTextVoice2},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5734,7 +5734,7 @@ var author$project$Player$partFromMelody = F3(
 		};
 	});
 var author$project$Songs$sample1TextVoice1 = 'What is si tahW is si sii sii,,,,';
-var author$project$Songs$sample1TextVoice2 = 'dtaattddttaa,';
+var author$project$Songs$sample1TextVoice2 = ',,,,,,zzaawwattaazz';
 var author$project$Songs$sample2TextVoice1 = 'MississipiipississiM,,,,,,,,,,,,,,,,';
 var author$project$Songs$sample2TextVoice2 = 'Wawacha,,,,';
 var elm$core$List$takeReverse = F3(
