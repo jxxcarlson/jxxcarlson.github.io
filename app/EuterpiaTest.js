@@ -6618,6 +6618,20 @@ var elm$json$Json$Encode$list = F2(
 var author$project$ToneJSPlayer$encodeEventList = function (eventList) {
 	return A2(elm$json$Json$Encode$list, author$project$ToneJSPlayer$encodeEvent, eventList);
 };
+var elm$json$Json$Encode$int = _Json_wrap;
+var author$project$ToneJSPlayer$encodeParts = function (parts) {
+	return elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'numberOfParts',
+				elm$json$Json$Encode$int(
+					elm$core$List$length(parts))),
+				_Utils_Tuple2(
+				'parts',
+				A2(elm$json$Json$Encode$list, author$project$ToneJSPlayer$encodeEventList, parts))
+			]));
+};
 var author$project$Rational$zero = A2(author$project$Rational$R, 0, 1);
 var author$project$Primitive$duration = function (p) {
 	if (p.$ === 'Note') {
@@ -6926,6 +6940,16 @@ var author$project$ToneJSPlayer$eventArrayOfMusicAtTime = F3(
 		}
 	});
 var author$project$ToneJSPlayer$eventListOfMusic = author$project$ToneJSPlayer$eventArrayOfMusicAtTime(author$project$Rational$zero);
+var elm_community$maybe_extra$Maybe$Extra$foldrValues = F2(
+	function (item, list) {
+		if (item.$ === 'Nothing') {
+			return list;
+		} else {
+			var v = item.a;
+			return A2(elm$core$List$cons, v, list);
+		}
+	});
+var elm_community$maybe_extra$Maybe$Extra$values = A2(elm$core$List$foldr, elm_community$maybe_extra$Maybe$Extra$foldrValues, _List_Nil);
 var author$project$Example$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -6985,30 +7009,21 @@ var author$project$Example$update = F2(
 					model,
 					author$project$Example$sendCommand('tempo:' + model.bpmString));
 			case 'Play':
-				var sendMusicCmd = function () {
-					var _n1 = model.voice1Music;
-					if (_n1.$ === 'Just') {
-						var music_ = _n1.a;
-						return author$project$Example$sendMusic(
-							author$project$ToneJSPlayer$encodeEventList(
-								A2(
-									author$project$ToneJSPlayer$eventListOfMusic,
-									author$project$Example$bpm(model),
-									music_)));
-					} else {
-						return elm$core$Platform$Cmd$none;
-					}
-				}();
-				var noteList2 = 'XX';
-				var noteList1 = 'XX';
+				var parts = elm_community$maybe_extra$Maybe$Extra$values(
+					_List_fromArray(
+						[model.voice1Music, model.voice2Music]));
+				var sendMusicCmd = author$project$Example$sendMusic(
+					author$project$ToneJSPlayer$encodeParts(
+						A2(
+							elm$core$List$map,
+							author$project$ToneJSPlayer$eventListOfMusic(
+								author$project$Example$bpm(model)),
+							parts)));
 				return _Utils_Tuple2(
 					model,
 					elm$core$Platform$Cmd$batch(
 						_List_fromArray(
-							[
-								author$project$Example$sendCommand('tempo:' + model.bpmString),
-								sendMusicCmd
-							])));
+							[sendMusicCmd])));
 			default:
 				return _Utils_Tuple2(
 					model,
@@ -13623,6 +13638,51 @@ var author$project$Example$readVoice1 = function (model) {
 				author$project$Example$displayVoice(model.voice1Music)
 			]));
 };
+var author$project$Example$ReadVoice2 = function (a) {
+	return {$: 'ReadVoice2', a: a};
+};
+var author$project$Example$readVoice2 = function (model) {
+	return A2(
+		mdgriffith$elm_ui$Element$column,
+		_List_fromArray(
+			[
+				mdgriffith$elm_ui$Element$spacing(8)
+			]),
+		_List_fromArray(
+			[
+				A2(
+				mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						mdgriffith$elm_ui$Element$Font$bold,
+						mdgriffith$elm_ui$Element$Font$size(14)
+					]),
+				mdgriffith$elm_ui$Element$text('Voice 2')),
+				A2(
+				mdgriffith$elm_ui$Element$Input$multiline,
+				_List_fromArray(
+					[
+						mdgriffith$elm_ui$Element$width(
+						mdgriffith$elm_ui$Element$px(700)),
+						mdgriffith$elm_ui$Element$height(
+						mdgriffith$elm_ui$Element$px(200))
+					]),
+				{
+					label: A2(
+						mdgriffith$elm_ui$Element$Input$labelLeft,
+						_List_Nil,
+						A2(
+							mdgriffith$elm_ui$Element$el,
+							_List_Nil,
+							mdgriffith$elm_ui$Element$text(''))),
+					onChange: author$project$Example$ReadVoice2,
+					placeholder: elm$core$Maybe$Nothing,
+					spellcheck: false,
+					text: model.voice2String
+				}),
+				author$project$Example$displayVoice(model.voice2Music)
+			]));
+};
 var author$project$Example$title = function (str) {
 	return A2(
 		mdgriffith$elm_ui$Element$row,
@@ -13696,6 +13756,7 @@ var author$project$Example$mainColumn = function (model) {
 					[
 						author$project$Example$title('Euterpia Test'),
 						author$project$Example$readVoice1(model),
+						author$project$Example$readVoice2(model),
 						author$project$Example$appButtons(model),
 						A2(
 						mdgriffith$elm_ui$Element$newTabLink,
