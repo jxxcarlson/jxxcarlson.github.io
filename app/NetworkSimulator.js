@@ -14749,6 +14749,18 @@ var author$project$NetworkSimulator$moneySupplyDisplay = function (model) {
 			'Money supply = ' + elm$core$String$fromInt(
 				author$project$Network$moneySupply(model.graph))));
 };
+var author$project$NetworkSimulator$numberOfTradersDisplay = function (model) {
+	var nodeFilter = function (entity) {
+		return author$project$Network$nodeState(entity).accountBalance > 0;
+	};
+	var n = elm$core$List$length(
+		A2(author$project$Network$filterNodes, nodeFilter, model.graph));
+	return A2(
+		mdgriffith$elm_ui$Element$el,
+		_List_Nil,
+		mdgriffith$elm_ui$Element$text(
+			'Trading population = ' + elm$core$String$fromInt(n)));
+};
 var author$project$NetworkSimulator$recruitedDisplay = function (model) {
 	var n = elm$core$String$fromInt(
 		author$project$Grid$recruitedCount(model.grid) - 1);
@@ -15165,8 +15177,18 @@ var author$project$NetworkSimulator$controlPanel = function (model) {
 						mdgriffith$elm_ui$Element$text(
 							'Nodes: ' + elm$core$String$fromInt(
 								elm_community$graph$Graph$size(model.graph)))),
-						author$project$NetworkSimulator$recruitedDisplay(model),
-						author$project$NetworkSimulator$moneySupplyDisplay(model)
+						author$project$NetworkSimulator$recruitedDisplay(model)
+					])),
+				A2(
+				mdgriffith$elm_ui$Element$row,
+				_List_fromArray(
+					[
+						mdgriffith$elm_ui$Element$spacing(18)
+					]),
+				_List_fromArray(
+					[
+						author$project$NetworkSimulator$moneySupplyDisplay(model),
+						author$project$NetworkSimulator$numberOfTradersDisplay(model)
 					])),
 				A2(
 				mdgriffith$elm_ui$Element$row,
