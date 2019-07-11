@@ -4959,6 +4959,7 @@ var author$project$Network$recruitedNodeState = F3(
 		var i = _n0.a;
 		var j = _n0.b;
 		return {
+			accountBalance: 0,
 			location: _Utils_Tuple2(i, j),
 			name: name,
 			numberRecruited: 0,
@@ -4972,6 +4973,7 @@ var author$project$Network$unrecruitedNodeState = F3(
 		var i = _n0.a;
 		var j = _n0.b;
 		return {
+			accountBalance: 0,
 			location: _Utils_Tuple2(i, j),
 			name: name,
 			numberRecruited: 0,
@@ -6479,7 +6481,7 @@ var author$project$Network$testGraph = A2(
 			_Utils_Tuple2(8, 10))
 		]),
 	_List_Nil);
-var author$project$NetworkSimulator$DisplayGrid = {$: 'DisplayGrid'};
+var author$project$NetworkSimulator$DisplayGraph = {$: 'DisplayGraph'};
 var author$project$NetworkSimulator$Ready = {$: 'Ready'};
 var author$project$NetworkSimulator$Selectable = {$: 'Selectable'};
 var author$project$NetworkSimulator$gridWidth = 20;
@@ -6754,7 +6756,7 @@ var author$project$NetworkSimulator$init = function (_n0) {
 	return _Utils_Tuple2(
 		{
 			clickCount: 0,
-			displayMode: author$project$NetworkSimulator$DisplayGrid,
+			displayMode: author$project$NetworkSimulator$DisplayGraph,
 			drag: elm$core$Maybe$Nothing,
 			gameClock: 0,
 			gameState: author$project$NetworkSimulator$Ready,
@@ -7811,6 +7813,38 @@ var author$project$Grid$recruitedCount = function (_n0) {
 		0,
 		cellArray);
 };
+var elm_community$graph$Graph$mapNodes = function (f) {
+	return A2(
+		elm_community$graph$Graph$fold,
+		function (_n0) {
+			var node = _n0.node;
+			var incoming = _n0.incoming;
+			var outgoing = _n0.outgoing;
+			return elm_community$graph$Graph$insert(
+				{
+					incoming: incoming,
+					node: {
+						id: node.id,
+						label: f(node.label)
+					},
+					outgoing: outgoing
+				});
+		},
+		elm_community$graph$Graph$empty);
+};
+var author$project$Network$changeAccountBalance = F3(
+	function (nodeIndex, delta, graph) {
+		return A2(
+			elm_community$graph$Graph$mapNodes,
+			function (n) {
+				return _Utils_eq(n.id, nodeIndex) ? _Utils_update(
+					n,
+					{
+						value: {accountBalance: n.value.accountBalance + delta, location: n.value.location, name: n.value.name, numberRecruited: n.value.numberRecruited, parentGraphId: n.value.parentGraphId, status: n.value.status}
+					}) : n;
+			},
+			graph);
+	});
 var author$project$Network$alterLink = function (_n0) {
 	var from = _n0.a;
 	var to = _n0.b;
@@ -7875,25 +7909,6 @@ var author$project$Network$connect = F3(
 			return A2(elm_community$graph$Graph$insert, ctx, graph);
 		}
 	});
-var elm_community$graph$Graph$mapNodes = function (f) {
-	return A2(
-		elm_community$graph$Graph$fold,
-		function (_n0) {
-			var node = _n0.node;
-			var incoming = _n0.incoming;
-			var outgoing = _n0.outgoing;
-			return elm_community$graph$Graph$insert(
-				{
-					incoming: incoming,
-					node: {
-						id: node.id,
-						label: f(node.label)
-					},
-					outgoing: outgoing
-				});
-		},
-		elm_community$graph$Graph$empty);
-};
 var author$project$Network$setStatus = F3(
 	function (nodeIndex, status, graph) {
 		return A2(
@@ -7902,7 +7917,7 @@ var author$project$Network$setStatus = F3(
 				return _Utils_eq(n.id, nodeIndex) ? _Utils_update(
 					n,
 					{
-						value: {location: n.value.location, name: n.value.name, numberRecruited: n.value.numberRecruited, parentGraphId: n.value.parentGraphId, status: status}
+						value: {accountBalance: n.value.accountBalance, location: n.value.location, name: n.value.name, numberRecruited: n.value.numberRecruited, parentGraphId: n.value.parentGraphId, status: status}
 					}) : n;
 			},
 			graph);
@@ -7950,7 +7965,7 @@ var author$project$Network$incrementRecruitedCount = F2(
 				return _Utils_eq(n.id, nodeId) ? _Utils_update(
 					n,
 					{
-						value: {location: n.value.location, name: n.value.name, numberRecruited: n.value.numberRecruited + 1, parentGraphId: n.value.parentGraphId, status: n.value.status}
+						value: {accountBalance: n.value.accountBalance, location: n.value.location, name: n.value.name, numberRecruited: n.value.numberRecruited + 1, parentGraphId: n.value.parentGraphId, status: n.value.status}
 					}) : n;
 			},
 			graph);
@@ -8152,10 +8167,14 @@ var author$project$Network$recruitRandom = F3(
 				author$project$Network$incrementRecruitedCount,
 				recruiterNodeId,
 				A3(
-					author$project$Network$setStatus,
+					author$project$Network$changeAccountBalance,
 					recruiteeNodeId,
-					author$project$Network$Recruited,
-					A3(author$project$Network$connect, recruiterNodeId, recruiteeNodeId, graph)));
+					10,
+					A3(
+						author$project$Network$setStatus,
+						recruiteeNodeId,
+						author$project$Network$Recruited,
+						A3(author$project$Network$connect, recruiterNodeId, recruiteeNodeId, graph))));
 		} else {
 			return graph;
 		}
@@ -9261,7 +9280,11 @@ var author$project$NetworkSimulator$update = F2(
 								author$project$Network$connect,
 								model.recruiter,
 								index,
-								A3(author$project$Network$setStatus, index, author$project$Network$Recruited, model.graph))));
+								A3(
+									author$project$Network$changeAccountBalance,
+									index,
+									10,
+									A3(author$project$Network$setStatus, index, author$project$Network$Recruited, model.graph)))));
 					var forces = author$project$Network$computeForces(newGraph);
 					var newGrid = A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, newGraph);
 					var associatedIncomingNodeIds = A2(author$project$Network$inComingNodeIds, index, model.hiddenGraph);
@@ -9466,6 +9489,7 @@ var author$project$NetworkSimulator$update = F2(
 					_Utils_update(
 						model,
 						{
+							clickCount: 0,
 							gameClock: 0,
 							gameState: author$project$NetworkSimulator$Ready,
 							graph: graph,
@@ -9517,7 +9541,11 @@ var author$project$NetworkSimulator$update = F2(
 								author$project$Network$connect,
 								model.recruiter,
 								index,
-								A3(author$project$Network$setStatus, index, author$project$Network$Recruited, model.graph))));
+								A3(
+									author$project$Network$changeAccountBalance,
+									index,
+									10,
+									A3(author$project$Network$setStatus, index, author$project$Network$Recruited, model.graph)))));
 					var newGrid = A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, newGraph);
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -14694,59 +14722,32 @@ var author$project$NetworkSimulator$clockIndicator = function (model) {
 				'Clock: ' + elm$core$String$fromInt(model.gameClock)));
 	}
 };
-var author$project$NetworkSimulator$influenceesDisplay = function (model) {
-	var ii = A2(
-		elm$core$String$join,
-		', ',
+var author$project$Network$nodeState2 = function (node) {
+	return node.label.value;
+};
+var elm$core$List$sum = function (numbers) {
+	return A3(elm$core$List$foldl, elm$core$Basics$add, 0, numbers);
+};
+var author$project$Network$moneySupply = function (graph) {
+	return elm$core$List$sum(
 		A2(
 			elm$core$List$map,
-			elm$core$String$fromInt,
-			A2(author$project$Network$influencees, model.recruiter, model.graph)));
-	return A2(
-		mdgriffith$elm_ui$Element$el,
-		_List_Nil,
-		mdgriffith$elm_ui$Element$text('Influencees: ' + ii));
-};
-var elm_community$graph$Graph$alongIncomingEdges = function (ctx) {
-	return elm_community$intdict$IntDict$keys(ctx.incoming);
-};
-var author$project$Network$influencers = F2(
-	function (nodeId, graph) {
-		return A2(
-			elm$core$Maybe$withDefault,
-			_List_Nil,
 			A2(
-				elm$core$Maybe$map,
-				elm_community$graph$Graph$alongIncomingEdges,
-				A2(elm_community$graph$Graph$get, nodeId, graph)));
-	});
-var author$project$Network$influencees2 = F2(
-	function (nodeId, graph) {
-		return A2(
-			elm$core$List$filter,
-			function (x) {
-				return !_Utils_eq(x, nodeId);
-			},
-			elm$core$List$concat(
-				A2(
-					elm$core$List$map,
-					function (n) {
-						return A2(author$project$Network$influencees, n, graph);
-					},
-					A2(author$project$Network$influencers, nodeId, graph))));
-	});
-var author$project$NetworkSimulator$influenceesDisplay2 = function (model) {
-	var ii = A2(
-		elm$core$String$join,
-		', ',
-		A2(
-			elm$core$List$map,
-			elm$core$String$fromInt,
-			A2(author$project$Network$influencees2, 4, model.hiddenGraph)));
+				elm$core$Basics$composeR,
+				author$project$Network$nodeState2,
+				function ($) {
+					return $.accountBalance;
+				}),
+			elm_community$graph$Graph$nodes(graph)));
+};
+var author$project$NetworkSimulator$moneySupplyDisplay = function (model) {
+	var moneySupply = author$project$Network$moneySupply(model.graph);
 	return A2(
 		mdgriffith$elm_ui$Element$el,
 		_List_Nil,
-		mdgriffith$elm_ui$Element$text('Influencees2 of p4: ' + ii));
+		mdgriffith$elm_ui$Element$text(
+			'Money supply = ' + elm$core$String$fromInt(
+				author$project$Network$moneySupply(model.graph))));
 };
 var author$project$NetworkSimulator$recruitedDisplay = function (model) {
 	var n = elm$core$String$fromInt(
@@ -15164,7 +15165,8 @@ var author$project$NetworkSimulator$controlPanel = function (model) {
 						mdgriffith$elm_ui$Element$text(
 							'Nodes: ' + elm$core$String$fromInt(
 								elm_community$graph$Graph$size(model.graph)))),
-						author$project$NetworkSimulator$recruitedDisplay(model)
+						author$project$NetworkSimulator$recruitedDisplay(model),
+						author$project$NetworkSimulator$moneySupplyDisplay(model)
 					])),
 				A2(
 				mdgriffith$elm_ui$Element$row,
@@ -15176,12 +15178,9 @@ var author$project$NetworkSimulator$controlPanel = function (model) {
 					[
 						author$project$NetworkSimulator$startOverButton(model),
 						author$project$NetworkSimulator$resetButton(model)
-					])),
-				author$project$NetworkSimulator$influenceesDisplay(model),
-				author$project$NetworkSimulator$influenceesDisplay2(model)
+					]))
 			]));
 };
-var author$project$NetworkSimulator$DisplayGraph = {$: 'DisplayGraph'};
 var author$project$NetworkSimulator$SetDisplayMode = function (a) {
 	return {$: 'SetDisplayMode', a: a};
 };
@@ -15214,6 +15213,7 @@ var author$project$NetworkSimulator$displayGraphButton = function (model) {
 				author$project$NetworkSimulator$SetDisplayMode(author$project$NetworkSimulator$DisplayGraph))
 		});
 };
+var author$project$NetworkSimulator$DisplayGrid = {$: 'DisplayGrid'};
 var author$project$NetworkSimulator$displayGridButton = function (model) {
 	return A2(
 		mdgriffith$elm_ui$Element$Input$button,
@@ -15264,7 +15264,7 @@ var author$project$NetworkSimulator$infoPanel = function (model) {
 					[
 						mdgriffith$elm_ui$Element$Font$size(14)
 					]),
-				mdgriffith$elm_ui$Element$text('Click on nodes to \'recruit\' them.')),
+				mdgriffith$elm_ui$Element$text('Press \'Ready\', then click on nodes to \'recruit\' them.')),
 				A2(
 				mdgriffith$elm_ui$Element$row,
 				_List_fromArray(
@@ -15308,6 +15308,7 @@ var author$project$NetworkSimulator$leftPanel = function (model) {
 			]));
 };
 var author$project$Network$defaultNodeState = {
+	accountBalance: 0,
 	location: _Utils_Tuple2(0, 0),
 	name: '',
 	numberRecruited: 0,
@@ -15783,7 +15784,8 @@ var author$project$NetworkSimulator$nodeElement = F2(
 						]),
 					_List_fromArray(
 						[
-							elm_community$typed_svg$TypedSvg$Core$text(node.label.value.name)
+							elm_community$typed_svg$TypedSvg$Core$text(
+							elm$core$String$fromInt(node.label.value.accountBalance))
 						]))
 				]));
 	});
