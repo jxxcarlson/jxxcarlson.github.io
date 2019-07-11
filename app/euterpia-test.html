@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Elm-Euterpia Test</title>
+  <script src="EuterpiaTest.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/13.0.1/Tone.min.js" ></script>
+</head>
+
+<body>
+  <div id="elm"></div>
+  <script>
+      var app = Elm.Example.init({
+        node: document.getElementById('elm')
+      });
+
+
+      app.ports.sendMusic.subscribe(function(eventArray) {
+
+        console.log("JSON: " + JSON.stringify(eventArray))
+
+        var synth = new Tone.Synth().toMaster()
+
+        var part = new Tone.Part(function(time, event){
+        	  synth.triggerAttackRelease(event.note, event.dur, time)
+          }, eventArray
+        )
+
+        part.start() // See discussion of "No argument" in https://github.com/Tonejs/Tone.js/wiki/Time
+        part.loop = false
+
+        Tone.Transport.start()
+
+      })
+
+      app.ports.sendCommand.subscribe(function(command) {
+
+        var args = command.split(":")
+
+        console.log("ARGS: " + args)
+
+        if (args[0] == "stop") {
+           Tone.Transport.cancel();
+        }
+
+      })
+
+  </script>
+
+</body>
+</html>
