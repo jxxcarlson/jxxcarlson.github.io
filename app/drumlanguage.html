@@ -14,7 +14,7 @@
         node: document.getElementById('elm')
       });
 
-      var bpm = 320
+      var bpm = 80
 
       var synth0 = new Tone.MembraneSynth().toMaster();
       var synth1 = new Tone.MembraneSynth().toMaster();
@@ -50,12 +50,9 @@
         synthPart1.start()
 
 
-        Tone.Transport.loopEnd = '1m'
         Tone.Transport.loop = false
         Tone.Transport.bpm.value = piece.bpm
         Tone.Transport.start();
-        Tone.Transport.loop = false
-
 
       })
 
@@ -69,7 +66,7 @@
            console.log("tempo = " + args[1] + " bpm")
            bpm = parseInt(args[1])
         } else if (args[0] == "stop") {
-          Tone.Transport.stop();
+          Tone.Transport.cancel();
         }
 
       })
