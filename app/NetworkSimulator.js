@@ -6765,6 +6765,7 @@ var author$project$NetworkSimulator$init = function (_n0) {
 			grid: A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, graph),
 			hiddenGraph: hiddenGraph,
 			message: 'No message yet',
+			numberOfTransactionsToDate: 0,
 			randomNumberList: _List_Nil,
 			recruiter: 12,
 			simulation: gampleman$elm_visualization$Force$simulation(forces)
@@ -7937,6 +7938,23 @@ var author$project$Network$connectNodeToNodeInList = F3(
 			graph,
 			nodeList);
 	});
+var author$project$Network$debitNode = F3(
+	function (nodeId, amount, graph) {
+		return A2(
+			elm_community$graph$Graph$mapNodes,
+			function (n) {
+				return _Utils_eq(n.id, nodeId) ? _Utils_update(
+					n,
+					{
+						value: {accountBalance: n.value.accountBalance - amount, location: n.value.location, name: n.value.name, numberRecruited: n.value.numberRecruited, parentGraphId: n.value.parentGraphId, status: n.value.status}
+					}) : n;
+			},
+			graph);
+	});
+var author$project$Network$creditNode = F3(
+	function (nodeId, amount, graph) {
+		return A3(author$project$Network$debitNode, nodeId, -amount, graph);
+	});
 var elm_community$intdict$IntDict$keys = function (dict) {
 	return A3(
 		elm_community$intdict$IntDict$foldr,
@@ -8007,23 +8025,6 @@ var author$project$Network$activeTraders = function (graph) {
 	};
 	return A2(author$project$Network$filterNodes, nodeFilter, graph);
 };
-var author$project$Network$debitNode = F3(
-	function (nodeId, amount, graph) {
-		return A2(
-			elm_community$graph$Graph$mapNodes,
-			function (n) {
-				return _Utils_eq(n.id, nodeId) ? _Utils_update(
-					n,
-					{
-						value: {accountBalance: n.value.accountBalance - amount, location: n.value.location, name: n.value.name, numberRecruited: n.value.numberRecruited, parentGraphId: n.value.parentGraphId, status: n.value.status}
-					}) : n;
-			},
-			graph);
-	});
-var author$project$Network$creditNode = F3(
-	function (nodeId, amount, graph) {
-		return A3(author$project$Network$debitNode, nodeId, -amount, graph);
-	});
 var elm$core$Basics$round = _Basics_round;
 var author$project$Network$scale = F2(
 	function (x, n) {
@@ -9376,7 +9377,11 @@ var author$project$NetworkSimulator$update = F2(
 									author$project$Network$changeAccountBalance,
 									index,
 									10,
-									A3(author$project$Network$setStatus, index, author$project$Network$Recruited, model.graph)))));
+									A3(
+										author$project$Network$creditNode,
+										model.recruiter,
+										1,
+										A3(author$project$Network$setStatus, index, author$project$Network$Recruited, model.graph))))));
 					var forces = author$project$Network$computeForces(newGraph);
 					var newGrid = A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, newGraph);
 					var associatedIncomingNodeIds = A2(author$project$Network$inComingNodeIds, index, model.hiddenGraph);
@@ -9389,6 +9394,7 @@ var author$project$NetworkSimulator$update = F2(
 								clickCount: model.clickCount + 1,
 								graph: newGraph,
 								grid: newGrid,
+								message: 'Recruit node ' + elm$core$String$fromInt(index),
 								simulation: gampleman$elm_visualization$Force$simulation(forces)
 							}));
 				}
@@ -9504,46 +9510,50 @@ var author$project$NetworkSimulator$update = F2(
 			case 'GotRandomNumbers':
 				var numbers = msg.a;
 				var recruitCount1 = author$project$Grid$recruitedCount(model.grid);
-				var newGraph_ = function () {
-					var _n20 = _Utils_eq(model.gameState, author$project$NetworkSimulator$Running) && _Utils_eq(
-						A2(elm$core$Basics$modBy, author$project$NetworkSimulator$recruitInterval, model.gameClock),
-						author$project$NetworkSimulator$recruitStep);
-					if (!_n20) {
-						return model.graph;
-					} else {
-						return A3(author$project$Network$recruitRandom, numbers, model.recruiter, model.graph);
-					}
-				}();
 				var newGameState = function () {
 					var everyoneRecruited = _Utils_eq(
 						author$project$Grid$recruitedCount(model.grid),
 						elm_community$graph$Graph$size(model.graph));
-					var _n17 = _Utils_Tuple2(model.gameState, everyoneRecruited);
-					_n17$2:
+					var _n20 = _Utils_Tuple2(model.gameState, everyoneRecruited);
+					_n20$2:
 					while (true) {
-						switch (_n17.a.$) {
+						switch (_n20.a.$) {
 							case 'Running':
-								if (_n17.b) {
-									var _n18 = _n17.a;
+								if (_n20.b) {
+									var _n21 = _n20.a;
 									return author$project$NetworkSimulator$GameEnding;
 								} else {
-									break _n17$2;
+									break _n20$2;
 								}
 							case 'GameEnding':
-								var _n19 = _n17.a;
+								var _n22 = _n20.a;
 								return author$project$NetworkSimulator$GameOver;
 							default:
-								break _n17$2;
+								break _n20$2;
 						}
 					}
 					return model.gameState;
 				}();
 				var _n10 = function () {
-					var _n11 = _Utils_eq(
+					var _n11 = _Utils_eq(model.gameState, author$project$NetworkSimulator$Running) && _Utils_eq(
+						A2(elm$core$Basics$modBy, author$project$NetworkSimulator$recruitInterval, model.gameClock),
+						author$project$NetworkSimulator$recruitStep);
+					if (!_n11) {
+						return _Utils_Tuple2(0, model.graph);
+					} else {
+						return _Utils_Tuple2(
+							1,
+							A3(author$project$Network$recruitRandom, numbers, model.recruiter, model.graph));
+					}
+				}();
+				var deltaRecuiterAccount = _n10.a;
+				var newGraph1 = _n10.b;
+				var _n12 = function () {
+					var _n13 = _Utils_eq(
 						A2(elm$core$Basics$modBy, author$project$NetworkSimulator$recruitInterval, model.gameClock),
 						author$project$NetworkSimulator$transactionStep);
-					if (!_n11) {
-						return _Utils_Tuple2(elm$core$Maybe$Nothing, newGraph_);
+					if (!_n13) {
+						return _Utils_Tuple2(elm$core$Maybe$Nothing, newGraph1);
 					} else {
 						return A4(
 							author$project$Network$randomTransaction,
@@ -9551,48 +9561,52 @@ var author$project$NetworkSimulator$update = F2(
 							elm$core$List$head(
 								A2(elm$core$List$drop, 1, numbers)),
 							1,
-							newGraph_);
+							newGraph1);
 					}
 				}();
-				var transactionRecord = _n10.a;
-				var newGraph = _n10.b;
+				var transactionRecord = _n12.a;
+				var newGraph = _n12.b;
 				var newGrid = A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, newGraph);
 				var recruitCount2 = author$project$Grid$recruitedCount(newGrid);
 				var audioMsg = function () {
-					var _n14 = _Utils_Tuple2(newGameState, (recruitCount2 - recruitCount1) > 0);
-					_n14$2:
+					var _n17 = _Utils_Tuple2(newGameState, (recruitCount2 - recruitCount1) > 0);
+					_n17$2:
 					while (true) {
-						switch (_n14.a.$) {
+						switch (_n17.a.$) {
 							case 'GameEnding':
-								var _n15 = _n14.a;
+								var _n18 = _n17.a;
 								return author$project$NetworkSimulator$VeryLongChirp;
 							case 'Running':
-								if (_n14.b) {
-									var _n16 = _n14.a;
+								if (_n17.b) {
+									var _n19 = _n17.a;
 									return author$project$NetworkSimulator$Coo;
 								} else {
-									break _n14$2;
+									break _n17$2;
 								}
 							default:
-								break _n14$2;
+								break _n17$2;
 						}
 					}
 					return author$project$NetworkSimulator$Silence;
 				}();
-				var message = function () {
+				var _n14 = function () {
 					if (transactionRecord.$ === 'Nothing') {
-						return model.message;
+						return _Utils_Tuple2(model.message, 0);
 					} else {
-						var _n13 = transactionRecord.a;
-						var i = _n13.a;
-						var j = _n13.b;
-						return 'Transfer 1 unit from node ' + (elm$core$String$fromInt(i) + (' to node ' + elm$core$String$fromInt(j)));
+						var _n16 = transactionRecord.a;
+						var i = _n16.a;
+						var j = _n16.b;
+						return _Utils_Tuple2(
+							'Transfer 1 unit from node ' + (elm$core$String$fromInt(i) + (' to node ' + elm$core$String$fromInt(j))),
+							1);
 					}
 				}();
+				var message = _n14.a;
+				var deltaTransactions = _n14.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{gameState: newGameState, graph: newGraph, grid: newGrid, message: message, randomNumberList: numbers}),
+						{gameState: newGameState, graph: newGraph, grid: newGrid, message: message, numberOfTransactionsToDate: model.numberOfTransactionsToDate + deltaTransactions, randomNumberList: numbers}),
 					author$project$NetworkSimulator$sendAudioMessage(audioMsg));
 			case 'SetDisplayMode':
 				var displayMode = msg.a;
@@ -9602,9 +9616,9 @@ var author$project$NetworkSimulator$update = F2(
 						{displayMode: displayMode}),
 					elm$core$Platform$Cmd$none);
 			case 'ResetGame':
-				var _n21 = author$project$Network$setupGraph(author$project$Network$testGraph);
-				var forces = _n21.a;
-				var graph = _n21.b;
+				var _n23 = author$project$Network$setupGraph(author$project$Network$testGraph);
+				var forces = _n23.a;
+				var graph = _n23.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -9622,29 +9636,29 @@ var author$project$NetworkSimulator$update = F2(
 				if (!_Utils_eq(model.gameState, author$project$NetworkSimulator$Running)) {
 					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 				} else {
-					var _n23 = msg_.a;
-					var i = _n23.a;
-					var j = _n23.b;
-					var _n24 = msg_.b;
-					var x = _n24.a;
-					var y = _n24.b;
+					var _n25 = msg_.a;
+					var i = _n25.a;
+					var j = _n25.b;
+					var _n26 = msg_.b;
+					var x = _n26.a;
+					var y = _n26.b;
 					var message = 'cellGrid: mouse click';
 					var index = function () {
-						var _n26 = A2(
+						var _n28 = A2(
 							author$project$CellGrid$cellAtMatrixIndex,
 							_Utils_Tuple2(i, j),
 							model.grid);
-						if (_n26.$ === 'Nothing') {
+						if (_n28.$ === 'Nothing') {
 							return -1;
 						} else {
-							var cell = _n26.a;
+							var cell = _n28.a;
 							return cell.id;
 						}
 					}();
 					var associatedOutgoingNodeIds = A2(author$project$Network$outGoingNodeIds, index, model.hiddenGraph);
 					var audioMsg = function () {
-						var _n25 = !elm$core$List$length(associatedOutgoingNodeIds);
-						if (_n25) {
+						var _n27 = !elm$core$List$length(associatedOutgoingNodeIds);
+						if (_n27) {
 							return author$project$NetworkSimulator$Chirp;
 						} else {
 							return author$project$NetworkSimulator$LongChirp;
@@ -15799,6 +15813,17 @@ var author$project$NetworkSimulator$controlPanel = function (model) {
 						author$project$NetworkSimulator$resetButton(model)
 					])),
 				author$project$NetworkSimulator$accountDisplay(model),
+				A2(
+				mdgriffith$elm_ui$Element$row,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						mdgriffith$elm_ui$Element$el,
+						_List_Nil,
+						mdgriffith$elm_ui$Element$text(
+							'Number of transactions: ' + elm$core$String$fromInt(model.numberOfTransactionsToDate)))
+					])),
 				A2(
 				mdgriffith$elm_ui$Element$row,
 				_List_fromArray(
