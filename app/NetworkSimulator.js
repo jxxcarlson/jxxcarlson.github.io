@@ -8001,32 +8001,28 @@ var author$project$Network$filterNodes = F2(
 			filterNode,
 			elm_community$graph$Graph$nodes(graph));
 	});
-var elm_community$list_extra$List$Extra$filterNot = F2(
-	function (pred, list) {
-		return A2(
-			elm$core$List$filter,
-			A2(elm$core$Basics$composeL, elm$core$Basics$not, pred),
-			list);
-	});
-var author$project$Network$filterNotGraph = F2(
-	function (graph, filter) {
-		return A2(
-			elm_community$list_extra$List$Extra$filterNot,
-			filter,
-			elm_community$graph$Graph$nodes(graph));
-	});
-var elm_community$graph$Graph$alongOutgoingEdges = function (ctx) {
-	return elm_community$intdict$IntDict$keys(ctx.outgoing);
+var author$project$Network$activeTraders = function (graph) {
+	var nodeFilter = function (entity) {
+		return author$project$Network$nodeState(entity).accountBalance > 0;
+	};
+	return A2(author$project$Network$filterNodes, nodeFilter, graph);
 };
-var author$project$Network$influencees = F2(
-	function (nodeId, graph) {
+var author$project$Network$debitNode = F3(
+	function (nodeId, amount, graph) {
 		return A2(
-			elm$core$Maybe$withDefault,
-			_List_Nil,
-			A2(
-				elm$core$Maybe$map,
-				elm_community$graph$Graph$alongOutgoingEdges,
-				A2(elm_community$graph$Graph$get, nodeId, graph)));
+			elm_community$graph$Graph$mapNodes,
+			function (n) {
+				return _Utils_eq(n.id, nodeId) ? _Utils_update(
+					n,
+					{
+						value: {accountBalance: n.value.accountBalance - amount, location: n.value.location, name: n.value.name, numberRecruited: n.value.numberRecruited, parentGraphId: n.value.parentGraphId, status: n.value.status}
+					}) : n;
+			},
+			graph);
+	});
+var author$project$Network$creditNode = F3(
+	function (nodeId, amount, graph) {
+		return A3(author$project$Network$debitNode, nodeId, -amount, graph);
 	});
 var elm$core$Basics$round = _Basics_round;
 var author$project$Network$scale = F2(
@@ -8078,6 +8074,66 @@ var author$project$Network$randomListElement = F2(
 			var i = A2(author$project$Network$scale, rn, n - 1);
 			return A2(elm_community$list_extra$List$Extra$getAt, i, list);
 		}
+	});
+var author$project$Network$randomTransaction = F4(
+	function (mr1, mr2, amount, graph) {
+		var traders = A2(
+			elm$core$List$map,
+			function ($) {
+				return $.id;
+			},
+			author$project$Network$activeTraders(graph));
+		var maybeNodeId2 = A2(author$project$Network$randomListElement, mr2, traders);
+		var maybeNodeId1 = A2(author$project$Network$randomListElement, mr1, traders);
+		if (_Utils_eq(maybeNodeId1, maybeNodeId2)) {
+			return _Utils_Tuple2(elm$core$Maybe$Nothing, graph);
+		} else {
+			var _n0 = _Utils_Tuple2(maybeNodeId1, maybeNodeId2);
+			if ((_n0.a.$ === 'Just') && (_n0.b.$ === 'Just')) {
+				var nodeId1 = _n0.a.a;
+				var nodeId2 = _n0.b.a;
+				return function (g) {
+					return _Utils_Tuple2(
+						elm$core$Maybe$Just(
+							_Utils_Tuple2(nodeId1, nodeId2)),
+						g);
+				}(
+					A3(
+						author$project$Network$debitNode,
+						nodeId1,
+						amount,
+						A3(author$project$Network$creditNode, nodeId2, amount, graph)));
+			} else {
+				return _Utils_Tuple2(elm$core$Maybe$Nothing, graph);
+			}
+		}
+	});
+var elm_community$list_extra$List$Extra$filterNot = F2(
+	function (pred, list) {
+		return A2(
+			elm$core$List$filter,
+			A2(elm$core$Basics$composeL, elm$core$Basics$not, pred),
+			list);
+	});
+var author$project$Network$filterNotGraph = F2(
+	function (graph, filter) {
+		return A2(
+			elm_community$list_extra$List$Extra$filterNot,
+			filter,
+			elm_community$graph$Graph$nodes(graph));
+	});
+var elm_community$graph$Graph$alongOutgoingEdges = function (ctx) {
+	return elm_community$intdict$IntDict$keys(ctx.outgoing);
+};
+var author$project$Network$influencees = F2(
+	function (nodeId, graph) {
+		return A2(
+			elm$core$Maybe$withDefault,
+			_List_Nil,
+			A2(
+				elm$core$Maybe$map,
+				elm_community$graph$Graph$alongOutgoingEdges,
+				A2(elm_community$graph$Graph$get, nodeId, graph)));
 	});
 var elm$core$Debug$log = _Debug_log;
 var elm$core$List$any = F2(
@@ -8352,7 +8408,7 @@ var author$project$NetworkSimulator$putCmd = F2(
 		return _Utils_Tuple2(model, cmd);
 	});
 var author$project$NetworkSimulator$recruitInterval = 8;
-var author$project$NetworkSimulator$recruitStep = (author$project$NetworkSimulator$recruitInterval / 2) | 0;
+var author$project$NetworkSimulator$recruitStep = 0;
 var elm$json$Json$Encode$string = _Json_wrap;
 var author$project$NetworkSimulator$encodeAudioMessage = function (msg) {
 	switch (msg.$) {
@@ -8373,6 +8429,7 @@ var author$project$NetworkSimulator$sendAudioMessage = function (audioMsg) {
 	return author$project$NetworkSimulator$sendMessage(
 		author$project$NetworkSimulator$encodeAudioMessage(audioMsg));
 };
+var author$project$NetworkSimulator$transactionStep = 1;
 var author$project$Network$updateContextWithValue = F2(
 	function (nodeCtx, value) {
 		var node = nodeCtx.node;
@@ -8471,6 +8528,23 @@ var elm$core$Dict$sizeHelp = F2(
 var elm$core$Dict$size = function (dict) {
 	return A2(elm$core$Dict$sizeHelp, 0, dict);
 };
+var gampleman$elm_visualization$Force$nTimes = F3(
+	function (fn, times, input) {
+		nTimes:
+		while (true) {
+			if (times <= 0) {
+				return input;
+			} else {
+				var $temp$fn = fn,
+					$temp$times = times - 1,
+					$temp$input = fn(input);
+				fn = $temp$fn;
+				times = $temp$times;
+				input = $temp$input;
+				continue nTimes;
+			}
+		}
+	});
 var elm$core$Basics$isNaN = _Basics_isNaN;
 var ianmackenzie$elm_geometry$BoundingBox2d$maxX = function (_n0) {
 	var boundingBox = _n0.a;
@@ -8839,32 +8913,44 @@ var gampleman$elm_visualization$Force$QuadTree$insertBy = F3(
 					switch (_n2.$) {
 						case 'NE':
 							return gampleman$elm_visualization$Force$QuadTree$Node(
-								_Utils_update(
-									node,
-									{
-										ne: A3(gampleman$elm_visualization$Force$QuadTree$insertBy, toPoint, vertex, node.ne)
-									}));
+								{
+									aggregate: node.aggregate,
+									boundingBox: node.boundingBox,
+									ne: A3(gampleman$elm_visualization$Force$QuadTree$insertBy, toPoint, vertex, node.ne),
+									nw: node.nw,
+									se: node.se,
+									sw: node.sw
+								});
 						case 'SE':
 							return gampleman$elm_visualization$Force$QuadTree$Node(
-								_Utils_update(
-									node,
-									{
-										se: A3(gampleman$elm_visualization$Force$QuadTree$insertBy, toPoint, vertex, node.se)
-									}));
+								{
+									aggregate: node.aggregate,
+									boundingBox: node.boundingBox,
+									ne: node.ne,
+									nw: node.nw,
+									se: A3(gampleman$elm_visualization$Force$QuadTree$insertBy, toPoint, vertex, node.se),
+									sw: node.sw
+								});
 						case 'NW':
 							return gampleman$elm_visualization$Force$QuadTree$Node(
-								_Utils_update(
-									node,
-									{
-										nw: A3(gampleman$elm_visualization$Force$QuadTree$insertBy, toPoint, vertex, node.nw)
-									}));
+								{
+									aggregate: node.aggregate,
+									boundingBox: node.boundingBox,
+									ne: node.ne,
+									nw: A3(gampleman$elm_visualization$Force$QuadTree$insertBy, toPoint, vertex, node.nw),
+									se: node.se,
+									sw: node.sw
+								});
 						default:
 							return gampleman$elm_visualization$Force$QuadTree$Node(
-								_Utils_update(
-									node,
-									{
-										sw: A3(gampleman$elm_visualization$Force$QuadTree$insertBy, toPoint, vertex, node.sw)
-									}));
+								{
+									aggregate: node.aggregate,
+									boundingBox: node.boundingBox,
+									ne: node.ne,
+									nw: node.nw,
+									se: node.se,
+									sw: A3(gampleman$elm_visualization$Force$QuadTree$insertBy, toPoint, vertex, node.sw)
+								});
 					}
 				} else {
 					var _n3 = ianmackenzie$elm_geometry$BoundingBox2d$extrema(node.boundingBox);
@@ -9098,51 +9184,57 @@ var gampleman$elm_visualization$Force$applyForce = F3(
 				var iters = force.a;
 				var lnks = force.b;
 				return A3(
-					elm$core$List$foldl,
-					F2(
-						function (_n5, ents) {
-							var source = _n5.source;
-							var target = _n5.target;
-							var distance = _n5.distance;
-							var strength = _n5.strength;
-							var bias = _n5.bias;
-							var _n6 = _Utils_Tuple2(
-								A2(elm$core$Dict$get, source, ents),
-								A2(elm$core$Dict$get, target, ents));
-							if ((_n6.a.$ === 'Just') && (_n6.b.$ === 'Just')) {
-								var sourceNode = _n6.a.a;
-								var targetNode = _n6.b.a;
-								var y = ((targetNode.y + targetNode.vy) - sourceNode.y) - sourceNode.vy;
-								var x = ((targetNode.x + targetNode.vx) - sourceNode.x) - sourceNode.vx;
-								var d = elm$core$Basics$sqrt(
-									A2(elm$core$Basics$pow, x, 2) + A2(elm$core$Basics$pow, y, 2));
-								var l = (((d - distance) / d) * alpha) * strength;
-								return A3(
-									elm$core$Dict$update,
-									source,
-									elm$core$Maybe$map(
-										function (tn) {
-											return _Utils_update(
-												tn,
-												{vx: tn.vx + ((x * l) * (1 - bias)), vy: tn.vy + ((y * l) * (1 - bias))});
-										}),
-									A3(
-										elm$core$Dict$update,
-										target,
-										elm$core$Maybe$map(
-											function (sn) {
-												return _Utils_update(
-													sn,
-													{vx: sn.vx - ((x * l) * bias), vy: sn.vy - ((y * l) * bias)});
-											}),
-										ents));
-							} else {
-								var otherwise = _n6;
-								return ents;
-							}
-						}),
-					entities,
-					lnks);
+					gampleman$elm_visualization$Force$nTimes,
+					function (entitiesList) {
+						return A3(
+							elm$core$List$foldl,
+							F2(
+								function (_n5, ents) {
+									var source = _n5.source;
+									var target = _n5.target;
+									var distance = _n5.distance;
+									var strength = _n5.strength;
+									var bias = _n5.bias;
+									var _n6 = _Utils_Tuple2(
+										A2(elm$core$Dict$get, source, ents),
+										A2(elm$core$Dict$get, target, ents));
+									if ((_n6.a.$ === 'Just') && (_n6.b.$ === 'Just')) {
+										var sourceNode = _n6.a.a;
+										var targetNode = _n6.b.a;
+										var y = ((targetNode.y + targetNode.vy) - sourceNode.y) - sourceNode.vy;
+										var x = ((targetNode.x + targetNode.vx) - sourceNode.x) - sourceNode.vx;
+										var d = elm$core$Basics$sqrt(
+											A2(elm$core$Basics$pow, x, 2) + A2(elm$core$Basics$pow, y, 2));
+										var l = (((d - distance) / d) * alpha) * strength;
+										return A3(
+											elm$core$Dict$update,
+											source,
+											elm$core$Maybe$map(
+												function (tn) {
+													return _Utils_update(
+														tn,
+														{vx: tn.vx + ((x * l) * (1 - bias)), vy: tn.vy + ((y * l) * (1 - bias))});
+												}),
+											A3(
+												elm$core$Dict$update,
+												target,
+												elm$core$Maybe$map(
+													function (sn) {
+														return _Utils_update(
+															sn,
+															{vx: sn.vx - ((x * l) * bias), vy: sn.vy - ((y * l) * bias)});
+													}),
+												ents));
+									} else {
+										var otherwise = _n6;
+										return ents;
+									}
+								}),
+							entitiesList,
+							lnks);
+					},
+					iters,
+					entities);
 			case 'ManyBody':
 				var theta = force.a;
 				var entityStrengths = force.b;
@@ -9412,67 +9504,95 @@ var author$project$NetworkSimulator$update = F2(
 			case 'GotRandomNumbers':
 				var numbers = msg.a;
 				var recruitCount1 = author$project$Grid$recruitedCount(model.grid);
-				var newGraph = function () {
-					var _n16 = _Utils_eq(model.gameState, author$project$NetworkSimulator$Running) && _Utils_eq(
+				var newGraph_ = function () {
+					var _n20 = _Utils_eq(model.gameState, author$project$NetworkSimulator$Running) && _Utils_eq(
 						A2(elm$core$Basics$modBy, author$project$NetworkSimulator$recruitInterval, model.gameClock),
 						author$project$NetworkSimulator$recruitStep);
-					if (!_n16) {
+					if (!_n20) {
 						return model.graph;
 					} else {
 						return A3(author$project$Network$recruitRandom, numbers, model.recruiter, model.graph);
 					}
 				}();
-				var newGrid = A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, newGraph);
-				var recruitCount2 = author$project$Grid$recruitedCount(newGrid);
 				var newGameState = function () {
 					var everyoneRecruited = _Utils_eq(
 						author$project$Grid$recruitedCount(model.grid),
 						elm_community$graph$Graph$size(model.graph));
-					var _n13 = _Utils_Tuple2(model.gameState, everyoneRecruited);
-					_n13$2:
+					var _n17 = _Utils_Tuple2(model.gameState, everyoneRecruited);
+					_n17$2:
 					while (true) {
-						switch (_n13.a.$) {
+						switch (_n17.a.$) {
 							case 'Running':
-								if (_n13.b) {
-									var _n14 = _n13.a;
+								if (_n17.b) {
+									var _n18 = _n17.a;
 									return author$project$NetworkSimulator$GameEnding;
 								} else {
-									break _n13$2;
+									break _n17$2;
 								}
 							case 'GameEnding':
-								var _n15 = _n13.a;
+								var _n19 = _n17.a;
 								return author$project$NetworkSimulator$GameOver;
 							default:
-								break _n13$2;
+								break _n17$2;
 						}
 					}
 					return model.gameState;
 				}();
+				var _n10 = function () {
+					var _n11 = _Utils_eq(
+						A2(elm$core$Basics$modBy, author$project$NetworkSimulator$recruitInterval, model.gameClock),
+						author$project$NetworkSimulator$transactionStep);
+					if (!_n11) {
+						return _Utils_Tuple2(elm$core$Maybe$Nothing, newGraph_);
+					} else {
+						return A4(
+							author$project$Network$randomTransaction,
+							elm$core$List$head(numbers),
+							elm$core$List$head(
+								A2(elm$core$List$drop, 1, numbers)),
+							1,
+							newGraph_);
+					}
+				}();
+				var transactionRecord = _n10.a;
+				var newGraph = _n10.b;
+				var newGrid = A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, newGraph);
+				var recruitCount2 = author$project$Grid$recruitedCount(newGrid);
 				var audioMsg = function () {
-					var _n10 = _Utils_Tuple2(newGameState, (recruitCount2 - recruitCount1) > 0);
-					_n10$2:
+					var _n14 = _Utils_Tuple2(newGameState, (recruitCount2 - recruitCount1) > 0);
+					_n14$2:
 					while (true) {
-						switch (_n10.a.$) {
+						switch (_n14.a.$) {
 							case 'GameEnding':
-								var _n11 = _n10.a;
+								var _n15 = _n14.a;
 								return author$project$NetworkSimulator$VeryLongChirp;
 							case 'Running':
-								if (_n10.b) {
-									var _n12 = _n10.a;
+								if (_n14.b) {
+									var _n16 = _n14.a;
 									return author$project$NetworkSimulator$Coo;
 								} else {
-									break _n10$2;
+									break _n14$2;
 								}
 							default:
-								break _n10$2;
+								break _n14$2;
 						}
 					}
 					return author$project$NetworkSimulator$Silence;
 				}();
+				var message = function () {
+					if (transactionRecord.$ === 'Nothing') {
+						return model.message;
+					} else {
+						var _n13 = transactionRecord.a;
+						var i = _n13.a;
+						var j = _n13.b;
+						return 'Transfer 1 unit from node ' + (elm$core$String$fromInt(i) + (' to node ' + elm$core$String$fromInt(j)));
+					}
+				}();
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{gameState: newGameState, graph: newGraph, grid: newGrid, randomNumberList: numbers}),
+						{gameState: newGameState, graph: newGraph, grid: newGrid, message: message, randomNumberList: numbers}),
 					author$project$NetworkSimulator$sendAudioMessage(audioMsg));
 			case 'SetDisplayMode':
 				var displayMode = msg.a;
@@ -9482,9 +9602,9 @@ var author$project$NetworkSimulator$update = F2(
 						{displayMode: displayMode}),
 					elm$core$Platform$Cmd$none);
 			case 'ResetGame':
-				var _n17 = author$project$Network$setupGraph(author$project$Network$testGraph);
-				var forces = _n17.a;
-				var graph = _n17.b;
+				var _n21 = author$project$Network$setupGraph(author$project$Network$testGraph);
+				var forces = _n21.a;
+				var graph = _n21.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -9502,29 +9622,29 @@ var author$project$NetworkSimulator$update = F2(
 				if (!_Utils_eq(model.gameState, author$project$NetworkSimulator$Running)) {
 					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 				} else {
-					var _n19 = msg_.a;
-					var i = _n19.a;
-					var j = _n19.b;
-					var _n20 = msg_.b;
-					var x = _n20.a;
-					var y = _n20.b;
-					var message = '';
+					var _n23 = msg_.a;
+					var i = _n23.a;
+					var j = _n23.b;
+					var _n24 = msg_.b;
+					var x = _n24.a;
+					var y = _n24.b;
+					var message = 'cellGrid: mouse click';
 					var index = function () {
-						var _n22 = A2(
+						var _n26 = A2(
 							author$project$CellGrid$cellAtMatrixIndex,
 							_Utils_Tuple2(i, j),
 							model.grid);
-						if (_n22.$ === 'Nothing') {
+						if (_n26.$ === 'Nothing') {
 							return -1;
 						} else {
-							var cell = _n22.a;
+							var cell = _n26.a;
 							return cell.id;
 						}
 					}();
 					var associatedOutgoingNodeIds = A2(author$project$Network$outGoingNodeIds, index, model.hiddenGraph);
 					var audioMsg = function () {
-						var _n21 = !elm$core$List$length(associatedOutgoingNodeIds);
-						if (_n21) {
+						var _n25 = !elm$core$List$length(associatedOutgoingNodeIds);
+						if (_n25) {
 							return author$project$NetworkSimulator$Chirp;
 						} else {
 							return author$project$NetworkSimulator$LongChirp;
@@ -9555,6 +9675,459 @@ var author$project$NetworkSimulator$update = F2(
 				}
 		}
 	});
+var author$project$Network$accountList = function (graph) {
+	return A2(
+		elm$core$List$map,
+		function (n) {
+			return _Utils_Tuple2(n.id, n.label.value.accountBalance);
+		},
+		elm_community$graph$Graph$nodes(graph));
+};
+var jxxcarlson$elm_graph$SimpleGraph$Color = function (a) {
+	return {$: 'Color', a: a};
+};
+var jxxcarlson$elm_graph$SimpleGraph$DeltaX = function (a) {
+	return {$: 'DeltaX', a: a};
+};
+var jxxcarlson$elm_graph$SimpleGraph$XTickmarks = function (a) {
+	return {$: 'XTickmarks', a: a};
+};
+var jxxcarlson$elm_graph$SimpleGraph$YTickmarks = function (a) {
+	return {$: 'YTickmarks', a: a};
+};
+var author$project$NetworkSimulator$barGraphAttributes = {
+	graphHeight: 70,
+	graphWidth: 300,
+	options: _List_fromArray(
+		[
+			jxxcarlson$elm_graph$SimpleGraph$Color('rgb(200,0,0)'),
+			jxxcarlson$elm_graph$SimpleGraph$DeltaX(15),
+			jxxcarlson$elm_graph$SimpleGraph$YTickmarks(6),
+			jxxcarlson$elm_graph$SimpleGraph$XTickmarks(2)
+		])
+};
+var elm$core$String$fromFloat = _String_fromNumber;
+var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
+var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
+var elm$svg$Svg$Attributes$transform = _VirtualDom_attribute('transform');
+var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
+var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
+var elm$svg$Svg$g = elm$svg$Svg$trustedNode('g');
+var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var elm$svg$Svg$text = elm$virtual_dom$VirtualDom$text;
+var elm$svg$Svg$text_ = elm$svg$Svg$trustedNode('text');
+var elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
+var elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
+var elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
+var jxxcarlson$elm_graph$SimpleGraph$roundTo = F2(
+	function (k, x) {
+		var kk = k;
+		return function (y) {
+			return y / A2(elm$core$Basics$pow, 10.0, kk);
+		}(
+			elm$core$Basics$round(
+				x * A2(elm$core$Basics$pow, 10.0, kk)));
+	});
+var jxxcarlson$elm_graph$SimpleGraph$bMakeYLabel = F2(
+	function (_n0, y) {
+		var yMax = _n0.a;
+		var graphHeight = _n0.b;
+		var label = elm$core$String$fromFloat(
+			A2(jxxcarlson$elm_graph$SimpleGraph$roundTo, 1, y));
+		return A2(
+			elm$svg$Svg$text_,
+			_List_fromArray(
+				[
+					elm$svg$Svg$Attributes$transform('translate(0,' + ('-3' + ') scale(1,-1)')),
+					elm$svg$Svg$Attributes$x('-30'),
+					elm$svg$Svg$Attributes$y(
+					elm$core$String$fromFloat(((-y) * graphHeight) / yMax)),
+					elm$svg$Svg$Attributes$fontSize('9px')
+				]),
+			_List_fromArray(
+				[
+					elm$svg$Svg$text(label)
+				]));
+	});
+var jxxcarlson$elm_graph$SimpleGraph$findMap = F2(
+	function (f, list) {
+		findMap:
+		while (true) {
+			if (!list.b) {
+				return elm$core$Maybe$Nothing;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				var _n1 = f(x);
+				if (_n1.$ === 'Just') {
+					var v = _n1.a;
+					return elm$core$Maybe$Just(v);
+				} else {
+					var $temp$f = f,
+						$temp$list = xs;
+					f = $temp$f;
+					list = $temp$list;
+					continue findMap;
+				}
+			}
+		}
+	});
+var jxxcarlson$elm_graph$SimpleGraph$yTickmarks_ = function (option) {
+	if (option.$ === 'YTickmarks') {
+		var k = option.a;
+		return elm$core$Maybe$Just(k);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var jxxcarlson$elm_graph$SimpleGraph$yTickmarks = function (options) {
+	return A2(
+		elm$core$Maybe$withDefault,
+		0,
+		A2(jxxcarlson$elm_graph$SimpleGraph$findMap, jxxcarlson$elm_graph$SimpleGraph$yTickmarks_, options));
+};
+var jxxcarlson$elm_graph$SimpleGraph$bMakeYLabels = F2(
+	function (yMax, ga) {
+		var n = jxxcarlson$elm_graph$SimpleGraph$yTickmarks(ga.options);
+		var _n0 = !n;
+		if (_n0) {
+			return A2(elm$svg$Svg$g, _List_Nil, _List_Nil);
+		} else {
+			return A2(
+				elm$svg$Svg$g,
+				_List_Nil,
+				A2(
+					elm$core$List$map,
+					jxxcarlson$elm_graph$SimpleGraph$bMakeYLabel(
+						_Utils_Tuple2(yMax, ga.graphHeight)),
+					A2(
+						elm$core$List$map,
+						function (k) {
+							return (k * yMax) / (n - 1);
+						},
+						A2(elm$core$List$range, 0, n - 1))));
+		}
+	});
+var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
+var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var jxxcarlson$elm_graph$SimpleGraph$barRect = F5(
+	function (color, barWidth, barHeight, x, fraction) {
+		return A2(
+			elm$svg$Svg$rect,
+			_List_fromArray(
+				[
+					elm$svg$Svg$Attributes$width(
+					elm$core$String$fromFloat(barWidth)),
+					elm$svg$Svg$Attributes$height(
+					elm$core$String$fromFloat(fraction * barHeight)),
+					elm$svg$Svg$Attributes$x(
+					elm$core$String$fromFloat(x)),
+					elm$svg$Svg$Attributes$fill(color)
+				]),
+			_List_Nil);
+	});
+var jxxcarlson$elm_graph$SimpleGraph$scale_ = function (option) {
+	if (option.$ === 'Scale') {
+		var kx = option.a;
+		var ky = option.b;
+		return elm$core$Maybe$Just(
+			_Utils_Tuple2(kx, ky));
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var jxxcarlson$elm_graph$SimpleGraph$scale = function (options) {
+	return A2(
+		elm$core$Maybe$withDefault,
+		_Utils_Tuple2(1.0, 1.0),
+		A2(jxxcarlson$elm_graph$SimpleGraph$findMap, jxxcarlson$elm_graph$SimpleGraph$scale_, options));
+};
+var jxxcarlson$elm_graph$SimpleGraph$buildSVGTransformString = function (ga) {
+	var _n0 = jxxcarlson$elm_graph$SimpleGraph$scale(ga.options);
+	var kx = _n0.a;
+	var ky = _n0.b;
+	var translateX = function () {
+		var _n2 = kx < 0;
+		if (!_n2) {
+			return '0';
+		} else {
+			return elm$core$String$fromFloat((-ga.graphWidth) + 60);
+		}
+	}();
+	var scaleString = 'scale(' + (elm$core$String$fromFloat(kx) + (', ' + (elm$core$String$fromFloat(ky) + ')')));
+	var translateY = function () {
+		var _n1 = ky < 0;
+		if (!_n1) {
+			return '0';
+		} else {
+			return elm$core$String$fromFloat(-ga.graphHeight);
+		}
+	}();
+	var translateString = 'translate(' + (translateX + (', ' + (translateY + ')')));
+	return scaleString + (' ' + translateString);
+};
+var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
+var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
+var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
+var elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
+var elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
+var elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
+var elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
+var jxxcarlson$elm_graph$SimpleGraph$lineColor_ = function (option) {
+	if (option.$ === 'Color') {
+		var str = option.a;
+		return elm$core$Maybe$Just(str);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var jxxcarlson$elm_graph$SimpleGraph$lineColor = function (options) {
+	return A2(
+		elm$core$Maybe$withDefault,
+		'rgb(40, 40, 40)',
+		A2(jxxcarlson$elm_graph$SimpleGraph$findMap, jxxcarlson$elm_graph$SimpleGraph$lineColor_, options));
+};
+var jxxcarlson$elm_graph$SimpleGraph$segmentToSVG = F2(
+	function (options, _n0) {
+		var _n1 = _n0.a;
+		var x1 = _n1.a;
+		var y1 = _n1.b;
+		var _n2 = _n0.b;
+		var x2 = _n2.a;
+		var y2 = _n2.b;
+		return A2(
+			elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					elm$svg$Svg$Attributes$x1(
+					elm$core$String$fromFloat(x1)),
+					elm$svg$Svg$Attributes$y1(
+					elm$core$String$fromFloat(y1)),
+					elm$svg$Svg$Attributes$x2(
+					elm$core$String$fromFloat(x2)),
+					elm$svg$Svg$Attributes$y2(
+					elm$core$String$fromFloat(y2)),
+					elm$svg$Svg$Attributes$stroke(
+					jxxcarlson$elm_graph$SimpleGraph$lineColor(options)),
+					elm$svg$Svg$Attributes$strokeWidth('1')
+				]),
+			_List_Nil);
+	});
+var jxxcarlson$elm_graph$SimpleGraph$bxTickmark = function (x) {
+	return A2(
+		jxxcarlson$elm_graph$SimpleGraph$segmentToSVG,
+		_List_Nil,
+		_Utils_Tuple2(
+			_Utils_Tuple2(x, 0),
+			_Utils_Tuple2(x, -8)));
+};
+var jxxcarlson$elm_graph$SimpleGraph$deltaX_ = function (option) {
+	if (option.$ === 'DeltaX') {
+		var dx = option.a;
+		return elm$core$Maybe$Just(dx);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var jxxcarlson$elm_graph$SimpleGraph$deltaX = function (options) {
+	return A2(
+		elm$core$Maybe$withDefault,
+		15,
+		A2(jxxcarlson$elm_graph$SimpleGraph$findMap, jxxcarlson$elm_graph$SimpleGraph$deltaX_, options));
+};
+var jxxcarlson$elm_graph$SimpleGraph$xTickmarks_ = function (option) {
+	if (option.$ === 'XTickmarks') {
+		var k = option.a;
+		return elm$core$Maybe$Just(k);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var jxxcarlson$elm_graph$SimpleGraph$xTickmarks = function (options) {
+	return A2(
+		elm$core$Maybe$withDefault,
+		0,
+		A2(jxxcarlson$elm_graph$SimpleGraph$findMap, jxxcarlson$elm_graph$SimpleGraph$xTickmarks_, options));
+};
+var jxxcarlson$elm_graph$SimpleGraph$bxTickmarks = function (ga) {
+	var dx = jxxcarlson$elm_graph$SimpleGraph$xTickmarks(ga.options) * jxxcarlson$elm_graph$SimpleGraph$deltaX(ga.options);
+	var n = elm$core$Basics$round(ga.graphWidth / dx);
+	return A2(
+		elm$svg$Svg$g,
+		_List_Nil,
+		A2(
+			elm$core$List$map,
+			jxxcarlson$elm_graph$SimpleGraph$bxTickmark,
+			A2(
+				elm$core$List$map,
+				function (k) {
+					return k * dx;
+				},
+				A2(elm$core$List$range, 0, n - 1))));
+};
+var jxxcarlson$elm_graph$SimpleGraph$byTickmark = function (y) {
+	return A2(
+		jxxcarlson$elm_graph$SimpleGraph$segmentToSVG,
+		_List_Nil,
+		_Utils_Tuple2(
+			_Utils_Tuple2(0, y),
+			_Utils_Tuple2(-8, y)));
+};
+var jxxcarlson$elm_graph$SimpleGraph$byTickmarks = function (ga) {
+	var n = jxxcarlson$elm_graph$SimpleGraph$yTickmarks(ga.options);
+	return A2(
+		elm$svg$Svg$g,
+		_List_Nil,
+		A2(
+			elm$core$List$map,
+			jxxcarlson$elm_graph$SimpleGraph$byTickmark,
+			A2(
+				elm$core$List$map,
+				function (k) {
+					return (k * ga.graphHeight) / (n - 1);
+				},
+				A2(elm$core$List$range, 0, n - 1))));
+};
+var elm$core$List$maximum = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(
+			A3(elm$core$List$foldl, elm$core$Basics$max, x, xs));
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var elm$core$Tuple$pair = F2(
+	function (a, b) {
+		return _Utils_Tuple2(a, b);
+	});
+var jxxcarlson$elm_graph$SimpleGraph$xCoordinates = F2(
+	function (n, dx) {
+		return A2(
+			elm$core$List$map,
+			function (i) {
+				return i * dx;
+			},
+			A2(elm$core$List$range, 0, n));
+	});
+var jxxcarlson$elm_graph$SimpleGraph$prepare = F2(
+	function (dx, data) {
+		var ymax = A2(
+			elm$core$Maybe$withDefault,
+			1,
+			elm$core$List$maximum(data));
+		var ys = A2(
+			elm$core$List$map,
+			function (y) {
+				return y / ymax;
+			},
+			data);
+		var xs = A2(
+			jxxcarlson$elm_graph$SimpleGraph$xCoordinates,
+			elm$core$List$length(data),
+			dx);
+		return _Utils_Tuple2(
+			ymax,
+			A3(elm$core$List$map2, elm$core$Tuple$pair, xs, ys));
+	});
+var jxxcarlson$elm_graph$SimpleGraph$barChartAsSVG = F2(
+	function (ga, data) {
+		var yTickmarks2 = jxxcarlson$elm_graph$SimpleGraph$byTickmarks(ga);
+		var xTickmarks2 = jxxcarlson$elm_graph$SimpleGraph$bxTickmarks(ga);
+		var transformer = elm$svg$Svg$Attributes$transform(
+			jxxcarlson$elm_graph$SimpleGraph$buildSVGTransformString(ga));
+		var ordinate = A2(
+			jxxcarlson$elm_graph$SimpleGraph$segmentToSVG,
+			_List_Nil,
+			_Utils_Tuple2(
+				_Utils_Tuple2(0, 0),
+				_Utils_Tuple2(0, ga.graphHeight)));
+		var barWidth = 0.8 * jxxcarlson$elm_graph$SimpleGraph$deltaX(ga.options);
+		var gbar = function (_n1) {
+			var x = _n1.a;
+			var y = _n1.b;
+			return A5(
+				jxxcarlson$elm_graph$SimpleGraph$barRect,
+				jxxcarlson$elm_graph$SimpleGraph$lineColor(ga.options),
+				barWidth,
+				ga.graphHeight,
+				x,
+				y);
+		};
+		var abscissa = A2(
+			jxxcarlson$elm_graph$SimpleGraph$segmentToSVG,
+			_List_Nil,
+			_Utils_Tuple2(
+				_Utils_Tuple2(0, 0),
+				_Utils_Tuple2(ga.graphWidth, 0)));
+		var _n0 = A2(
+			jxxcarlson$elm_graph$SimpleGraph$prepare,
+			jxxcarlson$elm_graph$SimpleGraph$deltaX(ga.options),
+			data);
+		var yMax = _n0.a;
+		var preparedData = _n0.b;
+		var yLabels = A2(jxxcarlson$elm_graph$SimpleGraph$bMakeYLabels, yMax, ga);
+		return A2(
+			elm$svg$Svg$g,
+			_List_fromArray(
+				[transformer]),
+			_Utils_ap(
+				A2(elm$core$List$map, gbar, preparedData),
+				_List_fromArray(
+					[abscissa, ordinate, xTickmarks2, yTickmarks2, yLabels])));
+	});
+var jxxcarlson$elm_graph$SimpleGraph$barChart = F2(
+	function (ga, data) {
+		return A2(
+			elm$svg$Svg$svg,
+			_List_fromArray(
+				[
+					elm$svg$Svg$Attributes$transform('scale(1,-1)'),
+					elm$svg$Svg$Attributes$height(
+					elm$core$String$fromFloat(ga.graphHeight + 40)),
+					elm$svg$Svg$Attributes$width(
+					elm$core$String$fromFloat(ga.graphWidth + 40)),
+					elm$svg$Svg$Attributes$viewBox(
+					'-60 -20 ' + (elm$core$String$fromFloat(ga.graphWidth + 40) + (' ' + elm$core$String$fromFloat(ga.graphHeight + 20))))
+				]),
+			_List_fromArray(
+				[
+					A2(jxxcarlson$elm_graph$SimpleGraph$barChartAsSVG, ga, data)
+				]));
+	});
+var mdgriffith$elm_ui$Internal$Model$Unstyled = function (a) {
+	return {$: 'Unstyled', a: a};
+};
+var mdgriffith$elm_ui$Internal$Model$unstyled = A2(elm$core$Basics$composeL, mdgriffith$elm_ui$Internal$Model$Unstyled, elm$core$Basics$always);
+var mdgriffith$elm_ui$Element$html = mdgriffith$elm_ui$Internal$Model$unstyled;
+var author$project$NetworkSimulator$accountChart = function (graph) {
+	var data = A2(
+		elm$core$List$map,
+		A2(elm$core$Basics$composeR, elm$core$Tuple$second, elm$core$Basics$toFloat),
+		author$project$Network$accountList(graph));
+	return mdgriffith$elm_ui$Element$html(
+		A2(jxxcarlson$elm_graph$SimpleGraph$barChart, author$project$NetworkSimulator$barGraphAttributes, data));
+};
+var author$project$Network$nodeState2 = function (node) {
+	return node.label.value;
+};
+var elm$core$List$sum = function (numbers) {
+	return A3(elm$core$List$foldl, elm$core$Basics$add, 0, numbers);
+};
+var author$project$Network$moneySupply = function (graph) {
+	return elm$core$List$sum(
+		A2(
+			elm$core$List$map,
+			A2(
+				elm$core$Basics$composeR,
+				author$project$Network$nodeState2,
+				function ($) {
+					return $.accountBalance;
+				}),
+			elm_community$graph$Graph$nodes(graph)));
+};
 var mdgriffith$elm_ui$Internal$Model$Height = function (a) {
 	return {$: 'Height', a: a};
 };
@@ -9614,9 +10187,6 @@ var mdgriffith$elm_ui$Internal$Model$Keyed = function (a) {
 var mdgriffith$elm_ui$Internal$Model$NoStyleSheet = {$: 'NoStyleSheet'};
 var mdgriffith$elm_ui$Internal$Model$Styled = function (a) {
 	return {$: 'Styled', a: a};
-};
-var mdgriffith$elm_ui$Internal$Model$Unstyled = function (a) {
-	return {$: 'Unstyled', a: a};
 };
 var mdgriffith$elm_ui$Internal$Model$addChildren = F2(
 	function (existing, nearbyChildren) {
@@ -9934,7 +10504,6 @@ var mdgriffith$elm_ui$Internal$Model$Style = F2(
 	function (a, b) {
 		return {$: 'Style', a: a, b: b};
 	});
-var elm$core$String$fromFloat = _String_fromNumber;
 var mdgriffith$elm_ui$Internal$Model$formatColor = function (_n0) {
 	var red = _n0.a;
 	var green = _n0.b;
@@ -10020,7 +10589,6 @@ var mdgriffith$elm_ui$Internal$Model$renderFocusStyle = function (focus) {
 					A2(mdgriffith$elm_ui$Internal$Model$Property, 'outline', 'none'))
 				])));
 };
-var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var mdgriffith$elm_ui$Internal$Style$Batch = function (a) {
 	return {$: 'Batch', a: a};
 };
@@ -12021,16 +12589,6 @@ var mdgriffith$elm_ui$Internal$Model$renderNullAdjustmentRule = F2(
 						]))
 				]));
 	});
-var elm$core$List$maximum = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return elm$core$Maybe$Just(
-			A3(elm$core$List$foldl, elm$core$Basics$max, x, xs));
-	} else {
-		return elm$core$Maybe$Nothing;
-	}
-};
 var elm$core$List$minimum = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -14679,6 +15237,170 @@ var mdgriffith$elm_ui$Internal$Model$Text = function (a) {
 var mdgriffith$elm_ui$Element$text = function (content) {
 	return mdgriffith$elm_ui$Internal$Model$Text(content);
 };
+var author$project$NetworkSimulator$moneySupplyDisplay = function (model) {
+	var moneySupply = author$project$Network$moneySupply(model.graph);
+	return A2(
+		mdgriffith$elm_ui$Element$el,
+		_List_Nil,
+		mdgriffith$elm_ui$Element$text(
+			'Money supply = ' + elm$core$String$fromInt(
+				author$project$Network$moneySupply(model.graph))));
+};
+var author$project$NetworkSimulator$numberOfTradersDisplay = function (model) {
+	var nodeFilter = function (entity) {
+		return author$project$Network$nodeState(entity).accountBalance > 0;
+	};
+	var n = elm$core$List$length(
+		A2(author$project$Network$filterNodes, nodeFilter, model.graph));
+	return A2(
+		mdgriffith$elm_ui$Element$el,
+		_List_Nil,
+		mdgriffith$elm_ui$Element$text(
+			'Trading population = ' + elm$core$String$fromInt(n)));
+};
+var mdgriffith$elm_ui$Internal$Model$AsColumn = {$: 'AsColumn'};
+var mdgriffith$elm_ui$Internal$Model$asColumn = mdgriffith$elm_ui$Internal$Model$AsColumn;
+var mdgriffith$elm_ui$Internal$Model$Attr = function (a) {
+	return {$: 'Attr', a: a};
+};
+var mdgriffith$elm_ui$Internal$Model$htmlClass = function (cls) {
+	return mdgriffith$elm_ui$Internal$Model$Attr(
+		elm$html$Html$Attributes$class(cls));
+};
+var mdgriffith$elm_ui$Element$column = F2(
+	function (attrs, children) {
+		return A4(
+			mdgriffith$elm_ui$Internal$Model$element,
+			mdgriffith$elm_ui$Internal$Model$asColumn,
+			mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				elm$core$List$cons,
+				mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.contentTop + (' ' + mdgriffith$elm_ui$Internal$Style$classes.contentLeft)),
+				A2(
+					elm$core$List$cons,
+					mdgriffith$elm_ui$Element$height(mdgriffith$elm_ui$Element$shrink),
+					A2(
+						elm$core$List$cons,
+						mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$shrink),
+						attrs))),
+			mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
+	});
+var mdgriffith$elm_ui$Internal$Flag$moveX = mdgriffith$elm_ui$Internal$Flag$flag(25);
+var mdgriffith$elm_ui$Internal$Model$MoveX = function (a) {
+	return {$: 'MoveX', a: a};
+};
+var mdgriffith$elm_ui$Internal$Model$TransformComponent = F2(
+	function (a, b) {
+		return {$: 'TransformComponent', a: a, b: b};
+	});
+var mdgriffith$elm_ui$Element$moveLeft = function (x) {
+	return A2(
+		mdgriffith$elm_ui$Internal$Model$TransformComponent,
+		mdgriffith$elm_ui$Internal$Flag$moveX,
+		mdgriffith$elm_ui$Internal$Model$MoveX(-x));
+};
+var mdgriffith$elm_ui$Internal$Flag$padding = mdgriffith$elm_ui$Internal$Flag$flag(2);
+var mdgriffith$elm_ui$Internal$Model$PaddingStyle = F5(
+	function (a, b, c, d, e) {
+		return {$: 'PaddingStyle', a: a, b: b, c: c, d: d, e: e};
+	});
+var mdgriffith$elm_ui$Internal$Model$StyleClass = F2(
+	function (a, b) {
+		return {$: 'StyleClass', a: a, b: b};
+	});
+var mdgriffith$elm_ui$Element$paddingXY = F2(
+	function (x, y) {
+		return _Utils_eq(x, y) ? A2(
+			mdgriffith$elm_ui$Internal$Model$StyleClass,
+			mdgriffith$elm_ui$Internal$Flag$padding,
+			A5(
+				mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+				'p-' + elm$core$String$fromInt(x),
+				x,
+				x,
+				x,
+				x)) : A2(
+			mdgriffith$elm_ui$Internal$Model$StyleClass,
+			mdgriffith$elm_ui$Internal$Flag$padding,
+			A5(
+				mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+				'p-' + (elm$core$String$fromInt(x) + ('-' + elm$core$String$fromInt(y))),
+				y,
+				x,
+				y,
+				x));
+	});
+var mdgriffith$elm_ui$Internal$Model$AsRow = {$: 'AsRow'};
+var mdgriffith$elm_ui$Internal$Model$asRow = mdgriffith$elm_ui$Internal$Model$AsRow;
+var mdgriffith$elm_ui$Element$row = F2(
+	function (attrs, children) {
+		return A4(
+			mdgriffith$elm_ui$Internal$Model$element,
+			mdgriffith$elm_ui$Internal$Model$asRow,
+			mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				elm$core$List$cons,
+				mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.contentLeft + (' ' + mdgriffith$elm_ui$Internal$Style$classes.contentCenterY)),
+				A2(
+					elm$core$List$cons,
+					mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$shrink),
+					A2(
+						elm$core$List$cons,
+						mdgriffith$elm_ui$Element$height(mdgriffith$elm_ui$Element$shrink),
+						attrs))),
+			mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
+	});
+var mdgriffith$elm_ui$Internal$Flag$spacing = mdgriffith$elm_ui$Internal$Flag$flag(3);
+var mdgriffith$elm_ui$Internal$Model$SpacingStyle = F3(
+	function (a, b, c) {
+		return {$: 'SpacingStyle', a: a, b: b, c: c};
+	});
+var mdgriffith$elm_ui$Internal$Model$spacingName = F2(
+	function (x, y) {
+		return 'spacing-' + (elm$core$String$fromInt(x) + ('-' + elm$core$String$fromInt(y)));
+	});
+var mdgriffith$elm_ui$Element$spacing = function (x) {
+	return A2(
+		mdgriffith$elm_ui$Internal$Model$StyleClass,
+		mdgriffith$elm_ui$Internal$Flag$spacing,
+		A3(
+			mdgriffith$elm_ui$Internal$Model$SpacingStyle,
+			A2(mdgriffith$elm_ui$Internal$Model$spacingName, x, x),
+			x,
+			x));
+};
+var author$project$NetworkSimulator$accountDisplay = function (model) {
+	return A2(
+		mdgriffith$elm_ui$Element$column,
+		_List_fromArray(
+			[
+				A2(mdgriffith$elm_ui$Element$paddingXY, 0, 12)
+			]),
+		_List_fromArray(
+			[
+				A2(
+				mdgriffith$elm_ui$Element$row,
+				_List_fromArray(
+					[
+						mdgriffith$elm_ui$Element$moveLeft(48)
+					]),
+				_List_fromArray(
+					[
+						author$project$NetworkSimulator$accountChart(model.graph)
+					])),
+				A2(
+				mdgriffith$elm_ui$Element$row,
+				_List_fromArray(
+					[
+						mdgriffith$elm_ui$Element$spacing(18)
+					]),
+				_List_fromArray(
+					[
+						author$project$NetworkSimulator$moneySupplyDisplay(model),
+						author$project$NetworkSimulator$numberOfTradersDisplay(model)
+					]))
+			]));
+};
 var mdgriffith$elm_ui$Internal$Flag$fontWeight = mdgriffith$elm_ui$Internal$Flag$flag(13);
 var mdgriffith$elm_ui$Internal$Model$Class = F2(
 	function (a, b) {
@@ -14689,10 +15411,6 @@ var mdgriffith$elm_ui$Internal$Flag$fontSize = mdgriffith$elm_ui$Internal$Flag$f
 var mdgriffith$elm_ui$Internal$Model$FontSize = function (a) {
 	return {$: 'FontSize', a: a};
 };
-var mdgriffith$elm_ui$Internal$Model$StyleClass = F2(
-	function (a, b) {
-		return {$: 'StyleClass', a: a, b: b};
-	});
 var mdgriffith$elm_ui$Element$Font$size = function (i) {
 	return A2(
 		mdgriffith$elm_ui$Internal$Model$StyleClass,
@@ -14722,45 +15440,6 @@ var author$project$NetworkSimulator$clockIndicator = function (model) {
 				'Clock: ' + elm$core$String$fromInt(model.gameClock)));
 	}
 };
-var author$project$Network$nodeState2 = function (node) {
-	return node.label.value;
-};
-var elm$core$List$sum = function (numbers) {
-	return A3(elm$core$List$foldl, elm$core$Basics$add, 0, numbers);
-};
-var author$project$Network$moneySupply = function (graph) {
-	return elm$core$List$sum(
-		A2(
-			elm$core$List$map,
-			A2(
-				elm$core$Basics$composeR,
-				author$project$Network$nodeState2,
-				function ($) {
-					return $.accountBalance;
-				}),
-			elm_community$graph$Graph$nodes(graph)));
-};
-var author$project$NetworkSimulator$moneySupplyDisplay = function (model) {
-	var moneySupply = author$project$Network$moneySupply(model.graph);
-	return A2(
-		mdgriffith$elm_ui$Element$el,
-		_List_Nil,
-		mdgriffith$elm_ui$Element$text(
-			'Money supply = ' + elm$core$String$fromInt(
-				author$project$Network$moneySupply(model.graph))));
-};
-var author$project$NetworkSimulator$numberOfTradersDisplay = function (model) {
-	var nodeFilter = function (entity) {
-		return author$project$Network$nodeState(entity).accountBalance > 0;
-	};
-	var n = elm$core$List$length(
-		A2(author$project$Network$filterNodes, nodeFilter, model.graph));
-	return A2(
-		mdgriffith$elm_ui$Element$el,
-		_List_Nil,
-		mdgriffith$elm_ui$Element$text(
-			'Trading population = ' + elm$core$String$fromInt(n)));
-};
 var author$project$NetworkSimulator$recruitedDisplay = function (model) {
 	var n = elm$core$String$fromInt(
 		author$project$Grid$recruitedCount(model.grid) - 1);
@@ -14779,11 +15458,6 @@ var mdgriffith$elm_ui$Element$rgb = F3(
 		return A4(mdgriffith$elm_ui$Internal$Model$Rgba, r, g, b, 1);
 	});
 var author$project$NetworkSimulator$white = A3(mdgriffith$elm_ui$Element$rgb, 1, 1, 1);
-var mdgriffith$elm_ui$Internal$Flag$padding = mdgriffith$elm_ui$Internal$Flag$flag(2);
-var mdgriffith$elm_ui$Internal$Model$PaddingStyle = F5(
-	function (a, b, c, d, e) {
-		return {$: 'PaddingStyle', a: a, b: b, c: c, d: d, e: e};
-	});
 var mdgriffith$elm_ui$Element$padding = function (x) {
 	return A2(
 		mdgriffith$elm_ui$Internal$Model$StyleClass,
@@ -14902,9 +15576,6 @@ var elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		elm$json$Json$Decode$succeed(msg));
 };
-var mdgriffith$elm_ui$Internal$Model$Attr = function (a) {
-	return {$: 'Attr', a: a};
-};
 var mdgriffith$elm_ui$Element$Events$onClick = A2(elm$core$Basics$composeL, mdgriffith$elm_ui$Internal$Model$Attr, elm$html$Html$Events$onClick);
 var mdgriffith$elm_ui$Element$Input$hasFocusStyle = function (attr) {
 	if (((attr.$ === 'StyleClass') && (attr.b.$ === 'PseudoSelector')) && (attr.b.a.$ === 'Focus')) {
@@ -14916,10 +15587,6 @@ var mdgriffith$elm_ui$Element$Input$hasFocusStyle = function (attr) {
 	}
 };
 var mdgriffith$elm_ui$Internal$Model$NoAttribute = {$: 'NoAttribute'};
-var mdgriffith$elm_ui$Internal$Model$htmlClass = function (cls) {
-	return mdgriffith$elm_ui$Internal$Model$Attr(
-		elm$html$Html$Attributes$class(cls));
-};
 var mdgriffith$elm_ui$Element$Input$focusDefault = function (attrs) {
 	return A2(elm$core$List$any, mdgriffith$elm_ui$Element$Input$hasFocusStyle, attrs) ? mdgriffith$elm_ui$Internal$Model$NoAttribute : mdgriffith$elm_ui$Internal$Model$htmlClass('focusable');
 };
@@ -15084,69 +15751,10 @@ var author$project$NetworkSimulator$startOverButton = function (model) {
 			onPress: elm$core$Maybe$Just(author$project$NetworkSimulator$AdvanceGameState)
 		});
 };
-var mdgriffith$elm_ui$Internal$Model$AsColumn = {$: 'AsColumn'};
-var mdgriffith$elm_ui$Internal$Model$asColumn = mdgriffith$elm_ui$Internal$Model$AsColumn;
-var mdgriffith$elm_ui$Element$column = F2(
-	function (attrs, children) {
-		return A4(
-			mdgriffith$elm_ui$Internal$Model$element,
-			mdgriffith$elm_ui$Internal$Model$asColumn,
-			mdgriffith$elm_ui$Internal$Model$div,
-			A2(
-				elm$core$List$cons,
-				mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.contentTop + (' ' + mdgriffith$elm_ui$Internal$Style$classes.contentLeft)),
-				A2(
-					elm$core$List$cons,
-					mdgriffith$elm_ui$Element$height(mdgriffith$elm_ui$Element$shrink),
-					A2(
-						elm$core$List$cons,
-						mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$shrink),
-						attrs))),
-			mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
-	});
 var mdgriffith$elm_ui$Internal$Model$Px = function (a) {
 	return {$: 'Px', a: a};
 };
 var mdgriffith$elm_ui$Element$px = mdgriffith$elm_ui$Internal$Model$Px;
-var mdgriffith$elm_ui$Internal$Model$AsRow = {$: 'AsRow'};
-var mdgriffith$elm_ui$Internal$Model$asRow = mdgriffith$elm_ui$Internal$Model$AsRow;
-var mdgriffith$elm_ui$Element$row = F2(
-	function (attrs, children) {
-		return A4(
-			mdgriffith$elm_ui$Internal$Model$element,
-			mdgriffith$elm_ui$Internal$Model$asRow,
-			mdgriffith$elm_ui$Internal$Model$div,
-			A2(
-				elm$core$List$cons,
-				mdgriffith$elm_ui$Internal$Model$htmlClass(mdgriffith$elm_ui$Internal$Style$classes.contentLeft + (' ' + mdgriffith$elm_ui$Internal$Style$classes.contentCenterY)),
-				A2(
-					elm$core$List$cons,
-					mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$shrink),
-					A2(
-						elm$core$List$cons,
-						mdgriffith$elm_ui$Element$height(mdgriffith$elm_ui$Element$shrink),
-						attrs))),
-			mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
-	});
-var mdgriffith$elm_ui$Internal$Flag$spacing = mdgriffith$elm_ui$Internal$Flag$flag(3);
-var mdgriffith$elm_ui$Internal$Model$SpacingStyle = F3(
-	function (a, b, c) {
-		return {$: 'SpacingStyle', a: a, b: b, c: c};
-	});
-var mdgriffith$elm_ui$Internal$Model$spacingName = F2(
-	function (x, y) {
-		return 'spacing-' + (elm$core$String$fromInt(x) + ('-' + elm$core$String$fromInt(y)));
-	});
-var mdgriffith$elm_ui$Element$spacing = function (x) {
-	return A2(
-		mdgriffith$elm_ui$Internal$Model$StyleClass,
-		mdgriffith$elm_ui$Internal$Flag$spacing,
-		A3(
-			mdgriffith$elm_ui$Internal$Model$SpacingStyle,
-			A2(mdgriffith$elm_ui$Internal$Model$spacingName, x, x),
-			x,
-			x));
-};
 var author$project$NetworkSimulator$controlPanel = function (model) {
 	return A2(
 		mdgriffith$elm_ui$Element$column,
@@ -15187,19 +15795,22 @@ var author$project$NetworkSimulator$controlPanel = function (model) {
 					]),
 				_List_fromArray(
 					[
-						author$project$NetworkSimulator$moneySupplyDisplay(model),
-						author$project$NetworkSimulator$numberOfTradersDisplay(model)
+						author$project$NetworkSimulator$startOverButton(model),
+						author$project$NetworkSimulator$resetButton(model)
 					])),
+				author$project$NetworkSimulator$accountDisplay(model),
 				A2(
 				mdgriffith$elm_ui$Element$row,
 				_List_fromArray(
 					[
-						mdgriffith$elm_ui$Element$spacing(18)
+						mdgriffith$elm_ui$Element$Font$size(12)
 					]),
 				_List_fromArray(
 					[
-						author$project$NetworkSimulator$startOverButton(model),
-						author$project$NetworkSimulator$resetButton(model)
+						A2(
+						mdgriffith$elm_ui$Element$el,
+						_List_Nil,
+						mdgriffith$elm_ui$Element$text(model.message))
 					]))
 			]));
 };
@@ -15297,19 +15908,6 @@ var author$project$NetworkSimulator$infoPanel = function (model) {
 					[
 						author$project$NetworkSimulator$displayGraphButton(model),
 						author$project$NetworkSimulator$displayGridButton(model)
-					])),
-				A2(
-				mdgriffith$elm_ui$Element$row,
-				_List_fromArray(
-					[
-						mdgriffith$elm_ui$Element$Font$size(12)
-					]),
-				_List_fromArray(
-					[
-						A2(
-						mdgriffith$elm_ui$Element$el,
-						_List_Nil,
-						mdgriffith$elm_ui$Element$text(model.message))
 					]))
 			]));
 };
@@ -15558,7 +16156,7 @@ var author$project$NetworkSimulator$nodeColorizer = function (node) {
 			case 0:
 				return elm_community$typed_svg$TypedSvg$Attributes$fill(
 					elm_community$typed_svg$TypedSvg$Types$Fill(
-						A3(avh4$elm_color$Color$rgb255, 66, 244, 137)));
+						A3(avh4$elm_color$Color$rgb255, 0, 180, 0)));
 			case 1:
 				return elm_community$typed_svg$TypedSvg$Attributes$fill(
 					elm_community$typed_svg$TypedSvg$Types$Fill(
@@ -15762,6 +16360,7 @@ var author$project$NetworkSimulator$nodeElement = F2(
 				return author$project$NetworkSimulator$onMouseDown;
 			}
 		}();
+		var accBal = node.label.value.accountBalance;
 		return A2(
 			elm_community$typed_svg$TypedSvg$g,
 			_List_Nil,
@@ -15771,7 +16370,7 @@ var author$project$NetworkSimulator$nodeElement = F2(
 					elm_community$typed_svg$TypedSvg$circle,
 					_List_fromArray(
 						[
-							elm_community$typed_svg$TypedSvg$Attributes$InPx$r(14.0),
+							elm_community$typed_svg$TypedSvg$Attributes$InPx$r(12.0 + (accBal / 2.5)),
 							author$project$NetworkSimulator$nodeColorizer(node),
 							elm_community$typed_svg$TypedSvg$Attributes$stroke(
 							A4(avh4$elm_color$Color$rgba, 0, 0, 0, 0)),
@@ -16088,8 +16687,6 @@ var author$project$NetworkSimulator$viewGrid = F3(
 			author$project$NetworkSimulator$CellGrid,
 			A4(author$project$CellGrid$renderAsHtml, 500, 500, author$project$NetworkSimulator$cellRenderer, model.grid));
 	});
-var mdgriffith$elm_ui$Internal$Model$unstyled = A2(elm$core$Basics$composeL, mdgriffith$elm_ui$Internal$Model$Unstyled, elm$core$Basics$always);
-var mdgriffith$elm_ui$Element$html = mdgriffith$elm_ui$Internal$Model$unstyled;
 var author$project$NetworkSimulator$rightPanel = function (model) {
 	return A2(
 		mdgriffith$elm_ui$Element$column,
