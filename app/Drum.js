@@ -4828,7 +4828,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Drum$init = function (flags) {
 	return _Utils_Tuple2(
-		{S: '165', a2: '', a3: '', I: author$project$DrumSongs$initialTextVoice1, J: author$project$DrumSongs$initialTextVoice2},
+		{S: '165', a2: '', a3: '', D: author$project$DrumSongs$initialTextVoice1, E: author$project$DrumSongs$initialTextVoice2},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5395,33 +5395,33 @@ var author$project$Drum$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{I: author$project$DrumSongs$initialTextVoice1, J: author$project$DrumSongs$initialTextVoice2}),
+						{D: author$project$DrumSongs$initialTextVoice1, E: author$project$DrumSongs$initialTextVoice2}),
 					elm$core$Platform$Cmd$none);
 			case 8:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{I: author$project$DrumSongs$sample1TextVoice1, J: author$project$DrumSongs$sample1TextVoice2}),
+						{D: author$project$DrumSongs$sample1TextVoice1, E: author$project$DrumSongs$sample1TextVoice2}),
 					elm$core$Platform$Cmd$none);
 			case 9:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{I: author$project$DrumSongs$sample2TextVoice1, J: author$project$DrumSongs$sample2TextVoice2}),
+						{D: author$project$DrumSongs$sample2TextVoice1, E: author$project$DrumSongs$sample2TextVoice2}),
 					elm$core$Platform$Cmd$none);
 			case 1:
 				var str = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{I: str}),
+						{D: str}),
 					elm$core$Platform$Cmd$none);
 			case 2:
 				var str = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{J: str}),
+						{E: str}),
 					elm$core$Platform$Cmd$none);
 			case 3:
 				var str = msg.a;
@@ -5435,9 +5435,9 @@ var author$project$Drum$update = F2(
 					model,
 					author$project$Drum$sendCommand('tempo:' + model.S));
 			case 4:
-				var noteList2 = author$project$Phoneme$toPitchNameList(model.J);
+				var noteList2 = author$project$Phoneme$toPitchNameList(model.E);
 				var part2 = A3(author$project$Player$partFromMelody, '4n', '0.4', noteList2);
-				var noteList1 = author$project$Phoneme$toPitchNameList(model.I);
+				var noteList1 = author$project$Phoneme$toPitchNameList(model.D);
 				var part1 = A3(author$project$Player$partFromMelody, '4n', '0.8', noteList1);
 				var piece = {
 					cZ: A2(
@@ -6041,7 +6041,7 @@ var mdgriffith$elm_ui$Internal$Model$getStyleName = function (style) {
 				A2(elm$core$List$map, mdgriffith$elm_ui$Internal$Model$lengthClassName, template.dW)) + ('-cols-' + (A2(
 				elm$core$String$join,
 				'-',
-				A2(elm$core$List$map, mdgriffith$elm_ui$Internal$Model$lengthClassName, template.D)) + ('-space-x-' + (mdgriffith$elm_ui$Internal$Model$lengthClassName(template.d4.a) + ('-space-y-' + mdgriffith$elm_ui$Internal$Model$lengthClassName(template.d4.b)))))));
+				A2(elm$core$List$map, mdgriffith$elm_ui$Internal$Model$lengthClassName, template.F)) + ('-space-x-' + (mdgriffith$elm_ui$Internal$Model$lengthClassName(template.d4.a) + ('-space-y-' + mdgriffith$elm_ui$Internal$Model$lengthClassName(template.d4.b)))))));
 		case 9:
 			var pos = style.a;
 			return 'gp grid-pos-' + (elm$core$String$fromInt(pos.cc) + ('-' + (elm$core$String$fromInt(pos.bu) + ('-' + (elm$core$String$fromInt(pos.al) + ('-' + elm$core$String$fromInt(pos.ae)))))));
@@ -7954,7 +7954,7 @@ var elm$core$String$concat = function (strings) {
 var mdgriffith$elm_ui$Internal$Style$Intermediate = elm$core$Basics$identity;
 var mdgriffith$elm_ui$Internal$Style$emptyIntermediate = F2(
 	function (selector, closing) {
-		return {az: closing, l: _List_Nil, P: _List_Nil, G: selector};
+		return {az: closing, l: _List_Nil, P: _List_Nil, I: selector};
 	});
 var mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 	function (_n0, rulesToRender) {
@@ -7983,7 +7983,7 @@ var mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 							{
 								l: A2(
 									elm$core$List$cons,
-									{az: '\n}', l: _List_Nil, P: props, G: '@supports (' + (prop + (':' + (value + (') {' + parent.G))))},
+									{az: '\n}', l: _List_Nil, P: props, I: '@supports (' + (prop + (':' + (value + (') {' + parent.I))))},
 									rendered.l)
 							});
 					case 4:
@@ -7996,7 +7996,7 @@ var mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 									elm$core$List$cons,
 									A2(
 										mdgriffith$elm_ui$Internal$Style$renderRules,
-										A2(mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.G + (' + ' + selector), ''),
+										A2(mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.I + (' + ' + selector), ''),
 										adjRules),
 									rendered.l)
 							});
@@ -8010,7 +8010,7 @@ var mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 									elm$core$List$cons,
 									A2(
 										mdgriffith$elm_ui$Internal$Style$renderRules,
-										A2(mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.G + (' > ' + child), ''),
+										A2(mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.I + (' > ' + child), ''),
 										childRules),
 									rendered.l)
 							});
@@ -8026,7 +8026,7 @@ var mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 										mdgriffith$elm_ui$Internal$Style$renderRules,
 										A2(
 											mdgriffith$elm_ui$Internal$Style$emptyIntermediate,
-											_Utils_ap(parent.G, descriptor),
+											_Utils_ap(parent.I, descriptor),
 											''),
 										descriptorRules),
 									rendered.l)
@@ -8040,7 +8040,7 @@ var mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 									elm$core$List$cons,
 									A2(
 										mdgriffith$elm_ui$Internal$Style$renderRules,
-										A2(mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.G, ''),
+										A2(mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.I, ''),
 										batched),
 									rendered.l)
 							});
@@ -8065,7 +8065,7 @@ var mdgriffith$elm_ui$Internal$Style$renderCompact = function (styleClasses) {
 		if (!_n2.b) {
 			return '';
 		} else {
-			return rule.G + ('{' + (renderValues(rule.P) + (rule.az + '}')));
+			return rule.I + ('{' + (renderValues(rule.P) + (rule.az + '}')));
 		}
 	};
 	var renderIntermediate = function (_n0) {
@@ -8885,14 +8885,14 @@ var mdgriffith$elm_ui$Internal$Model$toStyleSheetString = F2(
 							A2(
 								elm$core$String$join,
 								ySpacing,
-								A2(elm$core$List$map, toGridLength, template.D)));
+								A2(elm$core$List$map, toGridLength, template.F)));
 						var msColumns = function (x) {
 							return '-ms-grid-columns: ' + (x + ';');
 						}(
 							A2(
 								elm$core$String$join,
 								ySpacing,
-								A2(elm$core$List$map, toGridLength, template.D)));
+								A2(elm$core$List$map, toGridLength, template.F)));
 						var gapY = 'grid-row-gap:' + (toGridLength(template.d4.b) + ';');
 						var gapX = 'grid-column-gap:' + (toGridLength(template.d4.a) + ';');
 						var columns = function (x) {
@@ -8901,14 +8901,14 @@ var mdgriffith$elm_ui$Internal$Model$toStyleSheetString = F2(
 							A2(
 								elm$core$String$join,
 								' ',
-								A2(elm$core$List$map, toGridLength, template.D)));
+								A2(elm$core$List$map, toGridLength, template.F)));
 						var _class = '.grid-rows-' + (A2(
 							elm$core$String$join,
 							'-',
 							A2(elm$core$List$map, mdgriffith$elm_ui$Internal$Model$lengthClassName, template.dW)) + ('-cols-' + (A2(
 							elm$core$String$join,
 							'-',
-							A2(elm$core$List$map, mdgriffith$elm_ui$Internal$Model$lengthClassName, template.D)) + ('-space-x-' + (mdgriffith$elm_ui$Internal$Model$lengthClassName(template.d4.a) + ('-space-y-' + mdgriffith$elm_ui$Internal$Model$lengthClassName(template.d4.b)))))));
+							A2(elm$core$List$map, mdgriffith$elm_ui$Internal$Model$lengthClassName, template.F)) + ('-space-x-' + (mdgriffith$elm_ui$Internal$Model$lengthClassName(template.d4.a) + ('-space-y-' + mdgriffith$elm_ui$Internal$Model$lengthClassName(template.d4.b)))))));
 						var modernGrid = _class + ('{' + (columns + (rows + (gapX + (gapY + '}')))));
 						var supports = '@supports (display:grid) {' + (modernGrid + '}');
 						var base = _class + ('{' + (msColumns + (msRows + '}')));
@@ -11978,6 +11978,63 @@ var author$project$Drum$appButtons = function (model) {
 				author$project$Drum$inputBPM(model)
 			]));
 };
+var elm$core$Basics$modBy = _Basics_modBy;
+var author$project$Rational$gcd = F2(
+	function (a, b) {
+		gcd:
+		while (true) {
+			var r = A2(elm$core$Basics$modBy, a, b);
+			if (!r) {
+				return a;
+			} else {
+				var $temp$a = r,
+					$temp$b = a;
+				a = $temp$a;
+				b = $temp$b;
+				continue gcd;
+			}
+		}
+	});
+var author$project$Rational$lcm = F2(
+	function (a, b) {
+		return (a && b) ? elm$core$Maybe$Just(
+			((a * b) / A2(author$project$Rational$gcd, a, b)) | 0) : elm$core$Maybe$Nothing;
+	});
+var author$project$Drum$displayPeriod = function (model) {
+	var n2 = elm$core$List$length(
+		author$project$Phoneme$toPitchNameList(model.E));
+	var n1 = elm$core$List$length(
+		author$project$Phoneme$toPitchNameList(model.D));
+	var _n0 = A2(author$project$Rational$lcm, 2 * n1, n2);
+	if (_n0.$ === 1) {
+		return A2(
+			mdgriffith$elm_ui$Element$el,
+			_List_fromArray(
+				[
+					mdgriffith$elm_ui$Element$Font$size(12),
+					mdgriffith$elm_ui$Element$centerX
+				]),
+			mdgriffith$elm_ui$Element$text('Period: --'));
+	} else {
+		var k = _n0.a;
+		return A2(
+			mdgriffith$elm_ui$Element$row,
+			_List_fromArray(
+				[mdgriffith$elm_ui$Element$centerX]),
+			_List_fromArray(
+				[
+					A2(
+					mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							mdgriffith$elm_ui$Element$Font$size(12),
+							mdgriffith$elm_ui$Element$centerX
+						]),
+					mdgriffith$elm_ui$Element$text(
+						'Period: ' + elm$core$String$fromInt(k)))
+				]));
+	}
+};
 var author$project$Drum$mainColumnStyle = _List_fromArray(
 	[
 		mdgriffith$elm_ui$Element$centerX,
@@ -11991,27 +12048,27 @@ var author$project$Drum$mainColumnStyle = _List_fromArray(
 var author$project$Drum$ReadVoice1 = function (a) {
 	return {$: 1, a: a};
 };
-var author$project$Drum$displayVoice = function (notes) {
-	var noteList = author$project$Phoneme$toPitchNameList(notes);
-	var tag = (elm$core$List$length(noteList) > 20) ? ' ...' : '';
-	var noteLisAsString = A2(
-		elm$core$String$join,
-		' ',
-		A2(elm$core$List$take, 20, noteList));
-	return A2(
-		mdgriffith$elm_ui$Element$row,
-		_List_fromArray(
-			[
-				mdgriffith$elm_ui$Element$centerX,
-				mdgriffith$elm_ui$Element$Font$size(11)
-			]),
-		_List_fromArray(
-			[
-				mdgriffith$elm_ui$Element$text(
-				'beats: ' + (elm$core$String$fromInt(
-					elm$core$List$length(noteList)) + (', notes: ' + (noteLisAsString + tag))))
-			]));
-};
+var author$project$Drum$displayVoice = F2(
+	function (label, noteList) {
+		var tag = (elm$core$List$length(noteList) > 20) ? ' ...' : '';
+		var noteLisAsString = A2(
+			elm$core$String$join,
+			' ',
+			A2(elm$core$List$take, 20, noteList));
+		return A2(
+			mdgriffith$elm_ui$Element$row,
+			_List_fromArray(
+				[
+					mdgriffith$elm_ui$Element$centerX,
+					mdgriffith$elm_ui$Element$Font$size(11)
+				]),
+			_List_fromArray(
+				[
+					mdgriffith$elm_ui$Element$text(
+					label + (' ' + (elm$core$String$fromInt(
+						elm$core$List$length(noteList)) + (', notes: ' + (noteLisAsString + tag)))))
+				]));
+	});
 var mdgriffith$elm_ui$Element$column = F2(
 	function (attrs, children) {
 		return A4(
@@ -12078,9 +12135,12 @@ var author$project$Drum$readVoice1 = function (model) {
 					a5: author$project$Drum$ReadVoice1,
 					a6: elm$core$Maybe$Nothing,
 					ck: false,
-					bf: model.I
+					bf: model.D
 				}),
-				author$project$Drum$displayVoice(model.I)
+				A2(
+				author$project$Drum$displayVoice,
+				'beats (quarters):',
+				author$project$Phoneme$toPitchNameList(model.D))
 			]));
 };
 var author$project$Drum$ReadVoice2 = function (a) {
@@ -12123,9 +12183,12 @@ var author$project$Drum$readVoice2 = function (model) {
 					a5: author$project$Drum$ReadVoice2,
 					a6: elm$core$Maybe$Nothing,
 					ck: false,
-					bf: model.J
+					bf: model.E
 				}),
-				author$project$Drum$displayVoice(model.J)
+				A2(
+				author$project$Drum$displayVoice,
+				'beats (eighths):',
+				author$project$Phoneme$toPitchNameList(model.E))
 			]));
 };
 var author$project$Drum$title = function (str) {
@@ -12202,6 +12265,7 @@ var author$project$Drum$mainColumn = function (model) {
 						author$project$Drum$title('Techno Drum Language App'),
 						author$project$Drum$readVoice1(model),
 						author$project$Drum$readVoice2(model),
+						author$project$Drum$displayPeriod(model),
 						author$project$Drum$appButtons(model),
 						A2(
 						mdgriffith$elm_ui$Element$newTabLink,
