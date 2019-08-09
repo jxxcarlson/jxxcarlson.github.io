@@ -7840,6 +7840,7 @@ var author$project$NetworkSimulator$advanceGameState = function (model) {
 					gameState: newGameState,
 					graph: graph,
 					grid: A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, graph),
+					history: _List_Nil,
 					simulation: gampleman$elm_visualization$Force$simulation(forces)
 				}));
 	} else {
