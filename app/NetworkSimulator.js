@@ -6815,9 +6815,11 @@ var author$project$NetworkSimulator$init = function (_n0) {
 	return _Utils_Tuple2(
 		{
 			clickCount: 0,
+			clickCountAtGameOver: 0,
 			displayMode: author$project$NetworkSimulator$DisplayGraph,
 			drag: elm$core$Maybe$Nothing,
 			gameClock: 0,
+			gameOverCount: 0,
 			gameState: author$project$NetworkSimulator$Ready,
 			graph: graph,
 			graphBehavior: author$project$NetworkSimulator$Selectable,
@@ -7799,7 +7801,7 @@ var author$project$NetworkSimulator$Drag = F3(
 	});
 var author$project$NetworkSimulator$GameOver = {$: 'GameOver'};
 var author$project$NetworkSimulator$Paused = {$: 'Paused'};
-var author$project$NetworkSimulator$Running = {$: 'Running'};
+var author$project$NetworkSimulator$Phase1 = {$: 'Phase1'};
 var author$project$NetworkSimulator$putCmd = F2(
 	function (cmd, model) {
 		return _Utils_Tuple2(model, cmd);
@@ -7809,11 +7811,11 @@ var author$project$NetworkSimulator$advanceGameState = function (model) {
 		var _n2 = model.gameState;
 		switch (_n2.$) {
 			case 'Ready':
-				return author$project$NetworkSimulator$Running;
-			case 'Running':
+				return author$project$NetworkSimulator$Phase1;
+			case 'Phase1':
 				return author$project$NetworkSimulator$Paused;
 			case 'Paused':
-				return author$project$NetworkSimulator$Running;
+				return author$project$NetworkSimulator$Phase1;
 			case 'Phase2':
 				return author$project$NetworkSimulator$GameOver;
 			case 'GameOver':
@@ -8087,14 +8089,21 @@ var author$project$NetworkSimulator$handleDragEnd = F2(
 var author$project$NetworkSimulator$handleGameTick = F2(
 	function (model, t) {
 		var _n0 = model.gameState;
-		if (_n0.$ === 'Running') {
-			return _Utils_Tuple2(
-				_Utils_update(
-					model,
-					{gameClock: model.gameClock + 1}),
-				author$project$NetworkSimulator$getRandomNumbers);
-		} else {
-			return _Utils_Tuple2(model, author$project$NetworkSimulator$getRandomNumbers);
+		switch (_n0.$) {
+			case 'Phase1':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{clickCountAtGameOver: model.clickCount, gameClock: model.gameClock + 1, gameOverCount: model.gameClock + 1}),
+					author$project$NetworkSimulator$getRandomNumbers);
+			case 'Phase2':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{gameClock: model.gameClock + 1}),
+					author$project$NetworkSimulator$getRandomNumbers);
+			default:
+				return _Utils_Tuple2(model, author$project$NetworkSimulator$getRandomNumbers);
 		}
 	});
 var elm_community$graph$Graph$mapNodes = function (f) {
@@ -8305,7 +8314,7 @@ var author$project$NetworkSimulator$sendAudioMessage = function (audioMsg) {
 };
 var author$project$NetworkSimulator$handleMouseClick = F3(
 	function (model, index, xy) {
-		if (!_Utils_eq(model.gameState, author$project$NetworkSimulator$Running)) {
+		if (!_Utils_eq(model.gameState, author$project$NetworkSimulator$Phase1)) {
 			return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 		} else {
 			var associatedOutgoingNodeIds = A2(author$project$Network$outGoingNodeIds, index, model.hiddenGraph);
@@ -8405,7 +8414,7 @@ var author$project$CellGrid$cellAtMatrixIndex = F2(
 	});
 var author$project$NetworkSimulator$handleMouseClickInGrid = F2(
 	function (model, msg_) {
-		if (!_Utils_eq(model.gameState, author$project$NetworkSimulator$Running)) {
+		if (!_Utils_eq(model.gameState, author$project$NetworkSimulator$Phase1)) {
 			return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 		} else {
 			var _n1 = msg_.a;
@@ -10006,7 +10015,7 @@ var author$project$NetworkMeasure$giniIndex = function (g) {
 		author$project$NetworkMeasure$differences(balances));
 	return (_Utils_cmp(
 		elm$core$Basics$abs(meanBalance),
-		author$project$NetworkMeasure$epsilon) < 0) ? 0 : (elm$core$List$sum(absoluteDifferences) / ((n * n) * meanBalance));
+		author$project$NetworkMeasure$epsilon) < 0) ? 0 : ((100 * elm$core$List$sum(absoluteDifferences)) / ((n * n) * meanBalance));
 };
 var author$project$NetworkMeasure$resilienceOfEdge = F3(
 	function (totalFlow_, g, edge) {
@@ -10087,13 +10096,14 @@ var author$project$NetworkSimulator$measures = function (model) {
 };
 var author$project$NetworkSimulator$recruitInterval = 8;
 var author$project$NetworkSimulator$recruitStep = 0;
-var author$project$NetworkSimulator$transactionStep = 1;
 var elm$core$Basics$modBy = _Basics_modBy;
 var elm_community$graph$Graph$size = A2(elm$core$Basics$composeR, elm_community$graph$Graph$unGraph, elm_community$intdict$IntDict$size);
 var author$project$NetworkSimulator$randomUpdate = F2(
 	function (model, numbers) {
 		var recruitCount1 = author$project$Grid$recruitedCount(model.grid);
-		var nextHistory = (A2(elm$core$Basics$modBy, author$project$NetworkSimulator$recruitInterval, model.gameClock) === 1) ? A2(
+		var nextHistory = (_Utils_eq(model.gameState, author$project$NetworkSimulator$Phase2) || (_Utils_eq(model.gameState, author$project$NetworkSimulator$Phase1) && _Utils_eq(
+			A2(elm$core$Basics$modBy, author$project$NetworkSimulator$recruitInterval, model.gameClock),
+			author$project$NetworkSimulator$recruitStep))) ? A2(
 			elm$core$List$cons,
 			author$project$NetworkSimulator$measures(model),
 			model.history) : model.history;
@@ -10105,7 +10115,7 @@ var author$project$NetworkSimulator$randomUpdate = F2(
 			_n10$2:
 			while (true) {
 				switch (_n10.a.$) {
-					case 'Running':
+					case 'Phase1':
 						if (_n10.b) {
 							var _n11 = _n10.a;
 							return author$project$NetworkSimulator$Phase2;
@@ -10122,7 +10132,7 @@ var author$project$NetworkSimulator$randomUpdate = F2(
 			return model.gameState;
 		}();
 		var _n0 = function () {
-			var _n1 = _Utils_eq(model.gameState, author$project$NetworkSimulator$Running) && _Utils_eq(
+			var _n1 = _Utils_eq(model.gameState, author$project$NetworkSimulator$Phase1) && _Utils_eq(
 				A2(elm$core$Basics$modBy, author$project$NetworkSimulator$recruitInterval, model.gameClock),
 				author$project$NetworkSimulator$recruitStep);
 			if (!_n1) {
@@ -10136,9 +10146,7 @@ var author$project$NetworkSimulator$randomUpdate = F2(
 		var deltaRecuiterAccount = _n0.a;
 		var newGraph1 = _n0.b;
 		var _n2 = function () {
-			var _n3 = _Utils_eq(
-				A2(elm$core$Basics$modBy, author$project$NetworkSimulator$recruitInterval, model.gameClock),
-				author$project$NetworkSimulator$transactionStep) && (!_Utils_eq(model.gameState, author$project$NetworkSimulator$Paused));
+			var _n3 = _Utils_eq(model.gameState, author$project$NetworkSimulator$Phase2);
 			if (!_n3) {
 				return _Utils_Tuple2(elm$core$Maybe$Nothing, newGraph1);
 			} else {
@@ -10163,7 +10171,7 @@ var author$project$NetworkSimulator$randomUpdate = F2(
 					case 'GameEnding':
 						var _n8 = _n7.a;
 						return author$project$NetworkSimulator$VeryLongChirp;
-					case 'Running':
+					case 'Phase1':
 						if (_n7.b) {
 							var _n9 = _n7.a;
 							return author$project$NetworkSimulator$Coo;
@@ -16341,8 +16349,8 @@ var author$project$NetworkSimulator$recruitedNodes = function (model) {
 var author$project$NetworkSimulator$scoreIndicator = function (model) {
 	var rn = elm$core$List$length(
 		author$project$NetworkSimulator$recruitedNodes(model));
-	var gc = model.gameClock;
-	var cc = model.clickCount;
+	var gc = model.gameOverCount;
+	var cc = model.clickCountAtGameOver;
 	var score = elm$core$Basics$round(((30 * rn) - (20 * cc)) - (2.5 * gc));
 	return A2(
 		mdgriffith$elm_ui$Element$el,
@@ -16360,8 +16368,8 @@ var author$project$NetworkSimulator$controlButtonTitle = function (model) {
 	switch (_n0.$) {
 		case 'Ready':
 			return 'Ready';
-		case 'Running':
-			return 'Running';
+		case 'Phase1':
+			return 'Recruiting';
 		case 'Paused':
 			return 'Paused';
 		case 'GameEnding':
@@ -16577,7 +16585,12 @@ var author$project$NetworkSimulator$leftPanel = function (model) {
 				author$project$NetworkSimulator$controlPanel(model)
 			]));
 };
-var author$project$NetworkSimulator$dataWindow2 = {xMax: 100.0, xMin: 0.0, yMax: 100.0, yMin: 0.0};
+var author$project$NetworkSimulator$dataWindow2 = function (n) {
+	var n_ = n;
+	var b = A2(elm$core$Basics$max, 100.0, n_);
+	var a = A2(elm$core$Basics$max, 0, n_ - 100);
+	return {xMax: b, xMin: a, yMax: 100.0, yMin: 0};
+};
 var author$project$NetworkSimulator$wideBarGraphAttributes = {
 	graphHeight: 35,
 	graphWidth: 370,
@@ -16935,7 +16948,7 @@ var author$project$NetworkSimulator$giniChart = function (model) {
 				elm$core$List$indexedMap,
 				F2(
 					function (k, y) {
-						return _Utils_Tuple2(100 * (n - k), y);
+						return _Utils_Tuple2(n - k, y);
 					}),
 				A2(
 					elm$core$List$map,
@@ -16944,7 +16957,11 @@ var author$project$NetworkSimulator$giniChart = function (model) {
 					},
 					model.history))));
 	return mdgriffith$elm_ui$Element$html(
-		A3(jxxcarlson$elm_graph$SimpleGraph$lineChartWithDataWindow, author$project$NetworkSimulator$dataWindow2, author$project$NetworkSimulator$wideBarGraphAttributes, data));
+		A3(
+			jxxcarlson$elm_graph$SimpleGraph$lineChartWithDataWindow,
+			author$project$NetworkSimulator$dataWindow2(n),
+			author$project$NetworkSimulator$wideBarGraphAttributes,
+			data));
 };
 var author$project$NetworkSimulator$sustainabilityChart = function (model) {
 	var n = elm$core$List$length(model.history);
@@ -16965,7 +16982,11 @@ var author$project$NetworkSimulator$sustainabilityChart = function (model) {
 					},
 					model.history))));
 	return mdgriffith$elm_ui$Element$html(
-		A3(jxxcarlson$elm_graph$SimpleGraph$lineChartWithDataWindow, author$project$NetworkSimulator$dataWindow2, author$project$NetworkSimulator$wideBarGraphAttributes, data));
+		A3(
+			jxxcarlson$elm_graph$SimpleGraph$lineChartWithDataWindow,
+			author$project$NetworkSimulator$dataWindow2(n),
+			author$project$NetworkSimulator$wideBarGraphAttributes,
+			data));
 };
 var author$project$Network$absoluteEdgeFlow = function (e) {
 	return elm$core$Basics$abs(e.label.unitsSent);
