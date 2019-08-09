@@ -7814,6 +7814,8 @@ var author$project$NetworkSimulator$advanceGameState = function (model) {
 				return author$project$NetworkSimulator$Paused;
 			case 'Paused':
 				return author$project$NetworkSimulator$Running;
+			case 'Phase2':
+				return author$project$NetworkSimulator$GameOver;
 			case 'GameOver':
 				return author$project$NetworkSimulator$Ready;
 			default:
@@ -9709,7 +9711,7 @@ var author$project$Network$recruitRandom = F3(
 		}
 	});
 var author$project$NetworkSimulator$Coo = {$: 'Coo'};
-var author$project$NetworkSimulator$GameEnding = {$: 'GameEnding'};
+var author$project$NetworkSimulator$Phase2 = {$: 'Phase2'};
 var author$project$NetworkSimulator$Silence = {$: 'Silence'};
 var author$project$NetworkSimulator$VeryLongChirp = {$: 'VeryLongChirp'};
 var author$project$Network$simplifyGraph = function (g) {
@@ -10106,7 +10108,7 @@ var author$project$NetworkSimulator$randomUpdate = F2(
 					case 'Running':
 						if (_n10.b) {
 							var _n11 = _n10.a;
-							return author$project$NetworkSimulator$GameEnding;
+							return author$project$NetworkSimulator$Phase2;
 						} else {
 							break _n10$2;
 						}
@@ -10136,7 +10138,7 @@ var author$project$NetworkSimulator$randomUpdate = F2(
 		var _n2 = function () {
 			var _n3 = _Utils_eq(
 				A2(elm$core$Basics$modBy, author$project$NetworkSimulator$recruitInterval, model.gameClock),
-				author$project$NetworkSimulator$transactionStep) && _Utils_eq(model.gameState, author$project$NetworkSimulator$Running);
+				author$project$NetworkSimulator$transactionStep) && (!_Utils_eq(model.gameState, author$project$NetworkSimulator$Paused));
 			if (!_n3) {
 				return _Utils_Tuple2(elm$core$Maybe$Nothing, newGraph1);
 			} else {
@@ -16364,8 +16366,10 @@ var author$project$NetworkSimulator$controlButtonTitle = function (model) {
 			return 'Paused';
 		case 'GameEnding':
 			return 'Game ending';
-		default:
+		case 'GameOver':
 			return 'Play again';
+		default:
+			return 'Trading';
 	}
 };
 var author$project$NetworkSimulator$startOverButton = function (model) {
@@ -16573,16 +16577,16 @@ var author$project$NetworkSimulator$leftPanel = function (model) {
 				author$project$NetworkSimulator$controlPanel(model)
 			]));
 };
-var author$project$NetworkSimulator$dataWindow = {xMax: 100.0, xMin: 0.0, yMax: 1.0, yMin: 0.0};
+var author$project$NetworkSimulator$dataWindow2 = {xMax: 100.0, xMin: 0.0, yMax: 100.0, yMin: 0.0};
 var author$project$NetworkSimulator$wideBarGraphAttributes = {
 	graphHeight: 35,
-	graphWidth: 420,
+	graphWidth: 370,
 	options: _List_fromArray(
 		[
 			jxxcarlson$elm_graph$SimpleGraph$Color('rgb(200,0,0)'),
-			jxxcarlson$elm_graph$SimpleGraph$DeltaX(11),
+			jxxcarlson$elm_graph$SimpleGraph$DeltaX(2),
 			jxxcarlson$elm_graph$SimpleGraph$YTickmarks(5),
-			jxxcarlson$elm_graph$SimpleGraph$XTickmarks(2)
+			jxxcarlson$elm_graph$SimpleGraph$XTickmarks(11)
 		])
 };
 var jxxcarlson$elm_graph$SimpleGraph$boundingBox = F2(
@@ -16931,7 +16935,7 @@ var author$project$NetworkSimulator$giniChart = function (model) {
 				elm$core$List$indexedMap,
 				F2(
 					function (k, y) {
-						return _Utils_Tuple2(n - k, y);
+						return _Utils_Tuple2(100 * (n - k), y);
 					}),
 				A2(
 					elm$core$List$map,
@@ -16940,9 +16944,8 @@ var author$project$NetworkSimulator$giniChart = function (model) {
 					},
 					model.history))));
 	return mdgriffith$elm_ui$Element$html(
-		A3(jxxcarlson$elm_graph$SimpleGraph$lineChartWithDataWindow, author$project$NetworkSimulator$dataWindow, author$project$NetworkSimulator$wideBarGraphAttributes, data));
+		A3(jxxcarlson$elm_graph$SimpleGraph$lineChartWithDataWindow, author$project$NetworkSimulator$dataWindow2, author$project$NetworkSimulator$wideBarGraphAttributes, data));
 };
-var author$project$NetworkSimulator$dataWindow2 = {xMax: 100.0, xMin: 0.0, yMax: 100.0, yMin: 0.0};
 var author$project$NetworkSimulator$sustainabilityChart = function (model) {
 	var n = elm$core$List$length(model.history);
 	var data = elm$core$List$reverse(
@@ -17743,6 +17746,8 @@ var author$project$NetworkSimulator$rightPanel = function (model) {
 				mdgriffith$elm_ui$Element$spacing(12),
 				mdgriffith$elm_ui$Element$width(
 				mdgriffith$elm_ui$Element$px(500)),
+				mdgriffith$elm_ui$Element$height(
+				mdgriffith$elm_ui$Element$px(680)),
 				mdgriffith$elm_ui$Element$Border$width(1)
 			]),
 		_List_fromArray(
@@ -17757,8 +17762,44 @@ var author$project$NetworkSimulator$rightPanel = function (model) {
 						A3(author$project$NetworkSimulator$viewGrid, model, 500, 500));
 				}
 			}(),
-				author$project$NetworkSimulator$sustainabilityChart(model),
-				author$project$NetworkSimulator$giniChart(model)
+				A2(
+				mdgriffith$elm_ui$Element$row,
+				_List_fromArray(
+					[
+						A2(mdgriffith$elm_ui$Element$paddingXY, 12, 0)
+					]),
+				_List_fromArray(
+					[
+						A2(
+						mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								mdgriffith$elm_ui$Element$Font$size(12),
+								mdgriffith$elm_ui$Element$width(
+								mdgriffith$elm_ui$Element$px(30))
+							]),
+						mdgriffith$elm_ui$Element$text('Sust.')),
+						author$project$NetworkSimulator$sustainabilityChart(model)
+					])),
+				A2(
+				mdgriffith$elm_ui$Element$row,
+				_List_fromArray(
+					[
+						A2(mdgriffith$elm_ui$Element$paddingXY, 12, 0)
+					]),
+				_List_fromArray(
+					[
+						A2(
+						mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								mdgriffith$elm_ui$Element$Font$size(12),
+								mdgriffith$elm_ui$Element$width(
+								mdgriffith$elm_ui$Element$px(30))
+							]),
+						mdgriffith$elm_ui$Element$text('Gini')),
+						author$project$NetworkSimulator$giniChart(model)
+					]))
 			]));
 };
 var mdgriffith$elm_ui$Internal$Model$AlignX = function (a) {
