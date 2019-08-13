@@ -6526,6 +6526,19 @@ var author$project$Network$testGraph = A2(elm_community$graph$Graph$fromNodesAnd
 var author$project$NetworkSimulator$DisplayGraph = {$: 'DisplayGraph'};
 var author$project$NetworkSimulator$Ready = {$: 'Ready'};
 var author$project$NetworkSimulator$Selectable = {$: 'Selectable'};
+var author$project$NetworkSimulator$config = {
+	epsilon: 1.0e-6,
+	expiration: author$project$Currency$Finite(100),
+	forestDecayRate: 0.95,
+	forestIncrementPerWorker: 1,
+	forestState: 20,
+	gameCycleLength: 7,
+	gameTimeInterval: 1000,
+	numberOfForestWorkers: 11,
+	recruitStep: 0,
+	shopkeeper1: 'p0',
+	shopkeeper2: 'q5'
+};
 var author$project$NetworkSimulator$gridWidth = 20;
 var elm$core$Result$isOk = function (result) {
 	if (result.$ === 'Ok') {
@@ -6808,6 +6821,7 @@ var author$project$NetworkSimulator$init = function (_n0) {
 			clickCountAtGameOver: 0,
 			displayMode: author$project$NetworkSimulator$DisplayGraph,
 			drag: elm$core$Maybe$Nothing,
+			forestState: author$project$NetworkSimulator$config.forestState,
 			gameClock: 0,
 			gameOverCount: 0,
 			gameState: author$project$NetworkSimulator$Ready,
@@ -6826,15 +6840,6 @@ var author$project$NetworkSimulator$init = function (_n0) {
 };
 var author$project$NetworkSimulator$GameTick = function (a) {
 	return {$: 'GameTick', a: a};
-};
-var author$project$NetworkSimulator$config = {
-	epsilon: 1.0e-6,
-	expiration: author$project$Currency$Finite(100),
-	gameCycleLength: 7,
-	gameTimeInterval: 1000,
-	recruitStep: 0,
-	shopkeeper1: 'p0',
-	shopkeeper2: 'q5'
 };
 var author$project$NetworkSimulator$DragAt = function (a) {
 	return {$: 'DragAt', a: a};
@@ -8085,6 +8090,19 @@ var author$project$NetworkSimulator$handleDragEnd = F2(
 			return A2(author$project$NetworkSimulator$putCmd, elm$core$Platform$Cmd$none, model);
 		}
 	});
+var elm$core$Basics$modBy = _Basics_modBy;
+var author$project$NetworkSimulator$updateForestState = F2(
+	function (tick, forestState) {
+		var _n0 = A2(elm$core$Basics$modBy, author$project$NetworkSimulator$config.gameCycleLength, tick);
+		switch (_n0) {
+			case 0:
+				return author$project$NetworkSimulator$config.forestDecayRate * forestState;
+			case 5:
+				return forestState + (author$project$NetworkSimulator$config.numberOfForestWorkers * author$project$NetworkSimulator$config.forestIncrementPerWorker);
+			default:
+				return forestState;
+		}
+	});
 var author$project$Currency$removeInvalid = F2(
 	function (t, currencyList) {
 		return A2(
@@ -8195,7 +8213,7 @@ var author$project$NetworkSimulator$ccCoin = F2(
 	});
 var author$project$NetworkSimulator$transfer = {
 	foodBought: author$project$NetworkSimulator$ccCoin(-0.15),
-	foodSold: author$project$NetworkSimulator$ccCoin(11 * 0.15),
+	foodSold: author$project$NetworkSimulator$ccCoin(author$project$NetworkSimulator$config.numberOfForestWorkers * 0.15),
 	forestPay: author$project$NetworkSimulator$ccCoin(1),
 	houseRent: author$project$NetworkSimulator$ccCoin(-0.4),
 	shopRent: author$project$NetworkSimulator$ccCoin(-0.8)
@@ -8304,7 +8322,6 @@ var author$project$NetworkSimulator$payRent = F2(
 		};
 		return A2(elm_community$graph$Graph$mapNodes, entityMapper, g);
 	});
-var elm$core$Basics$modBy = _Basics_modBy;
 var author$project$NetworkSimulator$updateGraph = F2(
 	function (tick, g) {
 		var _n0 = A2(elm$core$Basics$modBy, author$project$NetworkSimulator$config.gameCycleLength, tick);
@@ -8323,6 +8340,28 @@ var author$project$NetworkSimulator$updateGraph = F2(
 				return g;
 		}
 	});
+var author$project$NetworkSimulator$updateModelAtTick = F2(
+	function (tick, model) {
+		return function (model_) {
+			return _Utils_update(
+				model_,
+				{gameClock: model.gameClock + 1});
+		}(
+			function (model_) {
+				return _Utils_update(
+					model_,
+					{
+						forestState: A2(author$project$NetworkSimulator$updateForestState, tick, model.forestState)
+					});
+			}(
+				function (model_) {
+					return _Utils_update(
+						model_,
+						{
+							graph: A2(author$project$NetworkSimulator$updateGraph, tick, model.graph)
+						});
+				}(model)));
+	});
 var author$project$NetworkSimulator$handleGameTick = F2(
 	function (model, t) {
 		var _n0 = model.gameState;
@@ -8335,12 +8374,7 @@ var author$project$NetworkSimulator$handleGameTick = F2(
 					author$project$NetworkSimulator$getRandomNumbers);
 			case 'Phase2':
 				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							gameClock: model.gameClock + 1,
-							graph: A2(author$project$NetworkSimulator$updateGraph, model.gameClock, model.graph)
-						}),
+					A2(author$project$NetworkSimulator$updateModelAtTick, model.gameClock, model),
 					author$project$NetworkSimulator$getRandomNumbers);
 			default:
 				return _Utils_Tuple2(model, author$project$NetworkSimulator$getRandomNumbers);
@@ -16481,6 +16515,14 @@ var author$project$NetworkSimulator$displayMeasures = function (model) {
 					'res: ' + elm$core$String$fromFloat(m.resilience)))
 			]));
 };
+var author$project$NetworkSimulator$forestStateDisplay = function (model) {
+	return A2(
+		mdgriffith$elm_ui$Element$el,
+		_List_Nil,
+		mdgriffith$elm_ui$Element$text(
+			'Forest state = ' + elm$core$String$fromFloat(
+				A2(author$project$Utility$roundTo, 1, model.forestState))));
+};
 var author$project$NetworkSimulator$recruitedDisplay = function (model) {
 	var n = elm$core$String$fromInt(
 		author$project$Grid$recruitedCount(model.grid) - 1);
@@ -16834,6 +16876,13 @@ var author$project$NetworkSimulator$controlPanel = function (model) {
 						_List_Nil,
 						mdgriffith$elm_ui$Element$text(
 							'Number of transactions: ' + elm$core$String$fromInt(model.numberOfTransactionsToDate)))
+					])),
+				A2(
+				mdgriffith$elm_ui$Element$row,
+				_List_Nil,
+				_List_fromArray(
+					[
+						author$project$NetworkSimulator$forestStateDisplay(model)
 					])),
 				A2(
 				mdgriffith$elm_ui$Element$row,
@@ -17342,6 +17391,134 @@ var author$project$NetworkSimulator$giniChart = function (model) {
 			author$project$NetworkSimulator$wideBarGraphAttributes,
 			data));
 };
+var elm$virtual_dom$VirtualDom$nodeNS = function (tag) {
+	return _VirtualDom_nodeNS(
+		_VirtualDom_noScript(tag));
+};
+var elm_community$typed_svg$TypedSvg$Core$node = elm$virtual_dom$VirtualDom$nodeNS('http://www.w3.org/2000/svg');
+var elm_community$typed_svg$TypedSvg$rect = elm_community$typed_svg$TypedSvg$Core$node('rect');
+var elm_community$typed_svg$TypedSvg$Core$attribute = elm$virtual_dom$VirtualDom$attribute;
+var avh4$elm_color$Color$toCssString = function (_n0) {
+	var r = _n0.a;
+	var g = _n0.b;
+	var b = _n0.c;
+	var a = _n0.d;
+	var roundTo = function (x) {
+		return elm$core$Basics$round(x * 1000) / 1000;
+	};
+	var pct = function (x) {
+		return elm$core$Basics$round(x * 10000) / 100;
+	};
+	return elm$core$String$concat(
+		_List_fromArray(
+			[
+				'rgba(',
+				elm$core$String$fromFloat(
+				pct(r)),
+				'%,',
+				elm$core$String$fromFloat(
+				pct(g)),
+				'%,',
+				elm$core$String$fromFloat(
+				pct(b)),
+				'%,',
+				elm$core$String$fromFloat(
+				roundTo(a)),
+				')'
+			]));
+};
+var elm_community$typed_svg$TypedSvg$TypesToStrings$fillToString = function (fill) {
+	if (fill.$ === 'Fill') {
+		var color = fill.a;
+		return avh4$elm_color$Color$toCssString(color);
+	} else {
+		return 'none';
+	}
+};
+var elm_community$typed_svg$TypedSvg$Attributes$fill = A2(
+	elm$core$Basics$composeL,
+	elm_community$typed_svg$TypedSvg$Core$attribute('fill'),
+	elm_community$typed_svg$TypedSvg$TypesToStrings$fillToString);
+var elm_community$typed_svg$TypedSvg$TypesToStrings$lengthToString = function (length) {
+	switch (length.$) {
+		case 'Cm':
+			var x = length.a;
+			return elm$core$String$fromFloat(x) + 'cm';
+		case 'Em':
+			var x = length.a;
+			return elm$core$String$fromFloat(x) + 'em';
+		case 'Ex':
+			var x = length.a;
+			return elm$core$String$fromFloat(x) + 'ex';
+		case 'In':
+			var x = length.a;
+			return elm$core$String$fromFloat(x) + 'in';
+		case 'Mm':
+			var x = length.a;
+			return elm$core$String$fromFloat(x) + 'mm';
+		case 'Num':
+			var x = length.a;
+			return elm$core$String$fromFloat(x);
+		case 'Pc':
+			var x = length.a;
+			return elm$core$String$fromFloat(x) + 'pc';
+		case 'Percent':
+			var x = length.a;
+			return elm$core$String$fromFloat(x) + '%';
+		case 'Pt':
+			var x = length.a;
+			return elm$core$String$fromFloat(x) + 'pt';
+		default:
+			var x = length.a;
+			return elm$core$String$fromFloat(x) + 'px';
+	}
+};
+var elm_community$typed_svg$TypedSvg$Attributes$height = function (length) {
+	return A2(
+		elm_community$typed_svg$TypedSvg$Core$attribute,
+		'height',
+		elm_community$typed_svg$TypedSvg$TypesToStrings$lengthToString(length));
+};
+var elm_community$typed_svg$TypedSvg$Attributes$width = function (length) {
+	return A2(
+		elm_community$typed_svg$TypedSvg$Core$attribute,
+		'width',
+		elm_community$typed_svg$TypedSvg$TypesToStrings$lengthToString(length));
+};
+var elm_community$typed_svg$TypedSvg$Types$Px = function (a) {
+	return {$: 'Px', a: a};
+};
+var author$project$NetworkSimulator$hRect = F4(
+	function (barWidth, barHeight, color, fraction) {
+		return A2(
+			elm_community$typed_svg$TypedSvg$rect,
+			_List_fromArray(
+				[
+					elm_community$typed_svg$TypedSvg$Attributes$width(
+					elm_community$typed_svg$TypedSvg$Types$Px(fraction * barWidth)),
+					elm_community$typed_svg$TypedSvg$Attributes$height(
+					elm_community$typed_svg$TypedSvg$Types$Px(barHeight)),
+					elm_community$typed_svg$TypedSvg$Attributes$fill(color)
+				]),
+			_List_Nil);
+	});
+var elm_community$typed_svg$TypedSvg$svg = elm_community$typed_svg$TypedSvg$Core$node('svg');
+var author$project$NetworkSimulator$indicator = F4(
+	function (barWidth, barHeight, color, fraction) {
+		return A2(
+			elm_community$typed_svg$TypedSvg$svg,
+			_List_fromArray(
+				[
+					elm_community$typed_svg$TypedSvg$Attributes$height(
+					elm_community$typed_svg$TypedSvg$Types$Px(barHeight)),
+					elm_community$typed_svg$TypedSvg$Attributes$width(
+					elm_community$typed_svg$TypedSvg$Types$Px(barWidth))
+				]),
+			_List_fromArray(
+				[
+					A4(author$project$NetworkSimulator$hRect, barWidth, barHeight, color, fraction)
+				]));
+	});
 var author$project$NetworkSimulator$sustainabilityChart = function (model) {
 	var n = elm$core$List$length(model.history);
 	var data = elm$core$List$reverse(
@@ -17392,90 +17569,18 @@ var avh4$elm_color$Color$rgb255 = F3(
 			avh4$elm_color$Color$scaleFrom255(b),
 			1.0);
 	});
-var elm$virtual_dom$VirtualDom$nodeNS = function (tag) {
-	return _VirtualDom_nodeNS(
-		_VirtualDom_noScript(tag));
-};
-var elm_community$typed_svg$TypedSvg$Core$node = elm$virtual_dom$VirtualDom$nodeNS('http://www.w3.org/2000/svg');
 var elm_community$typed_svg$TypedSvg$line = elm_community$typed_svg$TypedSvg$Core$node('line');
-var avh4$elm_color$Color$toCssString = function (_n0) {
-	var r = _n0.a;
-	var g = _n0.b;
-	var b = _n0.c;
-	var a = _n0.d;
-	var roundTo = function (x) {
-		return elm$core$Basics$round(x * 1000) / 1000;
-	};
-	var pct = function (x) {
-		return elm$core$Basics$round(x * 10000) / 100;
-	};
-	return elm$core$String$concat(
-		_List_fromArray(
-			[
-				'rgba(',
-				elm$core$String$fromFloat(
-				pct(r)),
-				'%,',
-				elm$core$String$fromFloat(
-				pct(g)),
-				'%,',
-				elm$core$String$fromFloat(
-				pct(b)),
-				'%,',
-				elm$core$String$fromFloat(
-				roundTo(a)),
-				')'
-			]));
-};
-var elm_community$typed_svg$TypedSvg$Core$attribute = elm$virtual_dom$VirtualDom$attribute;
 var elm_community$typed_svg$TypedSvg$Attributes$stroke = function (col) {
 	return A2(
 		elm_community$typed_svg$TypedSvg$Core$attribute,
 		'stroke',
 		avh4$elm_color$Color$toCssString(col));
 };
-var elm_community$typed_svg$TypedSvg$TypesToStrings$lengthToString = function (length) {
-	switch (length.$) {
-		case 'Cm':
-			var x = length.a;
-			return elm$core$String$fromFloat(x) + 'cm';
-		case 'Em':
-			var x = length.a;
-			return elm$core$String$fromFloat(x) + 'em';
-		case 'Ex':
-			var x = length.a;
-			return elm$core$String$fromFloat(x) + 'ex';
-		case 'In':
-			var x = length.a;
-			return elm$core$String$fromFloat(x) + 'in';
-		case 'Mm':
-			var x = length.a;
-			return elm$core$String$fromFloat(x) + 'mm';
-		case 'Num':
-			var x = length.a;
-			return elm$core$String$fromFloat(x);
-		case 'Pc':
-			var x = length.a;
-			return elm$core$String$fromFloat(x) + 'pc';
-		case 'Percent':
-			var x = length.a;
-			return elm$core$String$fromFloat(x) + '%';
-		case 'Pt':
-			var x = length.a;
-			return elm$core$String$fromFloat(x) + 'pt';
-		default:
-			var x = length.a;
-			return elm$core$String$fromFloat(x) + 'px';
-	}
-};
 var elm_community$typed_svg$TypedSvg$Attributes$strokeWidth = function (length) {
 	return A2(
 		elm_community$typed_svg$TypedSvg$Core$attribute,
 		'stroke-width',
 		elm_community$typed_svg$TypedSvg$TypesToStrings$lengthToString(length));
-};
-var elm_community$typed_svg$TypedSvg$Types$Px = function (a) {
-	return {$: 'Px', a: a};
 };
 var elm_community$typed_svg$TypedSvg$Types$px = elm_community$typed_svg$TypedSvg$Types$Px;
 var elm_community$typed_svg$TypedSvg$Attributes$InPx$strokeWidth = function (value) {
@@ -17569,18 +17674,6 @@ var author$project$NetworkSimulator$linkElement = F2(
 				]),
 			_List_Nil);
 	});
-var elm_community$typed_svg$TypedSvg$TypesToStrings$fillToString = function (fill) {
-	if (fill.$ === 'Fill') {
-		var color = fill.a;
-		return avh4$elm_color$Color$toCssString(color);
-	} else {
-		return 'none';
-	}
-};
-var elm_community$typed_svg$TypedSvg$Attributes$fill = A2(
-	elm$core$Basics$composeL,
-	elm_community$typed_svg$TypedSvg$Core$attribute('fill'),
-	elm_community$typed_svg$TypedSvg$TypesToStrings$fillToString);
 var elm_community$typed_svg$TypedSvg$Types$Fill = function (a) {
 	return {$: 'Fill', a: a};
 };
@@ -17617,19 +17710,6 @@ var avh4$elm_color$Color$rgba = F4(
 		return A4(avh4$elm_color$Color$RgbaSpace, r, g, b, a);
 	});
 var elm_community$typed_svg$TypedSvg$circle = elm_community$typed_svg$TypedSvg$Core$node('circle');
-var elm_community$typed_svg$TypedSvg$rect = elm_community$typed_svg$TypedSvg$Core$node('rect');
-var elm_community$typed_svg$TypedSvg$Attributes$height = function (length) {
-	return A2(
-		elm_community$typed_svg$TypedSvg$Core$attribute,
-		'height',
-		elm_community$typed_svg$TypedSvg$TypesToStrings$lengthToString(length));
-};
-var elm_community$typed_svg$TypedSvg$Attributes$width = function (length) {
-	return A2(
-		elm_community$typed_svg$TypedSvg$Core$attribute,
-		'width',
-		elm_community$typed_svg$TypedSvg$TypesToStrings$lengthToString(length));
-};
 var elm_community$typed_svg$TypedSvg$Attributes$cx = function (length) {
 	return A2(
 		elm_community$typed_svg$TypedSvg$Core$attribute,
@@ -17918,7 +17998,6 @@ var author$project$NetworkSimulator$nodeElement = F2(
 						]))
 				]));
 	});
-var elm_community$typed_svg$TypedSvg$svg = elm_community$typed_svg$TypedSvg$Core$node('svg');
 var elm_community$typed_svg$TypedSvg$Attributes$class = function (names) {
 	return A2(
 		elm_community$typed_svg$TypedSvg$Core$attribute,
@@ -18162,12 +18241,26 @@ var author$project$NetworkSimulator$viewGrid = F3(
 			author$project$NetworkSimulator$CellGrid,
 			A4(author$project$CellGrid$renderAsHtml, 500, 500, author$project$NetworkSimulator$cellRenderer, model.grid));
 	});
+var mdgriffith$elm_ui$Element$rgb255 = F3(
+	function (red, green, blue) {
+		return A4(mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, 1);
+	});
+var mdgriffith$elm_ui$Internal$Flag$borderColor = mdgriffith$elm_ui$Internal$Flag$flag(28);
+var mdgriffith$elm_ui$Element$Border$color = function (clr) {
+	return A2(
+		mdgriffith$elm_ui$Internal$Model$StyleClass,
+		mdgriffith$elm_ui$Internal$Flag$borderColor,
+		A3(
+			mdgriffith$elm_ui$Internal$Model$Colored,
+			'bc-' + mdgriffith$elm_ui$Internal$Model$formatColorClass(clr),
+			'border-color',
+			clr));
+};
 var author$project$NetworkSimulator$rightPanel = function (model) {
 	return A2(
 		mdgriffith$elm_ui$Element$column,
 		_List_fromArray(
 			[
-				mdgriffith$elm_ui$Element$spacing(12),
 				mdgriffith$elm_ui$Element$width(
 				mdgriffith$elm_ui$Element$px(500)),
 				mdgriffith$elm_ui$Element$height(
@@ -18186,6 +18279,29 @@ var author$project$NetworkSimulator$rightPanel = function (model) {
 						A3(author$project$NetworkSimulator$viewGrid, model, 500, 500));
 				}
 			}(),
+				A2(
+				mdgriffith$elm_ui$Element$row,
+				_List_fromArray(
+					[
+						mdgriffith$elm_ui$Element$width(
+						mdgriffith$elm_ui$Element$px(500)),
+						mdgriffith$elm_ui$Element$Background$color(
+						A3(mdgriffith$elm_ui$Element$rgb255, 0, 0, 0)),
+						mdgriffith$elm_ui$Element$Border$width(1),
+						mdgriffith$elm_ui$Element$Border$color(
+						A3(mdgriffith$elm_ui$Element$rgb255, 255, 2555, 255))
+					]),
+				_List_fromArray(
+					[
+						mdgriffith$elm_ui$Element$html(
+						A4(
+							author$project$NetworkSimulator$indicator,
+							500,
+							15,
+							elm_community$typed_svg$TypedSvg$Types$Fill(
+								A3(avh4$elm_color$Color$rgb255, 0, 255, 0)),
+							model.forestState / 200.0))
+					])),
 				A2(
 				mdgriffith$elm_ui$Element$row,
 				_List_fromArray(
