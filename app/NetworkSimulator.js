@@ -6529,7 +6529,7 @@ var author$project$NetworkSimulator$Selectable = {$: 'Selectable'};
 var author$project$NetworkSimulator$config = {
 	epsilon: 1.0e-6,
 	expiration: author$project$Currency$Finite(100),
-	forestDecayRate: 0.95,
+	forestDecayRate: 0.94,
 	forestIncrementPerWorker: 1,
 	forestState: 20,
 	gameCycleLength: 7,
@@ -8244,10 +8244,22 @@ var author$project$NetworkSimulator$buyFood = F3(
 				author$project$Network$balanceFromEntity(entity),
 				author$project$NetworkSimulator$config.epsilon) < 0;
 			if (_n0) {
-				return entity;
-			} else {
 				var _n1 = entity.value.role;
 				if (_n1.$ === 'Unemployed') {
+					return entity;
+				} else {
+					return A3(
+						author$project$Network$changeAccountBalanceOfEntity,
+						tick,
+						_List_fromArray(
+							[
+								author$project$NetworkSimulator$transfer.foodSold(tick)
+							]),
+						entity);
+				}
+			} else {
+				var _n2 = entity.value.role;
+				if (_n2.$ === 'Unemployed') {
 					return A3(
 						author$project$Network$changeAccountBalanceOfEntity,
 						tick,
