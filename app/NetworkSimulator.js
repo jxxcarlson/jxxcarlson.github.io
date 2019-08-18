@@ -6526,7 +6526,7 @@ var author$project$Network$testGraph = A2(elm_community$graph$Graph$fromNodesAnd
 var author$project$NetworkSimulator$DisplayGraph = {$: 'DisplayGraph'};
 var author$project$NetworkSimulator$Ready = {$: 'Ready'};
 var author$project$NetworkSimulator$Selectable = {$: 'Selectable'};
-var author$project$NetworkSimulator$config = {
+var author$project$NetworkSimulator$defaultConfig = {
 	epsilon: 1.0e-6,
 	expiration: author$project$Currency$Finite(100),
 	forestDecayRate: 0.94,
@@ -6819,9 +6819,10 @@ var author$project$NetworkSimulator$init = function (_n0) {
 				author$project$Currency$Bank(_List_Nil)),
 			clickCount: 0,
 			clickCountAtGameOver: 0,
+			configuration: author$project$NetworkSimulator$defaultConfig,
 			displayMode: author$project$NetworkSimulator$DisplayGraph,
 			drag: elm$core$Maybe$Nothing,
-			forestState: author$project$NetworkSimulator$config.forestState,
+			forestState: author$project$NetworkSimulator$defaultConfig.forestState,
 			gameClock: 0,
 			gameOverCount: 0,
 			gameState: author$project$NetworkSimulator$Ready,
@@ -7795,9 +7796,10 @@ var author$project$NetworkSimulator$subscriptions = function (model) {
 		_List_fromArray(
 			[
 				author$project$NetworkSimulator$simulationSubscription(model),
-				A2(elm$time$Time$every, author$project$NetworkSimulator$config.gameTimeInterval, author$project$NetworkSimulator$GameTick)
+				A2(elm$time$Time$every, model.configuration.gameTimeInterval, author$project$NetworkSimulator$GameTick)
 			]));
 };
+var author$project$Currency$Infinite = {$: 'Infinite'};
 var author$project$NetworkSimulator$Drag = F3(
 	function (start, current, index) {
 		return {current: current, index: index, start: start};
@@ -8091,14 +8093,14 @@ var author$project$NetworkSimulator$handleDragEnd = F2(
 		}
 	});
 var elm$core$Basics$modBy = _Basics_modBy;
-var author$project$NetworkSimulator$updateForestState = F2(
-	function (tick, forestState) {
-		var _n0 = A2(elm$core$Basics$modBy, author$project$NetworkSimulator$config.gameCycleLength, tick);
+var author$project$NetworkSimulator$updateForestState = F3(
+	function (model, tick, forestState) {
+		var _n0 = A2(elm$core$Basics$modBy, model.configuration.gameCycleLength, tick);
 		switch (_n0) {
 			case 0:
-				return author$project$NetworkSimulator$config.forestDecayRate * forestState;
+				return model.configuration.forestDecayRate * forestState;
 			case 5:
-				return forestState + (author$project$NetworkSimulator$config.numberOfForestWorkers * author$project$NetworkSimulator$config.forestIncrementPerWorker);
+				return forestState + (model.configuration.numberOfForestWorkers * model.configuration.forestIncrementPerWorker);
 			default:
 				return forestState;
 		}
@@ -8207,16 +8209,18 @@ var author$project$Network$changeAccountBalanceOfEntity = F3(
 			entity,
 			{value: newValue});
 	});
-var author$project$NetworkSimulator$ccCoin = F2(
-	function (amount, issueTime) {
-		return {amount: amount, currencyType: author$project$Currency$Complementary, expiration: author$project$NetworkSimulator$config.expiration, issueTime: issueTime};
+var author$project$NetworkSimulator$ccCoin = F3(
+	function (model, amount, issueTime) {
+		return {amount: amount, currencyType: author$project$Currency$Complementary, expiration: model.configuration.expiration, issueTime: issueTime};
 	});
-var author$project$NetworkSimulator$transfer = {
-	foodBought: author$project$NetworkSimulator$ccCoin(-0.15),
-	foodSold: author$project$NetworkSimulator$ccCoin(author$project$NetworkSimulator$config.numberOfForestWorkers * 0.15),
-	forestPay: author$project$NetworkSimulator$ccCoin(1),
-	houseRent: author$project$NetworkSimulator$ccCoin(-0.4),
-	shopRent: author$project$NetworkSimulator$ccCoin(-0.8)
+var author$project$NetworkSimulator$transfer = function (model) {
+	return {
+		foodBought: A2(author$project$NetworkSimulator$ccCoin, model, -0.15),
+		foodSold: A2(author$project$NetworkSimulator$ccCoin, model, model.configuration.numberOfForestWorkers * 0.15),
+		forestPay: A2(author$project$NetworkSimulator$ccCoin, model, 1),
+		houseRent: A2(author$project$NetworkSimulator$ccCoin, model, -0.4),
+		shopRent: A2(author$project$NetworkSimulator$ccCoin, model, -0.8)
+	};
 };
 var elm_community$graph$Graph$mapNodes = function (f) {
 	return A2(
@@ -8237,12 +8241,12 @@ var elm_community$graph$Graph$mapNodes = function (f) {
 		},
 		elm_community$graph$Graph$empty);
 };
-var author$project$NetworkSimulator$buyFood = F3(
-	function (shopkeeperName, tick, g) {
+var author$project$NetworkSimulator$buyFood = F4(
+	function (model, shopkeeperName, tick, g) {
 		var entityMapper = function (entity) {
 			var _n0 = _Utils_cmp(
 				author$project$Network$balanceFromEntity(entity),
-				author$project$NetworkSimulator$config.epsilon) < 0;
+				model.configuration.epsilon) < 0;
 			if (_n0) {
 				var _n1 = entity.value.role;
 				if (_n1.$ === 'Unemployed') {
@@ -8253,7 +8257,7 @@ var author$project$NetworkSimulator$buyFood = F3(
 						tick,
 						_List_fromArray(
 							[
-								author$project$NetworkSimulator$transfer.foodSold(tick)
+								author$project$NetworkSimulator$transfer(model).foodSold(tick)
 							]),
 						entity);
 				}
@@ -8265,7 +8269,7 @@ var author$project$NetworkSimulator$buyFood = F3(
 						tick,
 						_List_fromArray(
 							[
-								author$project$NetworkSimulator$transfer.foodBought(tick)
+								author$project$NetworkSimulator$transfer(model).foodBought(tick)
 							]),
 						entity);
 				} else {
@@ -8274,7 +8278,7 @@ var author$project$NetworkSimulator$buyFood = F3(
 						tick,
 						_List_fromArray(
 							[
-								author$project$NetworkSimulator$transfer.foodSold(tick)
+								author$project$NetworkSimulator$transfer(model).foodSold(tick)
 							]),
 						entity);
 				}
@@ -8282,8 +8286,8 @@ var author$project$NetworkSimulator$buyFood = F3(
 		};
 		return A2(elm_community$graph$Graph$mapNodes, entityMapper, g);
 	});
-var author$project$NetworkSimulator$payForForestryWork = F2(
-	function (tick, g) {
+var author$project$NetworkSimulator$payForForestryWork = F3(
+	function (model, tick, g) {
 		var entityMapper = function (entity) {
 			var _n0 = _Utils_eq(entity.value.role, author$project$Network$Unemployed);
 			if (_n0) {
@@ -8292,7 +8296,7 @@ var author$project$NetworkSimulator$payForForestryWork = F2(
 					tick,
 					_List_fromArray(
 						[
-							author$project$NetworkSimulator$transfer.forestPay(tick)
+							author$project$NetworkSimulator$transfer(model).forestPay(tick)
 						]),
 					entity);
 			} else {
@@ -8301,12 +8305,12 @@ var author$project$NetworkSimulator$payForForestryWork = F2(
 		};
 		return A2(elm_community$graph$Graph$mapNodes, entityMapper, g);
 	});
-var author$project$NetworkSimulator$payRent = F2(
-	function (tick, g) {
+var author$project$NetworkSimulator$payRent = F3(
+	function (model, tick, g) {
 		var entityMapper = function (entity) {
 			var _n0 = _Utils_cmp(
 				author$project$Network$balanceFromEntity(entity),
-				author$project$NetworkSimulator$config.epsilon) < 0;
+				model.configuration.epsilon) < 0;
 			if (_n0) {
 				return entity;
 			} else {
@@ -8317,7 +8321,7 @@ var author$project$NetworkSimulator$payRent = F2(
 						tick,
 						_List_fromArray(
 							[
-								author$project$NetworkSimulator$transfer.houseRent(tick)
+								author$project$NetworkSimulator$transfer(model).houseRent(tick)
 							]),
 						entity);
 				} else {
@@ -8326,7 +8330,7 @@ var author$project$NetworkSimulator$payRent = F2(
 						tick,
 						_List_fromArray(
 							[
-								author$project$NetworkSimulator$transfer.shopRent(tick)
+								author$project$NetworkSimulator$transfer(model).shopRent(tick)
 							]),
 						entity);
 				}
@@ -8334,20 +8338,20 @@ var author$project$NetworkSimulator$payRent = F2(
 		};
 		return A2(elm_community$graph$Graph$mapNodes, entityMapper, g);
 	});
-var author$project$NetworkSimulator$updateGraph = F2(
-	function (tick, g) {
-		var _n0 = A2(elm$core$Basics$modBy, author$project$NetworkSimulator$config.gameCycleLength, tick);
+var author$project$NetworkSimulator$updateGraph = F3(
+	function (model, tick, g) {
+		var _n0 = A2(elm$core$Basics$modBy, model.configuration.gameCycleLength, tick);
 		switch (_n0) {
 			case 0:
 				return A2(author$project$Network$removeExpiredCurrencyFromEdges, tick, g);
 			case 1:
-				return A2(author$project$NetworkSimulator$payForForestryWork, tick, g);
+				return A3(author$project$NetworkSimulator$payForForestryWork, model, tick, g);
 			case 2:
-				return A2(author$project$NetworkSimulator$payRent, tick, g);
+				return A3(author$project$NetworkSimulator$payRent, model, tick, g);
 			case 3:
-				return A3(author$project$NetworkSimulator$buyFood, author$project$NetworkSimulator$config.shopkeeper1, tick, g);
+				return A4(author$project$NetworkSimulator$buyFood, model, model.configuration.shopkeeper1, tick, g);
 			case 4:
-				return A3(author$project$NetworkSimulator$buyFood, author$project$NetworkSimulator$config.shopkeeper2, tick, g);
+				return A4(author$project$NetworkSimulator$buyFood, model, model.configuration.shopkeeper2, tick, g);
 			default:
 				return g;
 		}
@@ -8363,14 +8367,14 @@ var author$project$NetworkSimulator$updateModelAtTick = F2(
 				return _Utils_update(
 					model_,
 					{
-						forestState: A2(author$project$NetworkSimulator$updateForestState, tick, model.forestState)
+						forestState: A3(author$project$NetworkSimulator$updateForestState, model, tick, model.forestState)
 					});
 			}(
 				function (model_) {
 					return _Utils_update(
 						model_,
 						{
-							graph: A2(author$project$NetworkSimulator$updateGraph, tick, model.graph)
+							graph: A3(author$project$NetworkSimulator$updateGraph, model, tick, model.graph)
 						});
 				}(model)));
 	});
@@ -8827,7 +8831,7 @@ var author$project$NetworkSimulator$handleMouseClickInGrid = F2(
 							index,
 							_List_fromArray(
 								[
-									{amount: 10, currencyType: author$project$Currency$Complementary, expiration: author$project$NetworkSimulator$config.expiration, issueTime: model.gameClock}
+									{amount: 10, currencyType: author$project$Currency$Complementary, expiration: model.configuration.expiration, issueTime: model.gameClock}
 								]),
 							A3(author$project$Network$setStatus, index, author$project$Network$Recruited, model.graph)))));
 			var newGrid = A2(author$project$Grid$cellGridFromGraph, author$project$NetworkSimulator$gridWidth, newGraph);
@@ -10181,8 +10185,8 @@ var author$project$NetworkSimulator$measures = function (model) {
 };
 var author$project$NetworkSimulator$nextHistory_ = function (model) {
 	return (_Utils_eq(model.gameState, author$project$NetworkSimulator$Phase2) || (_Utils_eq(model.gameState, author$project$NetworkSimulator$Phase1) && _Utils_eq(
-		A2(elm$core$Basics$modBy, author$project$NetworkSimulator$config.gameCycleLength, model.gameClock),
-		author$project$NetworkSimulator$config.recruitStep))) ? A2(
+		A2(elm$core$Basics$modBy, model.configuration.gameCycleLength, model.gameClock),
+		model.configuration.recruitStep))) ? A2(
 		elm$core$List$cons,
 		author$project$NetworkSimulator$measures(model),
 		model.history) : model.history;
@@ -10360,8 +10364,8 @@ var author$project$Network$recruitRandom = F3(
 var author$project$NetworkSimulator$recruitMoreNodes_ = F2(
 	function (model, numbers) {
 		var _n0 = _Utils_eq(model.gameState, author$project$NetworkSimulator$Phase1) && _Utils_eq(
-			A2(elm$core$Basics$modBy, author$project$NetworkSimulator$config.gameCycleLength, model.gameClock),
-			author$project$NetworkSimulator$config.recruitStep);
+			A2(elm$core$Basics$modBy, model.configuration.gameCycleLength, model.gameClock),
+			model.configuration.recruitStep);
 		if (!_n0) {
 			return _Utils_Tuple2(0, model.graph);
 		} else {
@@ -10733,9 +10737,35 @@ var author$project$NetworkSimulator$update = F2(
 					elm$core$Platform$Cmd$none);
 			case 'ResetGame':
 				return author$project$NetworkSimulator$resetGame(model);
-			default:
+			case 'CellGrid':
 				var msg_ = msg.a;
 				return A2(author$project$NetworkSimulator$handleMouseClickInGrid, model, msg_);
+			default:
+				var c = model.configuration;
+				var _n1 = c.expiration;
+				if (_n1.$ === 'Infinite') {
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								configuration: _Utils_update(
+									c,
+									{
+										expiration: author$project$Currency$Finite(100)
+									})
+							}),
+						elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								configuration: _Utils_update(
+									c,
+									{expiration: author$project$Currency$Infinite})
+							}),
+						elm$core$Platform$Cmd$none);
+				}
 		}
 	});
 var author$project$Network$accountList = function (graph) {
@@ -16945,7 +16975,17 @@ var author$project$NetworkSimulator$displayGraphButton = function (model) {
 		});
 };
 var author$project$NetworkSimulator$DisplayGrid = {$: 'DisplayGrid'};
-var author$project$NetworkSimulator$displayGridButton = function (model) {
+var author$project$NetworkSimulator$ToggleCurrencyExpiration = {$: 'ToggleCurrencyExpiration'};
+var author$project$NetworkSimulator$displayCurrencyType = function (model) {
+	var _n0 = model.configuration.expiration;
+	if (_n0.$ === 'Infinite') {
+		return 'Currency does not expire';
+	} else {
+		var k = _n0.a;
+		return 'Currency expires after ' + (elm$core$String$fromInt(k) + ' ticks');
+	}
+};
+var author$project$NetworkSimulator$setCurrencyButton = function (model) {
 	return A2(
 		mdgriffith$elm_ui$Element$Input$button,
 		author$project$NetworkSimulator$buttonStyle(
@@ -16961,9 +17001,9 @@ var author$project$NetworkSimulator$displayGridButton = function (model) {
 					[
 						mdgriffith$elm_ui$Element$Font$size(14)
 					]),
-				mdgriffith$elm_ui$Element$text('Grid')),
-			onPress: elm$core$Maybe$Just(
-				author$project$NetworkSimulator$SetDisplayMode(author$project$NetworkSimulator$DisplayGrid))
+				mdgriffith$elm_ui$Element$text(
+					author$project$NetworkSimulator$displayCurrencyType(model))),
+			onPress: elm$core$Maybe$Just(author$project$NetworkSimulator$ToggleCurrencyExpiration)
 		});
 };
 var mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
@@ -17005,7 +17045,7 @@ var author$project$NetworkSimulator$infoPanel = function (model) {
 				_List_fromArray(
 					[
 						author$project$NetworkSimulator$displayGraphButton(model),
-						author$project$NetworkSimulator$displayGridButton(model)
+						author$project$NetworkSimulator$setCurrencyButton(model)
 					]))
 			]));
 };
@@ -17639,8 +17679,8 @@ var elm_community$typed_svg$TypedSvg$Attributes$InPx$y2 = function (value) {
 	return elm_community$typed_svg$TypedSvg$Attributes$y2(
 		elm_community$typed_svg$TypedSvg$Types$px(value));
 };
-var author$project$NetworkSimulator$linkElement = F2(
-	function (graph, edge) {
+var author$project$NetworkSimulator$linkElement = F3(
+	function (model, graph, edge) {
 		var target = A2(
 			elm$core$Maybe$withDefault,
 			A2(gampleman$elm_visualization$Force$entity, 0, author$project$Network$defaultNodeState),
@@ -17671,7 +17711,7 @@ var author$project$NetworkSimulator$linkElement = F2(
 				A2(elm_community$graph$Graph$get, edge.from, graph)));
 		var color = (_Utils_cmp(
 			author$project$Network$absoluteEdgeFlow(edge),
-			author$project$NetworkSimulator$config.epsilon) < 0) ? A3(avh4$elm_color$Color$rgb255, 255, 255, 255) : A3(avh4$elm_color$Color$rgb255, 0, 0, 255);
+			model.configuration.epsilon) < 0) ? A3(avh4$elm_color$Color$rgb255, 255, 255, 255) : A3(avh4$elm_color$Color$rgb255, 0, 0, 255);
 		return A2(
 			elm_community$typed_svg$TypedSvg$line,
 			_List_fromArray(
@@ -18068,7 +18108,7 @@ var author$project$NetworkSimulator$viewGraph = F3(
 						]),
 					A2(
 						elm$core$List$map,
-						author$project$NetworkSimulator$linkElement(model.graph),
+						A2(author$project$NetworkSimulator$linkElement, model, model.graph),
 						elm_community$graph$Graph$edges(model.graph))),
 					A2(
 					elm_community$typed_svg$TypedSvg$g,
