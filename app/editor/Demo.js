@@ -6405,12 +6405,12 @@ var $author$project$Buffer$replace = F4(
 var $author$project$Window$scroll = F2(
 	function (k, window) {
 		var _v0 = (window.first + k) >= 0;
-		if (_v0) {
+		if (!_v0) {
+			return window;
+		} else {
 			return _Utils_update(
 				window,
 				{first: window.first + k, last: window.last + k});
-		} else {
-			return window;
 		}
 	});
 var $author$project$Window$scrollToIncludeCursor = F2(
@@ -6445,10 +6445,17 @@ var $author$project$Position$shift = F2(
 			{line: position.line + k});
 	});
 var $author$project$Window$shift = F2(
-	function (window, position) {
+	function (k, w) {
 		return _Utils_update(
+			w,
+			{first: w.first + k, last: w.last + k});
+	});
+var $author$project$Window$shiftPosition = F2(
+	function (window, position) {
+		var line = position.line;
+		return (_Utils_cmp(line, window.last) < 0) ? _Utils_update(
 			position,
-			{line: position.line + window.first});
+			{line: position.line + window.first}) : position;
 	});
 var $author$project$Editor$History$undo = F2(
 	function (current, _v0) {
@@ -6474,13 +6481,11 @@ var $author$project$Editor$Update$update = F3(
 		switch (msg.$) {
 			case 'MouseDown':
 				var position = msg.a;
+				var newCursor1 = A2($elm$core$Debug$log, 'POS', position);
 				var newCursor = A2(
 					$elm$core$Debug$log,
-					'Shift on MouseDown',
-					A2(
-						$author$project$Window$shift,
-						state.window,
-						A2($elm$core$Debug$log, 'POS', position)));
+					'POS-Shifted',
+					A2($author$project$Window$shiftPosition, state.window, position));
 				return _Utils_Tuple3(
 					_Utils_update(
 						state,
@@ -7186,7 +7191,7 @@ var $author$project$Editor$Update$update = F3(
 						state,
 						{
 							cursor: newCursor,
-							window: A2($author$project$Window$scrollToIncludeCursor, newCursor, state.window)
+							window: A2($author$project$Window$shift, -1, state.window)
 						}),
 					buffer,
 					$elm$core$Platform$Cmd$none);
@@ -7197,7 +7202,7 @@ var $author$project$Editor$Update$update = F3(
 						state,
 						{
 							cursor: newCursor,
-							window: A2($author$project$Window$scrollToIncludeCursor, newCursor, state.window)
+							window: A2($author$project$Window$shift, 1, state.window)
 						}),
 					buffer,
 					$elm$core$Platform$Cmd$none);
@@ -7722,24 +7727,22 @@ var $author$project$Window$getOffset = F2(
 	function (window, lineNumber_) {
 		return A2($elm$core$Basics$min, (window.last - window.first) - lineNumber_, 0);
 	});
+var $author$project$Window$shiftPosition_ = F3(
+	function (window, line, column) {
+		return A2(
+			$author$project$Window$shiftPosition,
+			window,
+			A2($author$project$Position$Position, line, column));
+	});
 var $elm$core$String$foldr = _String_foldr;
 var $elm$core$String$toList = function (string) {
 	return A3($elm$core$String$foldr, $elm$core$List$cons, _List_Nil, string);
 };
 var $author$project$Editor$View$line = F5(
 	function (window, cursor, selection, number, content) {
-		var offset = A2(
-			$elm$core$Debug$log,
-			'(C) offset',
-			A2($author$project$Window$getOffset, window, cursor.line));
+		var offset = A2($author$project$Window$getOffset, window, cursor.line);
 		var length = $elm$core$String$length(content);
 		var endPosition = {column: length, line: number};
-		var _v0 = A2(
-			$elm$core$Debug$log,
-			'(C), cursor.line, offset',
-			_Utils_Tuple2(
-				cursor.line,
-				A2($author$project$Window$getOffset, window, cursor.line)));
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -7777,7 +7780,7 @@ var $author$project$Editor$View$line = F5(
 						$elm$core$List$indexedMap,
 						A2(
 							$elm$core$Basics$composeR,
-							$author$project$Position$Position(number - offset),
+							A2($author$project$Window$shiftPosition_, window, number),
 							A2($author$project$Editor$View$character, cursor, selection)),
 						$elm$core$String$toList(content)),
 						(_Utils_eq(cursor.line, number - offset) && (_Utils_cmp(cursor.column, length) > -1)) ? _List_fromArray(
