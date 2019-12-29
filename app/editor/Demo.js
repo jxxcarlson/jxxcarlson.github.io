@@ -7983,7 +7983,8 @@ var $author$project$Main$view = function (model) {
 						_List_fromArray(
 							[
 								$elm$html$Html$text('Source code')
-							]))
+							])),
+						$elm$html$Html$text(' — plenty of issues to work on.  This is a fork from code of SydneyNemzer')
 					])),
 				A2(
 				$elm$html$Html$details,
