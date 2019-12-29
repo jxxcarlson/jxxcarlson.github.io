@@ -5144,11 +5144,11 @@ var $author$project$Editor$init = $author$project$Editor$State(
 	});
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Main$text2 = '’Twas brillig, and the slithy toves\n      Did gyre and gimble in the wabe:\nAll mimsy were the borogoves,\n      And the mome raths outgrabe.\n\n“Beware the Jabberwock, my son!\n      The jaws that bite, the claws that catch!\nBeware the Jubjub bird, and shun\n      The frumious Bandersnatch!”\n\nHe took his vorpal sword in hand;\n      Long time the manxome foe he sought—\nSo rested he by the Tumtum tree\n      And stood awhile in thought.\n';
+var $author$project$TextExample$text2 = '’Twas brillig, and the slithy toves\n      Did gyre and gimble in the wabe:\nAll mimsy were the borogoves,\n      And the mome raths outgrabe.\n\n“Beware the Jabberwock, my son!\n      The jaws that bite, the claws that catch!\nBeware the Jubjub bird, and shun\n      The frumious Bandersnatch!”\n\nHe took his vorpal sword in hand;\n      Long time the manxome foe he sought—\nSo rested he by the Tumtum tree\n      And stood awhile in thought.\n';
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
-			content: $author$project$Buffer$init($author$project$Main$text2),
+			content: $author$project$Buffer$init($author$project$TextExample$text2),
 			editor: $author$project$Editor$init,
 			lastKeyPress: $elm$core$Maybe$Nothing
 		},
@@ -6214,6 +6214,14 @@ var $author$project$Buffer$indentBetween = F3(
 			buffer,
 			A2($elm$core$List$range, start.line, end.line));
 	});
+var $author$project$Editor$Update$initialState = {
+	cursor: A2($author$project$Position$Position, 0, 0),
+	dragging: false,
+	history: $author$project$Editor$History$empty,
+	scrolledLine: 0,
+	selection: $elm$core$Maybe$Nothing,
+	window: {first: 0, last: 9}
+};
 var $elm_community$string_extra$String$Extra$replaceSlice = F4(
 	function (substitution, start, end, string) {
 		return _Utils_ap(
@@ -6411,7 +6419,7 @@ var $author$project$Window$scrollToIncludeCursor = F2(
 		var offset = A2(
 			$elm$core$Debug$log,
 			'OFFST',
-			(_Utils_cmp(line, window.last) > -1) ? (line - window.last) : ((_Utils_cmp(line, window.first) < 1) ? (window.first - line) : 0));
+			(_Utils_cmp(line, window.last) > -1) ? (line - window.last) : ((_Utils_cmp(line, window.first) < 1) ? (line - window.first) : 0));
 		var _v0 = A2(
 			$elm$core$Debug$log,
 			'stic',
@@ -6744,10 +6752,7 @@ var $author$project$Editor$Update$update = F3(
 							$elm$core$Maybe$map,
 							$elm$core$Basics$append(string),
 							maybeClosing)) : string;
-					var cursor2 = A2(
-						$elm$core$Debug$log,
-						'Shifted cursor',
-						A2($author$project$Window$shift, state.window, state.cursor));
+					var cursor2 = state.cursor;
 					return A3(
 						$author$project$Editor$Update$recordHistory,
 						state,
@@ -7185,7 +7190,7 @@ var $author$project$Editor$Update$update = F3(
 						}),
 					buffer,
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'ScrollDown':
 				var newCursor = A2($author$project$Position$shift, 1, state.cursor);
 				return _Utils_Tuple3(
 					_Utils_update(
@@ -7195,6 +7200,11 @@ var $author$project$Editor$Update$update = F3(
 							window: A2($author$project$Window$scrollToIncludeCursor, newCursor, state.window)
 						}),
 					buffer,
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple3(
+					$author$project$Editor$Update$initialState,
+					$author$project$Buffer$init($author$project$TextExample$text2),
 					$elm$core$Platform$Cmd$none);
 		}
 	});
@@ -7724,6 +7734,12 @@ var $author$project$Editor$View$line = F5(
 			A2($author$project$Window$getOffset, window, cursor.line));
 		var length = $elm$core$String$length(content);
 		var endPosition = {column: length, line: number};
+		var _v0 = A2(
+			$elm$core$Debug$log,
+			'(C), cursor.line, offset',
+			_Utils_Tuple2(
+				cursor.line,
+				A2($author$project$Window$getOffset, window, cursor.line)));
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -7840,6 +7856,8 @@ var $elm$html$Html$Events$preventDefaultOn = F2(
 			event,
 			$elm$virtual_dom$VirtualDom$MayPreventDefault(decoder));
 	});
+var $author$project$Editor$Update$Reset = {$: 'Reset'};
+var $author$project$Editor$View$resetButton = A2($author$project$Editor$View$myButton, $author$project$Editor$Update$Reset, 'Reset');
 var $author$project$Window$indexedFilterMap = F2(
 	function (filter, list) {
 		return A2(
@@ -7912,7 +7930,8 @@ var $author$project$Editor$View$view = F2(
 						[
 							$author$project$Editor$View$upButton,
 							$author$project$Editor$View$downButton,
-							$author$project$Editor$View$lineCount(lines)
+							$author$project$Editor$View$lineCount(lines),
+							$author$project$Editor$View$resetButton
 						]))
 				]));
 	});
