@@ -7239,8 +7239,23 @@ var $author$project$Main$update = F2(
 var $author$project$Main$KeyPress = function (a) {
 	return {$: 'KeyPress', a: a};
 };
+var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$html$Html$details = _VirtualDom_node('details');
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
 var $author$project$Editor$internal = function (_v0) {
 	var s = _v0.a;
 	return s;
@@ -7289,14 +7304,6 @@ var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$Editor$Update$MouseUp = {$: 'MouseUp'};
 var $author$project$Editor$Update$SelectGroup = {$: 'SelectGroup'};
 var $author$project$Editor$Update$SelectLine = {$: 'SelectLine'};
-var $elm$json$Json$Encode$string = _Json_wrap;
-var $elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$string(string));
-	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$json$Json$Decode$andThen = _Json_andThen;
 var $author$project$Editor$Update$Insert = function (a) {
@@ -7467,32 +7474,49 @@ var $author$project$Editor$Keymap$keydownDecoder = A4(
 var $author$project$Editor$Keymap$decoder = A2($elm$json$Json$Decode$andThen, $author$project$Editor$Keymap$keyToMsg, $author$project$Editor$Keymap$keydownDecoder);
 var $author$project$Editor$Update$ScrollDown = {$: 'ScrollDown'};
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $author$project$Editor$View$buttonLabelStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'font-size', '12px'),
+		A2($elm$html$Html$Attributes$style, 'background-color', '#666'),
+		A2($elm$html$Html$Attributes$style, 'color', '#eee'),
+		A2($elm$html$Html$Attributes$style, 'width', '80px'),
+		A2($elm$html$Html$Attributes$style, 'height', '24px'),
+		A2($elm$html$Html$Attributes$style, 'border', 'none')
+	]);
+var $author$project$Editor$View$buttonStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'margin-top', '10px'),
+		A2($elm$html$Html$Attributes$style, 'font-size', '12px'),
+		A2($elm$html$Html$Attributes$style, 'border', 'none')
+	]);
 var $elm$html$Html$Events$onClick = function (msg) {
 	return A2(
 		$elm$html$Html$Events$on,
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
-var $author$project$Editor$View$downButton = A2(
-	$elm$html$Html$div,
-	_List_fromArray(
-		[
-			A2($elm$html$Html$Attributes$style, 'margin-right', '10px'),
-			A2($elm$html$Html$Attributes$style, 'font-size', '18px')
-		]),
-	_List_fromArray(
-		[
-			A2(
-			$elm$html$Html$button,
+var $author$project$Editor$View$myButton = F2(
+	function (msg, str) {
+		return A2(
+			$elm$html$Html$div,
+			$author$project$Editor$View$buttonStyle,
 			_List_fromArray(
 				[
-					$elm$html$Html$Events$onClick($author$project$Editor$Update$ScrollDown)
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('Down')
-				]))
-		]));
+					A2(
+					$elm$html$Html$button,
+					_Utils_ap(
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick(msg)
+							]),
+						$author$project$Editor$View$buttonLabelStyle),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(str)
+						]))
+				]));
+	});
+var $author$project$Editor$View$downButton = A2($author$project$Editor$View$myButton, $author$project$Editor$Update$ScrollDown, 'Down');
 var $author$project$Editor$Update$MouseDown = function (a) {
 	return {$: 'MouseDown', a: a};
 };
@@ -7766,6 +7790,17 @@ var $author$project$Editor$View$line = F5(
 						]) : _List_Nil
 					])));
 	});
+var $author$project$Editor$View$lineCount = function (lines) {
+	return A2(
+		$elm$html$Html$div,
+		$author$project$Editor$View$buttonStyle,
+		_List_fromArray(
+			[
+				$elm$html$Html$text(
+				'Lines: ' + $elm$core$String$fromInt(
+					$elm$core$List$length(lines)))
+			]));
+};
 var $author$project$Editor$View$linesContainer = $elm$html$Html$div(
 	_List_fromArray(
 		[
@@ -7842,26 +7877,7 @@ var $elm$html$Html$Attributes$tabindex = function (n) {
 		$elm$core$String$fromInt(n));
 };
 var $author$project$Editor$Update$ScrollUp = {$: 'ScrollUp'};
-var $author$project$Editor$View$upButton = A2(
-	$elm$html$Html$div,
-	_List_fromArray(
-		[
-			A2($elm$html$Html$Attributes$style, 'margin-right', '10px'),
-			A2($elm$html$Html$Attributes$style, 'font-size', '18px')
-		]),
-	_List_fromArray(
-		[
-			A2(
-			$elm$html$Html$button,
-			_List_fromArray(
-				[
-					$elm$html$Html$Events$onClick($author$project$Editor$Update$ScrollUp)
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('Up')
-				]))
-		]));
+var $author$project$Editor$View$upButton = A2($author$project$Editor$View$myButton, $author$project$Editor$Update$ScrollUp, 'Up');
 var $author$project$Editor$View$view = F2(
 	function (lines, state) {
 		return A2(
@@ -7888,9 +7904,16 @@ var $author$project$Editor$View$view = F2(
 						A2($author$project$Window$select, state.window, lines))),
 					A2(
 					$elm$html$Html$div,
-					_List_Nil,
 					_List_fromArray(
-						[$author$project$Editor$View$upButton, $author$project$Editor$View$downButton]))
+						[
+							A2($elm$html$Html$Attributes$style, 'width', '100px')
+						]),
+					_List_fromArray(
+						[
+							$author$project$Editor$View$upButton,
+							$author$project$Editor$View$downButton,
+							$author$project$Editor$View$lineCount(lines)
+						]))
 				]));
 	});
 var $author$project$Editor$view = F2(
@@ -7943,6 +7966,25 @@ var $author$project$Main$view = function (model) {
 				$elm$html$Html$map,
 				$author$project$Main$EditorMsg,
 				A2($author$project$Editor$view, model.content, model.editor)),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$style, 'margin-top', '20px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$a,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$href('https://github.com/jxxcarlson/elm-text-editor')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Source code')
+							]))
+					])),
 				A2(
 				$elm$html$Html$details,
 				_List_fromArray(
