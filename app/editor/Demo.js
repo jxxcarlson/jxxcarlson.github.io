@@ -8113,7 +8113,16 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$text('Source code')
 							])),
 						$elm$html$Html$text(' — plenty of issues to work on.  This is a fork from code of SydneyNemzer'),
-						$elm$html$Html$text('ctrl-c to copy selection; ctrl-p to paste copied text.')
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'margin-top', '20px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('ctrl-c to copy selection; ctrl-p to paste copied text.')
+							]))
 					])),
 				A2(
 				$elm$html$Html$details,
@@ -8144,7 +8153,10 @@ var $author$project$Main$view = function (model) {
 							])),
 						A2(
 						$elm$html$Html$div,
-						_List_Nil,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'margin-top', '5px')
+							]),
 						_List_fromArray(
 							[
 								$elm$html$Html$text(
