@@ -5139,6 +5139,7 @@ var $author$project$Editor$init = $author$project$Editor$State(
 		dragging: false,
 		history: $author$project$Editor$History$empty,
 		scrolledLine: 0,
+		selectedText: $elm$core$Maybe$Nothing,
 		selection: $elm$core$Maybe$Nothing,
 		window: {first: 0, last: 9}
 	});
@@ -6219,6 +6220,7 @@ var $author$project$Editor$Update$initialState = {
 	dragging: false,
 	history: $author$project$Editor$History$empty,
 	scrolledLine: 0,
+	selectedText: $elm$core$Maybe$Nothing,
 	selection: $elm$core$Maybe$Nothing,
 	window: {first: 0, last: 9}
 };
@@ -6695,18 +6697,33 @@ var $author$project$Editor$Update$update = F3(
 						}),
 					buffer,
 					$elm$core$Platform$Cmd$none);
+			case 'Paste':
+				var _v13 = A2(
+					$elm$core$Debug$log,
+					'PasteSelection',
+					_Utils_Tuple2(state.selection, state.cursor));
+				var _v14 = state.selectedText;
+				if (_v14.$ === 'Nothing') {
+					return _Utils_Tuple3(state, buffer, $elm$core$Platform$Cmd$none);
+				} else {
+					var text = _v14.a;
+					return _Utils_Tuple3(
+						state,
+						A3($author$project$Buffer$insert, state.cursor, text, buffer),
+						$elm$core$Platform$Cmd$none);
+				}
 			case 'Insert':
 				var string = msg.a;
-				var _v13 = _Utils_Tuple2(
+				var _v15 = _Utils_Tuple2(
 					state.selection,
 					A2($elm$core$Dict$get, string, $author$project$Editor$Update$autoclose));
-				if (_v13.a.$ === 'Just') {
-					if (_v13.b.$ === 'Just') {
-						var selection = _v13.a.a;
-						var closing = _v13.b.a;
-						var _v14 = A2($author$project$Position$order, selection, state.cursor);
-						var start = _v14.a;
-						var end = _v14.b;
+				if (_v15.a.$ === 'Just') {
+					if (_v15.b.$ === 'Just') {
+						var selection = _v15.a.a;
+						var closing = _v15.b.a;
+						var _v16 = A2($author$project$Position$order, selection, state.cursor);
+						var start = _v16.a;
+						var end = _v16.b;
 						var wrapped = _Utils_ap(
 							string,
 							_Utils_ap(
@@ -6727,11 +6744,11 @@ var $author$project$Editor$Update$update = F3(
 								A4($author$project$Buffer$replace, start, end, wrapped, buffer),
 								$elm$core$Platform$Cmd$none));
 					} else {
-						var selection = _v13.a.a;
-						var _v15 = _v13.b;
-						var _v16 = A2($author$project$Position$order, selection, state.cursor);
-						var start = _v16.a;
-						var end = _v16.b;
+						var selection = _v15.a.a;
+						var _v17 = _v15.b;
+						var _v18 = A2($author$project$Position$order, selection, state.cursor);
+						var start = _v18.a;
+						var end = _v18.b;
 						return A3(
 							$author$project$Editor$Update$recordHistory,
 							state,
@@ -6747,8 +6764,8 @@ var $author$project$Editor$Update$update = F3(
 								$elm$core$Platform$Cmd$none));
 					}
 				} else {
-					var _v17 = _v13.a;
-					var maybeClosing = _v13.b;
+					var _v19 = _v15.a;
+					var maybeClosing = _v15.b;
 					var nearWordChar = A2($author$project$Buffer$nearWordChar, state.cursor, buffer);
 					var insertString = (!nearWordChar) ? A2(
 						$elm$core$Maybe$withDefault,
@@ -6776,12 +6793,12 @@ var $author$project$Editor$Update$update = F3(
 							$elm$core$Platform$Cmd$none));
 				}
 			case 'RemoveCharAfter':
-				var _v18 = state.selection;
-				if (_v18.$ === 'Just') {
-					var selection = _v18.a;
-					var _v19 = A2($author$project$Position$order, selection, state.cursor);
-					var start = _v19.a;
-					var end = _v19.b;
+				var _v20 = state.selection;
+				if (_v20.$ === 'Just') {
+					var selection = _v20.a;
+					var _v21 = A2($author$project$Position$order, selection, state.cursor);
+					var start = _v21.a;
+					var end = _v21.b;
 					return A3(
 						$author$project$Editor$Update$recordHistory,
 						state,
@@ -6808,12 +6825,12 @@ var $author$project$Editor$Update$update = F3(
 							$elm$core$Platform$Cmd$none));
 				}
 			case 'RemoveCharBefore':
-				var _v20 = state.selection;
-				if (_v20.$ === 'Just') {
-					var selection = _v20.a;
-					var _v21 = A2($author$project$Position$order, selection, state.cursor);
-					var start = _v21.a;
-					var end = _v21.b;
+				var _v22 = state.selection;
+				if (_v22.$ === 'Just') {
+					var selection = _v22.a;
+					var _v23 = A2($author$project$Position$order, selection, state.cursor);
+					var start = _v23.a;
+					var end = _v23.b;
 					return A3(
 						$author$project$Editor$Update$recordHistory,
 						state,
@@ -6843,12 +6860,12 @@ var $author$project$Editor$Update$update = F3(
 							$elm$core$Platform$Cmd$none));
 				}
 			case 'RemoveGroupAfter':
-				var _v22 = state.selection;
-				if (_v22.$ === 'Just') {
-					var selection = _v22.a;
-					var _v23 = A2($author$project$Position$order, selection, state.cursor);
-					var start = _v23.a;
-					var end = _v23.b;
+				var _v24 = state.selection;
+				if (_v24.$ === 'Just') {
+					var selection = _v24.a;
+					var _v25 = A2($author$project$Position$order, selection, state.cursor);
+					var start = _v25.a;
+					var end = _v25.b;
 					return A3(
 						$author$project$Editor$Update$recordHistory,
 						state,
@@ -6870,13 +6887,68 @@ var $author$project$Editor$Update$update = F3(
 							A4($author$project$Buffer$replace, state.cursor, end, '', buffer),
 							$elm$core$Platform$Cmd$none));
 				}
+			case 'CutGroupAfter':
+				var _v26 = state.selection;
+				if (_v26.$ === 'Just') {
+					var selection = _v26.a;
+					var _v27 = A2($author$project$Position$order, selection, state.cursor);
+					var start = _v27.a;
+					var end = _v27.b;
+					return A3(
+						$author$project$Editor$Update$recordHistory,
+						state,
+						buffer,
+						_Utils_Tuple3(
+							_Utils_update(
+								state,
+								{cursor: start}),
+							A4($author$project$Buffer$replace, start, end, '', buffer),
+							$elm$core$Platform$Cmd$none));
+				} else {
+					var end = A2($author$project$Buffer$groupEnd, state.cursor, buffer);
+					return A3(
+						$author$project$Editor$Update$recordHistory,
+						state,
+						buffer,
+						_Utils_Tuple3(
+							state,
+							A4($author$project$Buffer$replace, state.cursor, end, '', buffer),
+							$elm$core$Platform$Cmd$none));
+				}
+			case 'Copy':
+				var _v28 = state.selection;
+				if (_v28.$ === 'Nothing') {
+					return _Utils_Tuple3(
+						_Utils_update(
+							state,
+							{selectedText: $elm$core$Maybe$Nothing}),
+						buffer,
+						$elm$core$Platform$Cmd$none);
+				} else {
+					var sel = _v28.a;
+					var _v29 = A2($author$project$Position$order, sel, state.cursor);
+					var start = _v29.a;
+					var end = _v29.b;
+					var selectedText = A2(
+						$elm$core$Debug$log,
+						'selectedText',
+						A3($author$project$Buffer$between, start, end, buffer));
+					return _Utils_Tuple3(
+						_Utils_update(
+							state,
+							{
+								selectedText: $elm$core$Maybe$Just(selectedText)
+							}),
+						buffer,
+						$elm$core$Platform$Cmd$none);
+				}
 			case 'RemoveGroupBefore':
-				var _v24 = state.selection;
-				if (_v24.$ === 'Just') {
-					var selection = _v24.a;
-					var _v25 = A2($author$project$Position$order, selection, state.cursor);
-					var start = _v25.a;
-					var end = _v25.b;
+				var _v30 = state.selection;
+				if (_v30.$ === 'Just') {
+					var selection = _v30.a;
+					var _v31 = A2($author$project$Position$order, selection, state.cursor);
+					var start = _v31.a;
+					var end = _v31.b;
 					return A3(
 						$author$project$Editor$Update$recordHistory,
 						state,
@@ -6900,10 +6972,40 @@ var $author$project$Editor$Update$update = F3(
 							A4($author$project$Buffer$replace, start, state.cursor, '', buffer),
 							$elm$core$Platform$Cmd$none));
 				}
+			case 'CutGroupBefore':
+				var _v32 = state.selection;
+				if (_v32.$ === 'Just') {
+					var selection = _v32.a;
+					var _v33 = A2($author$project$Position$order, selection, state.cursor);
+					var start = _v33.a;
+					var end = _v33.b;
+					return A3(
+						$author$project$Editor$Update$recordHistory,
+						state,
+						buffer,
+						_Utils_Tuple3(
+							_Utils_update(
+								state,
+								{cursor: start}),
+							A4($author$project$Buffer$replace, start, end, '', buffer),
+							$elm$core$Platform$Cmd$none));
+				} else {
+					var start = A2($author$project$Buffer$groupStart, state.cursor, buffer);
+					return A3(
+						$author$project$Editor$Update$recordHistory,
+						state,
+						buffer,
+						_Utils_Tuple3(
+							_Utils_update(
+								state,
+								{cursor: start}),
+							A4($author$project$Buffer$replace, start, state.cursor, '', buffer),
+							$elm$core$Platform$Cmd$none));
+				}
 			case 'Indent':
-				var _v26 = state.selection;
-				if (_v26.$ === 'Just') {
-					var selection = _v26.a;
+				var _v34 = state.selection;
+				if (_v34.$ === 'Just') {
+					var selection = _v34.a;
 					return A3(
 						$author$project$Editor$Update$recordHistory,
 						state,
@@ -6919,9 +7021,9 @@ var $author$project$Editor$Update$update = F3(
 							A3($author$project$Buffer$indentBetween, state.cursor, selection, buffer),
 							$elm$core$Platform$Cmd$none));
 				} else {
-					var _v27 = A2($author$project$Buffer$indentFrom, state.cursor, buffer);
-					var indentedBuffer = _v27.a;
-					var indentedColumn = _v27.b;
+					var _v35 = A2($author$project$Buffer$indentFrom, state.cursor, buffer);
+					var indentedBuffer = _v35.a;
+					var indentedColumn = _v35.b;
 					return A3(
 						$author$project$Editor$Update$recordHistory,
 						state,
@@ -6936,13 +7038,13 @@ var $author$project$Editor$Update$update = F3(
 							$elm$core$Platform$Cmd$none));
 				}
 			case 'Deindent':
-				var _v28 = state.selection;
-				if (_v28.$ === 'Just') {
-					var selection = _v28.a;
-					var _v29 = A3($author$project$Buffer$deindentBetween, state.cursor, selection, buffer);
-					var deindentedBuffer = _v29.a;
-					var cursorColumn = _v29.b;
-					var selectionColumn = _v29.c;
+				var _v36 = state.selection;
+				if (_v36.$ === 'Just') {
+					var selection = _v36.a;
+					var _v37 = A3($author$project$Buffer$deindentBetween, state.cursor, selection, buffer);
+					var deindentedBuffer = _v37.a;
+					var cursorColumn = _v37.b;
+					var selectionColumn = _v37.c;
 					return A3(
 						$author$project$Editor$Update$recordHistory,
 						state,
@@ -6958,9 +7060,9 @@ var $author$project$Editor$Update$update = F3(
 							deindentedBuffer,
 							$elm$core$Platform$Cmd$none));
 				} else {
-					var _v30 = A2($author$project$Buffer$deindentFrom, state.cursor, buffer);
-					var deindentedBuffer = _v30.a;
-					var deindentedColumn = _v30.b;
+					var _v38 = A2($author$project$Buffer$deindentFrom, state.cursor, buffer);
+					var deindentedBuffer = _v38.a;
+					var deindentedColumn = _v38.b;
 					return A3(
 						$author$project$Editor$Update$recordHistory,
 						state,
@@ -7114,9 +7216,9 @@ var $author$project$Editor$Update$update = F3(
 			case 'SelectGroup':
 				var range = A2($author$project$Buffer$groupRange, state.cursor, buffer);
 				if (range.$ === 'Just') {
-					var _v32 = range.a;
-					var start = _v32.a;
-					var end = _v32.b;
+					var _v40 = range.a;
+					var start = _v40.a;
+					var end = _v40.b;
 					return _Utils_Tuple3(
 						_Utils_update(
 							state,
@@ -7149,14 +7251,14 @@ var $author$project$Editor$Update$update = F3(
 					buffer,
 					$elm$core$Platform$Cmd$none);
 			case 'Undo':
-				var _v33 = A2(
+				var _v41 = A2(
 					$author$project$Editor$History$undo,
 					A2($author$project$Editor$Update$stateToSnapshot, state, buffer),
 					state.history);
-				if (_v33.$ === 'Just') {
-					var _v34 = _v33.a;
-					var history = _v34.a;
-					var snapshot = _v34.b;
+				if (_v41.$ === 'Just') {
+					var _v42 = _v41.a;
+					var history = _v42.a;
+					var snapshot = _v42.b;
 					return _Utils_Tuple3(
 						_Utils_update(
 							state,
@@ -7167,14 +7269,14 @@ var $author$project$Editor$Update$update = F3(
 					return _Utils_Tuple3(state, buffer, $elm$core$Platform$Cmd$none);
 				}
 			case 'Redo':
-				var _v35 = A2(
+				var _v43 = A2(
 					$author$project$Editor$History$redo,
 					A2($author$project$Editor$Update$stateToSnapshot, state, buffer),
 					state.history);
-				if (_v35.$ === 'Just') {
-					var _v36 = _v35.a;
-					var history = _v36.a;
-					var snapshot = _v36.b;
+				if (_v43.$ === 'Just') {
+					var _v44 = _v43.a;
+					var history = _v44.a;
+					var snapshot = _v44.b;
 					return _Utils_Tuple3(
 						_Utils_update(
 							state,
@@ -7325,6 +7427,7 @@ var $author$project$Editor$Update$Insert = function (a) {
 	return {$: 'Insert', a: a};
 };
 var $elm$json$Json$Decode$fail = _Json_fail;
+var $author$project$Editor$Update$Copy = {$: 'Copy'};
 var $author$project$Editor$Update$CursorDown = {$: 'CursorDown'};
 var $author$project$Editor$Update$CursorLeft = {$: 'CursorLeft'};
 var $author$project$Editor$Update$CursorRight = {$: 'CursorRight'};
@@ -7335,6 +7438,7 @@ var $author$project$Editor$Update$CursorToLineStart = {$: 'CursorToLineStart'};
 var $author$project$Editor$Update$CursorUp = {$: 'CursorUp'};
 var $author$project$Editor$Update$Deindent = {$: 'Deindent'};
 var $author$project$Editor$Update$Indent = {$: 'Indent'};
+var $author$project$Editor$Update$Paste = {$: 'Paste'};
 var $author$project$Editor$Update$Redo = {$: 'Redo'};
 var $author$project$Editor$Update$RemoveCharAfter = {$: 'RemoveCharAfter'};
 var $author$project$Editor$Update$RemoveCharBefore = {$: 'RemoveCharBefore'};
@@ -7360,6 +7464,8 @@ var $author$project$Editor$Keymap$keymaps = {
 				_Utils_Tuple2('Delete', $author$project$Editor$Update$RemoveGroupAfter),
 				_Utils_Tuple2('a', $author$project$Editor$Update$SelectAll),
 				_Utils_Tuple2('d', $author$project$Editor$Update$SelectGroup),
+				_Utils_Tuple2('c', $author$project$Editor$Update$Copy),
+				_Utils_Tuple2('p', $author$project$Editor$Update$Paste),
 				_Utils_Tuple2('z', $author$project$Editor$Update$Undo),
 				_Utils_Tuple2('y', $author$project$Editor$Update$Redo)
 			])),
@@ -8006,7 +8112,8 @@ var $author$project$Main$view = function (model) {
 							[
 								$elm$html$Html$text('Source code')
 							])),
-						$elm$html$Html$text(' — plenty of issues to work on.  This is a fork from code of SydneyNemzer')
+						$elm$html$Html$text(' — plenty of issues to work on.  This is a fork from code of SydneyNemzer'),
+						$elm$html$Html$text('ctrl-c to copy selection; ctrl-p to paste copied text.')
 					])),
 				A2(
 				$elm$html$Html$details,
