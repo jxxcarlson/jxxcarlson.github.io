@@ -37,4 +37,3 @@ app.ports.infoForOutside.subscribe(msg => {
 })
 
 
-// 
