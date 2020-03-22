@@ -5579,7 +5579,7 @@ var $author$project$EngineData$config1 = {
 var $author$project$EngineData$CCEarningsON = {$: 'CCEarningsON'};
 var $author$project$EngineData$config2 = _Utils_update(
 	$author$project$EngineData$config1,
-	{ccEarnings: $author$project$EngineData$CCEarningsON, maximumCCRatio: 0.5, subtitle: 'Somewhat more interesting', title: 'Usef CC Earnings'});
+	{ccEarnings: $author$project$EngineData$CCEarningsON, maximumCCRatio: 0.5, subtitle: 'Somewhat more interesting', title: 'Use CC Earnings'});
 var $author$project$EngineData$configurationList = _List_fromArray(
 	[$author$project$EngineData$config1, $author$project$EngineData$config2]);
 var $author$project$Entity$BusinessCharacteristics = function (a) {
@@ -6198,6 +6198,7 @@ var $author$project$State$configure = F2(
 								config.numberOfHouseholds,
 								A3($author$project$State$configureWithGivenSeed, config, seed, $author$project$State$initialState)))))));
 	});
+var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -7032,29 +7033,30 @@ var $elm$core$Maybe$withDefault = F2(
 		}
 	});
 var $author$project$Main$init = function (flags) {
+	var config = A2(
+		$elm$core$Maybe$withDefault,
+		$author$project$EngineData$config1,
+		A2($elm_community$list_extra$List$Extra$getAt, 0, $author$project$EngineData$configurationList));
 	return _Utils_Tuple2(
 		{
 			batchJobState: $author$project$Main$NoBatch,
-			ccRatioString: '',
-			configuration: A2(
-				$elm$core$Maybe$withDefault,
-				$author$project$EngineData$config1,
-				A2($elm_community$list_extra$List$Extra$getAt, 0, $author$project$EngineData$configurationList)),
+			ccRatioString: $elm$core$String$fromFloat(config.maximumCCRatio),
+			configuration: config,
 			configurationIndex: 0,
 			configurationList: $author$project$EngineData$configurationList,
 			configurationString: '1',
 			counter: 0,
-			cycleLengthString: '',
+			cycleLengthString: $elm$core$String$fromInt(config.cycleLength),
 			data: _List_Nil,
 			filterString: '',
 			input: 'App started',
 			output: 'App started',
 			randomAtmosphericInt: $elm$core$Maybe$Nothing,
-			rentString: '',
+			rentString: $elm$core$String$fromFloat(config.businessRent),
 			runMode: $author$project$Main$Single,
 			runState: $author$project$Main$Paused,
-			state: A2($author$project$State$configure, $author$project$EngineData$config1, 400),
-			tickRateString: '',
+			state: A2($author$project$State$configure, config, 400),
+			tickRateString: $elm$core$String$fromFloat(config.tickLoopInterval),
 			trialsToRun: 5
 		},
 		$author$project$Main$getRandomNumber);
@@ -7342,14 +7344,123 @@ var $author$project$Main$InTrial = function (a) {
 	return {$: 'InTrial', a: a};
 };
 var $author$project$Main$Running = {$: 'Running'};
+var $elm$core$Debug$log = _Debug_log;
+var $elm$core$String$toFloat = _String_toFloat;
+var $author$project$Main$updateCCRatioInConfig = F2(
+	function (str, config) {
+		var _v0 = $elm$core$String$toFloat(str);
+		if (_v0.$ === 'Nothing') {
+			return config;
+		} else {
+			var ccRatio_ = _v0.a;
+			return _Utils_update(
+				config,
+				{
+					maximumCCRatio: A2($elm$core$Debug$log, 'ccRatio_', ccRatio_)
+				});
+		}
+	});
+var $author$project$State$updateConfig = F2(
+	function (config, state) {
+		return _Utils_update(
+			state,
+			{config: config});
+	});
+var $author$project$Main$updateCCRatio = F2(
+	function (str, model) {
+		var newConfig = A2($author$project$Main$updateCCRatioInConfig, str, model.state.config);
+		var newState = A2($author$project$State$updateConfig, newConfig, model.state);
+		var _v0 = A2($elm$core$Debug$log, 'updateCCRatio', str);
+		return _Utils_update(
+			model,
+			{
+				ccRatioString: A2($elm$core$Debug$log, 'CCR@@', str),
+				state: newState
+			});
+	});
+var $author$project$Main$updateCycleLengthInConfig = F2(
+	function (str, config) {
+		var _v0 = $elm$core$String$toInt(str);
+		if (_v0.$ === 'Nothing') {
+			return config;
+		} else {
+			var cycleLength_ = _v0.a;
+			return _Utils_update(
+				config,
+				{cycleLength: cycleLength_});
+		}
+	});
+var $author$project$Main$updateCycleLength = F2(
+	function (str, model) {
+		var newConfig = A2($author$project$Main$updateCycleLengthInConfig, str, model.state.config);
+		var newState = A2($author$project$State$updateConfig, newConfig, model.state);
+		return _Utils_update(
+			model,
+			{cycleLengthString: str, state: newState});
+	});
+var $author$project$Main$updateRentInConfig = F2(
+	function (str, config) {
+		var _v0 = $elm$core$String$toFloat(str);
+		if (_v0.$ === 'Nothing') {
+			return config;
+		} else {
+			var rent_ = _v0.a;
+			return _Utils_update(
+				config,
+				{businessRent: rent_});
+		}
+	});
+var $author$project$Main$updateRent = F2(
+	function (str, model) {
+		var newConfig = A2($author$project$Main$updateRentInConfig, str, model.state.config);
+		var newState = A2($author$project$State$updateConfig, newConfig, model.state);
+		return _Utils_update(
+			model,
+			{rentString: str, state: newState});
+	});
+var $author$project$Main$updateTickRateInConfig = F2(
+	function (str, config) {
+		var _v0 = $elm$core$String$toFloat(str);
+		if (_v0.$ === 'Nothing') {
+			return config;
+		} else {
+			var tickRate_ = _v0.a;
+			return _Utils_update(
+				config,
+				{tickLoopInterval: tickRate_});
+		}
+	});
+var $author$project$Main$updateTickRate = F2(
+	function (str, model) {
+		var newConfig = A2($author$project$Main$updateTickRateInConfig, str, model.state.config);
+		var newState = A2($author$project$State$updateConfig, newConfig, model.state);
+		return _Utils_update(
+			model,
+			{state: newState, tickRateString: str});
+	});
+var $author$project$Main$updateParameters = function (model) {
+	return A2(
+		$author$project$Main$updateRent,
+		$elm$core$String$fromFloat(model.state.config.businessRent),
+		A2(
+			$author$project$Main$updateCCRatio,
+			$elm$core$String$fromFloat(model.state.config.maximumCCRatio),
+			A2(
+				$author$project$Main$updateTickRate,
+				$elm$core$String$fromFloat(model.state.config.tickLoopInterval),
+				A2(
+					$author$project$Main$updateCycleLength,
+					$elm$core$String$fromInt(model.state.config.cycleLength),
+					model))));
+};
 var $author$project$Main$changeConfig = F2(
 	function (k, model) {
 		var seed = function () {
-			var _v0 = model.randomAtmosphericInt;
-			if (_v0.$ === 'Nothing') {
+			var _v1 = model.randomAtmosphericInt;
+			if (_v1.$ === 'Nothing') {
 				return 400;
 			} else {
-				var s = _v0.a;
+				var s = _v1.a;
 				return s;
 			}
 		}();
@@ -7357,15 +7468,17 @@ var $author$project$Main$changeConfig = F2(
 			$elm$core$Maybe$withDefault,
 			$author$project$EngineData$config1,
 			A2($elm_community$list_extra$List$Extra$getAt, k, $author$project$EngineData$configurationList));
-		var state = A2($author$project$State$configure, configuration, seed);
-		return _Utils_update(
-			model,
-			{
-				configuration: configuration,
-				configurationIndex: k,
-				configurationString: $elm$core$String$fromInt(k),
-				state: A2($author$project$State$configure, configuration, seed)
-			});
+		var newState = A2($author$project$State$configure, configuration, seed);
+		var _v0 = A2($elm$core$Debug$log, 'CCR', newState.config.maximumCCRatio);
+		return $author$project$Main$updateParameters(
+			_Utils_update(
+				model,
+				{
+					configuration: configuration,
+					configurationIndex: k,
+					configurationString: $elm$core$String$fromInt(k),
+					state: newState
+				}));
 	});
 var $author$project$State$lostSales = function (log) {
 	return $elm$core$List$sum(
@@ -7635,7 +7748,6 @@ var $author$project$Report$fiatBalanceOfEntity = F2(
 				bt,
 				$author$project$Entity$getFiatAccount(entity)));
 	});
-var $elm$core$String$fromFloat = _String_fromNumber;
 var $author$project$Action$getLogString = F3(
 	function (purchaseAmt_, business_, newBusiness_) {
 		var oldFiatBalance = $elm$core$String$fromFloat(
@@ -8692,88 +8804,25 @@ var $author$project$Engine$nextState = F3(
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$core$String$trim = _String_trim;
-var $elm$core$String$toFloat = _String_toFloat;
-var $author$project$State$updateConfig = F2(
-	function (config, state) {
-		return _Utils_update(
-			state,
-			{config: config});
+var $author$project$Main$updateParametersInConfig = F2(
+	function (model, configuration) {
+		return A2(
+			$author$project$Main$updateRentInConfig,
+			$elm$core$String$fromFloat(model.state.config.businessRent),
+			A2(
+				$author$project$Main$updateCCRatioInConfig,
+				$elm$core$String$fromFloat(model.state.config.tickLoopInterval),
+				A2(
+					$author$project$Main$updateTickRateInConfig,
+					$elm$core$String$fromFloat(model.state.config.tickLoopInterval),
+					A2(
+						$author$project$Main$updateCycleLengthInConfig,
+						$elm$core$String$fromInt(model.state.config.cycleLength),
+						configuration))));
 	});
-var $author$project$Main$updateCCRatio = F2(
-	function (str, model) {
-		var _v0 = $elm$core$String$toFloat(str);
-		if (_v0.$ === 'Nothing') {
-			return _Utils_update(
-				model,
-				{ccRatioString: str});
-		} else {
-			var ccRatio_ = _v0.a;
-			var oldConfig = model.state.config;
-			var newConfig = _Utils_update(
-				oldConfig,
-				{maximumCCRatio: ccRatio_});
-			var newState = A2($author$project$State$updateConfig, newConfig, model.state);
-			return _Utils_update(
-				model,
-				{ccRatioString: str, state: newState});
-		}
-	});
-var $author$project$Main$updateCycleLength = F2(
-	function (str, model) {
-		var _v0 = $elm$core$String$toInt(str);
-		if (_v0.$ === 'Nothing') {
-			return _Utils_update(
-				model,
-				{cycleLengthString: str});
-		} else {
-			var cycleLength_ = _v0.a;
-			var oldConfig = model.state.config;
-			var newConfig = _Utils_update(
-				oldConfig,
-				{cycleLength: cycleLength_});
-			var newState = A2($author$project$State$updateConfig, newConfig, model.state);
-			return _Utils_update(
-				model,
-				{cycleLengthString: str, state: newState});
-		}
-	});
-var $author$project$Main$updateRent = F2(
-	function (str, model) {
-		var _v0 = $elm$core$String$toFloat(str);
-		if (_v0.$ === 'Nothing') {
-			return _Utils_update(
-				model,
-				{rentString: str});
-		} else {
-			var rent_ = _v0.a;
-			var oldConfig = model.state.config;
-			var newConfig = _Utils_update(
-				oldConfig,
-				{businessRent: rent_});
-			var newState = A2($author$project$State$updateConfig, newConfig, model.state);
-			return _Utils_update(
-				model,
-				{rentString: str, state: newState});
-		}
-	});
-var $author$project$Main$updateTickRate = F2(
-	function (str, model) {
-		var _v0 = $elm$core$String$toFloat(str);
-		if (_v0.$ === 'Nothing') {
-			return _Utils_update(
-				model,
-				{tickRateString: str});
-		} else {
-			var tickRate = _v0.a;
-			var oldConfig = model.state.config;
-			var newConfig = _Utils_update(
-				oldConfig,
-				{tickLoopInterval: tickRate});
-			var newState = A2($author$project$State$updateConfig, newConfig, model.state);
-			return _Utils_update(
-				model,
-				{state: newState, tickRateString: str});
-		}
+var $Janiczek$cmd_extra$Cmd$Extra$withCmd = F2(
+	function (cmd, model) {
+		return _Utils_Tuple2(model, cmd);
 	});
 var $Janiczek$cmd_extra$Cmd$Extra$withNoCmd = function (model) {
 	return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -8903,19 +8952,12 @@ var $author$project$Main$update = F2(
 								{runState: $author$project$Main$Paused}),
 							$elm$core$Platform$Cmd$none);
 					default:
-						var config = model.configuration;
-						return _Utils_Tuple2(
+						return A2(
+							$Janiczek$cmd_extra$Cmd$Extra$withCmd,
+							$author$project$Main$getRandomNumber,
 							_Utils_update(
 								model,
-								{
-									counter: 0,
-									runState: $author$project$Main$Running,
-									state: A2(
-										$author$project$State$configure,
-										config,
-										A2($elm$core$Maybe$withDefault, 400, model.randomAtmosphericInt))
-								}),
-							$author$project$Main$getRandomNumber);
+								{counter: 0, data: _List_Nil, runState: $author$project$Main$Running}));
 				}
 			case 'CycleRunMode':
 				var _v13 = model.runMode;
@@ -9022,14 +9064,18 @@ var $author$project$Main$update = F2(
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					} else {
 						var rn = _v16.a;
-						return _Utils_Tuple2(
+						var config = A2($author$project$Main$updateParametersInConfig, model, model.state.config);
+						var newState = A2(
+							$author$project$State$configure,
+							config,
+							A2($elm$core$Maybe$withDefault, 400, model.randomAtmosphericInt));
+						return $Janiczek$cmd_extra$Cmd$Extra$withNoCmd(
 							_Utils_update(
 								model,
 								{
 									randomAtmosphericInt: $elm$core$Maybe$Just(rn),
-									state: A2($author$project$State$configure, model.configuration, rn)
-								}),
-							$elm$core$Platform$Cmd$none);
+									state: A2($author$project$State$configure, config, rn)
+								}));
 					}
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -14663,55 +14709,62 @@ var $mdgriffith$elm_ui$Element$column = F2(
 var $author$project$Main$AcceptCCRatio = function (a) {
 	return {$: 'AcceptCCRatio', a: a};
 };
-var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
-	return {$: 'AlignY', a: a};
+var $author$project$Widget$TextField$TextField = F4(
+	function (a, b, c, d) {
+		return {$: 'TextField', a: a, b: b, c: c, d: d};
+	});
+var $author$project$Widget$TextField$Primary = {$: 'Primary'};
+var $author$project$Widget$TextField$Unbounded = {$: 'Unbounded'};
+var $mdgriffith$elm_ui$Element$rgb = F3(
+	function (r, g, b) {
+		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, r, g, b, 1);
+	});
+var $author$project$Widget$Style$gray = function (g) {
+	return A3($mdgriffith$elm_ui$Element$rgb, g, g, g);
 };
-var $mdgriffith$elm_ui$Internal$Model$CenterY = {$: 'CenterY'};
-var $mdgriffith$elm_ui$Element$centerY = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$CenterY);
+var $author$project$Widget$Style$darkGray = $author$project$Widget$Style$gray(0.4);
+var $author$project$Widget$Style$white = $author$project$Widget$Style$gray(0.9);
+var $author$project$Widget$TextField$defaultOptions = {backgroundColor: $author$project$Widget$Style$darkGray, fontColor: $author$project$Widget$Style$white, height: 40, labelWidth: $author$project$Widget$TextField$Unbounded, role: $author$project$Widget$TextField$Primary, width: 100};
+var $author$project$Widget$TextField$make = F3(
+	function (msg, text, label) {
+		return A4($author$project$Widget$TextField$TextField, $author$project$Widget$TextField$defaultOptions, msg, text, label);
+	});
 var $mdgriffith$elm_ui$Element$Input$Label = F3(
 	function (a, b, c) {
 		return {$: 'Label', a: a, b: b, c: c};
 	});
 var $mdgriffith$elm_ui$Element$Input$OnLeft = {$: 'OnLeft'};
 var $mdgriffith$elm_ui$Element$Input$labelLeft = $mdgriffith$elm_ui$Element$Input$Label($mdgriffith$elm_ui$Element$Input$OnLeft);
-var $mdgriffith$elm_ui$Internal$Model$PaddingStyle = F5(
-	function (a, b, c, d, e) {
-		return {$: 'PaddingStyle', a: a, b: b, c: c, d: d, e: e};
+var $mdgriffith$elm_ui$Internal$Model$MoveY = function (a) {
+	return {$: 'MoveY', a: a};
+};
+var $mdgriffith$elm_ui$Internal$Model$TransformComponent = F2(
+	function (a, b) {
+		return {$: 'TransformComponent', a: a, b: b};
 	});
-var $mdgriffith$elm_ui$Internal$Flag$padding = $mdgriffith$elm_ui$Internal$Flag$flag(2);
-var $mdgriffith$elm_ui$Internal$Model$paddingName = F4(
-	function (top, right, bottom, left) {
-		return 'pad-' + ($elm$core$String$fromInt(top) + ('-' + ($elm$core$String$fromInt(right) + ('-' + ($elm$core$String$fromInt(bottom) + ('-' + $elm$core$String$fromInt(left)))))));
-	});
-var $mdgriffith$elm_ui$Element$paddingEach = function (_v0) {
-	var top = _v0.top;
-	var right = _v0.right;
-	var bottom = _v0.bottom;
-	var left = _v0.left;
-	return (_Utils_eq(top, right) && (_Utils_eq(top, bottom) && _Utils_eq(top, left))) ? A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$padding,
-		A5(
-			$mdgriffith$elm_ui$Internal$Model$PaddingStyle,
-			'p-' + $elm$core$String$fromInt(top),
-			top,
-			top,
-			top,
-			top)) : A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$padding,
-		A5(
-			$mdgriffith$elm_ui$Internal$Model$PaddingStyle,
-			A4($mdgriffith$elm_ui$Internal$Model$paddingName, top, right, bottom, left),
-			top,
-			right,
-			bottom,
-			left));
+var $mdgriffith$elm_ui$Internal$Flag$moveY = $mdgriffith$elm_ui$Internal$Flag$flag(26);
+var $mdgriffith$elm_ui$Element$moveDown = function (y) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$TransformComponent,
+		$mdgriffith$elm_ui$Internal$Flag$moveY,
+		$mdgriffith$elm_ui$Internal$Model$MoveY(y));
+};
+var $mdgriffith$elm_ui$Element$moveUp = function (y) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$TransformComponent,
+		$mdgriffith$elm_ui$Internal$Flag$moveY,
+		$mdgriffith$elm_ui$Internal$Model$MoveY(-y));
 };
 var $mdgriffith$elm_ui$Internal$Model$Px = function (a) {
 	return {$: 'Px', a: a};
 };
 var $mdgriffith$elm_ui$Element$px = $mdgriffith$elm_ui$Internal$Model$Px;
+var $mdgriffith$elm_ui$Element$Font$size = function (i) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$fontSize,
+		$mdgriffith$elm_ui$Internal$Model$FontSize(i));
+};
 var $mdgriffith$elm_ui$Internal$Model$Text = function (a) {
 	return {$: 'Text', a: a};
 };
@@ -14819,20 +14872,6 @@ var $mdgriffith$elm_ui$Element$createNearby = F2(
 var $mdgriffith$elm_ui$Element$behindContent = function (element) {
 	return A2($mdgriffith$elm_ui$Element$createNearby, $mdgriffith$elm_ui$Internal$Model$Behind, element);
 };
-var $mdgriffith$elm_ui$Internal$Model$MoveY = function (a) {
-	return {$: 'MoveY', a: a};
-};
-var $mdgriffith$elm_ui$Internal$Model$TransformComponent = F2(
-	function (a, b) {
-		return {$: 'TransformComponent', a: a, b: b};
-	});
-var $mdgriffith$elm_ui$Internal$Flag$moveY = $mdgriffith$elm_ui$Internal$Flag$flag(26);
-var $mdgriffith$elm_ui$Element$moveUp = function (y) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$TransformComponent,
-		$mdgriffith$elm_ui$Internal$Flag$moveY,
-		$mdgriffith$elm_ui$Internal$Model$MoveY(-y));
-};
 var $mdgriffith$elm_ui$Element$Input$calcMoveToCompensateForPadding = function (attrs) {
 	var gatherSpacing = F2(
 		function (attr, found) {
@@ -14882,11 +14921,12 @@ var $mdgriffith$elm_ui$Element$Border$color = function (clr) {
 			'border-color',
 			clr));
 };
-var $mdgriffith$elm_ui$Element$rgb = F3(
-	function (r, g, b) {
-		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, r, g, b, 1);
-	});
 var $mdgriffith$elm_ui$Element$Input$darkGrey = A3($mdgriffith$elm_ui$Element$rgb, 186 / 255, 189 / 255, 182 / 255);
+var $mdgriffith$elm_ui$Internal$Model$PaddingStyle = F5(
+	function (a, b, c, d, e) {
+		return {$: 'PaddingStyle', a: a, b: b, c: c, d: d, e: e};
+	});
+var $mdgriffith$elm_ui$Internal$Flag$padding = $mdgriffith$elm_ui$Internal$Flag$flag(2);
 var $mdgriffith$elm_ui$Element$paddingXY = F2(
 	function (x, y) {
 		return _Utils_eq(x, y) ? A2(
@@ -15086,6 +15126,35 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			$elm$json$Json$Decode$map,
 			$elm$html$Html$Events$alwaysStop,
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
+var $mdgriffith$elm_ui$Internal$Model$paddingName = F4(
+	function (top, right, bottom, left) {
+		return 'pad-' + ($elm$core$String$fromInt(top) + ('-' + ($elm$core$String$fromInt(right) + ('-' + ($elm$core$String$fromInt(bottom) + ('-' + $elm$core$String$fromInt(left)))))));
+	});
+var $mdgriffith$elm_ui$Element$paddingEach = function (_v0) {
+	var top = _v0.top;
+	var right = _v0.right;
+	var bottom = _v0.bottom;
+	var left = _v0.left;
+	return (_Utils_eq(top, right) && (_Utils_eq(top, bottom) && _Utils_eq(top, left))) ? A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$padding,
+		A5(
+			$mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+			'p-' + $elm$core$String$fromInt(top),
+			top,
+			top,
+			top,
+			top)) : A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$padding,
+		A5(
+			$mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+			A4($mdgriffith$elm_ui$Internal$Model$paddingName, top, right, bottom, left),
+			top,
+			right,
+			bottom,
+			left));
 };
 var $mdgriffith$elm_ui$Element$htmlAttribute = $mdgriffith$elm_ui$Internal$Model$Attr;
 var $mdgriffith$elm_ui$Element$Input$isFill = function (len) {
@@ -15690,32 +15759,115 @@ var $mdgriffith$elm_ui$Element$Input$text = $mdgriffith$elm_ui$Element$Input$tex
 		spellchecked: false,
 		type_: $mdgriffith$elm_ui$Element$Input$TextInputNode('text')
 	});
-var $author$project$Main$ccRatioInput = function (model) {
+var $author$project$Widget$TextField$toElement = function (_v0) {
+	var options = _v0.a;
+	var msg = _v0.b;
+	var text = _v0.c;
+	var label = _v0.d;
+	var baseLabelOptions = _List_fromArray(
+		[
+			$mdgriffith$elm_ui$Element$moveDown(8)
+		]);
+	var labelOptions = function () {
+		var _v1 = options.labelWidth;
+		if (_v1.$ === 'Unbounded') {
+			return baseLabelOptions;
+		} else {
+			var k = _v1.a;
+			return A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Element$width(
+					$mdgriffith$elm_ui$Element$px(k)),
+				baseLabelOptions);
+		}
+	}();
 	return A2(
 		$mdgriffith$elm_ui$Element$Input$text,
 		_List_fromArray(
 			[
+				$mdgriffith$elm_ui$Element$moveUp(3),
 				$mdgriffith$elm_ui$Element$width(
-				$mdgriffith$elm_ui$Element$px(50)),
+				$mdgriffith$elm_ui$Element$px(options.width)),
 				$mdgriffith$elm_ui$Element$height(
-				$mdgriffith$elm_ui$Element$px(30)),
-				$mdgriffith$elm_ui$Element$paddingEach(
-				{bottom: 0, left: 4, right: 0, top: 8})
+				$mdgriffith$elm_ui$Element$px(options.height)),
+				$mdgriffith$elm_ui$Element$Font$size(14)
 			]),
 		{
 			label: A2(
 				$mdgriffith$elm_ui$Element$Input$labelLeft,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$centerY,
-						$mdgriffith$elm_ui$Element$width(
-						$mdgriffith$elm_ui$Element$px(70))
-					]),
-				$mdgriffith$elm_ui$Element$text('CC Ratio ')),
-			onChange: $author$project$Main$AcceptCCRatio,
+				labelOptions,
+				$mdgriffith$elm_ui$Element$text(label)),
+			onChange: msg,
 			placeholder: $elm$core$Maybe$Nothing,
-			text: model.ccRatioString
+			text: text
 		});
+};
+var $author$project$Widget$TextField$withHeight = F2(
+	function (height, _v0) {
+		var options = _v0.a;
+		var msg = _v0.b;
+		var text = _v0.c;
+		var label = _v0.d;
+		return A4(
+			$author$project$Widget$TextField$TextField,
+			_Utils_update(
+				options,
+				{height: height}),
+			msg,
+			text,
+			label);
+	});
+var $author$project$Widget$TextField$Bounded = function (a) {
+	return {$: 'Bounded', a: a};
+};
+var $author$project$Widget$TextField$withLabelWidth = F2(
+	function (labelWidth, _v0) {
+		var options = _v0.a;
+		var msg = _v0.b;
+		var text = _v0.c;
+		var label = _v0.d;
+		return A4(
+			$author$project$Widget$TextField$TextField,
+			_Utils_update(
+				options,
+				{
+					labelWidth: $author$project$Widget$TextField$Bounded(labelWidth)
+				}),
+			msg,
+			text,
+			label);
+	});
+var $author$project$Widget$TextField$withWidth = F2(
+	function (width, _v0) {
+		var options = _v0.a;
+		var msg = _v0.b;
+		var text = _v0.c;
+		var label = _v0.d;
+		return A4(
+			$author$project$Widget$TextField$TextField,
+			_Utils_update(
+				options,
+				{width: width}),
+			msg,
+			text,
+			label);
+	});
+var $author$project$Main$dashboardInput = F3(
+	function (msg, text, label) {
+		return $author$project$Widget$TextField$toElement(
+			A2(
+				$author$project$Widget$TextField$withLabelWidth,
+				70,
+				A2(
+					$author$project$Widget$TextField$withWidth,
+					50,
+					A2(
+						$author$project$Widget$TextField$withHeight,
+						30,
+						A3($author$project$Widget$TextField$make, msg, text, label)))));
+	});
+var $author$project$Main$ccRatioInput = function (model) {
+	return A3($author$project$Main$dashboardInput, $author$project$Main$AcceptCCRatio, model.ccRatioString, 'CC Ratio');
 };
 var $mdgriffith$elm_ui$Element$Font$family = function (families) {
 	return A2(
@@ -15730,12 +15882,6 @@ var $mdgriffith$elm_ui$Element$rgb255 = F3(
 	function (red, green, blue) {
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, 1);
 	});
-var $mdgriffith$elm_ui$Element$Font$size = function (i) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$fontSize,
-		$mdgriffith$elm_ui$Internal$Model$FontSize(i));
-};
 var $mdgriffith$elm_ui$Element$Font$typeface = $mdgriffith$elm_ui$Internal$Model$Typeface;
 var $author$project$Style$controlPanel = _List_fromArray(
 	[
@@ -15758,91 +15904,19 @@ var $author$project$Main$AcceptCycleLength = function (a) {
 	return {$: 'AcceptCycleLength', a: a};
 };
 var $author$project$Main$cycleLengthInput = function (model) {
-	return A2(
-		$mdgriffith$elm_ui$Element$Input$text,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$width(
-				$mdgriffith$elm_ui$Element$px(50)),
-				$mdgriffith$elm_ui$Element$height(
-				$mdgriffith$elm_ui$Element$px(30)),
-				$mdgriffith$elm_ui$Element$paddingEach(
-				{bottom: 0, left: 4, right: 0, top: 8})
-			]),
-		{
-			label: A2(
-				$mdgriffith$elm_ui$Element$Input$labelLeft,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$centerY,
-						$mdgriffith$elm_ui$Element$width(
-						$mdgriffith$elm_ui$Element$px(70))
-					]),
-				$mdgriffith$elm_ui$Element$text('Cycle ')),
-			onChange: $author$project$Main$AcceptCycleLength,
-			placeholder: $elm$core$Maybe$Nothing,
-			text: model.cycleLengthString
-		});
+	return A3($author$project$Main$dashboardInput, $author$project$Main$AcceptCycleLength, model.cycleLengthString, 'Cycle');
 };
 var $author$project$Main$AcceptRentString = function (a) {
 	return {$: 'AcceptRentString', a: a};
 };
 var $author$project$Main$rentInput = function (model) {
-	return A2(
-		$mdgriffith$elm_ui$Element$Input$text,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$width(
-				$mdgriffith$elm_ui$Element$px(50)),
-				$mdgriffith$elm_ui$Element$height(
-				$mdgriffith$elm_ui$Element$px(30)),
-				$mdgriffith$elm_ui$Element$paddingEach(
-				{bottom: 0, left: 4, right: 0, top: 8})
-			]),
-		{
-			label: A2(
-				$mdgriffith$elm_ui$Element$Input$labelLeft,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$centerY,
-						$mdgriffith$elm_ui$Element$width(
-						$mdgriffith$elm_ui$Element$px(70))
-					]),
-				$mdgriffith$elm_ui$Element$text('Rent ')),
-			onChange: $author$project$Main$AcceptRentString,
-			placeholder: $elm$core$Maybe$Nothing,
-			text: model.rentString
-		});
+	return A3($author$project$Main$dashboardInput, $author$project$Main$AcceptRentString, model.rentString, 'Rent');
 };
 var $author$project$Main$AcceptTickRate = function (a) {
 	return {$: 'AcceptTickRate', a: a};
 };
 var $author$project$Main$tickRateInput = function (model) {
-	return A2(
-		$mdgriffith$elm_ui$Element$Input$text,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$width(
-				$mdgriffith$elm_ui$Element$px(50)),
-				$mdgriffith$elm_ui$Element$height(
-				$mdgriffith$elm_ui$Element$px(30)),
-				$mdgriffith$elm_ui$Element$paddingEach(
-				{bottom: 0, left: 4, right: 0, top: 8})
-			]),
-		{
-			label: A2(
-				$mdgriffith$elm_ui$Element$Input$labelLeft,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$centerY,
-						$mdgriffith$elm_ui$Element$width(
-						$mdgriffith$elm_ui$Element$px(70))
-					]),
-				$mdgriffith$elm_ui$Element$text('Rate ')),
-			onChange: $author$project$Main$AcceptTickRate,
-			placeholder: $elm$core$Maybe$Nothing,
-			text: model.tickRateString
-		});
+	return A3($author$project$Main$dashboardInput, $author$project$Main$AcceptTickRate, model.tickRateString, 'Rate');
 };
 var $author$project$Main$controlPanel = function (model) {
 	return A2(
@@ -15854,6 +15928,13 @@ var $author$project$Main$controlPanel = function (model) {
 				$mdgriffith$elm_ui$Element$el,
 				_List_Nil,
 				$mdgriffith$elm_ui$Element$text('Control Panel')),
+				A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						A2($mdgriffith$elm_ui$Element$paddingXY, 0, 2)
+					]),
+				$mdgriffith$elm_ui$Element$text('')),
 				$author$project$Main$cycleLengthInput(model),
 				$author$project$Main$tickRateInput(model),
 				$author$project$Main$ccRatioInput(model),
@@ -16900,6 +16981,9 @@ var $author$project$Main$displayState = function (model) {
 					A2($author$project$Engine$render, model.configuration, model.state)))
 			]));
 };
+var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
+	return {$: 'AlignY', a: a};
+};
 var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
 var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
 var $mdgriffith$elm_ui$Internal$Model$Left = {$: 'Left'};
@@ -16907,6 +16991,8 @@ var $mdgriffith$elm_ui$Element$alignLeft = $mdgriffith$elm_ui$Internal$Model$Ali
 var $author$project$Main$AcceptFilter = function (a) {
 	return {$: 'AcceptFilter', a: a};
 };
+var $mdgriffith$elm_ui$Internal$Model$CenterY = {$: 'CenterY'};
+var $mdgriffith$elm_ui$Element$centerY = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$CenterY);
 var $author$project$Main$filterInput = function (model) {
 	return A2(
 		$mdgriffith$elm_ui$Element$Input$text,
@@ -17643,12 +17729,6 @@ var $author$project$Main$lineGraphAttributes = {
 			$jxxcarlson$elm_graph$SimpleGraph$YTickmarks(0),
 			$jxxcarlson$elm_graph$SimpleGraph$DeltaX(3)
 		])
-};
-var $mdgriffith$elm_ui$Element$moveDown = function (y) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$TransformComponent,
-		$mdgriffith$elm_ui$Internal$Flag$moveY,
-		$mdgriffith$elm_ui$Internal$Model$MoveY(y));
 };
 var $author$project$Main$graphDisplay = function (model) {
 	return A2(
