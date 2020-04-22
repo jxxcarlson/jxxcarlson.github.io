@@ -5347,14 +5347,14 @@ var $author$project$Config$default = {
 var $author$project$Config$config1 = _Utils_update(
 	$author$project$Config$default,
 	{
-		initialFiatBalance: $author$project$Unit$Money$create(20),
-		name: 'Initial Fiat Balance 20'
+		initialFiatBalance: $author$project$Unit$Money$create(8),
+		name: 'Initial Fiat Balance 8'
 	});
 var $author$project$Config$config2 = _Utils_update(
 	$author$project$Config$default,
 	{
-		initialCCBalance: $author$project$Unit$Money$create(20),
-		name: 'Initial CC Balance 20'
+		initialCCBalance: $author$project$Unit$Money$create(8),
+		name: 'Initial CC Balance 8'
 	});
 var $author$project$Config$configurations = _List_fromArray(
 	[$author$project$Config$default, $author$project$Config$config1, $author$project$Config$config2]);
@@ -6209,7 +6209,12 @@ var $author$project$State$orderSupplies = F2(
 			$author$project$State$stockOnHand(state),
 			config.stockOnHandThreshold);
 		if (!_v0) {
-			return state;
+			return $author$project$State$State(
+				_Utils_update(
+					data,
+					{
+						businessOrder: $author$project$Unit$Unit$create(0)
+					}));
 		} else {
 			var ccAvailable = A2(
 				$author$project$Unit$Money$min,
@@ -6235,7 +6240,7 @@ var $author$project$State$orderSupplies = F2(
 				var totalOrder = A2($author$project$Unit$Money$add, ccOrderAmount, fiatOrderAmount);
 				return A2($author$project$Unit$Unit$itemsFor, config.unitCost, totalOrder);
 			}();
-			var message_ = 'ORDER ' + ($author$project$Unit$Money$stringVal(fiatOrderAmount) + (', ' + $author$project$Unit$Money$stringVal(ccOrderAmount)));
+			var message_ = 'ORDER ' + ($author$project$Unit$Money$stringVal(fiatOrderAmount) + (', ' + ($author$project$Unit$Money$stringVal(ccOrderAmount) + (', ' + $author$project$Unit$Unit$stringVal(actualOrderAmount)))));
 			var message = _Utils_Tuple3(
 				$author$project$State$timeOf(state),
 				message_,
