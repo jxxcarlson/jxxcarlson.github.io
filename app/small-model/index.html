@@ -5653,7 +5653,7 @@ var $author$project$Main$initialModel = F4(
 			bc: A2($author$project$World$init, initialState, future)
 		};
 	});
-var $author$project$Main$initialParameters = {bJ: '0', bL: '0', bQ: '30', bX: '0', b$: '20', b3: '0', b9: '5', cl: '1234', cq: '10'};
+var $author$project$Main$initialParameters = {bJ: '0', bL: '0', bQ: '30', bX: '0', b$: '20', b3: '10', b9: '5', cl: '1234', cq: '10'};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $Janiczek$cmd_extra$Cmd$Extra$withNoCmd = function (model) {
@@ -14357,7 +14357,7 @@ var $author$project$Main$viewHistory = function (states) {
 			function (k, r) {
 				return A2(
 					$author$project$Main$showIf,
-					true,
+					(k !== 1) && (k !== 4),
 					A2(
 						$mdgriffith$elm_ui$Element$row,
 						_List_fromArray(
