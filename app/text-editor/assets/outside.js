@@ -20,6 +20,32 @@ app.ports.infoForOutside.subscribe(msg => {
 
              break;
 
+        case "AskForFileList":
+           var fileList = filesInLocalStorage()
+
+           console.log("Will send file list", fileList)
+
+           app.ports.infoForElm.send({tag: "GotFileList", data:  fileList})
+
+           break;
+
+        case "AskForFile":
+            var fileName = JSON.stringify(msg.data)
+            console.log("AskForFile", fileName)
+            var fileContents = getFileFromLocalStorage(fileName)
+            app.ports.infoForElm.send({tag: "GotFileContents", data: fileContents})
+
+           break;
+
+        case "DeleteFileFromLocalStorage":
+
+            console.log("DeleteFileFromLocalStorage: " + msg.data)
+            localStorage.removeItem("file:" + msg.data);
+            var fileList = filesInLocalStorage()
+            app.ports.infoForElm.send({tag: "GotFileList", data:  fileList})
+
+           break;
+
         case "WriteToClipboard":
             console.log("!JS!  WriteToClipboard", JSON.stringify(msg.data))
 
@@ -31,6 +57,16 @@ app.ports.infoForOutside.subscribe(msg => {
 
 
              break;
+
+          case "WriteFile":
+              console.log("!JS! WriteFile") ;
+
+               var fileName = msg.data.fileName
+               var fileContents = msg.data.fileContents
+
+               localStorage.setItem(fileName, fileContents);
+
+               break;
 
          case "Highlight":
 
@@ -55,6 +91,22 @@ app.ports.infoForOutside.subscribe(msg => {
 
            break;
 
+    }
+
+    function filesInLocalStorage() {
+      var fileList = []
+      for (var key in localStorage){
+        if (key.indexOf("file:") == 0)  {
+             fileList.push(key.replace("file:", "").replace(/\"/g, ""))
+          }
+      }
+      return fileList
+    }
+
+    function getFileFromLocalStorage(fileName) {
+        var fileName_ = ('file:' + fileName).replace(/\"/g, "")
+        console.log("fileName_", fileName_)
+        return localStorage.getItem(fileName_);
     }
 
     function updateClipboard(newClip) {
