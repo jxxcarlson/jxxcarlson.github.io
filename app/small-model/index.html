@@ -12715,27 +12715,27 @@ var $author$project$Main$EnterLowOrder = function (a) {
 var $author$project$Main$EnterThreshold = function (a) {
 	return {$: 'EnterThreshold', a: a};
 };
-var $jxxcarlson$elm_widget$Widget$TextField$LabelAbove = {$: 'LabelAbove'};
-var $jxxcarlson$elm_widget$Widget$TextField$TextField = F4(
+var $author$project$Widget$TextField$LabelAbove = {$: 'LabelAbove'};
+var $author$project$Widget$TextField$TextField = F4(
 	function (a, b, c, d) {
 		return {$: 'TextField', a: a, b: b, c: c, d: d};
 	});
-var $jxxcarlson$elm_widget$Widget$TextField$LabelLeft = {$: 'LabelLeft'};
-var $jxxcarlson$elm_widget$Widget$TextField$Primary = {$: 'Primary'};
-var $jxxcarlson$elm_widget$Widget$TextField$Unbounded = {$: 'Unbounded'};
+var $author$project$Widget$TextField$LabelLeft = {$: 'LabelLeft'};
+var $author$project$Widget$TextField$Primary = {$: 'Primary'};
+var $author$project$Widget$TextField$Unbounded = {$: 'Unbounded'};
 var $mdgriffith$elm_ui$Element$rgb = F3(
 	function (r, g, b) {
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, r, g, b, 1);
 	});
-var $jxxcarlson$elm_widget$Widget$Color$gray = function (g) {
+var $author$project$Widget$Color$gray = function (g) {
 	return A3($mdgriffith$elm_ui$Element$rgb, g, g, g);
 };
-var $jxxcarlson$elm_widget$Widget$Color$black = $jxxcarlson$elm_widget$Widget$Color$gray(0);
-var $jxxcarlson$elm_widget$Widget$Color$white = $jxxcarlson$elm_widget$Widget$Color$gray(0.9);
-var $jxxcarlson$elm_widget$Widget$TextField$defaultOptions = {backgroundColor: $jxxcarlson$elm_widget$Widget$Color$white, fontColor: $jxxcarlson$elm_widget$Widget$Color$black, height: 40, labelPosition: $jxxcarlson$elm_widget$Widget$TextField$LabelLeft, labelWidth: $jxxcarlson$elm_widget$Widget$TextField$Unbounded, role: $jxxcarlson$elm_widget$Widget$TextField$Primary, width: 100};
-var $jxxcarlson$elm_widget$Widget$TextField$make = F3(
+var $author$project$Widget$Color$black = $author$project$Widget$Color$gray(0);
+var $author$project$Widget$Color$white = $author$project$Widget$Color$gray(0.9);
+var $author$project$Widget$TextField$defaultOptions = {backgroundColor: $author$project$Widget$Color$white, fontColor: $author$project$Widget$Color$black, height: 40, labelPosition: $author$project$Widget$TextField$LabelLeft, labelWidth: $author$project$Widget$TextField$Unbounded, role: $author$project$Widget$TextField$Primary, title: '', width: 100};
+var $author$project$Widget$TextField$make = F3(
 	function (msg, text, label) {
-		return A4($jxxcarlson$elm_widget$Widget$TextField$TextField, $jxxcarlson$elm_widget$Widget$TextField$defaultOptions, msg, text, label);
+		return A4($author$project$Widget$TextField$TextField, $author$project$Widget$TextField$defaultOptions, msg, text, label);
 	});
 var $mdgriffith$elm_ui$Element$Input$TextInputNode = function (a) {
 	return {$: 'TextInputNode', a: a};
@@ -13655,8 +13655,12 @@ var $mdgriffith$elm_ui$Element$Input$OnLeft = {$: 'OnLeft'};
 var $mdgriffith$elm_ui$Element$Input$labelLeft = $mdgriffith$elm_ui$Element$Input$Label($mdgriffith$elm_ui$Element$Input$OnLeft);
 var $mdgriffith$elm_ui$Element$Input$OnRight = {$: 'OnRight'};
 var $mdgriffith$elm_ui$Element$Input$labelRight = $mdgriffith$elm_ui$Element$Input$Label($mdgriffith$elm_ui$Element$Input$OnRight);
-var $jxxcarlson$elm_widget$Widget$TextField$label_ = F3(
-	function (labelPosition, labelOptions, labelText) {
+var $author$project$Widget$TextField$label_ = F4(
+	function (labelPosition, labelOptions, labelText, title) {
+		var titleAttr = $mdgriffith$elm_ui$Element$htmlAttribute(
+			A2($elm$html$Html$Attributes$attribute, 'title', title));
+		var cursorAttr = $mdgriffith$elm_ui$Element$htmlAttribute(
+			A2($elm$html$Html$Attributes$attribute, 'cursor', 'default'));
 		switch (labelPosition.$) {
 			case 'LabelLeft':
 				return A2(
@@ -13671,7 +13675,9 @@ var $jxxcarlson$elm_widget$Widget$TextField$label_ = F3(
 						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
 							[
-								$mdgriffith$elm_ui$Element$moveUp(8)
+								$mdgriffith$elm_ui$Element$moveUp(8),
+								titleAttr,
+								cursorAttr
 							]),
 						$mdgriffith$elm_ui$Element$text(labelText)));
 			case 'LabelRight':
@@ -13698,11 +13704,12 @@ var $mdgriffith$elm_ui$Element$Input$text = $mdgriffith$elm_ui$Element$Input$tex
 		spellchecked: false,
 		type_: $mdgriffith$elm_ui$Element$Input$TextInputNode('text')
 	});
-var $jxxcarlson$elm_widget$Widget$TextField$toElement = function (_v0) {
+var $author$project$Widget$TextField$toElement = function (_v0) {
 	var options = _v0.a;
 	var msg = _v0.b;
 	var text = _v0.c;
 	var labelText = _v0.d;
+	var title = options.title;
 	var baseLabelOptions = _List_fromArray(
 		[
 			$mdgriffith$elm_ui$Element$moveDown(8)
@@ -13736,7 +13743,7 @@ var $jxxcarlson$elm_widget$Widget$TextField$toElement = function (_v0) {
 					$mdgriffith$elm_ui$Element$Font$size(14)
 				]),
 			{
-				label: A3($jxxcarlson$elm_widget$Widget$TextField$label_, options.labelPosition, labelOptions, labelText),
+				label: A4($author$project$Widget$TextField$label_, options.labelPosition, labelOptions, labelText, title),
 				onChange: msg,
 				placeholder: $elm$core$Maybe$Nothing,
 				show: false,
@@ -13757,21 +13764,21 @@ var $jxxcarlson$elm_widget$Widget$TextField$toElement = function (_v0) {
 					$mdgriffith$elm_ui$Element$Font$size(14)
 				]),
 			{
-				label: A3($jxxcarlson$elm_widget$Widget$TextField$label_, options.labelPosition, labelOptions, labelText),
+				label: A4($author$project$Widget$TextField$label_, options.labelPosition, labelOptions, labelText, title),
 				onChange: msg,
 				placeholder: $elm$core$Maybe$Nothing,
 				text: text
 			});
 	}
 };
-var $jxxcarlson$elm_widget$Widget$TextField$withHeight = F2(
+var $author$project$Widget$TextField$withHeight = F2(
 	function (height, _v0) {
 		var options = _v0.a;
 		var msg = _v0.b;
 		var text = _v0.c;
 		var label = _v0.d;
 		return A4(
-			$jxxcarlson$elm_widget$Widget$TextField$TextField,
+			$author$project$Widget$TextField$TextField,
 			_Utils_update(
 				options,
 				{height: height}),
@@ -13779,14 +13786,14 @@ var $jxxcarlson$elm_widget$Widget$TextField$withHeight = F2(
 			text,
 			label);
 	});
-var $jxxcarlson$elm_widget$Widget$TextField$withLabelPosition = F2(
+var $author$project$Widget$TextField$withLabelPosition = F2(
 	function (labelPosition, _v0) {
 		var options = _v0.a;
 		var msg = _v0.b;
 		var text = _v0.c;
 		var label = _v0.d;
 		return A4(
-			$jxxcarlson$elm_widget$Widget$TextField$TextField,
+			$author$project$Widget$TextField$TextField,
 			_Utils_update(
 				options,
 				{labelPosition: labelPosition}),
@@ -13794,16 +13801,34 @@ var $jxxcarlson$elm_widget$Widget$TextField$withLabelPosition = F2(
 			text,
 			label);
 	});
-var $author$project$Main$textField = F3(
-	function (msg, text, label) {
-		return $jxxcarlson$elm_widget$Widget$TextField$toElement(
+var $author$project$Widget$TextField$withTitle = F2(
+	function (title, _v0) {
+		var options = _v0.a;
+		var msg = _v0.b;
+		var text = _v0.c;
+		var label = _v0.d;
+		return A4(
+			$author$project$Widget$TextField$TextField,
+			_Utils_update(
+				options,
+				{title: title}),
+			msg,
+			text,
+			label);
+	});
+var $author$project$Main$textField = F4(
+	function (msg, text, label, title) {
+		return $author$project$Widget$TextField$toElement(
 			A2(
-				$jxxcarlson$elm_widget$Widget$TextField$withLabelPosition,
-				$jxxcarlson$elm_widget$Widget$TextField$LabelAbove,
+				$author$project$Widget$TextField$withTitle,
+				title,
 				A2(
-					$jxxcarlson$elm_widget$Widget$TextField$withHeight,
-					30,
-					A3($jxxcarlson$elm_widget$Widget$TextField$make, msg, text, label))));
+					$author$project$Widget$TextField$withLabelPosition,
+					$author$project$Widget$TextField$LabelAbove,
+					A2(
+						$author$project$Widget$TextField$withHeight,
+						30,
+						A3($author$project$Widget$TextField$make, msg, text, label)))));
 	});
 var $author$project$Style$whiteColor = A3($mdgriffith$elm_ui$Element$rgb255, 220, 220, 220);
 var $author$project$Main$parameters1 = function (model) {
@@ -13820,13 +13845,13 @@ var $author$project$Main$parameters1 = function (model) {
 			]),
 		_List_fromArray(
 			[
-				A3($author$project$Main$textField, $author$project$Main$EnterInitialFiatBalance, model.initialFiatBalanceAsString, 'Initial Fiat bal.'),
-				A3($author$project$Main$textField, $author$project$Main$EnterInitialStock, model.initialStockAsString, 'Initial Stock'),
-				A3($author$project$Main$textField, $author$project$Main$EnterCCEarnings, model.ccEarningsAsString, 'CC earned'),
-				A3($author$project$Main$textField, $author$project$Main$EnterCCRatio, model.ccRatioAsString, 'CC Ratio'),
-				A3($author$project$Main$textField, $author$project$Main$EnterLowOrder, model.lowOrderAsString, 'Low order'),
-				A3($author$project$Main$textField, $author$project$Main$EnterHighOrder, model.highOrderAsString, 'High order'),
-				A3($author$project$Main$textField, $author$project$Main$EnterThreshold, model.thresholdAsString, 'Order threshold')
+				A4($author$project$Main$textField, $author$project$Main$EnterInitialFiatBalance, model.initialFiatBalanceAsString, 'SetUp', 'You can test with the defaut values or can change them. After making changes, press SetUp'),
+				A4($author$project$Main$textField, $author$project$Main$EnterInitialStock, model.initialStockAsString, 'Initial Stock', ''),
+				A4($author$project$Main$textField, $author$project$Main$EnterCCEarnings, model.ccEarningsAsString, 'CC earned', 'Units Of Complementary Currency Earned'),
+				A4($author$project$Main$textField, $author$project$Main$EnterCCRatio, model.ccRatioAsString, 'CC Acc. SPL', 'Fraction Pf Complementary Currency Accepted By Supplier'),
+				A4($author$project$Main$textField, $author$project$Main$EnterLowOrder, model.lowOrderAsString, 'Min Order SPL', 'Minimum Order Asked to Supplier'),
+				A4($author$project$Main$textField, $author$project$Main$EnterHighOrder, model.highOrderAsString, 'Max Order SPL', 'Maximum Order Asked to Supplier'),
+				A4($author$project$Main$textField, $author$project$Main$EnterThreshold, model.thresholdAsString, 'Trigger SPL', 'Trigger Amount to Put Order to Supplier')
 			]));
 };
 var $author$project$Main$EnterCycleLength = function (a) {
@@ -13855,59 +13880,50 @@ var $author$project$Main$parameters2 = function (model) {
 			]),
 		_List_fromArray(
 			[
-				A3($author$project$Main$textField, $author$project$Main$EnterCycleLength, model.cycleLengthAsString, 'Cycle length'),
-				A3($author$project$Main$textField, $author$project$Main$EnterSeed, model.initialSeedAsString, 'Seed'),
-				A3($author$project$Main$textField, $author$project$Main$EnterDemandMean, model.demandMean, 'Demand mean'),
-				A3($author$project$Main$textField, $author$project$Main$EnterDemandSpread, model.demandSpread, 'Demand spread')
+				A4($author$project$Main$textField, $author$project$Main$EnterCycleLength, model.cycleLengthAsString, 'Cycle length', ''),
+				A4($author$project$Main$textField, $author$project$Main$EnterSeed, model.initialSeedAsString, 'Seed', ''),
+				A4($author$project$Main$textField, $author$project$Main$EnterDemandMean, model.demandMean, 'Demand mean', ''),
+				A4($author$project$Main$textField, $author$project$Main$EnterDemandSpread, model.demandSpread, 'Demand spread', '')
 			]));
 };
-var $jxxcarlson$elm_widget$Widget$Button$Bounded = function (a) {
+var $author$project$Widget$Button$Bounded = function (a) {
 	return {$: 'Bounded', a: a};
 };
 var $author$project$Main$Reset = {$: 'Reset'};
-var $jxxcarlson$elm_widget$Widget$Button$Button = F3(
+var $author$project$Widget$Button$Button = F3(
 	function (a, b, c) {
 		return {$: 'Button', a: a, b: b, c: c};
 	});
-var $jxxcarlson$elm_widget$Widget$Button$Center = {$: 'Center'};
-var $jxxcarlson$elm_widget$Widget$Button$Primary = {$: 'Primary'};
-var $jxxcarlson$elm_widget$Widget$Button$Square = {$: 'Square'};
-var $jxxcarlson$elm_widget$Widget$Button$Unbounded = {$: 'Unbounded'};
-var $jxxcarlson$elm_widget$Widget$Color$darkGray = $jxxcarlson$elm_widget$Widget$Color$gray(0.4);
-var $jxxcarlson$elm_widget$Widget$Color$darkRed = A3($mdgriffith$elm_ui$Element$rgb, 0.45, 0, 0);
-var $jxxcarlson$elm_widget$Widget$Button$defaultOptions = {
-	alignment: $jxxcarlson$elm_widget$Widget$Button$Center,
-	backgroundColor: $jxxcarlson$elm_widget$Widget$Color$darkGray,
-	borderColor: $jxxcarlson$elm_widget$Widget$Color$white,
-	fontColor: $jxxcarlson$elm_widget$Widget$Color$white,
-	height: $jxxcarlson$elm_widget$Widget$Button$Bounded(30),
-	role: $jxxcarlson$elm_widget$Widget$Button$Primary,
+var $author$project$Widget$Button$Center = {$: 'Center'};
+var $author$project$Widget$Button$Primary = {$: 'Primary'};
+var $author$project$Widget$Button$Square = {$: 'Square'};
+var $author$project$Widget$Button$Unbounded = {$: 'Unbounded'};
+var $author$project$Widget$Color$darkGray = $author$project$Widget$Color$gray(0.4);
+var $author$project$Widget$Color$darkRed = A3($mdgriffith$elm_ui$Element$rgb, 0.45, 0, 0);
+var $author$project$Widget$Button$defaultOptions = {
+	alignment: $author$project$Widget$Button$Center,
+	backgroundColor: $author$project$Widget$Color$darkGray,
+	borderColor: $author$project$Widget$Color$white,
+	fontColor: $author$project$Widget$Color$white,
+	height: $author$project$Widget$Button$Bounded(30),
+	icon: $elm$core$Maybe$Nothing,
+	role: $author$project$Widget$Button$Primary,
 	selected: false,
-	selectedBackgroundColor: $jxxcarlson$elm_widget$Widget$Color$darkRed,
-	selectedFontColor: $jxxcarlson$elm_widget$Widget$Color$white,
+	selectedBackgroundColor: $author$project$Widget$Color$darkRed,
+	selectedFontColor: $author$project$Widget$Color$white,
 	title: '',
-	variant: $jxxcarlson$elm_widget$Widget$Button$Square,
-	width: $jxxcarlson$elm_widget$Widget$Button$Unbounded
+	variant: $author$project$Widget$Button$Square,
+	width: $author$project$Widget$Button$Unbounded
 };
-var $jxxcarlson$elm_widget$Widget$Button$make = F2(
+var $author$project$Widget$Button$make = F2(
 	function (msg, label) {
-		return A3($jxxcarlson$elm_widget$Widget$Button$Button, $jxxcarlson$elm_widget$Widget$Button$defaultOptions, msg, label);
+		return A3($author$project$Widget$Button$Button, $author$project$Widget$Button$defaultOptions, msg, label);
 	});
-var $jxxcarlson$elm_widget$Widget$Button$buttonBackgroundColor = function (options) {
-	var _v0 = options.selected;
-	if (_v0) {
-		return options.selectedBackgroundColor;
-	} else {
-		return options.backgroundColor;
-	}
+var $author$project$Widget$Button$buttonBackgroundColor = function (options) {
+	return options.selected ? options.selectedBackgroundColor : options.backgroundColor;
 };
-var $jxxcarlson$elm_widget$Widget$Button$buttonFontColor = function (options) {
-	var _v0 = options.selected;
-	if (_v0) {
-		return options.selectedFontColor;
-	} else {
-		return options.fontColor;
-	}
+var $author$project$Widget$Button$buttonFontColor = function (options) {
+	return options.selected ? options.selectedFontColor : options.fontColor;
 };
 var $mdgriffith$elm_ui$Internal$Model$Active = {$: 'Active'};
 var $mdgriffith$elm_ui$Internal$Model$PseudoSelector = F2(
@@ -14038,7 +14054,7 @@ var $mdgriffith$elm_ui$Element$mouseDown = function (decs) {
 			$mdgriffith$elm_ui$Internal$Model$Active,
 			$mdgriffith$elm_ui$Internal$Model$unwrapDecorations(decs)));
 };
-var $jxxcarlson$elm_widget$Widget$Button$prependHeight = F2(
+var $author$project$Widget$Button$prependHeight = F2(
 	function (size, list) {
 		if (size.$ === 'Unbounded') {
 			return list;
@@ -14051,7 +14067,7 @@ var $jxxcarlson$elm_widget$Widget$Button$prependHeight = F2(
 				list);
 		}
 	});
-var $jxxcarlson$elm_widget$Widget$Button$prependWidth = F2(
+var $author$project$Widget$Button$prependWidth = F2(
 	function (size, list) {
 		if (size.$ === 'Unbounded') {
 			return list;
@@ -14066,7 +14082,7 @@ var $jxxcarlson$elm_widget$Widget$Button$prependWidth = F2(
 	});
 var $mdgriffith$elm_ui$Internal$Flag$borderStyle = $mdgriffith$elm_ui$Internal$Flag$flag(11);
 var $mdgriffith$elm_ui$Element$Border$solid = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$borderStyle, $mdgriffith$elm_ui$Internal$Style$classes.borderSolid);
-var $jxxcarlson$elm_widget$Widget$Button$variantStyle = F2(
+var $author$project$Widget$Button$variantStyle = F2(
 	function (variant, color) {
 		if (variant.$ === 'Square') {
 			return _List_Nil;
@@ -14078,21 +14094,21 @@ var $jxxcarlson$elm_widget$Widget$Button$variantStyle = F2(
 				]);
 		}
 	});
-var $jxxcarlson$elm_widget$Widget$Button$outlineButtonStyle = function (options) {
+var $author$project$Widget$Button$outlineButtonStyle = function (options) {
 	return A2(
-		$jxxcarlson$elm_widget$Widget$Button$prependHeight,
+		$author$project$Widget$Button$prependHeight,
 		options.height,
 		A2(
-			$jxxcarlson$elm_widget$Widget$Button$prependWidth,
+			$author$project$Widget$Button$prependWidth,
 			options.width,
 			_Utils_ap(
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Element$paddingXY, 0, 2),
 						$mdgriffith$elm_ui$Element$Background$color(
-						$jxxcarlson$elm_widget$Widget$Button$buttonBackgroundColor(options)),
+						$author$project$Widget$Button$buttonBackgroundColor(options)),
 						$mdgriffith$elm_ui$Element$Font$color(
-						$jxxcarlson$elm_widget$Widget$Button$buttonFontColor(options)),
+						$author$project$Widget$Button$buttonFontColor(options)),
 						$mdgriffith$elm_ui$Element$Font$size(14),
 						$mdgriffith$elm_ui$Element$htmlAttribute(
 						A2($elm$html$Html$Attributes$attribute, 'title', options.title)),
@@ -14107,23 +14123,23 @@ var $jxxcarlson$elm_widget$Widget$Button$outlineButtonStyle = function (options)
 								A3($mdgriffith$elm_ui$Element$rgb255, 40, 40, 200))
 							]))
 					]),
-				A2($jxxcarlson$elm_widget$Widget$Button$variantStyle, options.variant, options.fontColor))));
+				A2($author$project$Widget$Button$variantStyle, options.variant, options.fontColor))));
 };
-var $jxxcarlson$elm_widget$Widget$Button$primaryButtonStyle = function (options) {
+var $author$project$Widget$Button$primaryButtonStyle = function (options) {
 	return A2(
-		$jxxcarlson$elm_widget$Widget$Button$prependHeight,
+		$author$project$Widget$Button$prependHeight,
 		options.height,
 		A2(
-			$jxxcarlson$elm_widget$Widget$Button$prependWidth,
+			$author$project$Widget$Button$prependWidth,
 			options.width,
 			_Utils_ap(
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Element$paddingXY, 0, 2),
 						$mdgriffith$elm_ui$Element$Background$color(
-						$jxxcarlson$elm_widget$Widget$Button$buttonBackgroundColor(options)),
+						$author$project$Widget$Button$buttonBackgroundColor(options)),
 						$mdgriffith$elm_ui$Element$Font$color(
-						$jxxcarlson$elm_widget$Widget$Button$buttonFontColor(options)),
+						$author$project$Widget$Button$buttonFontColor(options)),
 						$mdgriffith$elm_ui$Element$Font$size(14),
 						$mdgriffith$elm_ui$Element$htmlAttribute(
 						A2($elm$html$Html$Attributes$attribute, 'title', options.title)),
@@ -14134,13 +14150,13 @@ var $jxxcarlson$elm_widget$Widget$Button$primaryButtonStyle = function (options)
 								A3($mdgriffith$elm_ui$Element$rgb255, 40, 40, 200))
 							]))
 					]),
-				A2($jxxcarlson$elm_widget$Widget$Button$variantStyle, options.variant, options.fontColor))));
+				A2($author$project$Widget$Button$variantStyle, options.variant, options.fontColor))));
 };
-var $jxxcarlson$elm_widget$Widget$Button$buttobuttonStyleDispatcher = function (role) {
+var $author$project$Widget$Button$buttonStyleDispatcher = function (role) {
 	if (role.$ === 'Primary') {
-		return $jxxcarlson$elm_widget$Widget$Button$primaryButtonStyle;
+		return $author$project$Widget$Button$primaryButtonStyle;
 	} else {
-		return $jxxcarlson$elm_widget$Widget$Button$outlineButtonStyle;
+		return $author$project$Widget$Button$outlineButtonStyle;
 	}
 };
 var $mdgriffith$elm_ui$Internal$Model$Button = {$: 'Button'};
@@ -14262,7 +14278,7 @@ var $mdgriffith$elm_ui$Element$Input$button = F2(
 	});
 var $mdgriffith$elm_ui$Internal$Model$Left = {$: 'Left'};
 var $mdgriffith$elm_ui$Element$alignLeft = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Left);
-var $jxxcarlson$elm_widget$Widget$Button$buttonAlignment = function (alignment) {
+var $author$project$Widget$Button$buttonAlignment = function (alignment) {
 	if (alignment.$ === 'Left') {
 		return $mdgriffith$elm_ui$Element$alignLeft;
 	} else {
@@ -14271,8 +14287,36 @@ var $jxxcarlson$elm_widget$Widget$Button$buttonAlignment = function (alignment) 
 };
 var $mdgriffith$elm_ui$Internal$Model$CenterY = {$: 'CenterY'};
 var $mdgriffith$elm_ui$Element$centerY = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$CenterY);
-var $jxxcarlson$elm_widget$Widget$Button$button_ = F4(
+var $mdgriffith$elm_ui$Element$html = $mdgriffith$elm_ui$Internal$Model$unstyled;
+var $author$project$Widget$Button$button_ = F4(
 	function (buttonStyleFunction, options, msg_, label) {
+		var labelElement = function () {
+			var _v0 = options.icon;
+			if (_v0.$ === 'Just') {
+				var svg = _v0.a;
+				return A2(
+					$mdgriffith$elm_ui$Element$row,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$paddingEach(
+									{bottom: 0, left: 0, right: 10, top: 0})
+								]),
+							$mdgriffith$elm_ui$Element$html(svg)),
+							$mdgriffith$elm_ui$Element$text(label)
+						]));
+			} else {
+				return A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[$mdgriffith$elm_ui$Element$centerX, $mdgriffith$elm_ui$Element$centerY]),
+					$mdgriffith$elm_ui$Element$text(label));
+			}
+		}();
 		return A2(
 			$mdgriffith$elm_ui$Element$row,
 			buttonStyleFunction(options),
@@ -14282,88 +14326,99 @@ var $jxxcarlson$elm_widget$Widget$Button$button_ = F4(
 					$mdgriffith$elm_ui$Element$Input$button,
 					_List_fromArray(
 						[
-							A2($mdgriffith$elm_ui$Element$paddingXY, 8, 4),
-							$jxxcarlson$elm_widget$Widget$Button$buttonAlignment(options.alignment)
+							$author$project$Widget$Button$buttonAlignment(options.alignment)
 						]),
 					{
-						label: A2(
-							$mdgriffith$elm_ui$Element$el,
-							_List_fromArray(
-								[$mdgriffith$elm_ui$Element$centerX, $mdgriffith$elm_ui$Element$centerY]),
-							$mdgriffith$elm_ui$Element$text(label)),
+						label: labelElement,
 						onPress: $elm$core$Maybe$Just(msg_)
 					})
 				]));
 	});
-var $jxxcarlson$elm_widget$Widget$Button$toElement = function (_v0) {
+var $author$project$Widget$Button$toElement = function (_v0) {
 	var options = _v0.a;
 	var msg = _v0.b;
 	var label = _v0.c;
 	return options.selected ? A4(
-		$jxxcarlson$elm_widget$Widget$Button$button_,
-		$jxxcarlson$elm_widget$Widget$Button$buttobuttonStyleDispatcher(options.role),
+		$author$project$Widget$Button$button_,
+		$author$project$Widget$Button$buttonStyleDispatcher(options.role),
 		options,
 		msg,
 		label) : A4(
-		$jxxcarlson$elm_widget$Widget$Button$button_,
-		$jxxcarlson$elm_widget$Widget$Button$buttobuttonStyleDispatcher(options.role),
+		$author$project$Widget$Button$button_,
+		$author$project$Widget$Button$buttonStyleDispatcher(options.role),
 		options,
 		msg,
 		label);
 };
-var $jxxcarlson$elm_widget$Widget$Button$withSelected = F2(
+var $author$project$Widget$Button$withSelected = F2(
 	function (flag, _v0) {
 		var options = _v0.a;
 		var msg = _v0.b;
 		var label = _v0.c;
 		return A3(
-			$jxxcarlson$elm_widget$Widget$Button$Button,
+			$author$project$Widget$Button$Button,
 			_Utils_update(
 				options,
 				{selected: flag}),
 			msg,
 			label);
 	});
-var $jxxcarlson$elm_widget$Widget$Button$withWidth = F2(
+var $author$project$Widget$Button$withWidth = F2(
 	function (size, _v0) {
 		var options = _v0.a;
 		var msg = _v0.b;
 		var label = _v0.c;
 		return A3(
-			$jxxcarlson$elm_widget$Widget$Button$Button,
+			$author$project$Widget$Button$Button,
 			_Utils_update(
 				options,
 				{width: size}),
 			msg,
 			label);
 	});
-var $author$project$Main$resetButton = $jxxcarlson$elm_widget$Widget$Button$toElement(
+var $author$project$Main$resetButton = $author$project$Widget$Button$toElement(
 	A2(
-		$jxxcarlson$elm_widget$Widget$Button$withSelected,
+		$author$project$Widget$Button$withSelected,
 		false,
 		A2(
-			$jxxcarlson$elm_widget$Widget$Button$withWidth,
-			$jxxcarlson$elm_widget$Widget$Button$Bounded(100),
-			A2($jxxcarlson$elm_widget$Widget$Button$make, $author$project$Main$Reset, 'Reset'))));
+			$author$project$Widget$Button$withWidth,
+			$author$project$Widget$Button$Bounded(100),
+			A2($author$project$Widget$Button$make, $author$project$Main$Reset, 'Reset'))));
 var $author$project$Main$Run = {$: 'Run'};
-var $author$project$Main$runButton = $jxxcarlson$elm_widget$Widget$Button$toElement(
+var $author$project$Main$runButton = $author$project$Widget$Button$toElement(
 	A2(
-		$jxxcarlson$elm_widget$Widget$Button$withSelected,
+		$author$project$Widget$Button$withSelected,
 		false,
 		A2(
-			$jxxcarlson$elm_widget$Widget$Button$withWidth,
-			$jxxcarlson$elm_widget$Widget$Button$Bounded(100),
-			A2($jxxcarlson$elm_widget$Widget$Button$make, $author$project$Main$Run, 'Run'))));
+			$author$project$Widget$Button$withWidth,
+			$author$project$Widget$Button$Bounded(100),
+			A2($author$project$Widget$Button$make, $author$project$Main$Run, 'Run'))));
 var $mdgriffith$elm_ui$Element$scrollbarX = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.scrollbarsX);
 var $author$project$Main$Step = {$: 'Step'};
-var $author$project$Main$stepButton = $jxxcarlson$elm_widget$Widget$Button$toElement(
+var $author$project$Widget$Button$withTitle = F2(
+	function (title, _v0) {
+		var options = _v0.a;
+		var msg = _v0.b;
+		var label = _v0.c;
+		return A3(
+			$author$project$Widget$Button$Button,
+			_Utils_update(
+				options,
+				{title: title}),
+			msg,
+			label);
+	});
+var $author$project$Main$stepButton = $author$project$Widget$Button$toElement(
 	A2(
-		$jxxcarlson$elm_widget$Widget$Button$withSelected,
-		false,
+		$author$project$Widget$Button$withTitle,
+		'Run one step of the simulation',
 		A2(
-			$jxxcarlson$elm_widget$Widget$Button$withWidth,
-			$jxxcarlson$elm_widget$Widget$Button$Bounded(100),
-			A2($jxxcarlson$elm_widget$Widget$Button$make, $author$project$Main$Step, 'Step'))));
+			$author$project$Widget$Button$withSelected,
+			false,
+			A2(
+				$author$project$Widget$Button$withWidth,
+				$author$project$Widget$Button$Bounded(100),
+				A2($author$project$Widget$Button$make, $author$project$Main$Step, 'Run Step')))));
 var $author$project$Main$addLabels = F2(
 	function (labels_, history_) {
 		return A3(
@@ -15002,14 +15057,14 @@ var $author$project$Main$mainColumn = function (model) {
 					]))
 			]));
 };
-var $jxxcarlson$elm_widget$Widget$Style$noFocus = {backgroundColor: $elm$core$Maybe$Nothing, borderColor: $elm$core$Maybe$Nothing, shadow: $elm$core$Maybe$Nothing};
+var $author$project$Widget$Style$noFocus = {backgroundColor: $elm$core$Maybe$Nothing, borderColor: $elm$core$Maybe$Nothing, shadow: $elm$core$Maybe$Nothing};
 var $author$project$Main$view = function (model) {
 	return A3(
 		$mdgriffith$elm_ui$Element$layoutWith,
 		{
 			options: _List_fromArray(
 				[
-					$mdgriffith$elm_ui$Element$focusStyle($jxxcarlson$elm_widget$Widget$Style$noFocus)
+					$mdgriffith$elm_ui$Element$focusStyle($author$project$Widget$Style$noFocus)
 				])
 		},
 		_List_fromArray(
