@@ -15198,6 +15198,15 @@ var $elm$html$Html$hr = _VirtualDom_node('hr');
 var $author$project$Markdown$Render$IDClicked = function (a) {
 	return {$: 'IDClicked', a: a};
 };
+var $author$project$Markdown$Render$DisplayMathMode = {$: 'DisplayMathMode'};
+var $elm$json$Json$Encode$bool = _Json_wrap;
+var $author$project$Markdown$Render$isDisplayMathMode = function (displayMode) {
+	if (displayMode.$ === 'InlineMathMode') {
+		return false;
+	} else {
+		return true;
+	}
+};
 var $elm$virtual_dom$VirtualDom$property = F2(
 	function (key, value) {
 		return A2(
@@ -15206,23 +15215,32 @@ var $elm$virtual_dom$VirtualDom$property = F2(
 			_VirtualDom_noJavaScriptOrHtmlUri(value));
 	});
 var $elm$html$Html$Attributes$property = $elm$virtual_dom$VirtualDom$property;
-var $author$project$Markdown$Render$mathText = function (content) {
-	return A3(
-		$elm$html$Html$node,
-		'math-text',
-		_List_fromArray(
-			[
-				$elm$html$Html$Attributes$class('mm-math'),
-				A2(
-				$elm$html$Html$Attributes$property,
-				'content',
-				$elm$json$Json$Encode$string(content))
-			]),
-		_List_Nil);
-};
+var $author$project$Markdown$Render$mathText = F2(
+	function (displayMode, content) {
+		return A3(
+			$elm$html$Html$node,
+			'math-text',
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$Attributes$property,
+					'display',
+					$elm$json$Json$Encode$bool(
+						$author$project$Markdown$Render$isDisplayMathMode(displayMode))),
+					A2(
+					$elm$html$Html$Attributes$property,
+					'content',
+					$elm$json$Json$Encode$string(
+						A3($elm$core$String$replace, '\\ \\', '\\\\', content)))
+				]),
+			_List_Nil);
+	});
 var $author$project$Markdown$Render$displayMathText = function (str) {
 	var str2 = $elm$core$String$trim(str);
-	return $author$project$Markdown$Render$mathText('$$\n' + (str2 + '\n$$'));
+	return A2(
+		$author$project$Markdown$Render$mathText,
+		$author$project$Markdown$Render$DisplayMathMode,
+		$elm$core$String$trim(str));
 };
 var $author$project$Markdown$Parse$stringFromId = function (_v0) {
 	var id = _v0.a;
@@ -22440,29 +22458,13 @@ var $author$project$Markdown$Render$htmlEntity_ = function (element) {
 	}
 };
 var $elm$html$Html$img = _VirtualDom_node('img');
-var $author$project$Markdown$Render$idAttrWithLabel = F2(
-	function (id, label) {
-		return $elm$html$Html$Attributes$id(
-			_Utils_ap(
-				$author$project$Markdown$Parse$stringFromId(id),
-				label));
-	});
+var $author$project$Markdown$Render$InlineMathMode = {$: 'InlineMathMode'};
 var $author$project$Markdown$Render$inlineMathText = F2(
 	function (id, str) {
-		return A3(
-			$elm$html$Html$Keyed$node,
-			'span',
-			_List_fromArray(
-				[
-					A2($author$project$Markdown$Render$idAttrWithLabel, id, 'm')
-				]),
-			_List_fromArray(
-				[
-					_Utils_Tuple2(
-					$author$project$Markdown$Parse$stringFromId(id) + 'm',
-					$author$project$Markdown$Render$mathText(
-						'$ ' + ($elm$core$String$trim(str) + ' $ ')))
-				]));
+		return A2(
+			$author$project$Markdown$Render$mathText,
+			$author$project$Markdown$Render$InlineMathMode,
+			$elm$core$String$trim(str));
 	});
 var $author$project$Markdown$Render$isPunctuation = function (str) {
 	return A2(
@@ -24976,19 +24978,7 @@ var $author$project$Demo$display = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Pure Elm Markdown Demo (Experimental)')
-					])),
-				A2(
-				$elm$html$Html$p,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'margin-left', '20px'),
-						A2($elm$html$Html$Attributes$style, 'margin-top', '0'),
-						A2($elm$html$Html$Attributes$style, 'font-size', '14pt')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('MathJax 3.')
+						$elm$html$Html$text('Pure Elm Math+Markdown Demo')
 					])),
 				$author$project$Demo$editor(model),
 				A2($author$project$Demo$renderedSource, rt, model),
