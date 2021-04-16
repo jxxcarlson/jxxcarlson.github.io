@@ -5333,10 +5333,9 @@ var $author$project$Render$String$tag = F2(
 var $author$project$Render$String$div = function (str) {
 	return A2($author$project$Render$String$tag, 'div', str);
 };
+var $author$project$Parser$Error$CArgsAndBody = {$: 'CArgsAndBody'};
+var $author$project$Parser$Error$CBody = {$: 'CBody'};
 var $author$project$Parser$Error$CElement = {$: 'CElement'};
-var $author$project$Parser$Error$CInline_ = function (a) {
-	return {$: 'CInline_', a: a};
-};
 var $author$project$Parser$Element$Element = F4(
 	function (a, b, c, d) {
 		return {$: 'Element', a: a, b: b, c: c, d: d};
@@ -5345,6 +5344,7 @@ var $author$project$Parser$Element$LX = F2(
 	function (a, b) {
 		return {$: 'LX', a: a, b: b};
 	});
+var $author$project$Parser$Error$CArgs = {$: 'CArgs'};
 var $elm$parser$Parser$Advanced$Bad = F2(
 	function (a, b) {
 		return {$: 'Bad', a: a, b: b};
@@ -5892,7 +5892,7 @@ var $author$project$Parser$Element$pipeSymbol = $elm$parser$Parser$Advanced$symb
 	A2($elm$parser$Parser$Advanced$Token, '|', $author$project$Parser$Error$ExpectingPipe));
 var $author$project$Parser$Element$elementArgs = A2(
 	$elm$parser$Parser$Advanced$inContext,
-	$author$project$Parser$Error$CInline_('inlineArgs'),
+	$author$project$Parser$Error$CArgs,
 	A3($author$project$Parser$Tool$between, $author$project$Parser$Element$pipeSymbol, $author$project$Parser$Element$innerElementArgs, $author$project$Parser$Element$pipeSymbol));
 var $author$project$Parser$Element$elementName = A2(
 	$author$project$Parser$Tool$first,
@@ -6164,7 +6164,7 @@ var $author$project$Parser$Element$argsAndBody = F2(
 	function (generation, lineNumber) {
 		return A2(
 			$elm$parser$Parser$Advanced$inContext,
-			$author$project$Parser$Error$CInline_('argsAndBody'),
+			$author$project$Parser$Error$CArgsAndBody,
 			$elm$parser$Parser$Advanced$oneOf(
 				_List_fromArray(
 					[
@@ -6209,7 +6209,7 @@ var $author$project$Parser$Element$elementBody = F2(
 	function (generation, lineNumber) {
 		return A2(
 			$elm$parser$Parser$Advanced$inContext,
-			$author$project$Parser$Error$CInline_('body'),
+			$author$project$Parser$Error$CBody,
 			$elm$parser$Parser$Advanced$lazy(
 				function (_v1) {
 					return A2(
@@ -15298,10 +15298,10 @@ var $author$project$Parser$Getters$getSource = function (expr) {
 			return sm;
 	}
 };
+var $author$project$Parser$SourceMap$dummy = {blockOffset: 0, generation: 0, length: 0, offset: 0};
 var $elm$core$String$fromChar = function (_char) {
 	return A2($elm$core$String$cons, _char, '');
 };
-var $author$project$Parser$SourceMap$dummy = {blockOffset: 0, generation: 0, length: 0, offset: 0};
 var $author$project$Parser$RecoveryData$problemWithElement = {
 	deltaOffset: 1,
 	parseSubstitute: A4(
@@ -15364,15 +15364,12 @@ var $author$project$Parser$RecoveryData$get = F2(
 			},
 			$author$project$Parser$RecoveryData$get_(problem));
 	});
-var $author$project$Parser$Driver$makeNewText = F3(
-	function (tc_, errorColumn_, mRecoveryData) {
-		if (mRecoveryData.$ === 'Just') {
-			var rd = mRecoveryData.a;
-			return A2($elm$core$String$dropLeft, rd.textTruncation, tc_.text);
-		} else {
-			return A2($elm$core$String$dropLeft, errorColumn_, tc_.text);
-		}
-	});
+var $author$project$Parser$Driver$fakeLeftBracket = $elm$core$String$fromChar(
+	_Utils_chr('⁅'));
+var $author$project$Parser$Driver$fakePipeSymbol = $elm$core$String$fromChar(
+	_Utils_chr('ǀ'));
+var $author$project$Parser$Driver$fakeRightBracket = $elm$core$String$fromChar(
+	_Utils_chr('⁆'));
 var $author$project$Parser$Driver$newOffset = F3(
 	function (tc_, errorColumn_, mRecoveryData_) {
 		if (mRecoveryData_.$ === 'Just') {
@@ -15380,28 +15377,6 @@ var $author$project$Parser$Driver$newOffset = F3(
 			return tc_.offset + rd.deltaOffset;
 		} else {
 			return tc_.offset + errorColumn_;
-		}
-	});
-var $author$project$Parser$Driver$newParsed = F3(
-	function (tc_, lxError_, mRecoveryData) {
-		if (mRecoveryData.$ === 'Just') {
-			var rd = mRecoveryData.a;
-			return A2($elm$core$List$cons, rd.parseSubstitute, tc_.parsed);
-		} else {
-			return A2($elm$core$List$cons, lxError_, tc_.parsed);
-		}
-	});
-var $author$project$Parser$Driver$newStack = F3(
-	function (tc_, errorText_, mRecoveryData) {
-		if (mRecoveryData.$ === 'Just') {
-			return _Utils_eq(
-				$elm$core$List$head(tc_.stack),
-				$elm$core$Maybe$Just('highlight')) ? tc_.stack : A2($elm$core$List$cons, 'highlight', tc_.stack);
-		} else {
-			return A2(
-				$elm$core$List$cons,
-				errorText_,
-				A2($elm$core$List$cons, 'highlight', tc_.stack));
 		}
 	});
 var $author$project$Parser$Driver$parse__ = function (str) {
@@ -15432,6 +15407,179 @@ var $elm_community$list_extra$List$Extra$setIf = F3(
 			predicate,
 			$elm$core$Basics$always(replacement),
 			list);
+	});
+var $author$project$Parser$Driver$handlePipeError = F4(
+	function (tc_, mFirstError, errorColumn, mRecoveryData) {
+		var textLines = A2(
+			$elm$core$Debug$log,
+			'(pipe) handle TXT LINES',
+			$elm$core$String$lines(tc_.text));
+		var errorRow = A2(
+			$elm$core$Maybe$withDefault,
+			0,
+			A2(
+				$elm$core$Maybe$map,
+				function ($) {
+					return $.row;
+				},
+				mFirstError));
+		var errorLines = A2(
+			$elm$core$Debug$log,
+			'handle ERR LINES',
+			A2($elm$core$List$take, errorRow - 1, textLines));
+		var badText = A2(
+			$elm$core$Debug$log,
+			'BAD TEXT',
+			function () {
+				var _v0 = $elm$core$List$head(textLines);
+				if (_v0.$ === 'Nothing') {
+					return 'Oops, couldn\'t find your error text';
+				} else {
+					var str = _v0.a;
+					return str;
+				}
+			}());
+		var correctedText = function (s) {
+			return s + (' ?? ' + $author$project$Parser$Driver$fakeRightBracket);
+		}(
+			A3(
+				$elm$core$String$replace,
+				'|',
+				$author$project$Parser$Driver$fakePipeSymbol,
+				A3($elm$core$String$replace, '[', $author$project$Parser$Driver$fakeLeftBracket, badText)));
+		var replacementText = '[highlightRGB |255, 130, 130| missing trailing pipe symbol in] [highlightRGB |186, 205, 255| ' + (correctedText + ' ]');
+		var newTextLines = $elm$core$List$reverse(
+			A3(
+				$elm_community$list_extra$List$Extra$setIf,
+				function (t) {
+					return _Utils_eq(t, badText);
+				},
+				replacementText,
+				textLines));
+		return {
+			block: '?? TO DO',
+			blockIndex: tc_.blockIndex,
+			count: tc_.count,
+			generation: tc_.generation,
+			offset: A3($author$project$Parser$Driver$newOffset, tc_, errorColumn, mRecoveryData),
+			parsed: $author$project$Parser$Driver$parse__(
+				A2($elm$core$String$join, '\n', errorLines)),
+			stack: _List_Nil,
+			text: A2(
+				$elm$core$String$join,
+				'\n',
+				$elm$core$List$reverse(newTextLines))
+		};
+	});
+var $author$project$Parser$Driver$handleRightBracketError = F4(
+	function (tc_, mFirstError, errorColumn, mRecoveryData) {
+		var textLines = A2(
+			$elm$core$Debug$log,
+			'handle TXT LINES',
+			$elm$core$String$lines(tc_.text));
+		var errorRow = A2(
+			$elm$core$Maybe$withDefault,
+			0,
+			A2(
+				$elm$core$Maybe$map,
+				function ($) {
+					return $.row;
+				},
+				mFirstError));
+		var errorLines = A2(
+			$elm$core$Debug$log,
+			'handle ERR LINES',
+			A2($elm$core$List$take, errorRow - 1, textLines));
+		var badText = A2(
+			$elm$core$Debug$log,
+			'BAD TEXT',
+			function () {
+				var _v0 = $elm$core$List$head(textLines);
+				if (_v0.$ === 'Nothing') {
+					return 'Oops, couldn\'t find your error text';
+				} else {
+					var str = _v0.a;
+					return str;
+				}
+			}());
+		var correctedText = A2(
+			$elm$core$Debug$log,
+			'RBE, corrected',
+			function (s) {
+				return s + (' ?? ' + $author$project$Parser$Driver$fakeRightBracket);
+			}(
+				A3(
+					$elm$core$String$replace,
+					'|',
+					$author$project$Parser$Driver$fakePipeSymbol,
+					A3($elm$core$String$replace, '[', $author$project$Parser$Driver$fakeLeftBracket, badText))));
+		var replacementText = '[highlightRGB |255, 130, 130| missing right bracket in] [highlightRGB |186, 205, 255| ' + (correctedText + ' ]');
+		var newTextLines = $elm$core$List$reverse(
+			A3(
+				$elm_community$list_extra$List$Extra$setIf,
+				function (t) {
+					return _Utils_eq(t, badText);
+				},
+				replacementText,
+				textLines));
+		return {
+			block: '?? TO DO',
+			blockIndex: tc_.blockIndex,
+			count: tc_.count,
+			generation: tc_.generation,
+			offset: A3($author$project$Parser$Driver$newOffset, tc_, errorColumn, mRecoveryData),
+			parsed: $author$project$Parser$Driver$parse__(
+				A2($elm$core$String$join, '\n', errorLines)),
+			stack: _List_Nil,
+			text: A2(
+				$elm$core$String$join,
+				'\n',
+				$elm$core$List$reverse(newTextLines))
+		};
+	});
+var $author$project$Parser$Driver$makeNewText = F3(
+	function (tc_, errorColumn_, mRecoveryData) {
+		if (mRecoveryData.$ === 'Just') {
+			var rd = mRecoveryData.a;
+			return A2($elm$core$String$dropLeft, rd.textTruncation, tc_.text);
+		} else {
+			return A2($elm$core$String$dropLeft, errorColumn_, tc_.text);
+		}
+	});
+var $author$project$Parser$Driver$newParsed = F3(
+	function (tc_, lxError_, mRecoveryData) {
+		if (mRecoveryData.$ === 'Just') {
+			var rd = mRecoveryData.a;
+			return A2($elm$core$List$cons, rd.parseSubstitute, tc_.parsed);
+		} else {
+			return A2($elm$core$List$cons, lxError_, tc_.parsed);
+		}
+	});
+var $author$project$Parser$Driver$newStack = F3(
+	function (tc_, errorText_, mRecoveryData) {
+		if (mRecoveryData.$ === 'Just') {
+			return _Utils_eq(
+				$elm$core$List$head(tc_.stack),
+				$elm$core$Maybe$Just('highlight')) ? tc_.stack : A2($elm$core$List$cons, 'highlight', tc_.stack);
+		} else {
+			return A2(
+				$elm$core$List$cons,
+				errorText_,
+				A2($elm$core$List$cons, 'highlight', tc_.stack));
+		}
+	});
+var $author$project$Parser$Driver$unhandledError = F6(
+	function (tc_, mFirstError, errorColumn, mRecoveryData, lxError, errorText) {
+		return {
+			block: '?? TO DO',
+			blockIndex: tc_.blockIndex,
+			count: tc_.count,
+			generation: tc_.generation,
+			offset: A3($author$project$Parser$Driver$newOffset, tc_, errorColumn, mRecoveryData),
+			parsed: A3($author$project$Parser$Driver$newParsed, tc_, lxError, mRecoveryData),
+			stack: A3($author$project$Parser$Driver$newStack, tc_, errorText, mRecoveryData),
+			text: A3($author$project$Parser$Driver$makeNewText, tc_, errorColumn, mRecoveryData)
+		};
 	});
 var $author$project$Parser$Driver$handleError = F2(
 	function (tc_, e) {
@@ -15467,74 +15615,13 @@ var $author$project$Parser$Driver$handleError = F2(
 			A2($author$project$Parser$Element$Text, errorText, $elm$core$Maybe$Nothing),
 			$elm$core$Maybe$Just(
 				{blockOffset: tc_.blockIndex, generation: tc_.generation, length: errorColumn, offset: tc_.offset + errorColumn}));
-		if (_Utils_eq(problem, $author$project$Parser$Error$ExpectingRightBracket)) {
-			var textLines = A2(
-				$elm$core$Debug$log,
-				'handle TXT LINES',
-				$elm$core$String$lines(tc_.text));
-			var errorRow = A2(
-				$elm$core$Maybe$withDefault,
-				0,
-				A2(
-					$elm$core$Maybe$map,
-					function ($) {
-						return $.row;
-					},
-					mFirstError));
-			var errorLines = A2(
-				$elm$core$Debug$log,
-				'handle ERR LINES',
-				A2($elm$core$List$take, errorRow - 1, textLines));
-			var badText = A2(
-				$elm$core$Debug$log,
-				'BAD TEXT',
-				function () {
-					var _v0 = $elm$core$List$head(textLines);
-					if (_v0.$ === 'Nothing') {
-						return 'Oops, couldn\'t find your error text';
-					} else {
-						var str = _v0.a;
-						return str;
-					}
-				}());
-			var correctedText = _Utils_ap(
-				$elm$core$String$fromChar(
-					_Utils_chr('⁅')),
-				A3($elm$core$String$replace, '[', '', badText));
-			var replacementText = '[highlightRGB |255, 130, 130| missing right bracket in] [highlightRGB |186, 205, 255| ' + (correctedText + ' ]');
-			var newTextLines = $elm$core$List$reverse(
-				A3(
-					$elm_community$list_extra$List$Extra$setIf,
-					function (t) {
-						return _Utils_eq(t, badText);
-					},
-					replacementText,
-					textLines));
-			return {
-				block: '?? TO DO',
-				blockIndex: tc_.blockIndex,
-				count: tc_.count,
-				generation: tc_.generation,
-				offset: A3($author$project$Parser$Driver$newOffset, tc_, errorColumn, mRecoveryData),
-				parsed: $author$project$Parser$Driver$parse__(
-					A2($elm$core$String$join, '\n', errorLines)),
-				stack: _List_Nil,
-				text: A2(
-					$elm$core$String$join,
-					'\n',
-					$elm$core$List$reverse(newTextLines))
-			};
-		} else {
-			return {
-				block: '?? TO DO',
-				blockIndex: tc_.blockIndex,
-				count: tc_.count,
-				generation: tc_.generation,
-				offset: A3($author$project$Parser$Driver$newOffset, tc_, errorColumn, mRecoveryData),
-				parsed: A3($author$project$Parser$Driver$newParsed, tc_, lxError, mRecoveryData),
-				stack: A3($author$project$Parser$Driver$newStack, tc_, errorText, mRecoveryData),
-				text: A3($author$project$Parser$Driver$makeNewText, tc_, errorColumn, mRecoveryData)
-			};
+		switch (problem.$) {
+			case 'ExpectingRightBracket':
+				return A4($author$project$Parser$Driver$handleRightBracketError, tc_, mFirstError, errorColumn, mRecoveryData);
+			case 'ExpectingPipe':
+				return A4($author$project$Parser$Driver$handlePipeError, tc_, mFirstError, errorColumn, mRecoveryData);
+			default:
+				return A6($author$project$Parser$Driver$unhandledError, tc_, mFirstError, errorColumn, mRecoveryData, lxError, errorText);
 		}
 	});
 var $author$project$Parser$Driver$incrementSourceMapOffset = F2(
