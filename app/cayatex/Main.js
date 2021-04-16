@@ -5312,7 +5312,7 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$RenderedMode = {$: 'RenderedMode'};
-var $author$project$Data$text = 'Pythagoras says that [math a^2 + b^2 = c^2].  \nThis is an [strong [italic extremely]] cool result. But just as cool is the below:\n[mathDisplay \\sum_1^\\infty 1/n = \\infty,]\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\n[theorem There are infinitely many primes [math p \\equiv 1 (4).]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\nTime for some code: [code col :: Int -> Matrix a -> \\[a\\]].\nDo you recognize the language (ha ha)?\n[italic [highlight And can we do something about the awkwardness of escaping brackets inside code elements?]]\n\nExample:  [highlightRGB |214, 93, 32| [fontRGB |169, 232, 245| What color is this?]]\n\n[strong Note:] We need to implement a macro facility so that users can abbreviate constructs like\nthe one in the previous example.\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n[strong Errors] Look what happens here: [ital One more beer, please!]\n';
+var $author$project$Data$text = '';
 var $author$project$Main$initialText = $author$project$Data$text;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
@@ -15106,6 +15106,223 @@ var $author$project$Parser$Getters$getSource = function (expr) {
 			return sm;
 	}
 };
+var $elm$core$String$fromChar = function (_char) {
+	return A2($elm$core$String$cons, _char, '');
+};
+var $author$project$Parser$SourceMap$dummy = {blockOffset: 0, generation: 0, length: 0, offset: 0};
+var $author$project$Parser$RecoveryData$problemWithElement = {
+	deltaOffset: 1,
+	parseSubstitute: A4(
+		$author$project$Parser$Element$Element,
+		'fontRGB',
+		_List_fromArray(
+			['255', '0', '0']),
+		A2(
+			$author$project$Parser$Element$Text,
+			$elm$core$String$fromChar(
+				_Utils_chr('⚠')) + (' unmatched $ in' + $elm$core$String$fromChar(
+				_Utils_chr('\u00A0'))),
+			$elm$core$Maybe$Nothing),
+		$elm$core$Maybe$Nothing),
+	problem: $author$project$Parser$Error$ExpectingRightBracket,
+	textTruncation: 1
+};
+var $author$project$Parser$RecoveryData$recoveryData = _List_fromArray(
+	[$author$project$Parser$RecoveryData$problemWithElement]);
+var $author$project$Parser$RecoveryData$get_ = function (problem) {
+	return $elm$core$List$head(
+		A2(
+			$elm$core$List$filter,
+			function (r) {
+				return _Utils_eq(r.problem, problem);
+			},
+			$author$project$Parser$RecoveryData$recoveryData));
+};
+var $author$project$Parser$RecoveryData$setSourceMap = F2(
+	function (sm, expr) {
+		switch (expr.$) {
+			case 'Text':
+				var e = expr.a;
+				return A2($author$project$Parser$Element$Text, e, sm);
+			case 'Element':
+				var name = expr.a;
+				var args = expr.b;
+				var body = expr.c;
+				return A4($author$project$Parser$Element$Element, name, args, body, sm);
+			default:
+				var list = expr.a;
+				return A2($author$project$Parser$Element$LX, list, sm);
+		}
+	});
+var $author$project$Parser$RecoveryData$get = F2(
+	function (tc_, problem) {
+		var oldSourceMap = $author$project$Parser$SourceMap$dummy;
+		var newSourceMap = $elm$core$Maybe$Just(
+			_Utils_update(
+				oldSourceMap,
+				{blockOffset: tc_.blockIndex}));
+		return A2(
+			$elm$core$Maybe$map,
+			function (r) {
+				return _Utils_update(
+					r,
+					{
+						parseSubstitute: A2($author$project$Parser$RecoveryData$setSourceMap, newSourceMap, r.parseSubstitute)
+					});
+			},
+			$author$project$Parser$RecoveryData$get_(problem));
+	});
+var $author$project$Parser$Driver$makeNewText = F3(
+	function (tc_, errorColumn_, mRecoveryData) {
+		if (mRecoveryData.$ === 'Just') {
+			var rd = mRecoveryData.a;
+			return A2($elm$core$String$dropLeft, rd.textTruncation, tc_.text);
+		} else {
+			return A2($elm$core$String$dropLeft, errorColumn_, tc_.text);
+		}
+	});
+var $author$project$Parser$Driver$newOffset = F3(
+	function (tc_, errorColumn_, mRecoveryData_) {
+		if (mRecoveryData_.$ === 'Just') {
+			var rd = mRecoveryData_.a;
+			return tc_.offset + rd.deltaOffset;
+		} else {
+			return tc_.offset + errorColumn_;
+		}
+	});
+var $author$project$Parser$Driver$newParsed = F3(
+	function (tc_, lxError_, mRecoveryData) {
+		if (mRecoveryData.$ === 'Just') {
+			var rd = mRecoveryData.a;
+			return A2($elm$core$List$cons, rd.parseSubstitute, tc_.parsed);
+		} else {
+			return A2($elm$core$List$cons, lxError_, tc_.parsed);
+		}
+	});
+var $author$project$Parser$Driver$newStack = F3(
+	function (tc_, errorText_, mRecoveryData) {
+		if (mRecoveryData.$ === 'Just') {
+			return _Utils_eq(
+				$elm$core$List$head(tc_.stack),
+				$elm$core$Maybe$Just('highlight')) ? tc_.stack : A2($elm$core$List$cons, 'highlight', tc_.stack);
+		} else {
+			return A2(
+				$elm$core$List$cons,
+				errorText_,
+				A2($elm$core$List$cons, 'highlight', tc_.stack));
+		}
+	});
+var $author$project$Parser$Driver$parse__ = function (str) {
+	var _v0 = A2(
+		$elm$parser$Parser$Advanced$run,
+		A2($author$project$Parser$Element$elementList, 0, 0),
+		str);
+	if (_v0.$ === 'Ok') {
+		var list = _v0.a;
+		return list;
+	} else {
+		return _List_Nil;
+	}
+};
+var $author$project$Parser$Driver$handleError = F2(
+	function (tc_, e) {
+		var mFirstError = A2(
+			$elm$core$Debug$log,
+			'FIRST ERR',
+			$elm$core$List$head(
+				A2($elm$core$Debug$log, 'handle ERR', e)));
+		var problem = A2(
+			$elm$core$Maybe$withDefault,
+			$author$project$Parser$Error$UnHandledError,
+			A2(
+				$elm$core$Maybe$map,
+				function ($) {
+					return $.problem;
+				},
+				mFirstError));
+		var mRecoveryData = A2($author$project$Parser$RecoveryData$get, tc_, problem);
+		var errorColumn = A2(
+			$elm$core$Maybe$withDefault,
+			0,
+			A2(
+				$elm$core$Maybe$map,
+				function ($) {
+					return $.col;
+				},
+				mFirstError));
+		var errorText = A2($elm$core$String$left, errorColumn, tc_.text);
+		var lxError = A4(
+			$author$project$Parser$Element$Element,
+			'Error',
+			_List_Nil,
+			A2($author$project$Parser$Element$Text, errorText, $elm$core$Maybe$Nothing),
+			$elm$core$Maybe$Just(
+				{blockOffset: tc_.blockIndex, generation: tc_.generation, length: errorColumn, offset: tc_.offset + errorColumn}));
+		if (_Utils_eq(problem, $author$project$Parser$Error$ExpectingRightBracket)) {
+			var textLines = A2(
+				$elm$core$Debug$log,
+				'handle TXT LINES',
+				$elm$core$String$lines(tc_.text));
+			var errorRow = A2(
+				$elm$core$Maybe$withDefault,
+				0,
+				A2(
+					$elm$core$Maybe$map,
+					function ($) {
+						return $.row;
+					},
+					mFirstError));
+			var errorLines = A2(
+				$elm$core$Debug$log,
+				'handle ERR LINES',
+				A2($elm$core$List$take, errorRow - 1, textLines));
+			var badText = A2(
+				$elm$core$Debug$log,
+				'BAD TEXT',
+				function () {
+					var _v0 = $elm$core$List$head(textLines);
+					if (_v0.$ === 'Nothing') {
+						return 'Oops, couldn\'t find your error text';
+					} else {
+						var str = _v0.a;
+						return str;
+					}
+				}());
+			var correctedText = _Utils_ap(
+				$elm$core$String$fromChar(
+					_Utils_chr('⁅')),
+				A3($elm$core$String$replace, '[', '', badText));
+			var newTextLines = A2(
+				$elm$core$List$cons,
+				'[highlightRGB |255, 130, 130| missing right bracket in] [highlightRGB |186, 205, 255| ' + (correctedText + ' ]'),
+				A2($elm$core$List$drop, errorRow, textLines));
+			return {
+				block: '?? TO DO',
+				blockIndex: tc_.blockIndex,
+				count: tc_.count,
+				generation: tc_.generation,
+				offset: A3($author$project$Parser$Driver$newOffset, tc_, errorColumn, mRecoveryData),
+				parsed: $author$project$Parser$Driver$parse__(
+					A2($elm$core$String$join, '\n', errorLines)),
+				stack: _List_Nil,
+				text: A2(
+					$elm$core$String$join,
+					'\n',
+					$elm$core$List$reverse(newTextLines))
+			};
+		} else {
+			return {
+				block: '?? TO DO',
+				blockIndex: tc_.blockIndex,
+				count: tc_.count,
+				generation: tc_.generation,
+				offset: A3($author$project$Parser$Driver$newOffset, tc_, errorColumn, mRecoveryData),
+				parsed: A3($author$project$Parser$Driver$newParsed, tc_, lxError, mRecoveryData),
+				stack: A3($author$project$Parser$Driver$newStack, tc_, errorText, mRecoveryData),
+				text: A3($author$project$Parser$Driver$makeNewText, tc_, errorColumn, mRecoveryData)
+			};
+		}
+	});
 var $author$project$Parser$Driver$incrementSourceMapOffset = F2(
 	function (delta, sourceMap) {
 		if (sourceMap.$ === 'Just') {
@@ -15148,7 +15365,13 @@ var $author$project$Parser$Driver$incrementOffset = F2(
 					A2($author$project$Parser$Driver$incrementSourceMapOffset, delta, sm));
 		}
 	});
-var $author$project$Parser$Driver$packet = {getSource: $author$project$Parser$Getters$getSource, handleError: $elm$core$Maybe$Nothing, highlighter: $elm$core$Maybe$Nothing, incrementOffset: $author$project$Parser$Driver$incrementOffset, parser: $author$project$Parser$Element$element};
+var $author$project$Parser$Driver$packet = {
+	getSource: $author$project$Parser$Getters$getSource,
+	handleError: $elm$core$Maybe$Just($author$project$Parser$Driver$handleError),
+	highlighter: $elm$core$Maybe$Nothing,
+	incrementOffset: $author$project$Parser$Driver$incrementOffset,
+	parser: $author$project$Parser$Element$element
+};
 var $author$project$Parser$TextCursor$init = F3(
 	function (generation, blockIndex, text) {
 		return {block: '', blockIndex: blockIndex, count: 0, generation: generation, offset: 0, parsed: _List_Nil, stack: _List_Nil, text: text};
@@ -15200,7 +15423,7 @@ var $author$project$Parser$Loop$newExpr = F3(
 	});
 var $author$project$Parser$Loop$nextCursor = F2(
 	function (packet, tc) {
-		var _v0 = A2($elm$core$Debug$log, 'TC', tc);
+		var _v0 = A2($elm$core$Debug$log, 'tc COUNT', tc.count);
 		if ((tc.text === '') || (tc.count > 10)) {
 			return $author$project$Parser$Tool$Done(
 				_Utils_update(
