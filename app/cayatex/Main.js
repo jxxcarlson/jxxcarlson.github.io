@@ -12368,7 +12368,7 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 	});
 var $author$project$Main$panelHeight_ = 500;
 var $author$project$Main$parserDisplayPanelHeight_ = 100;
-var $author$project$Main$appHeight_ = ($author$project$Main$panelHeight_ + $author$project$Main$parserDisplayPanelHeight_) + 100;
+var $author$project$Main$appHeight_ = ($author$project$Main$panelHeight_ + $author$project$Main$parserDisplayPanelHeight_) + 130;
 var $author$project$Main$panelWidth_ = 440;
 var $author$project$Main$appWidth_ = (2 * $author$project$Main$panelWidth_) + 15;
 var $mdgriffith$elm_ui$Element$Font$color = function (fontColor) {
@@ -15903,7 +15903,6 @@ var $author$project$Main$title = function (str) {
 		_List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$centerX,
-				$mdgriffith$elm_ui$Element$Font$bold,
 				$author$project$Main$fontGray(0.9)
 			]),
 		_List_fromArray(
@@ -15921,7 +15920,7 @@ var $author$project$Main$mainColumn = function (model) {
 				$mdgriffith$elm_ui$Element$column,
 				_List_fromArray(
 					[
-						$mdgriffith$elm_ui$Element$spacing(24),
+						$mdgriffith$elm_ui$Element$spacing(48),
 						$mdgriffith$elm_ui$Element$width(
 						$mdgriffith$elm_ui$Element$px($author$project$Main$appWidth_)),
 						$mdgriffith$elm_ui$Element$height(
@@ -15929,7 +15928,7 @@ var $author$project$Main$mainColumn = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$author$project$Main$title('CaYaTeX'),
+						$author$project$Main$title('CaYaTeX Test App'),
 						A2(
 						$mdgriffith$elm_ui$Element$column,
 						_List_fromArray(
