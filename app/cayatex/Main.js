@@ -15416,6 +15416,23 @@ var $author$project$Parser$Driver$parse__ = function (str) {
 		return _List_Nil;
 	}
 };
+var $elm_community$list_extra$List$Extra$updateIf = F3(
+	function (predicate, update, list) {
+		return A2(
+			$elm$core$List$map,
+			function (item) {
+				return predicate(item) ? update(item) : item;
+			},
+			list);
+	});
+var $elm_community$list_extra$List$Extra$setIf = F3(
+	function (predicate, replacement, list) {
+		return A3(
+			$elm_community$list_extra$List$Extra$updateIf,
+			predicate,
+			$elm$core$Basics$always(replacement),
+			list);
+	});
 var $author$project$Parser$Driver$handleError = F2(
 	function (tc_, e) {
 		var mFirstError = A2(
@@ -15484,10 +15501,15 @@ var $author$project$Parser$Driver$handleError = F2(
 				$elm$core$String$fromChar(
 					_Utils_chr('⁅')),
 				A3($elm$core$String$replace, '[', '', badText));
-			var newTextLines = A2(
-				$elm$core$List$cons,
-				'[highlightRGB |255, 130, 130| missing right bracket in] [highlightRGB |186, 205, 255| ' + (correctedText + ' ]'),
-				A2($elm$core$List$drop, errorRow, textLines));
+			var replacementText = '[highlightRGB |255, 130, 130| missing right bracket in] [highlightRGB |186, 205, 255| ' + (correctedText + ' ]');
+			var newTextLines = $elm$core$List$reverse(
+				A3(
+					$elm_community$list_extra$List$Extra$setIf,
+					function (t) {
+						return _Utils_eq(t, badText);
+					},
+					replacementText,
+					textLines));
 			return {
 				block: '?? TO DO',
 				blockIndex: tc_.blockIndex,
