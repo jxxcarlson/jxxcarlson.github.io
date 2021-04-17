@@ -6010,7 +6010,9 @@ var $author$project$Parser$XString$reduce = function (list) {
 	};
 };
 var $author$project$Parser$Error$ExpectingEscape = {$: 'ExpectingEscape'};
-var $author$project$Parser$Error$UnHandledError = {$: 'UnHandledError'};
+var $author$project$Parser$Error$UnHandledError = function (a) {
+	return {$: 'UnHandledError', a: a};
+};
 var $elm$parser$Parser$Advanced$chompIf = F2(
 	function (isGood, expecting) {
 		return $elm$parser$Parser$Advanced$Parser(
@@ -6054,7 +6056,7 @@ var $author$project$Parser$Tool$char = function (prefixTest) {
 						function (c) {
 							return prefixTest(c);
 						},
-						$author$project$Parser$Error$UnHandledError))),
+						$author$project$Parser$Error$UnHandledError(3)))),
 			$elm$parser$Parser$Advanced$getOffset),
 		$elm$parser$Parser$Advanced$getSource);
 };
@@ -6111,7 +6113,7 @@ var $author$project$Parser$Tool$text = F2(
 								function (c) {
 									return prefixTest(c);
 								},
-								$author$project$Parser$Error$UnHandledError)),
+								$author$project$Parser$Error$UnHandledError(2))),
 						$elm$parser$Parser$Advanced$chompWhile(
 							function (c) {
 								return suffixTest(c);
@@ -6253,7 +6255,10 @@ var $author$project$Parser$Element$primitiveElement = F2(
 							$author$project$Parser$Element$elementName),
 						A2(
 							$elm$parser$Parser$Advanced$ignorer,
-							A2($author$project$Parser$Element$argsAndBody, generation, blockOffset),
+							A2(
+								$elm$parser$Parser$Advanced$ignorer,
+								A2($author$project$Parser$Element$argsAndBody, generation, blockOffset),
+								$elm$parser$Parser$Advanced$spaces),
 							$author$project$Parser$Element$rightBracket)),
 					$elm$parser$Parser$Advanced$getOffset),
 				$elm$parser$Parser$Advanced$getSource));
@@ -14360,12 +14365,6 @@ var $mdgriffith$elm_ui$Element$paragraph = F2(
 						attrs))),
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
-var $author$project$Render$Elm$B = function (a) {
-	return {$: 'B', a: a};
-};
-var $author$project$Render$Elm$I = function (a) {
-	return {$: 'I', a: a};
-};
 var $author$project$Render$Elm$blueColor = A3($mdgriffith$elm_ui$Element$rgb, 0, 0, 0.8);
 var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
 var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.bold);
@@ -14840,6 +14839,16 @@ var $elm_community$string_extra$String$Extra$toSentenceCase = function (word) {
 var $mdgriffith$elm_ui$Element$Font$typeface = $mdgriffith$elm_ui$Internal$Model$Typeface;
 var $author$project$Render$Elm$violetColor = A3($mdgriffith$elm_ui$Element$rgb, 0.4, 0, 0.8);
 var $author$project$Render$Elm$yellowColor = A3($mdgriffith$elm_ui$Element$rgb, 1.0, 1.0, 0);
+var $author$project$Render$Elm$error = F5(
+	function (renderArgs, name, args_, body, sm) {
+		return A2(
+			$mdgriffith$elm_ui$Element$el,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$color($author$project$Render$Elm$violetColor)
+				]),
+			A2($author$project$Render$Elm$renderElement, renderArgs, body));
+	});
 var $author$project$Render$Elm$fontRGB = F5(
 	function (renderArgs, name, args, body, sm) {
 		var r = A2($author$project$Render$Elm$getInt, 0, args);
@@ -14881,8 +14890,43 @@ var $author$project$Render$Elm$highlightRGB = F5(
 				]),
 			A2($author$project$Render$Elm$renderElement, renderArgs, body));
 	});
+var $author$project$Render$Elm$item = F5(
+	function (renderArgs, name, args_, body, sm) {
+		return A2(
+			$mdgriffith$elm_ui$Element$el,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$paddingEach(
+					{bottom: 0, left: 18, right: 0, top: 0})
+				]),
+			A2($author$project$Render$Elm$renderElement, renderArgs, body));
+	});
+var $author$project$Render$Elm$list = F5(
+	function (renderArgs, name, args_, body, sm) {
+		if (body.$ === 'LX') {
+			var list_ = body.a;
+			return A2(
+				$mdgriffith$elm_ui$Element$column,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$spacing(4)
+					]),
+				A2(
+					$elm$core$List$map,
+					$author$project$Render$Elm$renderElement(renderArgs),
+					list_));
+		} else {
+			return A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Font$color($author$project$Render$Elm$redColor)
+					]),
+				$mdgriffith$elm_ui$Element$text('Malformed list'));
+		}
+	});
 var $author$project$Render$Elm$renderCode = F5(
-	function (renderArgs, _v8, _v9, body, sm) {
+	function (renderArgs, _v7, _v8, body, sm) {
 		var adjustedBody = function (text) {
 			return A2($author$project$Parser$Element$Text, text, sm);
 		}(
@@ -14929,18 +14973,18 @@ var $author$project$Render$Elm$renderElement = F2(
 				var sm = element.d;
 				return A5($author$project$Render$Elm$renderWithDictionary, renderArgs, name, args, body, sm);
 			default:
-				var list = element.a;
+				var list_ = element.a;
 				return A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					$author$project$Render$Elm$format,
 					A2(
 						$elm$core$List$map,
 						$author$project$Render$Elm$renderElement(renderArgs),
-						list));
+						list_));
 		}
 	});
 var $author$project$Render$Elm$renderItalic = F5(
-	function (renderArgs, _v5, _v6, body, sm) {
+	function (renderArgs, _v4, _v5, body, sm) {
 		return A2(
 			$mdgriffith$elm_ui$Element$el,
 			_List_fromArray(
@@ -14948,7 +14992,7 @@ var $author$project$Render$Elm$renderItalic = F5(
 			A2($author$project$Render$Elm$renderElement, renderArgs, body));
 	});
 var $author$project$Render$Elm$renderStrong = F5(
-	function (renderArgs, _v3, _v4, body, sm) {
+	function (renderArgs, _v2, _v3, body, sm) {
 		return A2(
 			$mdgriffith$elm_ui$Element$el,
 			_List_fromArray(
@@ -15006,13 +15050,7 @@ var $author$project$Render$Elm$renderWithDictionary = F5(
 					]));
 		} else {
 			var f = _v1.a;
-			if (f.$ === 'I') {
-				var g = f.a;
-				return A5(g, renderArgs, name, args, body, sm);
-			} else {
-				var g = f.a;
-				return A5(g, renderArgs, name, args, body, sm);
-			}
+			return A5(f, renderArgs, name, args, body, sm);
 		}
 	});
 var $author$project$Render$Elm$renderaAsTheoremLikeElement = F5(
@@ -15076,42 +15114,21 @@ function $author$project$Render$Elm$cyclic$renderElementDict() {
 	return $elm$core$Dict$fromList(
 		_List_fromArray(
 			[
-				_Utils_Tuple2(
-				'strong',
-				$author$project$Render$Elm$I($author$project$Render$Elm$renderStrong)),
-				_Utils_Tuple2(
-				'italic',
-				$author$project$Render$Elm$I($author$project$Render$Elm$renderItalic)),
-				_Utils_Tuple2(
-				'highlight',
-				$author$project$Render$Elm$I($author$project$Render$Elm$highlight)),
-				_Utils_Tuple2(
-				'highlightRGB',
-				$author$project$Render$Elm$I($author$project$Render$Elm$highlightRGB)),
-				_Utils_Tuple2(
-				'fontRGB',
-				$author$project$Render$Elm$I($author$project$Render$Elm$fontRGB)),
-				_Utils_Tuple2(
-				'code',
-				$author$project$Render$Elm$I($author$project$Render$Elm$renderCode)),
-				_Utils_Tuple2(
-				'section',
-				$author$project$Render$Elm$I($author$project$Render$Elm$section)),
-				_Utils_Tuple2(
-				'subsection',
-				$author$project$Render$Elm$I($author$project$Render$Elm$subsection)),
-				_Utils_Tuple2(
-				'link',
-				$author$project$Render$Elm$I($author$project$Render$Elm$link)),
-				_Utils_Tuple2(
-				'image',
-				$author$project$Render$Elm$I($author$project$Render$Elm$image)),
-				_Utils_Tuple2(
-				'math',
-				$author$project$Render$Elm$I($author$project$Render$Elm$renderMath)),
-				_Utils_Tuple2(
-				'mathDisplay',
-				$author$project$Render$Elm$B($author$project$Render$Elm$renderMathDisplay))
+				_Utils_Tuple2('Error', $author$project$Render$Elm$error),
+				_Utils_Tuple2('strong', $author$project$Render$Elm$renderStrong),
+				_Utils_Tuple2('italic', $author$project$Render$Elm$renderItalic),
+				_Utils_Tuple2('highlight', $author$project$Render$Elm$highlight),
+				_Utils_Tuple2('highlightRGB', $author$project$Render$Elm$highlightRGB),
+				_Utils_Tuple2('fontRGB', $author$project$Render$Elm$fontRGB),
+				_Utils_Tuple2('code', $author$project$Render$Elm$renderCode),
+				_Utils_Tuple2('section', $author$project$Render$Elm$section),
+				_Utils_Tuple2('subsection', $author$project$Render$Elm$subsection),
+				_Utils_Tuple2('list', $author$project$Render$Elm$list),
+				_Utils_Tuple2('item', $author$project$Render$Elm$item),
+				_Utils_Tuple2('link', $author$project$Render$Elm$link),
+				_Utils_Tuple2('image', $author$project$Render$Elm$image),
+				_Utils_Tuple2('math', $author$project$Render$Elm$renderMath),
+				_Utils_Tuple2('mathDisplay', $author$project$Render$Elm$renderMathDisplay)
 			]));
 }
 try {
@@ -15120,16 +15137,16 @@ try {
 		return $author$project$Render$Elm$renderElementDict;
 	};
 } catch ($) {
-	throw 'Some top-level definitions from `Render.Elm` are causing infinite recursion:\n\n  ┌─────┐\n  │    renderElementDict\n  │     ↓\n  │    fontRGB\n  │     ↓\n  │    highlight\n  │     ↓\n  │    highlightRGB\n  │     ↓\n  │    renderCode\n  │     ↓\n  │    renderElement\n  │     ↓\n  │    renderItalic\n  │     ↓\n  │    renderStrong\n  │     ↓\n  │    renderWithDictionary\n  │     ↓\n  │    renderaAsTheoremLikeElement\n  └─────┘\n\nThese errors are very tricky, so read https://elm-lang.org/0.19.1/bad-recursion to learn how to fix it!';}
+	throw 'Some top-level definitions from `Render.Elm` are causing infinite recursion:\n\n  ┌─────┐\n  │    renderElementDict\n  │     ↓\n  │    error\n  │     ↓\n  │    fontRGB\n  │     ↓\n  │    highlight\n  │     ↓\n  │    highlightRGB\n  │     ↓\n  │    item\n  │     ↓\n  │    list\n  │     ↓\n  │    renderCode\n  │     ↓\n  │    renderElement\n  │     ↓\n  │    renderItalic\n  │     ↓\n  │    renderStrong\n  │     ↓\n  │    renderWithDictionary\n  │     ↓\n  │    renderaAsTheoremLikeElement\n  └─────┘\n\nThese errors are very tricky, so read https://elm-lang.org/0.19.1/bad-recursion to learn how to fix it!';}
 var $author$project$Render$Elm$renderList = F2(
-	function (renderArgs, list) {
+	function (renderArgs, list_) {
 		return A2(
 			$mdgriffith$elm_ui$Element$paragraph,
 			$author$project$Render$Elm$format,
 			A2(
 				$elm$core$List$map,
 				$author$project$Render$Elm$renderElement(renderArgs),
-				list));
+				list_));
 	});
 var $author$project$Parser$Document$Start = {$: 'Start'};
 var $author$project$Parser$Document$init = F2(
@@ -15632,7 +15649,7 @@ var $author$project$Parser$Driver$handleError = F2(
 				A2($elm$core$Debug$log, 'handle ERR', e)));
 		var problem = A2(
 			$elm$core$Maybe$withDefault,
-			$author$project$Parser$Error$UnHandledError,
+			$author$project$Parser$Error$UnHandledError(0),
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
@@ -16066,7 +16083,7 @@ var $author$project$Parser$Document$nextState = function (state_) {
 		}
 	}
 };
-var $author$project$Parser$Document$runProcess = F2(
+var $author$project$Parser$Document$run = F2(
 	function (generation, strList) {
 		return A2(
 			$author$project$Parser$Document$loop,
@@ -16074,14 +16091,15 @@ var $author$project$Parser$Document$runProcess = F2(
 			$author$project$Parser$Document$nextState);
 	});
 var $author$project$Parser$Document$toParsed = function (state) {
-	return A2(
-		$elm$core$List$map,
-		function ($) {
-			return $.parsed;
-		},
-		state.output);
+	return $elm$core$List$reverse(
+		A2(
+			$elm$core$List$map,
+			function ($) {
+				return $.parsed;
+			},
+			state.output));
 };
-var $author$project$Main$render2 = F2(
+var $author$project$Main$render = F2(
 	function (k, str) {
 		return A2(
 			$mdgriffith$elm_ui$Element$map,
@@ -16096,12 +16114,11 @@ var $author$project$Main$render2 = F2(
 					$elm$core$List$map,
 					$author$project$Render$Elm$renderList(
 						{blockOffset: 0, generation: k, selectedId: '', width: 300}),
-					$elm$core$List$reverse(
-						$author$project$Parser$Document$toParsed(
-							A2(
-								$author$project$Parser$Document$runProcess,
-								k,
-								$elm$core$String$lines(str)))))));
+					$author$project$Parser$Document$toParsed(
+						A2(
+							$author$project$Parser$Document$run,
+							k,
+							$elm$core$String$lines(str))))));
 	});
 var $author$project$Main$outputDisplay_ = function (model) {
 	return A2(
@@ -16122,7 +16139,7 @@ var $author$project$Main$outputDisplay_ = function (model) {
 			]),
 		_Utils_eq(model.mode, $author$project$Main$RenderedMode) ? _List_fromArray(
 			[
-				A2($author$project$Main$render2, model.count, model.input)
+				A2($author$project$Main$render, model.count, model.input)
 			]) : A2(
 			$elm$core$List$map,
 			$mdgriffith$elm_ui$Element$text,
