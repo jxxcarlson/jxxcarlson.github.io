@@ -5312,7 +5312,7 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$RenderedMode = {$: 'RenderedMode'};
-var $author$project$Data$text = 'Pythagoras says that [math a^2 + b^2 = c^2].  \nThis is an [strong [italic extremely]] cool result. But just as cool is the below:\n[mathDisplay \\sum_1^\\infty 1/n = \\infty,]\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\n[theorem There are infinitely many primes [math p \\equiv 1 (4).]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\nTime for some code: [code col :: Int -> Matrix a -> \\[a\\]].\nDo you recognize the language (ha ha)?\n[italic [highlight And can we do something about the awkwardness of escaping brackets inside code elements?]]\n\nExample:  [highlightRGB |214, 93, 32| [fontRGB |169, 232, 245| What color is this?]]\n\n[strong Note:] We need to implement a macro facility so that users can abbreviate constructs like\nthe one in the previous example.\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n[strong Errors] Look what happens here: [ital One more beer, please!]\n';
+var $author$project$Data$text = '[section CaYaTeX Test Document]\n\nPythagoras says that [math a^2 + b^2 = c^2].\nThis is an [strong [italic extremely]] cool result. But just as cool is the below:\n[mathDisplay \\sum_1^\\infty 1/n = \\infty,]\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\n[theorem There are infinitely many primes [math p \\equiv 1 (4).]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\nTime for some code: [code col :: Int -> Matrix a -> \\[a\\]].\nDo you recognize the language (ha ha)?\n[italic [highlight And can we do something about the awkwardness of escaping brackets inside code elements?]]\n\nExample:  [highlightRGB |214, 93, 32| [fontRGB |169, 232, 245| What color is this?]]\n\n[strong Note:] We need to implement a macro facility so that users can abbreviate constructs like\nthe one in the previous example.\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n\n\n[subsection About Errors]\n\nLook what happens here:\n\n(1) [ital One more beer, please!]\n\n(2) [italic One more beer, please\n';
 var $author$project$Main$initialText = $author$project$Data$text;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
@@ -14777,6 +14777,42 @@ var $elm$core$String$replace = F3(
 			after,
 			A2($elm$core$String$split, before, string));
 	});
+var $author$project$Render$Elm$sectionFontSize = 22;
+var $author$project$Render$Elm$section = F5(
+	function (renderArgs, name, args, body, sm) {
+		return A2(
+			$mdgriffith$elm_ui$Element$paragraph,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$size($author$project$Render$Elm$sectionFontSize)
+				]),
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$text(
+					A2(
+						$elm$core$Maybe$withDefault,
+						'no section name found',
+						$author$project$Render$Elm$getText(body)))
+				]));
+	});
+var $author$project$Render$Elm$subsectionFontSize = 18;
+var $author$project$Render$Elm$subsection = F5(
+	function (renderArgs, name, args, body, sm) {
+		return A2(
+			$mdgriffith$elm_ui$Element$paragraph,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$size($author$project$Render$Elm$subsectionFontSize)
+				]),
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$text(
+					A2(
+						$elm$core$Maybe$withDefault,
+						'no subsection name found',
+						$author$project$Render$Elm$getText(body)))
+				]));
+	});
 var $author$project$Render$Elm$theoremLikeElements = _List_fromArray(
 	['theorem', 'proposition', 'proof', 'definition', 'example', 'problem', 'corollary', 'lemma']);
 var $elm$core$String$cons = _String_cons;
@@ -15058,6 +15094,12 @@ function $author$project$Render$Elm$cyclic$renderElementDict() {
 				_Utils_Tuple2(
 				'code',
 				$author$project$Render$Elm$I($author$project$Render$Elm$renderCode)),
+				_Utils_Tuple2(
+				'section',
+				$author$project$Render$Elm$I($author$project$Render$Elm$section)),
+				_Utils_Tuple2(
+				'subsection',
+				$author$project$Render$Elm$I($author$project$Render$Elm$subsection)),
 				_Utils_Tuple2(
 				'link',
 				$author$project$Render$Elm$I($author$project$Render$Elm$link)),
