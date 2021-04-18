@@ -12402,7 +12402,7 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 				_Utils_ap($mdgriffith$elm_ui$Internal$Model$rootStyle, attrs)),
 			child);
 	});
-var $author$project$Main$panelHeight_ = 900;
+var $author$project$Main$panelHeight_ = 500;
 var $author$project$Main$parserDisplayPanelHeight_ = 100;
 var $author$project$Main$appHeight_ = ($author$project$Main$panelHeight_ + $author$project$Main$parserDisplayPanelHeight_) + 130;
 var $author$project$Main$panelWidth_ = 440;
