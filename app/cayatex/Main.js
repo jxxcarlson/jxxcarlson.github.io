@@ -5312,7 +5312,7 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$RenderedMode = {$: 'RenderedMode'};
-var $author$project$Data$text = '[section CaYaTeX Test Document]\n\nPythagoras says that [math a^2 + b^2 = c^2].\nThis is an [strong [italic extremely]] cool result. But just as cool is the below:\n[mathDisplay \\sum_1^\\infty 1/n = \\infty,]\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\n[theorem There are infinitely many primes [math p \\equiv 1 (4).]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\nTime for some code: [code col :: Int -> Matrix a -> \\[a\\]].\nDo you recognize the language (ha ha)?\n[italic [highlight And can we do something about the awkwardness of escaping brackets inside code elements?]]\n\nExample:  [highlightRGB |214, 93, 32| [fontRGB |169, 232, 245| What color is this?]]\n\n[strong Note:] We need to implement a macro facility so that users can abbreviate constructs like\nthe one in the previous example.\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n\n\n[subsection About Errors]\n\nLook what happens here:\n\n(1) [ital One more beer, please!]\n\n(2) [italic One more beer, please\n';
+var $author$project$Data$text = '[section CaYaTeX Test Document]\n\nPythagoras says that [math a^2 + b^2 = c^2].\nThis is an [strong [italic extremely]] cool result. But just as cool is the below:\n[mathDisplay \\sum_1^\\infty 1/n = \\infty,]\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\n[theorem There are infinitely many primes [math p \\equiv 1 (4).]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\nTime for some code: [code col :: Int -> Matrix a -> \\[a\\]].\nDo you recognize the language (ha ha)?\n[italic [highlight And can we do something about the awkwardness of escaping brackets inside code elements?]]\n\nExample:  [highlightRGB |214, 93, 32| [fontRGB |169, 232, 245| What color is this?]]\n\n[strong Note:] We need to implement a macro facility so that users can abbreviate constructs like\nthe one in the previous example.\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n[subsection Lists, etc.]\n\n[strong Errands]\n\n[list |bullet|\n\n  [item Bread, milk, O-juice]\n\n  [item Sand paper, white paint]\n\n]\n\n[subsection About Errors]\n\nLook what happens here:\n\n(1) [ital One more beer, please!]\n\n(2) [italic One more beer, please\n';
 var $author$project$Main$initialText = $author$project$Data$text;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
@@ -6610,6 +6610,7 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$none;
 };
+var $author$project$Data$test = '[strong Errands]\n\n[list |bullet|\n\n[item Bread, milk, O-juice]\n\n[item Sand paper, white paint]\n\n[item A]\n\n[item B]\n\n]\n\n]\n\n';
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -6651,6 +6652,16 @@ var $author$project$Main$update = F2(
 							count: model.count + 1,
 							input: $author$project$Data$text,
 							renderedText: $author$project$Render$String$renderString($author$project$Data$text)
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 'GetTest':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							count: model.count + 1,
+							input: $author$project$Data$test,
+							renderedText: $author$project$Render$String$renderString($author$project$Data$test)
 						}),
 					$elm$core$Platform$Cmd$none);
 			default:
@@ -12391,7 +12402,7 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 				_Utils_ap($mdgriffith$elm_ui$Internal$Model$rootStyle, attrs)),
 			child);
 	});
-var $author$project$Main$panelHeight_ = 500;
+var $author$project$Main$panelHeight_ = 900;
 var $author$project$Main$parserDisplayPanelHeight_ = 100;
 var $author$project$Main$appHeight_ = ($author$project$Main$panelHeight_ + $author$project$Main$parserDisplayPanelHeight_) + 130;
 var $author$project$Main$panelWidth_ = 440;
@@ -12688,6 +12699,22 @@ var $author$project$Main$clearTextButton = A2(
 				]),
 			$mdgriffith$elm_ui$Element$text('Clear')),
 		onPress: $elm$core$Maybe$Just($author$project$Main$ClearText)
+	});
+var $author$project$Main$GetTest = {$: 'GetTest'};
+var $author$project$Main$getTestButton = A2(
+	$mdgriffith$elm_ui$Element$Input$button,
+	$author$project$Main$buttonStyle2,
+	{
+		label: A2(
+			$mdgriffith$elm_ui$Element$el,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$centerX,
+					$mdgriffith$elm_ui$Element$centerY,
+					$mdgriffith$elm_ui$Element$Font$size(14)
+				]),
+			$mdgriffith$elm_ui$Element$text('Test')),
+		onPress: $elm$core$Maybe$Just($author$project$Main$GetTest)
 	});
 var $author$project$Main$GetText = {$: 'GetText'};
 var $author$project$Main$getTextButton = A2(
@@ -13699,7 +13726,7 @@ var $author$project$Main$inputElement = function (model) {
 						$mdgriffith$elm_ui$Element$spacing(12)
 					]),
 				_List_fromArray(
-					[$author$project$Main$clearTextButton, $author$project$Main$getTextButton])),
+					[$author$project$Main$clearTextButton, $author$project$Main$getTextButton, $author$project$Main$getTestButton])),
 				$author$project$Main$inputText(model)
 			]));
 };
@@ -14383,6 +14410,13 @@ var $elm_community$list_extra$List$Extra$getAt = F2(
 		return (idx < 0) ? $elm$core$Maybe$Nothing : $elm$core$List$head(
 			A2($elm$core$List$drop, idx, xs));
 	});
+var $author$project$Render$Elm$getArg = F3(
+	function (k, _default, stringList) {
+		return A2(
+			$elm$core$Maybe$withDefault,
+			_default,
+			A2($elm_community$list_extra$List$Extra$getAt, k, stringList));
+	});
 var $author$project$Render$Elm$getArg_ = F2(
 	function (k, stringList) {
 		return A2($elm_community$list_extra$List$Extra$getAt, k, stringList);
@@ -14688,6 +14722,8 @@ var $author$project$Render$Elm$link = F5(
 				});
 		}
 	});
+var $author$project$Render$Elm$listPadding = $mdgriffith$elm_ui$Element$paddingEach(
+	{bottom: 0, left: 18, right: 0, top: 0});
 var $mdgriffith$elm_ui$Internal$Model$Monospace = {$: 'Monospace'};
 var $mdgriffith$elm_ui$Element$Font$monospace = $mdgriffith$elm_ui$Internal$Model$Monospace;
 var $author$project$Render$Elm$redColor = A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0, 0);
@@ -14865,7 +14901,7 @@ var $author$project$Render$Elm$fontRGB = F5(
 			A2($author$project$Render$Elm$renderElement, renderArgs, body));
 	});
 var $author$project$Render$Elm$highlight = F5(
-	function (renderArgs, _v11, _v12, body, _v13) {
+	function (renderArgs, _v14, _v15, body, _v16) {
 		return A2(
 			$mdgriffith$elm_ui$Element$el,
 			_List_fromArray(
@@ -14876,7 +14912,7 @@ var $author$project$Render$Elm$highlight = F5(
 			A2($author$project$Render$Elm$renderElement, renderArgs, body));
 	});
 var $author$project$Render$Elm$highlightRGB = F5(
-	function (renderArgs, _v10, args, body, sm) {
+	function (renderArgs, _v13, args, body, sm) {
 		var r = A2($author$project$Render$Elm$getInt, 0, args);
 		var g = A2($author$project$Render$Elm$getInt, 1, args);
 		var b = A2($author$project$Render$Elm$getInt, 2, args);
@@ -14893,27 +14929,40 @@ var $author$project$Render$Elm$highlightRGB = F5(
 var $author$project$Render$Elm$item = F5(
 	function (renderArgs, name, args_, body, sm) {
 		return A2(
-			$mdgriffith$elm_ui$Element$el,
+			$mdgriffith$elm_ui$Element$paragraph,
+			_List_Nil,
 			_List_fromArray(
 				[
-					$mdgriffith$elm_ui$Element$paddingEach(
-					{bottom: 0, left: 18, right: 0, top: 0})
-				]),
-			A2($author$project$Render$Elm$renderElement, renderArgs, body));
+					A2($author$project$Render$Elm$renderElement, renderArgs, body)
+				]));
 	});
 var $author$project$Render$Elm$list = F5(
 	function (renderArgs, name, args_, body, sm) {
+		var option = A3($author$project$Render$Elm$getArg, 0, 'xxxx', args_);
+		var prefixSymbol = function () {
+			switch (option) {
+				case 'bullet':
+					return '•';
+				case 'none':
+					return '';
+				case '_xxxx_':
+					return '';
+				default:
+					return option;
+			}
+		}();
 		if (body.$ === 'LX') {
 			var list_ = body.a;
 			return A2(
 				$mdgriffith$elm_ui$Element$column,
 				_List_fromArray(
 					[
-						$mdgriffith$elm_ui$Element$spacing(4)
+						$mdgriffith$elm_ui$Element$spacing(4),
+						$author$project$Render$Elm$listPadding
 					]),
 				A2(
 					$elm$core$List$map,
-					$author$project$Render$Elm$renderElement(renderArgs),
+					A2($author$project$Render$Elm$renderListItem1, prefixSymbol, renderArgs),
 					list_));
 		} else {
 			return A2(
@@ -14926,7 +14975,7 @@ var $author$project$Render$Elm$list = F5(
 		}
 	});
 var $author$project$Render$Elm$renderCode = F5(
-	function (renderArgs, _v7, _v8, body, sm) {
+	function (renderArgs, _v9, _v10, body, sm) {
 		var adjustedBody = function (text) {
 			return A2($author$project$Parser$Element$Text, text, sm);
 		}(
@@ -14984,12 +15033,62 @@ var $author$project$Render$Elm$renderElement = F2(
 		}
 	});
 var $author$project$Render$Elm$renderItalic = F5(
-	function (renderArgs, _v4, _v5, body, sm) {
+	function (renderArgs, _v6, _v7, body, sm) {
 		return A2(
 			$mdgriffith$elm_ui$Element$el,
 			_List_fromArray(
 				[$mdgriffith$elm_ui$Element$Font$italic]),
 			A2($author$project$Render$Elm$renderElement, renderArgs, body));
+	});
+var $author$project$Render$Elm$renderListItem1 = F3(
+	function (prefixSymbol, renderArgs, elt) {
+		_v4$2:
+		while (true) {
+			if (elt.$ === 'Element') {
+				switch (elt.a) {
+					case 'item':
+						var body = elt.c;
+						var prefix = function () {
+							if (prefixSymbol === 'bullet') {
+								return A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$Font$size(16)
+										]),
+									$mdgriffith$elm_ui$Element$text(prefixSymbol));
+							} else {
+								return A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$Font$size(16)
+										]),
+									$mdgriffith$elm_ui$Element$text(prefixSymbol));
+							}
+						}();
+						return A2(
+							$mdgriffith$elm_ui$Element$row,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$spacing(8)
+								]),
+							_List_fromArray(
+								[
+									prefix,
+									A2($author$project$Render$Elm$renderElement, renderArgs, elt)
+								]));
+					case 'list':
+						var body = elt.c;
+						return A2($author$project$Render$Elm$renderElement, renderArgs, body);
+					default:
+						break _v4$2;
+				}
+			} else {
+				break _v4$2;
+			}
+		}
+		return $mdgriffith$elm_ui$Element$none;
 	});
 var $author$project$Render$Elm$renderStrong = F5(
 	function (renderArgs, _v2, _v3, body, sm) {
@@ -15137,7 +15236,7 @@ try {
 		return $author$project$Render$Elm$renderElementDict;
 	};
 } catch ($) {
-	throw 'Some top-level definitions from `Render.Elm` are causing infinite recursion:\n\n  ┌─────┐\n  │    renderElementDict\n  │     ↓\n  │    error\n  │     ↓\n  │    fontRGB\n  │     ↓\n  │    highlight\n  │     ↓\n  │    highlightRGB\n  │     ↓\n  │    item\n  │     ↓\n  │    list\n  │     ↓\n  │    renderCode\n  │     ↓\n  │    renderElement\n  │     ↓\n  │    renderItalic\n  │     ↓\n  │    renderStrong\n  │     ↓\n  │    renderWithDictionary\n  │     ↓\n  │    renderaAsTheoremLikeElement\n  └─────┘\n\nThese errors are very tricky, so read https://elm-lang.org/0.19.1/bad-recursion to learn how to fix it!';}
+	throw 'Some top-level definitions from `Render.Elm` are causing infinite recursion:\n\n  ┌─────┐\n  │    renderElementDict\n  │     ↓\n  │    error\n  │     ↓\n  │    fontRGB\n  │     ↓\n  │    highlight\n  │     ↓\n  │    highlightRGB\n  │     ↓\n  │    item\n  │     ↓\n  │    list\n  │     ↓\n  │    renderCode\n  │     ↓\n  │    renderElement\n  │     ↓\n  │    renderItalic\n  │     ↓\n  │    renderListItem1\n  │     ↓\n  │    renderStrong\n  │     ↓\n  │    renderWithDictionary\n  │     ↓\n  │    renderaAsTheoremLikeElement\n  └─────┘\n\nThese errors are very tricky, so read https://elm-lang.org/0.19.1/bad-recursion to learn how to fix it!';}
 var $author$project$Render$Elm$renderList = F2(
 	function (renderArgs, list_) {
 		return A2(
@@ -15151,7 +15250,7 @@ var $author$project$Render$Elm$renderList = F2(
 var $author$project$Parser$Document$Start = {$: 'Start'};
 var $author$project$Parser$Document$init = F2(
 	function (generation, strList) {
-		return {blockContents: _List_Nil, blockType: $author$project$Parser$Document$Start, blockTypeStack: _List_Nil, generation: generation, input: strList, lineNumber: 0, output: _List_Nil};
+		return {blockContents: _List_Nil, blockLevel: 0, blockType: $author$project$Parser$Document$Start, generation: generation, input: strList, lineNumber: 0, output: _List_Nil};
 	});
 var $author$project$Parser$Document$loop = F2(
 	function (s, nextState_) {
@@ -15174,6 +15273,7 @@ var $author$project$Parser$Document$loop = F2(
 var $author$project$Parser$Document$Done = function (a) {
 	return {$: 'Done', a: a};
 };
+var $author$project$Parser$Document$ElementBlock = {$: 'ElementBlock'};
 var $author$project$Parser$Document$ErrorBlock = {$: 'ErrorBlock'};
 var $author$project$Parser$Document$Loop = function (a) {
 	return {$: 'Loop', a: a};
@@ -15188,77 +15288,7 @@ var $author$project$Parser$Document$addToBlockContents = F2(
 			});
 	});
 var $author$project$Parser$Document$LTBlank = {$: 'LTBlank'};
-var $author$project$Parser$Document$BeginElementBlock = {$: 'BeginElementBlock'};
-var $elm$parser$Parser$Advanced$findSubString = _Parser_findSubString;
-var $elm$parser$Parser$Advanced$fromInfo = F4(
-	function (row, col, x, context) {
-		return A2(
-			$elm$parser$Parser$Advanced$AddRight,
-			$elm$parser$Parser$Advanced$Empty,
-			A4($elm$parser$Parser$Advanced$DeadEnd, row, col, x, context));
-	});
-var $elm$parser$Parser$Advanced$chompUntil = function (_v0) {
-	var str = _v0.a;
-	var expecting = _v0.b;
-	return $elm$parser$Parser$Advanced$Parser(
-		function (s) {
-			var _v1 = A5($elm$parser$Parser$Advanced$findSubString, str, s.offset, s.row, s.col, s.src);
-			var newOffset = _v1.a;
-			var newRow = _v1.b;
-			var newCol = _v1.c;
-			return _Utils_eq(newOffset, -1) ? A2(
-				$elm$parser$Parser$Advanced$Bad,
-				false,
-				A4($elm$parser$Parser$Advanced$fromInfo, newRow, newCol, expecting, s.context)) : A3(
-				$elm$parser$Parser$Advanced$Good,
-				_Utils_cmp(s.offset, newOffset) < 0,
-				_Utils_Tuple0,
-				{col: newCol, context: s.context, indent: s.indent, offset: newOffset, row: newRow, src: s.src});
-		});
-};
-var $elm$parser$Parser$Expecting = function (a) {
-	return {$: 'Expecting', a: a};
-};
-var $elm$parser$Parser$toToken = function (str) {
-	return A2(
-		$elm$parser$Parser$Advanced$Token,
-		str,
-		$elm$parser$Parser$Expecting(str));
-};
-var $elm$parser$Parser$chompUntil = function (str) {
-	return $elm$parser$Parser$Advanced$chompUntil(
-		$elm$parser$Parser$toToken(str));
-};
-var $elm$parser$Parser$Advanced$mapChompedString = F2(
-	function (func, _v0) {
-		var parse = _v0.a;
-		return $elm$parser$Parser$Advanced$Parser(
-			function (s0) {
-				var _v1 = parse(s0);
-				if (_v1.$ === 'Bad') {
-					var p = _v1.a;
-					var x = _v1.b;
-					return A2($elm$parser$Parser$Advanced$Bad, p, x);
-				} else {
-					var p = _v1.a;
-					var a = _v1.b;
-					var s1 = _v1.c;
-					return A3(
-						$elm$parser$Parser$Advanced$Good,
-						p,
-						A2(
-							func,
-							A3($elm$core$String$slice, s0.offset, s1.offset, s0.src),
-							a),
-						s1);
-				}
-			});
-	});
-var $elm$parser$Parser$Advanced$getChompedString = function (parser) {
-	return A2($elm$parser$Parser$Advanced$mapChompedString, $elm$core$Basics$always, parser);
-};
-var $elm$parser$Parser$getChompedString = $elm$parser$Parser$Advanced$getChompedString;
-var $elm$parser$Parser$ignorer = $elm$parser$Parser$Advanced$ignorer;
+var $author$project$Parser$Document$LTBeginElement = {$: 'LTBeginElement'};
 var $elm$parser$Parser$keeper = $elm$parser$Parser$Advanced$keeper;
 var $elm$parser$Parser$succeed = $elm$parser$Parser$Advanced$succeed;
 var $elm$parser$Parser$ExpectingSymbol = function (a) {
@@ -15271,35 +15301,28 @@ var $elm$parser$Parser$symbol = function (str) {
 			str,
 			$elm$parser$Parser$ExpectingSymbol(str)));
 };
-var $author$project$Parser$Document$beginEnvLineParser = A2(
+var $author$project$Parser$Document$beginElementParser = A2(
 	$elm$parser$Parser$keeper,
-	A2(
-		$elm$parser$Parser$ignorer,
-		$elm$parser$Parser$succeed(
-			function (s) {
-				return $author$project$Parser$Document$BeginElementBlock;
-			}),
-		$elm$parser$Parser$symbol('\\[')),
-	$elm$parser$Parser$getChompedString(
-		$elm$parser$Parser$chompUntil('[')));
-var $author$project$Parser$Document$EndElementBlock = {$: 'EndElementBlock'};
-var $author$project$Parser$Document$endEnvLineParser = A2(
+	$elm$parser$Parser$succeed(
+		function (s) {
+			return $author$project$Parser$Document$LTBeginElement;
+		}),
+	$elm$parser$Parser$symbol('['));
+var $author$project$Parser$Document$LTEndElement = {$: 'LTEndElement'};
+var $author$project$Parser$Document$endElementParser = A2(
 	$elm$parser$Parser$keeper,
-	A2(
-		$elm$parser$Parser$ignorer,
-		$elm$parser$Parser$succeed(
-			function (s) {
-				return $author$project$Parser$Document$EndElementBlock;
-			}),
-		$elm$parser$Parser$symbol('\\]')),
-	$elm$parser$Parser$getChompedString(
-		$elm$parser$Parser$chompUntil(']')));
+	$elm$parser$Parser$succeed(
+		function (s) {
+			return $author$project$Parser$Document$LTEndElement;
+		}),
+	$elm$parser$Parser$symbol(']'));
 var $elm$parser$Parser$oneOf = $elm$parser$Parser$Advanced$oneOf;
 var $author$project$Parser$Document$LTTextBlock = {$: 'LTTextBlock'};
 var $elm$parser$Parser$UnexpectedChar = {$: 'UnexpectedChar'};
 var $elm$parser$Parser$chompIf = function (isGood) {
 	return A2($elm$parser$Parser$Advanced$chompIf, isGood, $elm$parser$Parser$UnexpectedChar);
 };
+var $elm$parser$Parser$ignorer = $elm$parser$Parser$Advanced$ignorer;
 var $author$project$Parser$Document$textBlockParser = A2(
 	$elm$parser$Parser$ignorer,
 	$elm$parser$Parser$succeed($author$project$Parser$Document$LTTextBlock),
@@ -15310,8 +15333,8 @@ var $author$project$Parser$Document$textBlockParser = A2(
 var $author$project$Parser$Document$lineTypeParser = $elm$parser$Parser$oneOf(
 	_List_fromArray(
 		[
-			$author$project$Parser$Document$beginEnvLineParser,
-			$author$project$Parser$Document$endEnvLineParser,
+			$author$project$Parser$Document$beginElementParser,
+			$author$project$Parser$Document$endElementParser,
 			$author$project$Parser$Document$textBlockParser,
 			$elm$parser$Parser$succeed($author$project$Parser$Document$LTBlank)
 		]));
@@ -15343,6 +15366,7 @@ var $author$project$Parser$Document$classify = function (str) {
 		return $author$project$Parser$Document$LTBlank;
 	}
 };
+var $author$project$Parser$Document$debug = false;
 var $author$project$Parser$Getters$getSource = function (expr) {
 	switch (expr.$) {
 		case 'Text':
@@ -15783,7 +15807,6 @@ var $author$project$Parser$Loop$newExpr = F3(
 	});
 var $author$project$Parser$Loop$nextCursor = F2(
 	function (packet, tc) {
-		var _v0 = A2($elm$core$Debug$log, 'tc COUNT', tc.count);
 		if ((tc.text === '') || (tc.count > 10)) {
 			return $author$project$Parser$Tool$Done(
 				_Utils_update(
@@ -15792,12 +15815,12 @@ var $author$project$Parser$Loop$nextCursor = F2(
 						parsed: $elm$core$List$reverse(tc.parsed)
 					}));
 		} else {
-			var _v1 = A2(
+			var _v0 = A2(
 				$elm$parser$Parser$Advanced$run,
 				A2(packet.parser, tc.generation, tc.blockIndex),
 				tc.text);
-			if (_v1.$ === 'Ok') {
-				var expr = _v1.a;
+			if (_v0.$ === 'Ok') {
+				var expr = _v0.a;
 				var sourceMapLength = A2(
 					$elm$core$Maybe$withDefault,
 					0,
@@ -15823,15 +15846,15 @@ var $author$project$Parser$Loop$nextCursor = F2(
 							text: A2($elm$core$String$dropLeft, sourceMapLength, tc.text)
 						}));
 			} else {
-				var e = _v1.a;
-				var _v2 = packet.handleError;
-				if (_v2.$ === 'Nothing') {
+				var e = _v0.a;
+				var _v1 = packet.handleError;
+				if (_v1.$ === 'Nothing') {
 					return $author$project$Parser$Tool$Loop(
 						_Utils_update(
 							tc,
 							{count: tc.count + 1}));
 				} else {
-					var he = _v2.a;
+					var he = _v1.a;
 					return $author$project$Parser$Tool$Loop(
 						A2(he, tc, e));
 				}
@@ -15910,10 +15933,28 @@ var $author$project$Parser$Document$initWithBlockType = F2(
 				output: A2($elm$core$List$cons, newTC, state.output)
 			});
 	});
+var $author$project$Parser$Document$differentialBlockLevel = function (str) {
+	var chars = A2($elm$core$String$split, '', str);
+	var leftBrackets = $elm$core$List$length(
+		A2(
+			$elm$core$List$filter,
+			function (s) {
+				return s === '[';
+			},
+			chars));
+	var rightBrackets = $elm$core$List$length(
+		A2(
+			$elm$core$List$filter,
+			function (s) {
+				return s === ']';
+			},
+			chars));
+	return leftBrackets - rightBrackets;
+};
 var $author$project$Parser$Document$popBlockStack = F2(
 	function (currentLine_, state) {
-		var newBlockTypeStack = A2($elm$core$List$drop, 1, state.blockTypeStack);
-		if (_Utils_eq(newBlockTypeStack, _List_Nil)) {
+		var newBlockLevel = state.blockLevel + $author$project$Parser$Document$differentialBlockLevel(currentLine_);
+		if (!newBlockLevel) {
 			var input_ = A2(
 				$elm$core$String$join,
 				'\n',
@@ -15927,8 +15968,8 @@ var $author$project$Parser$Document$popBlockStack = F2(
 				state,
 				{
 					blockContents: A2($elm$core$List$cons, currentLine_, state.blockContents),
+					blockLevel: 0,
 					blockType: $author$project$Parser$Document$Start,
-					blockTypeStack: _List_Nil,
 					lineNumber: state.lineNumber + (2 + $elm$core$List$length(state.blockContents)),
 					output: A2($elm$core$List$cons, tc, state.output)
 				});
@@ -15936,40 +15977,65 @@ var $author$project$Parser$Document$popBlockStack = F2(
 			return _Utils_update(
 				state,
 				{
-					blockContents: A2($elm$core$List$cons, currentLine_, state.blockContents)
+					blockContents: A2($elm$core$List$cons, currentLine_, state.blockContents),
+					blockLevel: newBlockLevel
 				});
 		}
 	});
-var $author$project$Parser$Document$pushBlock = function (state) {
-	var tc = A3(
-		$author$project$Parser$Driver$parseLoop,
-		state.generation,
-		state.lineNumber,
-		A2(
-			$elm$core$String$join,
-			'\n',
-			$elm$core$List$reverse(state.blockContents)));
-	return _Utils_update(
-		state,
-		{
-			blockContents: _List_Nil,
-			blockType: $author$project$Parser$Document$Start,
-			lineNumber: state.lineNumber + $author$project$Parser$Document$countLines(state.blockContents),
-			output: A2($elm$core$List$cons, tc, state.output)
-		});
-};
-var $author$project$Parser$Document$pushBlockStack = F2(
-	function (currentLine_, state) {
+var $author$project$Parser$Document$pushBlock_ = F2(
+	function (line, state) {
+		var tc = A3(
+			$author$project$Parser$Driver$parseLoop,
+			state.generation,
+			state.lineNumber,
+			_Utils_ap(
+				line,
+				A2(
+					$elm$core$String$join,
+					'\n',
+					$elm$core$List$reverse(state.blockContents))));
 		return _Utils_update(
 			state,
 			{
-				blockContents: A2($elm$core$List$cons, currentLine_, state.blockContents)
+				blockContents: _List_Nil,
+				blockLevel: 0,
+				blockType: $author$project$Parser$Document$Start,
+				lineNumber: state.lineNumber + $author$project$Parser$Document$countLines(state.blockContents),
+				output: A2($elm$core$List$cons, tc, state.output)
 			});
+	});
+var $author$project$Parser$Document$pushBlock = function (state) {
+	return A2($author$project$Parser$Document$pushBlock_, '', state);
+};
+var $author$project$Parser$Document$pushBlockStack = F2(
+	function (currentLine_, state) {
+		var newBlockLevel = state.blockLevel + $author$project$Parser$Document$differentialBlockLevel(currentLine_);
+		return (!newBlockLevel) ? A2($author$project$Parser$Document$pushBlock_, '\n' + currentLine_, state) : _Utils_update(
+			state,
+			{
+				blockContents: A2($elm$core$List$cons, currentLine_, state.blockContents),
+				blockLevel: newBlockLevel
+			});
+	});
+var $elm$core$Debug$toString = _Debug_toString;
+var $author$project$Parser$Document$report = F3(
+	function (debug_, line, state) {
+		return debug_ ? A3(
+			$elm$core$Debug$log,
+			'X',
+			$elm$core$Debug$toString,
+			{
+				blockContents: state.blockContents,
+				blockLevel: state.blockLevel,
+				blockType: state.blockType,
+				classif: $author$project$Parser$Document$classify(line),
+				line: line
+			}) : A2($elm$core$Debug$log, '', '');
 	});
 var $author$project$Parser$Document$start = function (state) {
 	return _Utils_update(
 		state,
-		{blockContents: _List_Nil, blockType: $author$project$Parser$Document$Start, blockTypeStack: _List_Nil});
+		{blockContents: _List_Nil, blockLevel: 0, blockType: $author$project$Parser$Document$Start});
 };
 var $author$project$Parser$Document$nextState = function (state_) {
 	var _v0 = $elm$core$List$head(state_.input);
@@ -15992,91 +16058,112 @@ var $author$project$Parser$Document$nextState = function (state_) {
 					case 'LTBlank':
 						var _v2 = _v1.a;
 						var _v3 = _v1.b;
+						var _v4 = A3($author$project$Parser$Document$report, $author$project$Parser$Document$debug, currentLine, state_);
 						return $author$project$Parser$Document$Loop(
 							$author$project$Parser$Document$start(state));
-					case 'BeginElementBlock':
-						var _v4 = _v1.a;
-						var _v5 = _v1.b;
+					case 'LTBeginElement':
+						var _v5 = _v1.a;
+						var _v6 = _v1.b;
+						var _v7 = A3($author$project$Parser$Document$report, $author$project$Parser$Document$debug, currentLine, state_);
 						return $author$project$Parser$Document$Loop(
-							A2($author$project$Parser$Document$pushBlockStack, currentLine, state));
-					case 'EndElementBlock':
-						var _v6 = _v1.a;
-						var _v7 = _v1.b;
+							A2(
+								$author$project$Parser$Document$pushBlockStack,
+								currentLine,
+								_Utils_update(
+									state,
+									{blockType: $author$project$Parser$Document$ElementBlock})));
+					case 'LTEndElement':
+						var _v8 = _v1.a;
+						var _v9 = _v1.b;
+						var _v10 = A3($author$project$Parser$Document$report, $author$project$Parser$Document$debug, currentLine, state_);
 						return $author$project$Parser$Document$Loop(
 							A3($author$project$Parser$Document$initBlock, $author$project$Parser$Document$ErrorBlock, currentLine, state));
 					default:
-						var _v8 = _v1.a;
-						var _v9 = _v1.b;
+						var _v11 = _v1.a;
+						var _v12 = _v1.b;
+						var _v13 = A3($author$project$Parser$Document$report, $author$project$Parser$Document$debug, currentLine, state_);
 						return $author$project$Parser$Document$Loop(
 							A3($author$project$Parser$Document$initBlock, $author$project$Parser$Document$TextBlock, currentLine, state));
 				}
 			case 'ErrorBlock':
 				switch (_v1.b.$) {
 					case 'LTBlank':
-						var _v10 = _v1.a;
-						var _v11 = _v1.b;
+						var _v14 = _v1.a;
+						var _v15 = _v1.b;
+						var _v16 = A3($author$project$Parser$Document$report, $author$project$Parser$Document$debug, currentLine, state_);
 						return $author$project$Parser$Document$Loop(
 							_Utils_update(
 								state,
 								{blockContents: _List_Nil, blockType: $author$project$Parser$Document$Start}));
-					case 'BeginElementBlock':
-						var _v12 = _v1.a;
-						var _v13 = _v1.b;
+					case 'LTBeginElement':
+						var _v17 = _v1.a;
+						var _v18 = _v1.b;
+						var _v19 = A3($author$project$Parser$Document$report, $author$project$Parser$Document$debug, currentLine, state_);
 						return $author$project$Parser$Document$Loop(
 							A2($author$project$Parser$Document$initWithBlockType, currentLine, state));
-					case 'EndElementBlock':
-						var _v14 = _v1.a;
-						var _v15 = _v1.b;
+					case 'LTEndElement':
+						var _v20 = _v1.a;
+						var _v21 = _v1.b;
+						var _v22 = A3($author$project$Parser$Document$report, $author$project$Parser$Document$debug, currentLine, state_);
 						return $author$project$Parser$Document$Loop(
 							A2($author$project$Parser$Document$addToBlockContents, currentLine, state));
 					default:
-						var _v16 = _v1.a;
-						var _v17 = _v1.b;
+						var _v23 = _v1.a;
+						var _v24 = _v1.b;
+						var _v25 = A3($author$project$Parser$Document$report, $author$project$Parser$Document$debug, currentLine, state_);
 						return $author$project$Parser$Document$Loop(
 							A2($author$project$Parser$Document$initWithBlockType, currentLine, state));
 				}
 			case 'TextBlock':
 				switch (_v1.b.$) {
 					case 'LTBlank':
-						var _v18 = _v1.a;
-						var _v19 = _v1.b;
+						var _v26 = _v1.a;
+						var _v27 = _v1.b;
+						var _v28 = A3($author$project$Parser$Document$report, $author$project$Parser$Document$debug, currentLine, state_);
 						return $author$project$Parser$Document$Loop(
 							$author$project$Parser$Document$pushBlock(state));
-					case 'BeginElementBlock':
-						var _v20 = _v1.a;
-						var _v21 = _v1.b;
+					case 'LTBeginElement':
+						var _v29 = _v1.a;
+						var _v30 = _v1.b;
+						var _v31 = A3($author$project$Parser$Document$report, $author$project$Parser$Document$debug, currentLine, state_);
 						return $author$project$Parser$Document$Loop(
 							A2($author$project$Parser$Document$initWithBlockType, currentLine, state));
-					case 'EndElementBlock':
-						var _v22 = _v1.a;
-						var _v23 = _v1.b;
+					case 'LTEndElement':
+						var _v32 = _v1.a;
+						var _v33 = _v1.b;
+						var _v34 = A3($author$project$Parser$Document$report, $author$project$Parser$Document$debug, currentLine, state_);
 						return $author$project$Parser$Document$Loop(
 							A2($author$project$Parser$Document$addToBlockContents, currentLine, state));
 					default:
-						var _v24 = _v1.a;
-						var _v25 = _v1.b;
+						var _v35 = _v1.a;
+						var _v36 = _v1.b;
+						var _v37 = A3($author$project$Parser$Document$report, $author$project$Parser$Document$debug, currentLine, state_);
 						return $author$project$Parser$Document$Loop(
 							A2($author$project$Parser$Document$addToBlockContents, currentLine, state));
 				}
 			default:
 				switch (_v1.b.$) {
 					case 'LTBlank':
-						var _v26 = _v1.a;
-						var _v27 = _v1.b;
+						var _v38 = _v1.a;
+						var _v39 = _v1.b;
+						var _v40 = A3($author$project$Parser$Document$report, $author$project$Parser$Document$debug, currentLine, state_);
 						return $author$project$Parser$Document$Loop(state);
-					case 'BeginElementBlock':
-						var _v28 = _v1.a;
-						var _v29 = _v1.b;
+					case 'LTBeginElement':
+						var _v41 = _v1.a;
+						var _v42 = _v1.b;
+						var _v43 = A3($author$project$Parser$Document$report, $author$project$Parser$Document$debug, currentLine, state_);
 						return $author$project$Parser$Document$Loop(
 							A2($author$project$Parser$Document$pushBlockStack, currentLine, state));
-					case 'EndElementBlock':
-						var _v30 = _v1.a;
-						var _v31 = _v1.b;
+					case 'LTEndElement':
+						var _v44 = _v1.a;
+						var _v45 = _v1.b;
+						var _v46 = A3($author$project$Parser$Document$report, $author$project$Parser$Document$debug, currentLine, state_);
 						return $author$project$Parser$Document$Loop(
 							A2($author$project$Parser$Document$popBlockStack, currentLine, state));
 					default:
-						var _v32 = _v1.a;
-						var _v33 = _v1.b;
+						var _v47 = _v1.a;
+						var _v48 = _v1.b;
+						var _v49 = A3($author$project$Parser$Document$report, $author$project$Parser$Document$debug, currentLine, state_);
 						return $author$project$Parser$Document$Loop(
 							A2($author$project$Parser$Document$addToBlockContents, currentLine, state));
 				}
@@ -16270,7 +16357,6 @@ var $elm$core$Result$map = F2(
 		}
 	});
 var $author$project$Main$paragraphFormat2 = {maximumWidth: 160, optimalWidth: 150, stringWidth: $elm$core$String$length};
-var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$Main$parsed_ = function (pt) {
 	return A2(
 		$folkertdev$elm_paragraph$Paragraph$lines,
