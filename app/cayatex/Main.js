@@ -5312,7 +5312,7 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$RenderedMode = {$: 'RenderedMode'};
-var $author$project$Data$text = '[section CaYaTeX Test Document]\n\n%Notice the a leading percent sign makes a line into a comment.\n\n[italic [fontRGB |12, 140, 176| The present document demonstrates some of the\nprogress towards specifiying CaYaTeX and implementing it in Elm. The work\nhere is incomplete, and there are bugs. But it\nis a start.]]\n\n[subsection Math and other things]\n\n\nPythagoras says that [math a^2 + b^2 = c^2].\nThis is an [strong [italic extremely]] cool result. But just as cool is the below:\n[mathDisplay \\sum_1^\\infty 1/n = \\infty,]\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\n[theorem There are infinitely many primes [math p \\equiv 1 (4).]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\nTime for some code: [code col :: Int -> Matrix a -> \\[a\\]].\nDo you recognize the language (ha ha)?\n[italic [highlight And can we do something about the awkwardness of escaping brackets inside code elements?]]\n\nExample:  [highlightRGB |214, 93, 32| [fontRGB |169, 232, 245| What color is this?]]\n\n[strong Note:] We need to implement a macro facility so that users can abbreviate constructs like\nthe one in the previous example.\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n[subsection Lists, etc.]\n\nNote that lists can be nested and can be given a title if desired.  The symbol for "bulleted" lists is • by default, but can be specified by the user.\n\n[list |title:Errands and other stuff|\n\n    [item Bread, milk, O-juice]\n\n    [item Sand paper, white paint]\n\n    [list |none|\n\n        [item A]\n\n        [item B]\n\n        [list |§, title:Greek symbols|\n\n            [item [math \\alpha]]\n\n            [item  [math \\beta]]\n\n]]]\n\n\n';
+var $author$project$Data$text = '\n[section CaYaTeX Test Document]\n\n%Notice the a leading percent sign makes a line into a comment.\n\n[italic [fontRGB |12, 140, 176| The present document demonstrates some of the\nprogress towards specifiying CaYaTeX and implementing it in Elm. The work\nhere is incomplete, and there are bugs. But it\nis a start.]]\n\n[italic [fontRGB |12, 140, 176|  One of the most important issues to address is providing robust error handling\nthat gives the user real-time, informative feedback on what has gone wrong and how to fix it.]]\n\n[subsection Mathematics]\n\n\nPythagoras says that [math a^2 + b^2 = c^2].\nThis is an [strong [italic extremely]] cool result. But just as cool is the below:\n[mathDisplay \\sum_1^\\infty 1/n = \\infty,]\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\n[theorem There are infinitely many primes [math p \\equiv 1 (4).]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\n\n[subsection Code]\n\nTime for some code: [code col :: Int -> Matrix a -> \\[a\\]].\nDo you recognize the language (ha ha)?\n[italic [highlight And can we do something about the awkwardness of escaping brackets inside code elements?]]\n\n[subsection Color]\n\nExample:  [highlightRGB |214, 93, 32| [fontRGB |169, 232, 245| What color is this?]]\n\n[strong Note:] We need to implement a macro facility so that users can abbreviate constructs like\nthe one in the previous example.\n\n[subsection Images]\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n[subsection Lists]\n\nNote that lists can be nested and can be given a title if desired.  The symbol for "bulleted" lists is • by default, but can be specified by the user.  We have not yet implemented numbered lists.\n\n[list |title:Errands and other stuff|\n\n    [item Bread, milk, O-juice]\n\n    [item Sand paper, white paint]\n\n    [list |none|\n\n        [item A]\n\n        [item B]\n\n        [list |§, title:Greek symbols|\n\n            [item [math \\alpha = 0.123]]\n\n            [item  [math \\beta = 4.567]]\n\n]]]\n';
 var $author$project$Main$initialText = $author$project$Data$text;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
@@ -6610,7 +6610,7 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$none;
 };
-var $author$project$Data$test = '[strong A]\n[strong B]\nC\n';
+var $author$project$Data$test = 'before\n\n[subsection A\n\n[strong B]\n[strong C]\n[strong D]\n[strong E]\n\nafter\n';
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -14868,7 +14868,7 @@ var $author$project$Render$Elm$section = F5(
 						$author$project$Render$Elm$getText(body)))
 				]));
 	});
-var $author$project$Render$Elm$subsectionFontSize = 18;
+var $author$project$Render$Elm$subsectionFontSize = 16;
 var $author$project$Render$Elm$subsection = F5(
 	function (renderArgs, name, args, body, sm) {
 		return A2(
@@ -15333,7 +15333,6 @@ var $author$project$Parser$Document$Done = function (a) {
 	return {$: 'Done', a: a};
 };
 var $author$project$Parser$Document$ElementBlock = {$: 'ElementBlock'};
-var $author$project$Parser$Document$ErrorBlock = {$: 'ErrorBlock'};
 var $author$project$Parser$Document$Loop = function (a) {
 	return {$: 'Loop', a: a};
 };
@@ -15559,27 +15558,30 @@ var $author$project$Parser$Driver$handleRightBracketError = F4(
 			'handle TXT LINES',
 			$elm$core$String$lines(tc_.text));
 		var errorRow = A2(
-			$elm$core$Maybe$withDefault,
-			0,
+			$elm$core$Debug$log,
+			'errorRow',
 			A2(
-				$elm$core$Maybe$map,
-				function ($) {
-					return $.row;
-				},
-				mFirstError));
+				$elm$core$Maybe$withDefault,
+				0,
+				A2(
+					$elm$core$Maybe$map,
+					function ($) {
+						return $.row;
+					},
+					mFirstError)));
 		var errorLines = A2(
 			$elm$core$Debug$log,
 			'handle ERR LINES',
-			A2($elm$core$List$take, errorRow - 1, textLines));
+			A2($elm$core$List$take, errorRow, textLines));
 		var badText = A2(
 			$elm$core$Debug$log,
 			'BAD TEXT',
 			function () {
-				var _v0 = $elm$core$List$head(textLines);
-				if (_v0.$ === 'Nothing') {
+				var _v1 = $elm$core$List$head(textLines);
+				if (_v1.$ === 'Nothing') {
 					return 'Oops, couldn\'t find your error text';
 				} else {
-					var str = _v0.a;
+					var str = _v1.a;
 					return str;
 				}
 			}());
@@ -15595,27 +15597,37 @@ var $author$project$Parser$Driver$handleRightBracketError = F4(
 					$author$project$Parser$Driver$fakePipeSymbol,
 					A3($elm$core$String$replace, '[', $author$project$Parser$Driver$fakeLeftBracket, badText))));
 		var replacementText = '[highlightRGB |255, 130, 130| missing right bracket in] [highlightRGB |186, 205, 255| ' + (correctedText + ' ]');
-		var newTextLines = $elm$core$List$reverse(
-			A3(
-				$elm_community$list_extra$List$Extra$setIf,
-				function (t) {
-					return _Utils_eq(t, badText);
-				},
-				replacementText,
-				textLines));
+		var newTextLines = A2(
+			$elm$core$Debug$log,
+			'NEW TEXT',
+			$elm$core$List$reverse(
+				A3(
+					$elm_community$list_extra$List$Extra$setIf,
+					function (t) {
+						return _Utils_eq(t, badText);
+					},
+					replacementText,
+					errorLines)));
+		var newText = A2(
+			$elm$core$Debug$log,
+			'NT',
+			A2(
+				$elm$core$String$join,
+				'\n',
+				$elm$core$List$reverse(newTextLines)));
+		var _v0 = A2($elm$core$Debug$log, 'x, he, parsed', tc_.parsed);
 		return {
 			block: '?? TO DO',
 			blockIndex: tc_.blockIndex,
 			count: tc_.count,
 			generation: tc_.generation,
-			offset: A3($author$project$Parser$Driver$newOffset, tc_, errorColumn, mRecoveryData),
-			parsed: $author$project$Parser$Driver$parse__(
-				A2($elm$core$String$join, '\n', errorLines)),
+			offset: A2(
+				$elm$core$Debug$log,
+				'RBEH, offset',
+				A3($author$project$Parser$Driver$newOffset, tc_, errorColumn, mRecoveryData)),
+			parsed: A2($elm$core$List$drop, 1, tc_.parsed),
 			stack: _List_Nil,
-			text: A2(
-				$elm$core$String$join,
-				'\n',
-				$elm$core$List$reverse(newTextLines))
+			text: newText
 		};
 	});
 var $author$project$Parser$Driver$makeNewText = F3(
@@ -15804,7 +15816,8 @@ var $author$project$Parser$Loop$newExpr = F3(
 	});
 var $author$project$Parser$Loop$nextCursor = F2(
 	function (packet, tc) {
-		if ((tc.text === '') || (tc.count > 10)) {
+		var _v0 = A2($elm$core$Debug$log, 'xxx tc;  count', tc.count);
+		if ((tc.text === '') || (tc.count > 100)) {
 			return $author$project$Parser$Tool$Done(
 				_Utils_update(
 					tc,
@@ -15812,12 +15825,12 @@ var $author$project$Parser$Loop$nextCursor = F2(
 						parsed: $elm$core$List$reverse(tc.parsed)
 					}));
 		} else {
-			var _v0 = A2(
+			var _v1 = A2(
 				$elm$parser$Parser$Advanced$run,
 				A2(packet.parser, tc.generation, tc.blockIndex),
 				tc.text);
-			if (_v0.$ === 'Ok') {
-				var expr = _v0.a;
+			if (_v1.$ === 'Ok') {
+				var expr = _v1.a;
 				var sourceMapLength = A2(
 					$elm$core$Maybe$withDefault,
 					0,
@@ -15843,15 +15856,19 @@ var $author$project$Parser$Loop$nextCursor = F2(
 							text: A2($elm$core$String$dropLeft, sourceMapLength, tc.text)
 						}));
 			} else {
-				var e = _v0.a;
-				var _v1 = packet.handleError;
-				if (_v1.$ === 'Nothing') {
+				var e = _v1.a;
+				var _v2 = packet.handleError;
+				if (_v2.$ === 'Nothing') {
 					return $author$project$Parser$Tool$Loop(
 						_Utils_update(
 							tc,
 							{count: tc.count + 1}));
 				} else {
-					var he = _v1.a;
+					var he = _v2.a;
+					var _v3 = A2(
+						$elm$core$Debug$log,
+						'x, he tc e in LOOP',
+						A2(he, tc, e));
 					return $author$project$Parser$Tool$Loop(
 						A2(he, tc, e));
 				}
@@ -16020,25 +16037,6 @@ var $author$project$Parser$Document$initBlock = F3(
 				blockType: blockType_
 			});
 	});
-var $author$project$Parser$Document$initWithBlockType = F2(
-	function (currentLine_, state) {
-		var newTC = A3(
-			$author$project$Parser$Driver$parseLoop,
-			state.generation,
-			state.lineNumber,
-			A2(
-				$elm$core$String$join,
-				'\n',
-				$elm$core$List$reverse(
-					A2($elm$core$List$cons, currentLine_, state.blockContents))));
-		return _Utils_update(
-			state,
-			{
-				blockContents: _List_Nil,
-				lineNumber: state.lineNumber + $author$project$Parser$Document$countLines(state.blockContents),
-				output: A2($elm$core$List$cons, newTC, state.output)
-			});
-	});
 var $author$project$Parser$Document$popBlockStack = F2(
 	function (currentLine_, state) {
 		var newBlockLevel = state.blockLevel + $author$project$Parser$Document$differentialBlockLevel(currentLine_);
@@ -16132,21 +16130,14 @@ var $author$project$Parser$Document$nextState = function (state_) {
 						var _v4 = _v1.b;
 						return $author$project$Parser$Document$Loop(
 							$author$project$Parser$Document$start(state));
-					case 'ErrorBlock':
+					case 'TextBlock':
 						var _v11 = _v1.a;
 						var _v12 = _v1.b;
 						return $author$project$Parser$Document$Loop(
-							_Utils_update(
-								state,
-								{blockContents: _List_Nil, blockType: $author$project$Parser$Document$Start}));
-					case 'TextBlock':
-						var _v19 = _v1.a;
-						var _v20 = _v1.b;
-						return $author$project$Parser$Document$Loop(
 							$author$project$Parser$Document$pushBlock(state));
 					default:
-						var _v27 = _v1.a;
-						var _v28 = _v1.b;
+						var _v19 = _v1.a;
+						var _v20 = _v1.b;
 						return $author$project$Parser$Document$Loop(
 							A2($author$project$Parser$Document$pushBlockStack, currentLine, state));
 				}
@@ -16162,19 +16153,14 @@ var $author$project$Parser$Document$nextState = function (state_) {
 								_Utils_update(
 									state,
 									{blockType: $author$project$Parser$Document$ElementBlock})));
-					case 'ErrorBlock':
+					case 'TextBlock':
 						var _v13 = _v1.a;
 						var _v14 = _v1.b;
 						return $author$project$Parser$Document$Loop(
-							A2($author$project$Parser$Document$initWithBlockType, currentLine, state));
-					case 'TextBlock':
-						var _v21 = _v1.a;
-						var _v22 = _v1.b;
-						return $author$project$Parser$Document$Loop(
 							A2($author$project$Parser$Document$startBlock, currentLine, state));
 					default:
-						var _v29 = _v1.a;
-						var _v30 = _v1.b;
+						var _v21 = _v1.a;
+						var _v22 = _v1.b;
 						return $author$project$Parser$Document$Loop(
 							A2($author$project$Parser$Document$startBlock, currentLine, state));
 				}
@@ -16184,20 +16170,15 @@ var $author$project$Parser$Document$nextState = function (state_) {
 						var _v7 = _v1.a;
 						var _v8 = _v1.b;
 						return $author$project$Parser$Document$Loop(
-							A3($author$project$Parser$Document$initBlock, $author$project$Parser$Document$ErrorBlock, currentLine, state));
-					case 'ErrorBlock':
+							A3($author$project$Parser$Document$initBlock, $author$project$Parser$Document$TextBlock, 'Error: ' + currentLine, state));
+					case 'TextBlock':
 						var _v15 = _v1.a;
 						var _v16 = _v1.b;
 						return $author$project$Parser$Document$Loop(
 							A2($author$project$Parser$Document$addToBlockContents, currentLine, state));
-					case 'TextBlock':
+					default:
 						var _v23 = _v1.a;
 						var _v24 = _v1.b;
-						return $author$project$Parser$Document$Loop(
-							A2($author$project$Parser$Document$addToBlockContents, currentLine, state));
-					default:
-						var _v31 = _v1.a;
-						var _v32 = _v1.b;
 						return $author$project$Parser$Document$Loop(
 							A2($author$project$Parser$Document$popBlockStack, currentLine, state));
 				}
@@ -16208,19 +16189,14 @@ var $author$project$Parser$Document$nextState = function (state_) {
 						var _v10 = _v1.b;
 						return $author$project$Parser$Document$Loop(
 							A3($author$project$Parser$Document$initBlock, $author$project$Parser$Document$TextBlock, currentLine, state));
-					case 'ErrorBlock':
+					case 'TextBlock':
 						var _v17 = _v1.a;
 						var _v18 = _v1.b;
 						return $author$project$Parser$Document$Loop(
-							A2($author$project$Parser$Document$initWithBlockType, currentLine, state));
-					case 'TextBlock':
-						var _v25 = _v1.a;
-						var _v26 = _v1.b;
-						return $author$project$Parser$Document$Loop(
 							A2($author$project$Parser$Document$addToBlockContents, currentLine, state));
 					default:
-						var _v33 = _v1.a;
-						var _v34 = _v1.b;
+						var _v25 = _v1.a;
+						var _v26 = _v1.b;
 						return $author$project$Parser$Document$Loop(
 							A2($author$project$Parser$Document$addToBlockContents, currentLine, state));
 				}
