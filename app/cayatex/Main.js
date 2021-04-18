@@ -5312,7 +5312,7 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$RenderedMode = {$: 'RenderedMode'};
-var $author$project$Data$text = '[section CaYaTeX Test Document]\n\n%Notice the a leading percent sign makes a line into a comment.\n\n[italic [fontRGB |12, 140, 176| The present document demonstrates some of the\nprogress towards specifiying CaYaTeX and implementing it in Elm. The work\nhere is incomplete, and there are many bugs in the implementation. But it\nis a start.]]\n\n[subsection Math and other things]\n\n\nPythagoras says that [math a^2 + b^2 = c^2].\nThis is an [strong [italic extremely]] cool result. But just as cool is the below:\n[mathDisplay \\sum_1^\\infty 1/n = \\infty,]\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\n[theorem There are infinitely many primes [math p \\equiv 1 (4).]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\nTime for some code: [code col :: Int -> Matrix a -> \\[a\\]].\nDo you recognize the language (ha ha)?\n[italic [highlight And can we do something about the awkwardness of escaping brackets inside code elements?]]\n\nExample:  [highlightRGB |214, 93, 32| [fontRGB |169, 232, 245| What color is this?]]\n\n[strong Note:] We need to implement a macro facility so that users can abbreviate constructs like\nthe one in the previous example.\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n[subsection Lists, etc.]\n\nNote that lists can be nested and can be given a title if desired.  The symbol for "bulleted" lists is • by default, but can be specified by the user.\n\n[list |title:Errands and other stuff|\n\n    [item Bread, milk, O-juice]\n\n    [item Sand paper, white paint]\n\n    [list |none|\n\n        [item A]\n\n        [item B]\n\n        [list |§, title:Greek symbols|\n\n            [item [math \\alpha]]\n\n            [item  [math \\beta]]\n\n]]]\n\n% Notice the a leading percent sign makes a line into a comment.\n\n%\n%[subsection About Errors]\n%\n%Look what happens here:\n%\n%(1) [ital One more beer, please!]\n%\n%(2) [italic One more beer, please\n';
+var $author$project$Data$text = '[section CaYaTeX Test Document]\n\n%Notice the a leading percent sign makes a line into a comment.\n\n[italic [fontRGB |12, 140, 176| The present document demonstrates some of the\nprogress towards specifiying CaYaTeX and implementing it in Elm. The work\nhere is incomplete, and there are bugs. But it\nis a start.]]\n\n[subsection Math and other things]\n\n\nPythagoras says that [math a^2 + b^2 = c^2].\nThis is an [strong [italic extremely]] cool result. But just as cool is the below:\n[mathDisplay \\sum_1^\\infty 1/n = \\infty,]\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\n[theorem There are infinitely many primes [math p \\equiv 1 (4).]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\nTime for some code: [code col :: Int -> Matrix a -> \\[a\\]].\nDo you recognize the language (ha ha)?\n[italic [highlight And can we do something about the awkwardness of escaping brackets inside code elements?]]\n\nExample:  [highlightRGB |214, 93, 32| [fontRGB |169, 232, 245| What color is this?]]\n\n[strong Note:] We need to implement a macro facility so that users can abbreviate constructs like\nthe one in the previous example.\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n[subsection Lists, etc.]\n\nNote that lists can be nested and can be given a title if desired.  The symbol for "bulleted" lists is • by default, but can be specified by the user.\n\n[list |title:Errands and other stuff|\n\n    [item Bread, milk, O-juice]\n\n    [item Sand paper, white paint]\n\n    [list |none|\n\n        [item A]\n\n        [item B]\n\n        [list |§, title:Greek symbols|\n\n            [item [math \\alpha]]\n\n            [item  [math \\beta]]\n\n]]]\n\n\n';
 var $author$project$Main$initialText = $author$project$Data$text;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
@@ -6610,7 +6610,7 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$none;
 };
-var $author$project$Data$test = 'A\n[highlight B]\n';
+var $author$project$Data$test = '[strong A]\n[strong B]\nC\n';
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -15356,6 +15356,7 @@ var $author$project$Parser$Document$differentialBlockLevel = function (str) {
 			chars));
 	return leftBrackets - rightBrackets;
 };
+var $elm$core$Debug$log = _Debug_log;
 var $author$project$Parser$Document$countLines = function (list) {
 	return function (x) {
 		return x + 1;
@@ -15450,7 +15451,6 @@ var $author$project$Parser$Driver$fakePipeSymbol = $elm$core$String$fromChar(
 	_Utils_chr('ǀ'));
 var $author$project$Parser$Driver$fakeRightBracket = $elm$core$String$fromChar(
 	_Utils_chr('⁆'));
-var $elm$core$Debug$log = _Debug_log;
 var $author$project$Parser$Driver$newOffset = F3(
 	function (tc_, errorColumn_, mRecoveryData_) {
 		if (mRecoveryData_.$ === 'Just') {
@@ -15890,6 +15890,10 @@ var $author$project$Parser$Document$addToBlockContents = F2(
 	function (currentLine_, state) {
 		var deltaBlockLevel = $author$project$Parser$Document$differentialBlockLevel(currentLine_);
 		var newBlockLevel = state.blockLevel + deltaBlockLevel;
+		var _v0 = A2(
+			$elm$core$Debug$log,
+			'(BL, Delta)',
+			_Utils_Tuple2(state.blockLevel, deltaBlockLevel));
 		return ((!newBlockLevel) && (deltaBlockLevel < 0)) ? A2($author$project$Parser$Document$pushBlock_, '\n' + currentLine_, state) : _Utils_update(
 			state,
 			{
@@ -16092,8 +16096,7 @@ var $author$project$Parser$Document$startBlock = F2(
 		return _Utils_update(
 			state,
 			{
-				blockContents: _List_fromArray(
-					[currentLine_]),
+				blockContents: A2($elm$core$List$cons, currentLine_, state.blockContents),
 				blockLevel: newBlockLevel,
 				blockType: $author$project$Parser$Document$ElementBlock
 			});
@@ -16168,12 +16171,12 @@ var $author$project$Parser$Document$nextState = function (state_) {
 						var _v21 = _v1.a;
 						var _v22 = _v1.b;
 						return $author$project$Parser$Document$Loop(
-							A2($author$project$Parser$Document$initWithBlockType, currentLine, state));
+							A2($author$project$Parser$Document$startBlock, currentLine, state));
 					default:
 						var _v29 = _v1.a;
 						var _v30 = _v1.b;
 						return $author$project$Parser$Document$Loop(
-							A2($author$project$Parser$Document$pushBlockStack, currentLine, state));
+							A2($author$project$Parser$Document$startBlock, currentLine, state));
 				}
 			case 'LTEndElement':
 				switch (_v1.a.$) {
