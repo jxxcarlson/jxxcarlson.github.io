@@ -5312,7 +5312,7 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$RenderedMode = {$: 'RenderedMode'};
-var $author$project$Data$text = '\n[section CaYaTeX Test Document]\n\nBy James Carlson and Nicholas Yang\n\n%Notice the a leading percent sign makes a line into a comment.\n\n[fontRGB |12, 140, 176| CaYaTeX is a simple yet powerful markup language that\ncompiles to both LaTeX and Html.]\n\n[fontRGB |12, 140, 176| The present document, written in CaYaTeX,\nlays out our design goals and demonstrates some of the\nprogress we have made towards specifiying the language and implementing it in Elm. While our work\nis incomplete, it\nis a start.]\n\n% [fontRGB |12, 140, 176| We are also working on implementations in Rust. This will,\n% among other things, help us to cross-validate both implementations of the\n% specification.]\n\n\n[subsection Design Goals]\n\nThe goals of the CaYaTeX project are for the language to be\n\n[list\n\n[item [strong Small], hence easy to learn. [italic To this end there are just two constructs: ordinary text and [code elements]].]\n\n[item [strong Powerful].  [italic To this end, we borrow ideas from functional programming.  Elements have a Lisp-like syntax. An element has a name, an argument list, and a body (which is also an argument). The partial element [code name args] is a function [code Element -> Element]. Such functions can be composed, as in mathematics or as in languages such as Haskell and Elm.]]\n\n[item [strong Extensible]. [italic Via a macro facility].]\n\n[item [strong Multiple inputs and outputs.] Documents written in CaYaTeX can be compiled to LaTeX, Markdown, and HTML. Markdown documents can be compiled to CaYaTeX.]\n\n[item [strong Web-ready]. CaYaTeX has a differential compiler that makes it suitable for real-time editing, e.g.,  in a web app. ]\n\n[item [strong Kind and Helpful]. Displays friendly and informative error messages in real time in the rendered text; has hooks for highlighting the corresponding source text in a suitable IDE/editor.]\n\n[item [strong Modern]. Unicode compatible.]]\n\n\n[subsection Mathematics]\n\n\nPythagoras says that [math a^2 + b^2 = c^2].\nThis is an [strong [italic extremely]] cool result. But just as cool is the below:\n[mathDisplay \\sum_1^\\infty 1/n = \\infty,]\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\n[theorem There are infinitely many primes [math p \\equiv 1 (4).]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\n\n[subsection Code]\n\nTime for some code: [code col :: Int -> Matrix a -> \\[a\\]].\nDo you recognize the language (ha ha)?\n[italic [highlight And can we do something about the awkwardness of escaping brackets inside code elements?]]\n\n[subsection Color]\n\nExample:  [highlightRGB |214, 93, 32| [fontRGB |169, 232, 245| What color is this?]]\n\n[strong Note:] We need to implement a macro facility so that users can abbreviate constructs like\nthe one in the previous example.\n\n[subsection Images]\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n[subsection Lists]\n\nNote that lists can be nested and can be given a title if desired.  The symbol for "bulleted" lists is • by default, but can be specified by the user.  We have not yet implemented numbered lists.\n\n[list |title:Errands and other stuff|\n\n    [item Bread, milk, O-juice]\n\n    [item Sand paper, white paint]\n\n    [list |none|\n\n        [item A]\n\n        [item B]\n\n        [list |§, title:Greek symbols|\n\n            [item [math \\alpha = 0.123]]\n\n            [item  [math \\beta = 4.567]]\n\n]]]\n';
+var $author$project$Data$text = '\n[section CaYaTeX Test Document]\n\nBy James Carlson and Nicholas Yang\n\n%Notice the a leading percent sign makes a line into a comment.\n\n[fontRGB |12, 140, 176| CaYaTeX is a simple yet powerful markup language that\ncompiles to both LaTeX and Html.]\n\n[fontRGB |12, 140, 176| The present document, written in CaYaTeX,\nlays out our design goals and demonstrates some of the\nprogress we have made towards specifiying the language and implementing it in Elm. While our work\nis incomplete, it\nis a start.]\n\n% [fontRGB |12, 140, 176| We are also working on implementations in Rust. This will,\n% among other things, help us to cross-validate both implementations of the\n% specification.]\n\n\n[subsection Design Goals]\n\nThe goals of the CaYaTeX project are for the language to be\n\n[list\n\n[item [strong Small], hence easy to learn. [italic To this end there are just two constructs: ordinary text and [code elements]].]\n\n[item [strong Powerful].  [italic To this end, we borrow ideas from functional programming.  Elements have a Lisp-like syntax. An element has a name, an argument list, and a body (which is also an argument). The partial element [code name args] is a function [code Element -> Element]. Such functions can be composed, as in mathematics or as in languages such as Haskell and Elm.]]\n\n[item [strong Extensible]. [italic Via a macro facility].]\n\n[item [strong Multiple inputs and outputs.] Documents written in CaYaTeX can be compiled to LaTeX, Markdown, and HTML. Markdown documents can be compiled to CaYaTeX.]\n\n[item [strong Web-ready]. CaYaTeX has a differential compiler that makes it suitable for real-time editing, e.g.,  in a web app. ]\n\n[item [strong Kind and Helpful]. Displays friendly and informative error messages in real time in the rendered text; has hooks for highlighting the corresponding source text in a suitable IDE/editor.]\n\n[item [strong Modern]. Unicode compatible.]]\n\n\n[subsection Mathematics]\n\n\nPythagoras says that [math a^2 + b^2 = c^2].\nThis is an [strong [italic extremely]] cool result. But just as cool is the below:\n[mathDisplay \\sum_1^\\infty 1/n = \\infty,]\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\n[theorem There are infinitely many primes [math p \\equiv 1 (4).]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\n\n[subsection Code]\n\nTime for some code: [code raw##col :: Int -> Matrix a -> [a]##].\nDo you recognize the language (ha ha)?\n\n[italic [highlight Note the use of Rust-like raw strings here to avoid escaping the brackets.]]\n\n[subsection Color]\n\nExample:  [highlightRGB |214, 93, 32| [fontRGB |169, 232, 245| What color is this?]]\n\n[strong Note:] We need to implement a macro facility so that users can abbreviate constructs like\nthe one in the previous example.\n\n[subsection Images]\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n[subsection Lists]\n\nNote that lists can be nested and can be given a title if desired.  The symbol for "bulleted" lists is • by default, but can be specified by the user.  We have not yet implemented numbered lists.\n\n[list |title:Errands and other stuff|\n\n    [item Bread, milk, O-juice]\n\n    [item Sand paper, white paint]\n\n    [list |none|\n\n        [item A]\n\n        [item B]\n\n        [list |§, title:Greek symbols|\n\n            [item [math \\alpha = 0.123]]\n\n            [item  [math \\beta = 4.567]]\n\n]]]\n';
 var $author$project$Main$initialText = $author$project$Data$text;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
@@ -6087,7 +6087,7 @@ var $author$project$Parser$Tool$manyNonEmpty = function (p) {
 };
 var $elm$core$Basics$neq = _Utils_notEqual;
 var $author$project$Parser$Tool$text = F2(
-	function (prefixTest, suffixTest) {
+	function (prefixTest, predicate) {
 		return A2(
 			$elm$parser$Parser$Advanced$keeper,
 			A2(
@@ -6116,7 +6116,7 @@ var $author$project$Parser$Tool$text = F2(
 								$author$project$Parser$Error$UnHandledError(2))),
 						$elm$parser$Parser$Advanced$chompWhile(
 							function (c) {
-								return suffixTest(c);
+								return predicate(c);
 							}))),
 				$elm$parser$Parser$Advanced$getOffset),
 			$elm$parser$Parser$Advanced$getSource);
@@ -6146,7 +6146,7 @@ var $author$project$Parser$XString$textWithPredicate = function (predicate) {
 		$author$project$Parser$XString$reduce,
 		$author$project$Parser$XString$textListWithPredicate(predicate));
 };
-var $author$project$Parser$Element$text = F2(
+var $author$project$Parser$Element$plainText = F2(
 	function (generation, lineNumber) {
 		return A2(
 			$elm$parser$Parser$Advanced$inContext,
@@ -6161,6 +6161,142 @@ var $author$project$Parser$Element$text = F2(
 							{blockOffset: lineNumber, generation: generation, length: data.finish - data.start, offset: data.start}));
 				},
 				$author$project$Parser$XString$textWithPredicate($author$project$Parser$XString$isNonLanguageChar)));
+	});
+var $elm$core$String$dropRight = F2(
+	function (n, string) {
+		return (n < 1) ? string : A3($elm$core$String$slice, 0, -n, string);
+	});
+var $elm$core$Basics$ge = _Utils_ge;
+var $author$project$Parser$Tool$oneChar = A2(
+	$elm$parser$Parser$Advanced$keeper,
+	A2(
+		$elm$parser$Parser$Advanced$keeper,
+		A2(
+			$elm$parser$Parser$Advanced$keeper,
+			$elm$parser$Parser$Advanced$succeed(
+				F3(
+					function (begin, end, data) {
+						return A3($elm$core$String$slice, begin, end, data);
+					})),
+			A2(
+				$elm$parser$Parser$Advanced$ignorer,
+				$elm$parser$Parser$Advanced$getOffset,
+				A2(
+					$elm$parser$Parser$Advanced$chompIf,
+					function (c) {
+						return true;
+					},
+					$author$project$Parser$Error$UnHandledError(4)))),
+		$elm$parser$Parser$Advanced$getOffset),
+	$elm$parser$Parser$Advanced$getSource);
+var $elm$core$String$right = F2(
+	function (n, string) {
+		return (n < 1) ? '' : A3(
+			$elm$core$String$slice,
+			-n,
+			$elm$core$String$length(string),
+			string);
+	});
+var $author$project$Parser$RawString$updateState = F3(
+	function (maxHashes, c, state) {
+		return (c === '#') ? ((A2($elm$core$String$right, 1, state.content) === '#') ? ((_Utils_cmp(state.hashCount + 1, state.hashCount + 1) > 0) ? $elm$parser$Parser$Advanced$Done(
+			{
+				content: _Utils_ap(state.content, c),
+				hashCount: state.hashCount + 1
+			}) : $elm$parser$Parser$Advanced$Loop(
+			{
+				content: _Utils_ap(state.content, c),
+				hashCount: state.hashCount + 1
+			})) : $elm$parser$Parser$Advanced$Loop(
+			{
+				content: _Utils_ap(state.content, c),
+				hashCount: 1
+			})) : $elm$parser$Parser$Advanced$Loop(
+			{
+				content: _Utils_ap(state.content, c),
+				hashCount: 0
+			});
+	});
+var $author$project$Parser$RawString$rawStringHelp = F2(
+	function (hashes, state) {
+		return (_Utils_cmp(state.hashCount, hashes) > -1) ? $elm$parser$Parser$Advanced$succeed(
+			$elm$parser$Parser$Advanced$Done(state)) : A2(
+			$elm$parser$Parser$Advanced$map,
+			function (c) {
+				return A3($author$project$Parser$RawString$updateState, hashes, c, state);
+			},
+			$author$project$Parser$Tool$oneChar);
+	});
+var $author$project$Parser$RawString$rawStringLoop = function (hashes) {
+	return A2(
+		$elm$parser$Parser$Advanced$loop,
+		{content: '', hashCount: 0},
+		$author$project$Parser$RawString$rawStringHelp(hashes));
+};
+var $author$project$Parser$Error$ExpectingRawPrefix = {$: 'ExpectingRawPrefix'};
+var $author$project$Parser$RawString$rawStringPrefix = A2(
+	$elm$parser$Parser$Advanced$keeper,
+	A2(
+		$elm$parser$Parser$Advanced$keeper,
+		$elm$parser$Parser$Advanced$succeed(
+			F2(
+				function (begin, end) {
+					return (end - begin) - 3;
+				})),
+		A2(
+			$elm$parser$Parser$Advanced$ignorer,
+			A2(
+				$elm$parser$Parser$Advanced$ignorer,
+				$elm$parser$Parser$Advanced$getOffset,
+				$elm$parser$Parser$Advanced$symbol(
+					A2($elm$parser$Parser$Advanced$Token, 'raw#', $author$project$Parser$Error$ExpectingRawPrefix))),
+			$elm$parser$Parser$Advanced$chompWhile(
+				function (c) {
+					return _Utils_eq(
+						c,
+						_Utils_chr('#'));
+				}))),
+	$elm$parser$Parser$Advanced$getOffset);
+var $author$project$Parser$RawString$parser = A2(
+	$elm$parser$Parser$Advanced$andThen,
+	function (maxHashes) {
+		return A2(
+			$elm$parser$Parser$Advanced$map,
+			function (ls) {
+				return A2($elm$core$String$dropRight, maxHashes, ls.content);
+			},
+			$author$project$Parser$RawString$rawStringLoop(maxHashes));
+	},
+	$author$project$Parser$RawString$rawStringPrefix);
+var $author$project$Parser$Element$rawString = F2(
+	function (generation, lineNumber) {
+		return A2(
+			$elm$parser$Parser$Advanced$keeper,
+			A2(
+				$elm$parser$Parser$Advanced$keeper,
+				A2(
+					$elm$parser$Parser$Advanced$keeper,
+					$elm$parser$Parser$Advanced$succeed(
+						F3(
+							function (start, source, finish) {
+								return A2(
+									$author$project$Parser$Element$Text,
+									source,
+									$elm$core$Maybe$Just(
+										{blockOffset: lineNumber, generation: generation, length: finish - start, offset: start}));
+							})),
+					$elm$parser$Parser$Advanced$getOffset),
+				$author$project$Parser$RawString$parser),
+			$elm$parser$Parser$Advanced$getOffset);
+	});
+var $author$project$Parser$Element$text = F2(
+	function (generation, lineNumber) {
+		return $elm$parser$Parser$Advanced$oneOf(
+			_List_fromArray(
+				[
+					A2($author$project$Parser$Element$rawString, generation, lineNumber),
+					A2($author$project$Parser$Element$plainText, generation, lineNumber)
+				]));
 	});
 var $author$project$Parser$Element$argsAndBody = F2(
 	function (generation, lineNumber) {
@@ -11221,7 +11357,6 @@ var $mdgriffith$elm_ui$Internal$Model$renderWidth = function (w) {
 	}
 };
 var $mdgriffith$elm_ui$Internal$Flag$borderWidth = $mdgriffith$elm_ui$Internal$Flag$flag(27);
-var $elm$core$Basics$ge = _Utils_ge;
 var $mdgriffith$elm_ui$Internal$Model$skippable = F2(
 	function (flag, style) {
 		if (_Utils_eq(flag, $mdgriffith$elm_ui$Internal$Flag$borderWidth)) {
