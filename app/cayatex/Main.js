@@ -12537,7 +12537,7 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 			child);
 	});
 var $author$project$Main$panelHeight_ = 600;
-var $author$project$Main$parserDisplayPanelHeight_ = 100;
+var $author$project$Main$parserDisplayPanelHeight_ = 0;
 var $author$project$Main$appHeight_ = ($author$project$Main$panelHeight_ + $author$project$Main$parserDisplayPanelHeight_) + 130;
 var $author$project$Main$panelWidth_ = 440;
 var $author$project$Main$appWidth_ = (2 * $author$project$Main$panelWidth_) + 15;
