@@ -12469,7 +12469,7 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 var $author$project$Main$panelHeight_ = 600;
 var $author$project$Main$parserDisplayPanelHeight_ = 0;
 var $author$project$Main$appHeight_ = ($author$project$Main$panelHeight_ + $author$project$Main$parserDisplayPanelHeight_) + 130;
-var $author$project$Main$panelWidth_ = 440;
+var $author$project$Main$panelWidth_ = 480;
 var $author$project$Main$appWidth_ = (2 * $author$project$Main$panelWidth_) + 15;
 var $mdgriffith$elm_ui$Element$Font$color = function (fontColor) {
 	return A2(
@@ -17426,7 +17426,7 @@ var $author$project$Main$outputDisplay_ = function (model) {
 				$mdgriffith$elm_ui$Element$spacing(8),
 				$mdgriffith$elm_ui$Element$Background$color(
 				A3($mdgriffith$elm_ui$Element$rgb, 1.0, 1.0, 1.0)),
-				A2($mdgriffith$elm_ui$Element$paddingXY, 8, 12),
+				A2($mdgriffith$elm_ui$Element$paddingXY, 24, 36),
 				$mdgriffith$elm_ui$Element$width(
 				$mdgriffith$elm_ui$Element$px($author$project$Main$panelWidth_)),
 				$mdgriffith$elm_ui$Element$height(
