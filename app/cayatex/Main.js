@@ -5306,7 +5306,7 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$RenderedMode = 1;
-var $author$project$Data$text = '\n[section CaYaTeX Test Document]\n\nBy James Carlson and Nicholas Yang\n\n%Notice the a leading percent sign makes a line into a comment.\n\n[italic CaYaTeX is a simple yet powerful markup language that\ncompiles to both LaTeX and Html.]\n\n[italic The present document, written entirely in CaYaTeX,\nlays out our design goals and demonstrates some of the\nprogress we have made towards specifiying the language and implementing it in Elm. While our work\nis incomplete, it\nis a start.]\n\n[italic We are also working on an implementation in Rust. This will,\namong other things, help us to cross-validate the specification.]\n\nThe project is open source: [link https://github.com/jxxcarlson/cayatex]\n\n\n[subsection Design Goals]\n\nThe goals of the CaYaTeX project are for the language to be\n\n[list |numbered|\n\n[item [strong Small], hence easy to learn. [italic To this end there are just two constructs: ordinary text and [code elements]].]\n\n[item [strong Powerful].  We borrow ideas from functional programming.\nElements have a Lisp-like syntax with brackets in place of parentheses.\nAn element has the form [code raw##[name |argument-list| body]##] or simply  [code raw##[name body]##]\nThe argument list is a comma-delimited sequence of\nstrings.  The body is an element.\nThe partial element [code name args] is a function [code Element -> Element].\nSuch functions can be composed, as in mathematics or as in languages such as Haskell and Elm.\n]\n\n\n[item [strong Extensible]. [italic Via a macro facility].]\n\n[item [strong Multiple inputs and outputs.] Documents written in CaYaTeX can be compiled to LaTeX, Markdown, and HTML. Markdown documents can be compiled to CaYaTeX.]\n\n[item [strong Web-ready]. CaYaTeX has a differential compiler that makes it suitable for real-time editing, e.g.,  in a web app. ]\n\n[item [strong Kind and Helpful]. Displays friendly and informative error messages in real time in the rendered text; has hooks for highlighting the corresponding source text in a suitable IDE/editor.]\n\n[item [strong Modern]. Unicode compatible.]]\n\n[strong Note.] [fontRGB |50, 0, 200| At the moment  we have not yet implemented differential compilation, which greatly\nspeeds up compilation during editing.  All in due time!]\n\n[subsection Mathematics]\n\n\nPythagoras says that [math a^2 + b^2 = c^2].\nThis is an [strong [italic extremely]] cool result. But just as cool is the below:\n\n[mathdisplay \\sum_{n=1}^\\infty \\frac{1}{n} = \\infty,]\n\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\nWe can also do some high-school math, with that beautifully curved integral sign\nthat attracts so many people to the subject:\n\n[mathdisplay \\int_0^1 x^n dx = \\frac{1}{n+1}]\n\nAnd of course, we can also do theorems:\n\n[theorem There are infinitely many primes [math p \\equiv 1 \\text{ mod } 4.]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\n\n\n[subsection Color]\n\nExample:  [highlightRGB |252, 178, 50| [fontRGB |23, 57, 156| [strong What color is this?]]]\n\n[code raw###[highlightRGB |252, 178, 50| [fontRGB |23, 57, 156| [strong What color is this?]]]###]\n\n\nNote the nesting of elements, aka function composition. When we have our macro facility up and running,  users can abbreviate constructs like\nthis one, e.g., just say [code raw##[myhighlight| What color is this?]##]\n\n[subsection Data]\n\nOne can design elements which manipulate data (numerical computations, visualization).  Here are some data computations:\n\n[sum 1.2, 2, 3.4, 4]\n\n[average 1.2, 2, 3.4, 4]\n\n[stdev |precision:3| 1.2, 2, 3.4, 4]\n\nIn the numerical examples, the precision of the result has a default value of 2.  This can be changed, as one sees in the source of the third example, e.g., you can have\n\n[codeblock raw##[stdev | 1.2, 2, 3.4, 4]## ]\n\nor\n\n[codeblock raw##[stdev |precision:3| 1.2, 2, 3.4, 4]## ]\n\n\n[subsection Graphs]\n\nBelow are two simple data visualizations. We plan more, and more configurability of what you see here.\n\n[subsubsection Bar graphs]\n\n[bargraph 1, 1.2, 3,  1, 2, 4,  3,  2, 1, 2, 3, 5, 3, 7, 3, 2, 9, 8, 7, 0, 0]\n\nThe bargraph code:\n\n[codeblock raw##[bargraph 1, 1.2, 3, 1, ... ]## ]\n\n[subsubsection Line graphs]\n\n[linegraph 0, 0\n1, 10\n2, 5\n3, 3\n4, 9\n5, 11\n6, 4\n7, 6\n8, 10\n9, 1\n]\n\nThe linegraph code (CSV format):\n\n[codeblock raw##[linegraph\n0, 0\n1, 10\n...\n8, 10\n9, 1\n]\n##]\n\n[subsection Unicode]\n\nYou can freely use unicode characters, as in this poetry element:\n\n[poetry\nА я иду, где ничего не надо,\nГде самый милый спутник — только тень,\nИ веет ветер из глухого сада,\nА под ногой могильная ступень.\n\n— Анна Ахматова\n]\n\n[subsection Code]\n\nTime for some code: [code raw##col :: Int -> Matrix a -> [a]##].\nDo you recognize the language (ha ha)?\n\nWe can also do code blocks.  Syntax highlighting coming later.\n\n[codeblock raw##\n# For Sudoku 3x3 subsquare function\n\ncol :: Int -> Matrix a -> [a]\ncol k = fmap ( !! k)\n\ncols :: Matrix a -> Matrix a\ncols m =\n    fmap (\\k -> col k m) [0..n]\n       where n = length m - 1\n##]\n\n\n[italic [highlight Note the use of Rust-like raw strings in the source text to avoid escaping all the brackets.]]\n\n\n\n\n[subsection Images]\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n[code raw##[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center| https://..jpg]##]\n\n[subsection Lists]\n\nNote that lists can be nested and can be given a title if desired.  The symbol for "bulleted" lists is • by default, but can be specified by the user.\nA numbered list has "numbered" as its first argument, as in the example below.\n\n[list |numbered, title:Errands and other stuff|\n\n    [item Bread, milk, O-juice]\n\n    [item Sand paper, white paint]\n\n    [list |none|\n\n        [item A]\n\n        [item B]\n\n        [list |§, title:Greek symbols|\n\n            [item [math \\alpha = 0.123]]\n\n            [item  [math \\beta = 4.567]]\n\n]]]\n';
+var $author$project$Data$text = '\n[section CaYaTeX Test Document]\n\nBy James Carlson and Nicholas Yang\n\n%Notice the a leading percent sign makes a line into a comment.\n\n[italic CaYaTeX is a simple yet powerful markup language that\ncompiles to both LaTeX and Html.]\n\n[italic The present document, written entirely in CaYaTeX,\nlays out our design goals and demonstrates some of the\nprogress we have made towards specifiying the language and implementing it in Elm. While our work\nis incomplete, it\nis a start.]\n\n[italic We are also working on an implementation in Rust. This will,\namong other things, help us sto cross-validate the specification.]\n\nThe project is open source: [link https://github.com/jxxcarlson/cayatex]\n\n\n[section2 Design Goals]\n\nThe goals of the CaYaTeX project are for the language to be\n\n[list |numbered|\n\n[item [strong Small], hence easy to learn. [italic To this end there are just two constructs: ordinary text and [code elements]].]\n\n[item [strong Powerful].  We borrow ideas from functional programming.\nElements have a Lisp-like syntax with brackets in place of parentheses.\nAn element has the form [code raw##[name |argument-list| body]##] or simply  [code raw##[name body]##]\nThe argument list is a comma-delimited sequence of\nstrings.  The body is an element.\nThe partial element [code name args] is a function [code Element -> Element].\nSuch functions can be composed, as in mathematics or as in languages such as Haskell and Elm.\n]\n\n\n[item [strong Extensible]. [italic Via a macro facility].]\n\n[item [strong Multiple inputs and outputs.] Documents written in CaYaTeX can be compiled to LaTeX, Markdown, and HTML. Markdown documents can be compiled to CaYaTeX.]\n\n[item [strong Web-ready]. CaYaTeX has a differential compiler that makes it suitable for real-time editing, e.g.,  in a web app. ]\n\n[item [strong Kind and Helpful]. Displays friendly and informative error messages in real time in the rendered text; has hooks for highlighting the corresponding source text in a suitable IDE/editor.]\n\n[item [strong Modern]. Unicode compatible.]]\n\n[strong Note.] [fontRGB |50, 0, 200| At the moment  we have not yet implemented differential compilation, which greatly\nspeeds up compilation during editing.  All in due time!]\n\n[section2 Mathematics]\n\n\nPythagoras says that [math a^2 + b^2 = c^2].\nThis is an [strong [italic extremely]] cool result. But just as cool is the below:\n\n[mathdisplay \\sum_{n=1}^\\infty \\frac{1}{n} = \\infty,]\n\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\nWe can also do some high-school math, with that beautifully curved integral sign\nthat attracts so many people to the subject:\n\n[mathdisplay \\int_0^1 x^n dx = \\frac{1}{n+1}]\n\nAnd of course, we can also do theorems:\n\n[theorem There are infinitely many primes [math p \\equiv 1 \\text{ mod } 4.]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\n\n\n[section2 Color]\n\nExample:  [highlightRGB |252, 178, 50| [fontRGB |23, 57, 156| [strong What color is this?]]]\n\n[code raw###[highlightRGB |252, 178, 50| [fontRGB |23, 57, 156| [strong What color is this?]]]###]\n\n\nNote the nesting of elements, aka function composition. When we have our macro facility up and running,  users can abbreviate constructs like\nthis one, e.g., just say [code raw##[myhighlight| What color is this?]##]\n\n[section2 Data]\n\nOne can design elements which manipulate data (numerical computations, visualization).  Here are some data computations:\n\n[sum 1.2, 2, 3.4, 4]\n\n[average 1.2, 2, 3.4, 4]\n\n[stdev |precision:3| 1.2, 2, 3.4, 4]\n\nIn the numerical examples, the precision of the result has a default value of 2.  This can be changed, as one sees in the source of the third example, e.g., you can have\n\n[codeblock raw##[stdev | 1.2, 2, 3.4, 4]## ]\n\nor\n\n[codeblock raw##[stdev |precision:3| 1.2, 2, 3.4, 4]## ]\n\n\n[section2 Graphs]\n\nBelow are two simple data visualizations. We plan more, and more configurability of what you see here.\n\n[section3 Bar graphs]\n\n[bargraph 1, 1.2, 3,  1, 2, 4,  3,  2, 1, 2, 3, 5, 3, 7, 3, 2, 9, 8, 7, 0, 0]\n\nThe bargraph code:\n\n[codeblock raw##[bargraph 1, 1.2, 3, 1, ... ]## ]\n\n[section3 Line graphs]\n\n[linegraph 0, 0\n1, 10\n2, 5\n3, 3\n4, 9\n5, 11\n6, 4\n7, 6\n8, 10\n9, 1\n]\n\nThe linegraph code (CSV format):\n\n[codeblock raw##[linegraph\n0, 0\n1, 10\n...\n8, 10\n9, 1\n]\n##]\n\n[section2 Unicode]\n\nYou can freely use unicode characters, as in this poetry element:\n\n[poetry\nА я иду, где ничего не надо,\nГде самый милый спутник — только тень,\nИ веет ветер из глухого сада,\nА под ногой могильная ступень.\n\n— Анна Ахматова\n]\n\n[section2 Code]\n\nTime for some code: [code raw##col :: Int -> Matrix a -> [a]##].\nDo you recognize the language (ha ha)?\n\nWe can also do code blocks.  Syntax highlighting coming later.\n\n[codeblock raw##\n# For Sudoku 3x3 subsquare function\n\ncol :: Int -> Matrix a -> [a]\ncol k = fmap ( !! k)\n\ncols :: Matrix a -> Matrix a\ncols m =\n    fmap (\\k -> col k m) [0..n]\n       where n = length m - 1\n##]\n\n\n[italic [highlight Note the use of Rust-like raw strings in the source text to avoid escaping all the brackets.]]\n\n\n\n\n[section2 Images]\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n[code raw##[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center| https://..jpg]##]\n\n[section2 Lists]\n\nNote that lists can be nested and can be given a title if desired.  The symbol for "bulleted" lists is • by default, but can be specified by the user.\nA numbered list has "numbered" as its first argument, as in the example below.\n\n[list |numbered, title:Errands and other stuff|\n\n    [item Bread, milk, O-juice]\n\n    [item Sand paper, white paint]\n\n    [list |none|\n\n        [item A]\n\n        [item B]\n\n        [list |§, title:Greek symbols|\n\n            [item [math \\alpha = 0.123]]\n\n            [item  [math \\beta = 4.567]]\n\n]]]\n';
 var $author$project$Main$initialText = $author$project$Data$text;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
@@ -16076,6 +16076,44 @@ var $author$project$Render$Elm$section = F5(
 						$author$project$Render$Elm$getText(body)))
 				]));
 	});
+var $author$project$Render$Elm$section2FontSize = 16;
+var $author$project$Render$Elm$section2 = F5(
+	function (renderArgs, name, args, body, sm) {
+		return A2(
+			$mdgriffith$elm_ui$Element$paragraph,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$size($author$project$Render$Elm$section2FontSize),
+					$author$project$Render$Elm$paddingAbove($author$project$Render$Elm$section2FontSize)
+				]),
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$text(
+					A2(
+						$elm$core$Maybe$withDefault,
+						'no subsection name found',
+						$author$project$Render$Elm$getText(body)))
+				]));
+	});
+var $author$project$Render$Elm$section3FontSize = 16;
+var $author$project$Render$Elm$section3 = F5(
+	function (renderArgs, name, args, body, sm) {
+		return A2(
+			$mdgriffith$elm_ui$Element$paragraph,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$size($author$project$Render$Elm$section3FontSize),
+					$author$project$Render$Elm$paddingAbove($author$project$Render$Elm$section3FontSize)
+				]),
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$text(
+					A2(
+						$elm$core$Maybe$withDefault,
+						'no subsubsection name found',
+						$author$project$Render$Elm$getText(body)))
+				]));
+	});
 var $elm$core$Basics$sqrt = _Basics_sqrt;
 var $author$project$Render$Elm$stdev = F5(
 	function (renderArgs, name, args, body, sm) {
@@ -16117,44 +16155,6 @@ var $author$project$Render$Elm$stdev = F5(
 								$elm$core$String$fromFloat(
 									A2($author$project$Render$Elm$roundTo, precision, stdev_)))
 							])))));
-	});
-var $author$project$Render$Elm$subsectionFontSize = 16;
-var $author$project$Render$Elm$subsection = F5(
-	function (renderArgs, name, args, body, sm) {
-		return A2(
-			$mdgriffith$elm_ui$Element$paragraph,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$Font$size($author$project$Render$Elm$subsectionFontSize),
-					$author$project$Render$Elm$paddingAbove($author$project$Render$Elm$subsectionFontSize)
-				]),
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$text(
-					A2(
-						$elm$core$Maybe$withDefault,
-						'no subsection name found',
-						$author$project$Render$Elm$getText(body)))
-				]));
-	});
-var $author$project$Render$Elm$subsubsectionFontSize = 16;
-var $author$project$Render$Elm$subsubsection = F5(
-	function (renderArgs, name, args, body, sm) {
-		return A2(
-			$mdgriffith$elm_ui$Element$paragraph,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$Font$size($author$project$Render$Elm$subsubsectionFontSize),
-					$author$project$Render$Elm$paddingAbove($author$project$Render$Elm$subsubsectionFontSize)
-				]),
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$text(
-					A2(
-						$elm$core$Maybe$withDefault,
-						'no subsubsection name found',
-						$author$project$Render$Elm$getText(body)))
-				]));
 	});
 var $author$project$Render$Elm$sum = F5(
 	function (renderArgs, name, args, body, sm) {
@@ -16527,8 +16527,8 @@ function $author$project$Render$Elm$cyclic$renderElementDict() {
 				_Utils_Tuple2('codeblock', $author$project$Render$Elm$renderCodeBlock),
 				_Utils_Tuple2('poetry', $author$project$Render$Elm$poetry),
 				_Utils_Tuple2('section', $author$project$Render$Elm$section),
-				_Utils_Tuple2('subsection', $author$project$Render$Elm$subsection),
-				_Utils_Tuple2('subsubsection', $author$project$Render$Elm$subsubsection),
+				_Utils_Tuple2('section2', $author$project$Render$Elm$section2),
+				_Utils_Tuple2('section3', $author$project$Render$Elm$section3),
 				_Utils_Tuple2('list', $author$project$Render$Elm$list),
 				_Utils_Tuple2('item', $author$project$Render$Elm$item),
 				_Utils_Tuple2('link', $author$project$Render$Elm$link),
