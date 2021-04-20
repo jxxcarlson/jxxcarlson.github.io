@@ -5312,7 +5312,7 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$RenderedMode = {$: 'RenderedMode'};
-var $author$project$Data$text = '\n[section CaYaTeX Test Document]\n\nBy James Carlson and Nicholas Yang\n\n%Notice the a leading percent sign makes a line into a comment.\n\n[fontRGB |12, 140, 176| CaYaTeX is a simple yet powerful markup language that\ncompiles to both LaTeX and Html.]\n\n[fontRGB |12, 140, 176| The present document, written in CaYaTeX,\nlays out our design goals and demonstrates some of the\nprogress we have made towards specifiying the language and implementing it in Elm. While our work\nis incomplete, it\nis a start.]\n\n\n[fontRGB |12, 140, 176| We are also working on an implementation in Rust. This will,\namong other things, help us to cross-validate the specification.]\n\nThe project is open source: [link https://github.com/jxxcarlson/cayatex]\n\n[subsection Design Goals]\n\nThe goals of the CaYaTeX project are for the language to be\n\n[list\n\n[item [strong Small], hence easy to learn. [italic To this end there are just two constructs: ordinary text and [code elements]].]\n\n[item [strong Powerful].  We borrow ideas from functional programming.\nElements have a Lisp-like syntax with brackets in place of parentheses.\nAn element has the form [code raw##[name |argument-list| body]##] or simply  [code raw##[name body]##]\nThe argument list is a comma-delimited sequence of\nstrings.  The body is an element.\nThe partial element [code name args] is a function [code Element -> Element].\nSuch functions can be composed, as in mathematics or as in languages such as Haskell and Elm.\n]\n\n\n[item [strong Extensible]. [italic Via a macro facility].]\n\n[item [strong Multiple inputs and outputs.] Documents written in CaYaTeX can be compiled to LaTeX, Markdown, and HTML. Markdown documents can be compiled to CaYaTeX.]\n\n[item [strong Web-ready]. CaYaTeX has a differential compiler that makes it suitable for real-time editing, e.g.,  in a web app. ]\n\n[item [strong Kind and Helpful]. Displays friendly and informative error messages in real time in the rendered text; has hooks for highlighting the corresponding source text in a suitable IDE/editor.]\n\n[item [strong Modern]. Unicode compatible.]]\n\n\n[subsection Mathematics]\n\n\nPythagoras says that [math a^2 + b^2 = c^2].\nThis is an [strong [italic extremely]] cool result. But just as cool is the below:\n\n[mathdisplay \\sum_{n=1}^\\infty \\frac{1}{n} = \\infty,]\n\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\nWe can also do some high-school math, with that beautifully curved integral sign\nthat attracts so many people to the subject:\n\n[mathdisplay \\int_0^1 x^n dx = \\frac{1}{n+1}]\n\nAnd of course, we can also do theorems:\n\n[theorem There are infinitely many primes [math p \\equiv 1 \\text{ mod } 4.]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\n[subsection Unicode]\n\nYou can freely use unicode characters:\n\n[poetry\nА я иду, где ничего не надо,\nГде самый милый спутник — только тень,\nИ веет ветер из глухого сада,\nА под ногой могильная ступень.\n\n— Анна Ахматова\n]\n\n[subsection Code]\n\nTime for some code: [code raw##col :: Int -> Matrix a -> [a]##].\nDo you recognize the language (ha ha)?\n\nWe can also do code blocks.  Syntax highlighting coming later.\n\n[codeblock raw##\n# For Sudoku 3x3 subsquare function\n\ncol :: Int -> Matrix a -> [a]\ncol k = fmap ( !! k)\n\ncols :: Matrix a -> Matrix a\ncols m =\n    fmap (\\k -> col k m) [0..n]\n       where n = length m - 1\n##]\n\n\n[italic [highlight Note the use of Rust-like raw strings in the source text to avoid escaping all the brackets.]]\n\n[subsection Color]\n\nExample:  [highlightRGB |214, 93, 32| [fontRGB |169, 232, 245| What color is this?]]\n\n[strong Note:] We need to implement a macro facility so that users can abbreviate constructs like\nthe one in the previous example.\n\n[subsection Images]\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n[subsection Lists]\n\nNote that lists can be nested and can be given a title if desired.  The symbol for "bulleted" lists is • by default, but can be specified by the user.  We have not yet implemented numbered lists.\n\n[list |title:Errands and other stuff|\n\n    [item Bread, milk, O-juice]\n\n    [item Sand paper, white paint]\n\n    [list |none|\n\n        [item A]\n\n        [item B]\n\n        [list |§, title:Greek symbols|\n\n            [item [math \\alpha = 0.123]]\n\n            [item  [math \\beta = 4.567]]\n\n]]]\n';
+var $author$project$Data$text = '\n[section CaYaTeX Test Document]\n\nBy James Carlson and Nicholas Yang\n\n%Notice the a leading percent sign makes a line into a comment.\n\n[fontRGB |12, 140, 176| CaYaTeX is a simple yet powerful markup language that\ncompiles to both LaTeX and Html.]\n\n[fontRGB |12, 140, 176| The present document, written in CaYaTeX,\nlays out our design goals and demonstrates some of the\nprogress we have made towards specifiying the language and implementing it in Elm. While our work\nis incomplete, it\nis a start.]\n\n\n[fontRGB |12, 140, 176| We are also working on an implementation in Rust. This will,\namong other things, help us to cross-validate the specification.]\n\nThe project is open source: [link https://github.com/jxxcarlson/cayatex]\n\n[subsection Design Goals]\n\nThe goals of the CaYaTeX project are for the language to be\n\n[list |numbered|\n\n[item [strong Small], hence easy to learn. [italic To this end there are just two constructs: ordinary text and [code elements]].]\n\n[item [strong Powerful].  We borrow ideas from functional programming.\nElements have a Lisp-like syntax with brackets in place of parentheses.\nAn element has the form [code raw##[name |argument-list| body]##] or simply  [code raw##[name body]##]\nThe argument list is a comma-delimited sequence of\nstrings.  The body is an element.\nThe partial element [code name args] is a function [code Element -> Element].\nSuch functions can be composed, as in mathematics or as in languages such as Haskell and Elm.\n]\n\n\n[item [strong Extensible]. [italic Via a macro facility].]\n\n[item [strong Multiple inputs and outputs.] Documents written in CaYaTeX can be compiled to LaTeX, Markdown, and HTML. Markdown documents can be compiled to CaYaTeX.]\n\n[item [strong Web-ready]. CaYaTeX has a differential compiler that makes it suitable for real-time editing, e.g.,  in a web app. ]\n\n[item [strong Kind and Helpful]. Displays friendly and informative error messages in real time in the rendered text; has hooks for highlighting the corresponding source text in a suitable IDE/editor.]\n\n[item [strong Modern]. Unicode compatible.]]\n\n\n[subsection Mathematics]\n\n\nPythagoras says that [math a^2 + b^2 = c^2].\nThis is an [strong [italic extremely]] cool result. But just as cool is the below:\n\n[mathdisplay \\sum_{n=1}^\\infty \\frac{1}{n} = \\infty,]\n\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\nWe can also do some high-school math, with that beautifully curved integral sign\nthat attracts so many people to the subject:\n\n[mathdisplay \\int_0^1 x^n dx = \\frac{1}{n+1}]\n\nAnd of course, we can also do theorems:\n\n[theorem There are infinitely many primes [math p \\equiv 1 \\text{ mod } 4.]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\n[subsection Unicode]\n\nYou can freely use unicode characters:\n\n[poetry\nА я иду, где ничего не надо,\nГде самый милый спутник — только тень,\nИ веет ветер из глухого сада,\nА под ногой могильная ступень.\n\n— Анна Ахматова\n]\n\n[subsection Code]\n\nTime for some code: [code raw##col :: Int -> Matrix a -> [a]##].\nDo you recognize the language (ha ha)?\n\nWe can also do code blocks.  Syntax highlighting coming later.\n\n[codeblock raw##\n# For Sudoku 3x3 subsquare function\n\ncol :: Int -> Matrix a -> [a]\ncol k = fmap ( !! k)\n\ncols :: Matrix a -> Matrix a\ncols m =\n    fmap (\\k -> col k m) [0..n]\n       where n = length m - 1\n##]\n\n\n[italic [highlight Note the use of Rust-like raw strings in the source text to avoid escaping all the brackets.]]\n\n[subsection Color]\n\nExample:  [highlightRGB |214, 93, 32| [fontRGB |169, 232, 245| What color is this?]]\n\n[strong Note:] We need to implement a macro facility so that users can abbreviate constructs like\nthe one in the previous example.\n\n[subsection Images]\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n[subsection Lists]\n\nNote that lists can be nested and can be given a title if desired.  The symbol for "bulleted" lists is • by default, but can be specified by the user.\nA numberd list has "numbered" as its first argument, as in the example below.\n\n[list |numbered, title:Errands and other stuff|\n\n    [item Bread, milk, O-juice]\n\n    [item Sand paper, white paint]\n\n    [list |none|\n\n        [item A]\n\n        [item B]\n\n        [list |§, title:Greek symbols|\n\n            [item [math \\alpha = 0.123]]\n\n            [item  [math \\beta = 4.567]]\n\n]]]\n';
 var $author$project$Main$initialText = $author$project$Data$text;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
@@ -14469,8 +14469,8 @@ var $author$project$Main$paragraphFormat = {maximumWidth: 80, optimalWidth: 70, 
 var $author$project$Main$Mark2Msg = function (a) {
 	return {$: 'Mark2Msg', a: a};
 };
-var $author$project$Render$State$defaultConfig = {blueColor: '#00c', highlightColor: '#fAA', redColor: '#a00'};
-var $author$project$Render$State$initialCounters = $elm$core$Dict$fromList(
+var $author$project$Parser$Data$defaultConfig = {blueColor: '#00c', highlightColor: '#fAA', redColor: '#a00'};
+var $author$project$Parser$Data$initialCounters = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
 			_Utils_Tuple2('section1', 0),
@@ -14479,14 +14479,14 @@ var $author$project$Render$State$initialCounters = $elm$core$Dict$fromList(
 			_Utils_Tuple2('theorem', 0),
 			_Utils_Tuple2('eqno', 0)
 		]));
-var $author$project$Render$State$init = function (config) {
-	return {config: config, counters: $author$project$Render$State$initialCounters, crossReferences: $elm$core$Dict$empty, dictionary: $elm$core$Dict$empty, tableOfContents: _List_Nil};
+var $author$project$Parser$Data$init = function (config) {
+	return {config: config, counters: $author$project$Parser$Data$initialCounters, crossReferences: $elm$core$Dict$empty, dictionary: $elm$core$Dict$empty, tableOfContents: _List_Nil};
 };
 var $author$project$Main$initState = function (k) {
 	return {
 		blockOffset: 0,
 		generation: k,
-		renderState: $author$project$Render$State$init($author$project$Render$State$defaultConfig),
+		parserData: $author$project$Parser$Data$init($author$project$Parser$Data$defaultConfig),
 		selectedId: '',
 		width: 300
 	};
@@ -14544,8 +14544,6 @@ var $mdgriffith$elm_ui$Element$paragraph = F2(
 						attrs))),
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
-var $mdgriffith$elm_ui$Internal$Model$Top = {$: 'Top'};
-var $mdgriffith$elm_ui$Element$alignTop = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Top);
 var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
 var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.bold);
 var $author$project$Render$Elm$codeColor = A3($mdgriffith$elm_ui$Element$rgb, 0.4, 0, 0.8);
@@ -14586,6 +14584,8 @@ var $author$project$Render$Elm$getInt = F2(
 				$elm$core$String$toInt,
 				A2($elm_community$list_extra$List$Extra$getAt, k, stringList)));
 	});
+var $mdgriffith$elm_ui$Internal$Model$Top = {$: 'Top'};
+var $mdgriffith$elm_ui$Element$alignTop = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Top);
 var $elm$core$String$trim = _String_trim;
 var $elm_community$maybe_extra$Maybe$Extra$cons = F2(
 	function (item, list) {
@@ -14615,23 +14615,63 @@ var $author$project$Utility$entities = function (strings_) {
 						$elm$core$String$split(':'),
 						strings_)))));
 };
-var $author$project$Render$Elm$getPrefixSymbol = function (args_) {
-	var _v0 = $elm$core$List$head(
-		$author$project$Utility$entities(args_));
-	if (_v0.$ === 'Nothing') {
-		return '•';
-	} else {
-		switch (_v0.a) {
-			case 'bullet':
-				return '•';
-			case 'none':
-				return '';
-			default:
-				var str = _v0.a;
-				return str;
-		}
-	}
+var $mdgriffith$elm_ui$Element$moveDown = function (y) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$TransformComponent,
+		$mdgriffith$elm_ui$Internal$Flag$moveY,
+		$mdgriffith$elm_ui$Internal$Model$MoveY(y));
 };
+var $mdgriffith$elm_ui$Element$none = $mdgriffith$elm_ui$Internal$Model$Empty;
+var $author$project$Render$Elm$getPrefixSymbol = F2(
+	function (k, args_) {
+		var _v0 = A2(
+			$elm$core$Maybe$map,
+			$elm$core$String$trim,
+			$elm$core$List$head(
+				$author$project$Utility$entities(args_)));
+		if (_v0.$ === 'Nothing') {
+			return A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Font$size(16)
+					]),
+				$mdgriffith$elm_ui$Element$text('•'));
+		} else {
+			switch (_v0.a) {
+				case 'numbered':
+					return A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Font$size(12),
+								$mdgriffith$elm_ui$Element$alignTop,
+								$mdgriffith$elm_ui$Element$moveDown(2.2)
+							]),
+						$mdgriffith$elm_ui$Element$text(
+							$elm$core$String$fromInt(k + 1) + '.'));
+				case 'bullet':
+					return A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Font$size(16)
+							]),
+						$mdgriffith$elm_ui$Element$text('•'));
+				case 'none':
+					return $mdgriffith$elm_ui$Element$none;
+				default:
+					var str = _v0.a;
+					return A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Font$size(16)
+							]),
+						$mdgriffith$elm_ui$Element$text(str));
+			}
+		}
+	});
 var $author$project$Render$Elm$getText = function (element) {
 	if ((((element.$ === 'LX') && element.a.b) && (element.a.a.$ === 'Text')) && (!element.a.b.b)) {
 		var _v1 = element.a;
@@ -14722,7 +14762,6 @@ var $author$project$Utility$keyValueDict = function (strings_) {
 						$elm$core$String$split(':'),
 						strings_)))));
 };
-var $mdgriffith$elm_ui$Element$none = $mdgriffith$elm_ui$Internal$Model$Empty;
 var $author$project$Render$Elm$image = F5(
 	function (renderArgs, name, args, body, sm) {
 		var dict = $author$project$Utility$keyValueDict(args);
@@ -15233,7 +15272,7 @@ var $author$project$Render$Elm$fontRGB = F5(
 			A2($author$project$Render$Elm$renderElement, renderArgs, body));
 	});
 var $author$project$Render$Elm$highlight = F5(
-	function (renderArgs, _v14, _v15, body, _v16) {
+	function (renderArgs, _v13, _v14, body, _v15) {
 		return A2(
 			$mdgriffith$elm_ui$Element$el,
 			_List_fromArray(
@@ -15244,7 +15283,7 @@ var $author$project$Render$Elm$highlight = F5(
 			A2($author$project$Render$Elm$renderElement, renderArgs, body));
 	});
 var $author$project$Render$Elm$highlightRGB = F5(
-	function (renderArgs, _v13, args, body, sm) {
+	function (renderArgs, _v12, args, body, sm) {
 		var r = A2($author$project$Render$Elm$getInt, 0, args);
 		var g = A2($author$project$Render$Elm$getInt, 1, args);
 		var b = A2($author$project$Render$Elm$getInt, 2, args);
@@ -15283,11 +15322,15 @@ var $author$project$Render$Elm$list = F5(
 					$elm$core$List$cons,
 					$author$project$Render$Elm$listTitle(args_),
 					A2(
-						$elm$core$List$map,
-						A2(
-							$author$project$Render$Elm$renderListItem,
-							$author$project$Render$Elm$getPrefixSymbol(args_),
-							renderArgs),
+						$elm$core$List$indexedMap,
+						F2(
+							function (k, item_) {
+								return A3(
+									$author$project$Render$Elm$renderListItem,
+									A2($author$project$Render$Elm$getPrefixSymbol, k, args_),
+									renderArgs,
+									item_);
+							}),
 						list_)));
 		} else {
 			return A2(
@@ -15300,7 +15343,7 @@ var $author$project$Render$Elm$list = F5(
 		}
 	});
 var $author$project$Render$Elm$renderCode = F5(
-	function (renderArgs, _v10, _v11, body, sm) {
+	function (renderArgs, _v9, _v10, body, sm) {
 		var adjustedBody = function (text) {
 			return A2($author$project$Parser$Element$Text, text, sm);
 		}(
@@ -15358,7 +15401,7 @@ var $author$project$Render$Elm$renderElement = F2(
 		}
 	});
 var $author$project$Render$Elm$renderItalic = F5(
-	function (renderArgs, _v7, _v8, body, sm) {
+	function (renderArgs, _v6, _v7, body, sm) {
 		return A2(
 			$mdgriffith$elm_ui$Element$el,
 			_List_fromArray(
@@ -15373,27 +15416,6 @@ var $author$project$Render$Elm$renderListItem = F3(
 				switch (elt.a) {
 					case 'item':
 						var body = elt.c;
-						var prefix = function () {
-							if (prefixSymbol === 'bullet') {
-								return A2(
-									$mdgriffith$elm_ui$Element$el,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$Font$size(16),
-											$mdgriffith$elm_ui$Element$alignTop
-										]),
-									$mdgriffith$elm_ui$Element$text(prefixSymbol));
-							} else {
-								return A2(
-									$mdgriffith$elm_ui$Element$el,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$Font$size(16),
-											$mdgriffith$elm_ui$Element$alignTop
-										]),
-									$mdgriffith$elm_ui$Element$text(prefixSymbol));
-							}
-						}();
 						return A2(
 							$mdgriffith$elm_ui$Element$row,
 							_List_fromArray(
@@ -15402,7 +15424,7 @@ var $author$project$Render$Elm$renderListItem = F3(
 								]),
 							_List_fromArray(
 								[
-									prefix,
+									prefixSymbol,
 									A2($author$project$Render$Elm$renderElement, renderArgs, elt)
 								]));
 					case 'list':
@@ -15421,11 +15443,15 @@ var $author$project$Render$Elm$renderListItem = F3(
 									$elm$core$List$cons,
 									$author$project$Render$Elm$listTitle(args),
 									A2(
-										$elm$core$List$map,
-										A2(
-											$author$project$Render$Elm$renderListItem,
-											$author$project$Render$Elm$getPrefixSymbol(args),
-											renderArgs),
+										$elm$core$List$indexedMap,
+										F2(
+											function (k, item_) {
+												return A3(
+													$author$project$Render$Elm$renderListItem,
+													A2($author$project$Render$Elm$getPrefixSymbol, k, args),
+													renderArgs,
+													item_);
+											}),
 										list_)));
 						} else {
 							return A2(
@@ -15574,7 +15600,7 @@ var $author$project$Parser$Document$init = F2(
 			input: strList,
 			lineNumber: 0,
 			output: _List_Nil,
-			renderState: $author$project$Render$State$init($author$project$Render$State$defaultConfig)
+			parserData: $author$project$Parser$Data$init($author$project$Parser$Data$defaultConfig)
 		};
 	});
 var $author$project$Parser$Document$loop = F2(
@@ -15598,11 +15624,11 @@ var $author$project$Parser$Document$loop = F2(
 var $author$project$Parser$Document$Done = function (a) {
 	return {$: 'Done', a: a};
 };
-var $author$project$Parser$Document$ElementBlock = {$: 'ElementBlock'};
+var $author$project$Parser$Document$InElementBlock = {$: 'InElementBlock'};
+var $author$project$Parser$Document$InTextBlock = {$: 'InTextBlock'};
 var $author$project$Parser$Document$Loop = function (a) {
 	return {$: 'Loop', a: a};
 };
-var $author$project$Parser$Document$TextBlock = {$: 'TextBlock'};
 var $author$project$Parser$Document$differentialBlockLevel = function (str) {
 	var chars = A2($elm$core$String$split, '', str);
 	var leftBrackets = $elm$core$List$length(
@@ -16358,7 +16384,7 @@ var $author$project$Parser$Document$startBlock = F2(
 			{
 				blockContents: A2($elm$core$List$cons, currentLine_, state.blockContents),
 				blockLevel: newBlockLevel,
-				blockType: $author$project$Parser$Document$ElementBlock
+				blockType: $author$project$Parser$Document$InElementBlock
 			});
 	});
 var $author$project$Parser$Document$nextState = function (state_) {
@@ -16392,7 +16418,7 @@ var $author$project$Parser$Document$nextState = function (state_) {
 						var _v4 = _v1.b;
 						return $author$project$Parser$Document$Loop(
 							$author$project$Parser$Document$start(state));
-					case 'TextBlock':
+					case 'InTextBlock':
 						var _v11 = _v1.a;
 						var _v12 = _v1.b;
 						return $author$project$Parser$Document$Loop(
@@ -16414,8 +16440,8 @@ var $author$project$Parser$Document$nextState = function (state_) {
 								currentLine,
 								_Utils_update(
 									state,
-									{blockType: $author$project$Parser$Document$ElementBlock})));
-					case 'TextBlock':
+									{blockType: $author$project$Parser$Document$InElementBlock})));
+					case 'InTextBlock':
 						var _v13 = _v1.a;
 						var _v14 = _v1.b;
 						return $author$project$Parser$Document$Loop(
@@ -16432,8 +16458,8 @@ var $author$project$Parser$Document$nextState = function (state_) {
 						var _v7 = _v1.a;
 						var _v8 = _v1.b;
 						return $author$project$Parser$Document$Loop(
-							A3($author$project$Parser$Document$initBlock, $author$project$Parser$Document$TextBlock, 'Error: ' + currentLine, state));
-					case 'TextBlock':
+							A3($author$project$Parser$Document$initBlock, $author$project$Parser$Document$InTextBlock, 'Error: ' + currentLine, state));
+					case 'InTextBlock':
 						var _v15 = _v1.a;
 						var _v16 = _v1.b;
 						return $author$project$Parser$Document$Loop(
@@ -16450,8 +16476,8 @@ var $author$project$Parser$Document$nextState = function (state_) {
 						var _v9 = _v1.a;
 						var _v10 = _v1.b;
 						return $author$project$Parser$Document$Loop(
-							A3($author$project$Parser$Document$initBlock, $author$project$Parser$Document$TextBlock, currentLine, state));
-					case 'TextBlock':
+							A3($author$project$Parser$Document$initBlock, $author$project$Parser$Document$InTextBlock, currentLine, state));
+					case 'InTextBlock':
 						var _v17 = _v1.a;
 						var _v18 = _v1.b;
 						return $author$project$Parser$Document$Loop(
@@ -16465,7 +16491,7 @@ var $author$project$Parser$Document$nextState = function (state_) {
 		}
 	}
 };
-var $author$project$Parser$Document$run = F2(
+var $author$project$Parser$Document$runloop = F2(
 	function (generation, strList) {
 		return A2(
 			$author$project$Parser$Document$loop,
@@ -16498,7 +16524,7 @@ var $author$project$Main$render = F2(
 						$author$project$Main$initState(k)),
 					$author$project$Parser$Document$toParsed(
 						A2(
-							$author$project$Parser$Document$run,
+							$author$project$Parser$Document$runloop,
 							k,
 							$elm$core$String$lines(str))))));
 	});
