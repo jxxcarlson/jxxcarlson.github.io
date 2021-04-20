@@ -14556,6 +14556,23 @@ var $mdgriffith$elm_ui$Element$Font$family = function (families) {
 			A3($elm$core$List$foldl, $mdgriffith$elm_ui$Internal$Model$renderFontClassName, 'ff-', families),
 			families));
 };
+var $elm$core$String$trim = _String_trim;
+var $author$project$Render$Elm$isBlankItem = function (el) {
+	if (el.$ === 'Text') {
+		var str = el.a;
+		return $elm$core$String$trim(str) === '';
+	} else {
+		return false;
+	}
+};
+var $author$project$Render$Elm$filterOutBlankItems = function (list_) {
+	return A2(
+		$elm$core$List$filter,
+		function (item_) {
+			return !$author$project$Render$Elm$isBlankItem(item_);
+		},
+		list_);
+};
 var $elm_community$list_extra$List$Extra$getAt = F2(
 	function (idx, xs) {
 		return (idx < 0) ? $elm$core$Maybe$Nothing : $elm$core$List$head(
@@ -14586,7 +14603,6 @@ var $author$project$Render$Elm$getInt = F2(
 	});
 var $mdgriffith$elm_ui$Internal$Model$Top = {$: 'Top'};
 var $mdgriffith$elm_ui$Element$alignTop = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Top);
-var $elm$core$String$trim = _String_trim;
 var $elm_community$maybe_extra$Maybe$Extra$cons = F2(
 	function (item, list) {
 		if (item.$ === 'Just') {
@@ -15331,7 +15347,7 @@ var $author$project$Render$Elm$list = F5(
 									renderArgs,
 									item_);
 							}),
-						list_)));
+						$author$project$Render$Elm$filterOutBlankItems(list_))));
 		} else {
 			return A2(
 				$mdgriffith$elm_ui$Element$el,
@@ -15452,7 +15468,7 @@ var $author$project$Render$Elm$renderListItem = F3(
 													renderArgs,
 													item_);
 											}),
-										list_)));
+										$author$project$Render$Elm$filterOutBlankItems(list_))));
 						} else {
 							return A2(
 								$mdgriffith$elm_ui$Element$el,
