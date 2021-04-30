@@ -2705,8 +2705,8 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
 		aA: func(record.aA),
-		dc: record.dc,
-		c5: record.c5
+		dd: record.dd,
+		c6: record.c6
 	}
 });
 
@@ -2975,10 +2975,10 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 
 		var value = result.a;
 		var message = !tag ? value : tag < 3 ? value.a : value.aA;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.dc;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.dd;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.c5) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.c6) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3968,7 +3968,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		impl.il,
 		impl.hV,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.da && impl.da(sendToApp)
+			var divertHrefToApp = impl.db && impl.db(sendToApp)
 			var view = impl.im;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -4043,7 +4043,7 @@ function _Browser_application(impl)
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		da: function(sendToApp)
+		db: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4237,7 +4237,7 @@ function _Browser_getViewport()
 			e7: _Browser_window.pageXOffset,
 			e8: _Browser_window.pageYOffset,
 			$9: _Browser_doc.documentElement.clientWidth,
-			cW: _Browser_doc.documentElement.clientHeight
+			cX: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4248,7 +4248,7 @@ function _Browser_getScene()
 	var elem = _Browser_doc.documentElement;
 	return {
 		$9: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		cW: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		cX: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4273,13 +4273,13 @@ function _Browser_getViewportOf(id)
 		return {
 			eO: {
 				$9: node.scrollWidth,
-				cW: node.scrollHeight
+				cX: node.scrollHeight
 			},
 			e2: {
 				e7: node.scrollLeft,
 				e8: node.scrollTop,
 				$9: node.clientWidth,
-				cW: node.clientHeight
+				cX: node.clientHeight
 			}
 		};
 	});
@@ -4314,13 +4314,13 @@ function _Browser_getElement(id)
 				e7: x,
 				e8: y,
 				$9: _Browser_doc.documentElement.clientWidth,
-				cW: _Browser_doc.documentElement.clientHeight
+				cX: _Browser_doc.documentElement.clientHeight
 			},
 			gf: {
 				e7: x + rect.left,
 				e8: y + rect.top,
 				$9: rect.width,
-				cW: rect.height
+				cX: rect.height
 			}
 		};
 	});
@@ -5308,7 +5308,7 @@ var $elm$core$Task$perform = F2(
 var $elm$browser$Browser$element = _Browser_element;
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $author$project$Main$RenderedMode = 1;
-var $author$project$Data$text = '\n[title Announcing CaYaTeX]\n\nBy James Carlson and Nicholas Yang\n\n\n\n[italic CaYaTeX is a simple yet powerful markup language that\ncompiles to both LaTeX and Html.]\n\n\n% Note that instead of saying [italic ... ], we can say [i .... ]\n% There are shortcuts for a few other common elements:\n% [b ... ] instead of [bold ... ]\n% [m ...] instead of [math ... ]\n% [dm ... ] instead of [displaymath ...]\n% Note also how comments are made.\n\n[i The present document, written entirely in CaYaTeX,\nlays out our design goals and demonstrates some of the\nprogress we have made towards specifiying the language and implementing it in Elm. While our work\nis incomplete, it\nis a start.]\n\n[i We are also working on an implementation in Rust. This will,\namong other things, help us to cross-validate the specification.]\n\nThe project is open source: [link https://github.com/jxxcarlson/cayatex]\n\n[i  [c You are welcome to edit/delete/replace any of the text here.  It won\'t be saved.  Comments to jxxcarlson@gmail.com]]\n\n\n[tableofcontents]\n\n[section1 Design Goals]\n\nThe goals of the CaYaTeX project are for the language to be\n\n[list |numbered|\n\n[item [bold Small], hence easy to learn. [i To this end there are just two constructs: ordinary text and [code elements]].]\n\n[item [b Powerful].  We borrow ideas from functional programming.\nElements have a Lisp-like syntax with brackets in place of parentheses.\nAn element has the form [code raw##[name |argument-list| body]##] or simply  [code raw##[name body]##]\nThe argument list is a comma-delimited sequence of\nstrings.  The body is an element.\nThe partial element [code name args] is a function [code Element -> Element].\nSuch functions can be composed, as in mathematics or as in languages such as Haskell and Elm.\n]\n\n\n[item [b Extensible]. [i Via a macro facility].]\n\n[item [b Multiple inputs and outputs.] Documents written in CaYaTeX can be compiled to LaTeX, Markdown, and HTML. Markdown documents can be compiled to CaYaTeX.]\n\n[item [b Web-ready]. CaYaTeX has a differential compiler that makes it suitable for real-time editing, e.g.,  in a web app. ]\n\n[item [b Kind and Helpful]. Displays friendly and informative error messages in real time in the rendered text; has hooks for highlighting the corresponding source text in a suitable IDE/editor.]\n\n[item [b Modern]. Unicode compatible.]]\n\n\nCertain tasks are particularly simple with cayatex: insertion of images referenced by URL, construction of tables, graphs, and plots from data given in a standard format such as CSV, and also inline compatations of statistical data. Examples of these are given below.\n\nOur goal is to have a convenient  tool for writing technical documents that are immediately publishasble on the web while at the same time offering export to conventional formats such as LaTeX (and therefore also) PDF.\n\n[b Note.] [fontRGB |50, 0, 200| At the moment  we have not yet implemented differential compilation, which greatly\nspeeds up compilation during editing.  All in due time!]\n\n[section1 Mathematics]\n\n\nPythagoras says that [math a^2 + b^2 = c^2].\nThis is an [b [i extremely]] cool result. But just as cool is the below:\n\n[displaymath \\sum_{n=1}^\\infty \\frac{1}{n} = \\infty,]\n\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\nWe can also do some high-school math, with that beautifully curved integral sign\nthat attracts so many people to the subject:\n\n[displaymath \\int_0^1 x^n dx = \\frac{1}{n+1}]\n\nAnd of course, we can also do theorems:\n\n[theorem There are infinitely many primes [math p \\equiv 1 \\text{ mod } 4.]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\n\n\n[section1 Color]\n\nExample:  [highlightRGB |252, 178, 50| [fontRGB |23, 57, 156| [b What color is this?]]]\n\n[code raw###[highlightRGB |252, 178, 50| [fontRGB |23, 57, 156| [b What color is this?]]]###]\n\n\nNote the nesting of elements, aka function composition. When we have our macro facility up and running,  users can abbreviate constructs like\nthis one, e.g., just say [code raw##[myhighlight| What color is this?]##]\n\n[section1 Data]\n\nOne can design elements which manipulate data (numerical computations, visualization).  Here are some data computations:\n\n[sum 1.2, 2, 3.4, 4]\n\n[average 1.2, 2, 3.4, 4]\n\n[stdev |precision:3| 1.2, 2, 3.4, 4]\n\nIn the numerical examples, the precision of the result has a default value of 2.  This can be changed, as one sees in the source of the third example, e.g., you can have\n\n[codeblock raw##[stdev | 1.2, 2, 3.4, 4]## ]\n\nor\n\n[codeblock raw##[stdev |precision:3| 1.2, 2, 3.4, 4]## ]\n\n\n[section1 Graphs]\n\nBelow are three simple data visualizations. We plan more, and more configurability of what you see here.\n\n[section2 Bar graphs]\n\n[bargraph |column:2, yShift: 0.2, caption: Global temperature anomaly 1880-1957|\n1880,-0.12\n1881,-0.07\n1882,-0.07\n1883,-0.15\n1884,-0.21\n1885,-0.22\n1886,-0.21\n1887,-0.25\n1888,-0.15\n1889,-0.10\n1890,-0.33\n1891,-0.25\n1892,-0.30\n1893,-0.31\n1894,-0.28\n1895,-0.22\n1896,-0.09\n1897,-0.12\n1898,-0.26\n1899,-0.12\n1900,-0.07\n1901,-0.14\n1902,-0.25\n1903,-0.34\n1904,-0.42\n1905,-0.29\n1906,-0.22\n1907,-0.37\n1908,-0.44\n1909,-0.43\n1910,-0.38\n1911,-0.43\n1912,-0.33\n1913,-0.31\n1914,-0.14\n1915,-0.07\n1916,-0.29\n1917,-0.31\n1918,-0.20\n1919,-0.20\n1920,-0.21\n1921,-0.14\n1922,-0.22\n1923,-0.21\n1924,-0.24\n1925,-0.14\n1926,-0.06\n1927,-0.14\n1928,-0.17\n1929,-0.29\n1930,-0.09\n1931,-0.07\n1932,-0.11\n1933,-0.24\n1934,-0.10\n1935,-0.14\n1936,-0.11\n1937,-0.01\n1938,-0.02\n1939,-0.01\n1940,0.10\n1941,0.19\n1942,0.15\n1943,0.16\n1944,0.29\n1945,0.17\n1946,-0.01\n1947,-0.05\n1948,-0.06\n1949,-0.06\n1950,-0.17\n1951,-0.01\n1952,0.02\n1953,0.09\n1954,-0.12\n1955,-0.14\n1956,-0.20\n1957,0.05\n]\n\nThe bargraph code:\n\n[codeblock raw##[bargraph |column:2,\n    caption: Global temperature anomaly 1880-1957|\n1880,-0.12\n1881,-0.07\n...]## ]\n\n[section2 Line graphs]\n\n[linegraph |caption: Global temperature anomaly 1880-1957|\n1880,-0.12\n1881,-0.07\n1882,-0.07\n1883,-0.15\n1884,-0.21\n1885,-0.22\n1886,-0.21\n1887,-0.25\n1888,-0.15\n1889,-0.10\n1890,-0.33\n1891,-0.25\n1892,-0.30\n1893,-0.31\n1894,-0.28\n1895,-0.22\n1896,-0.09\n1897,-0.12\n1898,-0.26\n1899,-0.12\n1900,-0.07\n1901,-0.14\n1902,-0.25\n1903,-0.34\n1904,-0.42\n1905,-0.29\n1906,-0.22\n1907,-0.37\n1908,-0.44\n1909,-0.43\n1910,-0.38\n1911,-0.43\n1912,-0.33\n1913,-0.31\n1914,-0.14\n1915,-0.07\n1916,-0.29\n1917,-0.31\n1918,-0.20\n1919,-0.20\n1920,-0.21\n1921,-0.14\n1922,-0.22\n1923,-0.21\n1924,-0.24\n1925,-0.14\n1926,-0.06\n1927,-0.14\n1928,-0.17\n1929,-0.29\n1930,-0.09\n1931,-0.07\n1932,-0.11\n1933,-0.24\n1934,-0.10\n1935,-0.14\n1936,-0.11\n1937,-0.01\n1938,-0.02\n1939,-0.01\n1940,0.10\n1941,0.19\n1942,0.15\n1943,0.16\n1944,0.29\n1945,0.17\n1946,-0.01\n1947,-0.05\n1948,-0.06\n1949,-0.06\n1950,-0.17\n1951,-0.01\n1952,0.02\n1953,0.09\n1954,-0.12\n1955,-0.14\n1956,-0.20\n1957,0.05\n]\n\nThe linegraph code (CSV format):\n\n[codeblock raw##[linegraph |caption: Global\ntemperature anomaly 1880-1957|\n1880,-0.12\n1881,-0.0]\n##]\n\n[section2 Scatter plots]\n\nUse the same syntax as before, but with "scatterplot" in place of "linegraph."\n\n[codeblock raw##[scatterplot |col1:3,  col2:4\n  , caption: Hubble\'s 1929 data| ...]##]\n\n[scatterplot |col1:3,  col2:4, caption: Hubble\'s 1929 data|\nobject,ms,R (Mpc),v (km/sec),mt,Mt,"D from mt,Mt",,,,,,,,,\nS.Mag.,..,0.032,170,1.5,-16.0,0.03,Slope when Intercept set to zero,423.901701290206,km/sec/Mpc,,,,,,\nL.Mag.,..,0.03,290,0.5,-17.2,0.03,,,,,,,,,\nN.G.C.6822,..,0.214,-130,9,-12.7,0.22,Slope,453.85999408475,km/sec/Mpc,,,,,,\n598,..,0.263,-70,7,-15.1,0.26,Intercept,-40.4360087766413,km/sec,,,,,,\n221,..,0.275,-185,8.8,-13.4,0.28,R Squared,0.623168376295362,,,,,,,\n224,..,0.275,-220,5,-17.2,0.28,,,,,,,,,\n5457,17,0.45,200,9.9,-13.3,0.44,,,,,,,,,\n4736,17.3,0.5,290,8.4,-15.1,0.50,,,,,,,,,\n5194,17.3,0.5,270,7.4,-16.1,0.50,,,,,,,,,\n4449,17.8,0.63,200,9.5,-14.5,0.63,,,,,,,,,\n4214,18.3,0.8,300,11.3,-13.2,0.79,,,,,,,,,\n3031,18.5,0.9,-30,8.3,-16.4,0.87,,,,,,,,,\n3627,18.5,0.9,650,9.1,-15.7,0.91,,,,,,,,,\n4826,18.5,0.9,150,9,-15.7,0.87,,,,,,,,,\n5236,18.5,0.9,500,10.4,-14.4,0.91,,,,,,,,,\n1068,18.7,1,920,9.1,-15.9,1.00,,,,,,,,,\n5055,19,1.1,450,9.6,-15.6,1.10,,,,,,,,,\n7331,19,1.1,500,10.4,-14.8,1.10,,,,,,,,,\n4258,19.5,1.4,500,8.7,-17.0,1.38,,,,,,,,,\n4151,20,1.7,960,12,-14.2,1.74,,,,,,,,,\n4382,..,2,500,10,-16.5,2.00,,,,,,,,,\n4472,..,2,850,8.8,-17.7,2.00,,,,,,,,,\n4486,..,2,800,9.7,-16.8,2.00,,,,,,,,,\n4649,..,2,1090,9.5,-17.0,2.00,,,,,,,,,\nTable 1,,,,,-15.5,,,,,,,,,,\n]\n\n[section1 Tables]\n\n[data |title:Atomic weights, header|\n\nN,  Symbol,  Name, W\n1, H, Hydrogen,1.008\n2, He, Helium, 4.002\n3, Li, Lithium, 6.94\n4, Be, Beryllium, 9.012\n5, B, Boron, 10.81\n6, C, Carbon, 12.011\n7, N, Nitrogen, 14.007\n8, O, Oxygen, 15.999\n9, F, Fluorine, 18.998\n10, Ne, Neon, 20.1797\n11, Na, Sodium, 22.989\n12, Mg, Magnesium, 24.305\n13, Al, Aluminium, 26.981\n14, Si, Silicon, 28.085\n15, P, Phosphorus, 30.973\n16, S, Sulfur, 32.06\n17, Cl, Chlorine, 35.45\n18, Ar, Argon, 39.948\n19, K, Potassium, 39.0983\n20, Ca, Calcium, 40.078\n\n]\n\n\n[section1 Unicode]\n\nYou can freely use unicode characters, as in this poetry element:\n\n[poetry\nА я иду, где ничего не надо,\nГде самый милый спутник — только тень,\nИ веет ветер из глухого сада,\nА под ногой могильная ступень.\n\n— Анна Ахматова\n]\n\n[section1 Shortcuts]\n\n[verbatim\n\nraw###\nNote that instead of saying [italic ...  ],\nyou can say [i .... ]\n\nThere are shortcuts for a few\nother common elements:\n[b ...] instead of [bold ... ]\n[m ...] instead of [math ... ]\n[dm ...] instead of [displaymath ... ]\n###\n\n]\n\n[section1 Code]\n\nTime for some code: [code raw##col :: Int -> Matrix a -> [a]##].\nDo you recognize the language (ha ha)?\n\nWe can also do code blocks.  Syntax highlighting coming later.\n\n[codeblock raw##\n# For Sudoku 3x3 subsquare function\n\ncol :: Int -> Matrix a -> [a]\ncol k = fmap ( !! k)\n\ncols :: Matrix a -> Matrix a\ncols m =\n    fmap (\\k -> col k m) [0..n]\n       where n = length m - 1\n##]\n\n\n[i [highlight Note the use of Rust-like raw strings in the source text to avoid escaping all the brackets.]]\n\n\n\n\n[section1 Images]\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n[code raw##[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center| https://..jpg]##]\n\n[section1 Lists]\n\nNote that lists can be nested and can be given a title if desired.  The symbol for "bulleted" lists is • by default, but can be specified by the user.\nA numbered list has "numbered" as its first argument, as in the example below.\n\n[list |numbered, title:Errands and other stuff|\n\n    [item Bread, milk, O-juice]\n\n    [item Sand paper, white paint]\n\n    [list |none|\n\n        [item A]\n\n        [item B]\n\n        [list |§, title:Greek symbols|\n\n            [item [math \\alpha = 0.123]]\n\n            [item  [math \\beta = 4.567]]\n\n]]]\n\n\n[section1 Appendix: Technical Stuff]\n\nBecause CaYaTeX is so simple, the type of the AST is very small:\n\n[codeblock\nraw##type Element\n    =   Text String Meta\n      | Element String (List String) Element Meta\n      | LX (List Element) Meta\n##\n]\n\nThe first variant, [code Text String] accounts for plain text.\nThe second is of the form [code Element name args body],\nwhile the third shows how a list of elements can form an\nelement.  In particular, the body of an element can be\n[code LX] of a list of elements.  The [code Meta] component tracks\nlocation of the corresponding piece of text in the source code and\nothe metadata such as section numbering.\n\n\n\n';
+var $author$project$Data$text = '\n[title Announcing CaYaTeX]\n\nBy James Carlson and Nicholas Yang\n\n\n\n[italic CaYaTeX is a simple yet powerful markup language that\ncompiles to both LaTeX and Html.]\n\n\n% Note that instead of saying [italic ... ], we can say [i .... ]\n% There are shortcuts for a few other common elements:\n% [b ... ] instead of [bold ... ]\n% [m ...] instead of [math ... ]\n% [dm ... ] instead of [displaymath ...]\n% Note also how comments are made.\n\n[i The present document, written entirely in CaYaTeX,\nlays out our design goals and demonstrates some of the\nprogress we have made towards specifiying the language and implementing it in Elm. While our work\nis incomplete, it\nis a start.]\n\n[i We are also working on an implementation in Rust. This will,\namong other things, help us to cross-validate the specification.]\n\nThe project is open source: [link https://github.com/jxxcarlson/cayatex]\n\n[i  [c You are welcome to edit/delete/replace any of the text here.  It won\'t be saved.  Comments to jxxcarlson@gmail.com]]\n\n\n[tableofcontents]\n\n[section1 Design Goals]\n\nThe goals of the CaYaTeX project are for the language to be\n\n[list |numbered|\n\n[item [bold Small], hence easy to learn. [i To this end there are just two constructs: ordinary text and [code elements]].]\n\n[item [b Powerful].  We borrow ideas from functional programming.\nElements have a Lisp-like syntax with brackets in place of parentheses.\nAn element has the form [code raw##[name |argument-list| body]##] or simply  [code raw##[name body]##]\nThe argument list is a comma-delimited sequence of\nstrings.  The body is an element.\nThe partial element [code name args] is a function [code Element -> Element].\nSuch functions can be composed, as in mathematics or as in languages such as Haskell and Elm.\n]\n\n\n[item [b Extensible]. [i Via a macro facility].]\n\n[item [b Multiple inputs and outputs.] Documents written in CaYaTeX can be compiled to LaTeX, Markdown, and HTML. Markdown documents can be compiled to CaYaTeX.]\n\n[item [b Web-ready]. CaYaTeX has a differential compiler that makes it suitable for real-time editing, e.g.,  in a web app. ]\n\n[item [b Kind and Helpful]. Displays friendly and informative error messages in real time in the rendered text; has hooks for highlighting the corresponding source text in a suitable IDE/editor.]\n\n[item [b Modern]. Unicode compatible.]]\n\n\nCertain tasks are particularly simple with cayatex: insertion of images referenced by URL, construction of tables, graphs, and plots from data given in a standard format such as CSV, and also inline compatations of statistical data. Examples of these are given below.\n\nOur goal is to have a convenient  tool for writing technical documents that are immediately publishasble on the web while at the same time offering export to conventional formats such as LaTeX (and therefore also) PDF.\n\n[b Note.] [fontRGB |50, 0, 200| At the moment  we have not yet implemented differential compilation, which greatly\nspeeds up compilation during editing.  All in due time!]\n\n[section1 Mathematics]\n\n\nPythagoras says that [math a^2 + b^2 = c^2].\nThis is an [b [i extremely]] cool result. But just as cool is the below:\n\n[displaymath \\sum_{n=1}^\\infty \\frac{1}{n} = \\infty,]\n\nwhich goes back to the work of Nicole Oresme (1320–1382).  See the entry in the\n[link |Stanford Encyclopedia of Philosophy| https://plato.stanford.edu/entries/nicole-oresme/].\nYou can also consult [link https://en.wikipedia.org/wiki/Nicole_Oresme].\n\nWe can also do some high-school math, with that beautifully curved integral sign\nthat attracts so many people to the subject:\n\n[displaymath \\int_0^1 x^n dx = \\frac{1}{n+1}]\n\nAnd of course, we can also do theorems:\n\n[theorem There are infinitely many primes [math p \\equiv 1 \\text{ mod } 4.]]\n\n[corollary |Euclid| There are infinitely many primes.]\n\n\n\n[section1 Color]\n\nExample:  [highlightRGB |252, 178, 50| [fontRGB |23, 57, 156| [b What color is this?]]]\n\n[code raw###[highlightRGB |252, 178, 50| [fontRGB |23, 57, 156| [b What color is this?]]]###]\n\n\nNote the nesting of elements, aka function composition. When we have our macro facility up and running,  users can abbreviate constructs like\nthis one, e.g., just say [code raw##[myhighlight| What color is this?]##]\n\n[section1 Data]\n\nOne can design elements which manipulate data (numerical computations, visualization).  Here are some data computations:\n\n[sum 1.2, 2, 3.4, 4]\n\n[average 1.2, 2, 3.4, 4]\n\n[stdev |precision:3| 1.2, 2, 3.4, 4]\n\nIn the numerical examples, the precision of the result has a default value of 2.  This can be changed, as one sees in the source of the third example, e.g., you can have\n\n[codeblock raw##[stdev | 1.2, 2, 3.4, 4]## ]\n\nor\n\n[codeblock raw##[stdev |precision:3| 1.2, 2, 3.4, 4]## ]\n\n\n[section1 Graphs]\n\nBelow are three simple data visualizations. We plan more, and more configurability of what you see here.\n\n[section2 Bar graphs]\n\n[bargraph |column:2, yShift: 0.2, caption: Global temperature anomaly 1880-1957|\n1880,-0.12\n1881,-0.07\n1882,-0.07\n1883,-0.15\n1884,-0.21\n1885,-0.22\n1886,-0.21\n1887,-0.25\n1888,-0.15\n1889,-0.10\n1890,-0.33\n1891,-0.25\n1892,-0.30\n1893,-0.31\n1894,-0.28\n1895,-0.22\n1896,-0.09\n1897,-0.12\n1898,-0.26\n1899,-0.12\n1900,-0.07\n1901,-0.14\n1902,-0.25\n1903,-0.34\n1904,-0.42\n1905,-0.29\n1906,-0.22\n1907,-0.37\n1908,-0.44\n1909,-0.43\n1910,-0.38\n1911,-0.43\n1912,-0.33\n1913,-0.31\n1914,-0.14\n1915,-0.07\n1916,-0.29\n1917,-0.31\n1918,-0.20\n1919,-0.20\n1920,-0.21\n1921,-0.14\n1922,-0.22\n1923,-0.21\n1924,-0.24\n1925,-0.14\n1926,-0.06\n1927,-0.14\n1928,-0.17\n1929,-0.29\n1930,-0.09\n1931,-0.07\n1932,-0.11\n1933,-0.24\n1934,-0.10\n1935,-0.14\n1936,-0.11\n1937,-0.01\n1938,-0.02\n1939,-0.01\n1940,0.10\n1941,0.19\n1942,0.15\n1943,0.16\n1944,0.29\n1945,0.17\n1946,-0.01\n1947,-0.05\n1948,-0.06\n1949,-0.06\n1950,-0.17\n1951,-0.01\n1952,0.02\n1953,0.09\n1954,-0.12\n1955,-0.14\n1956,-0.20\n1957,0.05\n]\n\nThe bargraph code:\n\n[codeblock raw##[bargraph |column:2,\n    caption: Global temperature anomaly 1880-1957|\n1880,-0.12\n1881,-0.07\n...]## ]\n\n[section2 Line graphs]\n\n[linegraph |caption: Global temperature anomaly 1880-1957|\n1880,-0.12\n1881,-0.07\n1882,-0.07\n1883,-0.15\n1884,-0.21\n1885,-0.22\n1886,-0.21\n1887,-0.25\n1888,-0.15\n1889,-0.10\n1890,-0.33\n1891,-0.25\n1892,-0.30\n1893,-0.31\n1894,-0.28\n1895,-0.22\n1896,-0.09\n1897,-0.12\n1898,-0.26\n1899,-0.12\n1900,-0.07\n1901,-0.14\n1902,-0.25\n1903,-0.34\n1904,-0.42\n1905,-0.29\n1906,-0.22\n1907,-0.37\n1908,-0.44\n1909,-0.43\n1910,-0.38\n1911,-0.43\n1912,-0.33\n1913,-0.31\n1914,-0.14\n1915,-0.07\n1916,-0.29\n1917,-0.31\n1918,-0.20\n1919,-0.20\n1920,-0.21\n1921,-0.14\n1922,-0.22\n1923,-0.21\n1924,-0.24\n1925,-0.14\n1926,-0.06\n1927,-0.14\n1928,-0.17\n1929,-0.29\n1930,-0.09\n1931,-0.07\n1932,-0.11\n1933,-0.24\n1934,-0.10\n1935,-0.14\n1936,-0.11\n1937,-0.01\n1938,-0.02\n1939,-0.01\n1940,0.10\n1941,0.19\n1942,0.15\n1943,0.16\n1944,0.29\n1945,0.17\n1946,-0.01\n1947,-0.05\n1948,-0.06\n1949,-0.06\n1950,-0.17\n1951,-0.01\n1952,0.02\n1953,0.09\n1954,-0.12\n1955,-0.14\n1956,-0.20\n1957,0.05\n]\n\nThe linegraph code (CSV format):\n\n[codeblock raw##[linegraph |caption: Global\ntemperature anomaly 1880-1957|\n1880,-0.12\n1881,-0.0]\n##]\n\n[section2 Scatter plots]\n\nUse the same syntax as before, but with "scatterplot" in place of "linegraph."\n\n[codeblock raw##[scatterplot |col1:3,  col2:4\n  , caption: Hubble\'s 1929 data| ...]##]\n\n[scatterplot |col1:3,  col2:4, caption: Hubble\'s 1929 data|\nobject,ms,R (Mpc),v (km/sec),mt,Mt,"D from mt,Mt",,,,,,,,,\nS.Mag.,..,0.032,170,1.5,-16.0,0.03,Slope when Intercept set to zero,423.901701290206,km/sec/Mpc,,,,,,\nL.Mag.,..,0.03,290,0.5,-17.2,0.03,,,,,,,,,\nN.G.C.6822,..,0.214,-130,9,-12.7,0.22,Slope,453.85999408475,km/sec/Mpc,,,,,,\n598,..,0.263,-70,7,-15.1,0.26,Intercept,-40.4360087766413,km/sec,,,,,,\n221,..,0.275,-185,8.8,-13.4,0.28,R Squared,0.623168376295362,,,,,,,\n224,..,0.275,-220,5,-17.2,0.28,,,,,,,,,\n5457,17,0.45,200,9.9,-13.3,0.44,,,,,,,,,\n4736,17.3,0.5,290,8.4,-15.1,0.50,,,,,,,,,\n5194,17.3,0.5,270,7.4,-16.1,0.50,,,,,,,,,\n4449,17.8,0.63,200,9.5,-14.5,0.63,,,,,,,,,\n4214,18.3,0.8,300,11.3,-13.2,0.79,,,,,,,,,\n3031,18.5,0.9,-30,8.3,-16.4,0.87,,,,,,,,,\n3627,18.5,0.9,650,9.1,-15.7,0.91,,,,,,,,,\n4826,18.5,0.9,150,9,-15.7,0.87,,,,,,,,,\n5236,18.5,0.9,500,10.4,-14.4,0.91,,,,,,,,,\n1068,18.7,1,920,9.1,-15.9,1.00,,,,,,,,,\n5055,19,1.1,450,9.6,-15.6,1.10,,,,,,,,,\n7331,19,1.1,500,10.4,-14.8,1.10,,,,,,,,,\n4258,19.5,1.4,500,8.7,-17.0,1.38,,,,,,,,,\n4151,20,1.7,960,12,-14.2,1.74,,,,,,,,,\n4382,..,2,500,10,-16.5,2.00,,,,,,,,,\n4472,..,2,850,8.8,-17.7,2.00,,,,,,,,,\n4486,..,2,800,9.7,-16.8,2.00,,,,,,,,,\n4649,..,2,1090,9.5,-17.0,2.00,,,,,,,,,\nTable 1,,,,,-15.5,,,,,,,,,,\n]\n\n[section1 Tables]\n\n[data |title:Atomic weights, header|\n\nN,  Symbol,  Name, W\n1, H, Hydrogen,1.008\n2, He, Helium, 4.002\n3, Li, Lithium, 6.94\n4, Be, Beryllium, 9.012\n5, B, Boron, 10.81\n6, C, Carbon, 12.011\n7, N, Nitrogen, 14.007\n8, O, Oxygen, 15.999\n9, F, Fluorine, 18.998\n10, Ne, Neon, 20.1797\n11, Na, Sodium, 22.989\n12, Mg, Magnesium, 24.305\n13, Al, Aluminium, 26.981\n14, Si, Silicon, 28.085\n15, P, Phosphorus, 30.973\n16, S, Sulfur, 32.06\n17, Cl, Chlorine, 35.45\n18, Ar, Argon, 39.948\n19, K, Potassium, 39.0983\n20, Ca, Calcium, 40.078\n\n]\n\n\n[section1 Table of contents]\n\nA table contents is generated automatically if you place\nthe element [c raw#[tableofcontents]#] in the source text.\nEntries in the table of contents are active links to the\nindicated sections.  Conversely, section titles act\nas active links back to the table of contents.\n\n\n[section1 Unicode]\n\nYou can freely use unicode characters, as in this poetry element:\n\n[poetry\nА я иду, где ничего не надо,\nГде самый милый спутник — только тень,\nИ веет ветер из глухого сада,\nА под ногой могильная ступень.\n\n— Анна Ахматова\n]\n\n[section1 Shortcuts]\n\n[verbatim\n\nraw###\nNote that instead of saying [italic ...  ],\nyou can say [i .... ]\n\nThere are shortcuts for a few\nother common elements:\n[b ...] instead of [bold ... ]\n[m ...] instead of [math ... ]\n[dm ...] instead of [displaymath ... ]\n###\n\n]\n\n[section1 Code]\n\nTime for some code: [code raw##col :: Int -> Matrix a -> [a]##].\nDo you recognize the language (ha ha)?\n\nWe can also do code blocks.  Syntax highlighting coming later.\n\n[codeblock raw##\n# For Sudoku 3x3 subsquare function\n\ncol :: Int -> Matrix a -> [a]\ncol k = fmap ( !! k)\n\ncols :: Matrix a -> Matrix a\ncols m =\n    fmap (\\k -> col k m) [0..n]\n       where n = length m - 1\n##]\n\n\n[i [highlight Note the use of Rust-like raw strings in the source text to avoid escaping all the brackets.]]\n\n\n\n\n[section1 Images]\n\n[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center|https://i.pinimg.com/originals/d4/07/a4/d407a45bcf3ade18468ac7ba633244b9.jpg]\n\n[code raw##[image |caption: Rotkehlchen aufgeplustert, width: 200, placement: center| https://..jpg]##]\n\n[section1 Lists]\n\nNote that lists can be nested and can be given a title if desired.  The symbol for "bulleted" lists is • by default, but can be specified by the user.\nA numbered list has "numbered" as its first argument, as in the example below.\n\n[list |numbered, title:Errands and other stuff|\n\n    [item Bread, milk, O-juice]\n\n    [item Sand paper, white paint]\n\n    [list |none|\n\n        [item A]\n\n        [item B]\n\n        [list |§, title:Greek symbols|\n\n            [item [math \\alpha = 0.123]]\n\n            [item  [math \\beta = 4.567]]\n\n]]]\n\n\n[section1 Appendix: Technical Stuff]\n\nBecause CaYaTeX is so simple, the type of the AST is very small:\n\n[codeblock\nraw##type Element\n    =   Text String Meta\n      | Element String (List String) Element Meta\n      | LX (List Element) Meta\n##\n]\n\nThe first variant, [code Text String] accounts for plain text.\nThe second is of the form [code Element name args body],\nwhile the third shows how a list of elements can form an\nelement.  In particular, the body of an element can be\n[code LX] of a list of elements.  The [code Meta] component tracks\nlocation of the corresponding piece of text in the source code and\nothe metadata such as section numbering.\n\n\n\n';
 var $author$project$Main$initialText = $author$project$Data$text;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
@@ -5831,7 +5831,7 @@ var $author$project$Parser$Element$rawText_ = function (stopChars) {
 					F3(
 						function (begin, end, content) {
 							return {
-								cF: A3($elm$core$String$slice, begin, end, content),
+								cG: A3($elm$core$String$slice, begin, end, content),
 								gV: end - begin,
 								cs: begin
 							};
@@ -5850,7 +5850,7 @@ var $author$project$Parser$Element$string_ = function (stopChars) {
 	return A2(
 		$elm$parser$Parser$Advanced$map,
 		function ($) {
-			return $.cF;
+			return $.cG;
 		},
 		$author$project$Parser$Element$rawText_(stopChars));
 };
@@ -5952,21 +5952,21 @@ var $author$project$Parser$XString$reduce = function (list) {
 		A2(
 			$elm$core$Maybe$map,
 			function ($) {
-				return $.cP;
+				return $.cQ;
 			},
 			$elm$core$List$head(reversedList)));
 	return {
-		cF: A3(
+		cG: A3(
 			$elm$core$List$foldl,
 			$elm$core$Basics$append,
 			'',
 			A2(
 				$elm$core$List$map,
 				function ($) {
-					return $.cF;
+					return $.cG;
 				},
 				reversedList)),
-		cP: finish,
+		cQ: finish,
 		cs: start
 	};
 };
@@ -6003,8 +6003,8 @@ var $author$project$Parser$Tool$char = function (prefixTest) {
 					F3(
 						function (start, finish, content) {
 							return {
-								cF: A3($elm$core$String$slice, start, finish, content),
-								cP: finish,
+								cG: A3($elm$core$String$slice, start, finish, content),
+								cQ: finish,
 								cs: start
 							};
 						})),
@@ -6023,7 +6023,7 @@ var $author$project$Parser$Tool$char = function (prefixTest) {
 var $author$project$Parser$XString$escapedChar = A2(
 	$elm$parser$Parser$Advanced$map,
 	function (result) {
-		return {cF: '\\' + result.cF, cP: result.cP, cs: result.cs - 1};
+		return {cG: '\\' + result.cG, cQ: result.cQ, cs: result.cs - 1};
 	},
 	A2(
 		$author$project$Parser$Tool$second,
@@ -6058,8 +6058,8 @@ var $author$project$Parser$Tool$text = F2(
 						F3(
 							function (start, finish, content) {
 								return {
-									cF: A3($elm$core$String$slice, start, finish, content),
-									cP: finish,
+									cG: A3($elm$core$String$slice, start, finish, content),
+									cQ: finish,
 									cs: start
 								};
 							})),
@@ -6114,9 +6114,9 @@ var $author$project$Parser$Element$plainText = F2(
 				function (data) {
 					return A2(
 						$author$project$Parser$Element$Text,
-						data.cF,
+						data.cG,
 						$elm$core$Maybe$Just(
-							A4($author$project$Parser$Metadata$init, generation, lineNumber, data.cs, data.cP)));
+							A4($author$project$Parser$Metadata$init, generation, lineNumber, data.cs, data.cQ)));
 				},
 				$author$project$Parser$XString$textWithPredicate($author$project$Parser$XString$isNonLanguageChar)));
 	});
@@ -6157,21 +6157,21 @@ var $elm$core$String$right = F2(
 	});
 var $author$project$Parser$RawString$updateState = F3(
 	function (maxHashes, c, state) {
-		return (c === '#') ? ((A2($elm$core$String$right, 1, state.cF) === '#') ? ((_Utils_cmp(state.aa + 1, state.aa + 1) > 0) ? $elm$parser$Parser$Advanced$Done(
+		return (c === '#') ? ((A2($elm$core$String$right, 1, state.cG) === '#') ? ((_Utils_cmp(state.aa + 1, state.aa + 1) > 0) ? $elm$parser$Parser$Advanced$Done(
 			{
-				cF: _Utils_ap(state.cF, c),
+				cG: _Utils_ap(state.cG, c),
 				aa: state.aa + 1
 			}) : $elm$parser$Parser$Advanced$Loop(
 			{
-				cF: _Utils_ap(state.cF, c),
+				cG: _Utils_ap(state.cG, c),
 				aa: state.aa + 1
 			})) : $elm$parser$Parser$Advanced$Loop(
 			{
-				cF: _Utils_ap(state.cF, c),
+				cG: _Utils_ap(state.cG, c),
 				aa: 1
 			})) : $elm$parser$Parser$Advanced$Loop(
 			{
-				cF: _Utils_ap(state.cF, c),
+				cG: _Utils_ap(state.cG, c),
 				aa: 0
 			});
 	});
@@ -6188,7 +6188,7 @@ var $author$project$Parser$RawString$rawStringHelp = F2(
 var $author$project$Parser$RawString$rawStringLoop = function (hashes) {
 	return A2(
 		$elm$parser$Parser$Advanced$loop,
-		{cF: '', aa: 0},
+		{cG: '', aa: 0},
 		$author$project$Parser$RawString$rawStringHelp(hashes));
 };
 var $author$project$Parser$Error$ExpectingRawPrefix = {$: 8};
@@ -6219,7 +6219,7 @@ var $author$project$Parser$RawString$parser = A2(
 		return A2(
 			$elm$parser$Parser$Advanced$map,
 			function (ls) {
-				return A2($elm$core$String$dropRight, maxHashes, ls.cF);
+				return A2($elm$core$String$dropRight, maxHashes, ls.cG);
 			},
 			$author$project$Parser$RawString$rawStringLoop(maxHashes));
 	},
@@ -6691,7 +6691,7 @@ var $author$project$Main$init = function (flags) {
 			ac: $author$project$Main$initialText,
 			cc: 1,
 			aD: $author$project$Render$String$renderString($author$project$Main$initialText),
-			di: flags.cW,
+			di: flags.cX,
 			e5: flags.$9
 		},
 		$elm$core$Platform$Cmd$none);
@@ -6702,8 +6702,8 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$none;
 };
-var $author$project$Data$notes = '\n\n[title Design Notes]\n\nFollowing are some random notes on the structure of the cayatex compiler.  The idea is to capture\nthe main ideas of the design while they are still in current memory.\nSubject to radical revision, as the project is still in a high-flux experimental state.\n\n[tableofcontents]\n\n[section  Syntax]\n\nThe syntax of CaYaTeX is as in the example below:\n\n[codeblock\n\nraw###\nWhiskey is [b very] strong stuff.\n###\n]\n\nIt renders as "Whiskey is [b very] strong stuff."  All CaYaTeX source text consists of ordinary text, which may contain unicode characters, and [i basic elements], which are of one of three forms:\n\n[list\n\n[item [code raw##[NAME]##]]\n\n[item [code raw##[NAME BODY]##]]\n\n[item [code raw##[NAME |ARGS| BODY]##]]\n\n]\n\nwhere [code ARGS] is a comma-separated list of strings. Below is an example of the third form.\n\n[codeblock\n\nraw###\n[bargraph | column:2, yShift: 0.2,\n  caption: Sales of XYZ |\n1, 2.1\n2, 2.9\n...\n]\n###\n]\n\n[bargraph | column:2, yShift: 0.2,\n  caption: Sales of XYZ |\n1, 2.1\n2, 2.9\n3, 4.4\n4, 6.8\n5, 7.1\n6, 7.8\n7, 5.9\n]\n\nAs an example of the first form, the table of contents is constructed via the element [code raw#[tableofcontents]#].\nAs to the structure of a general element, we have the following three rules:\n\n[list |s: numbered|\n\n[item Plain text is an element]\n\n[item Basic elements are elements and the body of an element is an element]\n\n[item A sequence [i a b c d ...] where each of [i a, b, c, d, ...] is an element is also an element]\n\n]\n\n[section Parse Tree]\n\n\nCayatex is built around the type of the parse tree.  This type captures the syntax of the source text as described above.\n\n[codeblock\nraw###\ntype Element\n    = Text String (Maybe Metadata)\n    | Element String (List String) Element (Maybe Metadata)\n    | LX (List Element) (Maybe Metadata)\n###\n]\n\n[section Parser]\n\nParsing, which is intended to be robust in the face of errors in the source text, occurs at three levels:\n\n[list |s: numbered|\n\n[item Parse one element from the input text using [code Parser.Element.parser]]\n\n[item Parse a list of elements from a block of input text using [code Parser.Driver.parseLoop]]\n\n[item Decompose the source text into logical elements and feed these to [code Parser.Driver.parseLoop]\n using [code Parser.Document.runLoop]]\n\n]\n\n[section2 Parser.Element]\n\nLow-level parsing is handled by the function [code Parser.Element.parser]:\n\n[codeblock\nparser : Int -> Int -> Parser Element\n]\n\nThe first two arguments are [code generation] and [code blockOffset].  These are "fed" to the parser by [code Parser.Driver.parseLoop].  The [c generation] argument is used for live editing-rendering and is incremented on each character stroke.  It is used downstream to manage updates to the virtual DOM.  The [c blockOffset] field is an index in the source text of the text parsed.\n\nNote every variant of type [c Element] has a component of type [c Meta].\nThis metadata component is a record of the following type.\n\n[cb type alias Metadata =\n    { blockOffset : Int\n    , offset : Int\n    , length : Int\n    , generation : Int\n    , label : String\n    }\n]\n\nThe first three fields are used to locate the text parsed in the source text.  The last, [c label], is computed when the text is parsed.  For example, if the element is  [c raw#[section3 Foo]#], the label might be the string [c 5.2.1].  Labels are used to render the output of the parser.\n\n[section2 Parser.Driver]\n\nThe next level up in parsing text is handled by [c parseLoop], whose type is given below. [i Grosso modo], it functions by applying [c Element.parser] to the input string, analyzing the result, doing some computations, and  dropping the substring just parsed from the input text, and adding the parsed result to a field of [c TextCursor].\n\n\n[cb\nparseLoop : Int -> Int -> Data -> String -> TextCursor Element\nparseLoop generation initialLineNumber data str = ...\n]\n\nLet\'s look at this in more detail.  The [c TextCursor] type, which we use as [c TextCursor Element], is as laid out below. Many of the fields have already been discussed already\n\n[cb\ntype alias TextCursor a =\n    { text : String           -- text remaining to be processed\n    , block : String\n    , parsand : Maybe a       -- element just parsed\n    , parsed : List a         -- elements parsed so far\n    , stack : List String\n    , blockIndex : Int\n    , offset : Int\n    , count : Int\n    , generation : Int\n    , data : Parser.Data.Data  -- data accumulated so far\n    }\n\n]\n\nThe [c data] field is of particular interest.  Its type is as listed below.  In it, the parser accumulates information about the source text that is used in rendering.  The [c vectorCounters] field, for example is used to set the label of a section element.\n\n[cb\ntype alias Data =\n    { counters : IntegerDict\n    , vectorCounters : VectorDict\n    , crossReferences : Dictionary\n    , tableOfContents : List TocEntry\n    , dictionary : Dictionary\n    , config : Config\n    }\n]\n\n[section2 Error recovery]\n\nThe [c parseLoop] function handles error recovery by modifiying the parse tree.  After modification, the tree is (a) error free, (b) constructed so that when rendered, information about the error is displayed.  This feature "works," but needs more work in order to provide a pleasant user experience.\n\n[section2 Parser.Document]\n\nThe highest level of the parser is handled by [c Parser.Document.runLoop]:\n\n[cb\nrunLoop : Int -> List String -> State\nrunLoop generation strList = ...\n]\n\nThis function takes as input data supplied by the editor: the generation number and the source text presented as a list of strings.  Its output is a value of type [c State], as described below.  The [c input] field is the source text, which is progresselvely truncated as [c runLoop] proceeds, building up (i) a [c Data] value, (ii) a list of [c TextCursor].  The [c parsed] field of a text cursor holds the parsed text.\n\n\n[cb\n\ntype alias State =\n    { input : List String\n    , blockOffset : Int\n    , generation : Int\n    , blockType : BlockStatus\n    , blockContents : List String\n    , blockLevel : Int\n    , output : List (TextCursor Element)\n    , data : Parser.Data.Data\n    }\n\n]\n\n\nIf [c state] is the final value computed by [c runLoop], then the code\n\n[cb raw#\nstate\n   |> .output\n   |> List.map .parsed\n   |> List.reverse\n#  ]\n\nproduces a value of type [c List (List Element)] which can then be fed to the rendering machine.  The renderer also requires the [c state.data] field.\n';
-var $author$project$Data$test = '\n[data \n\nN,  Symbol,  Name, W\n1, H, Hydrogen,1.008\n2, He, Helium, 4.002\n3, Li, Lithium, 6.94\n4, Be, Beryllium, 9.012\n5, B, Boron, 10.81\n6, C, Carbon, 12.011\n7, N, Nitrogen, 14.007\n8, O, Oxygen, 15.999\n9, F, Fluorine, 18.998\n10, Ne, Neon, 20.1797\n11, Na, Sodium, 22.989\n12, Mg, Magnesium, 24.305\n13, Al, Aluminium, 26.981\n14, Si, Silicon, 28.085\n15, P, Phosphorus, 30.973\n16, S, Sulfur, 32.06\n17, Cl, Chlorine, 35.45\n18, Ar, Argon, 39.948\n19, K, Potassium, 39.0983\n20, Ca, Calcium, 40.078\n\n]\n';
+var $author$project$Data$notes = '\n\n[title Design Notes]\n\nFollowing are some random notes on the structure of the cayatex compiler.  The idea is to capture\nthe main ideas of the design while they are still in current memory.\nSubject to radical revision, as the project is still in a high-flux experimental state.\n\n[tableofcontents]\n\n[section  Syntax]\n\nThe syntax of CaYaTeX is as in the example below:\n\n[codeblock\n\nraw###\nWhiskey is [b very] strong stuff.\n###\n]\n\nIt renders as "Whiskey is [b very] strong stuff."  All CaYaTeX source text consists of ordinary text, which may contain unicode characters, and [i basic elements], which are of one of three forms:\n\n[list\n\n[item [code raw##[NAME]##]]\n\n[item [code raw##[NAME BODY]##]]\n\n[item [code raw##[NAME |ARGS| BODY]##]]\n\n]\n\nwhere [code ARGS] is a comma-separated list of strings. Below is an example of the third form.\n\n[codeblock\n\nraw###\n[bargraph | column:2, yShift: 0.2,\n  caption: Sales of XYZ |\n1, 2.1\n2, 2.9\n...\n]\n###\n]\n\n[bargraph | column:2, yShift: 0.2,\n  caption: Sales of XYZ |\n1, 2.1\n2, 2.9\n3, 4.4\n4, 6.8\n5, 7.1\n6, 7.8\n7, 5.9\n]\n\nAs an example of the first form, the table of contents is constructed via the element [code raw#[tableofcontents]#].\nAs to the structure of a general element, we have the following three rules:\n\n[list |s: numbered|\n\n[item Plain text is an element]\n\n[item Basic elements are elements and the body of an element is an element]\n\n[item A sequence [i a b c d ...] where each of [i a, b, c, d, ...] is an element is also an element]\n\n]\n\n[section Parse Tree]\n\n\nCayatex is built around the type of the parse tree.  This type captures the syntax of the source text as described above.\n\n[codeblock\nraw###\ntype Element\n    = Text String (Maybe Metadata)\n    | Element String (List String) Element (Maybe Metadata)\n    | LX (List Element) (Maybe Metadata)\n###\n]\n\n[section Parser]\n\nParsing, which is intended to be robust in the face of errors in the source text, occurs at three levels:\n\n[list |s: numbered|\n\n[item Parse one element from the input text using [code Parser.Element.parser]]\n\n[item Parse a list of elements from a block of input text using [code Parser.Driver.parseLoop]]\n\n[item Decompose the source text into logical elements and feed these to [code Parser.Driver.parseLoop]\n using [code Parser.Document.runLoop]]\n\n]\n\n[section2 Parser.Element]\n\nLow-level parsing is handled by the function [code Parser.Element.parser]:\n\n[codeblock\nparser : Int -> Int -> Parser Element\n]\n\nThe first two arguments are [code generation] and [code blockOffset].  These are "fed" to the parser by [code Parser.Driver.parseLoop].  The [c generation] argument is used for live editing-rendering and is incremented on each character stroke.  It is used downstream to manage updates to the virtual DOM.  The [c blockOffset] field is an index in the source text of the text parsed.\n\nNote every variant of type [c Element] has a component of type [c Meta].\nThis metadata component is a record of the following type.\n\n[cb type alias Metadata =\n    { blockOffset : Int\n    , offset : Int\n    , length : Int\n    , generation : Int\n    , label : String\n    }\n]\n\nThe first three fields are used to locate the text parsed in the source text.  The last, [c label], is computed when the text is parsed.  For example, if the element is  [c raw#[section3 Foo]#], the label might be the string [c 5.2.1].  Labels are used to render the output of the parser.\n\n[section2 Parser.Driver]\n\nThe next level up in parsing text is handled by [c parseLoop], whose type is given below. [i Grosso modo], it functions by applying [c Element.parser] to the input string, analyzing the result, doing some computations, and  dropping the substring just parsed from the input text, and adding the parsed result to a field of [c TextCursor].\n\n\n[cb\nparseLoop : Int -> Int -> Data -> String -> TextCursor Element\nparseLoop generation initialLineNumber data str = ...\n]\n\nLet\'s look at this in more detail.  The [c TextCursor] type, which we use as [c TextCursor Element], is as laid out below. Many of the fields have already been discussed already\n\n[cb\ntype alias TextCursor a =\n    { text : String           -- text remaining to be processed\n    , block : String\n    , parsand : Maybe a       -- element just parsed\n    , parsed : List a         -- elements parsed so far\n    , stack : List String\n    , blockIndex : Int\n    , offset : Int\n    , count : Int\n    , generation : Int\n    , data : Parser.Data.Data  -- data accumulated so far\n    }\n\n]\n\nThe [c data] field is of particular interest.  Its type is as listed below.  In it, the parser accumulates information about the source text that is used in rendering.  The [c vectorCounters] field, for example is used to set the label of a section element.\n\n[cb\ntype alias Data =\n    { counters : IntegerDict\n    , vectorCounters : VectorDict\n    , crossReferences : Dictionary\n    , tableOfContents : List TocEntry\n    , dictionary : Dictionary\n    , config : Config\n    }\n]\n\n[section2 Error recovery]\n\nThe [c parseLoop] function handles error recovery by modifiying the parse tree.  After modification, the tree is (a) error free, (b) constructed so that when rendered, information about the error is displayed.  This feature "works," but needs more work in order to provide a pleasant user experience.\n\n[section2 Parser.Document]\n\nThe highest level of the parser is handled by [c Parser.Document.runLoop]:\n\n[cb\nrunLoop : Int -> List String -> State\nrunLoop generation strList = ...\n]\n\nThis function takes as input data supplied by the editor: the generation number and the source text presented as a list of strings.  Its output is a value of type [c State], as described below.  The [c input] field is the source text, which is progresselvely truncated as [c runLoop] proceeds, building up (\ni) a [c Data] value, (ii) a list of [c TextCursor].  The [c parsed] field of a text cursor holds the parsed text.\n\nThe task of the function [c runLoop] is to divide the input text into logical elements (strings), which are then fed to [c Driver.parseLoop].  The return value of [c Driver.parseLoop] is used to compute the new [c State].  A logical element is either (i) a paragraph, defined as an element sequence beginning with plain text and bounded above and below\nby blank lines or (ii) an element of the form [c NAME ... ] bounded above and below by blanke lines.\n\n\n[cb\n\ntype alias State =\n    { input : List String\n    , blockOffset : Int\n    , generation : Int\n    , blockType : BlockStatus\n    , blockContents : List String\n    , blockLevel : Int\n    , output : List (TextCursor Element)\n    , data : Parser.Data.Data\n    }\n\n]\n\n\nIf [c state] is the final value computed by [c runLoop], then the code\n\n[cb raw#\nstate\n   |> .output\n   |> List.map .parsed\n   |> List.reverse\n#  ]\n\nproduces a value of type [c List (List Element)] which can then be fed to the rendering machine.  The renderer also requires the [c state.data] field.\n';
+var $author$project$Data$test = '\n[tableofcontents]\n\n[section1 A]\n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in sem eget mi cursus posuere sagittis a neque. Mauris ut fringilla velit. Aenean sit amet odio nec quam pretium sodales eget sed nibh. Etiam vel dui non nibh finibus vehicula eget eu purus. Sed fermentum dignissim mi gravida pretium. Aenean auctor interdum vulputate. Donec aliquet velit nibh, a ultricies mi posuere ut. Praesent id hendrerit odio. Nam eu elit a ipsum eleifend faucibus a id mauris. Vestibulum nec feugiat urna. Fusce congue odio non erat molestie, ut pharetra mi dapibus.\n\nDonec ultrices magna iaculis augue porta dignissim. Aenean dui felis, molestie ut dapibus quis, tristique a lacus. Sed vulputate, ligula id consequat venenatis, enim odio sagittis nisl, vel tincidunt ligula velit quis erat. Pellentesque ultricies luctus risus, sit amet aliquam justo congue id. Aliquam consectetur arcu nec risus malesuada pellentesque. Nam tincidunt, nisl sed congue ullamcorper, ante nibh tempus elit, et fringilla magna diam elementum enim. Pellentesque quam nisl, tempus non metus vestibulum, varius tempus mauris. Maecenas fermentum tristique enim vitae pulvinar. Aenean id metus non nisi sagittis consequat. Integer nec erat luctus urna semper lobortis vel non neque. In semper scelerisque enim in lacinia. Praesent ut interdum felis. Quisque vitae ornare velit.\n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in sem eget mi cursus posuere sagittis a neque. Mauris ut fringilla velit. Aenean sit amet odio nec quam pretium sodales eget sed nibh. Etiam vel dui non nibh finibus vehicula eget eu purus. Sed fermentum dignissim mi gravida pretium. Aenean auctor interdum vulputate. Donec aliquet velit nibh, a ultricies mi posuere ut. Praesent id hendrerit odio. Nam eu elit a ipsum eleifend faucibus a id mauris. Vestibulum nec feugiat urna. Fusce congue odio non erat molestie, ut pharetra mi dapibus.\n\nDonec ultrices magna iaculis augue porta dignissim. Aenean dui felis, molestie ut dapibus quis, tristique a lacus. Sed vulputate, ligula id consequat venenatis, enim odio sagittis nisl, vel tincidunt ligula velit quis erat. Pellentesque ultricies luctus risus, sit amet aliquam justo congue id. Aliquam consectetur arcu nec risus malesuada pellentesque. Nam tincidunt, nisl sed congue ullamcorper, ante nibh tempus elit, et fringilla magna diam elementum enim. Pellentesque quam nisl, tempus non metus vestibulum, varius tempus mauris. Maecenas fermentum tristique enim vitae pulvinar. Aenean id metus non nisi sagittis consequat. Integer nec erat luctus urna semper lobortis vel non neque. In semper scelerisque enim in lacinia. Praesent ut interdum felis. Quisque vitae ornare velit.\n\n[section2 B]\n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in sem eget mi cursus posuere sagittis a neque. Mauris ut fringilla velit. Aenean sit amet odio nec quam pretium sodales eget sed nibh. Etiam vel dui non nibh finibus vehicula eget eu purus. Sed fermentum dignissim mi gravida pretium. Aenean auctor interdum vulputate. Donec aliquet velit nibh, a ultricies mi posuere ut. Praesent id hendrerit odio. Nam eu elit a ipsum eleifend faucibus a id mauris. Vestibulum nec feugiat urna. Fusce congue odio non erat molestie, ut pharetra mi dapibus.\n\nDonec ultrices magna iaculis augue porta dignissim. Aenean dui felis, molestie ut dapibus quis, tristique a lacus. Sed vulputate, ligula id consequat venenatis, enim odio sagittis nisl, vel tincidunt ligula velit quis erat. Pellentesque ultricies luctus risus, sit amet aliquam justo congue id. Aliquam consectetur arcu nec risus malesuada pellentesque. Nam tincidunt, nisl sed congue ullamcorper, ante nibh tempus elit, et fringilla magna diam elementum enim. Pellentesque quam nisl, tempus non metus vestibulum, varius tempus mauris. Maecenas fermentum tristique enim vitae pulvinar. Aenean id metus non nisi sagittis consequat. Integer nec erat luctus urna semper lobortis vel non neque. In semper scelerisque enim in lacinia. Praesent ut interdum felis. Quisque vitae ornare velit.\n\n[section3 C]\n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in sem eget mi cursus posuere sagittis a neque. Mauris ut fringilla velit. Aenean sit amet odio nec quam pretium sodales eget sed nibh. Etiam vel dui non nibh finibus vehicula eget eu purus. Sed fermentum dignissim mi gravida pretium. Aenean auctor interdum vulputate. Donec aliquet velit nibh, a ultricies mi posuere ut. Praesent id hendrerit odio. Nam eu elit a ipsum eleifend faucibus a id mauris. Vestibulum nec feugiat urna. Fusce congue odio non erat molestie, ut pharetra mi dapibus.\n\nDonec ultrices magna iaculis augue porta dignissim. Aenean dui felis, molestie ut dapibus quis, tristique a lacus. Sed vulputate, ligula id consequat venenatis, enim odio sagittis nisl, vel tincidunt ligula velit quis erat. Pellentesque ultricies luctus risus, sit amet aliquam justo congue id. Aliquam consectetur arcu nec risus malesuada pellentesque. Nam tincidunt, nisl sed congue ullamcorper, ante nibh tempus elit, et fringilla magna diam elementum enim. Pellentesque quam nisl, tempus non metus vestibulum, varius tempus mauris. Maecenas fermentum tristique enim vitae pulvinar. Aenean id metus non nisi sagittis consequat. Integer nec erat luctus urna semper lobortis vel non neque. In semper scelerisque enim in lacinia. Praesent ut interdum felis. Quisque vitae ornare velit.\n\n[section4 D]\n\n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in sem eget mi cursus posuere sagittis a neque. Mauris ut fringilla velit. Aenean sit amet odio nec quam pretium sodales eget sed nibh. Etiam vel dui non nibh finibus vehicula eget eu purus. Sed fermentum dignissim mi gravida pretium. Aenean auctor interdum vulputate. Donec aliquet velit nibh, a ultricies mi posuere ut. Praesent id hendrerit odio. Nam eu elit a ipsum eleifend faucibus a id mauris. Vestibulum nec feugiat urna. Fusce congue odio non erat molestie, ut pharetra mi dapibus.\n\nDonec ultrices magna iaculis augue porta dignissim. Aenean dui felis, molestie ut dapibus quis, tristique a lacus. Sed vulputate, ligula id consequat venenatis, enim odio sagittis nisl, vel tincidunt ligula velit quis erat. Pellentesque ultricies luctus risus, sit amet aliquam justo congue id. Aliquam consectetur arcu nec risus malesuada pellentesque. Nam tincidunt, nisl sed congue ullamcorper, ante nibh tempus elit, et fringilla magna diam elementum enim. Pellentesque quam nisl, tempus non metus vestibulum, varius tempus mauris. Maecenas fermentum tristique enim vitae pulvinar. Aenean id metus non nisi sagittis consequat. Integer nec erat luctus urna semper lobortis vel non neque. In semper scelerisque enim in lacinia. Praesent ut interdum felis. Quisque vitae ornare velit.\n\n[section5 E]\n\n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in sem eget mi cursus posuere sagittis a neque. Mauris ut fringilla velit. Aenean sit amet odio nec quam pretium sodales eget sed nibh. Etiam vel dui non nibh finibus vehicula eget eu purus. Sed fermentum dignissim mi gravida pretium. Aenean auctor interdum vulputate. Donec aliquet velit nibh, a ultricies mi posuere ut. Praesent id hendrerit odio. Nam eu elit a ipsum eleifend faucibus a id mauris. Vestibulum nec feugiat urna. Fusce congue odio non erat molestie, ut pharetra mi dapibus.\n\nDonec ultrices magna iaculis augue porta dignissim. Aenean dui felis, molestie ut dapibus quis, tristique a lacus. Sed vulputate, ligula id consequat venenatis, enim odio sagittis nisl, vel tincidunt ligula velit quis erat. Pellentesque ultricies luctus risus, sit amet aliquam justo congue id. Aliquam consectetur arcu nec risus malesuada pellentesque. Nam tincidunt, nisl sed congue ullamcorper, ante nibh tempus elit, et fringilla magna diam elementum enim. Pellentesque quam nisl, tempus non metus vestibulum, varius tempus mauris. Maecenas fermentum tristique enim vitae pulvinar. Aenean id metus non nisi sagittis consequat. Integer nec erat luctus urna semper lobortis vel non neque. In semper scelerisque enim in lacinia. Praesent ut interdum felis. Quisque vitae ornare velit.\n\n[section6 F]\n\n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in sem eget mi cursus posuere sagittis a neque. Mauris ut fringilla velit. Aenean sit amet odio nec quam pretium sodales eget sed nibh. Etiam vel dui non nibh finibus vehicula eget eu purus. Sed fermentum dignissim mi gravida pretium. Aenean auctor interdum vulputate. Donec aliquet velit nibh, a ultricies mi posuere ut. Praesent id hendrerit odio. Nam eu elit a ipsum eleifend faucibus a id mauris. Vestibulum nec feugiat urna. Fusce congue odio non erat molestie, ut pharetra mi dapibus.\n\nDonec ultrices magna iaculis augue porta dignissim. Aenean dui felis, molestie ut dapibus quis, tristique a lacus. Sed vulputate, ligula id consequat venenatis, enim odio sagittis nisl, vel tincidunt ligula velit quis erat. Pellentesque ultricies luctus risus, sit amet aliquam justo congue id. Aliquam consectetur arcu nec risus malesuada pellentesque. Nam tincidunt, nisl sed congue ullamcorper, ante nibh tempus elit, et fringilla magna diam elementum enim. Pellentesque quam nisl, tempus non metus vestibulum, varius tempus mauris. Maecenas fermentum tristique enim vitae pulvinar. Aenean id metus non nisi sagittis consequat. Integer nec erat luctus urna semper lobortis vel non neque. In semper scelerisque enim in lacinia. Praesent ut interdum felis. Quisque vitae ornare velit.\n\n\n';
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -6828,7 +6828,7 @@ var $mdgriffith$elm_ui$Internal$Model$Class = F2(
 	function (a, b) {
 		return {$: 3, a: a, b: b};
 	});
-var $mdgriffith$elm_ui$Internal$Style$classes = {fa: 'a', cy: 'atv', fd: 'ab', fe: 'cx', ff: 'cy', fg: 'acb', fh: 'accx', fi: 'accy', fj: 'acr', dm: 'al', dn: 'ar', fk: 'at', cz: 'ah', cA: 'av', fo: 's', fr: 'bh', fs: 'b', fy: 'w7', fA: 'bd', fB: 'bdt', bT: 'bn', fC: 'bs', bV: 'cpe', fN: 'cp', fO: 'cpx', fP: 'cpy', u: 'c', bX: 'ctr', bY: 'cb', bZ: 'ccx', aw: 'ccy', bp: 'cl', b_: 'cr', fV: 'ct', f$: 'cptr', f0: 'ctxt', gq: 'fcs', dJ: 'focus-within', gs: 'fs', gu: 'g', cU: 'hbh', cX: 'hc', dS: 'he', cY: 'hf', dT: 'hfp', gz: 'hv', gC: 'ic', gE: 'fr', b7: 'lbl', gI: 'iml', gJ: 'imlf', gK: 'imlp', gL: 'implw', gM: 'it', gQ: 'i', d7: 'lnk', a7: 'nb', ef: 'notxt', ha: 'ol', hb: 'or', aN: 'oq', hg: 'oh', eo: 'pg', ep: 'p', hm: 'ppe', hy: 'ui', eK: 'r', hA: 'sb', hB: 'sbx', hC: 'sby', hD: 'sbt', hJ: 'e', hK: 'cap', hL: 'sev', hT: 'sk', hZ: 't', h_: 'tc', h$: 'w8', h0: 'w2', h1: 'w9', h2: 'tj', cu: 'tja', h3: 'tl', h4: 'w3', h5: 'w5', h6: 'w4', h7: 'tr', h8: 'w6', h9: 'w1', ib: 'tun', e0: 'ts', aT: 'clr', ik: 'u', dg: 'wc', e3: 'we', dh: 'wf', e4: 'wfp', dj: 'wrp'};
+var $mdgriffith$elm_ui$Internal$Style$classes = {fa: 'a', cz: 'atv', fd: 'ab', fe: 'cx', ff: 'cy', fg: 'acb', fh: 'accx', fi: 'accy', fj: 'acr', dm: 'al', dn: 'ar', fk: 'at', cA: 'ah', cB: 'av', fo: 's', fr: 'bh', fs: 'b', fy: 'w7', fA: 'bd', fB: 'bdt', bT: 'bn', fC: 'bs', bV: 'cpe', fN: 'cp', fO: 'cpx', fP: 'cpy', u: 'c', bX: 'ctr', bY: 'cb', bZ: 'ccx', aw: 'ccy', bp: 'cl', b_: 'cr', fV: 'ct', f$: 'cptr', f0: 'ctxt', gq: 'fcs', dJ: 'focus-within', gs: 'fs', gu: 'g', cV: 'hbh', cY: 'hc', dS: 'he', cZ: 'hf', dT: 'hfp', gz: 'hv', gC: 'ic', gE: 'fr', b7: 'lbl', gI: 'iml', gJ: 'imlf', gK: 'imlp', gL: 'implw', gM: 'it', gQ: 'i', d7: 'lnk', a7: 'nb', ef: 'notxt', ha: 'ol', hb: 'or', aN: 'oq', hg: 'oh', eo: 'pg', ep: 'p', hm: 'ppe', hy: 'ui', eK: 'r', hA: 'sb', hB: 'sbx', hC: 'sby', hD: 'sbt', hJ: 'e', hK: 'cap', hL: 'sev', hT: 'sk', hZ: 't', h_: 'tc', h$: 'w8', h0: 'w2', h1: 'w9', h2: 'tj', cu: 'tja', h3: 'tl', h4: 'w3', h5: 'w5', h6: 'w4', h7: 'tr', h8: 'w6', h9: 'w1', ib: 'tun', e0: 'ts', aT: 'clr', ik: 'u', dg: 'wc', e3: 'we', dh: 'wf', e4: 'wfp', dj: 'wrp'};
 var $mdgriffith$elm_ui$Internal$Flag$overflow = $mdgriffith$elm_ui$Internal$Flag$flag(20);
 var $mdgriffith$elm_ui$Element$clipX = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.fO);
 var $mdgriffith$elm_ui$Element$clipY = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.fP);
@@ -7080,7 +7080,7 @@ var $mdgriffith$elm_ui$Internal$Model$getStyleName = function (style) {
 				A2($elm$core$List$map, $mdgriffith$elm_ui$Internal$Model$lengthClassName, template.C)) + ('-space-x-' + ($mdgriffith$elm_ui$Internal$Model$lengthClassName(template.hM.a) + ('-space-y-' + $mdgriffith$elm_ui$Internal$Model$lengthClassName(template.hM.b)))))));
 		case 9:
 			var pos = style.a;
-			return 'gp grid-pos-' + ($elm$core$String$fromInt(pos.eK) + ('-' + ($elm$core$String$fromInt(pos.fQ) + ('-' + ($elm$core$String$fromInt(pos.$9) + ('-' + $elm$core$String$fromInt(pos.cW)))))));
+			return 'gp grid-pos-' + ($elm$core$String$fromInt(pos.eK) + ('-' + ($elm$core$String$fromInt(pos.fQ) + ('-' + ($elm$core$String$fromInt(pos.$9) + ('-' + $elm$core$String$fromInt(pos.cX)))))));
 		case 11:
 			var selector = style.a;
 			var subStyle = style.b;
@@ -7465,7 +7465,7 @@ var $mdgriffith$elm_ui$Internal$Style$elDescription = _List_fromArray(
 		A2($mdgriffith$elm_ui$Internal$Style$Prop, 'white-space', 'pre'),
 		A2(
 		$mdgriffith$elm_ui$Internal$Style$Descriptor,
-		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cU),
+		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cV),
 		_List_fromArray(
 			[
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'z-index', '0'),
@@ -7489,7 +7489,7 @@ var $mdgriffith$elm_ui$Internal$Style$elDescription = _List_fromArray(
 					[
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Descriptor,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cY),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cZ),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '0')
@@ -7505,14 +7505,14 @@ var $mdgriffith$elm_ui$Internal$Style$elDescription = _List_fromArray(
 			])),
 		A2(
 		$mdgriffith$elm_ui$Internal$Style$Child,
-		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cX),
+		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cY),
 		_List_fromArray(
 			[
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'height', 'auto')
 			])),
 		A2(
 		$mdgriffith$elm_ui$Internal$Style$Child,
-		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cY),
+		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cZ),
 		_List_fromArray(
 			[
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '100000')
@@ -7683,7 +7683,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'block'),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cY),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cZ),
 				_List_fromArray(
 					[
 						A2(
@@ -7730,13 +7730,13 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
 				_Utils_ap(
 					$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fo),
-					$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cY)),
+					$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cZ)),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'height', '100%'),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cY),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cZ),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'height', '100%')
@@ -7791,7 +7791,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 											A2($mdgriffith$elm_ui$Internal$Style$Prop, 'margin', '0 !important'),
 											A2(
 											$mdgriffith$elm_ui$Internal$Style$Child,
-											$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cY),
+											$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cZ),
 											_List_fromArray(
 												[
 													A2($mdgriffith$elm_ui$Internal$Style$Prop, 'height', 'auto')
@@ -7835,7 +7835,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 												])),
 											A2(
 											$mdgriffith$elm_ui$Internal$Style$Child,
-											$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cY),
+											$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cZ),
 											_List_fromArray(
 												[
 													A2($mdgriffith$elm_ui$Internal$Style$Prop, 'height', 'auto')
@@ -8048,7 +8048,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
 				$mdgriffith$elm_ui$Internal$Style$dot(
-					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.cy, $mdgriffith$elm_ui$Internal$Style$classes.aT)) + ':active',
+					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.cz, $mdgriffith$elm_ui$Internal$Style$classes.aT)) + ':active',
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'opacity', '0')
@@ -8056,7 +8056,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
 				$mdgriffith$elm_ui$Internal$Style$dot(
-					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.cy, $mdgriffith$elm_ui$Internal$Style$classes.aN)) + ':active',
+					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.cz, $mdgriffith$elm_ui$Internal$Style$classes.aN)) + ':active',
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'opacity', '1')
@@ -8230,7 +8230,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cY),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cZ),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'align-self', 'stretch !important')
@@ -8417,7 +8417,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cY),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cZ),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '100000')
@@ -8775,7 +8775,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'overflow-wrap', 'break-word'),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Descriptor,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cU),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cV),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'z-index', '0'),
@@ -10016,7 +10016,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderStyleRule = F3(
 					_List_fromArray(
 						[
 							'-ms-grid-row: ' + ($elm$core$String$fromInt(position.eK) + ';'),
-							'-ms-grid-row-span: ' + ($elm$core$String$fromInt(position.cW) + ';'),
+							'-ms-grid-row-span: ' + ($elm$core$String$fromInt(position.cX) + ';'),
 							'-ms-grid-column: ' + ($elm$core$String$fromInt(position.fQ) + ';'),
 							'-ms-grid-column-span: ' + ($elm$core$String$fromInt(position.$9) + ';')
 						]));
@@ -10025,10 +10025,10 @@ var $mdgriffith$elm_ui$Internal$Model$renderStyleRule = F3(
 					' ',
 					_List_fromArray(
 						[
-							'grid-row: ' + ($elm$core$String$fromInt(position.eK) + (' / ' + ($elm$core$String$fromInt(position.eK + position.cW) + ';'))),
+							'grid-row: ' + ($elm$core$String$fromInt(position.eK) + (' / ' + ($elm$core$String$fromInt(position.eK + position.cX) + ';'))),
 							'grid-column: ' + ($elm$core$String$fromInt(position.fQ) + (' / ' + ($elm$core$String$fromInt(position.fQ + position.$9) + ';')))
 						]));
-				var _class = '.grid-pos-' + ($elm$core$String$fromInt(position.eK) + ('-' + ($elm$core$String$fromInt(position.fQ) + ('-' + ($elm$core$String$fromInt(position.$9) + ('-' + $elm$core$String$fromInt(position.cW)))))));
+				var _class = '.grid-pos-' + ($elm$core$String$fromInt(position.eK) + ('-' + ($elm$core$String$fromInt(position.fQ) + ('-' + ($elm$core$String$fromInt(position.$9) + ('-' + $elm$core$String$fromInt(position.cX)))))));
 				var modernGrid = _class + ('{' + (modernPosition + '}'));
 				var supports = '@supports (display:grid) {' + (modernGrid + '}');
 				var base = _class + ('{' + (msPosition + '}'));
@@ -10141,7 +10141,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderNullAdjustmentRule = F2(
 	});
 var $mdgriffith$elm_ui$Internal$Model$adjust = F3(
 	function (size, height, vertical) {
-		return {cW: height / size, bd: size, e1: vertical};
+		return {cX: height / size, bd: size, e1: vertical};
 	});
 var $elm$core$List$filter = F2(
 	function (isGood, list) {
@@ -10221,7 +10221,7 @@ var $mdgriffith$elm_ui$Internal$Model$fontAdjustmentRules = function (converted)
 				_Utils_Tuple2('display', 'inline-block'),
 				_Utils_Tuple2(
 				'line-height',
-				$elm$core$String$fromFloat(converted.cW)),
+				$elm$core$String$fromFloat(converted.cX)),
 				_Utils_Tuple2(
 				'vertical-align',
 				$elm$core$String$fromFloat(converted.e1) + 'em'),
@@ -10621,7 +10621,7 @@ var $elm$core$List$isEmpty = function (xs) {
 	}
 };
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $mdgriffith$elm_ui$Internal$Model$textElementClasses = $mdgriffith$elm_ui$Internal$Style$classes.fo + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.hZ + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.dg + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.cX)))));
+var $mdgriffith$elm_ui$Internal$Model$textElementClasses = $mdgriffith$elm_ui$Internal$Style$classes.fo + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.hZ + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.dg + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.cY)))));
 var $mdgriffith$elm_ui$Internal$Model$textElement = function (str) {
 	return A2(
 		$elm$html$Html$div,
@@ -10634,7 +10634,7 @@ var $mdgriffith$elm_ui$Internal$Model$textElement = function (str) {
 				$elm$html$Html$text(str)
 			]));
 };
-var $mdgriffith$elm_ui$Internal$Model$textElementFillClasses = $mdgriffith$elm_ui$Internal$Style$classes.fo + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.hZ + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.dh + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.cY)))));
+var $mdgriffith$elm_ui$Internal$Model$textElementFillClasses = $mdgriffith$elm_ui$Internal$Style$classes.fo + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.hZ + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.dh + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.cZ)))));
 var $mdgriffith$elm_ui$Internal$Model$textElementFill = function (str) {
 	return A2(
 		$elm$html$Html$div,
@@ -10996,21 +10996,21 @@ var $mdgriffith$elm_ui$Internal$Model$addNodeName = F2(
 var $mdgriffith$elm_ui$Internal$Model$alignXName = function (align) {
 	switch (align) {
 		case 0:
-			return $mdgriffith$elm_ui$Internal$Style$classes.cz + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.dm);
+			return $mdgriffith$elm_ui$Internal$Style$classes.cA + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.dm);
 		case 2:
-			return $mdgriffith$elm_ui$Internal$Style$classes.cz + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.dn);
+			return $mdgriffith$elm_ui$Internal$Style$classes.cA + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.dn);
 		default:
-			return $mdgriffith$elm_ui$Internal$Style$classes.cz + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fe);
+			return $mdgriffith$elm_ui$Internal$Style$classes.cA + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fe);
 	}
 };
 var $mdgriffith$elm_ui$Internal$Model$alignYName = function (align) {
 	switch (align) {
 		case 0:
-			return $mdgriffith$elm_ui$Internal$Style$classes.cA + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fk);
+			return $mdgriffith$elm_ui$Internal$Style$classes.cB + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fk);
 		case 2:
-			return $mdgriffith$elm_ui$Internal$Style$classes.cA + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fd);
+			return $mdgriffith$elm_ui$Internal$Style$classes.cB + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fd);
 		default:
-			return $mdgriffith$elm_ui$Internal$Style$classes.cA + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.ff);
+			return $mdgriffith$elm_ui$Internal$Style$classes.cB + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.ff);
 	}
 };
 var $elm$virtual_dom$VirtualDom$attribute = F2(
@@ -11177,13 +11177,13 @@ var $mdgriffith$elm_ui$Internal$Model$renderHeight = function (h) {
 		case 1:
 			return _Utils_Tuple3(
 				A2($mdgriffith$elm_ui$Internal$Flag$add, $mdgriffith$elm_ui$Internal$Flag$heightContent, $mdgriffith$elm_ui$Internal$Flag$none),
-				$mdgriffith$elm_ui$Internal$Style$classes.cX,
+				$mdgriffith$elm_ui$Internal$Style$classes.cY,
 				_List_Nil);
 		case 2:
 			var portion = h.a;
 			return (portion === 1) ? _Utils_Tuple3(
 				A2($mdgriffith$elm_ui$Internal$Flag$add, $mdgriffith$elm_ui$Internal$Flag$heightFill, $mdgriffith$elm_ui$Internal$Flag$none),
-				$mdgriffith$elm_ui$Internal$Style$classes.cY,
+				$mdgriffith$elm_ui$Internal$Style$classes.cZ,
 				_List_Nil) : _Utils_Tuple3(
 				A2($mdgriffith$elm_ui$Internal$Flag$add, $mdgriffith$elm_ui$Internal$Flag$heightFill, $mdgriffith$elm_ui$Internal$Flag$none),
 				$mdgriffith$elm_ui$Internal$Style$classes.dT + (' height-fill-' + $elm$core$String$fromInt(portion)),
@@ -11743,7 +11743,7 @@ var $mdgriffith$elm_ui$Internal$Model$gatherAttrRecursive = F8(
 									elementAttrs = $temp$elementAttrs;
 									continue gatherAttrRecursive;
 								case 1:
-									var $temp$classes = $mdgriffith$elm_ui$Internal$Style$classes.cX + (' ' + classes),
+									var $temp$classes = $mdgriffith$elm_ui$Internal$Style$classes.cY + (' ' + classes),
 										$temp$node = node,
 										$temp$has = A2(
 										$mdgriffith$elm_ui$Internal$Flag$add,
@@ -11766,7 +11766,7 @@ var $mdgriffith$elm_ui$Internal$Model$gatherAttrRecursive = F8(
 								case 2:
 									var portion = height.a;
 									if (portion === 1) {
-										var $temp$classes = $mdgriffith$elm_ui$Internal$Style$classes.cY + (' ' + classes),
+										var $temp$classes = $mdgriffith$elm_ui$Internal$Style$classes.cZ + (' ' + classes),
 											$temp$node = node,
 											$temp$has = A2(
 											$mdgriffith$elm_ui$Internal$Flag$add,
@@ -14762,7 +14762,7 @@ var $jxxcarlson$elm_graph$SimpleGraph$bMakeYLabels = F2(
 				A2(
 					$elm$core$List$map,
 					$jxxcarlson$elm_graph$SimpleGraph$bMakeYLabel(
-						_Utils_Tuple2(yMax, ga.cR)),
+						_Utils_Tuple2(yMax, ga.cS)),
 					A2(
 						$elm$core$List$map,
 						function (k) {
@@ -14816,7 +14816,7 @@ var $jxxcarlson$elm_graph$SimpleGraph$buildSVGTransformString = function (ga) {
 		if (!_v2) {
 			return '0';
 		} else {
-			return $elm$core$String$fromFloat((-ga.cS) + 60);
+			return $elm$core$String$fromFloat((-ga.cT) + 60);
 		}
 	}();
 	var scaleString = 'scale(' + ($elm$core$String$fromFloat(kx) + (', ' + ($elm$core$String$fromFloat(ky) + ')')));
@@ -14825,7 +14825,7 @@ var $jxxcarlson$elm_graph$SimpleGraph$buildSVGTransformString = function (ga) {
 		if (!_v1) {
 			return '0';
 		} else {
-			return $elm$core$String$fromFloat(-ga.cR);
+			return $elm$core$String$fromFloat(-ga.cS);
 		}
 	}();
 	var translateString = 'translate(' + (translateX + (', ' + (translateY + ')')));
@@ -14916,7 +14916,7 @@ var $jxxcarlson$elm_graph$SimpleGraph$xTickmarks = function (options) {
 };
 var $jxxcarlson$elm_graph$SimpleGraph$bxTickmarks = function (ga) {
 	var dx = $jxxcarlson$elm_graph$SimpleGraph$xTickmarks(ga.hf) * $jxxcarlson$elm_graph$SimpleGraph$deltaX(ga.hf);
-	var n = $elm$core$Basics$round(ga.cS / dx);
+	var n = $elm$core$Basics$round(ga.cT / dx);
 	return A2(
 		$elm$svg$Svg$g,
 		_List_Nil,
@@ -14949,7 +14949,7 @@ var $jxxcarlson$elm_graph$SimpleGraph$byTickmarks = function (ga) {
 			A2(
 				$elm$core$List$map,
 				function (k) {
-					return (k * ga.cR) / (n - 1);
+					return (k * ga.cS) / (n - 1);
 				},
 				A2($elm$core$List$range, 0, n - 1))));
 };
@@ -14997,7 +14997,7 @@ var $jxxcarlson$elm_graph$SimpleGraph$barChartAsSVG = F2(
 			_List_Nil,
 			_Utils_Tuple2(
 				_Utils_Tuple2(0, 0),
-				_Utils_Tuple2(0, ga.cR)));
+				_Utils_Tuple2(0, ga.cS)));
 		var barWidth = 0.8 * $jxxcarlson$elm_graph$SimpleGraph$deltaX(ga.hf);
 		var gbar = function (_v1) {
 			var x = _v1.a;
@@ -15006,7 +15006,7 @@ var $jxxcarlson$elm_graph$SimpleGraph$barChartAsSVG = F2(
 				$jxxcarlson$elm_graph$SimpleGraph$barRect,
 				$jxxcarlson$elm_graph$SimpleGraph$lineColor(ga.hf),
 				barWidth,
-				ga.cR,
+				ga.cS,
 				x,
 				y);
 		};
@@ -15015,7 +15015,7 @@ var $jxxcarlson$elm_graph$SimpleGraph$barChartAsSVG = F2(
 			_List_Nil,
 			_Utils_Tuple2(
 				_Utils_Tuple2(0, 0),
-				_Utils_Tuple2(ga.cS, 0)));
+				_Utils_Tuple2(ga.cT, 0)));
 		var _v0 = A2(
 			$jxxcarlson$elm_graph$SimpleGraph$prepare,
 			$jxxcarlson$elm_graph$SimpleGraph$deltaX(ga.hf),
@@ -15042,11 +15042,11 @@ var $jxxcarlson$elm_graph$SimpleGraph$barChart = F2(
 				[
 					$elm$svg$Svg$Attributes$transform('scale(1,-1)'),
 					$elm$svg$Svg$Attributes$height(
-					$elm$core$String$fromFloat(ga.cR + 40)),
-					$elm$svg$Svg$Attributes$width(
 					$elm$core$String$fromFloat(ga.cS + 40)),
+					$elm$svg$Svg$Attributes$width(
+					$elm$core$String$fromFloat(ga.cT + 40)),
 					$elm$svg$Svg$Attributes$viewBox(
-					'-60 -20 ' + ($elm$core$String$fromFloat(ga.cS + 40) + (' ' + $elm$core$String$fromFloat(ga.cR + 20))))
+					'-60 -20 ' + ($elm$core$String$fromFloat(ga.cT + 40) + (' ' + $elm$core$String$fromFloat(ga.cS + 20))))
 				]),
 			_List_fromArray(
 				[
@@ -15186,7 +15186,7 @@ var $author$project$Widget$Data$bargraph = F5(
 			$elm$core$Maybe$withDefault,
 			0,
 			$elm$core$List$maximum(numbers));
-		var barGraphAttributes = {cR: graphHeight, cS: graphWidth, hf: options};
+		var barGraphAttributes = {cS: graphHeight, cT: graphWidth, hf: options};
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_Nil,
@@ -15775,8 +15775,8 @@ var $jxxcarlson$elm_graph$SimpleGraph$boundingBox = F2(
 	});
 var $jxxcarlson$elm_graph$SimpleGraph$getScaleFactor = F2(
 	function (dataWindow, gA) {
-		var ky = gA.cR / (dataWindow.ae - dataWindow.y);
-		var kx = gA.cS / (dataWindow.ad - dataWindow.q);
+		var ky = gA.cS / (dataWindow.ae - dataWindow.y);
+		var kx = gA.cT / (dataWindow.ad - dataWindow.q);
 		return _Utils_Tuple2(kx, ky);
 	});
 var $jxxcarlson$elm_graph$SimpleGraph$makeXLabel = F3(
@@ -16080,11 +16080,11 @@ var $jxxcarlson$elm_graph$SimpleGraph$lineChartWithDataWindow = F3(
 				[
 					$elm$svg$Svg$Attributes$transform('scale(1,-1)'),
 					$elm$svg$Svg$Attributes$height(
-					$elm$core$String$fromFloat(ga.cR + 40)),
+					$elm$core$String$fromFloat(ga.cS + 40)),
 					$elm$svg$Svg$Attributes$width(
-					$elm$core$String$fromFloat(ga.cS + 50)),
+					$elm$core$String$fromFloat(ga.cT + 50)),
 					$elm$svg$Svg$Attributes$viewBox(
-					'-40 -20 ' + ($elm$core$String$fromFloat(ga.cS + 50) + (' ' + $elm$core$String$fromFloat(ga.cR + 40))))
+					'-40 -20 ' + ($elm$core$String$fromFloat(ga.cT + 50) + (' ' + $elm$core$String$fromFloat(ga.cS + 40))))
 				]),
 			_List_fromArray(
 				[
@@ -16138,7 +16138,7 @@ var $author$project$Widget$Data$linegraph = F5(
 				$elm$core$Basics$round(n + 1)),
 				A2($jxxcarlson$elm_graph$SimpleGraph$Scale, 1.0, 1.0)
 			]);
-		var lineGraphAttributes = {cR: graphHeight, cS: graphWidth, hf: options};
+		var lineGraphAttributes = {cS: graphHeight, cT: graphWidth, hf: options};
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_Nil,
@@ -16161,7 +16161,7 @@ var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty(
 var $mdgriffith$elm_ui$Element$newTabLink = F2(
 	function (attrs, _v0) {
 		var label = _v0.ay;
-		var url = _v0.df;
+		var url = _v0.cw;
 		return A4(
 			$mdgriffith$elm_ui$Internal$Model$element,
 			$mdgriffith$elm_ui$Internal$Model$asEl,
@@ -16212,7 +16212,7 @@ var $author$project$Render$Elm$link = F5(
 								$mdgriffith$elm_ui$Element$Font$italic
 							]),
 						$mdgriffith$elm_ui$Element$text(url_)),
-					df: url_
+					cw: url_
 				});
 		} else {
 			var labelText = _v0.a;
@@ -16228,7 +16228,7 @@ var $author$project$Render$Elm$link = F5(
 								$mdgriffith$elm_ui$Element$Font$italic
 							]),
 						$mdgriffith$elm_ui$Element$text(labelText)),
-					df: A2(
+					cw: A2(
 						$elm$core$Maybe$withDefault,
 						'missing url',
 						$author$project$Render$Elm$getText(body))
@@ -16515,8 +16515,8 @@ var $jxxcarlson$elm_graph$SimpleGraph$scatterPlotAsSVG = F2(
 							_Utils_Tuple2(-dw.q, -dw.y),
 							data_))));
 		};
-		var xScaleFactor = ga.cS / (dw.ad - dw.q);
-		var yScaleFactor = ga.cR / (dw.ae - dw.y);
+		var xScaleFactor = ga.cT / (dw.ad - dw.q);
+		var yScaleFactor = ga.cS / (dw.ae - dw.y);
 		var rescaledData = A2(
 			$elm$core$List$map,
 			function (_v1) {
@@ -16561,11 +16561,11 @@ var $jxxcarlson$elm_graph$SimpleGraph$scatterPlot = F2(
 				[
 					$elm$svg$Svg$Attributes$transform('scale(1,-1)'),
 					$elm$svg$Svg$Attributes$height(
-					$elm$core$String$fromFloat(ga.cR + 40)),
+					$elm$core$String$fromFloat(ga.cS + 40)),
 					$elm$svg$Svg$Attributes$width(
-					$elm$core$String$fromFloat(ga.cS + 50)),
+					$elm$core$String$fromFloat(ga.cT + 50)),
 					$elm$svg$Svg$Attributes$viewBox(
-					'0 0' + ($elm$core$String$fromFloat(ga.cS + 50) + (' ' + $elm$core$String$fromFloat(ga.cR + 50))))
+					'0 0' + ($elm$core$String$fromFloat(ga.cT + 50) + (' ' + $elm$core$String$fromFloat(ga.cS + 50))))
 				]),
 			_List_fromArray(
 				[
@@ -16607,7 +16607,7 @@ var $author$project$Widget$Data$scatterplot = F5(
 				$elm$core$Basics$round(n + 1)),
 				A2($jxxcarlson$elm_graph$SimpleGraph$Scale, 1.0, 1.0)
 			]);
-		var scatterPlotAttributes = {cR: graphHeight, cS: graphWidth, hf: options};
+		var scatterPlotAttributes = {cS: graphHeight, cT: graphWidth, hf: options};
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_Nil,
@@ -16635,130 +16635,82 @@ var $author$project$Widget$Data$scatterplot = F5(
 						]))
 				]));
 	});
+var $mdgriffith$elm_ui$Element$link = F2(
+	function (attrs, _v0) {
+		var label = _v0.ay;
+		var url = _v0.cw;
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asEl,
+			$mdgriffith$elm_ui$Internal$Model$NodeName('a'),
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Internal$Model$Attr(
+					$elm$html$Html$Attributes$href(url)),
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Internal$Model$Attr(
+						$elm$html$Html$Attributes$rel('noopener noreferrer')),
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
+						A2(
+							$elm$core$List$cons,
+							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
+							A2(
+								$elm$core$List$cons,
+								$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.bZ + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.aw + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.d7)))),
+								attrs))))),
+			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+				_List_fromArray(
+					[label])));
+	});
 var $author$project$Render$Utility$slug = function (str) {
 	return $elm$core$String$toLower(
 		A3($elm$core$String$replace, ' ', '-', str));
 };
-var $author$project$Render$Elm$section = F5(
+var $elm$core$Basics$sqrt = _Basics_sqrt;
+var $author$project$Render$Elm$section_ = F5(
 	function (renderArgs, name, args, body, meta) {
 		var sectionName = A2(
 			$elm$core$Maybe$withDefault,
 			'no section name found',
 			$author$project$Render$Elm$getText(body));
 		var tag = $author$project$Render$Utility$slug(sectionName);
+		var level = A2(
+			$elm$core$Maybe$withDefault,
+			1.0,
+			$elm$core$String$toFloat(
+				A3($elm$core$String$replace, 'section', '', name)));
+		var scaleFactor = A2(
+			$elm$core$Basics$max,
+			$elm$core$Basics$sqrt(1.0 / level),
+			0.5);
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
 				[
-					$mdgriffith$elm_ui$Element$Font$size($author$project$Render$Elm$sectionFontSize),
+					$mdgriffith$elm_ui$Element$Font$size(
+					$elm$core$Basics$round(scaleFactor * $author$project$Render$Elm$sectionFontSize)),
 					$author$project$Render$Elm$paddingAbove(
-					$elm$core$Basics$round(0.8 * $author$project$Render$Elm$sectionFontSize)),
+					$elm$core$Basics$round((0.8 * scaleFactor) * $author$project$Render$Elm$sectionFontSize)),
 					A2($author$project$Render$Utility$htmlAttribute, 'id', tag)
 				]),
 			_List_fromArray(
 				[
-					$mdgriffith$elm_ui$Element$text(
-					$author$project$Render$Elm$getLabel(meta) + (' ' + sectionName))
+					A2(
+					$mdgriffith$elm_ui$Element$link,
+					_List_Nil,
+					{
+						ay: A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_Nil,
+							$mdgriffith$elm_ui$Element$text(
+								$author$project$Render$Elm$getLabel(meta) + (' ' + sectionName))),
+						cw: '#tableofcontents__'
+					})
 				]));
 	});
-var $author$project$Render$Elm$section2FontSize = 18;
-var $author$project$Render$Elm$section2 = F5(
-	function (renderArgs, name, args, body, meta) {
-		return A2(
-			$mdgriffith$elm_ui$Element$column,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$Font$size($author$project$Render$Elm$section2FontSize),
-					$author$project$Render$Elm$paddingAbove(
-					$elm$core$Basics$round(0.8 * $author$project$Render$Elm$section2FontSize))
-				]),
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$text(
-					$author$project$Render$Elm$getLabel(meta) + (' ' + A2(
-						$elm$core$Maybe$withDefault,
-						'no subsection name found',
-						$author$project$Render$Elm$getText(body))))
-				]));
-	});
-var $author$project$Render$Elm$section3FontSize = 16;
-var $author$project$Render$Elm$section3 = F5(
-	function (renderArgs, name, args, body, meta) {
-		return A2(
-			$mdgriffith$elm_ui$Element$column,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$Font$size($author$project$Render$Elm$section3FontSize),
-					$author$project$Render$Elm$paddingAbove(
-					$elm$core$Basics$round(0.8 * $author$project$Render$Elm$section3FontSize))
-				]),
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$text(
-					$author$project$Render$Elm$getLabel(meta) + (' ' + A2(
-						$elm$core$Maybe$withDefault,
-						'no subsubsection name found',
-						$author$project$Render$Elm$getText(body))))
-				]));
-	});
-var $author$project$Render$Elm$section4 = F5(
-	function (renderArgs, name, args, body, meta) {
-		return A2(
-			$mdgriffith$elm_ui$Element$column,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$Font$size($author$project$Render$Elm$section3FontSize),
-					$author$project$Render$Elm$paddingAbove(
-					$elm$core$Basics$round(0.8 * $author$project$Render$Elm$section3FontSize))
-				]),
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$text(
-					$author$project$Render$Elm$getLabel(meta) + (' ' + A2(
-						$elm$core$Maybe$withDefault,
-						'no subsubsection name found',
-						$author$project$Render$Elm$getText(body))))
-				]));
-	});
-var $author$project$Render$Elm$section5 = F5(
-	function (renderArgs, name, args, body, meta) {
-		return A2(
-			$mdgriffith$elm_ui$Element$column,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$Font$size($author$project$Render$Elm$section3FontSize),
-					$author$project$Render$Elm$paddingAbove(
-					$elm$core$Basics$round(0.8 * $author$project$Render$Elm$section3FontSize))
-				]),
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$text(
-					$author$project$Render$Elm$getLabel(meta) + (' ' + A2(
-						$elm$core$Maybe$withDefault,
-						'no subsubsection name found',
-						$author$project$Render$Elm$getText(body))))
-				]));
-	});
-var $author$project$Render$Elm$section6 = F5(
-	function (renderArgs, name, args, body, meta) {
-		return A2(
-			$mdgriffith$elm_ui$Element$column,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$Font$size($author$project$Render$Elm$section3FontSize),
-					$author$project$Render$Elm$paddingAbove(
-					$elm$core$Basics$round(0.8 * $author$project$Render$Elm$section3FontSize))
-				]),
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$text(
-					$author$project$Render$Elm$getLabel(meta) + (' ' + A2(
-						$elm$core$Maybe$withDefault,
-						'no subsubsection name found',
-						$author$project$Render$Elm$getText(body))))
-				]));
-	});
-var $elm$core$Basics$sqrt = _Basics_sqrt;
 var $author$project$Widget$Data$stdev = F5(
 	function (renderArgs, name, args, body, sm) {
 		var precision = A2($author$project$Render$Utility$getPrecisionWithDefault, 2, args);
@@ -16830,36 +16782,6 @@ var $author$project$Widget$Data$sum = F5(
 									A2($author$project$CYUtility$roundTo, precision, sum_)))
 							])))));
 	});
-var $mdgriffith$elm_ui$Element$link = F2(
-	function (attrs, _v0) {
-		var label = _v0.ay;
-		var url = _v0.df;
-		return A4(
-			$mdgriffith$elm_ui$Internal$Model$element,
-			$mdgriffith$elm_ui$Internal$Model$asEl,
-			$mdgriffith$elm_ui$Internal$Model$NodeName('a'),
-			A2(
-				$elm$core$List$cons,
-				$mdgriffith$elm_ui$Internal$Model$Attr(
-					$elm$html$Html$Attributes$href(url)),
-				A2(
-					$elm$core$List$cons,
-					$mdgriffith$elm_ui$Internal$Model$Attr(
-						$elm$html$Html$Attributes$rel('noopener noreferrer')),
-					A2(
-						$elm$core$List$cons,
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
-						A2(
-							$elm$core$List$cons,
-							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
-							A2(
-								$elm$core$List$cons,
-								$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.bZ + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.aw + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.d7)))),
-								attrs))))),
-			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
-				_List_fromArray(
-					[label])));
-	});
 var $author$project$Render$Elm$tocPadding = function (k) {
 	return $mdgriffith$elm_ui$Element$paddingEach(
 		{bm: 0, bw: k * 10, bD: 0, bI: 0});
@@ -16874,7 +16796,7 @@ var $author$project$Render$Elm$renderTocItem = function (tocItem) {
 			]),
 		{
 			ay: $mdgriffith$elm_ui$Element$text(tocItem.ay + (' ' + tocItem.ed)),
-			df: '#' + $author$project$Render$Utility$slug(tocItem.ed)
+			cw: '#' + $author$project$Render$Utility$slug(tocItem.ed)
 		});
 };
 var $author$project$Render$Elm$tableofcontents = F5(
@@ -16883,7 +16805,8 @@ var $author$project$Render$Elm$tableofcontents = F5(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
 				[
-					$mdgriffith$elm_ui$Element$spacing(6)
+					$mdgriffith$elm_ui$Element$spacing(6),
+					A2($author$project$Render$Utility$htmlAttribute, 'id', 'tableofcontents__')
 				]),
 			A2(
 				$elm$core$List$cons,
@@ -17293,13 +17216,13 @@ function $author$project$Render$Elm$cyclic$renderElementDict() {
 				_Utils_Tuple2('verbatim', $author$project$Render$Elm$verbatim),
 				_Utils_Tuple2('poetry', $author$project$Render$Elm$poetry),
 				_Utils_Tuple2('title', $author$project$Render$Elm$docTitle),
-				_Utils_Tuple2('section', $author$project$Render$Elm$section),
-				_Utils_Tuple2('section1', $author$project$Render$Elm$section),
-				_Utils_Tuple2('section2', $author$project$Render$Elm$section2),
-				_Utils_Tuple2('section3', $author$project$Render$Elm$section3),
-				_Utils_Tuple2('section4', $author$project$Render$Elm$section4),
-				_Utils_Tuple2('section5', $author$project$Render$Elm$section5),
-				_Utils_Tuple2('section6', $author$project$Render$Elm$section6),
+				_Utils_Tuple2('section', $author$project$Render$Elm$section_),
+				_Utils_Tuple2('section1', $author$project$Render$Elm$section_),
+				_Utils_Tuple2('section2', $author$project$Render$Elm$section_),
+				_Utils_Tuple2('section3', $author$project$Render$Elm$section_),
+				_Utils_Tuple2('section4', $author$project$Render$Elm$section_),
+				_Utils_Tuple2('section5', $author$project$Render$Elm$section_),
+				_Utils_Tuple2('section6', $author$project$Render$Elm$section_),
 				_Utils_Tuple2('list', $author$project$Render$Elm$list),
 				_Utils_Tuple2('data', $author$project$Render$Elm$dataTable),
 				_Utils_Tuple2('item', $author$project$Render$Elm$item),
@@ -17337,7 +17260,7 @@ var $author$project$Parser$Document$Start = 0;
 var $author$project$Parser$Data$defaultConfig = {dr: '#00c', dU: '#fAA', eD: '#a00'};
 var $author$project$Vector$init = function (k) {
 	return {
-		cF: A2($elm$core$List$repeat, k, 0),
+		cG: A2($elm$core$List$repeat, k, 0),
 		bd: k
 	};
 };
@@ -17585,7 +17508,7 @@ var $author$project$Parser$Driver$handlePipeError = F4(
 			bu: tc_.bu,
 			as: A3($author$project$Parser$Driver$newOffset, tc_, errorColumn, mRecoveryData),
 			hi: $elm$core$Maybe$Nothing,
-			c4: $author$project$Parser$Driver$parse__(
+			c5: $author$project$Parser$Driver$parse__(
 				A2($elm$core$String$join, '\n', errorLines)),
 			aQ: _List_Nil,
 			hZ: A2(
@@ -17645,7 +17568,7 @@ var $author$project$Parser$Driver$handleRightBracketError = F4(
 			bu: tc_.bu,
 			as: A3($author$project$Parser$Driver$newOffset, tc_, errorColumn, mRecoveryData),
 			hi: $elm$core$Maybe$Nothing,
-			c4: A2($elm$core$List$drop, 1, tc_.c4),
+			c5: A2($elm$core$List$drop, 1, tc_.c5),
 			aQ: _List_Nil,
 			hZ: newText
 		};
@@ -17663,9 +17586,9 @@ var $author$project$Parser$Driver$newParsed = F3(
 	function (tc_, lxError_, mRecoveryData) {
 		if (!mRecoveryData.$) {
 			var rd = mRecoveryData.a;
-			return A2($elm$core$List$cons, rd.hj, tc_.c4);
+			return A2($elm$core$List$cons, rd.hj, tc_.c5);
 		} else {
-			return A2($elm$core$List$cons, lxError_, tc_.c4);
+			return A2($elm$core$List$cons, lxError_, tc_.c5);
 		}
 	});
 var $author$project$Parser$Driver$newStack = F3(
@@ -17691,7 +17614,7 @@ var $author$project$Parser$Driver$unhandledError = F6(
 			bu: tc_.bu,
 			as: A3($author$project$Parser$Driver$newOffset, tc_, errorColumn, mRecoveryData),
 			hi: $elm$core$Maybe$Nothing,
-			c4: A3($author$project$Parser$Driver$newParsed, tc_, lxError, mRecoveryData),
+			c5: A3($author$project$Parser$Driver$newParsed, tc_, lxError, mRecoveryData),
 			aQ: A3($author$project$Parser$Driver$newStack, tc_, errorText, mRecoveryData),
 			hZ: A3($author$project$Parser$Driver$makeNewText, tc_, errorColumn, mRecoveryData)
 		};
@@ -17786,7 +17709,7 @@ var $author$project$Parser$Driver$packet = {
 };
 var $author$project$Parser$TextCursor$init = F4(
 	function (generation, blockIndex, data, text) {
-		return {fu: '', aG: blockIndex, z: 0, f1: data, bu: generation, as: 0, hi: $elm$core$Maybe$Nothing, c4: _List_Nil, aQ: _List_Nil, hZ: text};
+		return {fu: '', aG: blockIndex, z: 0, f1: data, bu: generation, as: 0, hi: $elm$core$Maybe$Nothing, c5: _List_Nil, aQ: _List_Nil, hZ: text};
 	});
 var $author$project$Parser$Tool$loop = F2(
 	function (s, nextState) {
@@ -17824,7 +17747,7 @@ var $author$project$Vector$toString = function (v) {
 				function (x) {
 					return x > 0;
 				},
-				v.cF)));
+				v.cG)));
 };
 var $author$project$Parser$Data$sectionLabel = function (data) {
 	return A2(
@@ -17911,14 +17834,14 @@ var $author$project$Vector$get = F2(
 		return A2(
 			$elm$core$Maybe$withDefault,
 			0,
-			A2($elm_community$list_extra$List$Extra$getAt, k, v.cF));
+			A2($elm_community$list_extra$List$Extra$getAt, k, v.cG));
 	});
 var $author$project$Vector$resetFrom = F2(
 	function (k, v) {
 		var suffix = A2($elm$core$List$repeat, v.bd - k, 0);
-		var prefix = A2($elm$core$List$take, k, v.cF);
+		var prefix = A2($elm$core$List$take, k, v.cG);
 		return {
-			cF: _Utils_ap(prefix, suffix),
+			cG: _Utils_ap(prefix, suffix),
 			bd: v.bd
 		};
 	});
@@ -17955,7 +17878,7 @@ var $author$project$Vector$set = F3(
 		return _Utils_update(
 			v,
 			{
-				cF: A3($elm_community$list_extra$List$Extra$setAt, k, a, v.cF)
+				cG: A3($elm_community$list_extra$List$Extra$setAt, k, a, v.cG)
 			});
 	});
 var $author$project$Vector$increment = F2(
@@ -18393,7 +18316,7 @@ var $author$project$Parser$Loop$nextCursor = F2(
 				_Utils_update(
 					tc,
 					{
-						c4: $elm$core$List$reverse(tc.c4)
+						c5: $elm$core$List$reverse(tc.c5)
 					}));
 		} else {
 			var _v0 = A2(
@@ -18424,10 +18347,10 @@ var $author$project$Parser$Loop$nextCursor = F2(
 							f1: data,
 							as: tc.as + sourceMapLength,
 							hi: $elm$core$Maybe$Just(parsand),
-							c4: A2(
+							c5: A2(
 								$elm$core$List$cons,
 								A2($author$project$Parser$Data$labelElement, data, parsand),
-								tc.c4),
+								tc.c5),
 							hZ: A2($elm$core$String$dropLeft, sourceMapLength, tc.hZ)
 						}));
 			} else {
@@ -18795,7 +18718,7 @@ var $author$project$Parser$Document$toParsed = function (state) {
 		A2(
 			$elm$core$List$map,
 			function ($) {
-				return $.c4;
+				return $.c5;
 			},
 			state.P));
 };
@@ -18995,7 +18918,7 @@ _Platform_export({'Main':{'init':$author$project$Main$main(
 				$elm$json$Json$Decode$andThen,
 				function (height) {
 					return $elm$json$Json$Decode$succeed(
-						{cW: height, $9: width});
+						{cX: height, $9: width});
 				},
 				A2($elm$json$Json$Decode$field, 'height', $elm$json$Json$Decode$int));
 		},
