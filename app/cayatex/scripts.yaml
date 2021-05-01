@@ -1,0 +1,5 @@
+scripts:
+
+  publish:
+    - git ci -m "Update cayatex" Main.js
+    - git push
