@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.cv.bz === region.dL.bz)
+	if (region.cw.bz === region.dL.bz)
 	{
-		return 'on line ' + region.cv.bz;
+		return 'on line ' + region.cw.bz;
 	}
-	return 'on lines ' + region.cv.bz + ' through ' + region.dL.bz;
+	return 'on lines ' + region.cw.bz + ' through ' + region.dL.bz;
 }
 
 
@@ -4939,7 +4939,7 @@ var $elm$core$Array$builderToArray = F2(
 			var treeLen = builder.s * $elm$core$Array$branchFactor;
 			var depth = $elm$core$Basics$floor(
 				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.A) : builder.A;
+			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.B) : builder.B;
 			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.s);
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
@@ -4959,7 +4959,7 @@ var $elm$core$Array$initializeHelp = F5(
 				return A2(
 					$elm$core$Array$builderToArray,
 					false,
-					{A: nodeList, s: (len / $elm$core$Array$branchFactor) | 0, w: tail});
+					{B: nodeList, s: (len / $elm$core$Array$branchFactor) | 0, w: tail});
 			} else {
 				var leaf = $elm$core$Array$Leaf(
 					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
@@ -5831,9 +5831,9 @@ var $author$project$Parser$Element$rawText_ = function (stopChars) {
 					F3(
 						function (begin, end, content) {
 							return {
-								cJ: A3($elm$core$String$slice, begin, end, content),
+								cK: A3($elm$core$String$slice, begin, end, content),
 								gZ: end - begin,
-								cv: begin
+								cw: begin
 							};
 						})),
 				A2(
@@ -5850,7 +5850,7 @@ var $author$project$Parser$Element$string_ = function (stopChars) {
 	return A2(
 		$elm$parser$Parser$Advanced$map,
 		function ($) {
-			return $.cJ;
+			return $.cK;
 		},
 		$author$project$Parser$Element$rawText_(stopChars));
 };
@@ -5942,7 +5942,7 @@ var $author$project$Parser$XString$reduce = function (list) {
 		A2(
 			$elm$core$Maybe$map,
 			function ($) {
-				return $.cv;
+				return $.cw;
 			},
 			$elm$core$List$head(list)));
 	var reversedList = $elm$core$List$reverse(list);
@@ -5956,18 +5956,18 @@ var $author$project$Parser$XString$reduce = function (list) {
 			},
 			$elm$core$List$head(reversedList)));
 	return {
-		cJ: A3(
+		cK: A3(
 			$elm$core$List$foldl,
 			$elm$core$Basics$append,
 			'',
 			A2(
 				$elm$core$List$map,
 				function ($) {
-					return $.cJ;
+					return $.cK;
 				},
 				reversedList)),
 		cU: finish,
-		cv: start
+		cw: start
 	};
 };
 var $author$project$Parser$Error$ExpectingEscape = {$: 4};
@@ -6003,9 +6003,9 @@ var $author$project$Parser$Tool$char = function (prefixTest) {
 					F3(
 						function (start, finish, content) {
 							return {
-								cJ: A3($elm$core$String$slice, start, finish, content),
+								cK: A3($elm$core$String$slice, start, finish, content),
 								cU: finish,
-								cv: start
+								cw: start
 							};
 						})),
 				A2(
@@ -6023,7 +6023,7 @@ var $author$project$Parser$Tool$char = function (prefixTest) {
 var $author$project$Parser$XString$escapedChar = A2(
 	$elm$parser$Parser$Advanced$map,
 	function (result) {
-		return {cJ: '\\' + result.cJ, cU: result.cU, cv: result.cv - 1};
+		return {cK: '\\' + result.cK, cU: result.cU, cw: result.cw - 1};
 	},
 	A2(
 		$author$project$Parser$Tool$second,
@@ -6058,9 +6058,9 @@ var $author$project$Parser$Tool$text = F2(
 						F3(
 							function (start, finish, content) {
 								return {
-									cJ: A3($elm$core$String$slice, start, finish, content),
+									cK: A3($elm$core$String$slice, start, finish, content),
 									cU: finish,
-									cv: start
+									cw: start
 								};
 							})),
 					A2(
@@ -6114,9 +6114,9 @@ var $author$project$Parser$Element$plainText = F2(
 				function (data) {
 					return A2(
 						$author$project$Parser$Element$Text,
-						data.cJ,
+						data.cK,
 						$elm$core$Maybe$Just(
-							A4($author$project$Parser$Metadata$init, generation, lineNumber, data.cv, data.cU)));
+							A4($author$project$Parser$Metadata$init, generation, lineNumber, data.cw, data.cU)));
 				},
 				$author$project$Parser$XString$textWithPredicate($author$project$Parser$XString$isNonLanguageChar)));
 	});
@@ -6157,27 +6157,27 @@ var $elm$core$String$right = F2(
 	});
 var $author$project$Parser$RawString$updateState = F3(
 	function (maxHashes, c, state) {
-		return (c === '#') ? ((A2($elm$core$String$right, 1, state.cJ) === '#') ? ((_Utils_cmp(state.ab + 1, state.ab + 1) > 0) ? $elm$parser$Parser$Advanced$Done(
+		return (c === '#') ? ((A2($elm$core$String$right, 1, state.cK) === '#') ? ((_Utils_cmp(state.ac + 1, state.ac + 1) > 0) ? $elm$parser$Parser$Advanced$Done(
 			{
-				cJ: _Utils_ap(state.cJ, c),
-				ab: state.ab + 1
+				cK: _Utils_ap(state.cK, c),
+				ac: state.ac + 1
 			}) : $elm$parser$Parser$Advanced$Loop(
 			{
-				cJ: _Utils_ap(state.cJ, c),
-				ab: state.ab + 1
+				cK: _Utils_ap(state.cK, c),
+				ac: state.ac + 1
 			})) : $elm$parser$Parser$Advanced$Loop(
 			{
-				cJ: _Utils_ap(state.cJ, c),
-				ab: 1
+				cK: _Utils_ap(state.cK, c),
+				ac: 1
 			})) : $elm$parser$Parser$Advanced$Loop(
 			{
-				cJ: _Utils_ap(state.cJ, c),
-				ab: 0
+				cK: _Utils_ap(state.cK, c),
+				ac: 0
 			});
 	});
 var $author$project$Parser$RawString$rawStringHelp = F2(
 	function (hashes, state) {
-		return (_Utils_cmp(state.ab, hashes) > -1) ? $elm$parser$Parser$Advanced$succeed(
+		return (_Utils_cmp(state.ac, hashes) > -1) ? $elm$parser$Parser$Advanced$succeed(
 			$elm$parser$Parser$Advanced$Done(state)) : A2(
 			$elm$parser$Parser$Advanced$map,
 			function (c) {
@@ -6188,7 +6188,7 @@ var $author$project$Parser$RawString$rawStringHelp = F2(
 var $author$project$Parser$RawString$rawStringLoop = function (hashes) {
 	return A2(
 		$elm$parser$Parser$Advanced$loop,
-		{cJ: '', ab: 0},
+		{cK: '', ac: 0},
 		$author$project$Parser$RawString$rawStringHelp(hashes));
 };
 var $author$project$Parser$Error$ExpectingRawPrefix = {$: 8};
@@ -6219,7 +6219,7 @@ var $author$project$Parser$RawString$parser = A2(
 		return A2(
 			$elm$parser$Parser$Advanced$map,
 			function (ls) {
-				return A2($elm$core$String$dropRight, maxHashes, ls.cJ);
+				return A2($elm$core$String$dropRight, maxHashes, ls.cK);
 			},
 			$author$project$Parser$RawString$rawStringLoop(maxHashes));
 	},
@@ -6687,9 +6687,9 @@ var $author$project$Render$String$renderString = function (str) {
 var $author$project$Main$init = function (flags) {
 	return _Utils_Tuple2(
 		{
-			z: 0,
-			ad: $author$project$Main$initialText,
-			cf: 1,
+			A: 0,
+			ae: $author$project$Main$initialText,
+			cg: 1,
 			aF: $author$project$Render$String$renderString($author$project$Main$initialText),
 			dn: flags.c$,
 			fa: flags.ir
@@ -6702,7 +6702,7 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$none;
 };
-var $author$project$Data$notes = '\n\n\n\n[title Design Notes]\n\nFollowing are some random notes on the structure of the cayatex compiler.  Our aim is to capture\nthe main ideas of the design while they are still in current memory.\nAll is subject to radical revision, as the project is still in a high-flux experimental state.\n\n[tableofcontents]\n\n[section  Syntax]\n\nThe syntax of CaYaTeX is as in the example below:\n\n[codeblock\n\nraw###\nWhiskey is [b very] strong stuff.\n###\n]\n\nIt renders as "Whiskey is [b very] strong stuff."  All CaYaTeX source text consists of ordinary text, which may contain unicode characters, and [i basic elements], which are of one of three forms:\n\n[list\n\n[item [code raw##[NAME]##]]\n\n[item [code raw##[NAME BODY]##]]\n\n[item [code raw##[NAME |ARGS| BODY]##]]\n\n]\n\nwhere [code ARGS] is a comma-separated list of strings. Below is an example of the third form, where the data is in CSV format.\n\n[codeblock\n\nraw###\n[bargraph | column:2, yShift: 0.2,\n  caption: Sales of XYZ |\n1, 2.1\n2, 2.9\n...\n]\n###\n]\n\n[bargraph | column:2, yShift: 0.2,\n  caption: Sales of XYZ |\n1, 2.1\n2, 2.9\n3, 4.4\n4, 6.8\n5, 7.1\n6, 7.8\n7, 5.9\n]\n\nAs an example of the first form, the table of contents is constructed via the element [code raw#[tableofcontents]#].\nAs to the structure of a general syntactic element, we have the following three formation rules:\n\n[list |s: numbered|\n\n[item Plain text is a syntactic element]\n\n[item Basic elements are syntactic elements and the body of a syntactic element is a syntactic element]\n\n[item A sequence [i a b c d ...] where each of [i a, b, c, d, ...] is a syntactic element is also a syntactic element]\n\n]\n\n[section Parse Tree]\n\n\nCayatex is built around the type of the parse tree.  This type captures the syntax of the source text as described above.\n\n[codeblock\nraw###\ntype Element\n    = Text String (Maybe Metadata)\n    | Element String (List String) Element (Maybe Metadata)\n    | LX (List Element) (Maybe Metadata)\n###\n]\n\nThe [c Metadata] component is carries data used in rendering the element or in interacting with an editor: section numbers, cross-refrences, location of the corresponding text in in the source, etc.\n\nNote the distinction between syntactic element and Element.  The first is a decription of text formed by certain rules.  The second, while it reflects the first, is a type.\n\n[section Parser]\n\nParsing, which is intended gracefully handle errors in the source text, such as unmatched brackets, is described below.  It is a three-stage process that produces a valid syntax tree despite the presence of error:  errors are both corrected and annotated.  Thus, when rendered, the text is readable and errors called out in-line in color so that the author can more easily understand and correct them.\n\nThe first step in parsing a document is to attempt to break the input text, given as a list of lines, into a list of special strings called [i blocks].  A block is string which is valid syntactic element.  Thus \n\n[cb raw#abc [x 1] def [y[z 2]] ghi#] \n\nis a block  as is the multi-line text\n\n[cb raw#abc [x 1]\n def [y[z\n 2]] ghi#] \n\nThe previous text with the rightmost brace removed is not a block.  \n\nDivision of the text into blocks can fail, as it does with the last example of unbalanced brackets.  When this occurs, the parser invokes a backtracking strategy to  correct the text and then divide it into blocks.\n\n\n[list | s: numbered |\n\n[item Decompose the source text into blocks and feed these to [code Parser.Driver.parseLoop] using [code Parser.Document.runLoop]].  Here is a synopsis of the parsing process:\n\n\n[item Parse a list of elements from a block of input text using [code Parser.Driver.parseLoop].  The [c parseLoop] function does this by repeatedly running  [code Parser.Element.parser], truncating the input text each time.\n]\n\n[item Parse one element from the input text using [code Parser.Element.parser]]\n\n]\n\n\n[section2 Parser.Element]\n\nLow-level parsing is handled by the function [code Parser.Element.parser]:\n\n[codeblock\nparser : Int -> Int -> Parser Element\n]\n\nThe first two arguments are [code generation] and [code blockOffset].  These are "fed" to the parser by [code Parser.Driver.parseLoop].  The [c generation] argument is used for live editing-rendering and is incremented on each character stroke.  It is used downstream to manage updates to the virtual DOM.  The [c blockOffset] field is an index in the source text of the text parsed.\n\nNote every variant of type [c Element] has a component of type [c Meta].\nThis metadata component is a record of the following type.\n\n[cb type alias Metadata =\n    { blockOffset : Int\n    , offset : Int\n    , length : Int\n    , generation : Int\n    , label : String\n    }\n]\n\nThe first three fields are used to locate the text parsed in the source text.  The last, [c label], is computed when the text is parsed.  For example, if the element is  [c raw#[section3 Foo]#], the label might be the string [c 5.2.1].  Labels are used to render the output of the parser.\n\n[section2 Parser.Driver]\n\nThe next level up in parsing text is handled by [c parseLoop], whose type is given below. [i Grosso modo], it functions by applying [c Element.parser] to the input string, analyzing the result, doing some computations, and  dropping the substring just parsed from the input text, and adding the parsed result to a field of [c TextCursor].\n\n\n[cb\nparseLoop : Int -> Int -> Data -> String -> TextCursor Element\nparseLoop generation initialLineNumber data str = ...\n]\n\nLet\'s look at this in more detail.  The [c TextCursor] type, which we use as [c TextCursor Element], is as laid out below. Many of the fields have already been discussed already\n\n[cb\ntype alias TextCursor a =\n    { text : String           -- text remaining to be processed\n    , block : String\n    , parsand : Maybe a       -- element just parsed\n    , parsed : List a         -- elements parsed so far\n    , stack : List String\n    , blockIndex : Int\n    , offset : Int\n    , count : Int\n    , generation : Int\n    , data : Parser.Data.Data  -- data accumulated so far\n    }\n\n]\n\nThe [c data] field is of particular interest.  Its type is as listed below.  In it, the parser accumulates information about the source text that is used in rendering.  The [c vectorCounters] field, for example is used to set the label of a section element.\n\n[cb\ntype alias Data =\n    { counters : IntegerDict\n    , vectorCounters : VectorDict\n    , crossReferences : Dictionary\n    , tableOfContents : List TocEntry\n    , dictionary : Dictionary\n    , config : Config\n    }\n]\n\n[section2 Error recovery]\n\nThe [c parseLoop] function handles error recovery by modifiying the parse tree so as\nto (a) correct the error (b) highlight it in the rendered text.  A comment on the nature of the error\nis inserted in the TextCursor.  This comment is used by the supervising Parser.Document runLoop\nfunction which backtracks as needed to properly reparse the remaining text.\n\n[section2 Parser.Document]\n\nThe highest level of the parser is handled by [c Parser.Document.runLoop]:\n\n[cb\nrunLoop : Int -> List String -> State\nrunLoop generation strList = ...\n]\n\nThis function takes as input data supplied by the editor: the generation number and the source text presented as a list of strings.  Its output is a value of type [c State], as described below.  The [c input] field is the source text, which is progresselvely truncated as [c runLoop] proceeds, building up (\ni) a [c Data] value, (ii) a list of [c TextCursor].  The [c parsed] field of a text cursor holds the parsed text.\n\nThe task of the function [c runLoop] is to divide the input text into logical elements (strings), which are then fed to [c Driver.parseLoop].  The return value of [c Driver.parseLoop] is used to compute the new [c State].  A logical element is either (i) a paragraph, defined as an element sequence beginning with plain text and bounded above and below\nby blank lines or (ii) an element of the form [c NAME ... ] bounded above and below by blanke lines.\n\n\n[cb\n\ntype alias State =\n    { input : List String\n    , blockOffset : Int\n    , generation : Int\n    , blockType : BlockStatus\n    , blockContents : List String\n    , blockLevel : Int\n    , output : List (TextCursor Element)\n    , data : Parser.Data.Data\n    }\n\n]\n\n\nIf [c state] is the final value computed by [c runLoop], then the code\n\n[cb raw#\nstate\n   |> .output\n   |> List.map .parsed\n   |> List.reverse\n#  ]\n\nproduces a value of type [c List (List Element)] which can then be fed to the rendering machine.  The renderer also requires the [c state.data] field.\n\n\n';
+var $author$project$Data$notes = '\n\n\n\n[title Design Notes]\n\nFollowing are some random notes on the structure of the cayatex compiler.  Our aim is to capture\nthe main ideas of the design while they are still in current memory.\nAll is subject to radical revision, as the project is still in a high-flux experimental state. Hmmm ...\n\n[tableofcontents]\n\n[section  Syntax]\n\nThe syntax of CaYaTeX is as in the example below:\n\n[codeblock\n\nraw###\nWhiskey is [b very] strong stuff.\n###\n]\n\nIt renders as "Whiskey is [b very] strong stuff."  All CaYaTeX source text consists of ordinary text, which may contain unicode characters, and [i basic elements], which are of one of three forms:\n\n[list\n\n[item [code raw##[NAME]##]]\n\n[item [code raw##[NAME BODY]##]]\n\n[item [code raw##[NAME |ARGS| BODY]##]]\n\n]\n\nwhere [code ARGS] is a comma-separated list of strings. Below is an example of the third form, where the data is in CSV format.\n\n[codeblock\n\nraw###\n[bargraph | column:2, yShift: 0.2,\n  caption: Sales of XYZ |\n1, 2.1\n2, 2.9\n...\n]\n###\n]\n\n[bargraph | column:2, yShift: 0.2,\n  caption: Sales of XYZ |\n1, 2.1\n2, 2.9\n3, 4.4\n4, 6.8\n5, 7.1\n6, 7.8\n7, 5.9\n]\n\nAs an example of the first form, the table of contents is constructed via the element [code raw#[tableofcontents]#].\nAs to the structure of a general syntactic element, we have the following three formation rules:\n\n[list |s: numbered|\n\n[item Plain text is a syntactic element]\n\n[item Basic elements are syntactic elements and the body of a syntactic element is a syntactic element]\n\n[item A sequence [i a b c d ...] where each of [i a, b, c, d, ...] is a syntactic element is also a syntactic element]\n\n]\n\n[section Parse Tree]\n\n\nCayatex is built around the type of the parse tree.  This type captures the syntax of the source text as described above.\n\n[codeblock\nraw###\ntype Element\n    = Text String (Maybe Metadata)\n    | Element String (List String) Element (Maybe Metadata)\n    | LX (List Element) (Maybe Metadata)\n###\n]\n\nThe [c Metadata] component is carries data used in rendering the element or in interacting with an editor: section numbers, cross-refrences, location of the corresponding text in in the source, etc.\n\nNote the distinction between syntactic element and Element.  The first is a decription of text formed by certain rules.  The second, while it reflects the first, is a type.\n\n[section Parser]\n\nParsing, which is intended gracefully handle errors in the source text, such as unmatched brackets, is described below.  It is a three-stage process that produces a valid syntax tree despite the presence of error:  errors are both corrected and annotated.  Thus, when rendered, the text is readable and errors called out in-line in color so that the author can more easily understand and correct them.\n\nThe first step in parsing a document is to attempt to break the input text, given as a list of lines, into a list of special strings called [i blocks].  A block is string which is valid syntactic element.  Thus \n\n[cb raw#abc [x 1] def [y[z 2]] ghi#] \n\nis a block  as is the multi-line text\n\n[cb raw#abc [x 1]\n def [y[z\n 2]] ghi#] \n\nThe previous text with the rightmost brace removed is not a block.  \n\nDivision of the text into blocks can fail, as it does with the last example of unbalanced brackets.  When this occurs, the parser invokes a backtracking strategy to  correct the text and then divide it into blocks.\n\n\n[list | s: numbered |\n\n[item Decompose the source text into blocks and feed these to [code Parser.Driver.parseLoop] using [code Parser.Document.runLoop]].  Here is a synopsis of the parsing process:\n\n\n[item Parse a list of elements from a block of input text using [code Parser.Driver.parseLoop].  The [c parseLoop] function does this by repeatedly running  [code Parser.Element.parser], truncating the input text each time.\n]\n\n[item Parse one element from the input text using [code Parser.Element.parser]]\n\n]\n\n\n[section2 Parser.Element]\n\nLow-level parsing is handled by the function [code Parser.Element.parser]:\n\n[codeblock\nparser : Int -> Int -> Parser Element\n]\n\nThe first two arguments are [code generation] and [code blockOffset].  These are "fed" to the parser by [code Parser.Driver.parseLoop].  The [c generation] argument is used for live editing-rendering and is incremented on each character stroke.  It is used downstream to manage updates to the virtual DOM.  The [c blockOffset] field is an index in the source text of the text parsed.\n\nNote every variant of type [c Element] has a component of type [c Meta].\nThis metadata component is a record of the following type.\n\n[cb type alias Metadata =\n    { blockOffset : Int\n    , offset : Int\n    , length : Int\n    , generation : Int\n    , label : String\n    }\n]\n\nThe first three fields are used to locate the text parsed in the source text.  The last, [c label], is computed when the text is parsed.  For example, if the element is  [c raw#[section3 Foo]#], the label might be the string [c 5.2.1].  Labels are used to render the output of the parser.\n\n[section2 Parser.Driver]\n\nThe next level up in parsing text is handled by [c parseLoop], whose type is given below. [i Grosso modo], it functions by applying [c Element.parser] to the input string, analyzing the result, doing some computations, and  dropping the substring just parsed from the input text, and adding the parsed result to a field of [c TextCursor].\n\n\n[cb\nparseLoop : Int -> Int -> Data -> String -> TextCursor Element\nparseLoop generation initialLineNumber data str = ...\n]\n\nLet\'s look at this in more detail.  The [c TextCursor] type, which we use as [c TextCursor Element], is as laid out below. Many of the fields have already been discussed already\n\n[cb\ntype alias TextCursor a =\n    { text : String           -- text remaining to be processed\n    , block : String\n    , parsand : Maybe a       -- element just parsed\n    , parsed : List a         -- elements parsed so far\n    , stack : List String\n    , blockIndex : Int\n    , offset : Int\n    , count : Int\n    , generation : Int\n    , data : Parser.Data.Data  -- data accumulated so far\n    }\n\n]\n\nThe [c data] field is of particular interest.  Its type is as listed below.  In it, the parser accumulates information about the source text that is used in rendering.  The [c vectorCounters] field, for example is used to set the label of a section element.\n\n[cb\ntype alias Data =\n    { counters : IntegerDict\n    , vectorCounters : VectorDict\n    , crossReferences : Dictionary\n    , tableOfContents : List TocEntry\n    , dictionary : Dictionary\n    , config : Config\n    }\n]\n\n[section2 Error recovery]\n\nThe [c parseLoop] function handles error recovery by modifiying the parse tree so as\nto (a) correct the error (b) highlight it in the rendered text.  A comment on the nature of the error\nis inserted in the TextCursor.  This comment is used by the supervising Parser.Document runLoop\nfunction which backtracks as needed to properly reparse the remaining text.\n\n[section2 Parser.Document]\n\nThe highest level of the parser is handled by [c Parser.Document.runLoop]:\n\n[cb\nrunLoop : Int -> List String -> State\nrunLoop generation strList = ...\n]\n\nThis function takes as input data supplied by the editor: the generation number and the source text presented as a list of strings.  Its output is a value of type [c State], as described below.  The [c input] field is the source text, which is progresselvely truncated as [c runLoop] proceeds, building up (\ni) a [c Data] value, (ii) a list of [c TextCursor].  The [c parsed] field of a text cursor holds the parsed text.\n\nThe task of the function [c runLoop] is to divide the input text into logical elements (strings), which are then fed to [c Driver.parseLoop].  The return value of [c Driver.parseLoop] is used to compute the new [c State].  A logical element is either (i) a paragraph, defined as an element sequence beginning with plain text and bounded above and below\nby blank lines or (ii) an element of the form [c NAME ... ] bounded above and below by blanke lines.\n\n\n[cb\n\ntype alias State =\n    { input : List String\n    , blockOffset : Int\n    , generation : Int\n    , blockType : BlockStatus\n    , blockContents : List String\n    , blockLevel : Int\n    , output : List (TextCursor Element)\n    , data : Parser.Data.Data\n    }\n\n]\n\n\nIf [c state] is the final value computed by [c runLoop], then the code\n\n[cb raw#\nstate\n   |> .output\n   |> List.map .parsed\n   |> List.reverse\n#  ]\n\nproduces a value of type [c List (List Element)] which can then be fed to the rendering machine.  The renderer also requires the [c state.data] field.\n\n\n';
 var $author$project$Data$test = '\n[tableofcontents]\n\n[section1 A]\n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in sem eget mi cursus posuere sagittis a neque. Mauris ut fringilla velit. Aenean sit amet odio nec quam pretium sodales eget sed nibh. Etiam vel dui non nibh finibus vehicula eget eu purus. Sed fermentum dignissim mi gravida pretium. Aenean auctor interdum vulputate. Donec aliquet velit nibh, a ultricies mi posuere ut. Praesent id hendrerit odio. Nam eu elit a ipsum eleifend faucibus a id mauris. Vestibulum nec feugiat urna. Fusce congue odio non erat molestie, ut pharetra mi dapibus.\n\nDonec ultrices magna iaculis augue porta dignissim. Aenean dui felis, molestie ut dapibus quis, tristique a lacus. Sed vulputate, ligula id consequat venenatis, enim odio sagittis nisl, vel tincidunt ligula velit quis erat. Pellentesque ultricies luctus risus, sit amet aliquam justo congue id. Aliquam consectetur arcu nec risus malesuada pellentesque. Nam tincidunt, nisl sed congue ullamcorper, ante nibh tempus elit, et fringilla magna diam elementum enim. Pellentesque quam nisl, tempus non metus vestibulum, varius tempus mauris. Maecenas fermentum tristique enim vitae pulvinar. Aenean id metus non nisi sagittis consequat. Integer nec erat luctus urna semper lobortis vel non neque. In semper scelerisque enim in lacinia. Praesent ut interdum felis. Quisque vitae ornare velit.\n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in sem eget mi cursus posuere sagittis a neque. Mauris ut fringilla velit. Aenean sit amet odio nec quam pretium sodales eget sed nibh. Etiam vel dui non nibh finibus vehicula eget eu purus. Sed fermentum dignissim mi gravida pretium. Aenean auctor interdum vulputate. Donec aliquet velit nibh, a ultricies mi posuere ut. Praesent id hendrerit odio. Nam eu elit a ipsum eleifend faucibus a id mauris. Vestibulum nec feugiat urna. Fusce congue odio non erat molestie, ut pharetra mi dapibus.\n\nDonec ultrices magna iaculis augue porta dignissim. Aenean dui felis, molestie ut dapibus quis, tristique a lacus. Sed vulputate, ligula id consequat venenatis, enim odio sagittis nisl, vel tincidunt ligula velit quis erat. Pellentesque ultricies luctus risus, sit amet aliquam justo congue id. Aliquam consectetur arcu nec risus malesuada pellentesque. Nam tincidunt, nisl sed congue ullamcorper, ante nibh tempus elit, et fringilla magna diam elementum enim. Pellentesque quam nisl, tempus non metus vestibulum, varius tempus mauris. Maecenas fermentum tristique enim vitae pulvinar. Aenean id metus non nisi sagittis consequat. Integer nec erat luctus urna semper lobortis vel non neque. In semper scelerisque enim in lacinia. Praesent ut interdum felis. Quisque vitae ornare velit.\n\n[section2 B]\n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in sem eget mi cursus posuere sagittis a neque. Mauris ut fringilla velit. Aenean sit amet odio nec quam pretium sodales eget sed nibh. Etiam vel dui non nibh finibus vehicula eget eu purus. Sed fermentum dignissim mi gravida pretium. Aenean auctor interdum vulputate. Donec aliquet velit nibh, a ultricies mi posuere ut. Praesent id hendrerit odio. Nam eu elit a ipsum eleifend faucibus a id mauris. Vestibulum nec feugiat urna. Fusce congue odio non erat molestie, ut pharetra mi dapibus.\n\nDonec ultrices magna iaculis augue porta dignissim. Aenean dui felis, molestie ut dapibus quis, tristique a lacus. Sed vulputate, ligula id consequat venenatis, enim odio sagittis nisl, vel tincidunt ligula velit quis erat. Pellentesque ultricies luctus risus, sit amet aliquam justo congue id. Aliquam consectetur arcu nec risus malesuada pellentesque. Nam tincidunt, nisl sed congue ullamcorper, ante nibh tempus elit, et fringilla magna diam elementum enim. Pellentesque quam nisl, tempus non metus vestibulum, varius tempus mauris. Maecenas fermentum tristique enim vitae pulvinar. Aenean id metus non nisi sagittis consequat. Integer nec erat luctus urna semper lobortis vel non neque. In semper scelerisque enim in lacinia. Praesent ut interdum felis. Quisque vitae ornare velit.\n\n[section3 C]\n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in sem eget mi cursus posuere sagittis a neque. Mauris ut fringilla velit. Aenean sit amet odio nec quam pretium sodales eget sed nibh. Etiam vel dui non nibh finibus vehicula eget eu purus. Sed fermentum dignissim mi gravida pretium. Aenean auctor interdum vulputate. Donec aliquet velit nibh, a ultricies mi posuere ut. Praesent id hendrerit odio. Nam eu elit a ipsum eleifend faucibus a id mauris. Vestibulum nec feugiat urna. Fusce congue odio non erat molestie, ut pharetra mi dapibus.\n\nDonec ultrices magna iaculis augue porta dignissim. Aenean dui felis, molestie ut dapibus quis, tristique a lacus. Sed vulputate, ligula id consequat venenatis, enim odio sagittis nisl, vel tincidunt ligula velit quis erat. Pellentesque ultricies luctus risus, sit amet aliquam justo congue id. Aliquam consectetur arcu nec risus malesuada pellentesque. Nam tincidunt, nisl sed congue ullamcorper, ante nibh tempus elit, et fringilla magna diam elementum enim. Pellentesque quam nisl, tempus non metus vestibulum, varius tempus mauris. Maecenas fermentum tristique enim vitae pulvinar. Aenean id metus non nisi sagittis consequat. Integer nec erat luctus urna semper lobortis vel non neque. In semper scelerisque enim in lacinia. Praesent ut interdum felis. Quisque vitae ornare velit.\n\n[section4 D]\n\n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in sem eget mi cursus posuere sagittis a neque. Mauris ut fringilla velit. Aenean sit amet odio nec quam pretium sodales eget sed nibh. Etiam vel dui non nibh finibus vehicula eget eu purus. Sed fermentum dignissim mi gravida pretium. Aenean auctor interdum vulputate. Donec aliquet velit nibh, a ultricies mi posuere ut. Praesent id hendrerit odio. Nam eu elit a ipsum eleifend faucibus a id mauris. Vestibulum nec feugiat urna. Fusce congue odio non erat molestie, ut pharetra mi dapibus.\n\nDonec ultrices magna iaculis augue porta dignissim. Aenean dui felis, molestie ut dapibus quis, tristique a lacus. Sed vulputate, ligula id consequat venenatis, enim odio sagittis nisl, vel tincidunt ligula velit quis erat. Pellentesque ultricies luctus risus, sit amet aliquam justo congue id. Aliquam consectetur arcu nec risus malesuada pellentesque. Nam tincidunt, nisl sed congue ullamcorper, ante nibh tempus elit, et fringilla magna diam elementum enim. Pellentesque quam nisl, tempus non metus vestibulum, varius tempus mauris. Maecenas fermentum tristique enim vitae pulvinar. Aenean id metus non nisi sagittis consequat. Integer nec erat luctus urna semper lobortis vel non neque. In semper scelerisque enim in lacinia. Praesent ut interdum felis. Quisque vitae ornare velit.\n\n[section5 E]\n\n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in sem eget mi cursus posuere sagittis a neque. Mauris ut fringilla velit. Aenean sit amet odio nec quam pretium sodales eget sed nibh. Etiam vel dui non nibh finibus vehicula eget eu purus. Sed fermentum dignissim mi gravida pretium. Aenean auctor interdum vulputate. Donec aliquet velit nibh, a ultricies mi posuere ut. Praesent id hendrerit odio. Nam eu elit a ipsum eleifend faucibus a id mauris. Vestibulum nec feugiat urna. Fusce congue odio non erat molestie, ut pharetra mi dapibus.\n\nDonec ultrices magna iaculis augue porta dignissim. Aenean dui felis, molestie ut dapibus quis, tristique a lacus. Sed vulputate, ligula id consequat venenatis, enim odio sagittis nisl, vel tincidunt ligula velit quis erat. Pellentesque ultricies luctus risus, sit amet aliquam justo congue id. Aliquam consectetur arcu nec risus malesuada pellentesque. Nam tincidunt, nisl sed congue ullamcorper, ante nibh tempus elit, et fringilla magna diam elementum enim. Pellentesque quam nisl, tempus non metus vestibulum, varius tempus mauris. Maecenas fermentum tristique enim vitae pulvinar. Aenean id metus non nisi sagittis consequat. Integer nec erat luctus urna semper lobortis vel non neque. In semper scelerisque enim in lacinia. Praesent ut interdum felis. Quisque vitae ornare velit.\n\n[section6 F]\n\n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in sem eget mi cursus posuere sagittis a neque. Mauris ut fringilla velit. Aenean sit amet odio nec quam pretium sodales eget sed nibh. Etiam vel dui non nibh finibus vehicula eget eu purus. Sed fermentum dignissim mi gravida pretium. Aenean auctor interdum vulputate. Donec aliquet velit nibh, a ultricies mi posuere ut. Praesent id hendrerit odio. Nam eu elit a ipsum eleifend faucibus a id mauris. Vestibulum nec feugiat urna. Fusce congue odio non erat molestie, ut pharetra mi dapibus.\n\nDonec ultrices magna iaculis augue porta dignissim. Aenean dui felis, molestie ut dapibus quis, tristique a lacus. Sed vulputate, ligula id consequat venenatis, enim odio sagittis nisl, vel tincidunt ligula velit quis erat. Pellentesque ultricies luctus risus, sit amet aliquam justo congue id. Aliquam consectetur arcu nec risus malesuada pellentesque. Nam tincidunt, nisl sed congue ullamcorper, ante nibh tempus elit, et fringilla magna diam elementum enim. Pellentesque quam nisl, tempus non metus vestibulum, varius tempus mauris. Maecenas fermentum tristique enim vitae pulvinar. Aenean id metus non nisi sagittis consequat. Integer nec erat luctus urna semper lobortis vel non neque. In semper scelerisque enim in lacinia. Praesent ut interdum felis. Quisque vitae ornare velit.\n\n\n';
 var $author$project$Main$update = F2(
 	function (msg, model) {
@@ -6715,8 +6715,8 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							z: model.z + 1,
-							ad: str,
+							A: model.A + 1,
+							ae: str,
 							aF: $author$project$Render$String$renderString(str)
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -6725,15 +6725,15 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{z: model.z + 1, cf: mode}),
+						{A: model.A + 1, cg: mode}),
 					$elm$core$Platform$Cmd$none);
 			case 2:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							z: model.z + 1,
-							ad: '',
+							A: model.A + 1,
+							ae: '',
 							aF: $author$project$Render$String$renderString('')
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -6742,8 +6742,8 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							z: model.z + 1,
-							ad: $author$project$Data$text,
+							A: model.A + 1,
+							ae: $author$project$Data$text,
 							aF: $author$project$Render$String$renderString($author$project$Data$text)
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -6752,8 +6752,8 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							z: model.z + 1,
-							ad: $author$project$Data$test,
+							A: model.A + 1,
+							ae: $author$project$Data$test,
 							aF: $author$project$Render$String$renderString($author$project$Data$test)
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -6762,8 +6762,8 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							z: model.z + 1,
-							ad: $author$project$Data$notes,
+							A: model.A + 1,
+							ae: $author$project$Data$notes,
 							aF: $author$project$Render$String$renderString($author$project$Data$test)
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -6828,7 +6828,7 @@ var $mdgriffith$elm_ui$Internal$Model$Class = F2(
 	function (a, b) {
 		return {$: 3, a: a, b: b};
 	});
-var $mdgriffith$elm_ui$Internal$Style$classes = {ff: 'a', cC: 'atv', fi: 'ab', fj: 'cx', fk: 'cy', fl: 'acb', fm: 'accx', fn: 'accy', fo: 'acr', dr: 'al', ds: 'ar', fp: 'at', cD: 'ah', cE: 'av', ft: 's', fw: 'bh', fx: 'b', fD: 'w7', fF: 'bd', fG: 'bdt', bW: 'bn', fH: 'bs', bY: 'cpe', fS: 'cp', fT: 'cpx', fU: 'cpy', u: 'c', b_: 'ctr', b$: 'cb', b0: 'ccx', ay: 'ccy', bq: 'cl', b1: 'cr', f_: 'ct', f4: 'cptr', f5: 'ctxt', gu: 'fcs', dP: 'focus-within', gw: 'fs', gy: 'g', cZ: 'hbh', c0: 'hc', dY: 'he', c1: 'hf', dZ: 'hfp', gD: 'hv', gG: 'ic', gI: 'fr', ca: 'lbl', gM: 'iml', gN: 'imlf', gO: 'imlp', gP: 'implw', gQ: 'it', gU: 'i', ed: 'lnk', a8: 'nb', el: 'notxt', he: 'ol', hf: 'or', aP: 'oq', hk: 'oh', eu: 'pg', ev: 'p', hq: 'ppe', hC: 'ui', de: 'r', hE: 'sb', hF: 'sbx', hG: 'sby', hH: 'sbt', hN: 'e', hO: 'cap', hP: 'sev', hX: 'sk', h1: 't', h2: 'tc', h3: 'w8', h4: 'w2', h5: 'w9', h6: 'tj', cx: 'tja', h7: 'tl', h8: 'w3', h9: 'w5', ia: 'w4', ib: 'tr', ic: 'w6', id: 'w1', $8: 'tun', e5: 'ts', aU: 'clr', io: 'u', dl: 'wc', e8: 'we', dm: 'wf', e9: 'wfp', $7: 'wrp'};
+var $mdgriffith$elm_ui$Internal$Style$classes = {ff: 'a', cD: 'atv', fi: 'ab', fj: 'cx', fk: 'cy', fl: 'acb', fm: 'accx', fn: 'accy', fo: 'acr', dr: 'al', ds: 'ar', fp: 'at', cE: 'ah', cF: 'av', ft: 's', fw: 'bh', fx: 'b', fD: 'w7', fF: 'bd', fG: 'bdt', bW: 'bn', fH: 'bs', bY: 'cpe', fS: 'cp', fT: 'cpx', fU: 'cpy', u: 'c', b_: 'ctr', b$: 'cb', b0: 'ccx', ay: 'ccy', bq: 'cl', b1: 'cr', f_: 'ct', f4: 'cptr', f5: 'ctxt', gu: 'fcs', dP: 'focus-within', gw: 'fs', gy: 'g', cZ: 'hbh', c0: 'hc', dY: 'he', c1: 'hf', dZ: 'hfp', gD: 'hv', gG: 'ic', gI: 'fr', cb: 'lbl', gM: 'iml', gN: 'imlf', gO: 'imlp', gP: 'implw', gQ: 'it', gU: 'i', ed: 'lnk', a8: 'nb', el: 'notxt', he: 'ol', hf: 'or', aP: 'oq', hk: 'oh', eu: 'pg', ev: 'p', hq: 'ppe', hC: 'ui', de: 'r', hE: 'sb', hF: 'sbx', hG: 'sby', hH: 'sbt', hN: 'e', hO: 'cap', hP: 'sev', hX: 'sk', h1: 't', h2: 'tc', h3: 'w8', h4: 'w2', h5: 'w9', h6: 'tj', cy: 'tja', h7: 'tl', h8: 'w3', h9: 'w5', ia: 'w4', ib: 'tr', ic: 'w6', id: 'w1', $8: 'tun', e5: 'ts', aU: 'clr', io: 'u', dl: 'wc', e8: 'we', dm: 'wf', e9: 'wfp', $7: 'wrp'};
 var $mdgriffith$elm_ui$Internal$Flag$overflow = $mdgriffith$elm_ui$Internal$Flag$flag(20);
 var $mdgriffith$elm_ui$Element$clipX = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.fT);
 var $mdgriffith$elm_ui$Element$clipY = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.fU);
@@ -8048,7 +8048,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
 				$mdgriffith$elm_ui$Internal$Style$dot(
-					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.cC, $mdgriffith$elm_ui$Internal$Style$classes.aU)) + ':active',
+					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.cD, $mdgriffith$elm_ui$Internal$Style$classes.aU)) + ':active',
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'opacity', '0')
@@ -8056,7 +8056,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
 				$mdgriffith$elm_ui$Internal$Style$dot(
-					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.cC, $mdgriffith$elm_ui$Internal$Style$classes.aP)) + ':active',
+					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.cD, $mdgriffith$elm_ui$Internal$Style$classes.aP)) + ':active',
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'opacity', '1')
@@ -8387,7 +8387,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Descriptor,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ca),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cb),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'align-items', 'baseline')
@@ -9050,7 +9050,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cx),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cy),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'text-align', 'justify-all')
@@ -9195,7 +9195,7 @@ var $elm$core$String$concat = function (strings) {
 var $mdgriffith$elm_ui$Internal$Style$Intermediate = $elm$core$Basics$identity;
 var $mdgriffith$elm_ui$Internal$Style$emptyIntermediate = F2(
 	function (selector, closing) {
-		return {ax: closing, p: _List_Nil, V: _List_Nil, M: selector};
+		return {ax: closing, p: _List_Nil, W: _List_Nil, M: selector};
 	});
 var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 	function (_v0, rulesToRender) {
@@ -9209,10 +9209,10 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 						return _Utils_update(
 							rendered,
 							{
-								V: A2(
+								W: A2(
 									$elm$core$List$cons,
 									_Utils_Tuple2(name, val),
-									rendered.V)
+									rendered.W)
 							});
 					case 3:
 						var _v2 = rule.a;
@@ -9224,7 +9224,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 							{
 								p: A2(
 									$elm$core$List$cons,
-									{ax: '\n}', p: _List_Nil, V: props, M: '@supports (' + (prop + (':' + (value + (') {' + parent.M))))},
+									{ax: '\n}', p: _List_Nil, W: props, M: '@supports (' + (prop + (':' + (value + (') {' + parent.M))))},
 									rendered.p)
 							});
 					case 5:
@@ -9316,11 +9316,11 @@ var $mdgriffith$elm_ui$Internal$Style$renderCompact = function (styleClasses) {
 				values));
 	};
 	var renderClass = function (rule) {
-		var _v2 = rule.V;
+		var _v2 = rule.W;
 		if (!_v2.b) {
 			return '';
 		} else {
-			return rule.M + ('{' + (renderValues(rule.V) + (rule.ax + '}')));
+			return rule.M + ('{' + (renderValues(rule.W) + (rule.ax + '}')));
 		}
 	};
 	var renderIntermediate = function (_v0) {
@@ -9357,7 +9357,7 @@ var $mdgriffith$elm_ui$Internal$Style$rules = _Utils_ap(
 		_Utils_ap($mdgriffith$elm_ui$Internal$Style$baseSheet, $mdgriffith$elm_ui$Internal$Style$commonValues)));
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $mdgriffith$elm_ui$Internal$Model$staticRoot = function (opts) {
-	var _v0 = opts.cf;
+	var _v0 = opts.cg;
 	switch (_v0) {
 		case 0:
 			return A3(
@@ -10333,8 +10333,8 @@ var $mdgriffith$elm_ui$Internal$Model$toStyleSheetString = F2(
 		var combine = F2(
 			function (style, rendered) {
 				return {
-					cq: _Utils_ap(
-						rendered.cq,
+					cr: _Utils_ap(
+						rendered.cr,
 						A3($mdgriffith$elm_ui$Internal$Model$renderStyleRule, options, style, $elm$core$Maybe$Nothing)),
 					bM: function () {
 						var _v1 = $mdgriffith$elm_ui$Internal$Model$topLevelValue(style);
@@ -10350,9 +10350,9 @@ var $mdgriffith$elm_ui$Internal$Model$toStyleSheetString = F2(
 		var _v0 = A3(
 			$elm$core$List$foldl,
 			combine,
-			{cq: _List_Nil, bM: _List_Nil},
+			{cr: _List_Nil, bM: _List_Nil},
 			stylesheet);
-		var rules = _v0.cq;
+		var rules = _v0.cr;
 		var topLevel = _v0.bM;
 		return _Utils_ap(
 			$mdgriffith$elm_ui$Internal$Model$renderTopLevelValues(topLevel),
@@ -10360,7 +10360,7 @@ var $mdgriffith$elm_ui$Internal$Model$toStyleSheetString = F2(
 	});
 var $mdgriffith$elm_ui$Internal$Model$toStyleSheet = F2(
 	function (options, styleSheet) {
-		var _v0 = options.cf;
+		var _v0 = options.cg;
 		switch (_v0) {
 			case 0:
 				return A3(
@@ -10761,9 +10761,9 @@ var $mdgriffith$elm_ui$Internal$Model$createElement = F3(
 				return $mdgriffith$elm_ui$Internal$Model$Unstyled(
 					A5(
 						$mdgriffith$elm_ui$Internal$Model$finalizeNode,
-						rendered.aa,
+						rendered.ab,
 						rendered.em,
-						rendered._,
+						rendered.aa,
 						$mdgriffith$elm_ui$Internal$Model$Keyed(
 							A3($mdgriffith$elm_ui$Internal$Model$addKeyedChildren, 'nearby-element-pls', keyed, rendered.fQ)),
 						$mdgriffith$elm_ui$Internal$Model$NoStyleSheet));
@@ -10773,9 +10773,9 @@ var $mdgriffith$elm_ui$Internal$Model$createElement = F3(
 					{
 						gE: A4(
 							$mdgriffith$elm_ui$Internal$Model$finalizeNode,
-							rendered.aa,
+							rendered.ab,
 							rendered.em,
-							rendered._,
+							rendered.aa,
 							$mdgriffith$elm_ui$Internal$Model$Keyed(
 								A3($mdgriffith$elm_ui$Internal$Model$addKeyedChildren, 'nearby-element-pls', keyed, rendered.fQ))),
 						e_: allStyles
@@ -10795,9 +10795,9 @@ var $mdgriffith$elm_ui$Internal$Model$createElement = F3(
 				return $mdgriffith$elm_ui$Internal$Model$Unstyled(
 					A5(
 						$mdgriffith$elm_ui$Internal$Model$finalizeNode,
-						rendered.aa,
+						rendered.ab,
 						rendered.em,
-						rendered._,
+						rendered.aa,
 						$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 							A2($mdgriffith$elm_ui$Internal$Model$addChildren, unkeyed, rendered.fQ)),
 						$mdgriffith$elm_ui$Internal$Model$NoStyleSheet));
@@ -10807,9 +10807,9 @@ var $mdgriffith$elm_ui$Internal$Model$createElement = F3(
 					{
 						gE: A4(
 							$mdgriffith$elm_ui$Internal$Model$finalizeNode,
-							rendered.aa,
+							rendered.ab,
 							rendered.em,
-							rendered._,
+							rendered.aa,
 							$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 								A2($mdgriffith$elm_ui$Internal$Model$addChildren, unkeyed, rendered.fQ))),
 						e_: allStyles
@@ -10996,21 +10996,21 @@ var $mdgriffith$elm_ui$Internal$Model$addNodeName = F2(
 var $mdgriffith$elm_ui$Internal$Model$alignXName = function (align) {
 	switch (align) {
 		case 0:
-			return $mdgriffith$elm_ui$Internal$Style$classes.cD + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.dr);
+			return $mdgriffith$elm_ui$Internal$Style$classes.cE + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.dr);
 		case 2:
-			return $mdgriffith$elm_ui$Internal$Style$classes.cD + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.ds);
+			return $mdgriffith$elm_ui$Internal$Style$classes.cE + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.ds);
 		default:
-			return $mdgriffith$elm_ui$Internal$Style$classes.cD + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fj);
+			return $mdgriffith$elm_ui$Internal$Style$classes.cE + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fj);
 	}
 };
 var $mdgriffith$elm_ui$Internal$Model$alignYName = function (align) {
 	switch (align) {
 		case 0:
-			return $mdgriffith$elm_ui$Internal$Style$classes.cE + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fp);
+			return $mdgriffith$elm_ui$Internal$Style$classes.cF + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fp);
 		case 2:
-			return $mdgriffith$elm_ui$Internal$Style$classes.cE + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fi);
+			return $mdgriffith$elm_ui$Internal$Style$classes.cF + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fi);
 		default:
-			return $mdgriffith$elm_ui$Internal$Style$classes.cE + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fk);
+			return $mdgriffith$elm_ui$Internal$Style$classes.cF + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fk);
 	}
 };
 var $elm$virtual_dom$VirtualDom$attribute = F2(
@@ -11361,24 +11361,24 @@ var $mdgriffith$elm_ui$Internal$Model$gatherAttrRecursive = F8(
 				var _v1 = $mdgriffith$elm_ui$Internal$Model$transformClass(transform);
 				if (_v1.$ === 1) {
 					return {
-						_: A2(
+						aa: A2(
 							$elm$core$List$cons,
 							$elm$html$Html$Attributes$class(classes),
 							attrs),
 						fQ: children,
-						aa: has,
+						ab: has,
 						em: node,
 						e_: styles
 					};
 				} else {
 					var _class = _v1.a;
 					return {
-						_: A2(
+						aa: A2(
 							$elm$core$List$cons,
 							$elm$html$Html$Attributes$class(classes + (' ' + _class)),
 							attrs),
 						fQ: children,
-						aa: has,
+						ab: has,
 						em: node,
 						e_: A2(
 							$elm$core$List$cons,
@@ -12283,12 +12283,12 @@ var $mdgriffith$elm_ui$Internal$Model$optionsToRecord = function (options) {
 					}
 				default:
 					var renderMode = opt.a;
-					var _v6 = record.cf;
+					var _v6 = record.cg;
 					if (_v6.$ === 1) {
 						return _Utils_update(
 							record,
 							{
-								cf: $elm$core$Maybe$Just(renderMode)
+								cg: $elm$core$Maybe$Just(renderMode)
 							});
 					} else {
 						return record;
@@ -12315,8 +12315,8 @@ var $mdgriffith$elm_ui$Internal$Model$optionsToRecord = function (options) {
 					return hoverable;
 				}
 			}(),
-			cf: function () {
-				var _v2 = record.cf;
+			cg: function () {
+				var _v2 = record.cg;
 				if (_v2.$ === 1) {
 					return 0;
 				} else {
@@ -12330,7 +12330,7 @@ var $mdgriffith$elm_ui$Internal$Model$optionsToRecord = function (options) {
 		A3(
 			$elm$core$List$foldr,
 			combine,
-			{gu: $elm$core$Maybe$Nothing, gD: $elm$core$Maybe$Nothing, cf: $elm$core$Maybe$Nothing},
+			{gu: $elm$core$Maybe$Nothing, gD: $elm$core$Maybe$Nothing, cg: $elm$core$Maybe$Nothing},
 			options));
 };
 var $mdgriffith$elm_ui$Internal$Model$toHtml = F2(
@@ -12357,7 +12357,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderRoot = F3(
 	function (optionList, attributes, child) {
 		var options = $mdgriffith$elm_ui$Internal$Model$optionsToRecord(optionList);
 		var embedStyle = function () {
-			var _v0 = options.cf;
+			var _v0 = options.cg;
 			if (_v0 === 1) {
 				return $mdgriffith$elm_ui$Internal$Model$OnlyDynamic(options);
 			} else {
@@ -12876,7 +12876,7 @@ var $mdgriffith$elm_ui$Element$Input$applyLabel = F3(
 						$mdgriffith$elm_ui$Internal$Model$NodeName('label'),
 						A2(
 							$elm$core$List$cons,
-							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.ca),
+							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.cb),
 							attrs),
 						$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 							_List_fromArray(
@@ -12888,7 +12888,7 @@ var $mdgriffith$elm_ui$Element$Input$applyLabel = F3(
 						$mdgriffith$elm_ui$Internal$Model$NodeName('label'),
 						A2(
 							$elm$core$List$cons,
-							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.ca),
+							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.cb),
 							attrs),
 						$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 							_List_fromArray(
@@ -12900,7 +12900,7 @@ var $mdgriffith$elm_ui$Element$Input$applyLabel = F3(
 						$mdgriffith$elm_ui$Internal$Model$NodeName('label'),
 						A2(
 							$elm$core$List$cons,
-							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.ca),
+							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.cb),
 							attrs),
 						$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 							_List_fromArray(
@@ -12912,7 +12912,7 @@ var $mdgriffith$elm_ui$Element$Input$applyLabel = F3(
 						$mdgriffith$elm_ui$Internal$Model$NodeName('label'),
 						A2(
 							$elm$core$List$cons,
-							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.ca),
+							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.cb),
 							attrs),
 						$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 							_List_fromArray(
@@ -13261,7 +13261,7 @@ var $mdgriffith$elm_ui$Element$Input$redistributeOver = F4(
 					els,
 					{
 						o: A2($elm$core$List$cons, attr, els.o),
-						ad: A2($elm$core$List$cons, attr, els.ad),
+						ae: A2($elm$core$List$cons, attr, els.ae),
 						f: A2($elm$core$List$cons, attr, els.f)
 					}) : (stacked ? _Utils_update(
 					els,
@@ -13313,7 +13313,7 @@ var $mdgriffith$elm_ui$Element$Input$redistributeOver = F4(
 							els,
 							{
 								o: A2($elm$core$List$cons, attr, els.o),
-								ad: A2($elm$core$List$cons, attr, els.ad),
+								ae: A2($elm$core$List$cons, attr, els.ae),
 								f: A2($elm$core$List$cons, attr, els.f),
 								bj: A2($elm$core$List$cons, attr, els.bj)
 							});
@@ -13329,7 +13329,7 @@ var $mdgriffith$elm_ui$Element$Input$redistributeOver = F4(
 							return _Utils_update(
 								els,
 								{
-									S: A2($elm$core$List$cons, attr, els.S),
+									T: A2($elm$core$List$cons, attr, els.T),
 									f: A2($elm$core$List$cons, attr, els.f)
 								});
 						} else {
@@ -13360,11 +13360,11 @@ var $mdgriffith$elm_ui$Element$Input$redistributeOver = F4(
 							return _Utils_update(
 								els,
 								{
-									S: A2($elm$core$List$cons, attr, els.S),
-									ad: A2(
+									T: A2($elm$core$List$cons, attr, els.T),
+									ae: A2(
 										$elm$core$List$cons,
 										newHeight,
-										A2($elm$core$List$cons, newLineHeight, els.ad)),
+										A2($elm$core$List$cons, newLineHeight, els.ae)),
 									f: A2($elm$core$List$cons, reducedVerticalPadding, els.f)
 								});
 						}
@@ -13373,14 +13373,14 @@ var $mdgriffith$elm_ui$Element$Input$redistributeOver = F4(
 						return _Utils_update(
 							els,
 							{
-								S: A2($elm$core$List$cons, attr, els.S),
+								T: A2($elm$core$List$cons, attr, els.T),
 								f: A2($elm$core$List$cons, attr, els.f)
 							});
 					case 10:
 						return _Utils_update(
 							els,
 							{
-								S: A2($elm$core$List$cons, attr, els.S),
+								T: A2($elm$core$List$cons, attr, els.T),
 								f: A2($elm$core$List$cons, attr, els.f)
 							});
 					case 2:
@@ -13412,13 +13412,13 @@ var $mdgriffith$elm_ui$Element$Input$redistributeOver = F4(
 				return _Utils_update(
 					els,
 					{
-						ad: A2($elm$core$List$cons, attr, els.ad)
+						ae: A2($elm$core$List$cons, attr, els.ae)
 					});
 			case 2:
 				return _Utils_update(
 					els,
 					{
-						ad: A2($elm$core$List$cons, attr, els.ad)
+						ae: A2($elm$core$List$cons, attr, els.ae)
 					});
 			case 3:
 				return _Utils_update(
@@ -13430,7 +13430,7 @@ var $mdgriffith$elm_ui$Element$Input$redistributeOver = F4(
 				return _Utils_update(
 					els,
 					{
-						ad: A2($elm$core$List$cons, attr, els.ad)
+						ae: A2($elm$core$List$cons, attr, els.ae)
 					});
 		}
 	});
@@ -13438,9 +13438,9 @@ var $mdgriffith$elm_ui$Element$Input$redistribute = F3(
 	function (isMultiline, stacked, attrs) {
 		return function (redist) {
 			return {
-				S: $elm$core$List$reverse(redist.S),
+				T: $elm$core$List$reverse(redist.T),
 				o: $elm$core$List$reverse(redist.o),
-				ad: $elm$core$List$reverse(redist.ad),
+				ae: $elm$core$List$reverse(redist.ae),
 				f: $elm$core$List$reverse(redist.f),
 				bj: $elm$core$List$reverse(redist.bj)
 			};
@@ -13448,7 +13448,7 @@ var $mdgriffith$elm_ui$Element$Input$redistribute = F3(
 			A3(
 				$elm$core$List$foldl,
 				A2($mdgriffith$elm_ui$Element$Input$redistributeOver, isMultiline, stacked),
-				{S: _List_Nil, o: _List_Nil, ad: _List_Nil, f: _List_Nil, bj: _List_Nil},
+				{T: _List_Nil, o: _List_Nil, ae: _List_Nil, f: _List_Nil, bj: _List_Nil},
 				attrs));
 	});
 var $mdgriffith$elm_ui$Element$Input$renderBox = function (_v0) {
@@ -13641,7 +13641,7 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 							$mdgriffith$elm_ui$Internal$Model$NoAttribute,
 							A2($elm$core$Maybe$map, $mdgriffith$elm_ui$Element$Input$autofill, textInput.I))
 						]),
-					redistributed.ad)),
+					redistributed.ae)),
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(_List_Nil));
 		var wrappedInput = function () {
 			var _v0 = textInput.x;
@@ -13738,7 +13738,7 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 											return _List_fromArray(
 												[
 													$mdgriffith$elm_ui$Element$behindContent(
-													A3($mdgriffith$elm_ui$Element$Input$renderPlaceholder, place, redistributed.S, textOptions.h1 === ''))
+													A3($mdgriffith$elm_ui$Element$Input$renderPlaceholder, place, redistributed.T, textOptions.h1 === ''))
 												]);
 										}
 									}()
@@ -13793,7 +13793,7 @@ var $author$project$Main$inputText = function (model) {
 			hd: $author$project$Main$InputText,
 			hs: $elm$core$Maybe$Nothing,
 			hR: false,
-			h1: model.ad
+			h1: model.ae
 		});
 };
 var $mdgriffith$elm_ui$Element$row = F2(
@@ -16168,7 +16168,7 @@ var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty(
 var $mdgriffith$elm_ui$Element$newTabLink = F2(
 	function (attrs, _v0) {
 		var label = _v0.aA;
-		var url = _v0.cz;
+		var url = _v0.cA;
 		return A4(
 			$mdgriffith$elm_ui$Internal$Model$element,
 			$mdgriffith$elm_ui$Internal$Model$asEl,
@@ -16219,7 +16219,7 @@ var $author$project$Render$Elm$link = F5(
 								$mdgriffith$elm_ui$Element$Font$italic
 							]),
 						$mdgriffith$elm_ui$Element$text(url_)),
-					cz: url_
+					cA: url_
 				});
 		} else {
 			var labelText = _v0.a;
@@ -16235,7 +16235,7 @@ var $author$project$Render$Elm$link = F5(
 								$mdgriffith$elm_ui$Element$Font$italic
 							]),
 						$mdgriffith$elm_ui$Element$text(labelText)),
-					cz: A2(
+					cA: A2(
 						$elm$core$Maybe$withDefault,
 						'missing url',
 						$author$project$Render$Elm$getText(body))
@@ -16645,7 +16645,7 @@ var $author$project$Widget$Data$scatterplot = F5(
 var $mdgriffith$elm_ui$Element$link = F2(
 	function (attrs, _v0) {
 		var label = _v0.aA;
-		var url = _v0.cz;
+		var url = _v0.cA;
 		return A4(
 			$mdgriffith$elm_ui$Internal$Model$element,
 			$mdgriffith$elm_ui$Internal$Model$asEl,
@@ -16714,7 +16714,7 @@ var $author$project$Render$Elm$section_ = F5(
 							_List_Nil,
 							$mdgriffith$elm_ui$Element$text(
 								$author$project$Render$Elm$getLabel(meta) + (' ' + sectionName))),
-						cz: '#tableofcontents__'
+						cA: '#tableofcontents__'
 					})
 				]));
 	});
@@ -16803,7 +16803,7 @@ var $author$project$Render$Elm$renderTocItem = function (tocItem) {
 			]),
 		{
 			aA: $mdgriffith$elm_ui$Element$text(tocItem.aA + (' ' + tocItem.ej)),
-			cz: '#' + $author$project$Render$Utility$slug(tocItem.ej)
+			cA: '#' + $author$project$Render$Utility$slug(tocItem.ej)
 		});
 };
 var $author$project$Render$Elm$tableofcontents = F5(
@@ -17274,7 +17274,7 @@ var $author$project$Parser$Document$Start = 0;
 var $author$project$Parser$Data$defaultConfig = {dx: '#00c', d_: '#fAA', eJ: '#a00'};
 var $author$project$Vector$init = function (k) {
 	return {
-		cJ: A2($elm$core$List$repeat, k, 0),
+		cK: A2($elm$core$List$repeat, k, 0),
 		be: k
 	};
 };
@@ -17298,12 +17298,12 @@ var $author$project$Parser$Document$init = F2(
 	function (generation, strList) {
 		return {
 			n: _List_Nil,
-			C: 0,
-			R: 0,
+			z: 0,
+			O: 0,
 			f6: $author$project$Parser$Data$init($author$project$Parser$Data$defaultConfig),
 			bw: generation,
-			ad: strList,
-			ae: $elm$core$Maybe$Nothing,
+			ae: strList,
+			Q: $elm$core$Maybe$Nothing,
 			ak: 0,
 			D: _List_Nil
 		};
@@ -17505,9 +17505,9 @@ var $author$project$Parser$Driver$handleLeftBracketError = F4(
 		return {
 			dw: '?? TO DO',
 			ar: tc_.ar,
-			z: tc_.z,
+			A: tc_.A,
 			f6: tc_.f6,
-			bu: {cK: newTextLines, bH: 3},
+			bu: {b2: newTextLines, bH: 3},
 			bw: tc_.bw,
 			an: A3($author$project$Parser$Driver$newOffset, tc_, errorColumn, mRecoveryData),
 			hm: $elm$core$Maybe$Nothing,
@@ -17572,9 +17572,9 @@ var $author$project$Parser$Driver$handlePipeError = F4(
 		return {
 			dw: '?? TO DO',
 			ar: tc_.ar,
-			z: tc_.z,
+			A: tc_.A,
 			f6: tc_.f6,
-			bu: {cK: newTextLines, bH: 1},
+			bu: {b2: newTextLines, bH: 1},
 			bw: tc_.bw,
 			an: A3($author$project$Parser$Driver$newOffset, tc_, errorColumn, mRecoveryData),
 			hm: $elm$core$Maybe$Nothing,
@@ -17634,9 +17634,9 @@ var $author$project$Parser$Driver$handleRightBracketError = F4(
 		return {
 			dw: '?? TO DO',
 			ar: tc_.ar,
-			z: tc_.z,
+			A: tc_.A,
 			f6: tc_.f6,
-			bu: {cK: newTextLines, bH: 2},
+			bu: {b2: newTextLines, bH: 2},
 			bw: tc_.bw,
 			an: A3($author$project$Parser$Driver$newOffset, tc_, errorColumn, mRecoveryData),
 			hm: $elm$core$Maybe$Nothing,
@@ -17682,9 +17682,9 @@ var $author$project$Parser$Driver$unhandledError = F6(
 		return {
 			dw: '?? TO DO',
 			ar: tc_.ar,
-			z: tc_.z,
+			A: tc_.A,
 			f6: tc_.f6,
-			bu: {cK: _List_Nil, bH: 4},
+			bu: {b2: _List_Nil, bH: 4},
 			bw: tc_.bw,
 			an: A3($author$project$Parser$Driver$newOffset, tc_, errorColumn, mRecoveryData),
 			hm: $elm$core$Maybe$Nothing,
@@ -17789,9 +17789,9 @@ var $author$project$Parser$TextCursor$init = F4(
 		return {
 			dw: '',
 			ar: blockIndex,
-			z: 0,
+			A: 0,
 			f6: data,
-			bu: {cK: _List_Nil, bH: 0},
+			bu: {b2: _List_Nil, bH: 0},
 			bw: generation,
 			an: 0,
 			hm: $elm$core$Maybe$Nothing,
@@ -17836,7 +17836,7 @@ var $author$project$Vector$toString = function (v) {
 				function (x) {
 					return x > 0;
 				},
-				v.cJ)));
+				v.cK)));
 };
 var $author$project$Parser$Data$sectionLabel = function (data) {
 	return A2(
@@ -17923,14 +17923,14 @@ var $author$project$Vector$get = F2(
 		return A2(
 			$elm$core$Maybe$withDefault,
 			0,
-			A2($elm_community$list_extra$List$Extra$getAt, k, v.cJ));
+			A2($elm_community$list_extra$List$Extra$getAt, k, v.cK));
 	});
 var $author$project$Vector$resetFrom = F2(
 	function (k, v) {
 		var suffix = A2($elm$core$List$repeat, v.be - k, 0);
-		var prefix = A2($elm$core$List$take, k, v.cJ);
+		var prefix = A2($elm$core$List$take, k, v.cK);
 		return {
-			cJ: _Utils_ap(prefix, suffix),
+			cK: _Utils_ap(prefix, suffix),
 			be: v.be
 		};
 	});
@@ -17967,7 +17967,7 @@ var $author$project$Vector$set = F3(
 		return _Utils_update(
 			v,
 			{
-				cJ: A3($elm_community$list_extra$List$Extra$setAt, k, a, v.cJ)
+				cK: A3($elm_community$list_extra$List$Extra$setAt, k, a, v.cK)
 			});
 	});
 var $author$project$Vector$increment = F2(
@@ -18400,7 +18400,7 @@ var $author$project$Parser$Data$update = F2(
 	});
 var $author$project$Parser$Loop$nextCursor = F2(
 	function (packet, tc) {
-		if ((tc.h1 === '') || (tc.z > 100)) {
+		if ((tc.h1 === '') || (tc.A > 100)) {
 			return $author$project$Parser$Tool$Done(
 				_Utils_update(
 					tc,
@@ -18432,7 +18432,7 @@ var $author$project$Parser$Loop$nextCursor = F2(
 							dw: _Utils_ap(
 								tc.dw,
 								A2($elm$core$String$left, sourceMapLength, tc.h1)),
-							z: tc.z + 1,
+							A: tc.A + 1,
 							f6: data,
 							an: tc.an + sourceMapLength,
 							hm: $elm$core$Maybe$Just(parsand),
@@ -18449,7 +18449,7 @@ var $author$project$Parser$Loop$nextCursor = F2(
 					return $author$project$Parser$Tool$Loop(
 						_Utils_update(
 							tc,
-							{z: tc.z + 1}));
+							{A: tc.A + 1}));
 				} else {
 					var he = _v1.a;
 					return $author$project$Parser$Tool$Loop(
@@ -18489,10 +18489,10 @@ var $author$project$Parser$Document$pushBlock_ = F2(
 			state,
 			{
 				n: _List_Nil,
-				C: 0,
-				R: 0,
+				z: 0,
+				O: 0,
 				f6: $author$project$Parser$Document$updateData(tc),
-				ae: $elm$core$Maybe$Just(tc),
+				Q: $elm$core$Maybe$Just(tc),
 				ak: state.ak + $author$project$Parser$Document$countLines(state.n),
 				D: A2($elm$core$List$cons, tc, state.D)
 			});
@@ -18500,12 +18500,12 @@ var $author$project$Parser$Document$pushBlock_ = F2(
 var $author$project$Parser$Document$addToBlockContents = F2(
 	function (currentLine_, state) {
 		var deltaBlockLevel = $author$project$Parser$Document$differentialBlockLevel(currentLine_);
-		var newBlockLevel = A2($elm$core$Basics$max, 0, state.C + deltaBlockLevel);
+		var newBlockLevel = A2($elm$core$Basics$max, 0, state.z + deltaBlockLevel);
 		return ((!newBlockLevel) && (deltaBlockLevel < 0)) ? A2($author$project$Parser$Document$pushBlock_, '\n' + currentLine_, state) : _Utils_update(
 			state,
 			{
 				n: A2($elm$core$List$cons, currentLine_, state.n),
-				C: newBlockLevel
+				z: newBlockLevel
 			});
 	});
 var $author$project$Parser$Document$LTBlank = 0;
@@ -18605,7 +18605,7 @@ var $author$project$Parser$Document$noError = function (state) {
 		function ($) {
 			return $.bu;
 		},
-		state.ae);
+		state.Q);
 	return _Utils_eq(err, $elm$core$Maybe$Nothing) || _Utils_eq(
 		A2(
 			$elm$core$Maybe$map,
@@ -18632,7 +18632,7 @@ var $author$project$Parser$Document$flush = function (state) {
 				state,
 				{
 					f6: $author$project$Parser$Document$updateData(tc),
-					ae: $elm$core$Maybe$Just(tc),
+					Q: $elm$core$Maybe$Just(tc),
 					D: A2($elm$core$List$cons, tc, state.D)
 				});
 		}
@@ -18662,12 +18662,12 @@ var $author$project$Parser$Document$flush = function (state) {
 					A2(
 						$elm$core$Maybe$map,
 						function ($) {
-							return $.cK;
+							return $.b2;
 						},
 						errorStatus)));
 			var correctedState = _Utils_update(
 				state,
-				{n: _List_Nil, C: 0, R: 0, ad: correctedText});
+				{n: _List_Nil, z: 0, O: 0, ae: correctedText});
 			return $author$project$Parser$Document$Loop(correctedState);
 		} else {
 			return $author$project$Parser$Document$Done(newState);
@@ -18678,11 +18678,11 @@ var $author$project$Parser$Document$resetError = function (tc) {
 	return _Utils_update(
 		tc,
 		{
-			bu: {cK: _List_Nil, bH: 0}
+			bu: {b2: _List_Nil, bH: 0}
 		});
 };
 var $author$project$Parser$Document$handleError = function (state) {
-	if (_Utils_eq(state.ad, _List_Nil)) {
+	if (_Utils_eq(state.ae, _List_Nil)) {
 		return $author$project$Parser$Document$flush(state);
 	} else {
 		var err_ = A2(
@@ -18690,7 +18690,7 @@ var $author$project$Parser$Document$handleError = function (state) {
 			function ($) {
 				return $.bu;
 			},
-			state.ae);
+			state.Q);
 		var _v0 = A2(
 			$elm$core$Maybe$map,
 			function ($) {
@@ -18701,28 +18701,43 @@ var $author$project$Parser$Document$handleError = function (state) {
 				function ($) {
 					return $.bu;
 				},
-				state.ae));
+				state.Q));
 		if (err_.$ === 1) {
 			return $author$project$Parser$Document$Done(state);
 		} else {
 			var err = err_.a;
 			var _v2 = err.bH;
-			if (_v2 === 3) {
-				var foo = 1;
-				var correctedText = A2(
-					$elm$core$Maybe$withDefault,
-					'Could not get corrected text',
-					$elm$core$List$head(err.cK));
-				return $author$project$Parser$Document$Loop(
-					_Utils_update(
-						state,
-						{
-							C: 0,
-							R: 0,
-							ae: A2($elm$core$Maybe$map, $author$project$Parser$Document$resetError, state.ae)
-						}));
-			} else {
-				return $author$project$Parser$Document$Done(state);
+			switch (_v2) {
+				case 3:
+					var foo = 1;
+					var correctedText = A2(
+						$elm$core$Maybe$withDefault,
+						'Could not get corrected text',
+						$elm$core$List$head(err.b2));
+					return $author$project$Parser$Document$Loop(
+						_Utils_update(
+							state,
+							{
+								z: 0,
+								O: 0,
+								Q: A2($elm$core$Maybe$map, $author$project$Parser$Document$resetError, state.Q)
+							}));
+				case 2:
+					var foo = 1;
+					var correctedText = A2(
+						$elm$core$Maybe$withDefault,
+						'Could not get corrected text',
+						$elm$core$List$head(err.b2));
+					return $author$project$Parser$Document$Loop(
+						_Utils_update(
+							state,
+							{
+								z: 0,
+								O: 0,
+								Q: A2($elm$core$Maybe$map, $author$project$Parser$Document$resetError, state.Q)
+							}));
+				default:
+					return $author$project$Parser$Document$Done(state);
 			}
 		}
 	}
@@ -18734,7 +18749,7 @@ var $author$project$Parser$Document$initBlock = F3(
 			{
 				n: _List_fromArray(
 					[currentLine_]),
-				R: blockType_
+				O: blockType_
 			});
 	});
 var $author$project$Parser$Document$popBlockStack = F2(
@@ -18742,7 +18757,7 @@ var $author$project$Parser$Document$popBlockStack = F2(
 		var newBlockLevel = A2(
 			$elm$core$Basics$max,
 			0,
-			state.C + $author$project$Parser$Document$differentialBlockLevel(currentLine_));
+			state.z + $author$project$Parser$Document$differentialBlockLevel(currentLine_));
 		if (!newBlockLevel) {
 			var input_ = A2(
 				$elm$core$String$join,
@@ -18757,10 +18772,10 @@ var $author$project$Parser$Document$popBlockStack = F2(
 				state,
 				{
 					n: A2($elm$core$List$cons, currentLine_, state.n),
-					C: 0,
-					R: 0,
+					z: 0,
+					O: 0,
 					f6: $author$project$Parser$Document$updateData(tc),
-					ae: $elm$core$Maybe$Just(tc),
+					Q: $elm$core$Maybe$Just(tc),
 					ak: state.ak + (2 + $elm$core$List$length(state.n)),
 					D: A2($elm$core$List$cons, tc, state.D)
 				});
@@ -18769,7 +18784,7 @@ var $author$project$Parser$Document$popBlockStack = F2(
 				state,
 				{
 					n: A2($elm$core$List$cons, currentLine_, state.n),
-					C: newBlockLevel
+					z: newBlockLevel
 				});
 		}
 	});
@@ -18779,34 +18794,34 @@ var $author$project$Parser$Document$pushBlock = function (state) {
 var $author$project$Parser$Document$pushBlockStack = F2(
 	function (currentLine_, state) {
 		var deltaBlockLevel = $author$project$Parser$Document$differentialBlockLevel(currentLine_);
-		var newBlockLevel = A2($elm$core$Basics$max, 0, state.C + deltaBlockLevel);
+		var newBlockLevel = A2($elm$core$Basics$max, 0, state.z + deltaBlockLevel);
 		return (!newBlockLevel) ? A2($author$project$Parser$Document$pushBlock_, '\n' + currentLine_, state) : _Utils_update(
 			state,
 			{
 				n: A2($elm$core$List$cons, currentLine_, state.n),
-				C: newBlockLevel
+				z: newBlockLevel
 			});
 	});
 var $author$project$Parser$Document$start = function (state) {
 	return _Utils_update(
 		state,
-		{n: _List_Nil, C: 0, R: 0});
+		{n: _List_Nil, z: 0, O: 0});
 };
 var $author$project$Parser$Document$startBlock = F2(
 	function (currentLine_, state) {
 		var deltaBlockLevel = $author$project$Parser$Document$differentialBlockLevel(currentLine_);
-		var newBlockLevel = A2($elm$core$Basics$max, 0, state.C + deltaBlockLevel);
+		var newBlockLevel = A2($elm$core$Basics$max, 0, state.z + deltaBlockLevel);
 		return _Utils_update(
 			state,
 			{
 				n: A2($elm$core$List$cons, currentLine_, state.n),
-				C: newBlockLevel,
-				R: 2
+				z: newBlockLevel,
+				O: 2
 			});
 	});
 var $author$project$Parser$Document$nextState = function (state_) {
 	var _v0 = _Utils_Tuple2(
-		$elm$core$List$head(state_.ad),
+		$elm$core$List$head(state_.ae),
 		$author$project$Parser$Document$noError(state_));
 	if (_v0.a.$ === 1) {
 		var _v1 = _v0.a;
@@ -18819,10 +18834,10 @@ var $author$project$Parser$Document$nextState = function (state_) {
 			var state = _Utils_update(
 				state_,
 				{
-					ad: A2($elm$core$List$drop, 1, state_.ad)
+					ae: A2($elm$core$List$drop, 1, state_.ae)
 				});
 			var _v2 = _Utils_Tuple2(
-				state.R,
+				state.O,
 				$author$project$Parser$Document$classify(currentLine));
 			switch (_v2.b) {
 				case 4:
@@ -18831,7 +18846,7 @@ var $author$project$Parser$Document$nextState = function (state_) {
 						_Utils_update(
 							state,
 							{
-								ad: A2($elm$core$List$drop, 1, state.ad)
+								ae: A2($elm$core$List$drop, 1, state.ae)
 							}));
 				case 0:
 					switch (_v2.a) {
@@ -18862,7 +18877,7 @@ var $author$project$Parser$Document$nextState = function (state_) {
 									currentLine,
 									_Utils_update(
 										state,
-										{R: 2})));
+										{O: 2})));
 						case 1:
 							var _v14 = _v2.a;
 							var _v15 = _v2.b;
@@ -18969,9 +18984,9 @@ var $author$project$Main$outputDisplay_ = function (model) {
 				$mdgriffith$elm_ui$Element$moveUp(9),
 				$mdgriffith$elm_ui$Element$Font$size(12)
 			]),
-		(model.cf === 1) ? _List_fromArray(
+		(model.cg === 1) ? _List_fromArray(
 			[
-				A2($author$project$Main$render, model.z, model.ad)
+				A2($author$project$Main$render, model.A, model.ae)
 			]) : A2(
 			$elm$core$List$map,
 			$mdgriffith$elm_ui$Element$text,
@@ -19024,8 +19039,8 @@ var $author$project$Main$outputDisplay = function (model) {
 					[
 						$author$project$Main$dummyButton,
 						$mdgriffith$elm_ui$Element$text(
-						'generation: ' + $elm$core$String$fromInt(model.z)),
-						$author$project$Main$wordCountElement(model.ad)
+						'generation: ' + $elm$core$String$fromInt(model.A)),
+						$author$project$Main$wordCountElement(model.ae)
 					])),
 				$author$project$Main$outputDisplay_(model)
 			]));
