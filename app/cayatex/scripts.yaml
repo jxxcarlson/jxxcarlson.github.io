@@ -7,5 +7,5 @@ scripts:
   reset:
     - git fetch --all
     # - git branch backup-master
-    - get reset --hard origin/master
+    - git reset --hard origin/master
     
