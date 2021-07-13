@@ -1,0 +1,10 @@
+
+scripts:
+
+  push: 
+   - git ci -am "Update app"
+   - git push
+
+  look: open -a /Applications/Firefox.app app/elm-editor2/index.html
+
+  go: open -a /Applications/Firefox.app https://jxxcarlson.github.io/app/elm-editor2
