@@ -5491,12 +5491,12 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $elm$json$Json$Decode$field = _Json_decodeField;
-var $author$project$Data$Example$text = '\n\n\n\n\n\n\n\n# The L1 Markup Language\n\n[b L1] is a markup language with a syntax somewhat like Lisp, but with square brackets instead of parentheses.  To make bold text, we say `[b bold text]`, and for italic, we say `[i italic text]`.  These can be nested as in\n`[i italic text is very [b bold]]`:\n\n:[i italic text is very [b bold]]\n\n|heading2 Conveniences\n\nIn addition to the basic syntax, there are conveniences for common constructs.\nTitles and section headings, for example, can be done as in Markdown:\n\n` # The L1 Markup Language`\n\nSuch a heading must be preceded and followed by a blank line.\n\nConveniences can always be written in the standard way, e.g., `[heading1 The Markup Language]`.\n\n|heading3 Items\n\n\nItems are a convenience used to indent text:\n\n`:This is a test. [red I repeat: a test!].`\n\nwhich renders as\n\n:This is a test. [red I repeat: a test!].\n\nItems must be preceded and followed by a blank line.  The colon symbol must be in first position.\n\n|heading3 Blocks\n\nA [i block element] is an alternate way of writing an element without having to worry about it being closed by a right bracket `]`.  However, this method has much better error-handling properties.\n\n||codeblock\n|mathblock\n\\int_0^1 x^n dx\n  =\n\\frac{1}{n+1}\n\nThis block is rendered as\n\n|mathblock\n\\int_0^1 x^n dx\n  =\n\\frac{1}{n+1}\n\nNote the pipe symbol `|` in first position, that is, at the left margin.  Because the pipe symbol cannot start a block element unless it is first position,  one can still say things like [blue a = (b|c)]. A  block consists of its first line, which names the block, and its body, which consists of non-blank lines followed by a blank line. The first line always has form `|name` with no space between `|` and `name.`\n\nFor inline mathematics, one still has the familiar `$a^2 + b^2 = c^2$`, which renders as $a^2 + b^2 = c^2$.\n\n### Verbatim blocks\n\nOne can also have verbatim blocks, where the body is not subject to the usual rules, e.g.,\n\n||codeblock\n||codeblock\na[i] = 1\n    b[j] = 2\n\nwhich is rendered as\n\n||codeblock\na[i] = 1\n    b[j] = 2\n\nVerbatim blocks begin with a double pipe `||` and in all other respects are like ordinary blocks.  Note that for inline code, one can use backticks, just as in Markdown:\n\n||codeblock\nThis is code: `a[i] = 1.`\n\nThe rendered form is\n\n:`a[i] = 1`\n\n\n\n## More Examples\n\n### Images\n\n[image width:80 placement:left https://ichef.bbci.co.uk/news/976/cpsprodpb/4FB7/production/_116970402_a20-20sahas20barve20-20parrotbill_chavan.jpg]\n\n\n[image width:200 placement:left https://ichef.bbci.co.uk/news/976/cpsprodpb/4FB7/production/_116970402_a20-20sahas20barve20-20parrotbill_chavan.jpg]\n\n[image https://ichef.bbci.co.uk/news/976/cpsprodpb/4FB7/production/_116970402_a20-20sahas20barve20-20parrotbill_chavan.jpg]\n\n\n\n## Errors\n\nLook at the example below, where the source text is labeled (1) and the rendered version is labeled (2).  There should be a right bracket after [i real]. The error is flagged in rendered text, but the subsequent italicized text is unaffected.  This error-tolerance is a feature which [b L1] derives from Camperdown (see the [i Article] tab).\n\n(1) `This [i is] a [b real test! [i Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in augue eget felis rhoncus ullamcorper sed pulvinar sapien.]`\n\n\n(2) This [i is] a [b real test! [i Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in augue eget felis rhoncus ullamcorper sed pulvinar sapien.]\n\n## Lisp-like functions\n\nThe text `[fontRGB 255 0 255 foo]` renders as\n[fontRGB 255 0 255 foo].  Think of `fontRGB` and a function whose arguments here are the elements of the list `[255 0 255 foo]`.  Functions, or more properly, functional expressions, can be nested, as in  `[fontRGB 255 0 255 foo [b bar]]` which renders as [fontRGB 255 0 255 foo [b bar]].\n\n##  Markdown-type stuff\n\nBelow are some Markdown-like examples.   Compare the source and rendered text to see what is going on.\n\n### Links\n\nUse the model below for links:\n\n||codeblock\n[link NYT https://nytimes.com]\n\n:[link NYT https://nytimes.com]\n\n### Colors:\n\n||codeblock\n This is [red red meat].  [gray (We shouldn\'t eat so much)]\n\n:This is [red red meat].  [gray (We shouldn\'t eat so much.)]\n\n\n\n\n\n\n';
+var $author$project$Data$Example$text = '\n# The L1 Markup Language\n\n\n[b L1] is a markup language with a syntax somewhat like Lisp, but with square brackets instead of parentheses.  To make bold text, we say `[b bold text]`, and for italic, we say `[i italic text]`.  These can be nested as in\n`[i italic text is very [b bold]]`:\n\n:[i italic text is very [b bold]]\n\n|heading2 Conveniences\n\nIn addition to the basic syntax, there are conveniences for common constructs.\nTitles and section headings, for example, can be done as in Markdown:\n\n` # The L1 Markup Language`\n\nSuch a heading must be preceded and followed by a blank line.\n\nConveniences can always be written in the standard way, e.g., `[heading1 The Markup Language]`.\n\n|heading3 Items\n\n\nItems are a convenience used to indent text:\n\n`:This is a test. [red I repeat: a test!].`\n\nwhich renders as\n\n:This is a test. [red I repeat: a test!].\n\nItems must be preceded and followed by a blank line.  The colon symbol must be in first position.\n\n|heading3 Blocks\n\nA [i block element] is an alternate way of writing an element without having to worry about it being closed by a right bracket `]`.  However, this method has much better error-handling properties.\n\n||codeblock\n|mathblock\n\\int_0^1 x^n dx\n  =\n\\frac{1}{n+1}\n\nThis block is rendered as\n\n|mathblock\n\\int_0^1 x^n dx\n  =\n\\frac{1}{n+1}\n\nNote the pipe symbol `|` in first position, that is, at the left margin.  Because the pipe symbol cannot start a block element unless it is first position,  one can still say things like [blue a = (b|c)]. A  block consists of its first line, which names the block, and its body, which consists of non-blank lines followed by a blank line. The first line always has form `|name` with no space between `|` and `name.`\n\nFor inline mathematics, one still has the familiar `$a^2 + b^2 = c^2$`, which renders as $a^2 + b^2 = c^2$.\n\n### Verbatim blocks\n\nOne can also have verbatim blocks, where the body is not subject to the usual rules, e.g.,\n\n||codeblock\n||codeblock\na[i] = 1\n    b[j] = 2\n\nwhich is rendered as\n\n||codeblock\na[i] = 1\n    b[j] = 2\n\nVerbatim blocks begin with a double pipe `||` and in all other respects are like ordinary blocks.  Note that for inline code, one can use backticks, just as in Markdown:\n\n||codeblock\nThis is code: `a[i] = 1.`\n\nThe rendered form is\n\n:`a[i] = 1`\n\n\n\n## More Examples\n\n### Images\n\n[image width:80 placement:left https://ichef.bbci.co.uk/news/976/cpsprodpb/4FB7/production/_116970402_a20-20sahas20barve20-20parrotbill_chavan.jpg]\n\n\n[image width:200 placement:left https://ichef.bbci.co.uk/news/976/cpsprodpb/4FB7/production/_116970402_a20-20sahas20barve20-20parrotbill_chavan.jpg]\n\n[image https://ichef.bbci.co.uk/news/976/cpsprodpb/4FB7/production/_116970402_a20-20sahas20barve20-20parrotbill_chavan.jpg]\n\n\n\n## Errors\n\nLook at the example below, where the source text is labeled (1) and the rendered version is labeled (2).  There should be a right bracket after [i real]. The error is flagged in rendered text, but the subsequent italicized text is unaffected.  This error-tolerance is a feature which [b L1] derives from Camperdown (see the [i Article] tab).\n\n(1) `This [i is] a [b real test! [i Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in augue eget felis rhoncus ullamcorper sed pulvinar sapien.]`\n\n\n(2) This [i is] a [b real test! [i Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in augue eget felis rhoncus ullamcorper sed pulvinar sapien.]\n\n## Lisp-like functions\n\nThe text `[fontRGB 255 0 255 foo]` renders as\n[fontRGB 255 0 255 foo].  Think of `fontRGB` and a function whose arguments here are the elements of the list `[255 0 255 foo]`.  Functions, or more properly, functional expressions, can be nested, as in  `[fontRGB 255 0 255 foo [b bar]]` which renders as [fontRGB 255 0 255 foo [b bar]].\n\n##  Markdown-type stuff\n\nBelow are some Markdown-like examples.   Compare the source and rendered text to see what is going on.\n\n### Links\n\nUse the model below for links:\n\n||codeblock\n[link NYT https://nytimes.com]\n\n:[link NYT https://nytimes.com]\n\n### Colors:\n\n||codeblock\n This is [red red meat].  [gray (We shouldn\'t eat so much)]\n\n:This is [red red meat].  [gray (We shouldn\'t eat so much.)]\n\n\n\n\n\n\n\n';
 var $author$project$Main$initialText = $author$project$Data$Example$text;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Parser$TextCursor$NormalScan = {$: 'NormalScan'};
-var $author$project$Parser$TextCursor$init = F2(
+var $author$project$L1$TextCursor$NormalScan = {$: 'NormalScan'};
+var $author$project$L1$TextCursor$init = F2(
 	function (generation, source) {
 		return {
 			complete: _List_Nil,
@@ -5506,7 +5506,7 @@ var $author$project$Parser$TextCursor$init = F2(
 			message: 'STAR',
 			parsed: _List_Nil,
 			scanPoint: 0,
-			scannerType: $author$project$Parser$TextCursor$NormalScan,
+			scannerType: $author$project$L1$TextCursor$NormalScan,
 			source: source,
 			stack: _List_Nil,
 			text: ''
@@ -5537,7 +5537,7 @@ var $author$project$Library$ParserTools$Done = function (a) {
 var $author$project$Library$ParserTools$Loop = function (a) {
 	return {$: 'Loop', a: a};
 };
-var $author$project$Parser$TextCursor$add = F3(
+var $author$project$L1$TextCursor$add = F3(
 	function (parse_, str, tc) {
 		return _Utils_update(
 			tc,
@@ -5551,20 +5551,20 @@ var $author$project$Parser$TextCursor$add = F3(
 				scanPoint: tc.scanPoint + $elm$core$String$length(str)
 			});
 	});
-var $author$project$Parser$Loop$add = F3(
+var $author$project$L1$Loop$add = F3(
 	function (parser, cursor, chompedText) {
 		return $author$project$Library$ParserTools$Loop(
 			A3(
-				$author$project$Parser$TextCursor$add,
+				$author$project$L1$TextCursor$add,
 				parser,
 				chompedText.content,
 				_Utils_update(
 					cursor,
 					{message: 'ADD'})));
 	});
-var $author$project$Parser$Config$AllDelimiters = {$: 'AllDelimiters'};
-var $author$project$Parser$Config$InteriorDelimiters = {$: 'InteriorDelimiters'};
-var $author$project$Parser$Config$Anywhere = {$: 'Anywhere'};
+var $author$project$L1$Config$AllDelimiters = {$: 'AllDelimiters'};
+var $author$project$L1$Config$InteriorDelimiters = {$: 'InteriorDelimiters'};
+var $author$project$L1$Config$Anywhere = {$: 'Anywhere'};
 var $elm$core$Basics$composeR = F3(
 	function (f, g, x) {
 		return g(
@@ -5581,7 +5581,7 @@ var $elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
-var $author$project$Parser$Config$firstChar = function (str) {
+var $author$project$L1$Config$firstChar = function (str) {
 	var _v0 = $elm$core$String$uncons(str);
 	if (_v0.$ === 'Nothing') {
 		return $elm$core$Maybe$Nothing;
@@ -5826,7 +5826,7 @@ var $elm_community$maybe_extra$Maybe$Extra$cons = F2(
 		}
 	});
 var $elm_community$maybe_extra$Maybe$Extra$values = A2($elm$core$List$foldr, $elm_community$maybe_extra$Maybe$Extra$cons, _List_Nil);
-var $author$project$Parser$Config$configure = function (configDef) {
+var $author$project$L1$Config$configure = function (configDef) {
 	var verbatimChars = $elm_community$maybe_extra$Maybe$Extra$values(
 		A2(
 			$elm$core$List$map,
@@ -5835,7 +5835,7 @@ var $author$project$Parser$Config$configure = function (configDef) {
 				function ($) {
 					return $.beginSymbol;
 				},
-				$author$project$Parser$Config$firstChar),
+				$author$project$L1$Config$firstChar),
 			A2(
 				$elm$core$List$filter,
 				function (d) {
@@ -5851,7 +5851,7 @@ var $author$project$Parser$Config$configure = function (configDef) {
 			A2(
 				$elm$core$List$filter,
 				function (e) {
-					return _Utils_eq(e.markPosition, $author$project$Parser$Config$Anywhere);
+					return _Utils_eq(e.markPosition, $author$project$L1$Config$Anywhere);
 				},
 				configDef)));
 	var interiorEndChars = $elm_community$maybe_extra$Maybe$Extra$values(
@@ -5862,11 +5862,11 @@ var $author$project$Parser$Config$configure = function (configDef) {
 				function ($) {
 					return $.endSymbol;
 				},
-				$elm$core$Maybe$map($author$project$Parser$Config$firstChar)),
+				$elm$core$Maybe$map($author$project$L1$Config$firstChar)),
 			A2(
 				$elm$core$List$filter,
 				function (e) {
-					return _Utils_eq(e.markPosition, $author$project$Parser$Config$Anywhere);
+					return _Utils_eq(e.markPosition, $author$project$L1$Config$Anywhere);
 				},
 				configDef)));
 	var interiorBeginSymbols = A2(
@@ -5877,7 +5877,7 @@ var $author$project$Parser$Config$configure = function (configDef) {
 		A2(
 			$elm$core$List$filter,
 			function (e) {
-				return _Utils_eq(e.markPosition, $author$project$Parser$Config$Anywhere);
+				return _Utils_eq(e.markPosition, $author$project$L1$Config$Anywhere);
 			},
 			configDef));
 	var interiorBeginChars = $elm_community$maybe_extra$Maybe$Extra$values(
@@ -5888,11 +5888,11 @@ var $author$project$Parser$Config$configure = function (configDef) {
 				function ($) {
 					return $.beginSymbol;
 				},
-				$author$project$Parser$Config$firstChar),
+				$author$project$L1$Config$firstChar),
 			A2(
 				$elm$core$List$filter,
 				function (e) {
-					return _Utils_eq(e.markPosition, $author$project$Parser$Config$Anywhere);
+					return _Utils_eq(e.markPosition, $author$project$L1$Config$Anywhere);
 				},
 				configDef)));
 	var endChars = $elm_community$maybe_extra$Maybe$Extra$values(
@@ -5903,7 +5903,7 @@ var $author$project$Parser$Config$configure = function (configDef) {
 				function ($) {
 					return $.endSymbol;
 				},
-				$elm$core$Maybe$map($author$project$Parser$Config$firstChar)),
+				$elm$core$Maybe$map($author$project$L1$Config$firstChar)),
 			configDef));
 	var beginChars = $elm_community$maybe_extra$Maybe$Extra$values(
 		A2(
@@ -5913,7 +5913,7 @@ var $author$project$Parser$Config$configure = function (configDef) {
 				function ($) {
 					return $.beginSymbol;
 				},
-				$author$project$Parser$Config$firstChar),
+				$author$project$L1$Config$firstChar),
 			configDef));
 	return {
 		beginChars: beginChars,
@@ -5953,50 +5953,50 @@ var $author$project$Parser$Config$configure = function (configDef) {
 		verbatimChars: verbatimChars
 	};
 };
-var $author$project$Parser$Config$AtBeginning = {$: 'AtBeginning'};
-var $author$project$Parser$Config$CodeType = {$: 'CodeType'};
-var $author$project$Parser$Config$ElementType = {$: 'ElementType'};
-var $author$project$Parser$Config$InlineMathType = {$: 'InlineMathType'};
-var $author$project$Parser$Config$QuotedType = {$: 'QuotedType'};
-var $author$project$Parser$Configuration$expectations = _List_fromArray(
+var $author$project$L1$Config$AtBeginning = {$: 'AtBeginning'};
+var $author$project$L1$Config$CodeType = {$: 'CodeType'};
+var $author$project$L1$Config$ElementType = {$: 'ElementType'};
+var $author$project$L1$Config$InlineMathType = {$: 'InlineMathType'};
+var $author$project$L1$Config$QuotedType = {$: 'QuotedType'};
+var $author$project$L1$Configuration$expectations = _List_fromArray(
 	[
 		{
 		beginSymbol: '[',
 		endSymbol: $elm$core$Maybe$Just(']'),
-		etype: $author$project$Parser$Config$ElementType,
+		etype: $author$project$L1$Config$ElementType,
 		isVerbatim: false,
-		markPosition: $author$project$Parser$Config$Anywhere
+		markPosition: $author$project$L1$Config$Anywhere
 	},
 		{
 		beginSymbol: '`',
 		endSymbol: $elm$core$Maybe$Just('`'),
-		etype: $author$project$Parser$Config$CodeType,
+		etype: $author$project$L1$Config$CodeType,
 		isVerbatim: true,
-		markPosition: $author$project$Parser$Config$Anywhere
+		markPosition: $author$project$L1$Config$Anywhere
 	},
 		{
 		beginSymbol: '$',
 		endSymbol: $elm$core$Maybe$Just('$'),
-		etype: $author$project$Parser$Config$InlineMathType,
+		etype: $author$project$L1$Config$InlineMathType,
 		isVerbatim: true,
-		markPosition: $author$project$Parser$Config$Anywhere
+		markPosition: $author$project$L1$Config$Anywhere
 	},
-		{beginSymbol: '#', endSymbol: $elm$core$Maybe$Nothing, etype: $author$project$Parser$Config$ElementType, isVerbatim: false, markPosition: $author$project$Parser$Config$AtBeginning},
-		{beginSymbol: '##', endSymbol: $elm$core$Maybe$Nothing, etype: $author$project$Parser$Config$ElementType, isVerbatim: false, markPosition: $author$project$Parser$Config$AtBeginning},
-		{beginSymbol: '###', endSymbol: $elm$core$Maybe$Nothing, etype: $author$project$Parser$Config$ElementType, isVerbatim: false, markPosition: $author$project$Parser$Config$AtBeginning},
-		{beginSymbol: '####', endSymbol: $elm$core$Maybe$Nothing, etype: $author$project$Parser$Config$ElementType, isVerbatim: false, markPosition: $author$project$Parser$Config$AtBeginning},
-		{beginSymbol: ':', endSymbol: $elm$core$Maybe$Nothing, etype: $author$project$Parser$Config$ElementType, isVerbatim: false, markPosition: $author$project$Parser$Config$AtBeginning},
+		{beginSymbol: '#', endSymbol: $elm$core$Maybe$Nothing, etype: $author$project$L1$Config$ElementType, isVerbatim: false, markPosition: $author$project$L1$Config$AtBeginning},
+		{beginSymbol: '##', endSymbol: $elm$core$Maybe$Nothing, etype: $author$project$L1$Config$ElementType, isVerbatim: false, markPosition: $author$project$L1$Config$AtBeginning},
+		{beginSymbol: '###', endSymbol: $elm$core$Maybe$Nothing, etype: $author$project$L1$Config$ElementType, isVerbatim: false, markPosition: $author$project$L1$Config$AtBeginning},
+		{beginSymbol: '####', endSymbol: $elm$core$Maybe$Nothing, etype: $author$project$L1$Config$ElementType, isVerbatim: false, markPosition: $author$project$L1$Config$AtBeginning},
+		{beginSymbol: ':', endSymbol: $elm$core$Maybe$Nothing, etype: $author$project$L1$Config$ElementType, isVerbatim: false, markPosition: $author$project$L1$Config$AtBeginning},
 		{
 		beginSymbol: '\"',
 		endSymbol: $elm$core$Maybe$Just('\"'),
-		etype: $author$project$Parser$Config$QuotedType,
+		etype: $author$project$L1$Config$QuotedType,
 		isVerbatim: true,
-		markPosition: $author$project$Parser$Config$Anywhere
+		markPosition: $author$project$L1$Config$Anywhere
 	},
-		{beginSymbol: '||', endSymbol: $elm$core$Maybe$Nothing, etype: $author$project$Parser$Config$CodeType, isVerbatim: true, markPosition: $author$project$Parser$Config$AtBeginning},
-		{beginSymbol: '|', endSymbol: $elm$core$Maybe$Nothing, etype: $author$project$Parser$Config$ElementType, isVerbatim: false, markPosition: $author$project$Parser$Config$AtBeginning}
+		{beginSymbol: '||', endSymbol: $elm$core$Maybe$Nothing, etype: $author$project$L1$Config$CodeType, isVerbatim: true, markPosition: $author$project$L1$Config$AtBeginning},
+		{beginSymbol: '|', endSymbol: $elm$core$Maybe$Nothing, etype: $author$project$L1$Config$ElementType, isVerbatim: false, markPosition: $author$project$L1$Config$AtBeginning}
 	]);
-var $author$project$Parser$Configuration$configuration = $author$project$Parser$Config$configure($author$project$Parser$Configuration$expectations);
+var $author$project$L1$Configuration$configuration = $author$project$L1$Config$configure($author$project$L1$Configuration$expectations);
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
 		any:
@@ -6028,7 +6028,7 @@ var $elm$core$List$member = F2(
 			xs);
 	});
 var $elm$core$Basics$not = _Basics_not;
-var $author$project$Parser$Config$notDelimiter = F3(
+var $author$project$L1$Config$notDelimiter = F3(
 	function (config, delimiterTypes, c) {
 		if (delimiterTypes.$ === 'AllDelimiters') {
 			return !A2($elm$core$List$member, c, config.delimiters);
@@ -6076,7 +6076,7 @@ var $elm$parser$Parser$Advanced$run = F2(
 				A2($elm$parser$Parser$Advanced$bagToList, bag, _List_Nil));
 		}
 	});
-var $author$project$Parser$Error$UnHandledError = function (a) {
+var $author$project$L1$Error$UnHandledError = function (a) {
 	return {$: 'UnHandledError', a: a};
 };
 var $elm$parser$Parser$Advanced$Bad = F2(
@@ -6261,7 +6261,7 @@ var $author$project$Library$ParserTools$text = F2(
 								function (c) {
 									return prefix(c);
 								},
-								$author$project$Parser$Error$UnHandledError(2))),
+								$author$project$L1$Error$UnHandledError(2))),
 						$elm$parser$Parser$Advanced$chompWhile(
 							function (c) {
 								return _continue(c);
@@ -6269,19 +6269,19 @@ var $author$project$Library$ParserTools$text = F2(
 				$elm$parser$Parser$Advanced$getOffset),
 			$elm$parser$Parser$Advanced$getSource);
 	});
-var $author$project$Parser$TextCursor$advanceNormal = F3(
+var $author$project$L1$TextCursor$advanceNormal = F3(
 	function (config, position, str) {
 		var delimiterTypes = A2(
 			$elm$core$List$member,
 			A3($elm$core$String$slice, 0, 1, str),
 			_List_fromArray(
-				['|', ':'])) ? $author$project$Parser$Config$AllDelimiters : $author$project$Parser$Config$InteriorDelimiters;
+				['|', ':'])) ? $author$project$L1$Config$AllDelimiters : $author$project$L1$Config$InteriorDelimiters;
 		var _v0 = A2(
 			$elm$parser$Parser$Advanced$run,
 			A2(
 				$author$project$Library$ParserTools$text,
-				A2($author$project$Parser$Config$notDelimiter, $author$project$Parser$Configuration$configuration, delimiterTypes),
-				A2($author$project$Parser$Config$notDelimiter, $author$project$Parser$Configuration$configuration, delimiterTypes)),
+				A2($author$project$L1$Config$notDelimiter, $author$project$L1$Configuration$configuration, delimiterTypes),
+				A2($author$project$L1$Config$notDelimiter, $author$project$L1$Configuration$configuration, delimiterTypes)),
 			str);
 		if (_v0.$ === 'Ok') {
 			var stringData = _v0.a;
@@ -6291,7 +6291,7 @@ var $author$project$Parser$TextCursor$advanceNormal = F3(
 		}
 	});
 var $elm$core$Basics$neq = _Utils_notEqual;
-var $author$project$Parser$TextCursor$advanceVerbatim = F2(
+var $author$project$L1$TextCursor$advanceVerbatim = F2(
 	function (verbatimChar, str) {
 		var predicate = function (c) {
 			return !_Utils_eq(c, verbatimChar);
@@ -6307,24 +6307,24 @@ var $author$project$Parser$TextCursor$advanceVerbatim = F2(
 			return {content: '', finish: 0, start: 0};
 		}
 	});
-var $author$project$Parser$TextCursor$advance = F2(
+var $author$project$L1$TextCursor$advance = F2(
 	function (cursor, textToProcess) {
 		var _v0 = cursor.scannerType;
 		if (_v0.$ === 'NormalScan') {
-			return A3($author$project$Parser$TextCursor$advanceNormal, $author$project$Parser$Configuration$configuration, cursor.scanPoint, textToProcess);
+			return A3($author$project$L1$TextCursor$advanceNormal, $author$project$L1$Configuration$configuration, cursor.scanPoint, textToProcess);
 		} else {
 			var c = _v0.a;
-			return A2($author$project$Parser$TextCursor$advanceVerbatim, c, textToProcess);
+			return A2($author$project$L1$TextCursor$advanceVerbatim, c, textToProcess);
 		}
 	});
-var $author$project$Parser$Branch$ADD = {$: 'ADD'};
-var $author$project$Parser$Branch$COMMIT = {$: 'COMMIT'};
-var $author$project$Parser$Branch$POP = {$: 'POP'};
-var $author$project$Parser$Branch$PUSH = function (a) {
+var $author$project$L1$Branch$ADD = {$: 'ADD'};
+var $author$project$L1$Branch$COMMIT = {$: 'COMMIT'};
+var $author$project$L1$Branch$POP = {$: 'POP'};
+var $author$project$L1$Branch$PUSH = function (a) {
 	return {$: 'PUSH', a: a};
 };
-var $author$project$Parser$Branch$SHORTCIRCUIT = {$: 'SHORTCIRCUIT'};
-var $author$project$Parser$Stack$beginSymbol = function (si) {
+var $author$project$L1$Branch$SHORTCIRCUIT = {$: 'SHORTCIRCUIT'};
+var $author$project$L1$Stack$beginSymbol = function (si) {
 	switch (si.$) {
 		case 'Expect':
 			var data = si.a;
@@ -6407,12 +6407,12 @@ var $elm_community$list_extra$List$Extra$elemIndex = function (x) {
 	return $elm_community$list_extra$List$Extra$findIndex(
 		$elm$core$Basics$eq(x));
 };
-var $author$project$Parser$Check$beginSymbols = _List_fromArray(
+var $author$project$L1$Check$beginSymbols = _List_fromArray(
 	['[']);
-var $author$project$Parser$Check$endSymbols = _List_fromArray(
+var $author$project$L1$Check$endSymbols = _List_fromArray(
 	[']']);
-var $author$project$Parser$Check$symbolValue = function (str) {
-	return A2($elm$core$List$member, str, $author$project$Parser$Check$beginSymbols) ? 1 : (A2($elm$core$List$member, str, $author$project$Parser$Check$endSymbols) ? (-1) : 0);
+var $author$project$L1$Check$symbolValue = function (str) {
+	return A2($elm$core$List$member, str, $author$project$L1$Check$beginSymbols) ? 1 : (A2($elm$core$List$member, str, $author$project$L1$Check$endSymbols) ? (-1) : 0);
 };
 var $elm_community$list_extra$List$Extra$uncons = function (list) {
 	if (!list.b) {
@@ -6424,7 +6424,7 @@ var $elm_community$list_extra$List$Extra$uncons = function (list) {
 			_Utils_Tuple2(first, rest));
 	}
 };
-var $author$project$Parser$Check$getLevels_ = function (_v0) {
+var $author$project$L1$Check$getLevels_ = function (_v0) {
 	getLevels_:
 	while (true) {
 		var k = _v0.a;
@@ -6437,7 +6437,7 @@ var $author$project$Parser$Check$getLevels_ = function (_v0) {
 			var _v2 = _v1.a;
 			var first = _v2.a;
 			var rest = _v2.b;
-			var newK = k + $author$project$Parser$Check$symbolValue(first);
+			var newK = k + $author$project$L1$Check$symbolValue(first);
 			var $temp$_v0 = _Utils_Tuple3(
 				newK,
 				A2($elm$core$List$drop, 1, symbols),
@@ -6447,7 +6447,7 @@ var $author$project$Parser$Check$getLevels_ = function (_v0) {
 		}
 	}
 };
-var $author$project$Parser$Check$getLevels = function (symbols) {
+var $author$project$L1$Check$getLevels = function (symbols) {
 	return $elm$core$List$reverse(
 		function (_v0) {
 			var a = _v0.a;
@@ -6455,7 +6455,7 @@ var $author$project$Parser$Check$getLevels = function (symbols) {
 			var c = _v0.c;
 			return c;
 		}(
-			$author$project$Parser$Check$getLevels_(
+			$author$project$L1$Check$getLevels_(
 				_Utils_Tuple3(0, symbols, _List_Nil))));
 };
 var $elm$core$List$takeReverse = F3(
@@ -6600,8 +6600,8 @@ var $elm_community$list_extra$List$Extra$removeAt = F2(
 			}
 		}
 	});
-var $author$project$Parser$Check$reduceOnce = function (symbolList) {
-	var levels = $author$project$Parser$Check$getLevels(symbolList);
+var $author$project$L1$Check$reduceOnce = function (symbolList) {
+	var levels = $author$project$L1$Check$getLevels(symbolList);
 	var _v0 = A2($elm_community$list_extra$List$Extra$elemIndex, 0, levels);
 	if (_v0.$ === 'Nothing') {
 		return $elm$core$Maybe$Nothing;
@@ -6614,7 +6614,7 @@ var $author$project$Parser$Check$reduceOnce = function (symbolList) {
 				A2($elm_community$list_extra$List$Extra$removeAt, i, symbolList)));
 	}
 };
-var $author$project$Parser$Check$reduceAux = function (symbolList) {
+var $author$project$L1$Check$reduceAux = function (symbolList) {
 	reduceAux:
 	while (true) {
 		if (symbolList.$ === 'Nothing') {
@@ -6624,44 +6624,49 @@ var $author$project$Parser$Check$reduceAux = function (symbolList) {
 				return $elm$core$Maybe$Just(_List_Nil);
 			} else {
 				var symbols = symbolList.a;
-				var $temp$symbolList = $author$project$Parser$Check$reduceOnce(symbols);
+				var $temp$symbolList = $author$project$L1$Check$reduceOnce(symbols);
 				symbolList = $temp$symbolList;
 				continue reduceAux;
 			}
 		}
 	}
 };
-var $author$project$Parser$Check$reduces = function (symbolList) {
+var $author$project$L1$Check$reduces = function (symbolList) {
 	var _v0 = A2(
 		$elm$core$Debug$log,
-		A2($elm$core$Basics$composeR, $author$project$Library$Console$bgMagenta, $author$project$Library$Console$black)('symbolList'),
+		A2($elm$core$Basics$composeR, $author$project$Library$Console$bgMagenta, $author$project$Library$Console$black)('symbolList (reduces)'),
 		A2(
 			$elm$core$String$join,
 			'',
 			$elm$core$List$reverse(symbolList)));
-	var _v1 = $author$project$Parser$Check$reduceAux(
-		$elm$core$Maybe$Just(
-			A2(
-				$elm$core$List$filter,
-				function (s) {
-					return !A2(
-						$elm$core$List$member,
-						s,
-						_List_fromArray(
-							['$', '`', '\"']));
-				},
-				symbolList)));
-	if (_v1.$ === 'Nothing') {
-		return false;
-	} else {
-		if (!_v1.a.b) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+	return A2(
+		$elm$core$Debug$log,
+		A2($elm$core$Basics$composeR, $author$project$Library$Console$bgMagenta, $author$project$Library$Console$black)('symbolList (reduces), value'),
+		function () {
+			var _v1 = $author$project$L1$Check$reduceAux(
+				$elm$core$Maybe$Just(
+					A2(
+						$elm$core$List$filter,
+						function (s) {
+							return !A2(
+								$elm$core$List$member,
+								s,
+								_List_fromArray(
+									['$', '`', '\"']));
+						},
+						symbolList)));
+			if (_v1.$ === 'Nothing') {
+				return false;
+			} else {
+				if (!_v1.a.b) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}());
 };
-var $author$project$Parser$Stack$mark = function (stackItem) {
+var $author$project$L1$Stack$mark = function (stackItem) {
 	switch (stackItem.$) {
 		case 'Expect':
 			var data = stackItem.a;
@@ -6674,13 +6679,13 @@ var $author$project$Parser$Stack$mark = function (stackItem) {
 			return content;
 	}
 };
-var $author$project$Parser$Stack$simplifyStack = function (stack) {
+var $author$project$L1$Stack$simplifyStack = function (stack) {
 	return A2(
 		$elm$core$List$filter,
 		function (s) {
 			return s !== '000';
 		},
-		A2($elm$core$List$map, $author$project$Parser$Stack$mark, stack));
+		A2($elm$core$List$map, $author$project$L1$Stack$mark, stack));
 };
 var $author$project$Library$Console$yellow = function (str) {
 	return A2(
@@ -6689,52 +6694,52 @@ var $author$project$Library$Console$yellow = function (str) {
 		_List_fromArray(
 			['\u001B[33m', str, '\u001B[39m']));
 };
-var $author$project$Parser$Stack$isReducibleWith = F2(
+var $author$project$L1$Stack$isReducibleWith = F2(
 	function (str, stack) {
-		return $author$project$Parser$Check$reduces(
+		return $author$project$L1$Check$reduces(
 			A2(
 				$elm$core$Debug$log,
 				$author$project$Library$Console$yellow('SIMPLIFIED STACK'),
 				function (st) {
 					return A2($elm$core$List$cons, str, st);
 				}(
-					$author$project$Parser$Stack$simplifyStack(stack))));
+					$author$project$L1$Stack$simplifyStack(stack))));
 	});
-var $author$project$Parser$Branch$canPop = F3(
+var $author$project$L1$Branch$canPop = F3(
 	function (configuration_, tc, prefix) {
 		var _v0 = A2(
 			$elm$core$Debug$log,
 			$author$project$Library$Console$cyan('canPop, isReducibleWith'),
 			_Utils_Tuple2(
 				prefix,
-				$author$project$Parser$Stack$simplifyStack(tc.stack)));
+				$author$project$L1$Stack$simplifyStack(tc.stack)));
 		return A2(
 			$elm$core$Debug$log,
 			$author$project$Library$Console$cyan('canPop'),
-			A2($author$project$Parser$Stack$isReducibleWith, prefix, tc.stack));
+			A2($author$project$L1$Stack$isReducibleWith, prefix, tc.stack));
 	});
-var $author$project$Parser$Config$isBeginSymbol = F3(
+var $author$project$L1$Config$isBeginSymbol = F3(
 	function (config, position, str) {
 		return (!position) ? A2($elm$core$List$member, str, config.beginSymbols) : A2($elm$core$List$member, str, config.interiorBeginSymbols);
 	});
-var $author$project$Parser$Config$isEndSymbol = F3(
+var $author$project$L1$Config$isEndSymbol = F3(
 	function (config, position, str) {
 		return (!position) ? A2($elm$core$List$member, str, config.endSymbols) : A2($elm$core$List$member, str, config.interiorEndSymbols);
 	});
-var $author$project$Parser$Stack$isNotReducibleWith = F2(
+var $author$project$L1$Stack$isNotReducibleWith = F2(
 	function (str, stack) {
-		return !$author$project$Parser$Check$reduces(
+		return !$author$project$L1$Check$reduces(
 			function (st) {
 				return _Utils_ap(
 					st,
 					_List_fromArray(
 						[str]));
 			}(
-				$author$project$Parser$Stack$simplifyStack(stack)));
+				$author$project$L1$Stack$simplifyStack(stack)));
 	});
-var $author$project$Parser$Branch$canPush2 = F3(
+var $author$project$L1$Branch$canPush2 = F3(
 	function (configuration_, tc, prefix) {
-		return A3($author$project$Parser$Config$isBeginSymbol, configuration_, tc.scanPoint, prefix) || (A3($author$project$Parser$Config$isEndSymbol, configuration_, tc.scanPoint, prefix) && A2($author$project$Parser$Stack$isNotReducibleWith, prefix, tc.stack));
+		return A3($author$project$L1$Config$isBeginSymbol, configuration_, tc.scanPoint, prefix) || (A3($author$project$L1$Config$isEndSymbol, configuration_, tc.scanPoint, prefix) && A2($author$project$L1$Stack$isNotReducibleWith, prefix, tc.stack));
 	});
 var $elm$core$List$head = function (list) {
 	if (list.b) {
@@ -6745,64 +6750,108 @@ var $elm$core$List$head = function (list) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
-var $author$project$Parser$Config$isVerbatimSymbol = function (str) {
+var $author$project$L1$Config$isVerbatimSymbol = function (str) {
 	return A2(
 		$elm$core$List$member,
 		str,
 		_List_fromArray(
 			['$', '\"', '`', '||']));
 };
-var $author$project$Parser$Branch$canPush = F3(
+var $author$project$L1$Branch$canPush = F3(
 	function (configuration_, tc, prefix) {
-		return $author$project$Parser$Config$isVerbatimSymbol(prefix) ? (_Utils_eq(
+		return $author$project$L1$Config$isVerbatimSymbol(prefix) ? (_Utils_eq(
 			$elm$core$Maybe$Just(prefix),
 			A2(
 				$elm$core$Maybe$map,
-				$author$project$Parser$Stack$beginSymbol,
-				$elm$core$List$head(tc.stack))) ? ($author$project$Parser$Config$isVerbatimSymbol(prefix) ? {isMatch: true, prefix: prefix, value: true} : {isMatch: false, prefix: prefix, value: false}) : {isMatch: false, prefix: prefix, value: true}) : A3($author$project$Parser$Branch$canPush1, configuration_, tc, prefix);
+				$author$project$L1$Stack$beginSymbol,
+				$elm$core$List$head(tc.stack))) ? ($author$project$L1$Config$isVerbatimSymbol(prefix) ? {isMatch: true, prefix: prefix, value: true} : {isMatch: false, prefix: prefix, value: false}) : {isMatch: false, prefix: prefix, value: true}) : A3($author$project$L1$Branch$canPushNonVerbatim, configuration_, tc, prefix);
 	});
-var $author$project$Parser$Branch$canPush1 = F3(
+var $author$project$L1$Branch$canPushNonVerbatim = F3(
 	function (configuration_, tc, prefix) {
-		return (prefix === '') ? {isMatch: false, prefix: '', value: false} : (A3($author$project$Parser$Branch$canPush2, configuration_, tc, prefix) ? {isMatch: false, prefix: prefix, value: true} : A3(
-			$author$project$Parser$Branch$canPush,
-			configuration_,
-			tc,
-			A2($elm$core$String$dropLeft, 1, prefix)));
+		return A2(
+			$elm$core$Debug$log,
+			$author$project$Library$Console$yellow('canPushNonVerbatim, value'),
+			function () {
+				var _v0 = A2(
+					$elm$core$Debug$log,
+					$author$project$Library$Console$yellow('canPushNonVerbatim'),
+					prefix);
+				return (prefix === '') ? {isMatch: false, prefix: '', value: false} : (A3($author$project$L1$Branch$canPush2, configuration_, tc, prefix) ? {isMatch: false, prefix: prefix, value: true} : A3(
+					$author$project$L1$Branch$canPush,
+					configuration_,
+					tc,
+					A2($elm$core$String$dropLeft, 1, prefix)));
+			}());
 	});
-var $author$project$Parser$Stack$isReducible = function (stack) {
-	return $author$project$Parser$Check$reduces(
-		$author$project$Parser$Stack$simplifyStack(stack));
+var $author$project$L1$Stack$isReducible = function (stack) {
+	return $author$project$L1$Check$reduces(
+		$author$project$L1$Stack$simplifyStack(stack));
 };
-var $author$project$Parser$Branch$branch = F4(
+var $author$project$Library$Console$magenta = function (str) {
+	return A2(
+		$elm$core$String$join,
+		'',
+		_List_fromArray(
+			['\u001B[35m', str, '\u001B[39m']));
+};
+var $author$project$L1$Branch$branch = F4(
 	function (configuration_, tc, firstChar, prefix_) {
-		var _v0 = A3($author$project$Parser$Branch$canPush, configuration_, tc, prefix_);
+		var _v0 = A3($author$project$L1$Branch$canPush, configuration_, tc, prefix_);
 		var value = _v0.value;
 		var prefix = _v0.prefix;
 		var isMatch = _v0.isMatch;
-		return A2(
+		if (A2(
 			$elm$core$List$member,
 			prefix,
 			_List_fromArray(
-				['|', '||', ':', '#', '##', '###', '####', '```'])) ? $author$project$Parser$Branch$SHORTCIRCUIT : (($author$project$Parser$Stack$isReducible(tc.stack) && _Utils_eq(
-			A2(
-				$elm$core$Maybe$map,
-				A2($elm$core$Basics$composeR, $author$project$Parser$Stack$beginSymbol, $author$project$Parser$Config$isVerbatimSymbol),
-				$elm$core$List$head(tc.stack)),
-			$elm$core$Maybe$Just(true))) ? $author$project$Parser$Branch$POP : (A3($author$project$Parser$Config$notDelimiter, $author$project$Parser$Configuration$configuration, $author$project$Parser$Config$AllDelimiters, firstChar) ? $author$project$Parser$Branch$ADD : (value ? $author$project$Parser$Branch$PUSH(
-			{isMatch: isMatch, prefix: prefix}) : (A3($author$project$Parser$Branch$canPop, configuration_, tc, prefix_) ? $author$project$Parser$Branch$POP : $author$project$Parser$Branch$COMMIT))));
+				['|', '||', ':', '#', '##', '###', '####', '```']))) {
+			return $author$project$L1$Branch$SHORTCIRCUIT;
+		} else {
+			if ($author$project$L1$Stack$isReducible(tc.stack) && _Utils_eq(
+				A2(
+					$elm$core$Maybe$map,
+					A2($elm$core$Basics$composeR, $author$project$L1$Stack$beginSymbol, $author$project$L1$Config$isVerbatimSymbol),
+					$elm$core$List$head(tc.stack)),
+				$elm$core$Maybe$Just(true))) {
+				var _v1 = A2(
+					$elm$core$Debug$log,
+					$author$project$Library$Console$magenta('BRANCH'),
+					1);
+				return $author$project$L1$Branch$POP;
+			} else {
+				if (A3($author$project$L1$Config$notDelimiter, $author$project$L1$Configuration$configuration, $author$project$L1$Config$AllDelimiters, firstChar)) {
+					return $author$project$L1$Branch$ADD;
+				} else {
+					if (value) {
+						return $author$project$L1$Branch$PUSH(
+							{isMatch: isMatch, prefix: prefix});
+					} else {
+						if (A3($author$project$L1$Branch$canPop, configuration_, tc, prefix_)) {
+							var _v2 = A2(
+								$elm$core$Debug$log,
+								$author$project$Library$Console$magenta('BRANCH'),
+								2);
+							return $author$project$L1$Branch$POP;
+						} else {
+							return $author$project$L1$Branch$COMMIT;
+						}
+					}
+				}
+			}
+		}
 	});
-var $author$project$Parser$AST$Text = F2(
+var $author$project$L1$AST$Text = F2(
 	function (a, b) {
 		return {$: 'Text', a: a, b: b};
 	});
-var $author$project$Parser$MetaData$dummy = {
+var $author$project$L1$MetaData$dummy = {
 	generation: 0,
 	position: {end: 0, start: 0}
 };
-var $author$project$Parser$TextCursor$finishUp = function (tc) {
+var $author$project$L1$TextCursor$finishUp = function (tc) {
 	var parsed = (tc.text === '') ? tc.parsed : A2(
 		$elm$core$List$cons,
-		A2($author$project$Parser$AST$Text, tc.text, $author$project$Parser$MetaData$dummy),
+		A2($author$project$L1$AST$Text, tc.text, $author$project$L1$MetaData$dummy),
 		tc.parsed);
 	var complete = _Utils_ap(parsed, tc.complete);
 	var _v0 = A2(
@@ -6813,7 +6862,7 @@ var $author$project$Parser$TextCursor$finishUp = function (tc) {
 		tc,
 		{complete: complete, parsed: _List_Nil});
 };
-var $author$project$Parser$Stack$show = function (item) {
+var $author$project$L1$Stack$show = function (item) {
 	switch (item.$) {
 		case 'Expect':
 			var data = item.a;
@@ -6826,14 +6875,14 @@ var $author$project$Parser$Stack$show = function (item) {
 			return content;
 	}
 };
-var $author$project$Parser$TextCursor$finishUpWithReducibleStack = F2(
+var $author$project$L1$TextCursor$finishUpWithReducibleStack = F2(
 	function (parse, tc) {
 		var stackData = A2(
 			$elm$core$String$join,
 			'',
 			A2(
 				$elm$core$List$map,
-				$author$project$Parser$Stack$show,
+				$author$project$L1$Stack$show,
 				$elm$core$List$reverse(tc.stack)));
 		var _v0 = A2(
 			$elm$core$Debug$log,
@@ -6848,7 +6897,7 @@ var $author$project$Parser$TextCursor$finishUpWithReducibleStack = F2(
 					tc.complete)
 			});
 	});
-var $author$project$Parser$Check$matches = F2(
+var $author$project$L1$Check$matches = F2(
 	function (first, last) {
 		return ((first === '[') && (last === ']')) ? true : (((first === '$') && (last === '$')) ? true : (((first === '`') && (last === '`')) ? true : false));
 	});
@@ -6865,7 +6914,7 @@ var $elm_community$list_extra$List$Extra$unconsLast = function (list) {
 				$elm$core$List$reverse(rest)));
 	}
 };
-var $author$project$Parser$Check$reduces2 = function (list) {
+var $author$project$L1$Check$reduces2 = function (list) {
 	reduces2:
 	while (true) {
 		if (!list.b) {
@@ -6880,7 +6929,7 @@ var $author$project$Parser$Check$reduces2 = function (list) {
 				var _v2 = _v1.a;
 				var last = _v2.a;
 				var rest2 = _v2.b;
-				if (A2($author$project$Parser$Check$matches, first, last)) {
+				if (A2($author$project$L1$Check$matches, first, last)) {
 					var $temp$list = rest2;
 					list = $temp$list;
 					continue reduces2;
@@ -6891,16 +6940,16 @@ var $author$project$Parser$Check$reduces2 = function (list) {
 		}
 	}
 };
-var $author$project$Parser$Stack$isStrictlyReducible = function (stack) {
+var $author$project$L1$Stack$isStrictlyReducible = function (stack) {
 	return _Utils_eq(
-		A2($elm$core$Basics$composeR, $author$project$Parser$Stack$simplifyStack, $author$project$Parser$Check$reduces2)(stack),
+		A2($elm$core$Basics$composeR, $author$project$L1$Stack$simplifyStack, $author$project$L1$Check$reduces2)(stack),
 		_List_Nil);
 };
-var $author$project$Parser$AST$Element = F3(
+var $author$project$L1$AST$Element = F3(
 	function (a, b, c) {
 		return {$: 'Element', a: a, b: b, c: c};
 	});
-var $author$project$Parser$AST$Name = function (a) {
+var $author$project$L1$AST$Name = function (a) {
 	return {$: 'Name', a: a};
 };
 var $author$project$Library$Console$bgBlue = function (str) {
@@ -6910,20 +6959,13 @@ var $author$project$Library$Console$bgBlue = function (str) {
 		_List_fromArray(
 			['\u001B[44m', str, '\u001B[49m']));
 };
-var $author$project$Library$Console$magenta = function (str) {
-	return A2(
-		$elm$core$String$join,
-		'',
-		_List_fromArray(
-			['\u001B[35m', str, '\u001B[39m']));
-};
-var $author$project$Parser$Stack$showStack = function (stack) {
+var $author$project$L1$Stack$showStack = function (stack) {
 	return A2(
 		$elm$core$String$join,
 		' ',
-		A2($elm$core$List$map, $author$project$Parser$Stack$show, stack));
+		A2($elm$core$List$map, $author$project$L1$Stack$show, stack));
 };
-var $author$project$Parser$Stack$startPosition = function (si) {
+var $author$project$L1$Stack$startPosition = function (si) {
 	switch (si.$) {
 		case 'Expect':
 			var data = si.a;
@@ -6945,7 +6987,7 @@ var $elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
-var $author$project$Parser$TextCursor$resolveError = function (tc) {
+var $author$project$L1$TextCursor$resolveError = function (tc) {
 	var maybeBottomOfStack = A2(
 		$elm$core$Debug$log,
 		$author$project$Library$Console$bgBlue('badStackItem'),
@@ -6959,7 +7001,7 @@ var $author$project$Parser$TextCursor$resolveError = function (tc) {
 		A2(
 			$elm$core$Maybe$withDefault,
 			-1,
-			A2($elm$core$Maybe$map, $author$project$Parser$Stack$startPosition, maybeBottomOfStack)));
+			A2($elm$core$Maybe$map, $author$project$L1$Stack$startPosition, maybeBottomOfStack)));
 	var goodText = A2(
 		$elm$core$Debug$log,
 		$author$project$Library$Console$magenta('goodText'),
@@ -6970,12 +7012,12 @@ var $author$project$Parser$TextCursor$resolveError = function (tc) {
 		A2(
 			$elm$core$Maybe$withDefault,
 			'??',
-			A2($elm$core$Maybe$map, $author$project$Parser$Stack$beginSymbol, maybeBottomOfStack)));
+			A2($elm$core$Maybe$map, $author$project$L1$Stack$beginSymbol, maybeBottomOfStack)));
 	var errorElement = A3(
-		$author$project$Parser$AST$Element,
-		$author$project$Parser$AST$Name('error'),
-		A2($author$project$Parser$AST$Text, ' unmatched ' + badStackItemSymbol, $author$project$Parser$MetaData$dummy),
-		$author$project$Parser$MetaData$dummy);
+		$author$project$L1$AST$Element,
+		$author$project$L1$AST$Name('error'),
+		A2($author$project$L1$AST$Text, ' unmatched ' + badStackItemSymbol, $author$project$L1$MetaData$dummy),
+		$author$project$L1$MetaData$dummy);
 	var _v0 = A2(
 		$elm$core$Debug$log,
 		$author$project$Library$Console$magenta('RESOLVE ERROR'),
@@ -6983,14 +7025,14 @@ var $author$project$Parser$TextCursor$resolveError = function (tc) {
 	var _v1 = A2(
 		$elm$core$Debug$log,
 		$author$project$Library$Console$magenta('STACK STATE'),
-		$author$project$Parser$Stack$showStack(tc.stack));
+		$author$project$L1$Stack$showStack(tc.stack));
 	var _v2 = A2(
 		$elm$core$Debug$log,
 		$author$project$Library$Console$bgBlue('start positions'),
 		A2(
 			$elm$core$List$map,
 			function (item) {
-				return $author$project$Parser$Stack$startPosition(item);
+				return $author$project$L1$Stack$startPosition(item);
 			},
 			tc.stack));
 	return _Utils_update(
@@ -7004,18 +7046,18 @@ var $author$project$Parser$TextCursor$resolveError = function (tc) {
 			text: ''
 		});
 };
-var $author$project$Parser$TextCursor$commit_ = F2(
+var $author$project$L1$TextCursor$commit_ = F2(
 	function (parse, tc) {
 		var _v0 = tc.stack;
 		if (!_v0.b) {
-			return $author$project$Parser$TextCursor$finishUp(tc);
+			return $author$project$L1$TextCursor$finishUp(tc);
 		} else {
-			return $author$project$Parser$Stack$isStrictlyReducible(tc.stack) ? A2($author$project$Parser$TextCursor$finishUpWithReducibleStack, parse, tc) : $author$project$Parser$TextCursor$resolveError(tc);
+			return $author$project$L1$Stack$isStrictlyReducible(tc.stack) ? A2($author$project$L1$TextCursor$finishUpWithReducibleStack, parse, tc) : $author$project$L1$TextCursor$resolveError(tc);
 		}
 	});
-var $author$project$Parser$TextCursor$commit = F2(
+var $author$project$L1$TextCursor$commit = F2(
 	function (parse, cursor) {
-		return A2($author$project$Parser$TextCursor$commit_, parse, cursor);
+		return A2($author$project$L1$TextCursor$commit_, parse, cursor);
 	});
 var $author$project$Library$Console$bgRed = function (str) {
 	return A2(
@@ -7024,7 +7066,7 @@ var $author$project$Library$Console$bgRed = function (str) {
 		_List_fromArray(
 			['\u001B[41m', str, '\u001B[49m']));
 };
-var $author$project$Parser$Loop$exit = F3(
+var $author$project$L1$Loop$exit = F3(
 	function (parser, cursor, message) {
 		var _v0 = $elm$core$Debug$log(
 			$author$project$Library$Console$bgRed(
@@ -7034,55 +7076,42 @@ var $author$project$Parser$Loop$exit = F3(
 				cursor,
 				{message: message}));
 	});
-var $author$project$Parser$TextCursor$handlePop = F4(
-	function (parse, prefix, stackTop, cursor) {
-		var data = _Utils_ap(
-			$author$project$Parser$Stack$showStack(
-				$elm$core$List$reverse(cursor.stack)),
-			prefix);
-		return _Utils_update(
-			cursor,
-			{
-				count: cursor.count + 1,
-				parsed: A2(
-					$elm$core$List$cons,
-					parse(data),
-					cursor.parsed),
-				scanPoint: cursor.scanPoint + 1,
-				stack: _List_Nil
-			});
-	});
-var $author$project$Parser$TextCursor$pop = F3(
+var $author$project$L1$TextCursor$pop = F3(
 	function (parse, prefix, cursor) {
 		var _v0 = $elm$core$List$head(cursor.stack);
 		if (_v0.$ === 'Nothing') {
 			return _Utils_update(
 				cursor,
-				{count: cursor.count + 1, scanPoint: cursor.scanPoint + 1, scannerType: $author$project$Parser$TextCursor$NormalScan});
+				{count: cursor.count + 1, scanPoint: cursor.scanPoint + 1, scannerType: $author$project$L1$TextCursor$NormalScan});
 		} else {
 			var stackTop_ = _v0.a;
-			switch (stackTop_.$) {
-				case 'Expect':
-					return A4($author$project$Parser$TextCursor$handlePop, parse, prefix, stackTop_, cursor);
-				case 'TextItem':
-					return _Utils_update(
-						cursor,
-						{count: cursor.count + 1});
-				default:
-					return A4($author$project$Parser$TextCursor$handlePop, parse, prefix, stackTop_, cursor);
-			}
+			var data = _Utils_ap(
+				$author$project$L1$Stack$showStack(
+					$elm$core$List$reverse(cursor.stack)),
+				prefix);
+			return _Utils_update(
+				cursor,
+				{
+					count: cursor.count + 1,
+					parsed: A2(
+						$elm$core$List$cons,
+						parse(data),
+						cursor.parsed),
+					scanPoint: cursor.scanPoint + 1,
+					stack: _List_Nil
+				});
 		}
 	});
-var $author$project$Parser$Loop$pop = F3(
+var $author$project$L1$Loop$pop = F3(
 	function (parser, prefix, cursor) {
 		return $author$project$Library$ParserTools$Loop(
 			A3(
-				$author$project$Parser$TextCursor$pop,
+				$author$project$L1$TextCursor$pop,
 				parser,
 				prefix,
 				_Utils_update(
 					cursor,
-					{message: 'POP', scannerType: $author$project$Parser$TextCursor$NormalScan})));
+					{message: 'POP', scannerType: $author$project$L1$TextCursor$NormalScan})));
 	});
 var $author$project$Library$ParserTools$prefixWith = F2(
 	function (c, str) {
@@ -7104,7 +7133,7 @@ var $author$project$Library$ParserTools$prefixWith = F2(
 			return {content: '', finish: 0, start: 0};
 		}
 	});
-var $author$project$Parser$Print$printCaret = $author$project$Library$Console$bgRed(' ^ ');
+var $author$project$L1$Print$printCaret = $author$project$Library$Console$bgRed(' ^ ');
 var $author$project$Render$Text$print = function (element) {
 	switch (element.$) {
 		case 'Text':
@@ -7140,7 +7169,7 @@ var $author$project$Render$Text$print = function (element) {
 			return 'EMPTY';
 	}
 };
-var $author$project$Parser$Print$printComplete = function (cursor) {
+var $author$project$L1$Print$printComplete = function (cursor) {
 	return $author$project$Library$Console$bgBlue(
 		function (x) {
 			return x + ' ';
@@ -7157,7 +7186,7 @@ var $author$project$Library$Console$bgYellow = function (str) {
 		_List_fromArray(
 			['\u001B[43m', str, '\u001B[49m']));
 };
-var $author$project$Parser$Print$printCursorText = function (cursor) {
+var $author$project$L1$Print$printCursorText = function (cursor) {
 	return $author$project$Library$Console$bgYellow(
 		$author$project$Library$Console$black(cursor.text + ' '));
 };
@@ -7203,7 +7232,7 @@ var $elm$core$String$padLeft = F3(
 			string);
 	});
 var $elm$core$Debug$toString = _Debug_toString;
-var $author$project$Parser$Print$printMessage = function (cursor) {
+var $author$project$L1$Print$printMessage = function (cursor) {
 	return $author$project$Library$Console$blue(
 		$author$project$Library$Console$bgCyan(
 			A3(
@@ -7216,7 +7245,7 @@ var $author$project$Parser$Print$printMessage = function (cursor) {
 				_Utils_chr('.'),
 				cursor.message) + ($elm$core$Debug$toString(cursor.scannerType) + ' :: '))));
 };
-var $author$project$Parser$Print$printParsed = function (cursor) {
+var $author$project$L1$Print$printParsed = function (cursor) {
 	return $author$project$Library$Console$black(
 		$author$project$Library$Console$bgCyan(
 			function (x) {
@@ -7234,7 +7263,7 @@ var $author$project$Library$Console$bgGreen = function (str) {
 		_List_fromArray(
 			['\u001B[42m', str, '\u001B[49m']));
 };
-var $author$project$Parser$Print$printRemaining = function (cursor) {
+var $author$project$L1$Print$printRemaining = function (cursor) {
 	return $author$project$Library$Console$bgGreen(
 		$author$project$Library$Console$black(
 			A2($elm$core$String$dropLeft, cursor.scanPoint, cursor.source) + ' '));
@@ -7248,7 +7277,7 @@ var $elm$core$String$padRight = F3(
 				n - $elm$core$String$length(string),
 				$elm$core$String$fromChar(_char)));
 	});
-var $author$project$Parser$Print$printScanPoint = function (cursor) {
+var $author$project$L1$Print$printScanPoint = function (cursor) {
 	var firstChar = A3($elm$core$String$slice, cursor.scanPoint, cursor.scanPoint + 1, cursor.source);
 	return $author$project$Library$Console$magenta(
 		A3(
@@ -7259,16 +7288,16 @@ var $author$project$Parser$Print$printScanPoint = function (cursor) {
 				$elm$core$String$fromInt(cursor.scanPoint),
 				firstChar)));
 };
-var $author$project$Parser$Print$printSimplifiedStack = function (items) {
+var $author$project$L1$Print$printSimplifiedStack = function (items) {
 	return ' ' + ($author$project$Library$Console$black(
 		$author$project$Library$Console$bgCyan(
 			A2(
 				$elm$core$String$join,
 				'',
-				$author$project$Parser$Stack$simplifyStack(
+				$author$project$L1$Stack$simplifyStack(
 					$elm$core$List$reverse(items))))) + ' ');
 };
-var $author$project$Parser$Stack$getContent = function (si) {
+var $author$project$L1$Stack$getContent = function (si) {
 	switch (si.$) {
 		case 'EndMark':
 			return $elm$core$Maybe$Nothing;
@@ -7281,16 +7310,16 @@ var $author$project$Parser$Stack$getContent = function (si) {
 	}
 };
 var $elm$core$String$trim = _String_trim;
-var $author$project$Parser$Print$printStackItem = function (item) {
+var $author$project$L1$Print$printStackItem = function (item) {
 	switch (item.$) {
 		case 'Expect':
 			return _Utils_ap(
-				$author$project$Parser$Stack$beginSymbol(item),
+				$author$project$L1$Stack$beginSymbol(item),
 				$elm$core$String$trim(
 					A2(
 						$elm$core$Maybe$withDefault,
 						'@NOTHING (3)',
-						$author$project$Parser$Stack$getContent(item))));
+						$author$project$L1$Stack$getContent(item))));
 		case 'TextItem':
 			var data = item.a;
 			return data.content;
@@ -7299,7 +7328,7 @@ var $author$project$Parser$Print$printStackItem = function (item) {
 			return content;
 	}
 };
-var $author$project$Parser$Print$printStack = function (items) {
+var $author$project$L1$Print$printStack = function (items) {
 	return ' ' + ($author$project$Library$Console$black(
 		$author$project$Library$Console$bgMagenta(
 			A2(
@@ -7307,69 +7336,78 @@ var $author$project$Parser$Print$printStack = function (items) {
 				' ',
 				A2(
 					$elm$core$List$map,
-					$author$project$Parser$Print$printStackItem,
+					$author$project$L1$Print$printStackItem,
 					$elm$core$List$reverse(items))))) + ' ');
 };
-var $author$project$Parser$Print$print = function (cursor) {
+var $author$project$L1$Print$print = function (cursor) {
 	return _Utils_ap(
-		$author$project$Parser$Print$printMessage(cursor),
+		$author$project$L1$Print$printMessage(cursor),
 		_Utils_ap(
-			$author$project$Parser$Print$printScanPoint(cursor),
+			$author$project$L1$Print$printScanPoint(cursor),
 			_Utils_ap(
-				$author$project$Parser$Print$printComplete(cursor),
+				$author$project$L1$Print$printComplete(cursor),
 				_Utils_ap(
-					$author$project$Parser$Print$printCursorText(cursor),
+					$author$project$L1$Print$printCursorText(cursor),
 					_Utils_ap(
-						$author$project$Parser$Print$printParsed(cursor),
+						$author$project$L1$Print$printParsed(cursor),
 						_Utils_ap(
-							$author$project$Parser$Print$printCaret,
+							$author$project$L1$Print$printCaret,
 							_Utils_ap(
-								$author$project$Parser$Print$printRemaining(cursor),
+								$author$project$L1$Print$printRemaining(cursor),
 								_Utils_ap(
-									$author$project$Parser$Print$printStack(cursor.stack),
-									$author$project$Parser$Print$printSimplifiedStack(cursor.stack)))))))));
+									$author$project$L1$Print$printStack(cursor.stack),
+									$author$project$L1$Print$printSimplifiedStack(cursor.stack)))))))));
 };
-var $author$project$Parser$TextCursor$EndMark_ = function (a) {
+var $author$project$L1$TextCursor$EndMark_ = function (a) {
 	return {$: 'EndMark_', a: a};
 };
-var $author$project$Parser$TextCursor$Expect_ = function (a) {
+var $author$project$L1$TextCursor$Expect_ = function (a) {
 	return {$: 'Expect_', a: a};
 };
-var $author$project$Parser$TextCursor$VerbatimScan = function (a) {
+var $author$project$L1$TextCursor$VerbatimScan = function (a) {
 	return {$: 'VerbatimScan', a: a};
 };
-var $author$project$Parser$Config$lookup = F2(
+var $author$project$L1$Config$lookup = F2(
 	function (config, prefix) {
 		return A2($elm$core$Dict$get, prefix, config.expectationsDict);
 	});
-var $author$project$Parser$Stack$EndMark = function (a) {
+var $author$project$L1$Stack$EndMark = function (a) {
 	return {$: 'EndMark', a: a};
 };
-var $author$project$Parser$Stack$Expect = function (a) {
+var $author$project$L1$Stack$Expect = function (a) {
 	return {$: 'Expect', a: a};
 };
-var $author$project$Parser$Stack$TextItem = function (a) {
+var $author$project$L1$Stack$TextItem = function (a) {
 	return {$: 'TextItem', a: a};
 };
-var $author$project$Parser$TextCursor$push = F3(
+var $author$project$L1$TextCursor$push = F3(
 	function (prefixData, proto, tc) {
 		var prefix = prefixData.prefix;
 		var isMatch = prefixData.isMatch;
-		var newText = isMatch ? {content: '', finish: 0, start: 0} : A2(
-			$author$project$Parser$TextCursor$advance,
-			tc,
-			A2(
-				$elm$core$String$dropLeft,
-				tc.scanPoint + $elm$core$String$length(prefix),
-				tc.source));
-		var scanPointIncrement = ($elm$core$String$length(prefix) + newText.finish) - newText.start;
+		var newText = A2(
+			$elm$core$Debug$log,
+			$author$project$Library$Console$yellow('newText'),
+			isMatch ? {content: '', finish: 0, start: 0} : A2(
+				$author$project$L1$TextCursor$advance,
+				tc,
+				A2(
+					$elm$core$String$dropLeft,
+					tc.scanPoint + $elm$core$String$length(prefix),
+					tc.source)));
 		var newContent = newText.content;
+		var scanPointIncrement = function () {
+			if (proto.$ === 'Expect_') {
+				return ($elm$core$String$length(prefix) + newText.finish) - newText.start;
+			} else {
+				return (newContent === '') ? $elm$core$String$length(prefix) : (($elm$core$String$length(prefix) + newText.finish) - newText.start);
+			}
+		}();
 		var newStack = function () {
 			if (proto.$ === 'Expect_') {
 				var expectation = proto.a;
 				return A2(
 					$elm$core$List$cons,
-					$author$project$Parser$Stack$Expect(
+					$author$project$L1$Stack$Expect(
 						{
 							content: newContent,
 							count: tc.count,
@@ -7381,47 +7419,60 @@ var $author$project$Parser$TextCursor$push = F3(
 			} else {
 				var prefix_ = proto.a;
 				return (newContent === '') ? A2(
-					$elm$core$List$cons,
-					$author$project$Parser$Stack$EndMark(
-						{
-							content: prefix_,
-							position: {end: -1, start: -1}
-						}),
-					tc.stack) : A2(
-					$elm$core$List$cons,
-					$author$project$Parser$Stack$TextItem(
-						{
-							content: newContent,
-							position: {end: -1, start: -1}
-						}),
+					$elm$core$Debug$log,
+					$author$project$Library$Console$yellow('PUSH END MARK (1)'),
 					A2(
 						$elm$core$List$cons,
-						$author$project$Parser$Stack$EndMark(
+						$author$project$L1$Stack$EndMark(
 							{
 								content: prefix_,
-								position: {end: -1, start: -1}
+								position: {end: tc.scanPoint + scanPointIncrement, start: tc.scanPoint}
 							}),
-						tc.stack));
+						tc.stack)) : A2(
+					$elm$core$Debug$log,
+					$author$project$Library$Console$yellow('PUSH END MARK (2)'),
+					A2(
+						$elm$core$List$cons,
+						$author$project$L1$Stack$TextItem(
+							{
+								content: newContent,
+								position: {
+									end: tc.scanPoint + $elm$core$String$length(newContent),
+									start: tc.scanPoint + 1
+								}
+							}),
+						A2(
+							$elm$core$List$cons,
+							$author$project$L1$Stack$EndMark(
+								{
+									content: prefix_,
+									position: {end: -1, start: -1}
+								}),
+							tc.stack)));
 			}
 		}();
+		var _v0 = A2(
+			$elm$core$Debug$log,
+			$author$project$Library$Console$yellow('HERE IS'),
+			'TC.push');
 		return _Utils_update(
 			tc,
 			{count: tc.count + 1, scanPoint: tc.scanPoint + scanPointIncrement, stack: newStack});
 	});
-var $author$project$Parser$Loop$push = F2(
+var $author$project$L1$Loop$push = F2(
 	function (cursor, prefixData) {
 		var prefix = prefixData.prefix;
 		var isMatch = prefixData.isMatch;
-		var _v0 = A2($author$project$Parser$Config$lookup, $author$project$Parser$Configuration$configuration, prefix);
+		var _v0 = A2($author$project$L1$Config$lookup, $author$project$L1$Configuration$configuration, prefix);
 		if (_v0.$ === 'Nothing') {
 			return $author$project$Library$ParserTools$Loop(
 				A3(
-					$author$project$Parser$TextCursor$push,
+					$author$project$L1$TextCursor$push,
 					A2(
 						$elm$core$Debug$log,
 						$author$project$Library$Console$cyan('PUSHING MARK with prefix'),
 						prefixData),
-					$author$project$Parser$TextCursor$EndMark_(prefix),
+					$author$project$L1$TextCursor$EndMark_(prefix),
 					_Utils_update(
 						cursor,
 						{message: 'PUSH Endmark ' + prefix})));
@@ -7431,26 +7482,26 @@ var $author$project$Parser$Loop$push = F2(
 				$elm$core$List$member,
 				expectation.etype,
 				_List_fromArray(
-					[$author$project$Parser$Config$CodeType, $author$project$Parser$Config$InlineMathType, $author$project$Parser$Config$QuotedType])) ? $author$project$Parser$TextCursor$VerbatimScan(
+					[$author$project$L1$Config$CodeType, $author$project$L1$Config$InlineMathType, $author$project$L1$Config$QuotedType])) ? $author$project$L1$TextCursor$VerbatimScan(
 				A2(
 					$elm$core$Maybe$withDefault,
 					_Utils_chr('0'),
-					$author$project$Parser$Config$firstChar(expectation.beginSymbol))) : $author$project$Parser$TextCursor$NormalScan;
+					$author$project$L1$Config$firstChar(expectation.beginSymbol))) : $author$project$L1$TextCursor$NormalScan;
 			return $author$project$Library$ParserTools$Loop(
 				A3(
-					$author$project$Parser$TextCursor$push,
+					$author$project$L1$TextCursor$push,
 					A2(
 						$elm$core$Debug$log,
 						$author$project$Library$Console$cyan('PUSHING with prefix'),
 						prefixData),
-					$author$project$Parser$TextCursor$Expect_(expectation),
+					$author$project$L1$TextCursor$Expect_(expectation),
 					_Utils_update(
 						cursor,
 						{message: 'PUSH', scannerType: scannerType})));
 		}
 	});
 var $elm$core$String$lines = _String_lines;
-var $author$project$Parser$Handle$doublePipe = function (tc) {
+var $author$project$L1$Handle$doublePipe = function (tc) {
 	var lines = $elm$core$String$lines(tc.source);
 	var _v0 = $elm$core$List$head(lines);
 	if (_v0.$ === 'Nothing') {
@@ -7459,7 +7510,7 @@ var $author$project$Parser$Handle$doublePipe = function (tc) {
 			{
 				complete: A2(
 					$elm$core$List$cons,
-					A2($author$project$Parser$AST$Text, 'Error, no content', $author$project$Parser$MetaData$dummy),
+					A2($author$project$L1$AST$Text, 'Error, no content', $author$project$L1$MetaData$dummy),
 					tc.complete)
 			});
 	} else {
@@ -7469,11 +7520,11 @@ var $author$project$Parser$Handle$doublePipe = function (tc) {
 			'\n',
 			A2($elm$core$List$drop, 1, lines));
 		var element = A3(
-			$author$project$Parser$AST$Element,
-			$author$project$Parser$AST$Name(
+			$author$project$L1$AST$Element,
+			$author$project$L1$AST$Name(
 				A2($elm$core$String$dropLeft, 2, name)),
-			A2($author$project$Parser$AST$Text, body, $author$project$Parser$MetaData$dummy),
-			$author$project$Parser$MetaData$dummy);
+			A2($author$project$L1$AST$Text, body, $author$project$L1$MetaData$dummy),
+			$author$project$L1$MetaData$dummy);
 		return _Utils_update(
 			tc,
 			{
@@ -7481,13 +7532,13 @@ var $author$project$Parser$Handle$doublePipe = function (tc) {
 			});
 	}
 };
-var $author$project$Parser$Error$CElement = {$: 'CElement'};
-var $author$project$Parser$AST$EList = F2(
+var $author$project$L1$Error$CElement = {$: 'CElement'};
+var $author$project$L1$AST$EList = F2(
 	function (a, b) {
 		return {$: 'EList', a: a, b: b};
 	});
-var $author$project$Parser$Error$ExpectingSpace = {$: 'ExpectingSpace'};
-var $author$project$Parser$Error$ExpectingHashMark = {$: 'ExpectingHashMark'};
+var $author$project$L1$Error$ExpectingSpace = {$: 'ExpectingSpace'};
+var $author$project$L1$Error$ExpectingHashMark = {$: 'ExpectingHashMark'};
 var $elm$parser$Parser$Advanced$Token = F2(
 	function (a, b) {
 		return {$: 'Token', a: a, b: b};
@@ -7514,9 +7565,9 @@ var $elm$parser$Parser$Advanced$token = function (_v0) {
 		});
 };
 var $elm$parser$Parser$Advanced$symbol = $elm$parser$Parser$Advanced$token;
-var $author$project$Parser$Parser$hashMark = $elm$parser$Parser$Advanced$symbol(
-	A2($elm$parser$Parser$Advanced$Token, '#', $author$project$Parser$Error$ExpectingHashMark));
-var $author$project$Parser$Parser$hashMarks = A2(
+var $author$project$L1$Parser$hashMark = $elm$parser$Parser$Advanced$symbol(
+	A2($elm$parser$Parser$Advanced$Token, '#', $author$project$L1$Error$ExpectingHashMark));
+var $author$project$L1$Parser$hashMarks = A2(
 	$elm$parser$Parser$Advanced$keeper,
 	A2(
 		$elm$parser$Parser$Advanced$keeper,
@@ -7527,7 +7578,7 @@ var $author$project$Parser$Parser$hashMarks = A2(
 				})),
 		A2(
 			$elm$parser$Parser$Advanced$ignorer,
-			A2($elm$parser$Parser$Advanced$ignorer, $elm$parser$Parser$Advanced$getOffset, $author$project$Parser$Parser$hashMark),
+			A2($elm$parser$Parser$Advanced$ignorer, $elm$parser$Parser$Advanced$getOffset, $author$project$L1$Parser$hashMark),
 			$elm$parser$Parser$Advanced$chompWhile(
 				function (c) {
 					return _Utils_eq(
@@ -7614,7 +7665,7 @@ var $elm$parser$Parser$Advanced$loop = F2(
 var $elm$parser$Parser$Advanced$Done = function (a) {
 	return {$: 'Done', a: a};
 };
-var $author$project$Parser$Error$EndOfInput = {$: 'EndOfInput'};
+var $author$project$L1$Error$EndOfInput = {$: 'EndOfInput'};
 var $elm$parser$Parser$Advanced$Loop = function (a) {
 	return {$: 'Loop', a: a};
 };
@@ -7704,7 +7755,7 @@ var $author$project$Library$ParserTools$manyHelp = F2(
 						return $elm$parser$Parser$Advanced$Done(
 							$elm$core$List$reverse(vs));
 					},
-					$elm$parser$Parser$Advanced$end($author$project$Parser$Error$EndOfInput)),
+					$elm$parser$Parser$Advanced$end($author$project$L1$Error$EndOfInput)),
 					A2(
 					$elm$parser$Parser$Advanced$keeper,
 					$elm$parser$Parser$Advanced$succeed(
@@ -7728,18 +7779,18 @@ var $author$project$Library$ParserTools$many = function (p) {
 		_List_Nil,
 		$author$project$Library$ParserTools$manyHelp(p));
 };
-var $author$project$Parser$Error$CArgsAndBody = {$: 'CArgsAndBody'};
-var $author$project$Parser$Error$CBody = {$: 'CBody'};
-var $author$project$Parser$AST$Undefined = {$: 'Undefined'};
-var $author$project$Parser$AST$Code = {$: 'Code'};
-var $author$project$Parser$AST$Verbatim = F3(
+var $author$project$L1$Error$CArgsAndBody = {$: 'CArgsAndBody'};
+var $author$project$L1$Error$CBody = {$: 'CBody'};
+var $author$project$L1$AST$Undefined = {$: 'Undefined'};
+var $author$project$L1$AST$Code = {$: 'Code'};
+var $author$project$L1$AST$Verbatim = F3(
 	function (a, b, c) {
 		return {$: 'Verbatim', a: a, b: b, c: c};
 	});
-var $author$project$Parser$Error$ExpectingBackTick = {$: 'ExpectingBackTick'};
-var $author$project$Parser$Parser$backTick = $elm$parser$Parser$Advanced$symbol(
-	A2($elm$parser$Parser$Advanced$Token, '`', $author$project$Parser$Error$ExpectingBackTick));
-var $author$project$Parser$Parser$meta = F3(
+var $author$project$L1$Error$ExpectingBackTick = {$: 'ExpectingBackTick'};
+var $author$project$L1$Parser$backTick = $elm$parser$Parser$Advanced$symbol(
+	A2($elm$parser$Parser$Advanced$Token, '`', $author$project$L1$Error$ExpectingBackTick));
+var $author$project$L1$Parser$meta = F3(
 	function (generation, start, finish) {
 		return {
 			generation: generation,
@@ -7800,7 +7851,7 @@ var $elm$parser$Parser$Advanced$spaces = $elm$parser$Parser$Advanced$chompWhile(
 			c,
 			_Utils_chr('\r')));
 	});
-var $author$project$Parser$Parser$rawText_ = function (stopChars) {
+var $author$project$L1$Parser$rawText_ = function (stopChars) {
 	return A2(
 		$elm$parser$Parser$Advanced$keeper,
 		A2(
@@ -7826,24 +7877,24 @@ var $author$project$Parser$Parser$rawText_ = function (stopChars) {
 			$elm$parser$Parser$Advanced$getOffset),
 		$elm$parser$Parser$Advanced$getSource);
 };
-var $author$project$Parser$Parser$string_ = function (stopChars) {
+var $author$project$L1$Parser$string_ = function (stopChars) {
 	return A2(
 		$elm$parser$Parser$Advanced$map,
 		function ($) {
 			return $.content;
 		},
-		$author$project$Parser$Parser$rawText_(stopChars));
+		$author$project$L1$Parser$rawText_(stopChars));
 };
-var $author$project$Parser$Parser$string = function (stopChars) {
+var $author$project$L1$Parser$string = function (stopChars) {
 	return A2(
 		$author$project$Library$ParserTools$first,
-		$author$project$Parser$Parser$string_(stopChars),
+		$author$project$L1$Parser$string_(stopChars),
 		$elm$parser$Parser$Advanced$spaces);
 };
-var $author$project$Parser$Parser$codeElement = function (generation) {
+var $author$project$L1$Parser$codeElement = function (generation) {
 	return A2(
 		$elm$parser$Parser$Advanced$inContext,
-		$author$project$Parser$Error$CElement,
+		$author$project$L1$Error$CElement,
 		A2(
 			$elm$parser$Parser$Advanced$keeper,
 			A2(
@@ -7856,26 +7907,26 @@ var $author$project$Parser$Parser$codeElement = function (generation) {
 							F4(
 								function (start, content, end, source) {
 									return A3(
-										$author$project$Parser$AST$Verbatim,
-										$author$project$Parser$AST$Code,
+										$author$project$L1$AST$Verbatim,
+										$author$project$L1$AST$Code,
 										content,
-										A3($author$project$Parser$Parser$meta, generation, start, end));
+										A3($author$project$L1$Parser$meta, generation, start, end));
 								})),
-						A2($elm$parser$Parser$Advanced$ignorer, $elm$parser$Parser$Advanced$getOffset, $author$project$Parser$Parser$backTick)),
+						A2($elm$parser$Parser$Advanced$ignorer, $elm$parser$Parser$Advanced$getOffset, $author$project$L1$Parser$backTick)),
 					A2(
 						$elm$parser$Parser$Advanced$ignorer,
-						$author$project$Parser$Parser$string(
+						$author$project$L1$Parser$string(
 							_List_fromArray(
 								[
 									_Utils_chr('`')
 								])),
-						$author$project$Parser$Parser$backTick)),
+						$author$project$L1$Parser$backTick)),
 				$elm$parser$Parser$Advanced$getOffset),
 			$elm$parser$Parser$Advanced$getSource));
 };
-var $author$project$Parser$Parser$elementName = A2(
+var $author$project$L1$Parser$elementName = A2(
 	$author$project$Library$ParserTools$first,
-	$author$project$Parser$Parser$string_(
+	$author$project$L1$Parser$string_(
 		_List_fromArray(
 			[
 				_Utils_chr('['),
@@ -7892,17 +7943,17 @@ var $elm$parser$Parser$Advanced$lazy = function (thunk) {
 			return parse(s);
 		});
 };
-var $author$project$Parser$Error$ExpectingLeftBracket = {$: 'ExpectingLeftBracket'};
-var $author$project$Parser$Parser$leftBracket = $elm$parser$Parser$Advanced$symbol(
-	A2($elm$parser$Parser$Advanced$Token, '[', $author$project$Parser$Error$ExpectingLeftBracket));
-var $author$project$Parser$AST$Math = {$: 'Math'};
-var $author$project$Parser$Error$ExpectingDollarSign = {$: 'ExpectingDollarSign'};
-var $author$project$Parser$Parser$dollarSign = $elm$parser$Parser$Advanced$symbol(
-	A2($elm$parser$Parser$Advanced$Token, '$', $author$project$Parser$Error$ExpectingDollarSign));
-var $author$project$Parser$Parser$mathElement = function (generation) {
+var $author$project$L1$Error$ExpectingLeftBracket = {$: 'ExpectingLeftBracket'};
+var $author$project$L1$Parser$leftBracket = $elm$parser$Parser$Advanced$symbol(
+	A2($elm$parser$Parser$Advanced$Token, '[', $author$project$L1$Error$ExpectingLeftBracket));
+var $author$project$L1$AST$Math = {$: 'Math'};
+var $author$project$L1$Error$ExpectingDollarSign = {$: 'ExpectingDollarSign'};
+var $author$project$L1$Parser$dollarSign = $elm$parser$Parser$Advanced$symbol(
+	A2($elm$parser$Parser$Advanced$Token, '$', $author$project$L1$Error$ExpectingDollarSign));
+var $author$project$L1$Parser$mathElement = function (generation) {
 	return A2(
 		$elm$parser$Parser$Advanced$inContext,
-		$author$project$Parser$Error$CElement,
+		$author$project$L1$Error$CElement,
 		A2(
 			$elm$parser$Parser$Advanced$keeper,
 			A2(
@@ -7915,25 +7966,25 @@ var $author$project$Parser$Parser$mathElement = function (generation) {
 							F4(
 								function (start, content, end, source) {
 									return A3(
-										$author$project$Parser$AST$Verbatim,
-										$author$project$Parser$AST$Math,
+										$author$project$L1$AST$Verbatim,
+										$author$project$L1$AST$Math,
 										content,
-										A3($author$project$Parser$Parser$meta, generation, start, end));
+										A3($author$project$L1$Parser$meta, generation, start, end));
 								})),
-						A2($elm$parser$Parser$Advanced$ignorer, $elm$parser$Parser$Advanced$getOffset, $author$project$Parser$Parser$dollarSign)),
+						A2($elm$parser$Parser$Advanced$ignorer, $elm$parser$Parser$Advanced$getOffset, $author$project$L1$Parser$dollarSign)),
 					A2(
 						$elm$parser$Parser$Advanced$ignorer,
-						$author$project$Parser$Parser$string(
+						$author$project$L1$Parser$string(
 							_List_fromArray(
 								[
 									_Utils_chr('$')
 								])),
-						$author$project$Parser$Parser$dollarSign)),
+						$author$project$L1$Parser$dollarSign)),
 				$elm$parser$Parser$Advanced$getOffset),
 			$elm$parser$Parser$Advanced$getSource));
 };
-var $author$project$Parser$Loc$dummy = {end: -1, start: -1};
-var $author$project$Parser$AST$position = function (element) {
+var $author$project$L1$Loc$dummy = {end: -1, start: -1};
+var $author$project$L1$AST$position = function (element) {
 	switch (element.$) {
 		case 'Text':
 			var meta = element.b;
@@ -7948,15 +7999,15 @@ var $author$project$Parser$AST$position = function (element) {
 			var meta = element.b;
 			return meta.position;
 		case 'Problem':
-			return $author$project$Parser$Loc$dummy;
+			return $author$project$L1$Loc$dummy;
 		case 'StackError':
-			return $author$project$Parser$Loc$dummy;
+			return $author$project$L1$Loc$dummy;
 		default:
-			return $author$project$Parser$Loc$dummy;
+			return $author$project$L1$Loc$dummy;
 	}
 };
 var $elm$core$List$sortBy = _List_sortBy;
-var $author$project$Parser$Loc$positionOfList = function (positions) {
+var $author$project$L1$Loc$positionOfList = function (positions) {
 	var sorted = A2(
 		$elm$core$List$sortBy,
 		function (pos) {
@@ -7984,20 +8035,20 @@ var $author$project$Parser$Loc$positionOfList = function (positions) {
 			$elm$core$List$head(sorted)));
 	return {end: last, start: first};
 };
-var $author$project$Parser$Parser$metaOfList = F2(
+var $author$project$L1$Parser$metaOfList = F2(
 	function (generation, list) {
 		return {
 			generation: generation,
-			position: $author$project$Parser$Loc$positionOfList(
+			position: $author$project$L1$Loc$positionOfList(
 				A2(
 					$elm$core$List$map,
 					function (el) {
-						return $author$project$Parser$AST$position(el);
+						return $author$project$L1$AST$position(el);
 					},
 					list))
 		};
 	});
-var $author$project$Parser$Error$TextExpression = {$: 'TextExpression'};
+var $author$project$L1$Error$TextExpression = {$: 'TextExpression'};
 var $author$project$Library$StringParser$isLanguageChar = function (c) {
 	return _Utils_eq(
 		c,
@@ -8051,7 +8102,7 @@ var $author$project$Library$StringParser$reduce = function (list) {
 		start: start
 	};
 };
-var $author$project$Parser$Error$ExpectingEscape = {$: 'ExpectingEscape'};
+var $author$project$L1$Error$ExpectingEscape = {$: 'ExpectingEscape'};
 var $author$project$Library$ParserTools$char = function (prefixTest) {
 	return A2(
 		$elm$parser$Parser$Advanced$keeper,
@@ -8076,7 +8127,7 @@ var $author$project$Library$ParserTools$char = function (prefixTest) {
 						function (c) {
 							return prefixTest(c);
 						},
-						$author$project$Parser$Error$UnHandledError(3)))),
+						$author$project$L1$Error$UnHandledError(3)))),
 			$elm$parser$Parser$Advanced$getOffset),
 		$elm$parser$Parser$Advanced$getSource);
 };
@@ -8097,7 +8148,7 @@ var $author$project$Library$StringParser$escapedChar = A2(
 	A2(
 		$author$project$Library$ParserTools$second,
 		$elm$parser$Parser$Advanced$symbol(
-			A2($elm$parser$Parser$Advanced$Token, '\\', $author$project$Parser$Error$ExpectingEscape)),
+			A2($elm$parser$Parser$Advanced$Token, '\\', $author$project$L1$Error$ExpectingEscape)),
 		$author$project$Library$ParserTools$char(
 			function (c) {
 				return true;
@@ -8146,28 +8197,28 @@ var $author$project$Library$StringParser$textWithPredicate = function (predicate
 		$author$project$Library$StringParser$reduce,
 		$author$project$Library$StringParser$textListWithPredicate(predicate));
 };
-var $author$project$Parser$Parser$plainText = function (generation) {
+var $author$project$L1$Parser$plainText = function (generation) {
 	return A2(
 		$elm$parser$Parser$Advanced$inContext,
-		$author$project$Parser$Error$TextExpression,
+		$author$project$L1$Error$TextExpression,
 		A2(
 			$elm$parser$Parser$Advanced$map,
 			function (data) {
 				return A2(
-					$author$project$Parser$AST$Text,
+					$author$project$L1$AST$Text,
 					data.content,
-					A3($author$project$Parser$Parser$meta, generation, data.start, data.finish));
+					A3($author$project$L1$Parser$meta, generation, data.start, data.finish));
 			},
 			$author$project$Library$StringParser$textWithPredicate($author$project$Library$StringParser$isNonLanguageChar)));
 };
-var $author$project$Parser$AST$Quoted = {$: 'Quoted'};
-var $author$project$Parser$Error$ExpectingQuoteMark = {$: 'ExpectingQuoteMark'};
-var $author$project$Parser$Parser$quoteMark = $elm$parser$Parser$Advanced$symbol(
-	A2($elm$parser$Parser$Advanced$Token, '\"', $author$project$Parser$Error$ExpectingQuoteMark));
-var $author$project$Parser$Parser$quotedElement = function (generation) {
+var $author$project$L1$AST$Quoted = {$: 'Quoted'};
+var $author$project$L1$Error$ExpectingQuoteMark = {$: 'ExpectingQuoteMark'};
+var $author$project$L1$Parser$quoteMark = $elm$parser$Parser$Advanced$symbol(
+	A2($elm$parser$Parser$Advanced$Token, '\"', $author$project$L1$Error$ExpectingQuoteMark));
+var $author$project$L1$Parser$quotedElement = function (generation) {
 	return A2(
 		$elm$parser$Parser$Advanced$inContext,
-		$author$project$Parser$Error$CElement,
+		$author$project$L1$Error$CElement,
 		A2(
 			$elm$parser$Parser$Advanced$keeper,
 			A2(
@@ -8180,65 +8231,65 @@ var $author$project$Parser$Parser$quotedElement = function (generation) {
 							F4(
 								function (start, content, end, source) {
 									return A3(
-										$author$project$Parser$AST$Verbatim,
-										$author$project$Parser$AST$Quoted,
+										$author$project$L1$AST$Verbatim,
+										$author$project$L1$AST$Quoted,
 										content,
-										A3($author$project$Parser$Parser$meta, generation, start, end));
+										A3($author$project$L1$Parser$meta, generation, start, end));
 								})),
-						A2($elm$parser$Parser$Advanced$ignorer, $elm$parser$Parser$Advanced$getOffset, $author$project$Parser$Parser$quoteMark)),
+						A2($elm$parser$Parser$Advanced$ignorer, $elm$parser$Parser$Advanced$getOffset, $author$project$L1$Parser$quoteMark)),
 					A2(
 						$elm$parser$Parser$Advanced$ignorer,
-						$author$project$Parser$Parser$string(
+						$author$project$L1$Parser$string(
 							_List_fromArray(
 								[
 									_Utils_chr('\"')
 								])),
-						$author$project$Parser$Parser$quoteMark)),
+						$author$project$L1$Parser$quoteMark)),
 				$elm$parser$Parser$Advanced$getOffset),
 			$elm$parser$Parser$Advanced$getSource));
 };
-var $author$project$Parser$Error$ExpectingRightBracket = {$: 'ExpectingRightBracket'};
-var $author$project$Parser$Parser$rightBracket = $elm$parser$Parser$Advanced$symbol(
-	A2($elm$parser$Parser$Advanced$Token, ']', $author$project$Parser$Error$ExpectingRightBracket));
-var $author$project$Parser$Parser$argsAndBody = function (generation) {
+var $author$project$L1$Error$ExpectingRightBracket = {$: 'ExpectingRightBracket'};
+var $author$project$L1$Parser$rightBracket = $elm$parser$Parser$Advanced$symbol(
+	A2($elm$parser$Parser$Advanced$Token, ']', $author$project$L1$Error$ExpectingRightBracket));
+var $author$project$L1$Parser$argsAndBody = function (generation) {
 	return A2(
 		$elm$parser$Parser$Advanced$inContext,
-		$author$project$Parser$Error$CArgsAndBody,
-		$author$project$Parser$Parser$elementBody(generation));
+		$author$project$L1$Error$CArgsAndBody,
+		$author$project$L1$Parser$elementBody(generation));
 };
-var $author$project$Parser$Parser$elementBody = function (generation) {
+var $author$project$L1$Parser$elementBody = function (generation) {
 	return A2(
 		$elm$parser$Parser$Advanced$inContext,
-		$author$project$Parser$Error$CBody,
+		$author$project$L1$Error$CBody,
 		$elm$parser$Parser$Advanced$lazy(
 			function (_v0) {
 				return A2(
 					$elm$parser$Parser$Advanced$map,
 					function (list) {
 						return A2(
-							$author$project$Parser$AST$EList,
+							$author$project$L1$AST$EList,
 							list,
-							A2($author$project$Parser$Parser$metaOfList, generation, list));
+							A2($author$project$L1$Parser$metaOfList, generation, list));
 					},
 					$author$project$Library$ParserTools$many(
-						$author$project$Parser$Parser$parser(generation)));
+						$author$project$L1$Parser$parser(generation)));
 			}));
 };
-var $author$project$Parser$Parser$parser = function (generation) {
+var $author$project$L1$Parser$parser = function (generation) {
 	return $elm$parser$Parser$Advanced$oneOf(
 		_List_fromArray(
 			[
-				$author$project$Parser$Parser$primitiveElement(generation),
-				$author$project$Parser$Parser$mathElement(generation),
-				$author$project$Parser$Parser$quotedElement(generation),
-				$author$project$Parser$Parser$codeElement(generation),
-				$author$project$Parser$Parser$plainText(generation)
+				$author$project$L1$Parser$primitiveElement(generation),
+				$author$project$L1$Parser$mathElement(generation),
+				$author$project$L1$Parser$quotedElement(generation),
+				$author$project$L1$Parser$codeElement(generation),
+				$author$project$L1$Parser$plainText(generation)
 			]));
 };
-var $author$project$Parser$Parser$primitiveElement = function (generation) {
+var $author$project$L1$Parser$primitiveElement = function (generation) {
 	return A2(
 		$elm$parser$Parser$Advanced$inContext,
-		$author$project$Parser$Error$CElement,
+		$author$project$L1$Error$CElement,
 		A2(
 			$elm$parser$Parser$Advanced$keeper,
 			A2(
@@ -8253,37 +8304,37 @@ var $author$project$Parser$Parser$primitiveElement = function (generation) {
 								F5(
 									function (start, name, body_, end, source) {
 										return A3(
-											$author$project$Parser$AST$Element,
+											$author$project$L1$AST$Element,
 											name,
 											body_,
-											A3($author$project$Parser$Parser$meta, generation, start, end));
+											A3($author$project$L1$Parser$meta, generation, start, end));
 									})),
-							A2($elm$parser$Parser$Advanced$ignorer, $elm$parser$Parser$Advanced$getOffset, $author$project$Parser$Parser$leftBracket)),
+							A2($elm$parser$Parser$Advanced$ignorer, $elm$parser$Parser$Advanced$getOffset, $author$project$L1$Parser$leftBracket)),
 						$elm$parser$Parser$Advanced$oneOf(
 							_List_fromArray(
 								[
-									A2($elm$parser$Parser$Advanced$map, $author$project$Parser$AST$Name, $author$project$Parser$Parser$elementName),
-									$elm$parser$Parser$Advanced$succeed($author$project$Parser$AST$Undefined)
+									A2($elm$parser$Parser$Advanced$map, $author$project$L1$AST$Name, $author$project$L1$Parser$elementName),
+									$elm$parser$Parser$Advanced$succeed($author$project$L1$AST$Undefined)
 								]))),
 					A2(
 						$elm$parser$Parser$Advanced$ignorer,
 						A2(
 							$elm$parser$Parser$Advanced$ignorer,
-							$author$project$Parser$Parser$argsAndBody(generation),
+							$author$project$L1$Parser$argsAndBody(generation),
 							$elm$parser$Parser$Advanced$spaces),
-						$author$project$Parser$Parser$rightBracket)),
+						$author$project$L1$Parser$rightBracket)),
 				$elm$parser$Parser$Advanced$getOffset),
 			$elm$parser$Parser$Advanced$getSource));
 };
-var $author$project$Parser$Parser$listParser = F2(
+var $author$project$L1$Parser$listParser = F2(
 	function (generation, lineNumber) {
 		return $author$project$Library$ParserTools$many(
-			$author$project$Parser$Parser$parser(generation));
+			$author$project$L1$Parser$parser(generation));
 	});
-var $author$project$Parser$Parser$headingParser = function (generation) {
+var $author$project$L1$Parser$headingParser = function (generation) {
 	return A2(
 		$elm$parser$Parser$Advanced$inContext,
-		$author$project$Parser$Error$CElement,
+		$author$project$L1$Error$CElement,
 		A2(
 			$elm$parser$Parser$Advanced$keeper,
 			A2(
@@ -8298,21 +8349,21 @@ var $author$project$Parser$Parser$headingParser = function (generation) {
 								F5(
 									function (start, n, elements, end, source) {
 										return A3(
-											$author$project$Parser$AST$Element,
-											$author$project$Parser$AST$Name(
+											$author$project$L1$AST$Element,
+											$author$project$L1$AST$Name(
 												'heading' + $elm$core$String$fromInt(n)),
 											A2(
-												$author$project$Parser$AST$EList,
+												$author$project$L1$AST$EList,
 												elements,
-												A3($author$project$Parser$Parser$meta, generation, start, end)),
-											A3($author$project$Parser$Parser$meta, generation, start, end));
+												A3($author$project$L1$Parser$meta, generation, start, end)),
+											A3($author$project$L1$Parser$meta, generation, start, end));
 									})),
 							$elm$parser$Parser$Advanced$getOffset),
 						A2(
 							$elm$parser$Parser$Advanced$ignorer,
 							A2(
 								$elm$parser$Parser$Advanced$ignorer,
-								$author$project$Parser$Parser$hashMarks,
+								$author$project$L1$Parser$hashMarks,
 								A2(
 									$elm$parser$Parser$Advanced$chompIf,
 									function (c) {
@@ -8320,32 +8371,32 @@ var $author$project$Parser$Parser$headingParser = function (generation) {
 											c,
 											_Utils_chr(' '));
 									},
-									$author$project$Parser$Error$ExpectingSpace)),
+									$author$project$L1$Error$ExpectingSpace)),
 							$elm$parser$Parser$Advanced$chompWhile(
 								function (c) {
 									return _Utils_eq(
 										c,
 										_Utils_chr(' '));
 								}))),
-					A2($author$project$Parser$Parser$listParser, generation, 0)),
+					A2($author$project$L1$Parser$listParser, generation, 0)),
 				$elm$parser$Parser$Advanced$getOffset),
 			$elm$parser$Parser$Advanced$getSource));
 };
-var $author$project$Parser$Parser$parseHeading = F2(
+var $author$project$L1$Parser$parseHeading = F2(
 	function (generation, str) {
 		return A2(
 			$elm$parser$Parser$Advanced$run,
-			$author$project$Parser$Parser$headingParser(generation),
+			$author$project$L1$Parser$headingParser(generation),
 			str);
 	});
-var $author$project$Parser$Handle$heading2 = function (tc) {
+var $author$project$L1$Handle$heading2 = function (tc) {
 	var parsed_ = function () {
-		var _v0 = A2($author$project$Parser$Parser$parseHeading, tc.generation, tc.source);
+		var _v0 = A2($author$project$L1$Parser$parseHeading, tc.generation, tc.source);
 		if (_v0.$ === 'Ok') {
 			var goodstuff = _v0.a;
 			return goodstuff;
 		} else {
-			return A2($author$project$Parser$AST$Text, 'Error on \'' + (tc.source + '\''), $author$project$Parser$MetaData$dummy);
+			return A2($author$project$L1$AST$Text, 'Error on \'' + (tc.source + '\''), $author$project$L1$MetaData$dummy);
 		}
 	}();
 	return _Utils_update(
@@ -8354,13 +8405,13 @@ var $author$project$Parser$Handle$heading2 = function (tc) {
 			complete: A2($elm$core$List$cons, parsed_, tc.complete)
 		});
 };
-var $author$project$Parser$Error$ExpectingColon = {$: 'ExpectingColon'};
-var $author$project$Parser$Parser$colonMark = $elm$parser$Parser$Advanced$symbol(
-	A2($elm$parser$Parser$Advanced$Token, ':', $author$project$Parser$Error$ExpectingColon));
-var $author$project$Parser$Parser$itemParser = function (generation) {
+var $author$project$L1$Error$ExpectingColon = {$: 'ExpectingColon'};
+var $author$project$L1$Parser$colonMark = $elm$parser$Parser$Advanced$symbol(
+	A2($elm$parser$Parser$Advanced$Token, ':', $author$project$L1$Error$ExpectingColon));
+var $author$project$L1$Parser$itemParser = function (generation) {
 	return A2(
 		$elm$parser$Parser$Advanced$inContext,
-		$author$project$Parser$Error$CElement,
+		$author$project$L1$Error$CElement,
 		A2(
 			$elm$parser$Parser$Advanced$keeper,
 			A2(
@@ -8373,42 +8424,42 @@ var $author$project$Parser$Parser$itemParser = function (generation) {
 							F4(
 								function (start, elements, end, source) {
 									return A3(
-										$author$project$Parser$AST$Element,
-										$author$project$Parser$AST$Name('item'),
+										$author$project$L1$AST$Element,
+										$author$project$L1$AST$Name('item'),
 										A2(
-											$author$project$Parser$AST$EList,
+											$author$project$L1$AST$EList,
 											elements,
-											A3($author$project$Parser$Parser$meta, generation, start, end)),
-										A3($author$project$Parser$Parser$meta, generation, start, end));
+											A3($author$project$L1$Parser$meta, generation, start, end)),
+										A3($author$project$L1$Parser$meta, generation, start, end));
 								})),
 						A2(
 							$elm$parser$Parser$Advanced$ignorer,
-							A2($elm$parser$Parser$Advanced$ignorer, $elm$parser$Parser$Advanced$getOffset, $author$project$Parser$Parser$colonMark),
+							A2($elm$parser$Parser$Advanced$ignorer, $elm$parser$Parser$Advanced$getOffset, $author$project$L1$Parser$colonMark),
 							$elm$parser$Parser$Advanced$chompWhile(
 								function (c) {
 									return _Utils_eq(
 										c,
 										_Utils_chr(' '));
 								}))),
-					A2($author$project$Parser$Parser$listParser, generation, 0)),
+					A2($author$project$L1$Parser$listParser, generation, 0)),
 				$elm$parser$Parser$Advanced$getOffset),
 			$elm$parser$Parser$Advanced$getSource));
 };
-var $author$project$Parser$Parser$parseItem = F2(
+var $author$project$L1$Parser$parseItem = F2(
 	function (generation, str) {
 		return A2(
 			$elm$parser$Parser$Advanced$run,
-			$author$project$Parser$Parser$itemParser(generation),
+			$author$project$L1$Parser$itemParser(generation),
 			str);
 	});
-var $author$project$Parser$Handle$item = function (tc) {
+var $author$project$L1$Handle$item = function (tc) {
 	var parsed_ = function () {
-		var _v0 = A2($author$project$Parser$Parser$parseItem, tc.generation, tc.source);
+		var _v0 = A2($author$project$L1$Parser$parseItem, tc.generation, tc.source);
 		if (_v0.$ === 'Ok') {
 			var goodstuff = _v0.a;
 			return goodstuff;
 		} else {
-			return A2($author$project$Parser$AST$Text, 'Error on \'' + (tc.source + '\''), $author$project$Parser$MetaData$dummy);
+			return A2($author$project$L1$AST$Text, 'Error on \'' + (tc.source + '\''), $author$project$L1$MetaData$dummy);
 		}
 	}();
 	return _Utils_update(
@@ -8417,25 +8468,25 @@ var $author$project$Parser$Handle$item = function (tc) {
 			complete: A2($elm$core$List$cons, parsed_, tc.complete)
 		});
 };
-var $author$project$Parser$AST$Problem = F2(
+var $author$project$L1$AST$Problem = F2(
 	function (a, b) {
 		return {$: 'Problem', a: a, b: b};
 	});
-var $author$project$Parser$Parser$parse = F2(
+var $author$project$L1$Parser$parse = F2(
 	function (generation, str) {
 		var _v0 = A2(
 			$elm$parser$Parser$Advanced$run,
-			$author$project$Parser$Parser$parser(generation),
+			$author$project$L1$Parser$parser(generation),
 			str);
 		if (_v0.$ === 'Ok') {
 			var ast = _v0.a;
 			return ast;
 		} else {
 			var errors = _v0.a;
-			return A2($author$project$Parser$AST$Problem, errors, str);
+			return A2($author$project$L1$AST$Problem, errors, str);
 		}
 	});
-var $author$project$Parser$Handle$pipe = function (tc) {
+var $author$project$L1$Handle$pipe = function (tc) {
 	var source_ = A2(
 		$elm$core$Debug$log,
 		$author$project$Library$Console$bgBlue('PIPE SOURCE'),
@@ -8445,11 +8496,11 @@ var $author$project$Parser$Handle$pipe = function (tc) {
 		{
 			complete: A2(
 				$elm$core$List$cons,
-				A2($author$project$Parser$Parser$parse, tc.generation, source_),
+				A2($author$project$L1$Parser$parse, tc.generation, source_),
 				tc.complete)
 		});
 };
-var $author$project$Parser$Loop$shortcircuit = F2(
+var $author$project$L1$Loop$shortcircuit = F2(
 	function (prefix, cursor) {
 		var _v0 = A2(
 			$elm$core$Debug$log,
@@ -8460,15 +8511,15 @@ var $author$project$Parser$Loop$shortcircuit = F2(
 			prefix,
 			_List_fromArray(
 				['#', '##', '###', '####'])) ? $author$project$Library$ParserTools$Done(
-			$author$project$Parser$Handle$heading2(cursor)) : ((prefix === ':') ? $author$project$Library$ParserTools$Done(
-			$author$project$Parser$Handle$item(cursor)) : ((prefix === '|') ? $author$project$Library$ParserTools$Done(
-			$author$project$Parser$Handle$pipe(cursor)) : ((prefix === '||') ? $author$project$Library$ParserTools$Done(
-			$author$project$Parser$Handle$doublePipe(cursor)) : $author$project$Library$ParserTools$Done(cursor))));
+			$author$project$L1$Handle$heading2(cursor)) : ((prefix === ':') ? $author$project$Library$ParserTools$Done(
+			$author$project$L1$Handle$item(cursor)) : ((prefix === '|') ? $author$project$Library$ParserTools$Done(
+			$author$project$L1$Handle$pipe(cursor)) : ((prefix === '||') ? $author$project$Library$ParserTools$Done(
+			$author$project$L1$Handle$doublePipe(cursor)) : $author$project$Library$ParserTools$Done(cursor))));
 	});
-var $author$project$Parser$Loop$nextCursor = F2(
+var $author$project$L1$Loop$nextCursor = F2(
 	function (parser, cursor) {
-		if (cursor.count > 20) {
-			return A3($author$project$Parser$Loop$exit, parser, cursor, 'EMERGENCY STOP AT COUNT 20');
+		if (cursor.count > 100) {
+			return A3($author$project$L1$Loop$exit, parser, cursor, 'EMERGENCY STOP AT COUNT 100');
 		} else {
 			var textToProcess = A2($elm$core$String$dropLeft, cursor.scanPoint, cursor.source);
 			var maybeFirstChar = A2(
@@ -8486,10 +8537,10 @@ var $author$project$Parser$Loop$nextCursor = F2(
 						return $.content;
 					}),
 				maybeFirstChar);
-			var chompedText = A2($author$project$Parser$TextCursor$advance, cursor, textToProcess);
+			var chompedText = A2($author$project$L1$TextCursor$advance, cursor, textToProcess);
 			var _v0 = A2(
 				$elm$core$Debug$log,
-				$author$project$Parser$Print$print(cursor),
+				$author$project$L1$Print$print(cursor),
 				'');
 			var _v1 = _Utils_Tuple3(maybeFirstChar, maybePrefix, cursor.stack);
 			if (_v1.a.$ === 'Nothing') {
@@ -8506,7 +8557,7 @@ var $author$project$Parser$Loop$nextCursor = F2(
 					var _v3 = _v1.a;
 					return $author$project$Library$ParserTools$Loop(
 						A2(
-							$author$project$Parser$TextCursor$commit,
+							$author$project$L1$TextCursor$commit,
 							parser,
 							_Utils_update(
 								cursor,
@@ -8517,7 +8568,7 @@ var $author$project$Parser$Loop$nextCursor = F2(
 					var _v4 = _v1.b;
 					return $author$project$Library$ParserTools$Loop(
 						A2(
-							$author$project$Parser$TextCursor$commit,
+							$author$project$L1$TextCursor$commit,
 							parser,
 							_Utils_update(
 								cursor,
@@ -8525,25 +8576,25 @@ var $author$project$Parser$Loop$nextCursor = F2(
 				} else {
 					var firstChar = _v1.a.a;
 					var prefixx = _v1.b.a;
-					var _v5 = A4($author$project$Parser$Branch$branch, $author$project$Parser$Configuration$configuration, cursor, firstChar, prefixx);
+					var _v5 = A4($author$project$L1$Branch$branch, $author$project$L1$Configuration$configuration, cursor, firstChar, prefixx);
 					switch (_v5.$) {
 						case 'ADD':
-							return A3($author$project$Parser$Loop$add, parser, cursor, chompedText);
+							return A3($author$project$L1$Loop$add, parser, cursor, chompedText);
 						case 'PUSH':
 							var data = _v5.a;
-							return A2($author$project$Parser$Loop$push, cursor, data);
+							return A2($author$project$L1$Loop$push, cursor, data);
 						case 'POP':
-							return A3($author$project$Parser$Loop$pop, parser, prefixx, cursor);
+							return A3($author$project$L1$Loop$pop, parser, prefixx, cursor);
 						case 'SHORTCIRCUIT':
-							return A2($author$project$Parser$Loop$shortcircuit, prefixx, cursor);
+							return A2($author$project$L1$Loop$shortcircuit, prefixx, cursor);
 						default:
-							return A3($author$project$Parser$Loop$exit, parser, cursor, 'COMM4');
+							return A3($author$project$L1$Loop$exit, parser, cursor, 'COMM4');
 					}
 				}
 			}
 		}
 	});
-var $author$project$Parser$Loop$parseLoop = F3(
+var $author$project$L1$Loop$parseLoop = F3(
 	function (parser, generation, str) {
 		var result = function (tc_) {
 			return _Utils_update(
@@ -8554,21 +8605,21 @@ var $author$project$Parser$Loop$parseLoop = F3(
 		}(
 			A2(
 				$author$project$Library$ParserTools$loop,
-				A2($author$project$Parser$TextCursor$init, generation, str),
-				$author$project$Parser$Loop$nextCursor(parser)));
+				A2($author$project$L1$TextCursor$init, generation, str),
+				$author$project$L1$Loop$nextCursor(parser)));
 		var _v0 = A2(
 			$elm$core$Debug$log,
-			$author$project$Parser$Print$print(result),
+			$author$project$L1$Print$print(result),
 			'-');
 		return result;
 	});
-var $author$project$Parser$Driver$parseLoop = F3(
-	function (parse_, generation, str) {
-		return A3($author$project$Parser$Loop$parseLoop, parse_, generation, str);
+var $author$project$L1$Chunk$parseLoop = F3(
+	function (parser, generation, str) {
+		return A3($author$project$L1$Loop$parseLoop, parser, generation, str);
 	});
-var $author$project$Parser$Driver$parse = F3(
-	function (parse_, generation, str) {
-		return A3($author$project$Parser$Driver$parseLoop, parse_, generation, str).complete;
+var $author$project$L1$Chunk$parse = F3(
+	function (parser, generation, str) {
+		return A3($author$project$L1$Chunk$parseLoop, parser, generation, str).complete;
 	});
 var $author$project$Main$renderArgs = {generation: 0, selectedId: 'foobar', width: 450};
 var $mdgriffith$elm_ui$Internal$Model$Rgba = F4(
@@ -14080,7 +14131,7 @@ var $mdgriffith$elm_ui$Element$Font$family = function (families) {
 			A3($elm$core$List$foldl, $mdgriffith$elm_ui$Internal$Model$renderFontClassName, 'ff-', families),
 			families));
 };
-var $author$project$Parser$AST$getText = function (element) {
+var $author$project$L1$AST$getText = function (element) {
 	getText:
 	while (true) {
 		switch (element.$) {
@@ -14097,7 +14148,7 @@ var $author$project$Parser$AST$getText = function (element) {
 				return A2(
 					$elm$core$String$join,
 					' ',
-					A2($elm$core$List$map, $author$project$Parser$AST$getText, list));
+					A2($elm$core$List$map, $author$project$L1$AST$getText, list));
 			default:
 				return '';
 		}
@@ -14130,7 +14181,7 @@ var $author$project$Render$Elm$code = F4(
 					$mdgriffith$elm_ui$Element$Font$color($author$project$Render$Elm$codeColor)
 				]),
 			$mdgriffith$elm_ui$Element$text(
-				' ' + $author$project$Parser$AST$getText(body)));
+				' ' + $author$project$L1$AST$getText(body)));
 	});
 var $mdgriffith$elm_ui$Internal$Model$AsColumn = {$: 'AsColumn'};
 var $mdgriffith$elm_ui$Internal$Model$asColumn = $mdgriffith$elm_ui$Internal$Model$AsColumn;
@@ -14552,9 +14603,9 @@ var $author$project$Render$Elm$image = F4(
 				]));
 	});
 var $mdgriffith$elm_ui$Element$Font$italic = $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.italic);
-var $author$project$Parser$AST$getTextList = function (element) {
+var $author$project$L1$AST$getTextList = function (element) {
 	return $elm$core$String$words(
-		$author$project$Parser$AST$getText(element));
+		$author$project$L1$AST$getText(element));
 };
 var $author$project$Render$Elm$linkColor = A3($mdgriffith$elm_ui$Element$rgb, 0, 0, 0.8);
 var $elm$html$Html$Attributes$href = function (url) {
@@ -14601,7 +14652,7 @@ var $mdgriffith$elm_ui$Element$newTabLink = F2(
 	});
 var $author$project$Render$Elm$link = F4(
 	function (renderArgs, name, args, body) {
-		var _v0 = $author$project$Parser$AST$getTextList(body);
+		var _v0 = $author$project$L1$AST$getTextList(body);
 		if (_v0.b && _v0.b.b) {
 			var label = _v0.a;
 			var _v1 = _v0.b;
@@ -14628,14 +14679,14 @@ var $author$project$Render$Elm$link = F4(
 				$mdgriffith$elm_ui$Element$text('Invalid link'));
 		}
 	});
-var $author$project$Parser$AST$map = F2(
+var $author$project$L1$AST$map = F2(
 	function (f, element) {
 		switch (element.$) {
 			case 'Text':
 				var s = element.a;
 				var meta = element.b;
 				return A2(
-					$author$project$Parser$AST$Text,
+					$author$project$L1$AST$Text,
 					f(s),
 					meta);
 			case 'Element':
@@ -14643,18 +14694,18 @@ var $author$project$Parser$AST$map = F2(
 				var body__ = element.b;
 				var meta = element.c;
 				return A3(
-					$author$project$Parser$AST$Element,
+					$author$project$L1$AST$Element,
 					name,
-					A2($author$project$Parser$AST$map, f, body__),
+					A2($author$project$L1$AST$map, f, body__),
 					meta);
 			case 'EList':
 				var items = element.a;
 				var meta = element.b;
 				return A2(
-					$author$project$Parser$AST$EList,
+					$author$project$L1$AST$EList,
 					A2(
 						$elm$core$List$map,
-						$author$project$Parser$AST$map(f),
+						$author$project$L1$AST$map(f),
 						items),
 					meta);
 			default:
@@ -14727,7 +14778,7 @@ var $author$project$Render$Elm$math2 = F4(
 			$author$project$Render$Elm$getText2(body));
 	});
 var $author$project$Render$Elm$DisplayMathMode = {$: 'DisplayMathMode'};
-var $author$project$Parser$AST$toStringList = function (element) {
+var $author$project$L1$AST$toStringList = function (element) {
 	toStringList:
 	while (true) {
 		switch (element.$) {
@@ -14746,7 +14797,7 @@ var $author$project$Parser$AST$toStringList = function (element) {
 					[s]);
 			case 'EList':
 				var elements = element.a;
-				return A2($elm$core$List$map, $author$project$Parser$AST$getText, elements);
+				return A2($elm$core$List$map, $author$project$L1$AST$getText, elements);
 			case 'Problem':
 				return _List_fromArray(
 					['problems']);
@@ -14761,11 +14812,11 @@ var $author$project$Parser$AST$toStringList = function (element) {
 		}
 	}
 };
-var $author$project$Parser$AST$stringContent = function (element) {
+var $author$project$L1$AST$stringContent = function (element) {
 	return A2(
 		$elm$core$String$join,
 		' ',
-		$author$project$Parser$AST$toStringList(element));
+		$author$project$L1$AST$toStringList(element));
 };
 var $author$project$Render$Elm$mathblock = F4(
 	function (rendArgs, name, args, body) {
@@ -14773,7 +14824,7 @@ var $author$project$Render$Elm$mathblock = F4(
 			$author$project$Render$Elm$mathText,
 			rendArgs,
 			$author$project$Render$Elm$DisplayMathMode,
-			$author$project$Parser$AST$stringContent(body));
+			$author$project$L1$AST$stringContent(body));
 	});
 var $mdgriffith$elm_ui$Element$paddingXY = F2(
 	function (x, y) {
@@ -14898,7 +14949,7 @@ var $mdgriffith$elm_ui$Element$Font$size = function (i) {
 		$mdgriffith$elm_ui$Internal$Model$FontSize(i));
 };
 var $mdgriffith$elm_ui$Element$Font$strike = $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.strike);
-var $author$project$Parser$AST$toList = function (element) {
+var $author$project$L1$AST$toList = function (element) {
 	toList:
 	while (true) {
 		switch (element.$) {
@@ -14983,18 +15034,18 @@ var $author$project$Render$Elm$fontRGB = F4(
 	function (renderArgs, _v19, _v20, body) {
 		var textArgs = A2(
 			$elm$core$List$map,
-			$author$project$Parser$AST$map(
+			$author$project$L1$AST$map(
 				function (x) {
 					return ' ' + x;
 				}),
 			A2(
 				$elm$core$List$drop,
 				3,
-				$author$project$Parser$AST$toList(body)));
+				$author$project$L1$AST$toList(body)));
 		var colorArgs = A2(
 			$elm$core$List$take,
 			3,
-			$author$project$Parser$AST$toStringList(body));
+			$author$project$L1$AST$toStringList(body));
 		var _v21 = $author$project$Render$Elm$convertRGB(colorArgs);
 		if (_v21.$ === 'Nothing') {
 			return A2(
@@ -15172,7 +15223,7 @@ var $author$project$Render$Elm$render = F2(
 						$elm$core$List$map,
 						A2(
 							$elm$core$Basics$composeR,
-							$author$project$Parser$AST$map(
+							$author$project$L1$AST$map(
 								function (s) {
 									return ' ' + s;
 								}),
@@ -15331,8 +15382,8 @@ var $author$project$Main$render = F2(
 			$author$project$Render$Elm$renderList,
 			$author$project$Main$renderArgs,
 			A3(
-				$author$project$Parser$Driver$parse,
-				$author$project$Parser$Parser$parse(k),
+				$author$project$L1$Chunk$parse,
+				$author$project$L1$Parser$parse(k),
 				k,
 				str));
 	});
@@ -15368,24 +15419,103 @@ var $author$project$Main$download = F3(
 	function (filename, mimetype, content) {
 		return A3($elm$file$File$Download$string, filename, mimetype, content);
 	});
-var $author$project$Parser$Document$split = function (doc) {
-	return A2(
-		$elm$core$List$filter,
-		function (s) {
-			return s !== '';
-		},
-		A2($elm$core$String$split, '\n\n', doc));
+var $author$project$L1$Document$InParagraph = {$: 'InParagraph'};
+var $author$project$L1$Document$BlankLines = function (a) {
+	return {$: 'BlankLines', a: a};
 };
-var $author$project$Parser$Document$parse = F2(
+var $author$project$L1$Document$groupLinesAux = function (state) {
+	groupLinesAux:
+	while (true) {
+		var _v0 = $elm$core$List$head(state.input);
+		if (_v0.$ === 'Nothing') {
+			return _Utils_update(
+				state,
+				{
+					output: A2(
+						$elm$core$List$cons,
+						$elm$core$List$reverse(state.buffer),
+						state.output)
+				});
+		} else {
+			var line = _v0.a;
+			var _v1 = _Utils_Tuple2(line === '', state.status);
+			if (_v1.a) {
+				if (_v1.b.$ === 'BlankLines') {
+					var n = _v1.b.a;
+					var $temp$state = _Utils_update(
+						state,
+						{
+							buffer: A2($elm$core$List$cons, line, state.buffer),
+							input: A2($elm$core$List$drop, 1, state.input),
+							status: $author$project$L1$Document$BlankLines(n + 1)
+						});
+					state = $temp$state;
+					continue groupLinesAux;
+				} else {
+					var _v2 = _v1.b;
+					var $temp$state = _Utils_update(
+						state,
+						{
+							buffer: _List_Nil,
+							input: A2($elm$core$List$drop, 1, state.input),
+							output: A2(
+								$elm$core$List$cons,
+								$elm$core$List$reverse(state.buffer),
+								state.output),
+							status: $author$project$L1$Document$BlankLines(1)
+						});
+					state = $temp$state;
+					continue groupLinesAux;
+				}
+			} else {
+				if (_v1.b.$ === 'BlankLines') {
+					var $temp$state = _Utils_update(
+						state,
+						{
+							buffer: _List_fromArray(
+								[line]),
+							input: A2($elm$core$List$drop, 1, state.input),
+							status: $author$project$L1$Document$InParagraph
+						});
+					state = $temp$state;
+					continue groupLinesAux;
+				} else {
+					var _v3 = _v1.b;
+					var $temp$state = _Utils_update(
+						state,
+						{
+							buffer: A2($elm$core$List$cons, line, state.buffer),
+							input: A2($elm$core$List$drop, 1, state.input)
+						});
+					state = $temp$state;
+					continue groupLinesAux;
+				}
+			}
+		}
+	}
+};
+var $author$project$L1$Document$groupLines = function (lines) {
+	return $elm$core$List$reverse(
+		$author$project$L1$Document$groupLinesAux(
+			{buffer: _List_Nil, input: lines, output: _List_Nil, status: $author$project$L1$Document$InParagraph}).output);
+};
+var $author$project$L1$Document$split = function (doc) {
+	return A2(
+		$elm$core$List$map,
+		$elm$core$String$join('\n'),
+		$author$project$L1$Document$groupLines(
+			$elm$core$String$lines(doc)));
+};
+var $author$project$L1$Document$parse = F2(
 	function (generation, doc) {
 		var p = A2(
-			$author$project$Parser$Driver$parse,
-			$author$project$Parser$Parser$parse(generation),
+			$author$project$L1$Chunk$parse,
+			$author$project$L1$Parser$parse(generation),
 			generation);
 		return A2(
 			$elm$core$List$map,
 			p,
-			$author$project$Parser$Document$split(doc));
+			$author$project$L1$Document$split(doc));
 	});
 var $author$project$Render$Markdown$boldMark = '**';
 var $author$project$Render$Markdown$codeMark = '`';
@@ -15463,7 +15593,7 @@ var $author$project$Render$Markdown$link = F4(
 		var bodyStrings = function () {
 			if (body.$ === 'EList') {
 				var elements = body.a;
-				return A2($elm$core$List$map, $author$project$Parser$AST$getText, elements);
+				return A2($elm$core$List$map, $author$project$L1$AST$getText, elements);
 			} else {
 				return _List_fromArray(
 					['missing', 'stuff']);
@@ -15595,7 +15725,7 @@ var $author$project$Render$Markdown$transform = F2(
 						$elm$core$List$map,
 						A2(
 							$elm$core$Basics$composeR,
-							$author$project$Parser$AST$map(
+							$author$project$L1$AST$map(
 								function (s) {
 									return ' ' + s;
 								}),
@@ -15656,7 +15786,7 @@ var $author$project$Render$Markdown$transformDocument = function (doc) {
 			$elm$core$List$map,
 			$author$project$Render$Markdown$transformList(
 				{width: 600}),
-			A2($author$project$Parser$Document$parse, 0, doc)));
+			A2($author$project$L1$Document$parse, 0, doc)));
 };
 var $author$project$Main$toMarkdown = function (content) {
 	return $author$project$Render$Markdown$transformDocument(content);
@@ -15678,8 +15808,11 @@ var $author$project$Main$update = F2(
 						model,
 						{
 							count: model.count + 1,
-							input: str,
-							renderedText: A2($author$project$Main$render, model.count, str)
+							input: $elm$core$String$trim(str),
+							renderedText: A2(
+								$author$project$Main$render,
+								model.count,
+								$elm$core$String$trim(str))
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'ClearText':
@@ -16225,7 +16358,7 @@ var $author$project$Main$buttonStyle2 = _List_fromArray(
 	]);
 var $mdgriffith$elm_ui$Internal$Model$CenterY = {$: 'CenterY'};
 var $mdgriffith$elm_ui$Element$centerY = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$CenterY);
-var $author$project$Data$Article$text = '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n[image caption:Camperdown-Prospect-Park-Brooklyn https://upload.wikimedia.org/wikipedia/commons/2/20/Camperdown_Elm_Prospect_Park_Brooklyn.jpg]\n\n# Fault-Tolerant Parsing\n\nThe goal of this article is to explain  how one can implement a fault-tolerant parser for a simple markup language which we will call [b L1].\nTo put the notion of fault-tolerance in context, recall that the task of a  parser is to read source text in some language, then convert it to an abstract syntax tree (AST).  Classical parsers act like a dumb pipe, consuming the source text and producing the AST in one go, but bailing out when an error is encountered. Such behavior is not suited for interactive language editors, be they for programming languages or markup languages.  In an interactive environoment, the source text will pass in and out of error states, potentially  on each keystroke. A fault-tolerant parser should in all cases return an abstract syntax tree that makes sense.  This means that (a) most of the text is parsed as one expects, e.g., a new error at the halfway point does not necessarily invalidate the latter half which had already been correctly parsed in previous edits; (b) error text is converted into a valid node of the AST which displays the text in question, signals that it is an error, and gives some insight into the nature of the error.\n\n\nThe strategy for fault-tolerant parsing discussed here is based on Matt Griffith\'s project [link mdgriffith/elm-markup https://package.elm-lang.org/packages/mdgriffith/elm-markup/latest/], in which he introduced the notion of [i TextCursor].  Building on Griffith\'s work, the ed-tech company [link Brillant.org https://brilliant.org] developed a configurable fault-tolerant parser, Camperdown, for its internal authoring tools.\n\nThe Camperdown parser can be configured for applications ranging from Markdown-style languages to a kind of mini-LaTeX to interactive story-telling (see XXX).  The aim here is to present the main ideas of Camperdown in a simple yet nontrivial context that will be helpful both on its own and as a warmup to understanding and using Camperdown itself. The  codebase for [b L1] is small, with the core `textCursor` module, the largest of the bunch,  weighing in at just over 200 lines of code. Here are a few sentences in [b L1]:\n\n: (a) `This [highlight is [b not] a very good] test.`\n\n: (b) `Pythagoras said that $a^2 + b^2 = c^2. Wow! What a dude!!`\n\n\nThese are rendered\n\n:(a) This [highlight is [b not] a very good] test.\n\nPythagoras said that $a^2 + b^2 = c^2. Wow! What a dude!!\n\n\n\n## The Main Ideas\n\nThe two strategies that go into designing a fault-tolerant parser [i isolation] and the use a [i TextCursor] to scan the source text in such a way even if errors are detected, a valid AST can be constructed.\n\n### Isolation\n\nA first strategy is to divide the document into pieces in some way, e.g. A, B, C, D, ... that can be parsed separately.  Then an error in B, for example, will not affect the parsing of the subsequent parts C, D, etc.  This strategy has another advantage.  If the user edits part B, only that part need be re-parsed and re-rendered.  This kind of partitioning of the work provides large speed improvements.  The goal is always the same — instant feedback for the user.\n\nFor [b L1], we use an especially simple algorithm for partitioning the text: pieces are contiguous set of lines separated by two or more newlines.  One can imagine more complex schemes, but this one will do here.\n\n\n\n### Text Cursor\n\nTo explain the  scanning/cursor idea, let us consider the two snippets\n\n:(a) `This [i is] a [b real] test!`\n\nand\n\n:(b) `This [i is a [b real] test!`\n\nThey are rendered as\n\n:(a) This [i is] a [b real] test!\n\nand\n\n:(b) This [i is a [b real] test\n\nIn the second case the error is called out;  moreover, the word [i real] is\nstill rendered in bold.  Ergo, the parser was able to continue after the error, providing us with as good  a result as can be expected.\n\n### The Inner Workings (Happy Path)\n\nTo understand the scan/parse process, we consider an isomorphic but simpler example, the string `a [x b] [y c] d`.  As we scan from left to right, with the scannner head represented by `^`, we try to recognize and parse as man subunits as possible, keeping them ready in case they are needed to fit all the pieces of the puzzle together at a later time.  The first line in the image below is the starting state, with the pointer to the left of the data.  Unprocessed data is highlighted in green.  At step (1), the pointer moves to the right to just before the left bracket, which is one of the two delimiters in [b L1], The text `a` is saved in `cursor.text`, which is highlighted in yellow.  At step (2) the scanner has encountered an opening for an [b L1] element.  It knows that `a` is completely processed; it is therefore saved in `cursor.complete`, which is highlighted in blue.  At the same time, the  left bracket, which is in an unfulfilled state, is pushed onto the stack (magenta) for later use.\n\n[image https://noteimages.s3.amazonaws.com/parser-L1-1.png]\n\n\nAt step (3), the pointer moves to the next delimiter, placing the intervening text in the `.content` field of the item on top of the stack.  At step (4) something new happens.  The parser recognizes the right bracket which can close the data on the top of the stack. It appends the right bracket to the content of the top of the stack, parses it, and pushes it the list `cursor.parsed` (cyan).  This is the POP operation.  In step (5), a blank space is moved into `cursor.text`.  Not so interesting.\n\nThe next move of the pointer brings us to an opening bracket.  We know what to do. PUSH in step (6), then ADD text in (7), and finally POP once again in (8). Note that the function of ADD depends on whether the stack is empty or not.  Thus in (9), unprocessed text is transferred to `cursor.text`.\n\n-\n\nThe stack in now empty, indicating no errors.\nThere is one last operation, COMMIT.  In the the case of an empty stack, its role is to put the various parts of the cursor in the correct order —\n\n: `cursor.complete ++ cursor.parsed ++ (parse cursor.text)`\n\nThe very last element is a parsed version of `cursor.text`, and `++` is concatentation of lists.\n\n\n\n### The Inner Workings (Unhappy Path)\n\nOf course, it may happen that there are errors, as in the text\n\n: `a [x b [y c] d`\n\nThe key fact is that the opening bracket of `[x b` was never closed.  There are multiple solutions to the problem of turnng this into valid text, among which are `a [x] b [y c] d` and `a [x b] [y c] d`.  We have to pick a solution and a general rule for finding it.  Fortunately, the parser has collected enough information to do this. As it enters the commit phase, it knows the initial position of the never-closed  data `[x b`.  It can therefore assemble the following:\n\n: `c.complete ++ c.parsed ++ ((c.stack)) ++ (parse c.text)`\n\nwhere `((c.stack))` means [i make a  valid element whose text comes from] `c.stack`.  The image below shows what the parser knows as it enters the commit phase.\n\n[image https://noteimages.s3.amazonaws.com/parser-L1-2.png]\n\n\n\n## References\n\n\n[link "Error recovery with parser combinators"  "https://eyalkalderon.com/blog/nom-error-recovery/"]\n\n\n\n';
+var $author$project$Data$Article$text = '\n[image caption:Camperdown-Prospect-Park-Brooklyn https://upload.wikimedia.org/wikipedia/commons/2/20/Camperdown_Elm_Prospect_Park_Brooklyn.jpg]\n\n# Fault-Tolerant Parsing\n\nThe goal of this article is to explain  how one can implement a fault-tolerant parser for a simple markup language which we will call [b L1].\nTo put the notion of fault-tolerance in context, recall that the task of a  parser is to read source text in some language, then convert it to an abstract syntax tree (AST).  Classical parsers act like a dumb pipe, consuming the source text and producing the AST in one go, but bailing out when an error is encountered. Such behavior is not suited for interactive language editors, be they for programming languages or markup languages.  In an interactive environoment, the source text will pass in and out of error states, potentially  on each keystroke. A fault-tolerant parser should in all cases return an abstract syntax tree that makes sense.  This means that (a) most of the text is parsed as one expects, e.g., a new error at the halfway point does not necessarily invalidate the latter half which had already been correctly parsed in previous edits; (b) error text is converted into a valid node of the AST which displays the text in question, signals that it is an error, and gives some insight into the nature of the error.\n\n\nThe strategy for fault-tolerant parsing discussed here is based on Matt Griffith\'s project [link mdgriffith/elm-markup https://package.elm-lang.org/packages/mdgriffith/elm-markup/latest/], in which he introduced the notion of [i TextCursor] and a study of the code for [i Camperdown], a fault-tolerant parser that the ed-tech company [link Brillant.org https://brilliant.org] developed for its internal authoring tools.\n\nThe Camperdown parser can be configured for applications ranging from Markdown-style languages to a kind of mini-LaTeX to interactive story-telling (see XXX).  The aim here is to present the main ideas of Camperdown in a simple yet nontrivial context that will be helpful both on its own and as a warmup to understanding and using Camperdown itself. The  codebase for [b L1] is small, with the core `textCursor` module, the largest of the bunch,  weighing in at just over 200 lines of code. Here are a few sentences in [b L1]:\n\n: (a) `This [highlight is [b not] a very good] test.`\n\n: (b) `Pythagoras said that $a^2 + b^2 = c^2. Wow! What a dude!!`\n\n\nThese are rendered\n\n:(a) This [highlight is [b not] a very good] test.\n\n:(b) Pythagoras said that $a^2 + b^2 = c^2. Wow! What a dude!!\n\n\n## The Main Ideas\n\nThe two strategies that go into designing a fault-tolerant parser [i isolation] and the use a [i TextCursor] to scan the source text in such a way even if errors are detected, a valid AST can be constructed.\n\n### Isolation\n\nA first strategy is to divide the document into pieces in some way, e.g. A, B, C, D, ... that can be parsed separately.  Then an error in B, for example, will not affect the parsing of the subsequent parts C, D, etc.  This strategy has another advantage.  If the user edits part B, only that part need be re-parsed and re-rendered.  This kind of partitioning of the work provides large speed improvements.  The goal is always the same — instant feedback for the user.\n\nFor [b L1], we use an especially simple algorithm for partitioning the text: pieces are contiguous set of lines separated by two or more newlines.  One can imagine more complex schemes, but this one will do here.\n\n\n\n### Text Cursor\n\nTo explain the  scanning/cursor idea, let us consider the two snippets\n\n:(a) `This [i is] a [b real] test!`\n\nand\n\n:(b) `This [i is a [b real] test!`\n\nThey are rendered as\n\n:(a) This [i is] a [b real] test!\n\nand\n\n:(b) This [i is a [b real] test\n\nIn the second case the error is called out;  moreover, the word [i real] is\nstill rendered in bold.  Ergo, the parser was able to continue after the error, providing us with as good  a result as can be expected.\n\n### The Inner Workings (Happy Path)\n\nTo understand the scan/parse process, we consider an isomorphic but simpler example, the string `a [x b] [y c] d`.  As we scan from left to right, with the scannner head represented by `^`, we try to recognize and parse as man subunits as possible, keeping them ready in case they are needed to fit all the pieces of the puzzle together at a later time.  The first line in the image below is the starting state, with the pointer to the left of the data.  Unprocessed data is highlighted in green.  At step (1), the pointer moves to the right to just before the left bracket, which is one of the two delimiters in [b L1], The text `a` is saved in `cursor.text`, which is highlighted in yellow.  At step (2) the scanner has encountered an opening for an [b L1] element.  It knows that `a` is completely processed; it is therefore saved in `cursor.complete`, which is highlighted in blue.  At the same time, the  left bracket, which is in an unfulfilled state, is pushed onto the stack (magenta) for later use.\n\n[image https://noteimages.s3.amazonaws.com/parser-L1-1.png]\n\n\nAt step (3), the pointer moves to the next delimiter, placing the intervening text in the `.content` field of the item on top of the stack.  At step (4) something new happens.  The parser recognizes the right bracket which can close the data on the top of the stack. It appends the right bracket to the content of the top of the stack, parses it, and pushes it the list `cursor.parsed` (cyan).  This is the POP operation.  In step (5), a blank space is moved into `cursor.text`.  Not so interesting.\n\nThe next move of the pointer brings us to an opening bracket.  We know what to do. PUSH in step (6), then ADD text in (7), and finally POP once again in (8). Note that the function of ADD depends on whether the stack is empty or not.  Thus in (9), unprocessed text is transferred to `cursor.text`.\n\n-\n\nThe stack in now empty, indicating no errors.\nThere is one last operation, COMMIT.  In the the case of an empty stack, its role is to put the various parts of the cursor in the correct order —\n\n: `cursor.complete ++ cursor.parsed ++ (parse cursor.text)`\n\nThe very last element is a parsed version of `cursor.text`, and `++` is concatentation of lists.\n\n\n\n### The Inner Workings (Unhappy Path)\n\nOf course, it may happen that there are errors, as in the text\n\n: `a [x b [y c] d`\n\nThe key fact is that the opening bracket of `[x b` was never closed.  There are multiple solutions to the problem of turnng this into valid text, among which are `a [x] b [y c] d` and `a [x b] [y c] d`.  We have to pick a solution and a general rule for finding it.  Fortunately, the parser has collected enough information to do this. As it enters the commit phase, it knows the initial position of the never-closed  data `[x b`.  It can therefore assemble the following:\n\n: `c.complete ++ c.parsed ++ ((c.stack)) ++ (parse c.text)`\n\nwhere `((c.stack))` means [i make a  valid element whose text comes from] `c.stack`.  The image below shows what the parser knows as it enters the commit phase.\n\n[image https://noteimages.s3.amazonaws.com/parser-L1-2.png]\n\n\n\n## References\n\n\n[link "Error recovery with parser combinators"  "https://eyalkalderon.com/blog/nom-error-recovery/"]\n\n\n';
 var $author$project$Main$articleButton = A2(
 	$mdgriffith$elm_ui$Element$Input$button,
 	$author$project$Main$buttonStyle2,
@@ -17232,6 +17365,36 @@ var $author$project$Main$fontGray = function (g) {
 	return $mdgriffith$elm_ui$Element$Font$color(
 		A3($mdgriffith$elm_ui$Element$rgb, g, g, g));
 };
+var $mdgriffith$elm_ui$Element$Keyed$column = F2(
+	function (attrs, children) {
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asColumn,
+			$mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentTop + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.contentLeft)),
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
+						attrs))),
+			$mdgriffith$elm_ui$Internal$Model$Keyed(children));
+	});
+var $author$project$Main$keyIt = F2(
+	function (k, list) {
+		return A2(
+			$elm$core$List$indexedMap,
+			F2(
+				function (i, e) {
+					return _Utils_Tuple2(
+						$elm$core$String$fromInt(i + k),
+						e);
+				}),
+			list);
+	});
 var $author$project$Main$renderDocument = F2(
 	function (generation, document) {
 		return A2(
@@ -17244,11 +17407,11 @@ var $author$project$Main$renderDocument = F2(
 						{generation: generation}),
 					para);
 			},
-			A2($author$project$Parser$Document$parse, generation, document));
+			A2($author$project$L1$Document$parse, generation, document));
 	});
 var $author$project$Main$outputDisplay_ = function (model) {
 	return A2(
-		$mdgriffith$elm_ui$Element$column,
+		$mdgriffith$elm_ui$Element$Keyed$column,
 		_List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$spacing(18),
@@ -17265,11 +17428,14 @@ var $author$project$Main$outputDisplay_ = function (model) {
 				$mdgriffith$elm_ui$Element$Font$size(12)
 			]),
 		A2(
-			$elm$core$List$map,
-			function (para) {
-				return A2($mdgriffith$elm_ui$Element$paragraph, _List_Nil, para);
-			},
-			A2($author$project$Main$renderDocument, model.count, model.input)));
+			$author$project$Main$keyIt,
+			model.count,
+			A2(
+				$elm$core$List$map,
+				function (para) {
+					return A2($mdgriffith$elm_ui$Element$paragraph, _List_Nil, para);
+				},
+				A2($author$project$Main$renderDocument, model.count, model.input))));
 };
 var $author$project$Main$wordCount = function (str) {
 	return $elm$core$List$length(
