@@ -16888,9 +16888,25 @@ var $author$project$L1$Render$Elm$render = F2(
 			case 4:
 				var str = element.b;
 				return A2(
-					$mdgriffith$elm_ui$Element$el,
+					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
-					$mdgriffith$elm_ui$Element$text('PROBLEM: ' + str));
+					_List_fromArray(
+						[
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$Background$color($author$project$L1$Render$Elm$lightRedColor)
+								]),
+							$mdgriffith$elm_ui$Element$text('PROBLEM: ')),
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$Background$color($author$project$L1$Render$Elm$lightBlueColor)
+								]),
+							$mdgriffith$elm_ui$Element$text(str))
+						]));
 			case 5:
 				var message = element.c;
 				var errorText = element.d;
