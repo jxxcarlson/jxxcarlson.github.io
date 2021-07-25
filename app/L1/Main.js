@@ -6911,7 +6911,7 @@ var $author$project$L1$Parser$TextCursor$resolveError = function (tc) {
 		$elm_community$list_extra$List$Extra$unconsLast(tc.aK));
 	var errorPosition = A2(
 		$elm$core$Maybe$withDefault,
-		-1,
+		0,
 		A2($elm$core$Maybe$map, $author$project$L1$Parser$Stack$startPosition, maybeBottomOfStack));
 	var badStackItemSymbol = A2(
 		$elm$core$Maybe$withDefault,
@@ -7092,7 +7092,7 @@ var $author$project$L1$Parser$TextCursor$push = F3(
 						$author$project$L1$Parser$Stack$EndMark(
 							{
 								an: prefix_,
-								a2: {dE: -1, at: -1}
+								a2: {dE: tc.bL + 1, at: tc.bL}
 							}),
 						tc.aK));
 			}
