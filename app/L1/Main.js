@@ -6928,7 +6928,8 @@ var $author$project$L1$Parser$TextCursor$resolveError = function (tc) {
 			bm: A2($elm$core$List$cons, errorElement, tc.bm),
 			aB: 1 + tc.aB,
 			ep: _List_Nil,
-			bM: errorPosition + 1,
+			bM: errorPosition + $elm$core$String$length(badStackItemSymbol),
+			cO: $author$project$L1$Parser$TextCursor$NormalScan,
 			aL: _List_Nil,
 			eO: ''
 		});
