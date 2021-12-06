@@ -6343,8 +6343,8 @@ var $author$project$Tree$Build$fromString = F3(
 			makeNode,
 			$author$project$Tree$Blocks$fromStringAsLines(str));
 	});
-var $author$project$Main$initialAperture = 0.25;
-var $author$project$Main$initialGraphString = '\n1\n 2\n  3\n   4\n   5\n  6\n 7\n';
+var $author$project$Main$initialAperture = 0.225;
+var $author$project$Main$initialGraphString = '\n1\n 2\n  3\n   4\n   5\n  6\n 7\n 8\n  9\n  10\n  11\n';
 var $elm$random$Random$Seed = F2(
 	function (a, b) {
 		return {$: 'Seed', a: a, b: b};
@@ -13173,10 +13173,12 @@ var $mdgriffith$elm_ui$Internal$Model$AlignX = function (a) {
 var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
 var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
 var $author$project$Main$appHeight_ = function (model) {
-	return model.windowHeight - 140;
+	return model.windowHeight - 160;
 };
 var $author$project$Main$panelWidth_ = 560;
 var $author$project$Main$appWidth_ = (2 * $author$project$Main$panelWidth_) + 15;
+var $mdgriffith$elm_ui$Internal$Model$CenterX = {$: 'CenterX'};
+var $mdgriffith$elm_ui$Element$centerX = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$CenterX);
 var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
 	return {$: 'AlignY', a: a};
 };
@@ -13332,7 +13334,7 @@ var $author$project$Main$editor_ = function (model) {
 						A2(
 						$elm$html$Html$Attributes$style,
 						'width',
-						$elm$core$String$fromInt($author$project$Main$panelWidth_) + 'px'),
+						$elm$core$String$fromInt(($author$project$Main$panelWidth_ / 2) | 0) + 'px'),
 						A2($elm$html$Html$Attributes$attribute, 'text', model.sourceText)
 					]),
 				_List_Nil)));
@@ -13402,7 +13404,7 @@ var $author$project$Main$editor = function (model) {
 				$mdgriffith$elm_ui$Element$height(
 				$mdgriffith$elm_ui$Element$px(
 					$author$project$Main$innerPanelHeight(model))),
-				$mdgriffith$elm_ui$Element$moveDown(18),
+				$mdgriffith$elm_ui$Element$moveDown(4),
 				$mdgriffith$elm_ui$Element$alignTop
 			]),
 		_List_fromArray(
@@ -13747,8 +13749,6 @@ var $author$project$Main$buttonStyle = _List_fromArray(
 				A3($mdgriffith$elm_ui$Element$rgb255, 180, 180, 255))
 			]))
 	]);
-var $mdgriffith$elm_ui$Internal$Model$CenterX = {$: 'CenterX'};
-var $mdgriffith$elm_ui$Element$centerX = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$CenterX);
 var $author$project$Main$labelStyleToString = function (labelStyle) {
 	switch (labelStyle.$) {
 		case 'NoLabel':
@@ -13787,18 +13787,84 @@ var $author$project$Main$labelStyleButton = function (labelStyle) {
 				$author$project$Main$SetLabelStyle(labelStyle))
 		});
 };
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
+var $elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
+var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty('target');
+var $mdgriffith$elm_ui$Element$newTabLink = F2(
+	function (attrs, _v0) {
+		var label = _v0.label;
+		var url = _v0.url;
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asEl,
+			$mdgriffith$elm_ui$Internal$Model$NodeName('a'),
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Internal$Model$Attr(
+					$elm$html$Html$Attributes$href(url)),
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Internal$Model$Attr(
+						$elm$html$Html$Attributes$rel('noopener noreferrer')),
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Internal$Model$Attr(
+							$elm$html$Html$Attributes$target('_blank')),
+						A2(
+							$elm$core$List$cons,
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
+							A2(
+								$elm$core$List$cons,
+								$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
+								A2(
+									$elm$core$List$cons,
+									$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentCenterX + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.contentCenterY + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.link)))),
+									attrs)))))),
+			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+				_List_fromArray(
+					[label])));
+	});
+var $author$project$Main$linkToGitHub = A2(
+	$mdgriffith$elm_ui$Element$newTabLink,
+	_List_fromArray(
+		[
+			$mdgriffith$elm_ui$Element$Font$color(
+			A3($mdgriffith$elm_ui$Element$rgb, 0.8, 0.8, 0.8)),
+			$mdgriffith$elm_ui$Element$Font$size(14)
+		]),
+	{
+		label: $mdgriffith$elm_ui$Element$text('GitHub repo'),
+		url: 'https://github.com/jxxcarlson/elm-tree-builder'
+	});
+var $author$project$Main$linkToPackage = A2(
+	$mdgriffith$elm_ui$Element$newTabLink,
+	_List_fromArray(
+		[
+			$mdgriffith$elm_ui$Element$Font$color(
+			A3($mdgriffith$elm_ui$Element$rgb, 0.8, 0.8, 0.8)),
+			$mdgriffith$elm_ui$Element$Font$size(14)
+		]),
+	{
+		label: $mdgriffith$elm_ui$Element$text('package: jxxcarlson/elm-tree-builder'),
+		url: 'https://package.elm-lang.org/packages/jxxcarlson/elm-tree-builder/latest/'
+	});
 var $author$project$Main$mainColumnStyle = function (model) {
 	return _List_fromArray(
 		[
 			$mdgriffith$elm_ui$Element$centerX,
 			$mdgriffith$elm_ui$Element$centerY,
 			$author$project$Main$bgGray(0.5),
-			A2($mdgriffith$elm_ui$Element$paddingXY, 20, 20),
+			A2($mdgriffith$elm_ui$Element$paddingXY, 20, 10),
 			$mdgriffith$elm_ui$Element$width(
 			$mdgriffith$elm_ui$Element$px($author$project$Main$appWidth_ + 40)),
 			$mdgriffith$elm_ui$Element$height(
 			$mdgriffith$elm_ui$Element$px(
-				$author$project$Main$appHeight_(model) + 40))
+				$author$project$Main$appHeight_(model)))
 		]);
 };
 var $jxxcarlson$tree_extra$Tree$Extra$nodeCount = function (t) {
@@ -14042,16 +14108,17 @@ var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var $author$project$Main$render = F2(
 	function (model, graph_) {
+		var w = $elm$core$String$fromInt(
+			$author$project$Main$panelWidth_ + $elm$core$Basics$round(0.52 * $author$project$Main$panelWidth_));
 		var h = $elm$core$String$fromInt(
-			$author$project$Main$rawPanelHeight(model) - 14);
+			$author$project$Main$rawPanelHeight(model) - 7);
 		return A2(
 			$elm$svg$Svg$svg,
 			_List_fromArray(
 				[
-					$elm$svg$Svg$Attributes$width('900'),
-					$elm$svg$Svg$Attributes$height('920'),
-					$elm$svg$Svg$Attributes$viewBox(
-					'0 0 ' + ($elm$core$String$fromInt($author$project$Main$panelWidth_) + h)),
+					$elm$svg$Svg$Attributes$width(w),
+					$elm$svg$Svg$Attributes$height(h),
+					$elm$svg$Svg$Attributes$viewBox('0 0 100% 100%'),
 					$elm$svg$Svg$Attributes$fill('white')
 				]),
 			_Utils_ap(
@@ -14063,11 +14130,10 @@ var $author$project$Main$render = F2(
 							[
 								$elm$svg$Svg$Attributes$x('10'),
 								$elm$svg$Svg$Attributes$y('10'),
-								$elm$svg$Svg$Attributes$width(
-								$elm$core$String$fromInt($author$project$Main$panelWidth_)),
+								$elm$svg$Svg$Attributes$width(w),
 								$elm$svg$Svg$Attributes$height(h),
-								$elm$svg$Svg$Attributes$rx('15'),
-								$elm$svg$Svg$Attributes$ry('15'),
+								$elm$svg$Svg$Attributes$rx('0'),
+								$elm$svg$Svg$Attributes$ry('0'),
 								$elm$svg$Svg$Attributes$fill('white')
 							]),
 						_List_Nil)
@@ -14075,7 +14141,7 @@ var $author$project$Main$render = F2(
 				A2(
 					$author$project$Tree$Svg$render,
 					model.labelStyle,
-					A6($author$project$Tree$Svg$transform, 280, 100, 60, 60, 0.5, graph_))));
+					A6($author$project$Tree$Svg$transform, 425, 100, 60, 60, 0.5, graph_))));
 	});
 var $author$project$Main$rhs = function (model) {
 	var toRender = function () {
@@ -14109,7 +14175,6 @@ var $author$project$Main$rhs = function (model) {
 					[
 						$author$project$Main$fontGray(0.9),
 						$mdgriffith$elm_ui$Element$spacing(12),
-						$mdgriffith$elm_ui$Element$moveDown(14),
 						$mdgriffith$elm_ui$Element$Font$size(14)
 					]),
 				toRender)
@@ -14166,7 +14231,7 @@ var $author$project$Main$mainColumn = function (model) {
 						$mdgriffith$elm_ui$Element$centerY,
 						$mdgriffith$elm_ui$Element$paddingEach(
 						{bottom: 0, left: 0, right: 0, top: 16}),
-						$mdgriffith$elm_ui$Element$spacing(8),
+						$mdgriffith$elm_ui$Element$spacing(12),
 						$mdgriffith$elm_ui$Element$width(
 						$mdgriffith$elm_ui$Element$px($author$project$Main$appWidth_)),
 						$mdgriffith$elm_ui$Element$height(
@@ -14175,7 +14240,22 @@ var $author$project$Main$mainColumn = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$author$project$Main$title('Tree Test App'),
+						A2(
+						$mdgriffith$elm_ui$Element$row,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$spacing(24)
+							]),
+						_List_fromArray(
+							[
+								$author$project$Main$title('Tree Test App'),
+								A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[$mdgriffith$elm_ui$Element$centerX]),
+								$author$project$Main$linkToPackage),
+								$author$project$Main$linkToGitHub
+							])),
 						A2(
 						$mdgriffith$elm_ui$Element$row,
 						_List_fromArray(
