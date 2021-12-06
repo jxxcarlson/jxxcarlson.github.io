@@ -13242,6 +13242,8 @@ var $jxxcarlson$tree_extra$Tree$Extra$depth = function (t) {
 	return _Utils_eq(c, _List_Nil) ? 0 : (1 + $jxxcarlson$tree_extra$Tree$Extra$maxiumumPositiveInteger(
 		A2($elm$core$List$map, $jxxcarlson$tree_extra$Tree$Extra$depth, c)));
 };
+var $mdgriffith$elm_ui$Internal$Model$Top = {$: 'Top'};
+var $mdgriffith$elm_ui$Element$alignTop = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Top);
 var $author$project$Main$InputText = function (a) {
 	return {$: 'InputText', a: a};
 };
@@ -13343,11 +13345,11 @@ var $mdgriffith$elm_ui$Internal$Model$TransformComponent = F2(
 		return {$: 'TransformComponent', a: a, b: b};
 	});
 var $mdgriffith$elm_ui$Internal$Flag$moveY = $mdgriffith$elm_ui$Internal$Flag$flag(26);
-var $mdgriffith$elm_ui$Element$moveUp = function (y) {
+var $mdgriffith$elm_ui$Element$moveDown = function (y) {
 	return A2(
 		$mdgriffith$elm_ui$Internal$Model$TransformComponent,
 		$mdgriffith$elm_ui$Internal$Flag$moveY,
-		$mdgriffith$elm_ui$Internal$Model$MoveY(-y));
+		$mdgriffith$elm_ui$Internal$Model$MoveY(y));
 };
 var $mdgriffith$elm_ui$Internal$Model$Px = function (a) {
 	return {$: 'Px', a: a};
@@ -13400,7 +13402,8 @@ var $author$project$Main$editor = function (model) {
 				$mdgriffith$elm_ui$Element$height(
 				$mdgriffith$elm_ui$Element$px(
 					$author$project$Main$innerPanelHeight(model))),
-				$mdgriffith$elm_ui$Element$moveUp(28)
+				$mdgriffith$elm_ui$Element$moveDown(18),
+				$mdgriffith$elm_ui$Element$alignTop
 			]),
 		_List_fromArray(
 			[
@@ -13880,12 +13883,6 @@ var $author$project$Main$fontGray = function (g) {
 	return $mdgriffith$elm_ui$Element$Font$color(
 		A3($mdgriffith$elm_ui$Element$rgb, g, g, g));
 };
-var $mdgriffith$elm_ui$Element$moveDown = function (y) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$TransformComponent,
-		$mdgriffith$elm_ui$Internal$Flag$moveY,
-		$mdgriffith$elm_ui$Internal$Model$MoveY(y));
-};
 var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
@@ -14046,13 +14043,13 @@ var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var $author$project$Main$render = F2(
 	function (model, graph_) {
 		var h = $elm$core$String$fromInt(
-			$author$project$Main$rawPanelHeight(model) - 24);
+			$author$project$Main$rawPanelHeight(model) - 14);
 		return A2(
 			$elm$svg$Svg$svg,
 			_List_fromArray(
 				[
 					$elm$svg$Svg$Attributes$width('900'),
-					$elm$svg$Svg$Attributes$height('900'),
+					$elm$svg$Svg$Attributes$height('920'),
 					$elm$svg$Svg$Attributes$viewBox(
 					'0 0 ' + ($elm$core$String$fromInt($author$project$Main$panelWidth_) + h)),
 					$elm$svg$Svg$Attributes$fill('white')
@@ -14112,7 +14109,7 @@ var $author$project$Main$rhs = function (model) {
 					[
 						$author$project$Main$fontGray(0.9),
 						$mdgriffith$elm_ui$Element$spacing(12),
-						$mdgriffith$elm_ui$Element$moveDown(20),
+						$mdgriffith$elm_ui$Element$moveDown(14),
 						$mdgriffith$elm_ui$Element$Font$size(14)
 					]),
 				toRender)
