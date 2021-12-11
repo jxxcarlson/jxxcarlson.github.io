@@ -5492,7 +5492,6 @@ var $elm$core$Task$perform = F2(
 var $elm$browser$Browser$element = _Browser_element;
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $author$project$Tree$Svg$NoLabel = {$: 'NoLabel'};
-var $author$project$Tree$Build$BlocksNotWellFormed = {$: 'BlocksNotWellFormed'};
 var $author$project$Tree$Build$EmptyBlocks = {$: 'EmptyBlocks'};
 var $elm$core$List$drop = F2(
 	function (n, list) {
@@ -5536,219 +5535,6 @@ var $zwilias$elm_rosetree$Tree$Tree = F2(
 		return {$: 'Tree', a: a, b: b};
 	});
 var $zwilias$elm_rosetree$Tree$tree = $zwilias$elm_rosetree$Tree$Tree;
-var $elm$core$List$takeReverse = F3(
-	function (n, list, kept) {
-		takeReverse:
-		while (true) {
-			if (n <= 0) {
-				return kept;
-			} else {
-				if (!list.b) {
-					return kept;
-				} else {
-					var x = list.a;
-					var xs = list.b;
-					var $temp$n = n - 1,
-						$temp$list = xs,
-						$temp$kept = A2($elm$core$List$cons, x, kept);
-					n = $temp$n;
-					list = $temp$list;
-					kept = $temp$kept;
-					continue takeReverse;
-				}
-			}
-		}
-	});
-var $elm$core$List$takeTailRec = F2(
-	function (n, list) {
-		return $elm$core$List$reverse(
-			A3($elm$core$List$takeReverse, n, list, _List_Nil));
-	});
-var $elm$core$List$takeFast = F3(
-	function (ctr, n, list) {
-		if (n <= 0) {
-			return _List_Nil;
-		} else {
-			var _v0 = _Utils_Tuple2(n, list);
-			_v0$1:
-			while (true) {
-				_v0$5:
-				while (true) {
-					if (!_v0.b.b) {
-						return list;
-					} else {
-						if (_v0.b.b.b) {
-							switch (_v0.a) {
-								case 1:
-									break _v0$1;
-								case 2:
-									var _v2 = _v0.b;
-									var x = _v2.a;
-									var _v3 = _v2.b;
-									var y = _v3.a;
-									return _List_fromArray(
-										[x, y]);
-								case 3:
-									if (_v0.b.b.b.b) {
-										var _v4 = _v0.b;
-										var x = _v4.a;
-										var _v5 = _v4.b;
-										var y = _v5.a;
-										var _v6 = _v5.b;
-										var z = _v6.a;
-										return _List_fromArray(
-											[x, y, z]);
-									} else {
-										break _v0$5;
-									}
-								default:
-									if (_v0.b.b.b.b && _v0.b.b.b.b.b) {
-										var _v7 = _v0.b;
-										var x = _v7.a;
-										var _v8 = _v7.b;
-										var y = _v8.a;
-										var _v9 = _v8.b;
-										var z = _v9.a;
-										var _v10 = _v9.b;
-										var w = _v10.a;
-										var tl = _v10.b;
-										return (ctr > 1000) ? A2(
-											$elm$core$List$cons,
-											x,
-											A2(
-												$elm$core$List$cons,
-												y,
-												A2(
-													$elm$core$List$cons,
-													z,
-													A2(
-														$elm$core$List$cons,
-														w,
-														A2($elm$core$List$takeTailRec, n - 4, tl))))) : A2(
-											$elm$core$List$cons,
-											x,
-											A2(
-												$elm$core$List$cons,
-												y,
-												A2(
-													$elm$core$List$cons,
-													z,
-													A2(
-														$elm$core$List$cons,
-														w,
-														A3($elm$core$List$takeFast, ctr + 1, n - 4, tl)))));
-									} else {
-										break _v0$5;
-									}
-							}
-						} else {
-							if (_v0.a === 1) {
-								break _v0$1;
-							} else {
-								break _v0$5;
-							}
-						}
-					}
-				}
-				return list;
-			}
-			var _v1 = _v0.b;
-			var x = _v1.a;
-			return _List_fromArray(
-				[x]);
-		}
-	});
-var $elm$core$List$take = F2(
-	function (n, list) {
-		return A3($elm$core$List$takeFast, 0, n, list);
-	});
-var $author$project$Tree$Blocks$differences = function (xs) {
-	var us = A2($elm$core$List$drop, 1, xs);
-	var n = $elm$core$List$length(xs);
-	var vs = A2($elm$core$List$take, n - 1, xs);
-	return A3($elm$core$List$map2, $elm$core$Basics$sub, us, vs);
-};
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
-var $elm$core$Basics$modBy = _Basics_modBy;
-var $author$project$Tree$Math$gcd = F2(
-	function (a, b) {
-		gcd:
-		while (true) {
-			if (!a) {
-				return b;
-			} else {
-				var $temp$a = A2($elm$core$Basics$modBy, a, b),
-					$temp$b = a;
-				a = $temp$a;
-				b = $temp$b;
-				continue gcd;
-			}
-		}
-	});
-var $author$project$Tree$Math$gcdList = function (is) {
-	var _v0 = $elm$core$List$head(is);
-	if (_v0.$ === 'Nothing') {
-		return 1;
-	} else {
-		var n = _v0.a;
-		return A3(
-			$elm$core$List$foldl,
-			F2(
-				function (k, acc) {
-					return A2($author$project$Tree$Math$gcd, k, acc);
-				}),
-			n,
-			A2($elm$core$List$drop, 1, is));
-	}
-};
-var $author$project$Tree$Blocks$quantumOfBlocks = function (blocks) {
-	return $author$project$Tree$Math$gcdList(
-		A2(
-			$elm$core$List$filter,
-			function (n) {
-				return n > 0;
-			},
-			$author$project$Tree$Blocks$differences(
-				A2(
-					$elm$core$List$map,
-					function ($) {
-						return $.indent;
-					},
-					blocks))));
-};
-var $author$project$Tree$Blocks$wellFormed = function (blocks) {
-	var quantum = $author$project$Tree$Blocks$quantumOfBlocks(blocks);
-	var outliers = A2(
-		$elm$core$List$filter,
-		function (n) {
-			return n > 1;
-		},
-		A2(
-			$elm$core$List$map,
-			function (k) {
-				return (k / quantum) | 0;
-			},
-			$author$project$Tree$Blocks$differences(
-				A2(
-					$elm$core$List$map,
-					function ($) {
-						return $.indent;
-					},
-					blocks))));
-	return _Utils_Tuple2(
-		quantum,
-		!$elm$core$List$length(outliers));
-};
 var $author$project$Tree$Build$init = F3(
 	function (defaultNode, makeNode, blocks) {
 		var _v0 = $elm$core$List$head(blocks);
@@ -5756,22 +5542,19 @@ var $author$project$Tree$Build$init = F3(
 			return $elm$core$Result$Err($author$project$Tree$Build$EmptyBlocks);
 		} else {
 			var rootBlock = _v0.a;
-			var _v1 = $author$project$Tree$Blocks$wellFormed(blocks);
-			var quantum = _v1.a;
-			var wellFormed = _v1.b;
-			return (!wellFormed) ? $elm$core$Result$Err($author$project$Tree$Build$BlocksNotWellFormed) : $elm$core$Result$Ok(
+			return $elm$core$Result$Ok(
 				{
 					blocks: A2($elm$core$List$drop, 1, blocks),
 					_default: $zwilias$elm_rosetree$Tree$Zipper$fromTree(
 						A2($zwilias$elm_rosetree$Tree$tree, defaultNode, _List_Nil)),
 					indent: 0,
-					indentationQuantum: quantum,
+					indentationChanges: _List_Nil,
 					level: 0,
 					make: makeNode,
 					zipper: $zwilias$elm_rosetree$Tree$Zipper$fromTree(
 						A2(
 							$zwilias$elm_rosetree$Tree$tree,
-							makeNode(rootBlock.content),
+							makeNode(rootBlock),
 							_List_Nil))
 				});
 		}
@@ -5840,10 +5623,10 @@ var $author$project$Tree$Build$attachAtFocus = F2(
 			z);
 	});
 var $author$project$Tree$Build$handleEQ = F3(
-	function (indent, content, state) {
+	function (indent, block, state) {
 		var newTree = A2(
 			$zwilias$elm_rosetree$Tree$tree,
-			state.make(content),
+			state.make(block),
 			_List_Nil);
 		return _Utils_update(
 			state,
@@ -5887,11 +5670,21 @@ var $zwilias$elm_rosetree$Tree$Zipper$lastChild = function (_v0) {
 				}));
 	}
 };
+var $elm$core$List$sum = function (numbers) {
+	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
+};
+var $author$project$Tree$Build$pushIndentationChange = F2(
+	function (k, ks) {
+		return A2(
+			$elm$core$List$cons,
+			k - $elm$core$List$sum(ks),
+			ks);
+	});
 var $author$project$Tree$Build$handleGT = F3(
-	function (indent, content, state) {
+	function (indent, block, state) {
 		var newTree = A2(
 			$zwilias$elm_rosetree$Tree$tree,
-			state.make(content),
+			state.make(block),
 			_List_Nil);
 		var _v0 = $zwilias$elm_rosetree$Tree$Zipper$lastChild(state.zipper);
 		if (_v0.$ === 'Nothing') {
@@ -5900,6 +5693,7 @@ var $author$project$Tree$Build$handleGT = F3(
 				{
 					blocks: A2($elm$core$List$drop, 1, state.blocks),
 					indent: indent,
+					indentationChanges: A2($author$project$Tree$Build$pushIndentationChange, block.indent, state.indentationChanges),
 					level: state.level + 1,
 					zipper: A2($author$project$Tree$Build$attachAtFocus, newTree, state.zipper)
 				});
@@ -5910,6 +5704,7 @@ var $author$project$Tree$Build$handleGT = F3(
 				{
 					blocks: A2($elm$core$List$drop, 1, state.blocks),
 					indent: indent,
+					indentationChanges: A2($author$project$Tree$Build$pushIndentationChange, block.indent, state.indentationChanges),
 					level: state.level + 1,
 					zipper: A2($author$project$Tree$Build$attachAtFocus, newTree, newZipper)
 				});
@@ -5945,6 +5740,46 @@ var $zwilias$elm_rosetree$Tree$Zipper$parent = function (_v0) {
 				}));
 	}
 };
+var $author$project$Tree$Build$popUntilAux = F2(
+	function (goal, _v0) {
+		popUntilAux:
+		while (true) {
+			var sum = _v0.sum;
+			var popped = _v0.popped;
+			var remaining = _v0.remaining;
+			var _v1 = $elm$core$List$head(remaining);
+			if (_v1.$ === 'Nothing') {
+				return {popped: popped, remaining: remaining, sum: sum};
+			} else {
+				var k = _v1.a;
+				var newSum = sum + k;
+				if (_Utils_cmp(newSum, goal) < 0) {
+					var $temp$goal = goal,
+						$temp$_v0 = {
+						popped: popped + 1,
+						remaining: A2($elm$core$List$drop, 1, remaining),
+						sum: newSum
+					};
+					goal = $temp$goal;
+					_v0 = $temp$_v0;
+					continue popUntilAux;
+				} else {
+					return {
+						popped: popped + 1,
+						remaining: A2($elm$core$List$drop, 1, remaining),
+						sum: newSum
+					};
+				}
+			}
+		}
+	});
+var $author$project$Tree$Build$popUntil = F2(
+	function (goal, input) {
+		return A2(
+			$author$project$Tree$Build$popUntilAux,
+			goal,
+			{popped: 0, remaining: input, sum: 0});
+	});
 var $elm$core$Maybe$andThen = F2(
 	function (callback, maybeValue) {
 		if (maybeValue.$ === 'Just') {
@@ -5986,17 +5821,20 @@ var $author$project$Tree$Build$repeat = F3(
 		}
 	});
 var $author$project$Tree$Build$handleLT = F3(
-	function (indent, content, state) {
+	function (indent, block, state) {
 		var newTree = A2(
 			$zwilias$elm_rosetree$Tree$tree,
-			state.make(content),
+			state.make(block),
 			_List_Nil);
-		var deltaLevel = ((state.indent - indent) / state.indentationQuantum) | 0;
+		var deltaInfo = A2($author$project$Tree$Build$popUntil, state.indent - indent, state.indentationChanges);
+		var deltaLevel = deltaInfo.popped;
 		return _Utils_update(
 			state,
 			{
 				blocks: A2($elm$core$List$drop, 1, state.blocks),
 				indent: indent,
+				indentationChanges: deltaInfo.remaining,
+				level: state.level - deltaLevel,
 				zipper: A2(
 					$author$project$Tree$Build$attachAtFocus,
 					newTree,
@@ -6066,13 +5904,13 @@ var $author$project$Tree$Build$nextStep = function (state) {
 		switch (_v1.$) {
 			case 'GT':
 				return $author$project$Tree$Build$Loop(
-					A3($author$project$Tree$Build$handleGT, block.indent, block.content, state));
+					A3($author$project$Tree$Build$handleGT, block.indent, block, state));
 			case 'EQ':
 				return $author$project$Tree$Build$Loop(
-					A3($author$project$Tree$Build$handleEQ, block.indent, block.content, state));
+					A3($author$project$Tree$Build$handleEQ, block.indent, block, state));
 			default:
 				return $author$project$Tree$Build$Loop(
-					A3($author$project$Tree$Build$handleLT, block.indent, block.content, state));
+					A3($author$project$Tree$Build$handleLT, block.indent, block, state));
 		}
 	}
 };
@@ -6215,42 +6053,45 @@ var $elm$parser$Parser$Advanced$succeed = function (a) {
 		});
 };
 var $elm$parser$Parser$succeed = $elm$parser$Parser$Advanced$succeed;
-var $author$project$Tree$Line$prefixParser = A2(
-	$elm$parser$Parser$keeper,
-	A2(
+var $author$project$Tree$Line$prefixParser = function (lineNumber) {
+	return A2(
 		$elm$parser$Parser$keeper,
 		A2(
 			$elm$parser$Parser$keeper,
 			A2(
 				$elm$parser$Parser$keeper,
-				$elm$parser$Parser$succeed(
-					F4(
-						function (prefixStart, prefixEnd, end, content) {
-							return {
-								content: A3($elm$core$String$slice, prefixEnd, end, content),
-								indent: prefixEnd - prefixStart
-							};
-						})),
+				A2(
+					$elm$parser$Parser$keeper,
+					$elm$parser$Parser$succeed(
+						F4(
+							function (prefixStart, prefixEnd, end, content) {
+								return {
+									content: A3($elm$core$String$slice, prefixEnd, end, content),
+									indent: prefixEnd - prefixStart,
+									lineNumber: lineNumber
+								};
+							})),
+					A2(
+						$elm$parser$Parser$ignorer,
+						$elm$parser$Parser$getOffset,
+						$elm$parser$Parser$chompWhile(
+							function (c) {
+								return _Utils_eq(
+									c,
+									_Utils_chr(' '));
+							}))),
 				A2(
 					$elm$parser$Parser$ignorer,
 					$elm$parser$Parser$getOffset,
 					$elm$parser$Parser$chompWhile(
 						function (c) {
-							return _Utils_eq(
+							return !_Utils_eq(
 								c,
-								_Utils_chr(' '));
+								_Utils_chr('\n'));
 						}))),
-			A2(
-				$elm$parser$Parser$ignorer,
-				$elm$parser$Parser$getOffset,
-				$elm$parser$Parser$chompWhile(
-					function (c) {
-						return !_Utils_eq(
-							c,
-							_Utils_chr('\n'));
-					}))),
-		$elm$parser$Parser$getOffset),
-	$elm$parser$Parser$getSource);
+			$elm$parser$Parser$getOffset),
+		$elm$parser$Parser$getSource);
+};
 var $elm$parser$Parser$DeadEnd = F3(
 	function (row, col, problem) {
 		return {col: col, problem: problem, row: row};
@@ -6310,23 +6151,39 @@ var $elm$parser$Parser$run = F2(
 				A2($elm$core$List$map, $elm$parser$Parser$problemToDeadEnd, problems));
 		}
 	});
-var $author$project$Tree$Line$classify = function (str) {
-	var _v0 = A2($elm$parser$Parser$run, $author$project$Tree$Line$prefixParser, str);
-	if (_v0.$ === 'Err') {
-		return {content: '!!ERROR', indent: 0};
-	} else {
-		var result = _v0.a;
-		return result;
-	}
-};
+var $author$project$Tree$Line$classify = F2(
+	function (lineNumber, str) {
+		var _v0 = A2(
+			$elm$parser$Parser$run,
+			$author$project$Tree$Line$prefixParser(lineNumber),
+			str);
+		if (_v0.$ === 'Err') {
+			return {content: '!!ERROR', indent: 0, lineNumber: lineNumber};
+		} else {
+			var result = _v0.a;
+			return result;
+		}
+	});
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
 var $elm$core$String$lines = _String_lines;
 var $elm$core$String$trim = _String_trim;
-var $author$project$Tree$Blocks$fromStringAsLines = function (str) {
+var $author$project$Tree$BlocksV$fromStringAsLines = function (str) {
 	return A2(
-		$elm$core$List$map,
-		function (line) {
-			return $author$project$Tree$Line$classify(line);
-		},
+		$elm$core$List$indexedMap,
+		F2(
+			function (k, line) {
+				return A2($author$project$Tree$Line$classify, k, line);
+			}),
 		A2(
 			$elm$core$List$filter,
 			function (line) {
@@ -6335,6 +6192,7 @@ var $author$project$Tree$Blocks$fromStringAsLines = function (str) {
 			$elm$core$String$lines(
 				$elm$core$String$trim(str))));
 };
+var $author$project$Tree$Blocks$fromStringAsLines = $author$project$Tree$BlocksV$fromStringAsLines;
 var $author$project$Tree$Build$fromString = F3(
 	function (defaultNode, makeNode, str) {
 		return A3(
@@ -6364,7 +6222,6 @@ var $elm$random$Random$initialSeed = function (x) {
 	return $elm$random$Random$next(
 		A2($elm$random$Random$Seed, state2, incr));
 };
-var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Result$map = F2(
 	function (func, ra) {
 		if (ra.$ === 'Ok') {
@@ -7022,16 +6879,25 @@ var $author$project$Main$init = function (flags) {
 					$author$project$Tree$Render$toGraph,
 					$author$project$Main$preferences($author$project$Main$initialAperture),
 					$elm$core$Basics$identity),
-				A3($author$project$Tree$Build$fromString, '?', $elm$core$Basics$identity, $author$project$Main$initialGraphString)),
+				A3(
+					$author$project$Tree$Build$fromString,
+					'?',
+					function ($) {
+						return $.content;
+					},
+					$author$project$Main$initialGraphString)),
 			labelStyle: $author$project$Tree$Svg$NoLabel,
 			lineNumber: 0,
 			message: '',
-			seed: A2(
-				$elm$core$Debug$log,
-				'SEED2',
-				$elm$random$Random$initialSeed(flags.seed)),
+			seed: $elm$random$Random$initialSeed(flags.seed),
 			sourceText: $author$project$Main$initialGraphString,
-			tree: A3($author$project$Tree$Build$fromString, '?', $elm$core$Basics$identity, $author$project$Main$initialGraphString),
+			tree: A3(
+				$author$project$Tree$Build$fromString,
+				'?',
+				function ($) {
+					return $.content;
+				},
+				$author$project$Main$initialGraphString),
 			windowHeight: flags.height,
 			windowWidth: flags.width
 		},
@@ -7149,9 +7015,6 @@ var $elm$random$Random$map = F2(
 					seed1);
 			});
 	});
-var $elm$core$List$sum = function (numbers) {
-	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
-};
 var $elm$random$Random$weighted = F2(
 	function (first, others) {
 		var normalize = function (_v0) {
@@ -7311,7 +7174,13 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			case 'InputText':
 				var t = msg.a;
-				var tree_ = A3($author$project$Tree$Build$fromString, '?', $elm$core$Basics$identity, t);
+				var tree_ = A3(
+					$author$project$Tree$Build$fromString,
+					'?',
+					function ($) {
+						return $.content;
+					},
+					t);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -7361,9 +7230,21 @@ var $author$project$Main$update = F2(
 									$author$project$Tree$Render$toGraph,
 									$author$project$Main$preferences(model.aperture),
 									$elm$core$Basics$identity),
-								A3($author$project$Tree$Build$fromString, '?', $elm$core$Basics$identity, content)),
+								A3(
+									$author$project$Tree$Build$fromString,
+									'?',
+									function ($) {
+										return $.content;
+									},
+									content)),
 							sourceText: content,
-							tree: A3($author$project$Tree$Build$fromString, '?', $elm$core$Basics$identity, content)
+							tree: A3(
+								$author$project$Tree$Build$fromString,
+								'?',
+								function ($) {
+									return $.content;
+								},
+								content)
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'SaveToFile':
@@ -7384,7 +7265,13 @@ var $author$project$Main$update = F2(
 				var randomNumber = _v2.a;
 				var seed = _v2.b;
 				var sourceText = A2($author$project$Tree$Random$generateOutline, numberOfNodes, randomNumber);
-				var tree = A3($author$project$Tree$Build$fromString, '?', $elm$core$Basics$identity, sourceText);
+				var tree = A3(
+					$author$project$Tree$Build$fromString,
+					'?',
+					function ($) {
+						return $.content;
+					},
+					sourceText);
 				var graph = A2(
 					$elm$core$Result$map,
 					A2(
@@ -14066,6 +13953,132 @@ var $author$project$Tree$Svg$renderFirstEdge = F2(
 				A2($author$project$Tree$Svg$renderNodeWithLabel, labelStyle, edge.from),
 				$author$project$Tree$Svg$renderNode(edge.to)
 			]);
+	});
+var $elm$core$List$takeReverse = F3(
+	function (n, list, kept) {
+		takeReverse:
+		while (true) {
+			if (n <= 0) {
+				return kept;
+			} else {
+				if (!list.b) {
+					return kept;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs,
+						$temp$kept = A2($elm$core$List$cons, x, kept);
+					n = $temp$n;
+					list = $temp$list;
+					kept = $temp$kept;
+					continue takeReverse;
+				}
+			}
+		}
+	});
+var $elm$core$List$takeTailRec = F2(
+	function (n, list) {
+		return $elm$core$List$reverse(
+			A3($elm$core$List$takeReverse, n, list, _List_Nil));
+	});
+var $elm$core$List$takeFast = F3(
+	function (ctr, n, list) {
+		if (n <= 0) {
+			return _List_Nil;
+		} else {
+			var _v0 = _Utils_Tuple2(n, list);
+			_v0$1:
+			while (true) {
+				_v0$5:
+				while (true) {
+					if (!_v0.b.b) {
+						return list;
+					} else {
+						if (_v0.b.b.b) {
+							switch (_v0.a) {
+								case 1:
+									break _v0$1;
+								case 2:
+									var _v2 = _v0.b;
+									var x = _v2.a;
+									var _v3 = _v2.b;
+									var y = _v3.a;
+									return _List_fromArray(
+										[x, y]);
+								case 3:
+									if (_v0.b.b.b.b) {
+										var _v4 = _v0.b;
+										var x = _v4.a;
+										var _v5 = _v4.b;
+										var y = _v5.a;
+										var _v6 = _v5.b;
+										var z = _v6.a;
+										return _List_fromArray(
+											[x, y, z]);
+									} else {
+										break _v0$5;
+									}
+								default:
+									if (_v0.b.b.b.b && _v0.b.b.b.b.b) {
+										var _v7 = _v0.b;
+										var x = _v7.a;
+										var _v8 = _v7.b;
+										var y = _v8.a;
+										var _v9 = _v8.b;
+										var z = _v9.a;
+										var _v10 = _v9.b;
+										var w = _v10.a;
+										var tl = _v10.b;
+										return (ctr > 1000) ? A2(
+											$elm$core$List$cons,
+											x,
+											A2(
+												$elm$core$List$cons,
+												y,
+												A2(
+													$elm$core$List$cons,
+													z,
+													A2(
+														$elm$core$List$cons,
+														w,
+														A2($elm$core$List$takeTailRec, n - 4, tl))))) : A2(
+											$elm$core$List$cons,
+											x,
+											A2(
+												$elm$core$List$cons,
+												y,
+												A2(
+													$elm$core$List$cons,
+													z,
+													A2(
+														$elm$core$List$cons,
+														w,
+														A3($elm$core$List$takeFast, ctr + 1, n - 4, tl)))));
+									} else {
+										break _v0$5;
+									}
+							}
+						} else {
+							if (_v0.a === 1) {
+								break _v0$1;
+							} else {
+								break _v0$5;
+							}
+						}
+					}
+				}
+				return list;
+			}
+			var _v1 = _v0.b;
+			var x = _v1.a;
+			return _List_fromArray(
+				[x]);
+		}
+	});
+var $elm$core$List$take = F2(
+	function (n, list) {
+		return A3($elm$core$List$takeFast, 0, n, list);
 	});
 var $author$project$Tree$Svg$render = F2(
 	function (labelStyle, graph) {
