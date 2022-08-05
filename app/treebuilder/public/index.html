@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Tree Test App</title>
+
+  <!-- For the ACE editor as in Alex Korban's book -->
+  <script src="assets/ace.js"></script>
+  <script src="assets/ace-element.js"></script>
+
+  <title>CaYaTeX Test App</title>
+
+  <!-- Style -->
+
+  <!-- Load app -->
+  <script src="Main.js" charset="utf-8"></script>
+
+</head>
+
+<body>
+
+  <div id="main"></div>
+
+  <script>
+
+    var windowHeight = window.screen.height
+    var windowWidth = window.screen.width
+
+    var root = document.getElementById('main');
+    var app = Elm.Main.init({ node: root, flags: { seed: randInts[0], width: windowWidth, height: windowHeight } });
+    init(app);
+
+  </script>
+
+</body>
+
+</html>
