@@ -5427,6 +5427,7 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
+var $author$project$Main$Example = {$: 'Example'};
 var $author$project$Scripta$Language$MicroLaTeXLang = {$: 'MicroLaTeXLang'};
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
@@ -17351,13 +17352,14 @@ var $author$project$Compiler$DifferentialParser$init = F3(
 		};
 	});
 var $author$project$Scripta$API$init = $author$project$Compiler$DifferentialParser$init;
-var $author$project$Text$microLaTeXDemo = '\n\\title{Demo (MicroLaTeX)}\n\n| banner\n\\link{Scrpta.io https://scripta.io}\n\n\\contents\n\n\\section{Images}\n\n\\image{https://see.news/wp-content/uploads/2020/12/UK_wildbirds-01-robin.jpg}\n\n\\section{Math}\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n';
+var $author$project$Text$microLaTeXDemo = '\n\\title{Demo (MicroLaTeX)}\n\n| banner\n\\link{Scrpta.io https://scripta.io}\n\n\\contents\n\n\\section{Images}\n\n\\image{https://see.news/wp-content/uploads/2020/12/UK_wildbirds-01-robin.jpg}\n\n\\section{Math}\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n\\strong{Tip:} Click on a section title to go back to the table of contents.\n';
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (flags) {
 	return _Utils_Tuple2(
 		{
 			count: 0,
+			documentType: $author$project$Main$Example,
 			editRecord: A3($author$project$Scripta$API$init, $elm$core$Dict$empty, $author$project$Scripta$Language$MicroLaTeXLang, $author$project$Text$microLaTeXDemo),
 			input: $author$project$Text$microLaTeXDemo,
 			language: $author$project$Scripta$Language$MicroLaTeXLang
@@ -17369,6 +17371,7 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$none;
 };
+var $author$project$Main$InfoDocument = {$: 'InfoDocument'};
 var $author$project$Text$info = '\n| title\nAbout the Scripta compiler\n\n[tags jxxcarlson:about-the-scripta-compiler]\n\n| runninghead\n[link Scripta.io https://scripta.io]\n\nThe Scripta compiler transforms source text to HTML, where\nthe source text is one of the following markup languages:\n\n| item\nL0 — an experimental language with syntax inspired by Lisp.\nCan render LaTeX-style\nmathematical text.  This document is written in L0.\n\n| item\nMicroLaTeX — a cousin of LaTeX.  Source text can be exported\nto standard LaTeX\n\n| item\nXMarkdown — a cousin of Markdown.  Can render LaTeX-style\nmathematical text.\n\n\nThe Scripta compiler features real-time, fault-tolerant\nparsing and rendering, and so is suitable for an interactive\nediting system in which (a) changes to the source text\nare rendered "instantly," that is, with no perceptible delay,\nand (b) syntax errors are handled gracefully, marked as such\nin the rendered text, and with the following text rendered\nproperly to the greatest extent possible.\n\nThe Scripta compiler is open-source, and can be found at\n[link github.com/jxxcarlson/scripta-compiler  https://github.com/jxxcarlson/scripta-compiler].  In the Example\nfolder, you will find a small demo app.  It is hosted online\nat [link Github https://jxxcarlson.github.io/app/scripta-compiler-demo/assets/index.html].\n\nThe Scripta compiler is used to power\n[link Scripta.io https://scripta.io].  It features\ninteractive editing, a searchable store of documents,\nand facilities for collaboration and web publishing.\n';
 var $author$project$Main$NoOp = {$: 'NoOp'};
 var $elm$core$Task$onError = _Scheduler_onError;
@@ -17405,7 +17408,7 @@ var $author$project$Main$jumpToTop = function (id) {
 			},
 			$elm$browser$Browser$Dom$getViewportOf(id)));
 };
-var $author$project$Text$l0Demo = '\n| title\nDemo (L0)\n\n| banner\n[link Scripta.io https://scripta.io]\n\n| contents\n\n| section 1\nImages\n\n[image https://nas-national-prod.s3.amazonaws.com/styles/hero_image/s3/web_h_apa_2016-a1_2474_8_cedar-waxwing_peter_brannon_kk_female.jpg?itok=VdeVVmGA]\n\n| section 1\nMath\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n';
+var $author$project$Text$l0Demo = '\n| title\nDemo (L0)\n\n| banner\n[link Scripta.io https://scripta.io]\n\n| contents\n\n| section 1\nImages\n\n[image https://nas-national-prod.s3.amazonaws.com/styles/hero_image/s3/web_h_apa_2016-a1_2474_8_cedar-waxwing_peter_brannon_kk_female.jpg?itok=VdeVVmGA]\n\n| section 1\nMath\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n[bold Tip:] Click on a section title to go back to the table of contents.\n\n';
 var $author$project$Compiler$Differ$DiffRecord = F4(
 	function (commonInitialSegment, commonTerminalSegment, middleSegmentInSource, middleSegmentInTarget) {
 		return {commonInitialSegment: commonInitialSegment, commonTerminalSegment: commonTerminalSegment, middleSegmentInSource: middleSegmentInSource, middleSegmentInTarget: middleSegmentInTarget};
@@ -17514,7 +17517,7 @@ var $author$project$Compiler$DifferentialParser$update = F2(
 			text);
 	});
 var $author$project$Scripta$API$update = $author$project$Compiler$DifferentialParser$update;
-var $author$project$Text$xMarkdown = '\n| title\nDemo (XMarkdown)\n\n| banner\n[Scripta.io](https://scripta.io)\n\n| contents\n\n# Images\n\n![Yellow bird](https://i.ibb.co/XFzZYby/image.png)\n\n# Math\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n';
+var $author$project$Text$xMarkdown = '\n| title\nDemo (XMarkdown)\n\n| banner\n[Scripta.io](https://scripta.io)\n\n| contents\n\n# Images\n\n![Yellow bird](https://i.ibb.co/XFzZYby/image.png)\n\n# Math\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n*bold Tip:* Click on a section title to go back to the table of contents.\n\n';
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -17550,6 +17553,7 @@ var $author$project$Main$update = F2(
 						model,
 						{
 							count: model.count + 1,
+							documentType: $author$project$Main$Example,
 							editRecord: A3($author$project$Scripta$API$init, $elm$core$Dict$empty, lang, docText),
 							input: docText,
 							language: lang
@@ -17566,6 +17570,7 @@ var $author$project$Main$update = F2(
 						model,
 						{
 							count: model.count + 1,
+							documentType: $author$project$Main$InfoDocument,
 							editRecord: A3($author$project$Scripta$API$init, $elm$core$Dict$empty, $author$project$Scripta$Language$L0Lang, $author$project$Text$info),
 							input: $author$project$Text$info,
 							language: $author$project$Scripta$Language$L0Lang
@@ -23332,6 +23337,7 @@ var $mdgriffith$elm_ui$Element$rgb255 = F3(
 	function (red, green, blue) {
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, 1);
 	});
+var $author$project$Main$darkRed = A3($mdgriffith$elm_ui$Element$rgb255, 140, 0, 0);
 var $author$project$Main$gray = A3($mdgriffith$elm_ui$Element$rgb255, 60, 60, 60);
 var $mdgriffith$elm_ui$Internal$Model$Px = function (a) {
 	return {$: 'Px', a: a};
@@ -23897,27 +23903,35 @@ var $author$project$Button$template = function (buttonData) {
 			]));
 };
 var $author$project$Main$white = A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255);
-var $author$project$Main$infoButton = $author$project$Button$template(
-	{
-		attributes: _List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$Font$color($author$project$Main$white),
-				$mdgriffith$elm_ui$Element$Background$color($author$project$Main$gray),
-				$mdgriffith$elm_ui$Element$width(
-				$mdgriffith$elm_ui$Element$px($author$project$Main$buttonWidth))
-			]),
-		label: 'Info',
-		msg: $author$project$Main$Info,
-		tooltipPlacement: $mdgriffith$elm_ui$Element$above,
-		tooltipText: 'Info on the Scripta compiler'
-	});
+var $author$project$Main$infoButton = function (documentType) {
+	var bgColor = function () {
+		if (documentType.$ === 'InfoDocument') {
+			return $author$project$Main$darkRed;
+		} else {
+			return $author$project$Main$gray;
+		}
+	}();
+	return $author$project$Button$template(
+		{
+			attributes: _List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$color($author$project$Main$white),
+					$mdgriffith$elm_ui$Element$Background$color(bgColor),
+					$mdgriffith$elm_ui$Element$width(
+					$mdgriffith$elm_ui$Element$px($author$project$Main$buttonWidth))
+				]),
+			label: 'About',
+			msg: $author$project$Main$Info,
+			tooltipPlacement: $mdgriffith$elm_ui$Element$above,
+			tooltipText: 'Info on the Scripta compiler'
+		});
+};
 var $author$project$Main$SetLanguage = function (a) {
 	return {$: 'SetLanguage', a: a};
 };
-var $author$project$Main$darkRed = A3($mdgriffith$elm_ui$Element$rgb255, 140, 0, 0);
-var $author$project$Main$setLanguageButton = F3(
-	function (label, language, currentLanguage) {
-		var bgColor = _Utils_eq(language, currentLanguage) ? $author$project$Main$darkRed : $author$project$Main$gray;
+var $author$project$Main$setLanguageButton = F4(
+	function (label, documentType, language, currentLanguage) {
+		var bgColor = (_Utils_eq(language, currentLanguage) && _Utils_eq(documentType, $author$project$Main$Example)) ? $author$project$Main$darkRed : $author$project$Main$gray;
 		return $author$project$Button$template(
 			{
 				attributes: _List_fromArray(
@@ -23963,16 +23977,16 @@ var $author$project$Main$controls = function (model) {
 			]),
 		_List_fromArray(
 			[
-				A3($author$project$Main$setLanguageButton, 'L0', $author$project$Scripta$Language$L0Lang, model.language),
-				A3($author$project$Main$setLanguageButton, 'MicroLaTeX', $author$project$Scripta$Language$MicroLaTeXLang, model.language),
-				A3($author$project$Main$setLanguageButton, 'XMarkdown', $author$project$Scripta$Language$XMarkdownLang, model.language),
+				A4($author$project$Main$setLanguageButton, 'L0', model.documentType, $author$project$Scripta$Language$L0Lang, model.language),
+				A4($author$project$Main$setLanguageButton, 'MicroLaTeX', model.documentType, $author$project$Scripta$Language$MicroLaTeXLang, model.language),
+				A4($author$project$Main$setLanguageButton, 'XMarkdown', model.documentType, $author$project$Scripta$Language$XMarkdownLang, model.language),
 				A2(
 				$mdgriffith$elm_ui$Element$el,
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Element$paddingXY, 0, 40)
 					]),
-				$author$project$Main$infoButton)
+				$author$project$Main$infoButton(model.documentType))
 			]));
 };
 var $author$project$Main$fontGray = function (g) {
