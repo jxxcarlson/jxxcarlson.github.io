@@ -4604,6 +4604,405 @@ var _Regex_infinity = Infinity;
 
 
 
+function _Time_now(millisToPosix)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		callback(_Scheduler_succeed(millisToPosix(Date.now())));
+	});
+}
+
+var _Time_setInterval = F2(function(interval, task)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var id = setInterval(function() { _Scheduler_rawSpawn(task); }, interval);
+		return function() { clearInterval(id); };
+	});
+});
+
+function _Time_here()
+{
+	return _Scheduler_binding(function(callback)
+	{
+		callback(_Scheduler_succeed(
+			A2($elm$time$Time$customZone, -(new Date().getTimezoneOffset()), _List_Nil)
+		));
+	});
+}
+
+
+function _Time_getZoneName()
+{
+	return _Scheduler_binding(function(callback)
+	{
+		try
+		{
+			var name = $elm$time$Time$Name(Intl.DateTimeFormat().resolvedOptions().timeZone);
+		}
+		catch (e)
+		{
+			var name = $elm$time$Time$Offset(new Date().getTimezoneOffset());
+		}
+		callback(_Scheduler_succeed(name));
+	});
+}
+
+
+
+// DECODER
+
+var _File_decoder = _Json_decodePrim(function(value) {
+	// NOTE: checks if `File` exists in case this is run on node
+	return (typeof File !== 'undefined' && value instanceof File)
+		? $elm$core$Result$Ok(value)
+		: _Json_expecting('a FILE', value);
+});
+
+
+// METADATA
+
+function _File_name(file) { return file.name; }
+function _File_mime(file) { return file.type; }
+function _File_size(file) { return file.size; }
+
+function _File_lastModified(file)
+{
+	return $elm$time$Time$millisToPosix(file.lastModified);
+}
+
+
+// DOWNLOAD
+
+var _File_downloadNode;
+
+function _File_getDownloadNode()
+{
+	return _File_downloadNode || (_File_downloadNode = document.createElement('a'));
+}
+
+var _File_download = F3(function(name, mime, content)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var blob = new Blob([content], {type: mime});
+
+		// for IE10+
+		if (navigator.msSaveOrOpenBlob)
+		{
+			navigator.msSaveOrOpenBlob(blob, name);
+			return;
+		}
+
+		// for HTML5
+		var node = _File_getDownloadNode();
+		var objectUrl = URL.createObjectURL(blob);
+		node.href = objectUrl;
+		node.download = name;
+		_File_click(node);
+		URL.revokeObjectURL(objectUrl);
+	});
+});
+
+function _File_downloadUrl(href)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var node = _File_getDownloadNode();
+		node.href = href;
+		node.download = '';
+		node.origin === location.origin || (node.target = '_blank');
+		_File_click(node);
+	});
+}
+
+
+// IE COMPATIBILITY
+
+function _File_makeBytesSafeForInternetExplorer(bytes)
+{
+	// only needed by IE10 and IE11 to fix https://github.com/elm/file/issues/10
+	// all other browsers can just run `new Blob([bytes])` directly with no problem
+	//
+	return new Uint8Array(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+}
+
+function _File_click(node)
+{
+	// only needed by IE10 and IE11 to fix https://github.com/elm/file/issues/11
+	// all other browsers have MouseEvent and do not need this conditional stuff
+	//
+	if (typeof MouseEvent === 'function')
+	{
+		node.dispatchEvent(new MouseEvent('click'));
+	}
+	else
+	{
+		var event = document.createEvent('MouseEvents');
+		event.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+		document.body.appendChild(node);
+		node.dispatchEvent(event);
+		document.body.removeChild(node);
+	}
+}
+
+
+// UPLOAD
+
+var _File_node;
+
+function _File_uploadOne(mimes)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		_File_node = document.createElement('input');
+		_File_node.type = 'file';
+		_File_node.accept = A2($elm$core$String$join, ',', mimes);
+		_File_node.addEventListener('change', function(event)
+		{
+			callback(_Scheduler_succeed(event.target.files[0]));
+		});
+		_File_click(_File_node);
+	});
+}
+
+function _File_uploadOneOrMore(mimes)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		_File_node = document.createElement('input');
+		_File_node.type = 'file';
+		_File_node.multiple = true;
+		_File_node.accept = A2($elm$core$String$join, ',', mimes);
+		_File_node.addEventListener('change', function(event)
+		{
+			var elmFiles = _List_fromArray(event.target.files);
+			callback(_Scheduler_succeed(_Utils_Tuple2(elmFiles.a, elmFiles.b)));
+		});
+		_File_click(_File_node);
+	});
+}
+
+
+// CONTENT
+
+function _File_toString(blob)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var reader = new FileReader();
+		reader.addEventListener('loadend', function() {
+			callback(_Scheduler_succeed(reader.result));
+		});
+		reader.readAsText(blob);
+		return function() { reader.abort(); };
+	});
+}
+
+function _File_toBytes(blob)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var reader = new FileReader();
+		reader.addEventListener('loadend', function() {
+			callback(_Scheduler_succeed(new DataView(reader.result)));
+		});
+		reader.readAsArrayBuffer(blob);
+		return function() { reader.abort(); };
+	});
+}
+
+function _File_toUrl(blob)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var reader = new FileReader();
+		reader.addEventListener('loadend', function() {
+			callback(_Scheduler_succeed(reader.result));
+		});
+		reader.readAsDataURL(blob);
+		return function() { reader.abort(); };
+	});
+}
+
+
+
+
+// SEND REQUEST
+
+var _Http_toTask = F3(function(router, toTask, request)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		function done(response) {
+			callback(toTask(request.expect.a(response)));
+		}
+
+		var xhr = new XMLHttpRequest();
+		xhr.addEventListener('error', function() { done($elm$http$Http$NetworkError_); });
+		xhr.addEventListener('timeout', function() { done($elm$http$Http$Timeout_); });
+		xhr.addEventListener('load', function() { done(_Http_toResponse(request.expect.b, xhr)); });
+		$elm$core$Maybe$isJust(request.tracker) && _Http_track(router, xhr, request.tracker.a);
+
+		try {
+			xhr.open(request.method, request.url, true);
+		} catch (e) {
+			return done($elm$http$Http$BadUrl_(request.url));
+		}
+
+		_Http_configureRequest(xhr, request);
+
+		request.body.a && xhr.setRequestHeader('Content-Type', request.body.a);
+		xhr.send(request.body.b);
+
+		return function() { xhr.c = true; xhr.abort(); };
+	});
+});
+
+
+// CONFIGURE
+
+function _Http_configureRequest(xhr, request)
+{
+	for (var headers = request.headers; headers.b; headers = headers.b) // WHILE_CONS
+	{
+		xhr.setRequestHeader(headers.a.a, headers.a.b);
+	}
+	xhr.timeout = request.timeout.a || 0;
+	xhr.responseType = request.expect.d;
+	xhr.withCredentials = request.allowCookiesFromOtherDomains;
+}
+
+
+// RESPONSES
+
+function _Http_toResponse(toBody, xhr)
+{
+	return A2(
+		200 <= xhr.status && xhr.status < 300 ? $elm$http$Http$GoodStatus_ : $elm$http$Http$BadStatus_,
+		_Http_toMetadata(xhr),
+		toBody(xhr.response)
+	);
+}
+
+
+// METADATA
+
+function _Http_toMetadata(xhr)
+{
+	return {
+		url: xhr.responseURL,
+		statusCode: xhr.status,
+		statusText: xhr.statusText,
+		headers: _Http_parseHeaders(xhr.getAllResponseHeaders())
+	};
+}
+
+
+// HEADERS
+
+function _Http_parseHeaders(rawHeaders)
+{
+	if (!rawHeaders)
+	{
+		return $elm$core$Dict$empty;
+	}
+
+	var headers = $elm$core$Dict$empty;
+	var headerPairs = rawHeaders.split('\r\n');
+	for (var i = headerPairs.length; i--; )
+	{
+		var headerPair = headerPairs[i];
+		var index = headerPair.indexOf(': ');
+		if (index > 0)
+		{
+			var key = headerPair.substring(0, index);
+			var value = headerPair.substring(index + 2);
+
+			headers = A3($elm$core$Dict$update, key, function(oldValue) {
+				return $elm$core$Maybe$Just($elm$core$Maybe$isJust(oldValue)
+					? value + ', ' + oldValue.a
+					: value
+				);
+			}, headers);
+		}
+	}
+	return headers;
+}
+
+
+// EXPECT
+
+var _Http_expect = F3(function(type, toBody, toValue)
+{
+	return {
+		$: 0,
+		d: type,
+		b: toBody,
+		a: toValue
+	};
+});
+
+var _Http_mapExpect = F2(function(func, expect)
+{
+	return {
+		$: 0,
+		d: expect.d,
+		b: expect.b,
+		a: function(x) { return func(expect.a(x)); }
+	};
+});
+
+function _Http_toDataView(arrayBuffer)
+{
+	return new DataView(arrayBuffer);
+}
+
+
+// BODY and PARTS
+
+var _Http_emptyBody = { $: 0 };
+var _Http_pair = F2(function(a, b) { return { $: 0, a: a, b: b }; });
+
+function _Http_toFormData(parts)
+{
+	for (var formData = new FormData(); parts.b; parts = parts.b) // WHILE_CONS
+	{
+		var part = parts.a;
+		formData.append(part.a, part.b);
+	}
+	return formData;
+}
+
+var _Http_bytesToBlob = F2(function(mime, bytes)
+{
+	return new Blob([bytes], { type: mime });
+});
+
+
+// PROGRESS
+
+function _Http_track(router, xhr, tracker)
+{
+	// TODO check out lengthComputable on loadstart event
+
+	xhr.upload.addEventListener('progress', function(event) {
+		if (xhr.c) { return; }
+		_Scheduler_rawSpawn(A2($elm$core$Platform$sendToSelf, router, _Utils_Tuple2(tracker, $elm$http$Http$Sending({
+			sent: event.loaded,
+			size: event.total
+		}))));
+	});
+	xhr.addEventListener('progress', function(event) {
+		if (xhr.c) { return; }
+		_Scheduler_rawSpawn(A2($elm$core$Platform$sendToSelf, router, _Utils_Tuple2(tracker, $elm$http$Http$Receiving({
+			received: event.loaded,
+			size: event.lengthComputable ? $elm$core$Maybe$Just(event.total) : $elm$core$Maybe$Nothing
+		}))));
+	});
+}
+
+
 var _Bitwise_and = F2(function(a, b)
 {
 	return a & b;
@@ -5429,6 +5828,8 @@ var $elm$core$Task$perform = F2(
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$Example = {$: 'Example'};
 var $author$project$Scripta$Language$MicroLaTeXLang = {$: 'MicroLaTeXLang'};
+var $author$project$Scripta$PDF$PrintWaiting = {$: 'PrintWaiting'};
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $author$project$Parser$Line$PBParagraph = {$: 'PBParagraph'};
@@ -9673,10 +10074,6 @@ var $author$project$MicroLaTeX$Parser$Expression$handleMath = function (state) {
 var $author$project$MicroLaTeX$Parser$Token$BS = function (a) {
 	return {$: 'BS', a: a};
 };
-var $author$project$Tools$debugCyan = F3(
-	function (label, width, a) {
-		return a;
-	});
 var $author$project$MicroLaTeX$Parser$Expression$errorMessage1Part = function (a) {
 	return A3(
 		$author$project$Parser$Expr$Fun,
@@ -9736,21 +10133,16 @@ var $author$project$MicroLaTeX$Parser$Expression$split = function (tokens) {
 };
 var $author$project$MicroLaTeX$Parser$Expression$reduceRestOfTokens = F3(
 	function (macroName, lineNumber, tokens) {
-		var _v8 = A3(
-			$author$project$Tools$debugCyan,
-			'reduceRestOfTokens',
-			20,
-			$author$project$MicroLaTeX$Parser$Symbol$convertTokens2(tokens));
-		_v9$5:
+		_v7$5:
 		while (true) {
 			if (tokens.b) {
 				switch (tokens.a.$) {
 					case 'BS':
 						return A2($author$project$MicroLaTeX$Parser$Expression$reduceTokens, lineNumber, tokens);
 					case 'S':
-						var _v10 = tokens.a;
-						var str = _v10.a;
-						var m1 = _v10.b;
+						var _v8 = tokens.a;
+						var str = _v8.a;
+						var m1 = _v8.b;
 						var rest = tokens.b;
 						return A2(
 							$elm$core$List$cons,
@@ -9760,19 +10152,19 @@ var $author$project$MicroLaTeX$Parser$Expression$reduceRestOfTokens = F3(
 								A2($author$project$MicroLaTeX$Parser$Expression$boostMeta, lineNumber, m1)),
 							A3($author$project$MicroLaTeX$Parser$Expression$reduceRestOfTokens, $elm$core$Maybe$Nothing, lineNumber, rest));
 					case 'LB':
-						var _v11 = $author$project$MicroLaTeX$Parser$Match$match(
+						var _v9 = $author$project$MicroLaTeX$Parser$Match$match(
 							$author$project$MicroLaTeX$Parser$Symbol$convertTokens2(tokens));
-						if (_v11.$ === 'Nothing') {
+						if (_v9.$ === 'Nothing') {
 							return A3(
 								$author$project$MicroLaTeX$Parser$Expression$errorMessage3Part,
 								'\\' + A2($elm$core$Maybe$withDefault, 'x', macroName),
 								$author$project$MicroLaTeX$Parser$Token$toString(tokens),
 								' ?}');
 						} else {
-							var k = _v11.a;
-							var _v12 = A2($author$project$MicroLaTeX$Parser$Match$splitAt, k + 1, tokens);
-							var a = _v12.a;
-							var b = _v12.b;
+							var k = _v9.a;
+							var _v10 = A2($author$project$MicroLaTeX$Parser$Match$splitAt, k + 1, tokens);
+							var a = _v10.a;
+							var b = _v10.b;
 							var aa = A2(
 								$elm$core$List$drop,
 								1,
@@ -9786,12 +10178,12 @@ var $author$project$MicroLaTeX$Parser$Expression$reduceRestOfTokens = F3(
 						}
 					case 'MathToken':
 						if (((tokens.b.b && (tokens.b.a.$ === 'S')) && tokens.b.b.b) && (tokens.b.b.a.$ === 'MathToken')) {
-							var _v13 = tokens.b;
-							var _v14 = _v13.a;
-							var str = _v14.a;
-							var m2 = _v14.b;
-							var _v15 = _v13.b;
-							var more = _v15.b;
+							var _v11 = tokens.b;
+							var _v12 = _v11.a;
+							var str = _v12.a;
+							var m2 = _v12.b;
+							var _v13 = _v11.b;
+							var more = _v13.b;
 							return A2(
 								$elm$core$List$cons,
 								A3(
@@ -9801,16 +10193,16 @@ var $author$project$MicroLaTeX$Parser$Expression$reduceRestOfTokens = F3(
 									A2($author$project$MicroLaTeX$Parser$Expression$boostMeta, lineNumber, m2)),
 								A3($author$project$MicroLaTeX$Parser$Expression$reduceRestOfTokens, $elm$core$Maybe$Nothing, lineNumber, more));
 						} else {
-							break _v9$5;
+							break _v7$5;
 						}
 					case 'LMathBracket':
 						if (((tokens.b.b && (tokens.b.a.$ === 'S')) && tokens.b.b.b) && (tokens.b.b.a.$ === 'RMathBracket')) {
-							var _v16 = tokens.b;
-							var _v17 = _v16.a;
-							var str = _v17.a;
-							var m2 = _v17.b;
-							var _v18 = _v16.b;
-							var more = _v18.b;
+							var _v14 = tokens.b;
+							var _v15 = _v14.a;
+							var str = _v15.a;
+							var m2 = _v15.b;
+							var _v16 = _v14.b;
+							var more = _v16.b;
 							return A2(
 								$elm$core$List$cons,
 								A3(
@@ -9820,10 +10212,10 @@ var $author$project$MicroLaTeX$Parser$Expression$reduceRestOfTokens = F3(
 									A2($author$project$MicroLaTeX$Parser$Expression$boostMeta, lineNumber, m2)),
 								A3($author$project$MicroLaTeX$Parser$Expression$reduceRestOfTokens, $elm$core$Maybe$Nothing, lineNumber, more));
 						} else {
-							break _v9$5;
+							break _v7$5;
 						}
 					default:
-						break _v9$5;
+						break _v7$5;
 				}
 			} else {
 				return _List_Nil;
@@ -9831,9 +10223,9 @@ var $author$project$MicroLaTeX$Parser$Expression$reduceRestOfTokens = F3(
 		}
 		var token = tokens.a;
 		var more = tokens.b;
-		var _v19 = A2($author$project$MicroLaTeX$Parser$Expression$exprOfToken, lineNumber, token);
-		if (_v19.$ === 'Just') {
-			var expr = _v19.a;
+		var _v17 = A2($author$project$MicroLaTeX$Parser$Expression$exprOfToken, lineNumber, token);
+		if (_v17.$ === 'Just') {
+			var expr = _v17.a;
 			return A2(
 				$elm$core$List$cons,
 				expr,
@@ -9847,23 +10239,18 @@ var $author$project$MicroLaTeX$Parser$Expression$reduceRestOfTokens = F3(
 	});
 var $author$project$MicroLaTeX$Parser$Expression$reduceTokens = F2(
 	function (lineNumber, tokens) {
-		var _v0 = A3(
-			$author$project$Tools$debugCyan,
-			'reduceTokens',
-			20,
-			$author$project$MicroLaTeX$Parser$Symbol$convertTokens2(tokens));
-		_v1$3:
+		_v0$3:
 		while (true) {
 			if (tokens.b) {
 				switch (tokens.a.$) {
 					case 'S':
 						if (tokens.b.b && (tokens.b.a.$ === 'BS')) {
-							var _v2 = tokens.a;
-							var t = _v2.a;
-							var m1 = _v2.b;
-							var _v3 = tokens.b;
-							var m2 = _v3.a.a;
-							var rest = _v3.b;
+							var _v1 = tokens.a;
+							var t = _v1.a;
+							var m1 = _v1.b;
+							var _v2 = tokens.b;
+							var m2 = _v2.a.a;
+							var rest = _v2.b;
 							return A2(
 								$elm$core$List$cons,
 								A2(
@@ -9878,9 +10265,9 @@ var $author$project$MicroLaTeX$Parser$Expression$reduceTokens = F2(
 										$author$project$MicroLaTeX$Parser$Token$BS(m2),
 										rest)));
 						} else {
-							var _v4 = tokens.a;
-							var t = _v4.a;
-							var m2 = _v4.b;
+							var _v3 = tokens.a;
+							var t = _v3.a;
+							var m2 = _v3.b;
 							var rest = tokens.b;
 							return A2(
 								$elm$core$List$cons,
@@ -9893,13 +10280,13 @@ var $author$project$MicroLaTeX$Parser$Expression$reduceTokens = F2(
 					case 'BS':
 						if (tokens.b.b && (tokens.b.a.$ === 'S')) {
 							var m1 = tokens.a.a;
-							var _v5 = tokens.b;
-							var _v6 = _v5.a;
-							var name = _v6.a;
-							var rest = _v5.b;
-							var _v7 = $author$project$MicroLaTeX$Parser$Expression$split(rest);
-							var a = _v7.a;
-							var b = _v7.b;
+							var _v4 = tokens.b;
+							var _v5 = _v4.a;
+							var name = _v5.a;
+							var rest = _v4.b;
+							var _v6 = $author$project$MicroLaTeX$Parser$Expression$split(rest);
+							var a = _v6.a;
+							var b = _v6.b;
 							return _Utils_eq(b, _List_Nil) ? _List_fromArray(
 								[
 									A3(
@@ -9948,13 +10335,13 @@ var $author$project$MicroLaTeX$Parser$Expression$reduceTokens = F2(
 									lineNumber,
 									b)));
 						} else {
-							break _v1$3;
+							break _v0$3;
 						}
 					default:
-						break _v1$3;
+						break _v0$3;
 				}
 			} else {
-				break _v1$3;
+				break _v0$3;
 			}
 		}
 		return _List_fromArray(
@@ -17352,27 +17739,6 @@ var $author$project$Compiler$DifferentialParser$init = F3(
 		};
 	});
 var $author$project$Scripta$API$init = $author$project$Compiler$DifferentialParser$init;
-var $author$project$Text$microLaTeXDemo = '\n\\title{Demo (MicroLaTeX)}\n\n| banner\n\\link{Scrpta.io https://scripta.io}\n\n\\contents\n\n\\section{Images}\n\n\\image{https://see.news/wp-content/uploads/2020/12/UK_wildbirds-01-robin.jpg}\n\n\\section{Math}\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n\\strong{Tip:} Click on a section title to go back to the table of contents.\n';
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Main$init = function (flags) {
-	return _Utils_Tuple2(
-		{
-			count: 0,
-			documentType: $author$project$Main$Example,
-			editRecord: A3($author$project$Scripta$API$init, $elm$core$Dict$empty, $author$project$Scripta$Language$MicroLaTeXLang, $author$project$Text$microLaTeXDemo),
-			input: $author$project$Text$microLaTeXDemo,
-			language: $author$project$Scripta$Language$MicroLaTeXLang
-		},
-		$elm$core$Platform$Cmd$none);
-};
-var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $author$project$Main$subscriptions = function (model) {
-	return $elm$core$Platform$Sub$none;
-};
-var $author$project$Main$InfoDocument = {$: 'InfoDocument'};
-var $author$project$Text$info = '\n| title\nAbout the Scripta compiler\n\n[tags jxxcarlson:about-the-scripta-compiler]\n\n| runninghead\n[link Scripta.io https://scripta.io]\n\nThe Scripta compiler transforms source text to HTML, where\nthe source text is one of the following markup languages:\n\n| item\nL0 — an experimental language with syntax inspired by Lisp.\nCan render LaTeX-style\nmathematical text.  This document is written in L0.\n\n| item\nMicroLaTeX — a cousin of LaTeX.  Source text can be exported\nto standard LaTeX\n\n| item\nXMarkdown — a cousin of Markdown.  Can render LaTeX-style\nmathematical text.\n\n\nThe Scripta compiler features real-time, fault-tolerant\nparsing and rendering, and so is suitable for an interactive\nediting system in which (a) changes to the source text\nare rendered "instantly," that is, with no perceptible delay,\nand (b) syntax errors are handled gracefully, marked as such\nin the rendered text, and with the following text rendered\nproperly to the greatest extent possible.\n\nThe Scripta compiler is open-source, and can be found at\n[link github.com/jxxcarlson/scripta-compiler  https://github.com/jxxcarlson/scripta-compiler].  In the Example\nfolder, you will find a small demo app.  It is hosted online\nat [link Github https://jxxcarlson.github.io/app/scripta-compiler-demo/assets/index.html].\n\nThe Scripta compiler is used to power\n[link Scripta.io https://scripta.io].  It features\ninteractive editing, a searchable store of documents,\nand facilities for collaboration and web publishing.\n';
 var $author$project$Main$NoOp = {$: 'NoOp'};
 var $elm$core$Task$onError = _Scheduler_onError;
 var $elm$core$Task$attempt = F2(
@@ -17408,7 +17774,2746 @@ var $author$project$Main$jumpToTop = function (id) {
 			},
 			$elm$browser$Browser$Dom$getViewportOf(id)));
 };
-var $author$project$Text$l0Demo = '\n| title\nDemo (L0)\n\n| banner\n[link Scripta.io https://scripta.io]\n\n| contents\n\n| section 1\nImages\n\n[image https://nas-national-prod.s3.amazonaws.com/styles/hero_image/s3/web_h_apa_2016-a1_2474_8_cedar-waxwing_peter_brannon_kk_female.jpg?itok=VdeVVmGA]\n\n| section 1\nMath\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n[bold Tip:] Click on a section title to go back to the table of contents.\n\n';
+var $author$project$Text$microLaTeXDemo = '\n\\title{Demo (MicroLaTeX)}\n\n| banner\n\\link{Scripta.io https://scripta.io}\n\n\\contents\n\n\\section{Images}\n\n\\image{https://see.news/wp-content/uploads/2020/12/UK_wildbirds-01-robin.jpg}\n\n\\section{Math}\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n\\strong{Tip:} Click on a section title to go back to the table of contents.\n';
+var $elm$time$Time$Posix = function (a) {
+	return {$: 'Posix', a: a};
+};
+var $elm$time$Time$millisToPosix = $elm$time$Time$Posix;
+var $author$project$Main$init = function (flags) {
+	return _Utils_Tuple2(
+		{
+			count: 0,
+			currentTime: $elm$time$Time$millisToPosix(0),
+			documentType: $author$project$Main$Example,
+			editRecord: A3($author$project$Scripta$API$init, $elm$core$Dict$empty, $author$project$Scripta$Language$MicroLaTeXLang, $author$project$Text$microLaTeXDemo),
+			input: $author$project$Text$microLaTeXDemo,
+			language: $author$project$Scripta$Language$MicroLaTeXLang,
+			message: 'Starting up',
+			printingState: $author$project$Scripta$PDF$PrintWaiting,
+			ticks: 0
+		},
+		$elm$core$Platform$Cmd$batch(
+			_List_fromArray(
+				[
+					$author$project$Main$jumpToTop('scripta-output'),
+					$author$project$Main$jumpToTop('input-text')
+				])));
+};
+var $author$project$Main$Tick = function (a) {
+	return {$: 'Tick', a: a};
+};
+var $elm$time$Time$Every = F2(
+	function (a, b) {
+		return {$: 'Every', a: a, b: b};
+	});
+var $elm$time$Time$State = F2(
+	function (taggers, processes) {
+		return {processes: processes, taggers: taggers};
+	});
+var $elm$time$Time$init = $elm$core$Task$succeed(
+	A2($elm$time$Time$State, $elm$core$Dict$empty, $elm$core$Dict$empty));
+var $elm$time$Time$addMySub = F2(
+	function (_v0, state) {
+		var interval = _v0.a;
+		var tagger = _v0.b;
+		var _v1 = A2($elm$core$Dict$get, interval, state);
+		if (_v1.$ === 'Nothing') {
+			return A3(
+				$elm$core$Dict$insert,
+				interval,
+				_List_fromArray(
+					[tagger]),
+				state);
+		} else {
+			var taggers = _v1.a;
+			return A3(
+				$elm$core$Dict$insert,
+				interval,
+				A2($elm$core$List$cons, tagger, taggers),
+				state);
+		}
+	});
+var $elm$core$Process$kill = _Scheduler_kill;
+var $elm$core$Dict$foldl = F3(
+	function (func, acc, dict) {
+		foldl:
+		while (true) {
+			if (dict.$ === 'RBEmpty_elm_builtin') {
+				return acc;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var $temp$func = func,
+					$temp$acc = A3(
+					func,
+					key,
+					value,
+					A3($elm$core$Dict$foldl, func, acc, left)),
+					$temp$dict = right;
+				func = $temp$func;
+				acc = $temp$acc;
+				dict = $temp$dict;
+				continue foldl;
+			}
+		}
+	});
+var $elm$core$Dict$merge = F6(
+	function (leftStep, bothStep, rightStep, leftDict, rightDict, initialResult) {
+		var stepState = F3(
+			function (rKey, rValue, _v0) {
+				stepState:
+				while (true) {
+					var list = _v0.a;
+					var result = _v0.b;
+					if (!list.b) {
+						return _Utils_Tuple2(
+							list,
+							A3(rightStep, rKey, rValue, result));
+					} else {
+						var _v2 = list.a;
+						var lKey = _v2.a;
+						var lValue = _v2.b;
+						var rest = list.b;
+						if (_Utils_cmp(lKey, rKey) < 0) {
+							var $temp$rKey = rKey,
+								$temp$rValue = rValue,
+								$temp$_v0 = _Utils_Tuple2(
+								rest,
+								A3(leftStep, lKey, lValue, result));
+							rKey = $temp$rKey;
+							rValue = $temp$rValue;
+							_v0 = $temp$_v0;
+							continue stepState;
+						} else {
+							if (_Utils_cmp(lKey, rKey) > 0) {
+								return _Utils_Tuple2(
+									list,
+									A3(rightStep, rKey, rValue, result));
+							} else {
+								return _Utils_Tuple2(
+									rest,
+									A4(bothStep, lKey, lValue, rValue, result));
+							}
+						}
+					}
+				}
+			});
+		var _v3 = A3(
+			$elm$core$Dict$foldl,
+			stepState,
+			_Utils_Tuple2(
+				$elm$core$Dict$toList(leftDict),
+				initialResult),
+			rightDict);
+		var leftovers = _v3.a;
+		var intermediateResult = _v3.b;
+		return A3(
+			$elm$core$List$foldl,
+			F2(
+				function (_v4, result) {
+					var k = _v4.a;
+					var v = _v4.b;
+					return A3(leftStep, k, v, result);
+				}),
+			intermediateResult,
+			leftovers);
+	});
+var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
+var $elm$time$Time$Name = function (a) {
+	return {$: 'Name', a: a};
+};
+var $elm$time$Time$Offset = function (a) {
+	return {$: 'Offset', a: a};
+};
+var $elm$time$Time$Zone = F2(
+	function (a, b) {
+		return {$: 'Zone', a: a, b: b};
+	});
+var $elm$time$Time$customZone = $elm$time$Time$Zone;
+var $elm$time$Time$setInterval = _Time_setInterval;
+var $elm$core$Process$spawn = _Scheduler_spawn;
+var $elm$time$Time$spawnHelp = F3(
+	function (router, intervals, processes) {
+		if (!intervals.b) {
+			return $elm$core$Task$succeed(processes);
+		} else {
+			var interval = intervals.a;
+			var rest = intervals.b;
+			var spawnTimer = $elm$core$Process$spawn(
+				A2(
+					$elm$time$Time$setInterval,
+					interval,
+					A2($elm$core$Platform$sendToSelf, router, interval)));
+			var spawnRest = function (id) {
+				return A3(
+					$elm$time$Time$spawnHelp,
+					router,
+					rest,
+					A3($elm$core$Dict$insert, interval, id, processes));
+			};
+			return A2($elm$core$Task$andThen, spawnRest, spawnTimer);
+		}
+	});
+var $elm$time$Time$onEffects = F3(
+	function (router, subs, _v0) {
+		var processes = _v0.processes;
+		var rightStep = F3(
+			function (_v6, id, _v7) {
+				var spawns = _v7.a;
+				var existing = _v7.b;
+				var kills = _v7.c;
+				return _Utils_Tuple3(
+					spawns,
+					existing,
+					A2(
+						$elm$core$Task$andThen,
+						function (_v5) {
+							return kills;
+						},
+						$elm$core$Process$kill(id)));
+			});
+		var newTaggers = A3($elm$core$List$foldl, $elm$time$Time$addMySub, $elm$core$Dict$empty, subs);
+		var leftStep = F3(
+			function (interval, taggers, _v4) {
+				var spawns = _v4.a;
+				var existing = _v4.b;
+				var kills = _v4.c;
+				return _Utils_Tuple3(
+					A2($elm$core$List$cons, interval, spawns),
+					existing,
+					kills);
+			});
+		var bothStep = F4(
+			function (interval, taggers, id, _v3) {
+				var spawns = _v3.a;
+				var existing = _v3.b;
+				var kills = _v3.c;
+				return _Utils_Tuple3(
+					spawns,
+					A3($elm$core$Dict$insert, interval, id, existing),
+					kills);
+			});
+		var _v1 = A6(
+			$elm$core$Dict$merge,
+			leftStep,
+			bothStep,
+			rightStep,
+			newTaggers,
+			processes,
+			_Utils_Tuple3(
+				_List_Nil,
+				$elm$core$Dict$empty,
+				$elm$core$Task$succeed(_Utils_Tuple0)));
+		var spawnList = _v1.a;
+		var existingDict = _v1.b;
+		var killTask = _v1.c;
+		return A2(
+			$elm$core$Task$andThen,
+			function (newProcesses) {
+				return $elm$core$Task$succeed(
+					A2($elm$time$Time$State, newTaggers, newProcesses));
+			},
+			A2(
+				$elm$core$Task$andThen,
+				function (_v2) {
+					return A3($elm$time$Time$spawnHelp, router, spawnList, existingDict);
+				},
+				killTask));
+	});
+var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
+var $elm$time$Time$onSelfMsg = F3(
+	function (router, interval, state) {
+		var _v0 = A2($elm$core$Dict$get, interval, state.taggers);
+		if (_v0.$ === 'Nothing') {
+			return $elm$core$Task$succeed(state);
+		} else {
+			var taggers = _v0.a;
+			var tellTaggers = function (time) {
+				return $elm$core$Task$sequence(
+					A2(
+						$elm$core$List$map,
+						function (tagger) {
+							return A2(
+								$elm$core$Platform$sendToApp,
+								router,
+								tagger(time));
+						},
+						taggers));
+			};
+			return A2(
+				$elm$core$Task$andThen,
+				function (_v1) {
+					return $elm$core$Task$succeed(state);
+				},
+				A2($elm$core$Task$andThen, tellTaggers, $elm$time$Time$now));
+		}
+	});
+var $elm$time$Time$subMap = F2(
+	function (f, _v0) {
+		var interval = _v0.a;
+		var tagger = _v0.b;
+		return A2(
+			$elm$time$Time$Every,
+			interval,
+			A2($elm$core$Basics$composeL, f, tagger));
+	});
+_Platform_effectManagers['Time'] = _Platform_createManager($elm$time$Time$init, $elm$time$Time$onEffects, $elm$time$Time$onSelfMsg, 0, $elm$time$Time$subMap);
+var $elm$time$Time$subscription = _Platform_leaf('Time');
+var $elm$time$Time$every = F2(
+	function (interval, tagger) {
+		return $elm$time$Time$subscription(
+			A2($elm$time$Time$Every, interval, tagger));
+	});
+var $author$project$Main$subscriptions = function (model) {
+	return A2($elm$time$Time$every, 400, $author$project$Main$Tick);
+};
+var $author$project$Main$InfoDocument = {$: 'InfoDocument'};
+var $author$project$Main$PDF = function (a) {
+	return {$: 'PDF', a: a};
+};
+var $author$project$Scripta$PDF$PrintProcessing = {$: 'PrintProcessing'};
+var $author$project$Scripta$PDF$PrintReady = {$: 'PrintReady'};
+var $mdgriffith$elm_ui$Internal$Model$Rgba = F4(
+	function (a, b, c, d) {
+		return {$: 'Rgba', a: a, b: b, c: c, d: d};
+	});
+var $mdgriffith$elm_ui$Element$rgb = F3(
+	function (r, g, b) {
+		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, r, g, b, 1);
+	});
+var $elm$core$Basics$round = _Basics_round;
+var $author$project$Render$Settings$makeSettings = F4(
+	function (id, selectedSlug, scale, width) {
+		return {
+			backgroundColor: A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1),
+			isStandaloneDocument: false,
+			paragraphSpacing: 28,
+			selectedId: id,
+			selectedSlug: selectedSlug,
+			showErrorMessages: false,
+			showTOC: true,
+			titlePrefix: '',
+			titleSize: 30,
+			width: $elm$core$Basics$round(scale * width)
+		};
+	});
+var $author$project$Render$Settings$defaultSettings = A4($author$project$Render$Settings$makeSettings, '', $elm$core$Maybe$Nothing, 1, 600);
+var $author$project$Scripta$API$defaultSettings = $author$project$Render$Settings$defaultSettings;
+var $elm$file$File$Download$string = F3(
+	function (name, mime, content) {
+		return A2(
+			$elm$core$Task$perform,
+			$elm$core$Basics$never,
+			A3(_File_download, name, mime, content));
+	});
+var $author$project$Main$download = F2(
+	function (fileName, fileContents) {
+		return A3($elm$file$File$Download$string, fileName, 'application/x-tex', fileContents);
+	});
+var $author$project$Compiler$ASTTools$matchBlockName = F2(
+	function (key, _v0) {
+		var name = _v0.a.name;
+		return _Utils_eq(
+			$elm$core$Maybe$Just(key),
+			name);
+	});
+var $author$project$Compiler$ASTTools$filterBlocksOnName = F2(
+	function (name, blocks) {
+		return A2(
+			$elm$core$List$filter,
+			$author$project$Compiler$ASTTools$matchBlockName(name),
+			blocks);
+	});
+var $author$project$Compiler$ASTTools$getBlockByName = F2(
+	function (name, ast) {
+		return $elm$core$List$head(
+			A2(
+				$author$project$Compiler$ASTTools$filterBlocksOnName,
+				name,
+				$elm$core$List$concat(
+					A2($elm$core$List$map, $zwilias$elm_rosetree$Tree$flatten, ast))));
+	});
+var $author$project$Compiler$ASTTools$getBlockArgsByName = F2(
+	function (key, ast) {
+		var _v0 = A2($author$project$Compiler$ASTTools$getBlockByName, key, ast);
+		if (_v0.$ === 'Nothing') {
+			return _List_Nil;
+		} else {
+			var args = _v0.a.a.args;
+			return args;
+		}
+	});
+var $author$project$Render$Export$LaTeX$counterValue = function (ast) {
+	return A2(
+		$elm$core$Maybe$andThen,
+		$elm$core$String$toInt,
+		$elm$core$List$head(
+			A2($author$project$Compiler$ASTTools$getBlockArgsByName, 'setcounter', ast)));
+};
+var $author$project$Parser$Block$getContent = function (_v0) {
+	var content = _v0.a.content;
+	if (content.$ === 'Left') {
+		return _List_Nil;
+	} else {
+		var exprs = content.a;
+		return exprs;
+	}
+};
+var $author$project$Parser$Expr$getName = function (expr) {
+	switch (expr.$) {
+		case 'Fun':
+			var name = expr.a;
+			return $elm$core$Maybe$Just(name);
+		case 'Text':
+			return $elm$core$Maybe$Nothing;
+		default:
+			var name = expr.a;
+			return $elm$core$Maybe$Just(name);
+	}
+};
+var $author$project$Compiler$ASTTools$expressionNames = function (forest) {
+	return $elm$core$List$sort(
+		$elm_community$list_extra$List$Extra$unique(
+			$elm_community$maybe_extra$Maybe$Extra$values(
+				A2(
+					$elm$core$List$map,
+					$author$project$Parser$Expr$getName,
+					$elm$core$List$concat(
+						A2(
+							$elm$core$List$map,
+							$author$project$Parser$Block$getContent,
+							$elm$core$List$concat(
+								A2($elm$core$List$map, $zwilias$elm_rosetree$Tree$flatten, forest))))))));
+};
+var $author$project$Compiler$ASTTools$loop = F2(
+	function (s, nextState_) {
+		loop:
+		while (true) {
+			var _v0 = nextState_(s);
+			if (_v0.$ === 'Loop') {
+				var s_ = _v0.a;
+				var $temp$s = s_,
+					$temp$nextState_ = nextState_;
+				s = $temp$s;
+				nextState_ = $temp$nextState_;
+				continue loop;
+			} else {
+				var b = _v0.a;
+				return b;
+			}
+		}
+	});
+var $author$project$Compiler$ASTTools$Done = function (a) {
+	return {$: 'Done', a: a};
+};
+var $author$project$Compiler$ASTTools$Loop = function (a) {
+	return {$: 'Loop', a: a};
+};
+var $author$project$Compiler$ASTTools$nextStepFix = function (state) {
+	var _v0 = $elm$core$List$head(state.input);
+	if (_v0.$ === 'Nothing') {
+		return $author$project$Compiler$ASTTools$Done(state.output);
+	} else {
+		var line = _v0.a;
+		return (line === '') ? $author$project$Compiler$ASTTools$Loop(
+			_Utils_update(
+				state,
+				{
+					input: A2($elm$core$List$drop, 1, state.input)
+				})) : ((A2($elm$core$String$left, 7, line) === 'author:') ? $author$project$Compiler$ASTTools$Loop(
+			_Utils_update(
+				state,
+				{
+					count: state.count + 1,
+					input: A2($elm$core$List$drop, 1, state.input),
+					output: A2(
+						$elm$core$List$cons,
+						A3(
+							$elm$core$String$replace,
+							'author:',
+							'author' + ($elm$core$String$fromInt(state.count) + ':'),
+							line),
+						state.output)
+				})) : $author$project$Compiler$ASTTools$Loop(
+			_Utils_update(
+				state,
+				{
+					input: A2($elm$core$List$drop, 1, state.input),
+					output: A2($elm$core$List$cons, line, state.output)
+				})));
+	}
+};
+var $author$project$Compiler$ASTTools$fixFrontMatterList = function (strings) {
+	return $elm$core$List$reverse(
+		A2(
+			$author$project$Compiler$ASTTools$loop,
+			{count: 1, input: strings, output: _List_Nil},
+			$author$project$Compiler$ASTTools$nextStepFix));
+};
+var $author$project$Compiler$ASTTools$getVerbatimBlockValue = F2(
+	function (key, ast) {
+		var _v0 = A2($author$project$Compiler$ASTTools$getBlockByName, key, ast);
+		if (_v0.$ === 'Nothing') {
+			return '(' + (key + ')');
+		} else {
+			var content = _v0.a.a.content;
+			if (content.$ === 'Left') {
+				var str = content.a;
+				return str;
+			} else {
+				return '(' + (key + ')');
+			}
+		}
+	});
+var $author$project$Compiler$ASTTools$pairFromList = function (strings) {
+	if ((strings.b && strings.b.b) && (!strings.b.b.b)) {
+		var x = strings.a;
+		var _v1 = strings.b;
+		var y = _v1.a;
+		return $elm$core$Maybe$Just(
+			_Utils_Tuple2(x, y));
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Compiler$ASTTools$keyValueDict = function (strings_) {
+	return $elm$core$Dict$fromList(
+		$elm_community$maybe_extra$Maybe$Extra$values(
+			A2(
+				$elm$core$List$map,
+				$author$project$Compiler$ASTTools$pairFromList,
+				A2(
+					$elm$core$List$map,
+					$elm$core$List$map($elm$core$String$trim),
+					A2(
+						$elm$core$List$map,
+						$elm$core$String$split(':'),
+						strings_)))));
+};
+var $author$project$Compiler$ASTTools$frontMatterDict = function (ast) {
+	return $author$project$Compiler$ASTTools$keyValueDict(
+		$author$project$Compiler$ASTTools$fixFrontMatterList(
+			A2(
+				$elm$core$String$split,
+				'\n',
+				A2($author$project$Compiler$ASTTools$getVerbatimBlockValue, 'docinfo', ast))));
+};
+var $author$project$Compiler$ASTTools$getValue = F2(
+	function (key, ast) {
+		var _v0 = A2($author$project$Compiler$ASTTools$getBlockByName, key, ast);
+		if (_v0.$ === 'Nothing') {
+			return '(' + (key + ')');
+		} else {
+			var content = _v0.a.a.content;
+			if (content.$ === 'Left') {
+				var str = content.a;
+				return str;
+			} else {
+				var exprList = content.a;
+				return A2(
+					$elm$core$String$join,
+					'',
+					$elm_community$maybe_extra$Maybe$Extra$values(
+						A2($elm$core$List$map, $author$project$Compiler$ASTTools$getText, exprList)));
+			}
+		}
+	});
+var $author$project$Compiler$ASTTools$title = function (ast) {
+	return A2($author$project$Compiler$ASTTools$getValue, 'title', ast);
+};
+var $author$project$Render$Export$LaTeX$frontMatter = F2(
+	function (currentTime, ast) {
+		var title = function (title_) {
+			return '\\title{' + (title_ + '}');
+		}(
+			$author$project$Compiler$ASTTools$title(ast));
+		var dict = $author$project$Compiler$ASTTools$frontMatterDict(ast);
+		var date = A2(
+			$elm$core$Maybe$withDefault,
+			'\\date{Today}',
+			A2(
+				$elm$core$Maybe$map,
+				function (date_) {
+					return '\\date{' + (date_ + '}');
+				},
+				A2($elm$core$Dict$get, 'date', dict)));
+		var author4 = A2($elm$core$Dict$get, 'author4', dict);
+		var author3 = A2($elm$core$Dict$get, 'author3', dict);
+		var author2 = A2($elm$core$Dict$get, 'author2', dict);
+		var author1 = A2($elm$core$Dict$get, 'author1', dict);
+		var authors = function (s) {
+			return '\\author{\n' + (s + '\n}');
+		}(
+			A2(
+				$elm$core$String$join,
+				'\n\\and\n',
+				$elm_community$maybe_extra$Maybe$Extra$values(
+					_List_fromArray(
+						[author1, author2, author3, author4]))));
+		return A2(
+			$elm$core$String$join,
+			'\n\n',
+			A2(
+				$elm$core$List$cons,
+				'\\begin{document}',
+				A2(
+					$elm$core$List$cons,
+					title,
+					A2(
+						$elm$core$List$cons,
+						date,
+						A2(
+							$elm$core$List$cons,
+							authors,
+							A2($elm$core$List$cons, '\\maketitle\n\n', _List_Nil)))))) + '\\maketitle\n\n';
+	});
+var $author$project$Render$Export$Preamble$commands = '\n%% Commands\n\n\\newcommand{\\code}[1]{{\\tt #1}}\n\\newcommand{\\ellie}[1]{\\href{#1}{Link to Ellie}}\n% \\newcommand{\\image}[3]{\\includegraphics[width=3cm]{#1}}\n\n%% width=4truein,keepaspectratio]\n\n\n\\newcommand{\\imagecentercaptioned}[3]{\n   \\medskip\n   \\begin{figure}[htp]\n   \\centering\n    \\includegraphics[width=#2]{#1}\n    \\vglue0pt\n    \\caption{#3}\n    \\end{figure}\n    \\medskip\n}\n\n\\newcommand{\\imagecenter}[2]{\n   \\medskip\n   \\begin{figure}[htp]\n   \\centering\n    \\includegraphics[width=#2]{#1}\n    \\vglue0pt\n    \\end{figure}\n    \\medskip\n}\n\n\\newcommand{\\imagefloat}[4]{\n    \\begin{wrapfigure}{#4}{#2}\n    \\includegraphics[width=#2]{#1}\n    \\caption{#3}\n    \\end{wrapfigure}\n}\n\n\n\\newcommand{\\imagefloatright}[3]{\n    \\begin{wrapfigure}{R}{0.30\\textwidth}\n    \\includegraphics[width=0.30\\textwidth]{#1}\n    \\caption{#2}\n    \\end{wrapfigure}\n}\n\n\\newcommand{\\hide}[1]{}\n\n\n\\newcommand{\\imagefloatleft}[3]{\n    \\begin{wrapfigure}{L}{0.3-\\textwidth}\n    \\includegraphics[width=0.30\\textwidth]{#1}\n    \\caption{#2}\n    \\end{wrapfigure}\n}\n% Font style\n\\newcommand{\\italic}[1]{{\\sl #1}}\n\\newcommand{\\strong}[1]{{\\bf #1}}\n\\newcommand{\\strike}[1]{\\st{#1}}\n\n% Scripta\n\\newcommand{\\ilink}[2]{\\href{{https://scripta.io/s/#1}}{#2}}\n\n% Color\n\\newcommand{\\red}[1]{\\textcolor{red}{#1}}\n\\newcommand{\\blue}[1]{\\textcolor{blue}{#1}}\n\\newcommand{\\violet}[1]{\\textcolor{violet}{#1}}\n\\newcommand{\\highlight}[1]{\\hl{#1}}\n\\newcommand{\\note}[2]{\\textcolor{blue}{#1}{\\hl{#1}}}\n\n% WTF?\n\\newcommand{\\remote}[1]{\\textcolor{red}{#1}}\n\\newcommand{\\local}[1]{\\textcolor{blue}{#1}}\n\n% Unclassified\n\\newcommand{\\subheading}[1]{{\\bf #1}\\par}\n\\newcommand{\\term}[1]{{\\sl #1}}\n\\newcommand{\\termx}[1]{}\n\\newcommand{\\comment}[1]{}\n\\newcommand{\\innertableofcontents}{}\n\n\n% Special character\n\\newcommand{\\dollarSign}[0]{{\\$}}\n\\newcommand{\\backTick}[0]{\\`{}}\n\n%% Theorems\n\\newtheorem{remark}{Remark}\n\\newtheorem{theorem}{Theorem}\n\\newtheorem{axiom}{Axiom}\n\\newtheorem{lemma}{Lemma}\n\\newtheorem{proposition}{Proposition}\n\\newtheorem{corollary}{Corollary}\n\\newtheorem{definition}{Definition}\n\\newtheorem{example}{Example}\n\\newtheorem{exercise}{Exercise}\n\\newtheorem{problem}{Problem}\n\\newtheorem{exercises}{Exercises}\n\\newcommand{\\bs}[1]{$\\backslash$#1}\n\\newcommand{\\texarg}[1]{\\{#1\\}}\n\n\n%% Environments\n\\renewenvironment{quotation}\n  {\\begin{adjustwidth}{2cm}{} \\footnotesize}\n  {\\end{adjustwidth}}\n\n\\def\\changemargin#1#2{\\list{}{\\rightmargin#2\\leftmargin#1}\\item[]}\n\\let\\endchangemargin=\\endlist\n\n\\renewenvironment{indent}\n  {\\begin{adjustwidth}{0.75cm}{}}\n  {\\end{adjustwidth}}\n\n\n%% NEWCOMMAND\n\n% \\definecolor{mypink1}{rgb}{0.858, 0.188, 0.478}\n% \\definecolor{mypink2}{RGB}{219, 48, 122}\n\\newcommand{\\fontRGB}[4]{\n    \\definecolor{mycolor}{RGB}{#1, #2, #3}\n    \\textcolor{mycolor}{#4}\n    }\n\n\\newcommand{\\highlightRGB}[4]{\n    \\definecolor{mycolor}{RGB}{#1, #2, #3}\n    \\sethlcolor{mycolor}\n    \\hl{#4}\n     \\sethlcolor{yellow}\n    }\n\n\\newcommand{\\gray}[2]{\n\\definecolor{mygray}{gray}{#1}\n\\textcolor{mygray}{#2}\n}\n\n\\newcommand{\\white}[1]{\\gray{1}[#1]}\n\\newcommand{\\medgray}[1]{\\gray{0.5}[#1]}\n\\newcommand{\\black}[1]{\\gray{0}[#1]}\n\n% Spacing\n\\parindent0pt\n\\parskip5pt\n\n';
+var $author$project$Render$Export$Preamble$newPackageText = function (packagesNeeded_) {
+	return A2(
+		$elm$core$String$join,
+		'\n',
+		A2(
+			$elm$core$List$map,
+			function (name) {
+				return '\\usepackage{' + (name + '}');
+			},
+			packagesNeeded_));
+};
+var $author$project$Render$Export$Preamble$addPackage = F4(
+	function (namesInDocument, entityName, packageNames, packages_) {
+		return A2($elm$core$List$member, entityName, namesInDocument) ? _Utils_ap(packageNames, packages_) : packages_;
+	});
+var $author$project$Render$Export$Preamble$packageList = _List_fromArray(
+	[
+		_Utils_Tuple2(
+		'quiver',
+		_List_fromArray(
+			['quiver'])),
+		_Utils_Tuple2(
+		'tikz',
+		_List_fromArray(
+			['tikz'])),
+		_Utils_Tuple2(
+		'link',
+		_List_fromArray(
+			['hyperref'])),
+		_Utils_Tuple2(
+		'ilink',
+		_List_fromArray(
+			['hyperref'])),
+		_Utils_Tuple2(
+		'href',
+		_List_fromArray(
+			['hyperref'])),
+		_Utils_Tuple2(
+		'textcolor',
+		_List_fromArray(
+			['xcolor'])),
+		_Utils_Tuple2(
+		'blue',
+		_List_fromArray(
+			['xcolor'])),
+		_Utils_Tuple2(
+		'red',
+		_List_fromArray(
+			['xcolor'])),
+		_Utils_Tuple2(
+		'green',
+		_List_fromArray(
+			['xcolor'])),
+		_Utils_Tuple2(
+		'gray',
+		_List_fromArray(
+			['xcolor'])),
+		_Utils_Tuple2(
+		'magenta',
+		_List_fromArray(
+			['xcolor'])),
+		_Utils_Tuple2(
+		'violet',
+		_List_fromArray(
+			['xcolor'])),
+		_Utils_Tuple2(
+		'pink',
+		_List_fromArray(
+			['xcolor'])),
+		_Utils_Tuple2(
+		'highlight',
+		_List_fromArray(
+			['xcolor'])),
+		_Utils_Tuple2(
+		'highlight',
+		_List_fromArray(
+			['soul'])),
+		_Utils_Tuple2(
+		'strike',
+		_List_fromArray(
+			['soul'])),
+		_Utils_Tuple2(
+		'errorHighlight',
+		_List_fromArray(
+			['xcolor'])),
+		_Utils_Tuple2(
+		'image',
+		_List_fromArray(
+			['graphicx', 'wrapfig', 'float']))
+	]);
+var $author$project$Render$Export$Preamble$newPackageList = function (names) {
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (_v0, acc) {
+				var entityName = _v0.a;
+				var packageNames = _v0.b;
+				return A4($author$project$Render$Export$Preamble$addPackage, names, entityName, packageNames, acc);
+			}),
+		_List_Nil,
+		$author$project$Render$Export$Preamble$packageList);
+};
+var $author$project$Render$Export$Preamble$packagesNeeded = function (names) {
+	return $elm$core$List$sort(
+		$elm_community$list_extra$List$Extra$unique(
+			$author$project$Render$Export$Preamble$newPackageList(names)));
+};
+var $author$project$Render$Export$Preamble$standardPackages = '\n%% Packages\n\n%% Standard packages\n\\usepackage{geometry}\n\\geometry{letterpaper}\n\\usepackage{changepage}   % for the adjustwidth environment\n\n%% AMS\n\\usepackage{amssymb}\n\\usepackage{amsmath}\n\n\\usepackage{amscd}\n';
+var $author$project$Render$Export$Preamble$addCode = F4(
+	function (packagesInDocument, _package, codeText, accumulatedCodeText) {
+		return A2($elm$core$List$member, _package, packagesInDocument) ? (codeText + ('\n\n' + accumulatedCodeText)) : accumulatedCodeText;
+	});
+var $author$project$Render$Export$Preamble$hypersetup = '\n\\hypersetup{\n    colorlinks=true,\n    linkcolor=blue,\n    filecolor=magenta,\n    urlcolor=blue,\n}\n';
+var $author$project$Render$Export$Preamble$setupCode = _List_fromArray(
+	[
+		_Utils_Tuple2('graphicx', '\\graphicspath{ {image/} }'),
+		_Utils_Tuple2('hyperref', $author$project$Render$Export$Preamble$hypersetup)
+	]);
+var $author$project$Render$Export$Preamble$supportingCode = function (packagesInDocument) {
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (_v0, acc) {
+				var entityName = _v0.a;
+				var packageNames = _v0.b;
+				return A4($author$project$Render$Export$Preamble$addCode, packagesInDocument, entityName, packageNames, acc);
+			}),
+		'',
+		$author$project$Render$Export$Preamble$setupCode);
+};
+var $author$project$Render$Export$Preamble$make = F2(
+	function (blockNames_, expressionNames_) {
+		var names = _Utils_ap(blockNames_, expressionNames_);
+		var packagesUsed = $author$project$Render$Export$Preamble$packagesNeeded(names);
+		return A2(
+			$elm$core$String$join,
+			'\n',
+			_List_fromArray(
+				[
+					'\\documentclass[11pt, oneside]{article}',
+					$author$project$Render$Export$Preamble$newPackageText(packagesUsed),
+					$author$project$Render$Export$Preamble$supportingCode(packagesUsed),
+					$author$project$Render$Export$Preamble$standardPackages,
+					$author$project$Render$Export$Preamble$commands
+				]));
+	});
+var $author$project$Parser$Block$getName = function (_v0) {
+	var name = _v0.a.name;
+	return name;
+};
+var $author$project$Compiler$ASTTools$rawBlockNames = function (forest) {
+	return $elm_community$maybe_extra$Maybe$Extra$values(
+		A2(
+			$elm$core$List$map,
+			$author$project$Parser$Block$getName,
+			$elm$core$List$concat(
+				A2($elm$core$List$map, $zwilias$elm_rosetree$Tree$flatten, forest))));
+};
+var $author$project$Parser$Expr$smashUrl = function (url) {
+	return A2(
+		$elm$core$Maybe$withDefault,
+		'?',
+		$elm_community$list_extra$List$Extra$last(
+			A2($elm$core$String$split, '/', url)));
+};
+var $author$project$Parser$Expr$condenseUrl = function (expr) {
+	if ((((expr.$ === 'Fun') && (expr.a === 'image')) && expr.b.b) && (expr.b.a.$ === 'Text')) {
+		var _v1 = expr.b;
+		var _v2 = _v1.a;
+		var url = _v2.a;
+		var meta1 = _v2.b;
+		var rest = _v1.b;
+		var meta2 = expr.c;
+		return A3(
+			$author$project$Parser$Expr$Fun,
+			'image',
+			A2(
+				$elm$core$List$cons,
+				A2(
+					$author$project$Parser$Expr$Text,
+					$author$project$Parser$Expr$smashUrl(url),
+					meta1),
+				rest),
+			meta2);
+	} else {
+		return expr;
+	}
+};
+var $author$project$Parser$Block$condenseUrls = function (_v0) {
+	var data = _v0.a;
+	var _v1 = data.content;
+	if (_v1.$ === 'Left') {
+		return $author$project$Parser$Block$ExpressionBlock(data);
+	} else {
+		var exprList = _v1.a;
+		return $author$project$Parser$Block$ExpressionBlock(
+			_Utils_update(
+				data,
+				{
+					content: $toastal$either$Either$Right(
+						A2($elm$core$List$map, $author$project$Parser$Expr$condenseUrl, exprList))
+				}));
+	}
+};
+var $author$project$Render$Export$LaTeX$OutsideList = {$: 'OutsideList'};
+var $author$project$Render$Export$LaTeX$InsideItemizedList = {$: 'InsideItemizedList'};
+var $author$project$Render$Export$LaTeX$InsideNumberedList = {$: 'InsideNumberedList'};
+var $author$project$Render$Export$LaTeX$beginItemizedBlock = $author$project$Parser$Block$ExpressionBlock(
+	{
+		args: _List_Nil,
+		blockType: $author$project$Parser$Block$OrdinaryBlock(
+			_List_fromArray(
+				['beginBlock'])),
+		content: $toastal$either$Either$Right(
+			_List_fromArray(
+				[
+					A2(
+					$author$project$Parser$Expr$Text,
+					'itemize',
+					{begin: 0, end: 7, id: '', index: 0})
+				])),
+		id: '0',
+		indent: 1,
+		lineNumber: 0,
+		messages: _List_Nil,
+		name: $elm$core$Maybe$Just('beginBlock'),
+		numberOfLines: 2,
+		sourceText: '| beginBlock\nitemize',
+		tag: ''
+	});
+var $author$project$Render$Export$LaTeX$beginNumberedBlock = $author$project$Parser$Block$ExpressionBlock(
+	{
+		args: _List_Nil,
+		blockType: $author$project$Parser$Block$OrdinaryBlock(
+			_List_fromArray(
+				['beginNumberedBlock'])),
+		content: $toastal$either$Either$Right(
+			_List_fromArray(
+				[
+					A2(
+					$author$project$Parser$Expr$Text,
+					'enumerate',
+					{begin: 0, end: 7, id: 'begin', index: 0})
+				])),
+		id: '0',
+		indent: 1,
+		lineNumber: 0,
+		messages: _List_Nil,
+		name: $elm$core$Maybe$Just('beginNumberedBlock'),
+		numberOfLines: 2,
+		sourceText: '| beginBlock\nitemize',
+		tag: ''
+	});
+var $author$project$Render$Export$LaTeX$endItemizedBlock = $author$project$Parser$Block$ExpressionBlock(
+	{
+		args: _List_Nil,
+		blockType: $author$project$Parser$Block$OrdinaryBlock(
+			_List_fromArray(
+				['endBlock'])),
+		content: $toastal$either$Either$Right(
+			_List_fromArray(
+				[
+					A2(
+					$author$project$Parser$Expr$Text,
+					'itemize',
+					{begin: 0, end: 7, id: '', index: 0})
+				])),
+		id: '0',
+		indent: 1,
+		lineNumber: 0,
+		messages: _List_Nil,
+		name: $elm$core$Maybe$Just('endBlock'),
+		numberOfLines: 2,
+		sourceText: '| endBlock\nitemize',
+		tag: ''
+	});
+var $author$project$Render$Export$LaTeX$endNumberedBlock = $author$project$Parser$Block$ExpressionBlock(
+	{
+		args: _List_Nil,
+		blockType: $author$project$Parser$Block$OrdinaryBlock(
+			_List_fromArray(
+				['endNumberedBlock'])),
+		content: $toastal$either$Either$Right(
+			_List_fromArray(
+				[
+					A2(
+					$author$project$Parser$Expr$Text,
+					'enumerate',
+					{begin: 0, end: 7, id: 'end', index: 0})
+				])),
+		id: '0',
+		indent: 1,
+		lineNumber: 0,
+		messages: _List_Nil,
+		name: $elm$core$Maybe$Just('endNumberedBlock'),
+		numberOfLines: 2,
+		sourceText: '| endBlock\nitemize',
+		tag: ''
+	});
+var $author$project$Render$Export$LaTeX$nextState = F2(
+	function (tree, state) {
+		var name_ = function () {
+			var _v8 = $zwilias$elm_rosetree$Tree$label(tree);
+			var name = _v8.a.name;
+			return name;
+		}();
+		var _v0 = _Utils_Tuple2(state.status, name_);
+		_v0$6:
+		while (true) {
+			switch (_v0.a.$) {
+				case 'InsideItemizedList':
+					if ((_v0.b.$ === 'Just') && (_v0.b.a === 'item')) {
+						var _v2 = _v0.a;
+						return _Utils_update(
+							state,
+							{
+								input: A2($elm$core$List$drop, 1, state.input),
+								itemNumber: state.itemNumber + 1,
+								output: A2($elm$core$List$cons, tree, state.output)
+							});
+					} else {
+						var _v3 = _v0.a;
+						return _Utils_update(
+							state,
+							{
+								input: A2($elm$core$List$drop, 1, state.input),
+								itemNumber: 0,
+								output: A2(
+									$elm$core$List$cons,
+									tree,
+									A2(
+										$elm$core$List$cons,
+										$zwilias$elm_rosetree$Tree$singleton($author$project$Render$Export$LaTeX$endItemizedBlock),
+										state.output)),
+								status: $author$project$Render$Export$LaTeX$OutsideList
+							});
+					}
+				case 'InsideNumberedList':
+					if ((_v0.b.$ === 'Just') && (_v0.b.a === 'numbered')) {
+						var _v5 = _v0.a;
+						return _Utils_update(
+							state,
+							{
+								input: A2($elm$core$List$drop, 1, state.input),
+								itemNumber: state.itemNumber + 1,
+								output: A2($elm$core$List$cons, tree, state.output)
+							});
+					} else {
+						var _v6 = _v0.a;
+						return _Utils_update(
+							state,
+							{
+								input: A2($elm$core$List$drop, 1, state.input),
+								itemNumber: 0,
+								output: A2(
+									$elm$core$List$cons,
+									tree,
+									A2(
+										$elm$core$List$cons,
+										$zwilias$elm_rosetree$Tree$singleton($author$project$Render$Export$LaTeX$endNumberedBlock),
+										state.output)),
+								status: $author$project$Render$Export$LaTeX$OutsideList
+							});
+					}
+				default:
+					if (_v0.b.$ === 'Just') {
+						switch (_v0.b.a) {
+							case 'item':
+								var _v1 = _v0.a;
+								return _Utils_update(
+									state,
+									{
+										input: A2($elm$core$List$drop, 1, state.input),
+										itemNumber: 1,
+										output: A2(
+											$elm$core$List$cons,
+											tree,
+											A2(
+												$elm$core$List$cons,
+												$zwilias$elm_rosetree$Tree$singleton($author$project$Render$Export$LaTeX$beginItemizedBlock),
+												state.output)),
+										status: $author$project$Render$Export$LaTeX$InsideItemizedList
+									});
+							case 'numbered':
+								var _v4 = _v0.a;
+								return _Utils_update(
+									state,
+									{
+										input: A2($elm$core$List$drop, 1, state.input),
+										itemNumber: 1,
+										output: A2(
+											$elm$core$List$cons,
+											tree,
+											A2(
+												$elm$core$List$cons,
+												$zwilias$elm_rosetree$Tree$singleton($author$project$Render$Export$LaTeX$beginNumberedBlock),
+												state.output)),
+										status: $author$project$Render$Export$LaTeX$InsideNumberedList
+									});
+							default:
+								break _v0$6;
+						}
+					} else {
+						break _v0$6;
+					}
+			}
+		}
+		var _v7 = _v0.a;
+		return _Utils_update(
+			state,
+			{
+				input: A2($elm$core$List$drop, 1, state.input),
+				output: A2($elm$core$List$cons, tree, state.output)
+			});
+	});
+var $author$project$Render$Export$LaTeX$nextStep = function (state) {
+	var _v0 = $elm$core$List$head(state.input);
+	if (_v0.$ === 'Nothing') {
+		return $author$project$Parser$Helpers$Done(state.output);
+	} else {
+		var tree = _v0.a;
+		return $author$project$Parser$Helpers$Loop(
+			A2($author$project$Render$Export$LaTeX$nextState, tree, state));
+	}
+};
+var $author$project$Render$Export$LaTeX$encloseLists = function (blocks) {
+	return $elm$core$List$reverse(
+		A2(
+			$author$project$Parser$Helpers$loop,
+			{input: blocks, itemNumber: 0, output: _List_Nil, status: $author$project$Render$Export$LaTeX$OutsideList},
+			$author$project$Render$Export$LaTeX$nextStep));
+};
+var $author$project$Render$Export$LaTeX$functionDict = $elm$core$Dict$fromList(
+	_List_fromArray(
+		[
+			_Utils_Tuple2('italic', 'textit'),
+			_Utils_Tuple2('i', 'textit'),
+			_Utils_Tuple2('bold', 'textbf'),
+			_Utils_Tuple2('b', 'textbf'),
+			_Utils_Tuple2('image', 'imagecenter'),
+			_Utils_Tuple2('contents', 'tableofcontents')
+		]));
+var $author$project$Render$Export$LaTeX$mapChars2 = function (str) {
+	return A3($elm$core$String$replace, '_', '\\_', str);
+};
+var $author$project$Render$Export$LaTeX$macro1 = F2(
+	function (name, arg) {
+		if (name === 'math') {
+			return '$' + (arg + '$');
+		} else {
+			if (name === 'group') {
+				return arg;
+			} else {
+				if (name === 'tags') {
+					return '';
+				} else {
+					var _v0 = A2($elm$core$Dict$get, name, $author$project$Render$Export$LaTeX$functionDict);
+					if (_v0.$ === 'Nothing') {
+						return '\\' + (name + ('{' + ($author$project$Render$Export$LaTeX$mapChars2(
+							$elm$core$String$trimLeft(arg)) + '}')));
+					} else {
+						var realName = _v0.a;
+						return '\\' + (realName + ('{' + ($author$project$Render$Export$LaTeX$mapChars2(
+							$elm$core$String$trimLeft(arg)) + '}')));
+					}
+				}
+			}
+		}
+	});
+var $author$project$Render$Utility$getArg = F3(
+	function (_default, index, args) {
+		var _v0 = A2($elm_community$list_extra$List$Extra$getAt, index, args);
+		if (_v0.$ === 'Nothing') {
+			return _default;
+		} else {
+			var a = _v0.a;
+			return a;
+		}
+	});
+var $author$project$Render$Export$LaTeX$section1 = F2(
+	function (args, body) {
+		var suffix = function () {
+			var _v1 = A2($elm_community$list_extra$List$Extra$getAt, 1, args);
+			if (_v1.$ === 'Nothing') {
+				return '';
+			} else {
+				if (_v1.a === '-') {
+					return '*';
+				} else {
+					return '';
+				}
+			}
+		}();
+		var _v0 = A3($author$project$Render$Utility$getArg, '4', 0, args);
+		switch (_v0) {
+			case '1':
+				return A2($author$project$Render$Export$LaTeX$macro1, 'title' + suffix, body);
+			case '2':
+				return A2($author$project$Render$Export$LaTeX$macro1, 'section' + suffix, body);
+			case '3':
+				return A2($author$project$Render$Export$LaTeX$macro1, 'subsection' + suffix, body);
+			case '4':
+				return A2($author$project$Render$Export$LaTeX$macro1, 'subheading' + suffix, body);
+			default:
+				return A2($author$project$Render$Export$LaTeX$macro1, 'subheading' + suffix, body);
+		}
+	});
+var $author$project$Render$Export$LaTeX$section2 = F2(
+	function (args, body) {
+		var suffix = function () {
+			var _v1 = A2($elm_community$list_extra$List$Extra$getAt, 1, args);
+			if (_v1.$ === 'Nothing') {
+				return '';
+			} else {
+				if (_v1.a === '-') {
+					return '*';
+				} else {
+					return '';
+				}
+			}
+		}();
+		var _v0 = A3($author$project$Render$Utility$getArg, '4', 0, args);
+		switch (_v0) {
+			case '1':
+				return A2($author$project$Render$Export$LaTeX$macro1, 'section' + suffix, body);
+			case '2':
+				return A2($author$project$Render$Export$LaTeX$macro1, 'subsection' + suffix, body);
+			case '3':
+				return A2($author$project$Render$Export$LaTeX$macro1, 'subsubsection' + suffix, body);
+			default:
+				return A2($author$project$Render$Export$LaTeX$macro1, 'subheading' + suffix, body);
+		}
+	});
+var $author$project$Render$Export$LaTeX$section = F3(
+	function (settings, args, body) {
+		return settings.isStandaloneDocument ? A2($author$project$Render$Export$LaTeX$section1, args, body) : A2($author$project$Render$Export$LaTeX$section2, args, body);
+	});
+var $author$project$Render$Export$LaTeX$blockDict = $elm$core$Dict$fromList(
+	_List_fromArray(
+		[
+			_Utils_Tuple2(
+			'title',
+			F3(
+				function (_v0, _v1, _v2) {
+					return '';
+				})),
+			_Utils_Tuple2(
+			'subtitle',
+			F3(
+				function (_v3, _v4, _v5) {
+					return '';
+				})),
+			_Utils_Tuple2(
+			'author',
+			F3(
+				function (_v6, _v7, _v8) {
+					return '';
+				})),
+			_Utils_Tuple2(
+			'date',
+			F3(
+				function (_v9, _v10, _v11) {
+					return '';
+				})),
+			_Utils_Tuple2(
+			'contents',
+			F3(
+				function (_v12, _v13, _v14) {
+					return '';
+				})),
+			_Utils_Tuple2(
+			'hide',
+			F3(
+				function (_v15, _v16, _v17) {
+					return '';
+				})),
+			_Utils_Tuple2(
+			'tags',
+			F3(
+				function (_v18, _v19, _v20) {
+					return '';
+				})),
+			_Utils_Tuple2(
+			'docinfo',
+			F3(
+				function (_v21, _v22, _v23) {
+					return '';
+				})),
+			_Utils_Tuple2(
+			'section',
+			F3(
+				function (settings_, args, body) {
+					return A3($author$project$Render$Export$LaTeX$section, settings_, args, body);
+				})),
+			_Utils_Tuple2(
+			'item',
+			F3(
+				function (_v24, _v25, body) {
+					return A2($author$project$Render$Export$LaTeX$macro1, 'item', body);
+				})),
+			_Utils_Tuple2(
+			'numbered',
+			F3(
+				function (_v26, _v27, body) {
+					return A2($author$project$Render$Export$LaTeX$macro1, 'item', body);
+				})),
+			_Utils_Tuple2(
+			'beginBlock',
+			F3(
+				function (_v28, _v29, _v30) {
+					return '\\begin{itemize}';
+				})),
+			_Utils_Tuple2(
+			'endBlock',
+			F3(
+				function (_v31, _v32, _v33) {
+					return '\\end{itemize}';
+				})),
+			_Utils_Tuple2(
+			'beginNumberedBlock',
+			F3(
+				function (_v34, _v35, _v36) {
+					return '\\begin{enumerate}';
+				})),
+			_Utils_Tuple2(
+			'endNumberedBlock',
+			F3(
+				function (_v37, _v38, _v39) {
+					return '\\end{enumerate}';
+				})),
+			_Utils_Tuple2(
+			'mathmacros',
+			F3(
+				function (_v40, _v41, body) {
+					return body + '\nHa ha ha!';
+				})),
+			_Utils_Tuple2(
+			'setcounter',
+			F3(
+				function (_v42, _v43, _v44) {
+					return '';
+				}))
+		]));
+var $author$project$Render$Export$LaTeX$tagged = F2(
+	function (name, body) {
+		return '\\' + (name + ('{' + (body + '}')));
+	});
+var $author$project$Render$Export$LaTeX$environment = F2(
+	function (name, body) {
+		return A2(
+			$elm$core$String$join,
+			'\n',
+			_List_fromArray(
+				[
+					A2($author$project$Render$Export$LaTeX$tagged, 'begin', name),
+					body,
+					A2($author$project$Render$Export$LaTeX$tagged, 'end', name)
+				]));
+	});
+var $author$project$Render$Export$LaTeX$blindIndex = '';
+var $author$project$Render$Export$LaTeX$fixChars = function (str) {
+	return A3(
+		$elm$core$String$replace,
+		'}',
+		'\\}',
+		A3($elm$core$String$replace, '{', '\\{', str));
+};
+var $author$project$Compiler$ASTTools$exprListToStringList = function (exprList) {
+	return A2(
+		$elm$core$List$filter,
+		function (s) {
+			return s !== '';
+		},
+		A2(
+			$elm$core$List$map,
+			$elm$core$String$trim,
+			$elm_community$maybe_extra$Maybe$Extra$values(
+				A2($elm$core$List$map, $author$project$Compiler$ASTTools$getText, exprList))));
+};
+var $author$project$Render$Export$Util$getArgs = A2(
+	$elm$core$Basics$composeR,
+	$author$project$Compiler$ASTTools$exprListToStringList,
+	A2(
+		$elm$core$Basics$composeR,
+		$elm$core$List$map($elm$core$String$words),
+		A2(
+			$elm$core$Basics$composeR,
+			$elm$core$List$concat,
+			$elm$core$List$filter(
+				function (x) {
+					return x !== '';
+				}))));
+var $author$project$Render$Export$Util$getOneArg = function (exprs) {
+	var _v0 = $elm$core$List$head(
+		$author$project$Render$Export$Util$getArgs(exprs));
+	if (_v0.$ === 'Nothing') {
+		return '';
+	} else {
+		var str = _v0.a;
+		return str;
+	}
+};
+var $author$project$Render$Export$LaTeX$code = F2(
+	function (_v0, exprs) {
+		return $author$project$Render$Export$LaTeX$fixChars(
+			$author$project$Render$Export$Util$getOneArg(exprs));
+	});
+var $author$project$Render$Export$Image$exportCenteredFigure = F3(
+	function (url, options, caption) {
+		return (caption === '') ? A2(
+			$elm$core$String$join,
+			'',
+			_List_fromArray(
+				['\\imagecenter{', url, '}{' + (options + '}')])) : A2(
+			$elm$core$String$join,
+			'',
+			_List_fromArray(
+				['\\imagecentercaptioned{', url, '}{' + (options + ('}{' + (caption + '}')))]));
+	});
+var $author$project$Render$Export$Image$exportWrappedFigure = F4(
+	function (placement, url, options, caption) {
+		return A2(
+			$elm$core$String$join,
+			'',
+			_List_fromArray(
+				['\\imagefloat{', url, '}{' + (options + ('}{' + (caption + ('}{' + (placement + '}')))))]));
+	});
+var $elm$core$String$fromFloat = _String_fromNumber;
+var $author$project$Render$Export$Image$fractionaRescale = function (k) {
+	var f = $elm$core$String$fromFloat(k / 800.0);
+	return A2(
+		$elm$core$String$join,
+		'',
+		_List_fromArray(
+			[f, '\\textwidth']));
+};
+var $author$project$Render$Utility$pairFromList = function (strings) {
+	if ((strings.b && strings.b.b) && (!strings.b.b.b)) {
+		var x = strings.a;
+		var _v1 = strings.b;
+		var y = _v1.a;
+		return $elm$core$Maybe$Just(
+			_Utils_Tuple2(x, y));
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Render$Utility$keyValueDict = function (strings_) {
+	return $elm$core$Dict$fromList(
+		$elm_community$maybe_extra$Maybe$Extra$values(
+			A2(
+				$elm$core$List$map,
+				$author$project$Render$Utility$pairFromList,
+				A2(
+					$elm$core$List$map,
+					$elm$core$List$map($elm$core$String$trim),
+					A2(
+						$elm$core$List$map,
+						$elm$core$String$split(':'),
+						strings_)))));
+};
+var $author$project$Render$Export$Image$rescale = function (k) {
+	return $elm$core$String$fromFloat(k * (8.0 / 800.0)) + 'truein';
+};
+var $author$project$Render$Export$Image$imageParameters = F2(
+	function (settings, body) {
+		var displayWidth = settings.width;
+		var _arguments = $elm$core$List$concat(
+			A2(
+				$elm$core$List$map,
+				$elm$core$String$words,
+				$author$project$Compiler$ASTTools$exprListToStringList(body)));
+		var remainingArguments = A2($elm$core$List$drop, 1, _arguments);
+		var keyValueStrings_ = A2(
+			$elm$core$List$filter,
+			function (s) {
+				return A2($elm$core$String$contains, ':', s);
+			},
+			remainingArguments);
+		var captionLeadString = A3(
+			$elm$core$String$replace,
+			'caption:',
+			'',
+			A2(
+				$elm$core$String$join,
+				'',
+				A2(
+					$elm$core$List$filter,
+					function (s) {
+						return A2($elm$core$String$contains, 'caption', s);
+					},
+					keyValueStrings_)));
+		var caption = A2(
+			$elm$core$String$join,
+			' ',
+			A2(
+				$elm$core$List$cons,
+				captionLeadString,
+				A2(
+					$elm$core$List$filter,
+					function (s) {
+						return !A2($elm$core$String$contains, ':', s);
+					},
+					remainingArguments)));
+		var keyValueStrings = A2(
+			$elm$core$List$filter,
+			function (s) {
+				return !A2($elm$core$String$contains, 'caption', s);
+			},
+			keyValueStrings_);
+		var dict = $author$project$Render$Utility$keyValueDict(keyValueStrings);
+		var description = A2(
+			$elm$core$Maybe$withDefault,
+			'',
+			A2($elm$core$Dict$get, 'caption', dict));
+		var fractionalWidth = function () {
+			var _v3 = A2($elm$core$Dict$get, 'width', dict);
+			if (_v3.$ === 'Nothing') {
+				return $author$project$Render$Export$Image$fractionaRescale(displayWidth);
+			} else {
+				if (_v3.a === 'fill') {
+					return $author$project$Render$Export$Image$fractionaRescale(displayWidth);
+				} else {
+					var w_ = _v3.a;
+					var _v4 = $elm$core$String$toInt(w_);
+					if (_v4.$ === 'Nothing') {
+						return $author$project$Render$Export$Image$fractionaRescale(displayWidth);
+					} else {
+						var w = _v4.a;
+						return $author$project$Render$Export$Image$fractionaRescale(w);
+					}
+				}
+			}
+		}();
+		var placement = function () {
+			var _v2 = A2($elm$core$Dict$get, 'placement', dict);
+			if (_v2.$ === 'Nothing') {
+				return 'C';
+			} else {
+				switch (_v2.a) {
+					case 'left':
+						return 'L';
+					case 'right':
+						return 'R';
+					case 'center':
+						return 'C';
+					default:
+						return 'C';
+				}
+			}
+		}();
+		var width = function () {
+			var _v0 = A2($elm$core$Dict$get, 'width', dict);
+			if (_v0.$ === 'Nothing') {
+				return $author$project$Render$Export$Image$rescale(displayWidth);
+			} else {
+				if (_v0.a === 'fill') {
+					return $author$project$Render$Export$Image$rescale(displayWidth);
+				} else {
+					var w_ = _v0.a;
+					var _v1 = $elm$core$String$toInt(w_);
+					if (_v1.$ === 'Nothing') {
+						return $author$project$Render$Export$Image$rescale(displayWidth);
+					} else {
+						var w = _v1.a;
+						return $author$project$Render$Export$Image$rescale(w);
+					}
+				}
+			}
+		}();
+		var url = A2(
+			$elm$core$Maybe$withDefault,
+			'no-image',
+			$elm$core$List$head(_arguments));
+		return {caption: caption, description: description, fractionalWidth: fractionalWidth, placement: placement, url: url, width: width};
+	});
+var $author$project$Render$Export$Image$export = F2(
+	function (s, exprs) {
+		var params = A2($author$project$Render$Export$Image$imageParameters, s, exprs);
+		var options = A2(
+			$elm$core$String$join,
+			'',
+			_List_fromArray(
+				[params.width, ',keepaspectratio']));
+		var args = $elm$core$String$words(
+			$author$project$Render$Export$Util$getOneArg(exprs));
+		var _v0 = $elm$core$List$head(args);
+		if (_v0.$ === 'Nothing') {
+			return 'ERROR IN IMAGE';
+		} else {
+			var url = _v0.a;
+			return (params.placement === 'C') ? A3($author$project$Render$Export$Image$exportCenteredFigure, url, options, params.caption) : A4($author$project$Render$Export$Image$exportWrappedFigure, params.placement, url, params.fractionalWidth, params.caption);
+		}
+	});
+var $author$project$Render$Export$Util$getTwoArgs = function (exprs) {
+	var args = $author$project$Render$Export$Util$getArgs(exprs);
+	var n = $elm$core$List$length(args);
+	var first = A2(
+		$elm$core$String$join,
+		' ',
+		A2($elm$core$List$take, n - 1, args));
+	var second = A2(
+		$elm$core$String$join,
+		'',
+		A2($elm$core$List$drop, n - 1, args));
+	return {first: first, second: second};
+};
+var $author$project$Render$Export$LaTeX$ilink = function (exprs) {
+	var args = $author$project$Render$Export$Util$getTwoArgs(exprs);
+	return A2(
+		$elm$core$String$join,
+		'',
+		_List_fromArray(
+			['\\href{', 'https://scripta.io/s/', args.second, '}{', args.first, '}']));
+};
+var $author$project$Render$Export$LaTeX$link = function (exprs) {
+	var args = $author$project$Render$Export$Util$getTwoArgs(exprs);
+	return A2(
+		$elm$core$String$join,
+		'',
+		_List_fromArray(
+			['\\href{', args.second, '}{', args.first, '}']));
+};
+var $author$project$Render$Export$LaTeX$macroDict = $elm$core$Dict$fromList(
+	_List_fromArray(
+		[
+			_Utils_Tuple2(
+			'link',
+			function (_v0) {
+				return $author$project$Render$Export$LaTeX$link;
+			}),
+			_Utils_Tuple2(
+			'ilink',
+			function (_v1) {
+				return $author$project$Render$Export$LaTeX$ilink;
+			}),
+			_Utils_Tuple2(
+			'index_',
+			F2(
+				function (_v2, _v3) {
+					return $author$project$Render$Export$LaTeX$blindIndex;
+				})),
+			_Utils_Tuple2('code', $author$project$Render$Export$LaTeX$code),
+			_Utils_Tuple2('image', $author$project$Render$Export$Image$export)
+		]));
+var $author$project$Render$Export$LaTeX$verbatimExprDict = $elm$core$Dict$fromList(
+	_List_fromArray(
+		[
+			_Utils_Tuple2('code', $author$project$Render$Export$LaTeX$code)
+		]));
+var $author$project$Render$Export$LaTeX$renderVerbatim = F2(
+	function (name, body) {
+		var _v0 = A2($elm$core$Dict$get, name, $author$project$Render$Export$LaTeX$verbatimExprDict);
+		if (_v0.$ === 'Nothing') {
+			return A2($author$project$Render$Export$LaTeX$macro1, name, body);
+		} else {
+			return $author$project$Render$Export$LaTeX$fixChars(body);
+		}
+	});
+var $author$project$Compiler$TextMacro$toString = F2(
+	function (exprToString, macro) {
+		return A2(
+			$elm$core$String$join,
+			'',
+			_List_fromArray(
+				[
+					'\\newcommand{\\',
+					macro.name,
+					'}[',
+					$elm$core$String$fromInt(
+					$elm$core$List$length(macro.vars)),
+					']{',
+					A2(
+					$elm$core$String$join,
+					'',
+					A2($elm$core$List$map, exprToString, macro.body)),
+					'}    '
+				]));
+	});
+var $author$project$Render$Export$LaTeX$exportExpr = F2(
+	function (settings, expr) {
+		switch (expr.$) {
+			case 'Fun':
+				var name = expr.a;
+				var exps_ = expr.b;
+				if (name === 'lambda') {
+					var _v1 = $author$project$Compiler$TextMacro$extract(expr);
+					if (_v1.$ === 'Just') {
+						var lambda = _v1.a;
+						return A2(
+							$author$project$Compiler$TextMacro$toString,
+							$author$project$Render$Export$LaTeX$exportExpr(settings),
+							lambda);
+					} else {
+						return 'Error extracting lambda';
+					}
+				} else {
+					var _v2 = A2($elm$core$Dict$get, name, $author$project$Render$Export$LaTeX$macroDict);
+					if (_v2.$ === 'Just') {
+						var f = _v2.a;
+						return A2(f, settings, exps_);
+					} else {
+						return A2(
+							$author$project$Render$Export$LaTeX$macro1,
+							name,
+							A2(
+								$elm$core$String$join,
+								' ',
+								A2(
+									$elm$core$List$map,
+									$author$project$Render$Export$LaTeX$exportExpr(settings),
+									exps_)));
+					}
+				}
+			case 'Text':
+				var str = expr.a;
+				return $author$project$Render$Export$LaTeX$mapChars2(str);
+			default:
+				var name = expr.a;
+				var body = expr.b;
+				return A2($author$project$Render$Export$LaTeX$renderVerbatim, name, body);
+		}
+	});
+var $author$project$Render$Export$LaTeX$mapChars1 = function (str) {
+	return A3($elm$core$String$replace, '\\term_', '\\termx', str);
+};
+var $author$project$Render$Export$LaTeX$exportExprList = F2(
+	function (settings, exprs) {
+		return $author$project$Render$Export$LaTeX$mapChars1(
+			A2(
+				$elm$core$String$join,
+				'',
+				A2(
+					$elm$core$List$map,
+					$author$project$Render$Export$LaTeX$exportExpr(settings),
+					exprs)));
+	});
+var $author$project$Render$Export$LaTeX$exportBlock = F2(
+	function (settings, _v0) {
+		var blockType = _v0.a.blockType;
+		var name = _v0.a.name;
+		var args = _v0.a.args;
+		var content = _v0.a.content;
+		switch (blockType.$) {
+			case 'Paragraph':
+				if (content.$ === 'Left') {
+					var str = content.a;
+					return $author$project$Render$Export$LaTeX$mapChars2(str);
+				} else {
+					var exprs_ = content.a;
+					return A2($author$project$Render$Export$LaTeX$exportExprList, settings, exprs_);
+				}
+			case 'OrdinaryBlock':
+				if (content.$ === 'Left') {
+					return '';
+				} else {
+					var exprs_ = content.a;
+					var name_ = A2($elm$core$Maybe$withDefault, 'anon', name);
+					var _v4 = A2($elm$core$Dict$get, name_, $author$project$Render$Export$LaTeX$blockDict);
+					if (_v4.$ === 'Just') {
+						var f = _v4.a;
+						return A3(
+							f,
+							settings,
+							args,
+							A2($author$project$Render$Export$LaTeX$exportExprList, settings, exprs_));
+					} else {
+						return A2(
+							$author$project$Render$Export$LaTeX$environment,
+							name_,
+							A2($author$project$Render$Export$LaTeX$exportExprList, settings, exprs_));
+					}
+				}
+			default:
+				if (content.$ === 'Left') {
+					var str = content.a;
+					_v6$10:
+					while (true) {
+						if (name.$ === 'Just') {
+							switch (name.a) {
+								case 'math':
+									return A2(
+										$elm$core$String$join,
+										'\n',
+										_List_fromArray(
+											['$$', str, '$$']));
+								case 'equation':
+									return A2(
+										$elm$core$String$join,
+										'\n',
+										_List_fromArray(
+											['\\begin{equation}', str, '\\end{equation}']));
+								case 'aligned':
+									return A2(
+										$elm$core$String$join,
+										'\n',
+										_List_fromArray(
+											['\\begin{align}', str, '\\end{align}']));
+								case 'code':
+									return function (s) {
+										return '\\begin{verbatim}\n' + (s + '\n\\end{verbatim}');
+									}(
+										$author$project$Render$Export$LaTeX$fixChars(str));
+								case 'mathmacros':
+									return str;
+								case 'textmacros':
+									return str;
+								case 'quiver':
+									var data = A2(
+										$elm$core$String$join,
+										'',
+										A2(
+											$elm$core$List$drop,
+											1,
+											A2($elm$core$String$split, '---', str)));
+									return data;
+								case 'tikz':
+									var data = A2(
+										$elm$core$String$join,
+										'\n',
+										A2(
+											$elm$core$List$map,
+											function (line) {
+												return (line === '') ? '%' : line;
+											},
+											$elm$core$String$lines(
+												A2(
+													$elm$core$String$join,
+													'',
+													A2(
+														$elm$core$List$drop,
+														1,
+														A2($elm$core$String$split, '---', str))))));
+									return A2(
+										$elm$core$String$join,
+										'',
+										_List_fromArray(
+											['\\[\n', data, '\n\\]']));
+								case 'hide':
+									return '';
+								case 'docinfo':
+									return '';
+								default:
+									break _v6$10;
+							}
+						} else {
+							break _v6$10;
+						}
+					}
+					return A2($elm$core$Maybe$withDefault, '??', name) + ': export of this block is unimplemented';
+				} else {
+					return '???(13)';
+				}
+		}
+	});
+var $elm_community$list_extra$List$Extra$unconsLast = function (list) {
+	var _v0 = $elm$core$List$reverse(list);
+	if (!_v0.b) {
+		return $elm$core$Maybe$Nothing;
+	} else {
+		var last_ = _v0.a;
+		var rest = _v0.b;
+		return $elm$core$Maybe$Just(
+			_Utils_Tuple2(
+				last_,
+				$elm$core$List$reverse(rest)));
+	}
+};
+var $author$project$Render$Export$LaTeX$exportTree = F2(
+	function (settings, tree) {
+		var _v0 = $zwilias$elm_rosetree$Tree$children(tree);
+		if (!_v0.b) {
+			return A2(
+				$author$project$Render$Export$LaTeX$exportBlock,
+				settings,
+				$zwilias$elm_rosetree$Tree$label(tree));
+		} else {
+			var children = _v0;
+			var root = $elm$core$String$lines(
+				A2(
+					$author$project$Render$Export$LaTeX$exportBlock,
+					settings,
+					$zwilias$elm_rosetree$Tree$label(tree)));
+			var renderedChildren = $elm$core$List$concat(
+				A2(
+					$elm$core$List$map,
+					$elm$core$String$lines,
+					A2(
+						$elm$core$List$map,
+						$author$project$Render$Export$LaTeX$exportTree(settings),
+						children)));
+			var _v1 = $elm_community$list_extra$List$Extra$unconsLast(root);
+			if (_v1.$ === 'Nothing') {
+				return '';
+			} else {
+				var _v2 = _v1.a;
+				var lastLine = _v2.a;
+				var precedingLines = _v2.b;
+				return A2(
+					$elm$core$String$join,
+					'\n',
+					_Utils_ap(
+						precedingLines,
+						_Utils_ap(
+							renderedChildren,
+							_List_fromArray(
+								[lastLine]))));
+			}
+		}
+	});
+var $author$project$Compiler$ASTTools$labelName = function (tree) {
+	var _v0 = $zwilias$elm_rosetree$Tree$label(tree);
+	var name = _v0.a.name;
+	return name;
+};
+var $author$project$Compiler$ASTTools$filterForestOnLabelNames = F2(
+	function (predicate, forest) {
+		return A2(
+			$elm$core$List$filter,
+			function (tree) {
+				return predicate(
+					$author$project$Compiler$ASTTools$labelName(tree));
+			},
+			forest);
+	});
+var $author$project$Parser$Forest$map = A2($elm$core$Basics$composeL, $elm$core$List$map, $zwilias$elm_rosetree$Tree$map);
+var $author$project$Render$Export$LaTeX$oneOrTwo = function (mInt) {
+	if (mInt.$ === 'Nothing') {
+		return 1;
+	} else {
+		return 2;
+	}
+};
+var $author$project$Render$Export$LaTeX$shiftSection = F2(
+	function (delta, block) {
+		var data = block.a;
+		if (_Utils_eq(
+			data.name,
+			$elm$core$Maybe$Just('section'))) {
+			var _v0 = data.args;
+			if (_v0.b) {
+				var level = _v0.a;
+				var rest = _v0.b;
+				var _v1 = $elm$core$String$toInt(level);
+				if (_v1.$ === 'Nothing') {
+					return block;
+				} else {
+					var kk = _v1.a;
+					var newLevel = $elm$core$String$fromInt(kk + delta);
+					return $author$project$Parser$Block$ExpressionBlock(
+						_Utils_update(
+							data,
+							{
+								args: A2($elm$core$List$cons, newLevel, rest)
+							}));
+				}
+			} else {
+				return block;
+			}
+		} else {
+			return block;
+		}
+	});
+var $author$project$Render$Export$LaTeX$rawExport = F2(
+	function (settings, ast) {
+		var deltaShift = $author$project$Render$Export$LaTeX$counterValue(ast);
+		return A2(
+			$elm$core$String$join,
+			'\n\n',
+			A2(
+				$elm$core$List$map,
+				$author$project$Render$Export$LaTeX$exportTree(settings),
+				A2(
+					$author$project$Parser$Forest$map,
+					$author$project$Render$Export$LaTeX$shiftSection(
+						$author$project$Render$Export$LaTeX$oneOrTwo(deltaShift)),
+					$author$project$Render$Export$LaTeX$encloseLists(
+						A2(
+							$author$project$Parser$Forest$map,
+							$author$project$Parser$Block$condenseUrls,
+							A2(
+								$author$project$Compiler$ASTTools$filterForestOnLabelNames,
+								function (name) {
+									return !_Utils_eq(
+										name,
+										$elm$core$Maybe$Just('runninghead'));
+								},
+								ast))))));
+	});
+var $author$project$Render$Export$LaTeX$tableofcontents = function (rawBlockNames_) {
+	return ($elm$core$List$length(
+		A2(
+			$elm$core$List$filter,
+			function (name) {
+				return name === 'section';
+			},
+			rawBlockNames_)) > 1) ? '\n\n\\tableofcontents' : '';
+};
+var $author$project$Render$Export$LaTeX$zeroOrSome = function (mInt) {
+	if (mInt.$ === 'Nothing') {
+		return 0;
+	} else {
+		var k = mInt.a;
+		return k;
+	}
+};
+var $author$project$Render$Export$LaTeX$export = F3(
+	function (currentTime, settings_, ast) {
+		var rawBlockNames = $author$project$Compiler$ASTTools$rawBlockNames(ast);
+		var expressionNames = $author$project$Compiler$ASTTools$expressionNames(ast);
+		return A2($author$project$Render$Export$Preamble$make, rawBlockNames, expressionNames) + (A2($author$project$Render$Export$LaTeX$frontMatter, currentTime, ast) + (('\n\\setcounter{section}{' + ($elm$core$String$fromInt(
+			$author$project$Render$Export$LaTeX$zeroOrSome(
+				$author$project$Render$Export$LaTeX$counterValue(ast))) + '}\n')) + ($author$project$Render$Export$LaTeX$tableofcontents(rawBlockNames) + ('\n\n' + (A2($author$project$Render$Export$LaTeX$rawExport, settings_, ast) + '\n\n\\end{document}\n')))));
+	});
+var $author$project$Scripta$API$export = $author$project$Render$Export$LaTeX$export;
+var $author$project$Scripta$API$userReplace = F3(
+	function (userRegex, replacer, string) {
+		var _v0 = $elm$regex$Regex$fromString(userRegex);
+		if (_v0.$ === 'Nothing') {
+			return string;
+		} else {
+			var regex = _v0.a;
+			return A3($elm$regex$Regex$replace, regex, replacer, string);
+		}
+	});
+var $author$project$Scripta$API$compressWhitespace = function (string) {
+	return A3(
+		$author$project$Scripta$API$userReplace,
+		'\\s\\s+',
+		function (_v0) {
+			return ' ';
+		},
+		string);
+};
+var $author$project$Scripta$API$removeNonAlphaNum = function (string) {
+	return A3(
+		$author$project$Scripta$API$userReplace,
+		'[^A-Za-z0-9\\-]',
+		function (_v0) {
+			return '';
+		},
+		string);
+};
+var $author$project$Scripta$API$fileNameForExport = function (ast) {
+	return function (s) {
+		return s + '.tex';
+	}(
+		$author$project$Scripta$API$removeNonAlphaNum(
+			A3(
+				$elm$core$String$replace,
+				' ',
+				'-',
+				$author$project$Scripta$API$compressWhitespace(
+					$author$project$Compiler$ASTTools$title(ast)))));
+};
+var $author$project$Text$info = '\n\n| title\nAbout the Scripta compiler\n\n| contents\n\n[tags jxxcarlson:about-the-scripta-compiler]\n\n| runninghead\n[link Scripta.io https://scripta.io]\n\n\n| section 1 -\nWhat it is\n\nThe Scripta compiler transforms source text to HTML, where\nthe source text is one of the following markup languages:\n\n| item\nL0 — an experimental language with syntax inspired by Lisp.\nCan render LaTeX-style\nmathematical text.  This document is written in L0.\n\n| item\nMicroLaTeX — a cousin of LaTeX.  Source text can be exported\nto standard LaTeX\n\n| item\nXMarkdown — a cousin of Markdown.  Can render LaTeX-style\nmathematical text.\n\n\nThe Scripta compiler features real-time, fault-tolerant\nparsing and rendering, and so is suitable for an interactive\nediting system in which (a) changes to the source text\nare rendered "instantly," that is, with no perceptible delay,\nand (b) syntax errors are handled gracefully, marked as such\nin the rendered text, and with the following text rendered\nproperly to the greatest extent possible.\n\n\n| section 1 -\nOpen source\n\nThe Scripta compiler is open-source, and can be found at\n[link github.com/jxxcarlson/scripta-compiler  https://github.com/jxxcarlson/scripta-compiler].  In the Example\nfolder, you will find a small demo app.  It is hosted online\nat [link Github https://jxxcarlson.github.io/app/scripta-compiler-demo/assets/index.html].\n\nThe Scripta compiler is used to power\n[link Scripta.io https://scripta.io].  It features\ninteractive editing, a searchable store of documents,\nand facilities for collaboration and web publishing.\n\n\n| section 1 -\nCode\n\nIf you are interested in looking at the code, there are two\ngood places to start. The first is `compiler/Scripta/API.elm`.\nThe second is the folder `compiler/L0/Parser/` especially\nthe file `compiler/L0/Parser/Expression`.  The latter\nis the shift-reduce parser used for L0, the simplest\nof the three markup languages considered.\n\nA notable feature of the Scripta compiler is that\nall three markup languages use a common expression\ntype and parse to a common type (a list of syntax trees)\n\n|| code\ntype Expr\n    = Fun String (List Expr) Meta\n    | Text String Meta\n    | Verbatim String String Meta\n\nThe three variants of this type align with the three\nsyntactic elements of `L0`:\n\n| item\nFunction elements, e.g. `[italic This is italic text]`,\nwhich are bounded on left and right by brackets.\n\n| item\nStretches of pure text,\n\n| item\nVerbatim elements, which are bounded by\ndollar signs or by backtics, for inline\nmathematical text and inline code,\nrespectively.\n\n\n| section 1 -\nStatus and Roadmap\n\nThe Scripta compiler is serviceable — I\'ve used to to write\n[link these class notes https://scripta.io/s/jxxcarlson:wave-packets-dispersion], for example.\nThat said, there is still a great deal to be done. Please send bug reports,\nfeature requests, and comments in general to me at jxxcarlson (gmail).\nI am on the Elm Slack and Github as jxxcarlson and on Twitter as @epsilon2718.\n\n';
+var $author$project$Text$l0Demo = '\n| title\nDemo (L0)\n\n| banner\n[link Scripta.io https://scripta.io]\n\n| contents\n\n| section 1\nImages\n\n|| hide\n[image https://nas-national-prod.s3.amazonaws.com/styles/hero_image/s3/web_h_apa_2016-a1_2474_8_cedar-waxwing_peter_brannon_kk_female.jpg?itok=VdeVVmGA]\n\n[image https://www.birdsandblooms.com/wp-content/uploads/2018/10/BNBbyc18_patricia-warren.jpg width:400]\n\n\n| section 1\nMath\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n[bold Tip:] Click on a section title to go back to the table of contents.\n\n';
+var $elm$core$Platform$Cmd$map = _Platform_map;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Scripta$PDF$ChangePrintingState = function (a) {
+	return {$: 'ChangePrintingState', a: a};
+};
+var $author$project$Scripta$PDF$GotPdfLink = function (a) {
+	return {$: 'GotPdfLink', a: a};
+};
+var $elm$json$Json$Encode$list = F2(
+	function (func, entries) {
+		return _Json_wrap(
+			A3(
+				$elm$core$List$foldl,
+				_Json_addEntry(func),
+				_Json_emptyArray(_Utils_Tuple0),
+				entries));
+	});
+var $elm$json$Json$Encode$object = function (pairs) {
+	return _Json_wrap(
+		A3(
+			$elm$core$List$foldl,
+			F2(
+				function (_v0, obj) {
+					var k = _v0.a;
+					var v = _v0.b;
+					return A3(_Json_addField, k, v, obj);
+				}),
+			_Json_emptyObject(_Utils_Tuple0),
+			pairs));
+};
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$Scripta$PDF$encodeForPDF = F3(
+	function (id, content, urlList) {
+		return $elm$json$Json$Encode$object(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					'id',
+					$elm$json$Json$Encode$string(id)),
+					_Utils_Tuple2(
+					'content',
+					$elm$json$Json$Encode$string(content)),
+					_Utils_Tuple2(
+					'urlList',
+					A2($elm$json$Json$Encode$list, $elm$json$Json$Encode$string, urlList))
+				]));
+	});
+var $elm$http$Http$BadStatus_ = F2(
+	function (a, b) {
+		return {$: 'BadStatus_', a: a, b: b};
+	});
+var $elm$http$Http$BadUrl_ = function (a) {
+	return {$: 'BadUrl_', a: a};
+};
+var $elm$http$Http$GoodStatus_ = F2(
+	function (a, b) {
+		return {$: 'GoodStatus_', a: a, b: b};
+	});
+var $elm$http$Http$NetworkError_ = {$: 'NetworkError_'};
+var $elm$http$Http$Receiving = function (a) {
+	return {$: 'Receiving', a: a};
+};
+var $elm$http$Http$Sending = function (a) {
+	return {$: 'Sending', a: a};
+};
+var $elm$http$Http$Timeout_ = {$: 'Timeout_'};
+var $elm$core$Maybe$isJust = function (maybe) {
+	if (maybe.$ === 'Just') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $elm$core$Dict$getMin = function (dict) {
+	getMin:
+	while (true) {
+		if ((dict.$ === 'RBNode_elm_builtin') && (dict.d.$ === 'RBNode_elm_builtin')) {
+			var left = dict.d;
+			var $temp$dict = left;
+			dict = $temp$dict;
+			continue getMin;
+		} else {
+			return dict;
+		}
+	}
+};
+var $elm$core$Dict$moveRedLeft = function (dict) {
+	if (((dict.$ === 'RBNode_elm_builtin') && (dict.d.$ === 'RBNode_elm_builtin')) && (dict.e.$ === 'RBNode_elm_builtin')) {
+		if ((dict.e.d.$ === 'RBNode_elm_builtin') && (dict.e.d.a.$ === 'Red')) {
+			var clr = dict.a;
+			var k = dict.b;
+			var v = dict.c;
+			var _v1 = dict.d;
+			var lClr = _v1.a;
+			var lK = _v1.b;
+			var lV = _v1.c;
+			var lLeft = _v1.d;
+			var lRight = _v1.e;
+			var _v2 = dict.e;
+			var rClr = _v2.a;
+			var rK = _v2.b;
+			var rV = _v2.c;
+			var rLeft = _v2.d;
+			var _v3 = rLeft.a;
+			var rlK = rLeft.b;
+			var rlV = rLeft.c;
+			var rlL = rLeft.d;
+			var rlR = rLeft.e;
+			var rRight = _v2.e;
+			return A5(
+				$elm$core$Dict$RBNode_elm_builtin,
+				$elm$core$Dict$Red,
+				rlK,
+				rlV,
+				A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					$elm$core$Dict$Black,
+					k,
+					v,
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, lK, lV, lLeft, lRight),
+					rlL),
+				A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, rK, rV, rlR, rRight));
+		} else {
+			var clr = dict.a;
+			var k = dict.b;
+			var v = dict.c;
+			var _v4 = dict.d;
+			var lClr = _v4.a;
+			var lK = _v4.b;
+			var lV = _v4.c;
+			var lLeft = _v4.d;
+			var lRight = _v4.e;
+			var _v5 = dict.e;
+			var rClr = _v5.a;
+			var rK = _v5.b;
+			var rV = _v5.c;
+			var rLeft = _v5.d;
+			var rRight = _v5.e;
+			if (clr.$ === 'Black') {
+				return A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					$elm$core$Dict$Black,
+					k,
+					v,
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, lK, lV, lLeft, lRight),
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, rK, rV, rLeft, rRight));
+			} else {
+				return A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					$elm$core$Dict$Black,
+					k,
+					v,
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, lK, lV, lLeft, lRight),
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, rK, rV, rLeft, rRight));
+			}
+		}
+	} else {
+		return dict;
+	}
+};
+var $elm$core$Dict$moveRedRight = function (dict) {
+	if (((dict.$ === 'RBNode_elm_builtin') && (dict.d.$ === 'RBNode_elm_builtin')) && (dict.e.$ === 'RBNode_elm_builtin')) {
+		if ((dict.d.d.$ === 'RBNode_elm_builtin') && (dict.d.d.a.$ === 'Red')) {
+			var clr = dict.a;
+			var k = dict.b;
+			var v = dict.c;
+			var _v1 = dict.d;
+			var lClr = _v1.a;
+			var lK = _v1.b;
+			var lV = _v1.c;
+			var _v2 = _v1.d;
+			var _v3 = _v2.a;
+			var llK = _v2.b;
+			var llV = _v2.c;
+			var llLeft = _v2.d;
+			var llRight = _v2.e;
+			var lRight = _v1.e;
+			var _v4 = dict.e;
+			var rClr = _v4.a;
+			var rK = _v4.b;
+			var rV = _v4.c;
+			var rLeft = _v4.d;
+			var rRight = _v4.e;
+			return A5(
+				$elm$core$Dict$RBNode_elm_builtin,
+				$elm$core$Dict$Red,
+				lK,
+				lV,
+				A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, llK, llV, llLeft, llRight),
+				A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					$elm$core$Dict$Black,
+					k,
+					v,
+					lRight,
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, rK, rV, rLeft, rRight)));
+		} else {
+			var clr = dict.a;
+			var k = dict.b;
+			var v = dict.c;
+			var _v5 = dict.d;
+			var lClr = _v5.a;
+			var lK = _v5.b;
+			var lV = _v5.c;
+			var lLeft = _v5.d;
+			var lRight = _v5.e;
+			var _v6 = dict.e;
+			var rClr = _v6.a;
+			var rK = _v6.b;
+			var rV = _v6.c;
+			var rLeft = _v6.d;
+			var rRight = _v6.e;
+			if (clr.$ === 'Black') {
+				return A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					$elm$core$Dict$Black,
+					k,
+					v,
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, lK, lV, lLeft, lRight),
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, rK, rV, rLeft, rRight));
+			} else {
+				return A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					$elm$core$Dict$Black,
+					k,
+					v,
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, lK, lV, lLeft, lRight),
+					A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, rK, rV, rLeft, rRight));
+			}
+		}
+	} else {
+		return dict;
+	}
+};
+var $elm$core$Dict$removeHelpPrepEQGT = F7(
+	function (targetKey, dict, color, key, value, left, right) {
+		if ((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Red')) {
+			var _v1 = left.a;
+			var lK = left.b;
+			var lV = left.c;
+			var lLeft = left.d;
+			var lRight = left.e;
+			return A5(
+				$elm$core$Dict$RBNode_elm_builtin,
+				color,
+				lK,
+				lV,
+				lLeft,
+				A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Red, key, value, lRight, right));
+		} else {
+			_v2$2:
+			while (true) {
+				if ((right.$ === 'RBNode_elm_builtin') && (right.a.$ === 'Black')) {
+					if (right.d.$ === 'RBNode_elm_builtin') {
+						if (right.d.a.$ === 'Black') {
+							var _v3 = right.a;
+							var _v4 = right.d;
+							var _v5 = _v4.a;
+							return $elm$core$Dict$moveRedRight(dict);
+						} else {
+							break _v2$2;
+						}
+					} else {
+						var _v6 = right.a;
+						var _v7 = right.d;
+						return $elm$core$Dict$moveRedRight(dict);
+					}
+				} else {
+					break _v2$2;
+				}
+			}
+			return dict;
+		}
+	});
+var $elm$core$Dict$removeMin = function (dict) {
+	if ((dict.$ === 'RBNode_elm_builtin') && (dict.d.$ === 'RBNode_elm_builtin')) {
+		var color = dict.a;
+		var key = dict.b;
+		var value = dict.c;
+		var left = dict.d;
+		var lColor = left.a;
+		var lLeft = left.d;
+		var right = dict.e;
+		if (lColor.$ === 'Black') {
+			if ((lLeft.$ === 'RBNode_elm_builtin') && (lLeft.a.$ === 'Red')) {
+				var _v3 = lLeft.a;
+				return A5(
+					$elm$core$Dict$RBNode_elm_builtin,
+					color,
+					key,
+					value,
+					$elm$core$Dict$removeMin(left),
+					right);
+			} else {
+				var _v4 = $elm$core$Dict$moveRedLeft(dict);
+				if (_v4.$ === 'RBNode_elm_builtin') {
+					var nColor = _v4.a;
+					var nKey = _v4.b;
+					var nValue = _v4.c;
+					var nLeft = _v4.d;
+					var nRight = _v4.e;
+					return A5(
+						$elm$core$Dict$balance,
+						nColor,
+						nKey,
+						nValue,
+						$elm$core$Dict$removeMin(nLeft),
+						nRight);
+				} else {
+					return $elm$core$Dict$RBEmpty_elm_builtin;
+				}
+			}
+		} else {
+			return A5(
+				$elm$core$Dict$RBNode_elm_builtin,
+				color,
+				key,
+				value,
+				$elm$core$Dict$removeMin(left),
+				right);
+		}
+	} else {
+		return $elm$core$Dict$RBEmpty_elm_builtin;
+	}
+};
+var $elm$core$Dict$removeHelp = F2(
+	function (targetKey, dict) {
+		if (dict.$ === 'RBEmpty_elm_builtin') {
+			return $elm$core$Dict$RBEmpty_elm_builtin;
+		} else {
+			var color = dict.a;
+			var key = dict.b;
+			var value = dict.c;
+			var left = dict.d;
+			var right = dict.e;
+			if (_Utils_cmp(targetKey, key) < 0) {
+				if ((left.$ === 'RBNode_elm_builtin') && (left.a.$ === 'Black')) {
+					var _v4 = left.a;
+					var lLeft = left.d;
+					if ((lLeft.$ === 'RBNode_elm_builtin') && (lLeft.a.$ === 'Red')) {
+						var _v6 = lLeft.a;
+						return A5(
+							$elm$core$Dict$RBNode_elm_builtin,
+							color,
+							key,
+							value,
+							A2($elm$core$Dict$removeHelp, targetKey, left),
+							right);
+					} else {
+						var _v7 = $elm$core$Dict$moveRedLeft(dict);
+						if (_v7.$ === 'RBNode_elm_builtin') {
+							var nColor = _v7.a;
+							var nKey = _v7.b;
+							var nValue = _v7.c;
+							var nLeft = _v7.d;
+							var nRight = _v7.e;
+							return A5(
+								$elm$core$Dict$balance,
+								nColor,
+								nKey,
+								nValue,
+								A2($elm$core$Dict$removeHelp, targetKey, nLeft),
+								nRight);
+						} else {
+							return $elm$core$Dict$RBEmpty_elm_builtin;
+						}
+					}
+				} else {
+					return A5(
+						$elm$core$Dict$RBNode_elm_builtin,
+						color,
+						key,
+						value,
+						A2($elm$core$Dict$removeHelp, targetKey, left),
+						right);
+				}
+			} else {
+				return A2(
+					$elm$core$Dict$removeHelpEQGT,
+					targetKey,
+					A7($elm$core$Dict$removeHelpPrepEQGT, targetKey, dict, color, key, value, left, right));
+			}
+		}
+	});
+var $elm$core$Dict$removeHelpEQGT = F2(
+	function (targetKey, dict) {
+		if (dict.$ === 'RBNode_elm_builtin') {
+			var color = dict.a;
+			var key = dict.b;
+			var value = dict.c;
+			var left = dict.d;
+			var right = dict.e;
+			if (_Utils_eq(targetKey, key)) {
+				var _v1 = $elm$core$Dict$getMin(right);
+				if (_v1.$ === 'RBNode_elm_builtin') {
+					var minKey = _v1.b;
+					var minValue = _v1.c;
+					return A5(
+						$elm$core$Dict$balance,
+						color,
+						minKey,
+						minValue,
+						left,
+						$elm$core$Dict$removeMin(right));
+				} else {
+					return $elm$core$Dict$RBEmpty_elm_builtin;
+				}
+			} else {
+				return A5(
+					$elm$core$Dict$balance,
+					color,
+					key,
+					value,
+					left,
+					A2($elm$core$Dict$removeHelp, targetKey, right));
+			}
+		} else {
+			return $elm$core$Dict$RBEmpty_elm_builtin;
+		}
+	});
+var $elm$core$Dict$remove = F2(
+	function (key, dict) {
+		var _v0 = A2($elm$core$Dict$removeHelp, key, dict);
+		if ((_v0.$ === 'RBNode_elm_builtin') && (_v0.a.$ === 'Red')) {
+			var _v1 = _v0.a;
+			var k = _v0.b;
+			var v = _v0.c;
+			var l = _v0.d;
+			var r = _v0.e;
+			return A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, k, v, l, r);
+		} else {
+			var x = _v0;
+			return x;
+		}
+	});
+var $elm$core$Dict$update = F3(
+	function (targetKey, alter, dictionary) {
+		var _v0 = alter(
+			A2($elm$core$Dict$get, targetKey, dictionary));
+		if (_v0.$ === 'Just') {
+			var value = _v0.a;
+			return A3($elm$core$Dict$insert, targetKey, value, dictionary);
+		} else {
+			return A2($elm$core$Dict$remove, targetKey, dictionary);
+		}
+	});
+var $elm$http$Http$expectStringResponse = F2(
+	function (toMsg, toResult) {
+		return A3(
+			_Http_expect,
+			'',
+			$elm$core$Basics$identity,
+			A2($elm$core$Basics$composeR, toResult, toMsg));
+	});
+var $elm$http$Http$BadBody = function (a) {
+	return {$: 'BadBody', a: a};
+};
+var $elm$http$Http$BadStatus = function (a) {
+	return {$: 'BadStatus', a: a};
+};
+var $elm$http$Http$BadUrl = function (a) {
+	return {$: 'BadUrl', a: a};
+};
+var $elm$http$Http$NetworkError = {$: 'NetworkError'};
+var $elm$http$Http$Timeout = {$: 'Timeout'};
+var $elm$core$Result$mapError = F2(
+	function (f, result) {
+		if (result.$ === 'Ok') {
+			var v = result.a;
+			return $elm$core$Result$Ok(v);
+		} else {
+			var e = result.a;
+			return $elm$core$Result$Err(
+				f(e));
+		}
+	});
+var $elm$http$Http$resolve = F2(
+	function (toResult, response) {
+		switch (response.$) {
+			case 'BadUrl_':
+				var url = response.a;
+				return $elm$core$Result$Err(
+					$elm$http$Http$BadUrl(url));
+			case 'Timeout_':
+				return $elm$core$Result$Err($elm$http$Http$Timeout);
+			case 'NetworkError_':
+				return $elm$core$Result$Err($elm$http$Http$NetworkError);
+			case 'BadStatus_':
+				var metadata = response.a;
+				return $elm$core$Result$Err(
+					$elm$http$Http$BadStatus(metadata.statusCode));
+			default:
+				var body = response.b;
+				return A2(
+					$elm$core$Result$mapError,
+					$elm$http$Http$BadBody,
+					toResult(body));
+		}
+	});
+var $elm$http$Http$expectString = function (toMsg) {
+	return A2(
+		$elm$http$Http$expectStringResponse,
+		toMsg,
+		$elm$http$Http$resolve($elm$core$Result$Ok));
+};
+var $author$project$Scripta$PDF$extractUrl = function (str) {
+	return $elm$core$List$head(
+		A2($elm$core$String$split, ' ', str));
+};
+var $author$project$Compiler$ASTTools$matchExprOnName = F2(
+	function (name, expr) {
+		switch (expr.$) {
+			case 'Fun':
+				var name2 = expr.a;
+				return _Utils_eq(name, name2);
+			case 'Verbatim':
+				var name2 = expr.a;
+				return _Utils_eq(name, name2);
+			default:
+				return false;
+		}
+	});
+var $author$project$Compiler$ASTTools$filterExpressionsOnName = F2(
+	function (name, exprs) {
+		return A2(
+			$elm$core$List$filter,
+			$author$project$Compiler$ASTTools$matchExprOnName(name),
+			exprs);
+	});
+var $elm$http$Http$Header = F2(
+	function (a, b) {
+		return {$: 'Header', a: a, b: b};
+	});
+var $elm$http$Http$header = $elm$http$Http$Header;
+var $elm$http$Http$jsonBody = function (value) {
+	return A2(
+		_Http_pair,
+		'application/json',
+		A2($elm$json$Json$Encode$encode, 0, value));
+};
+var $elm$http$Http$Request = function (a) {
+	return {$: 'Request', a: a};
+};
+var $elm$http$Http$State = F2(
+	function (reqs, subs) {
+		return {reqs: reqs, subs: subs};
+	});
+var $elm$http$Http$init = $elm$core$Task$succeed(
+	A2($elm$http$Http$State, $elm$core$Dict$empty, _List_Nil));
+var $elm$http$Http$updateReqs = F3(
+	function (router, cmds, reqs) {
+		updateReqs:
+		while (true) {
+			if (!cmds.b) {
+				return $elm$core$Task$succeed(reqs);
+			} else {
+				var cmd = cmds.a;
+				var otherCmds = cmds.b;
+				if (cmd.$ === 'Cancel') {
+					var tracker = cmd.a;
+					var _v2 = A2($elm$core$Dict$get, tracker, reqs);
+					if (_v2.$ === 'Nothing') {
+						var $temp$router = router,
+							$temp$cmds = otherCmds,
+							$temp$reqs = reqs;
+						router = $temp$router;
+						cmds = $temp$cmds;
+						reqs = $temp$reqs;
+						continue updateReqs;
+					} else {
+						var pid = _v2.a;
+						return A2(
+							$elm$core$Task$andThen,
+							function (_v3) {
+								return A3(
+									$elm$http$Http$updateReqs,
+									router,
+									otherCmds,
+									A2($elm$core$Dict$remove, tracker, reqs));
+							},
+							$elm$core$Process$kill(pid));
+					}
+				} else {
+					var req = cmd.a;
+					return A2(
+						$elm$core$Task$andThen,
+						function (pid) {
+							var _v4 = req.tracker;
+							if (_v4.$ === 'Nothing') {
+								return A3($elm$http$Http$updateReqs, router, otherCmds, reqs);
+							} else {
+								var tracker = _v4.a;
+								return A3(
+									$elm$http$Http$updateReqs,
+									router,
+									otherCmds,
+									A3($elm$core$Dict$insert, tracker, pid, reqs));
+							}
+						},
+						$elm$core$Process$spawn(
+							A3(
+								_Http_toTask,
+								router,
+								$elm$core$Platform$sendToApp(router),
+								req)));
+				}
+			}
+		}
+	});
+var $elm$http$Http$onEffects = F4(
+	function (router, cmds, subs, state) {
+		return A2(
+			$elm$core$Task$andThen,
+			function (reqs) {
+				return $elm$core$Task$succeed(
+					A2($elm$http$Http$State, reqs, subs));
+			},
+			A3($elm$http$Http$updateReqs, router, cmds, state.reqs));
+	});
+var $elm$core$List$maybeCons = F3(
+	function (f, mx, xs) {
+		var _v0 = f(mx);
+		if (_v0.$ === 'Just') {
+			var x = _v0.a;
+			return A2($elm$core$List$cons, x, xs);
+		} else {
+			return xs;
+		}
+	});
+var $elm$core$List$filterMap = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$foldr,
+			$elm$core$List$maybeCons(f),
+			_List_Nil,
+			xs);
+	});
+var $elm$http$Http$maybeSend = F4(
+	function (router, desiredTracker, progress, _v0) {
+		var actualTracker = _v0.a;
+		var toMsg = _v0.b;
+		return _Utils_eq(desiredTracker, actualTracker) ? $elm$core$Maybe$Just(
+			A2(
+				$elm$core$Platform$sendToApp,
+				router,
+				toMsg(progress))) : $elm$core$Maybe$Nothing;
+	});
+var $elm$http$Http$onSelfMsg = F3(
+	function (router, _v0, state) {
+		var tracker = _v0.a;
+		var progress = _v0.b;
+		return A2(
+			$elm$core$Task$andThen,
+			function (_v1) {
+				return $elm$core$Task$succeed(state);
+			},
+			$elm$core$Task$sequence(
+				A2(
+					$elm$core$List$filterMap,
+					A3($elm$http$Http$maybeSend, router, tracker, progress),
+					state.subs)));
+	});
+var $elm$http$Http$Cancel = function (a) {
+	return {$: 'Cancel', a: a};
+};
+var $elm$http$Http$cmdMap = F2(
+	function (func, cmd) {
+		if (cmd.$ === 'Cancel') {
+			var tracker = cmd.a;
+			return $elm$http$Http$Cancel(tracker);
+		} else {
+			var r = cmd.a;
+			return $elm$http$Http$Request(
+				{
+					allowCookiesFromOtherDomains: r.allowCookiesFromOtherDomains,
+					body: r.body,
+					expect: A2(_Http_mapExpect, func, r.expect),
+					headers: r.headers,
+					method: r.method,
+					timeout: r.timeout,
+					tracker: r.tracker,
+					url: r.url
+				});
+		}
+	});
+var $elm$http$Http$MySub = F2(
+	function (a, b) {
+		return {$: 'MySub', a: a, b: b};
+	});
+var $elm$http$Http$subMap = F2(
+	function (func, _v0) {
+		var tracker = _v0.a;
+		var toMsg = _v0.b;
+		return A2(
+			$elm$http$Http$MySub,
+			tracker,
+			A2($elm$core$Basics$composeR, toMsg, func));
+	});
+_Platform_effectManagers['Http'] = _Platform_createManager($elm$http$Http$init, $elm$http$Http$onEffects, $elm$http$Http$onSelfMsg, $elm$http$Http$cmdMap, $elm$http$Http$subMap);
+var $elm$http$Http$command = _Platform_leaf('Http');
+var $elm$http$Http$subscription = _Platform_leaf('Http');
+var $elm$http$Http$request = function (r) {
+	return $elm$http$Http$command(
+		$elm$http$Http$Request(
+			{allowCookiesFromOtherDomains: false, body: r.body, expect: r.expect, headers: r.headers, method: r.method, timeout: r.timeout, tracker: r.tracker, url: r.url}));
+};
+var $elm$core$List$singleton = function (value) {
+	return _List_fromArray(
+		[value]);
+};
+var $toastal$either$Either$unwrap = F3(
+	function (d, f, e) {
+		if (e.$ === 'Left') {
+			return d;
+		} else {
+			var a = e.a;
+			return f(a);
+		}
+	});
+var $toastal$either$Either$toListVia = function (f) {
+	return A2(
+		$toastal$either$Either$unwrap,
+		_List_Nil,
+		A2($elm$core$Basics$composeR, f, $elm$core$List$singleton));
+};
+var $toastal$either$Either$toList = $toastal$either$Either$toListVia($elm$core$Basics$identity);
+var $author$project$Scripta$PDF$generatePdf = F3(
+	function (currentTime, settings, syntaxTree) {
+		var imageUrls = $elm_community$maybe_extra$Maybe$Extra$values(
+			A2(
+				$elm$core$List$map,
+				$elm$core$Maybe$andThen($author$project$Scripta$PDF$extractUrl),
+				A2(
+					$elm$core$List$map,
+					A2(
+						$elm$core$Basics$composeR,
+						$author$project$Compiler$ASTTools$getText,
+						$elm$core$Maybe$map($elm$core$String$trim)),
+					A2(
+						$author$project$Compiler$ASTTools$filterExpressionsOnName,
+						'image',
+						$elm$core$List$concat(
+							$elm$core$List$concat(
+								A2(
+									$elm$core$List$map,
+									function (_v0) {
+										var content = _v0.a.content;
+										return $toastal$either$Either$toList(content);
+									},
+									$elm$core$List$concat(
+										A2($elm$core$List$map, $zwilias$elm_rosetree$Tree$flatten, syntaxTree)))))))));
+		var fileName = $author$project$Scripta$API$fileNameForExport(syntaxTree);
+		var contentForExport = A3($author$project$Render$Export$LaTeX$export, currentTime, settings, syntaxTree);
+		return $elm$core$Platform$Cmd$batch(
+			_List_fromArray(
+				[
+					$elm$http$Http$request(
+					{
+						body: $elm$http$Http$jsonBody(
+							A3($author$project$Scripta$PDF$encodeForPDF, fileName, contentForExport, imageUrls)),
+						expect: $elm$http$Http$expectString($author$project$Scripta$PDF$GotPdfLink),
+						headers: _List_fromArray(
+							[
+								A2($elm$http$Http$header, 'Content-Type', 'application/json')
+							]),
+						method: 'POST',
+						timeout: $elm$core$Maybe$Nothing,
+						tracker: $elm$core$Maybe$Nothing,
+						url: 'https://pdfserv.app/pdf'
+					})
+				]));
+	});
+var $elm$core$Process$sleep = _Process_sleep;
+var $author$project$Scripta$PDF$printCmd = F3(
+	function (currentTime, settings, forest) {
+		return $elm$core$Platform$Cmd$batch(
+			_List_fromArray(
+				[
+					A2(
+					$elm$core$Task$perform,
+					$elm$core$Basics$always(
+						$author$project$Scripta$PDF$ChangePrintingState($author$project$Scripta$PDF$PrintProcessing)),
+					$elm$core$Process$sleep(30)),
+					A3($author$project$Scripta$PDF$generatePdf, currentTime, settings, forest)
+				]));
+	});
+var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$Compiler$Differ$DiffRecord = F4(
 	function (commonInitialSegment, commonTerminalSegment, middleSegmentInSource, middleSegmentInTarget) {
 		return {commonInitialSegment: commonInitialSegment, commonTerminalSegment: commonTerminalSegment, middleSegmentInSource: middleSegmentInSource, middleSegmentInTarget: middleSegmentInTarget};
@@ -17523,6 +20628,15 @@ var $author$project$Main$update = F2(
 		switch (msg.$) {
 			case 'NoOp':
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+			case 'Tick':
+				var newTime = msg.a;
+				var ticks = (model.ticks > 10) ? 0 : (model.ticks + 1);
+				var printingState = (_Utils_eq(model.printingState, $author$project$Scripta$PDF$PrintProcessing) && (model.ticks > 2)) ? $author$project$Scripta$PDF$PrintReady : ((_Utils_eq(model.printingState, $author$project$Scripta$PDF$PrintReady) && (model.ticks > 10)) ? $author$project$Scripta$PDF$PrintWaiting : model.printingState);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{currentTime: newTime, printingState: printingState, ticks: ticks}),
+					$elm$core$Platform$Cmd$none);
 			case 'InputText':
 				var str = msg.a;
 				return _Utils_Tuple2(
@@ -17581,6 +20695,48 @@ var $author$project$Main$update = F2(
 								$author$project$Main$jumpToTop('scripta-output'),
 								$author$project$Main$jumpToTop('input-text')
 							])));
+			case 'Export':
+				var fileName = $author$project$Scripta$API$fileNameForExport(model.editRecord.parsed);
+				var defaultSettings = $author$project$Scripta$API$defaultSettings;
+				var exportSettings = _Utils_update(
+					defaultSettings,
+					{isStandaloneDocument: true});
+				var exportText = A3($author$project$Scripta$API$export, model.currentTime, exportSettings, model.editRecord.parsed);
+				return _Utils_Tuple2(
+					model,
+					A2($author$project$Main$download, fileName, exportText));
+			case 'PDF':
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+			case 'GotPdfLink':
+				var result = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							message: 'Got PDF Link' + $elm$core$Debug$toString(result),
+							printingState: $author$project$Scripta$PDF$PrintReady
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 'ChangePrintingState':
+				var printingState = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{message: 'Changing printing state', printingState: printingState}),
+					$elm$core$Platform$Cmd$none);
+			case 'PrintToPDF':
+				var defaultSettings = $author$project$Scripta$API$defaultSettings;
+				var exportSettings = _Utils_update(
+					defaultSettings,
+					{isStandaloneDocument: true});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{message: 'requesting PDF', printingState: $author$project$Scripta$PDF$PrintProcessing, ticks: 0}),
+					A2(
+						$elm$core$Platform$Cmd$map,
+						$author$project$Main$PDF,
+						A3($author$project$Scripta$PDF$printCmd, model.currentTime, exportSettings, model.editRecord.parsed)));
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
@@ -17604,7 +20760,6 @@ var $mdgriffith$elm_ui$Internal$Flag$flag = function (i) {
 	return (i > 31) ? $mdgriffith$elm_ui$Internal$Flag$Second(1 << (i - 32)) : $mdgriffith$elm_ui$Internal$Flag$Flag(1 << i);
 };
 var $mdgriffith$elm_ui$Internal$Flag$bgColor = $mdgriffith$elm_ui$Internal$Flag$flag(8);
-var $elm$core$Basics$round = _Basics_round;
 var $mdgriffith$elm_ui$Internal$Model$floatClass = function (x) {
 	return $elm$core$String$fromInt(
 		$elm$core$Basics$round(x * 255));
@@ -17626,14 +20781,6 @@ var $mdgriffith$elm_ui$Element$Background$color = function (clr) {
 			'background-color',
 			clr));
 };
-var $mdgriffith$elm_ui$Internal$Model$Rgba = F4(
-	function (a, b, c, d) {
-		return {$: 'Rgba', a: a, b: b, c: c, d: d};
-	});
-var $mdgriffith$elm_ui$Element$rgb = F3(
-	function (r, g, b) {
-		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, r, g, b, 1);
-	});
 var $author$project$Main$bgGray = function (g) {
 	return $mdgriffith$elm_ui$Element$Background$color(
 		A3($mdgriffith$elm_ui$Element$rgb, g, g, g));
@@ -17646,7 +20793,6 @@ var $mdgriffith$elm_ui$Internal$Style$classes = {above: 'a', active: 'atv', alig
 var $mdgriffith$elm_ui$Internal$Model$Attr = function (a) {
 	return {$: 'Attr', a: a};
 };
-var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -17938,25 +21084,6 @@ var $mdgriffith$elm_ui$Internal$Model$Style = F2(
 var $mdgriffith$elm_ui$Internal$Style$dot = function (c) {
 	return '.' + c;
 };
-var $elm$core$List$maybeCons = F3(
-	function (f, mx, xs) {
-		var _v0 = f(mx);
-		if (_v0.$ === 'Just') {
-			var x = _v0.a;
-			return A2($elm$core$List$cons, x, xs);
-		} else {
-			return xs;
-		}
-	});
-var $elm$core$List$filterMap = F2(
-	function (f, xs) {
-		return A3(
-			$elm$core$List$foldr,
-			$elm$core$List$maybeCons(f),
-			_List_Nil,
-			xs);
-	});
-var $elm$core$String$fromFloat = _String_fromNumber;
 var $mdgriffith$elm_ui$Internal$Model$formatColor = function (_v0) {
 	var red = _v0.a;
 	var green = _v0.b;
@@ -20175,28 +23302,6 @@ var $mdgriffith$elm_ui$Internal$Model$staticRoot = function (opts) {
 					]),
 				_List_Nil);
 	}
-};
-var $elm$json$Json$Encode$list = F2(
-	function (func, entries) {
-		return _Json_wrap(
-			A3(
-				$elm$core$List$foldl,
-				_Json_addEntry(func),
-				_Json_emptyArray(_Utils_Tuple0),
-				entries));
-	});
-var $elm$json$Json$Encode$object = function (pairs) {
-	return _Json_wrap(
-		A3(
-			$elm$core$List$foldl,
-			F2(
-				function (_v0, obj) {
-					var k = _v0.a;
-					var v = _v0.b;
-					return A3(_Json_addField, k, v, obj);
-				}),
-			_Json_emptyObject(_Utils_Tuple0),
-			pairs));
 };
 var $mdgriffith$elm_ui$Internal$Model$fontName = function (font) {
 	switch (font.$) {
@@ -23252,6 +26357,16 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 				_Utils_ap($mdgriffith$elm_ui$Internal$Model$rootStyle, attrs)),
 			child);
 	});
+var $mdgriffith$elm_ui$Element$Font$color = function (fontColor) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$fontColor,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Colored,
+			'fc-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(fontColor),
+			'color',
+			fontColor));
+};
 var $mdgriffith$elm_ui$Internal$Model$AsColumn = {$: 'AsColumn'};
 var $mdgriffith$elm_ui$Internal$Model$asColumn = $mdgriffith$elm_ui$Internal$Model$AsColumn;
 var $mdgriffith$elm_ui$Internal$Model$Height = function (a) {
@@ -23304,7 +26419,7 @@ var $mdgriffith$elm_ui$Element$el = F2(
 				_List_fromArray(
 					[child])));
 	});
-var $author$project$Main$Info = {$: 'Info'};
+var $author$project$Main$Export = {$: 'Export'};
 var $mdgriffith$elm_ui$Internal$Model$Above = {$: 'Above'};
 var $mdgriffith$elm_ui$Internal$Model$Nearby = F2(
 	function (a, b) {
@@ -23323,21 +26438,10 @@ var $mdgriffith$elm_ui$Element$above = function (element) {
 	return A2($mdgriffith$elm_ui$Element$createNearby, $mdgriffith$elm_ui$Internal$Model$Above, element);
 };
 var $author$project$Main$buttonWidth = 105;
-var $mdgriffith$elm_ui$Element$Font$color = function (fontColor) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$fontColor,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$Colored,
-			'fc-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(fontColor),
-			'color',
-			fontColor));
-};
 var $mdgriffith$elm_ui$Element$rgb255 = F3(
 	function (red, green, blue) {
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, 1);
 	});
-var $author$project$Main$darkRed = A3($mdgriffith$elm_ui$Element$rgb255, 140, 0, 0);
 var $author$project$Main$gray = A3($mdgriffith$elm_ui$Element$rgb255, 60, 60, 60);
 var $mdgriffith$elm_ui$Internal$Model$Px = function (a) {
 	return {$: 'Px', a: a};
@@ -23903,6 +27007,22 @@ var $author$project$Button$template = function (buttonData) {
 			]));
 };
 var $author$project$Main$white = A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255);
+var $author$project$Main$exportButton = $author$project$Button$template(
+	{
+		attributes: _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$Font$color($author$project$Main$white),
+				$mdgriffith$elm_ui$Element$Background$color($author$project$Main$gray),
+				$mdgriffith$elm_ui$Element$width(
+				$mdgriffith$elm_ui$Element$px($author$project$Main$buttonWidth))
+			]),
+		label: 'Export',
+		msg: $author$project$Main$Export,
+		tooltipPlacement: $mdgriffith$elm_ui$Element$above,
+		tooltipText: 'Export text to standard LaTeX'
+	});
+var $author$project$Main$Info = {$: 'Info'};
+var $author$project$Main$darkRed = A3($mdgriffith$elm_ui$Element$rgb255, 140, 0, 0);
 var $author$project$Main$infoButton = function (documentType) {
 	var bgColor = function () {
 		if (documentType.$ === 'InfoDocument') {
@@ -23925,6 +27045,139 @@ var $author$project$Main$infoButton = function (documentType) {
 			tooltipPlacement: $mdgriffith$elm_ui$Element$above,
 			tooltipText: 'Info on the Scripta compiler'
 		});
+};
+var $author$project$Main$ChangePrintingState = function (a) {
+	return {$: 'ChangePrintingState', a: a};
+};
+var $author$project$Main$PrintToPDF = {$: 'PrintToPDF'};
+var $author$project$Color$blue = A3($mdgriffith$elm_ui$Element$rgb, 0, 0, 0.8);
+var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
+var $author$project$Main$elementAttribute = F2(
+	function (key, value) {
+		return $mdgriffith$elm_ui$Element$htmlAttribute(
+			A2($elm$html$Html$Attributes$attribute, key, value));
+	});
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
+var $elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
+var $mdgriffith$elm_ui$Element$link = F2(
+	function (attrs, _v0) {
+		var label = _v0.label;
+		var url = _v0.url;
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asEl,
+			$mdgriffith$elm_ui$Internal$Model$NodeName('a'),
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Internal$Model$Attr(
+					$elm$html$Html$Attributes$href(url)),
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Internal$Model$Attr(
+						$elm$html$Html$Attributes$rel('noopener noreferrer')),
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
+						A2(
+							$elm$core$List$cons,
+							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
+							A2(
+								$elm$core$List$cons,
+								$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentCenterX + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.contentCenterY + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.link)))),
+								attrs))))),
+			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+				_List_fromArray(
+					[label])));
+	});
+var $author$project$Button$simpleTemplate = F3(
+	function (attrList, msg, label_) {
+		return A2(
+			$mdgriffith$elm_ui$Element$row,
+			_Utils_ap(
+				_List_fromArray(
+					[
+						$author$project$Button$bgGray(0.2),
+						$mdgriffith$elm_ui$Element$pointer,
+						$mdgriffith$elm_ui$Element$mouseDown(
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Background$color($author$project$Button$darkRed)
+							]))
+					]),
+				attrList),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$Input$button,
+					$author$project$Button$buttonStyle,
+					{
+						label: A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$centerX,
+									$mdgriffith$elm_ui$Element$centerY,
+									$mdgriffith$elm_ui$Element$Font$size(14)
+								]),
+							$mdgriffith$elm_ui$Element$text(label_)),
+						onPress: $elm$core$Maybe$Just(msg)
+					})
+				]));
+	});
+var $author$project$Color$white = A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1);
+var $author$project$Main$printToPDF = function (model) {
+	var _v0 = model.printingState;
+	switch (_v0.$) {
+		case 'PrintWaiting':
+			return A3(
+				$author$project$Button$simpleTemplate,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$width(
+						$mdgriffith$elm_ui$Element$px($author$project$Main$buttonWidth)),
+						A2($author$project$Main$elementAttribute, 'title', 'Generate PDF')
+					]),
+				$author$project$Main$PrintToPDF,
+				'PDF');
+		case 'PrintProcessing':
+			return A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Font$size(14),
+						$mdgriffith$elm_ui$Element$padding(8),
+						$mdgriffith$elm_ui$Element$height(
+						$mdgriffith$elm_ui$Element$px(30)),
+						$mdgriffith$elm_ui$Element$Background$color($author$project$Color$blue),
+						$mdgriffith$elm_ui$Element$Font$color($author$project$Color$white)
+					]),
+				$mdgriffith$elm_ui$Element$text('Please wait ...'));
+		default:
+			return A2(
+				$mdgriffith$elm_ui$Element$link,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Font$size(14),
+						$mdgriffith$elm_ui$Element$Background$color($author$project$Color$white),
+						A2($mdgriffith$elm_ui$Element$paddingXY, 8, 8),
+						$mdgriffith$elm_ui$Element$Font$color($author$project$Color$blue),
+						$mdgriffith$elm_ui$Element$Events$onClick(
+						$author$project$Main$ChangePrintingState($author$project$Scripta$PDF$PrintWaiting)),
+						A2($author$project$Main$elementAttribute, 'target', '_blank')
+					]),
+				{
+					label: A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_Nil,
+						$mdgriffith$elm_ui$Element$text('Click for PDF')),
+					url: 'https://pdfserv.app/pdf/' + $author$project$Scripta$API$fileNameForExport(model.editRecord.parsed)
+				});
+	}
 };
 var $author$project$Main$SetLanguage = function (a) {
 	return {$: 'SetLanguage', a: a};
@@ -23986,7 +27239,9 @@ var $author$project$Main$controls = function (model) {
 					[
 						A2($mdgriffith$elm_ui$Element$paddingXY, 0, 40)
 					]),
-				$author$project$Main$infoButton(model.documentType))
+				$author$project$Main$infoButton(model.documentType)),
+				$author$project$Main$exportButton,
+				$author$project$Main$printToPDF(model)
 			]));
 };
 var $author$project$Main$fontGray = function (g) {
@@ -24004,10 +27259,6 @@ var $author$project$Main$htmlId = function (str) {
 var $author$project$Scripta$API$body = function (editRecord) {
 	return editRecord.parsed;
 };
-var $author$project$Parser$Block$getName = function (_v0) {
-	var name = _v0.a.name;
-	return name;
-};
 var $mdgriffith$elm_ui$Element$Font$italic = $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.italic);
 var $author$project$Render$Msg$SendId = function (a) {
 	return {$: 'SendId', a: a};
@@ -24022,7 +27273,6 @@ var $author$project$Render$Msg$Unsolved = {$: 'Unsolved'};
 var $author$project$Render$Color$blue = A3($mdgriffith$elm_ui$Element$rgb, 0, 0, 0.8);
 var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
 var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.bold);
-var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
 var $author$project$Render$Utility$elementAttribute = F2(
 	function (key, value) {
 		return $mdgriffith$elm_ui$Element$htmlAttribute(
@@ -24100,18 +27350,6 @@ var $author$project$Render$Msg$SendMeta = function (a) {
 	return {$: 'SendMeta', a: a};
 };
 var $author$project$Render$Elm$backTick = $mdgriffith$elm_ui$Element$text('`');
-var $author$project$Compiler$ASTTools$exprListToStringList = function (exprList) {
-	return A2(
-		$elm$core$List$filter,
-		function (s) {
-			return s !== '';
-		},
-		A2(
-			$elm$core$List$map,
-			$elm$core$String$trim,
-			$elm_community$maybe_extra$Maybe$Extra$values(
-				A2($elm$core$List$map, $author$project$Compiler$ASTTools$getText, exprList))));
-};
 var $author$project$Render$Elm$bibitem = function (exprs) {
 	return A2(
 		$mdgriffith$elm_ui$Element$paragraph,
@@ -24247,43 +27485,6 @@ var $author$project$Render$Utility$makeSlug = function (str) {
 var $author$project$Render$Utility$internalLink = function (str) {
 	return $author$project$Render$Utility$makeSlug('#' + str);
 };
-var $elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
-};
-var $elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
-var $mdgriffith$elm_ui$Element$link = F2(
-	function (attrs, _v0) {
-		var label = _v0.label;
-		var url = _v0.url;
-		return A4(
-			$mdgriffith$elm_ui$Internal$Model$element,
-			$mdgriffith$elm_ui$Internal$Model$asEl,
-			$mdgriffith$elm_ui$Internal$Model$NodeName('a'),
-			A2(
-				$elm$core$List$cons,
-				$mdgriffith$elm_ui$Internal$Model$Attr(
-					$elm$html$Html$Attributes$href(url)),
-				A2(
-					$elm$core$List$cons,
-					$mdgriffith$elm_ui$Internal$Model$Attr(
-						$elm$html$Html$Attributes$rel('noopener noreferrer')),
-					A2(
-						$elm$core$List$cons,
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
-						A2(
-							$elm$core$List$cons,
-							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
-							A2(
-								$elm$core$List$cons,
-								$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentCenterX + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.contentCenterY + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.link)))),
-								attrs))))),
-			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
-				_List_fromArray(
-					[label])));
-	});
 var $author$project$Render$Elm$eqref = F2(
 	function (acc, exprList) {
 		var key = $elm$core$String$trim(
@@ -24332,26 +27533,6 @@ var $author$project$Render$Elm$eqref = F2(
 			});
 	});
 var $author$project$Render$Elm$errorBackgroundColor = A3($mdgriffith$elm_ui$Element$rgb, 1, 0.8, 0.8);
-var $author$project$Compiler$ASTTools$matchExprOnName = F2(
-	function (name, expr) {
-		switch (expr.$) {
-			case 'Fun':
-				var name2 = expr.a;
-				return _Utils_eq(name, name2);
-			case 'Verbatim':
-				var name2 = expr.a;
-				return _Utils_eq(name, name2);
-			default:
-				return false;
-		}
-	});
-var $author$project$Compiler$ASTTools$filterExpressionsOnName = F2(
-	function (name, exprs) {
-		return A2(
-			$elm$core$List$filter,
-			$author$project$Compiler$ASTTools$matchExprOnName(name),
-			exprs);
-	});
 var $author$project$Compiler$ASTTools$filterOutExpressionsOnName = F2(
 	function (name, exprs) {
 		return A2(
@@ -24580,31 +27761,6 @@ var $mdgriffith$elm_ui$Internal$Model$Left = {$: 'Left'};
 var $mdgriffith$elm_ui$Element$alignLeft = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Left);
 var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
 var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
-var $author$project$Render$Utility$pairFromList = function (strings) {
-	if ((strings.b && strings.b.b) && (!strings.b.b.b)) {
-		var x = strings.a;
-		var _v1 = strings.b;
-		var y = _v1.a;
-		return $elm$core$Maybe$Just(
-			_Utils_Tuple2(x, y));
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
-var $author$project$Render$Utility$keyValueDict = function (strings_) {
-	return $elm$core$Dict$fromList(
-		$elm_community$maybe_extra$Maybe$Extra$values(
-			A2(
-				$elm$core$List$map,
-				$author$project$Render$Utility$pairFromList,
-				A2(
-					$elm$core$List$map,
-					$elm$core$List$map($elm$core$String$trim),
-					A2(
-						$elm$core$List$map,
-						$elm$core$String$split(':'),
-						strings_)))));
-};
 var $author$project$Render$Graphics$imageParameters = F2(
 	function (settings, _arguments) {
 		var url = A2(
@@ -27649,16 +30805,6 @@ var $author$project$Render$Math$aligned_ = F6(
 	});
 var $author$project$Render$Math$equationLabelPadding = $mdgriffith$elm_ui$Element$paddingEach(
 	{bottom: 0, left: 0, right: 18, top: 0});
-var $author$project$Render$Utility$getArg = F3(
-	function (_default, index, args) {
-		var _v0 = A2($elm_community$list_extra$List$Extra$getAt, index, args);
-		if (_v0.$ === 'Nothing') {
-			return _default;
-		} else {
-			var a = _v0.a;
-			return a;
-		}
-	});
 var $author$project$Render$Math$aligned = F6(
 	function (count, acc, settings, args, id, str) {
 		return A2(
@@ -33273,10 +36419,6 @@ var $elm$time$Time$toSecond = F2(
 				1000));
 	});
 var $elm$core$String$toUpper = _String_toUpper;
-var $elm$time$Time$Posix = function (a) {
-	return {$: 'Posix', a: a};
-};
-var $elm$time$Time$millisToPosix = $elm$time$Time$Posix;
 var $ryannhg$date_format$DateFormat$millisecondsPerYear = $elm$core$Basics$round((((1000 * 60) * 60) * 24) * 365.25);
 var $ryannhg$date_format$DateFormat$firstDayOfYear = F2(
 	function (zone, time) {
@@ -36851,121 +39993,10 @@ var $author$project$Scripta$API$renderBody = F3(
 			settings,
 			$author$project$Scripta$API$body(editRecord));
 	});
-var $author$project$Render$Settings$makeSettings = F4(
-	function (id, selectedSlug, scale, width) {
-		return {
-			backgroundColor: A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1),
-			isStandaloneDocument: false,
-			paragraphSpacing: 28,
-			selectedId: id,
-			selectedSlug: selectedSlug,
-			showErrorMessages: false,
-			showTOC: true,
-			titlePrefix: '',
-			titleSize: 30,
-			width: $elm$core$Basics$round(scale * width)
-		};
-	});
 var $author$project$Scripta$API$renderSettings = function (ds) {
 	return A4($author$project$Render$Settings$makeSettings, ds.selectedId, ds.selectedSlug, ds.scale, ds.windowWidth);
 };
-var $author$project$Render$Settings$defaultSettings = A4($author$project$Render$Settings$makeSettings, '', $elm$core$Maybe$Nothing, 1, 600);
-var $author$project$Compiler$ASTTools$matchBlockName = F2(
-	function (key, _v0) {
-		var name = _v0.a.name;
-		return _Utils_eq(
-			$elm$core$Maybe$Just(key),
-			name);
-	});
-var $author$project$Compiler$ASTTools$filterBlocksOnName = F2(
-	function (name, blocks) {
-		return A2(
-			$elm$core$List$filter,
-			$author$project$Compiler$ASTTools$matchBlockName(name),
-			blocks);
-	});
-var $author$project$Parser$Block$getContent = function (_v0) {
-	var content = _v0.a.content;
-	if (content.$ === 'Left') {
-		return _List_Nil;
-	} else {
-		var exprs = content.a;
-		return exprs;
-	}
-};
-var $elm$core$Debug$log = _Debug_log;
-var $author$project$Compiler$ASTTools$matchBlock = F2(
-	function (key, _v0) {
-		var blockType = _v0.a.blockType;
-		switch (blockType.$) {
-			case 'Paragraph':
-				return false;
-			case 'OrdinaryBlock':
-				var args = blockType.a;
-				return A2(
-					$elm$core$List$any,
-					$elm$core$String$contains(key),
-					args);
-			default:
-				var args = blockType.a;
-				return A2(
-					$elm$core$List$any,
-					$elm$core$String$contains(key),
-					args);
-		}
-	});
-var $author$project$Compiler$ASTTools$filterBlocksByArgs = F2(
-	function (key, ast) {
-		return A2(
-			$elm$core$List$filter,
-			$author$project$Compiler$ASTTools$matchBlock(key),
-			$elm$core$List$concat(
-				A2($elm$core$List$map, $zwilias$elm_rosetree$Tree$flatten, ast)));
-	});
-var $author$project$Compiler$ASTTools$titleTOC = function (ast) {
-	return A2($author$project$Compiler$ASTTools$filterBlocksByArgs, 'title', ast);
-};
-var $elm$core$List$singleton = function (value) {
-	return _List_fromArray(
-		[value]);
-};
-var $toastal$either$Either$unwrap = F3(
-	function (d, f, e) {
-		if (e.$ === 'Left') {
-			return d;
-		} else {
-			var a = e.a;
-			return f(a);
-		}
-	});
-var $toastal$either$Either$toListVia = function (f) {
-	return A2(
-		$toastal$either$Either$unwrap,
-		_List_Nil,
-		A2($elm$core$Basics$composeR, f, $elm$core$List$singleton));
-};
-var $toastal$either$Either$toList = $toastal$either$Either$toListVia($elm$core$Basics$identity);
-var $author$project$Compiler$ASTTools$toExprList_ = function (_v0) {
-	var blockType = _v0.a.blockType;
-	var content = _v0.a.content;
-	return {
-		blockType: blockType,
-		content: $elm$core$List$concat(
-			$toastal$either$Either$toList(content))
-	};
-};
-var $author$project$Compiler$ASTTools$toExprRecord = function (blocks) {
-	return A2($elm$core$List$map, $author$project$Compiler$ASTTools$toExprList_, blocks);
-};
 var $author$project$Scripta$TOC$getHeadings = function (ast) {
-	var title_ = A2(
-		$elm$core$Debug$log,
-		'!! TITLE',
-		A2(
-			$author$project$Compiler$ASTTools$filterBlocksOnName,
-			'title',
-			$elm$core$List$concat(
-				A2($elm$core$List$map, $zwilias$elm_rosetree$Tree$flatten, ast))));
 	var flattened = $elm$core$List$concat(
 		A2($elm$core$List$map, $zwilias$elm_rosetree$Tree$flatten, ast));
 	var subtitle = $elm$core$List$concat(
@@ -36978,8 +40009,6 @@ var $author$project$Scripta$TOC$getHeadings = function (ast) {
 			$elm$core$List$map,
 			$author$project$Parser$Block$getContent,
 			A2($author$project$Compiler$ASTTools$filterBlocksOnName, 'title', flattened)));
-	var data = $author$project$Compiler$ASTTools$toExprRecord(
-		$author$project$Compiler$ASTTools$titleTOC(ast));
 	return {subtitle: subtitle, title: title};
 };
 var $author$project$Scripta$TOC$prepareFrontMatter = F4(
@@ -37014,15 +40043,6 @@ var $author$project$Scripta$TOC$prepareFrontMatter = F4(
 			$elm$core$List$cons,
 			title,
 			A2($elm$core$List$cons, subtitle, _List_Nil));
-	});
-var $author$project$Compiler$ASTTools$getBlockByName = F2(
-	function (name, ast) {
-		return $elm$core$List$head(
-			A2(
-				$author$project$Compiler$ASTTools$filterBlocksOnName,
-				name,
-				$elm$core$List$concat(
-					A2($elm$core$List$map, $zwilias$elm_rosetree$Tree$flatten, ast))));
 	});
 var $author$project$Compiler$ASTTools$banner = function (ast) {
 	return A2($author$project$Compiler$ASTTools$getBlockByName, 'banner', ast);
@@ -38183,7 +41203,7 @@ var $author$project$Main$mainColumn = function (model) {
 				$mdgriffith$elm_ui$Element$column,
 				_List_fromArray(
 					[
-						$mdgriffith$elm_ui$Element$spacing(36),
+						$mdgriffith$elm_ui$Element$spacing(18),
 						$mdgriffith$elm_ui$Element$width(
 						$mdgriffith$elm_ui$Element$px(1200)),
 						$mdgriffith$elm_ui$Element$height(
@@ -38202,6 +41222,20 @@ var $author$project$Main$mainColumn = function (model) {
 								$author$project$Main$inputText(model),
 								$author$project$Main$displayRenderedText(model),
 								$author$project$Main$controls(model)
+							])),
+						A2(
+						$mdgriffith$elm_ui$Element$row,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width(
+								$mdgriffith$elm_ui$Element$px(1200)),
+								$mdgriffith$elm_ui$Element$Font$color(
+								A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+								$mdgriffith$elm_ui$Element$Font$size(14)
+							]),
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$text(model.message)
 							]))
 					]))
 			]));
