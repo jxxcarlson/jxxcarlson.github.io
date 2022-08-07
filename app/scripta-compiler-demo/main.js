@@ -5828,7 +5828,8 @@ var $elm$core$Task$perform = F2(
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$Example = {$: 'Example'};
 var $author$project$Scripta$Language$MicroLaTeXLang = {$: 'MicroLaTeXLang'};
-var $author$project$Scripta$PDF$PrintWaiting = {$: 'PrintWaiting'};
+var $author$project$PDF$PrintWaiting = {$: 'PrintWaiting'};
+var $author$project$PDF$TarFileWaiting = {$: 'TarFileWaiting'};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
@@ -17774,7 +17775,7 @@ var $author$project$Main$jumpToTop = function (id) {
 			},
 			$elm$browser$Browser$Dom$getViewportOf(id)));
 };
-var $author$project$Text$microLaTeXDemo = '\n\\title{Demo (MicroLaTeX)}\n\n| banner\n\\link{Scripta.io https://scripta.io}\n\n\\contents\n\n\\section{Images}\n\n\\image{https://see.news/wp-content/uploads/2020/12/UK_wildbirds-01-robin.jpg}\n\n\\section{Math}\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n\\strong{Tip:} Click on a section title to go back to the table of contents.\n';
+var $author$project$Text$microLaTeXDemo = '\n\\title{Demo (MicroLaTeX)}\n\n| banner\n\\link{Scripta.io https://scripta.io}\n\n\\contents\n\n\\section{Images}\n\n\\image{https://see.news/wp-content/uploads/2020/12/UK_wildbirds-01-robin.jpg width:400}\n\n\\section{Math}\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n\\strong{Tip:} Click on a section title to go back to the table of contents.\n';
 var $elm$time$Time$Posix = function (a) {
 	return {$: 'Posix', a: a};
 };
@@ -17789,7 +17790,8 @@ var $author$project$Main$init = function (flags) {
 			input: $author$project$Text$microLaTeXDemo,
 			language: $author$project$Scripta$Language$MicroLaTeXLang,
 			message: 'Starting up',
-			printingState: $author$project$Scripta$PDF$PrintWaiting,
+			printingState: $author$project$PDF$PrintWaiting,
+			tarFileState: $author$project$PDF$TarFileWaiting,
 			ticks: 0
 		},
 		$elm$core$Platform$Cmd$batch(
@@ -18073,8 +18075,11 @@ var $author$project$Main$InfoDocument = {$: 'InfoDocument'};
 var $author$project$Main$PDF = function (a) {
 	return {$: 'PDF', a: a};
 };
-var $author$project$Scripta$PDF$PrintProcessing = {$: 'PrintProcessing'};
-var $author$project$Scripta$PDF$PrintReady = {$: 'PrintReady'};
+var $author$project$PDF$PrintProcessing = {$: 'PrintProcessing'};
+var $author$project$PDF$PrintReady = {$: 'PrintReady'};
+var $author$project$PDF$TarFileProcessing = {$: 'TarFileProcessing'};
+var $author$project$PDF$TarFileReady = {$: 'TarFileReady'};
+var $author$project$Main$TestDocument = {$: 'TestDocument'};
 var $mdgriffith$elm_ui$Internal$Model$Rgba = F4(
 	function (a, b, c, d) {
 		return {$: 'Rgba', a: a, b: b, c: c, d: d};
@@ -18959,6 +18964,12 @@ var $author$project$Render$Export$LaTeX$blockDict = $elm$core$Dict$fromList(
 					return '';
 				})),
 			_Utils_Tuple2(
+			'banner',
+			F3(
+				function (_v24, _v25, _v26) {
+					return '';
+				})),
+			_Utils_Tuple2(
 			'section',
 			F3(
 				function (settings_, args, body) {
@@ -18967,49 +18978,49 @@ var $author$project$Render$Export$LaTeX$blockDict = $elm$core$Dict$fromList(
 			_Utils_Tuple2(
 			'item',
 			F3(
-				function (_v24, _v25, body) {
+				function (_v27, _v28, body) {
 					return A2($author$project$Render$Export$LaTeX$macro1, 'item', body);
 				})),
 			_Utils_Tuple2(
 			'numbered',
 			F3(
-				function (_v26, _v27, body) {
+				function (_v29, _v30, body) {
 					return A2($author$project$Render$Export$LaTeX$macro1, 'item', body);
 				})),
 			_Utils_Tuple2(
 			'beginBlock',
 			F3(
-				function (_v28, _v29, _v30) {
+				function (_v31, _v32, _v33) {
 					return '\\begin{itemize}';
 				})),
 			_Utils_Tuple2(
 			'endBlock',
 			F3(
-				function (_v31, _v32, _v33) {
+				function (_v34, _v35, _v36) {
 					return '\\end{itemize}';
 				})),
 			_Utils_Tuple2(
 			'beginNumberedBlock',
 			F3(
-				function (_v34, _v35, _v36) {
+				function (_v37, _v38, _v39) {
 					return '\\begin{enumerate}';
 				})),
 			_Utils_Tuple2(
 			'endNumberedBlock',
 			F3(
-				function (_v37, _v38, _v39) {
+				function (_v40, _v41, _v42) {
 					return '\\end{enumerate}';
 				})),
 			_Utils_Tuple2(
 			'mathmacros',
 			F3(
-				function (_v40, _v41, body) {
+				function (_v43, _v44, body) {
 					return body + '\nHa ha ha!';
 				})),
 			_Utils_Tuple2(
 			'setcounter',
 			F3(
-				function (_v42, _v43, _v44) {
+				function (_v45, _v46, _v47) {
 					return '';
 				}))
 		]));
@@ -19451,11 +19462,26 @@ var $author$project$Render$Export$LaTeX$exportBlock = F2(
 						if (name.$ === 'Just') {
 							switch (name.a) {
 								case 'math':
+									var fix_ = function (str_) {
+										return A2(
+											$elm$core$String$join,
+											'\n',
+											A2(
+												$elm$core$List$filter,
+												function (line) {
+													return A2($elm$core$String$left, 2, line) !== '$$';
+												},
+												$elm$core$String$lines(str_)));
+									};
 									return A2(
 										$elm$core$String$join,
 										'\n',
 										_List_fromArray(
-											['$$', str, '$$']));
+											[
+												'$$',
+												fix_(str),
+												'$$'
+											]));
 								case 'equation':
 									return A2(
 										$elm$core$String$join,
@@ -19725,14 +19751,83 @@ var $author$project$Scripta$API$fileNameForExport = function (ast) {
 				$author$project$Scripta$API$compressWhitespace(
 					$author$project$Compiler$ASTTools$title(ast)))));
 };
+var $author$project$PDF$extractUrl = function (str) {
+	return $elm$core$List$head(
+		A2($elm$core$String$split, ' ', str));
+};
+var $author$project$Compiler$ASTTools$matchExprOnName = F2(
+	function (name, expr) {
+		switch (expr.$) {
+			case 'Fun':
+				var name2 = expr.a;
+				return _Utils_eq(name, name2);
+			case 'Verbatim':
+				var name2 = expr.a;
+				return _Utils_eq(name, name2);
+			default:
+				return false;
+		}
+	});
+var $author$project$Compiler$ASTTools$filterExpressionsOnName = F2(
+	function (name, exprs) {
+		return A2(
+			$elm$core$List$filter,
+			$author$project$Compiler$ASTTools$matchExprOnName(name),
+			exprs);
+	});
+var $elm$core$List$singleton = function (value) {
+	return _List_fromArray(
+		[value]);
+};
+var $toastal$either$Either$unwrap = F3(
+	function (d, f, e) {
+		if (e.$ === 'Left') {
+			return d;
+		} else {
+			var a = e.a;
+			return f(a);
+		}
+	});
+var $toastal$either$Either$toListVia = function (f) {
+	return A2(
+		$toastal$either$Either$unwrap,
+		_List_Nil,
+		A2($elm$core$Basics$composeR, f, $elm$core$List$singleton));
+};
+var $toastal$either$Either$toList = $toastal$either$Either$toListVia($elm$core$Basics$identity);
+var $author$project$PDF$getImageUrls = function (syntaxTree) {
+	return $elm_community$maybe_extra$Maybe$Extra$values(
+		A2(
+			$elm$core$List$map,
+			$elm$core$Maybe$andThen($author$project$PDF$extractUrl),
+			A2(
+				$elm$core$List$map,
+				A2(
+					$elm$core$Basics$composeR,
+					$author$project$Compiler$ASTTools$getText,
+					$elm$core$Maybe$map($elm$core$String$trim)),
+				A2(
+					$author$project$Compiler$ASTTools$filterExpressionsOnName,
+					'image',
+					$elm$core$List$concat(
+						$elm$core$List$concat(
+							A2(
+								$elm$core$List$map,
+								function (_v0) {
+									var content = _v0.a.content;
+									return $toastal$either$Either$toList(content);
+								},
+								$elm$core$List$concat(
+									A2($elm$core$List$map, $zwilias$elm_rosetree$Tree$flatten, syntaxTree)))))))));
+};
 var $author$project$Text$info = '\n\n| title\nAbout the Scripta compiler\n\n| contents\n\n[tags jxxcarlson:about-the-scripta-compiler]\n\n| runninghead\n[link Scripta.io https://scripta.io]\n\n\n| section 1 -\nWhat it is\n\nThe Scripta compiler transforms source text to HTML, where\nthe source text is one of the following markup languages:\n\n| item\nL0 — an experimental language with syntax inspired by Lisp.\nCan render LaTeX-style\nmathematical text.  This document is written in L0.\n\n| item\nMicroLaTeX — a cousin of LaTeX.  Source text can be exported\nto standard LaTeX\n\n| item\nXMarkdown — a cousin of Markdown.  Can render LaTeX-style\nmathematical text.\n\n\nThe Scripta compiler features real-time, fault-tolerant\nparsing and rendering, and so is suitable for an interactive\nediting system in which (a) changes to the source text\nare rendered "instantly," that is, with no perceptible delay,\nand (b) syntax errors are handled gracefully, marked as such\nin the rendered text, and with the following text rendered\nproperly to the greatest extent possible.\n\n\n| section 1 -\nOpen source\n\nThe Scripta compiler is open-source, and can be found at\n[link github.com/jxxcarlson/scripta-compiler  https://github.com/jxxcarlson/scripta-compiler].  In the Example\nfolder, you will find a small demo app.  It is hosted online\nat [link Github https://jxxcarlson.github.io/app/scripta-compiler-demo/assets/index.html].\n\nThe Scripta compiler is used to power\n[link Scripta.io https://scripta.io].  It features\ninteractive editing, a searchable store of documents,\nand facilities for collaboration and web publishing.\n\n\n| section 1 -\nCode\n\nIf you are interested in looking at the code, there are two\ngood places to start. The first is `compiler/Scripta/API.elm`.\nThe second is the folder `compiler/L0/Parser/` especially\nthe file `compiler/L0/Parser/Expression`.  The latter\nis the shift-reduce parser used for L0, the simplest\nof the three markup languages considered.\n\nA notable feature of the Scripta compiler is that\nall three markup languages use a common expression\ntype and parse to a common type (a list of syntax trees)\n\n|| code\ntype Expr\n    = Fun String (List Expr) Meta\n    | Text String Meta\n    | Verbatim String String Meta\n\nThe three variants of this type align with the three\nsyntactic elements of `L0`:\n\n| item\nFunction elements, e.g. `[italic This is italic text]`,\nwhich are bounded on left and right by brackets.\n\n| item\nStretches of pure text,\n\n| item\nVerbatim elements, which are bounded by\ndollar signs or by backtics, for inline\nmathematical text and inline code,\nrespectively.\n\n\n| section 1 -\nStatus and Roadmap\n\nThe Scripta compiler is serviceable — I\'ve used to to write\n[link these class notes https://scripta.io/s/jxxcarlson:wave-packets-dispersion], for example.\nThat said, there is still a great deal to be done. Please send bug reports,\nfeature requests, and comments in general to me at jxxcarlson (gmail).\nI am on the Elm Slack and Github as jxxcarlson and on Twitter as @epsilon2718.\n\n';
 var $author$project$Text$l0Demo = '\n| title\nDemo (L0)\n\n| banner\n[link Scripta.io https://scripta.io]\n\n| contents\n\n| section 1\nImages\n\n|| hide\n[image https://nas-national-prod.s3.amazonaws.com/styles/hero_image/s3/web_h_apa_2016-a1_2474_8_cedar-waxwing_peter_brannon_kk_female.jpg?itok=VdeVVmGA]\n\n[image https://www.birdsandblooms.com/wp-content/uploads/2018/10/BNBbyc18_patricia-warren.jpg width:400]\n\n\n| section 1\nMath\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n[bold Tip:] Click on a section title to go back to the table of contents.\n\n';
 var $elm$core$Platform$Cmd$map = _Platform_map;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Scripta$PDF$ChangePrintingState = function (a) {
+var $author$project$PDF$ChangePrintingState = function (a) {
 	return {$: 'ChangePrintingState', a: a};
 };
-var $author$project$Scripta$PDF$GotPdfLink = function (a) {
+var $author$project$PDF$GotPdfLink = function (a) {
 	return {$: 'GotPdfLink', a: a};
 };
 var $elm$json$Json$Encode$list = F2(
@@ -19758,7 +19853,7 @@ var $elm$json$Json$Encode$object = function (pairs) {
 			pairs));
 };
 var $elm$json$Json$Encode$string = _Json_wrap;
-var $author$project$Scripta$PDF$encodeForPDF = F3(
+var $author$project$PDF$encodeForPDF = F3(
 	function (id, content, urlList) {
 		return $elm$json$Json$Encode$object(
 			_List_fromArray(
@@ -20232,30 +20327,6 @@ var $elm$http$Http$expectString = function (toMsg) {
 		toMsg,
 		$elm$http$Http$resolve($elm$core$Result$Ok));
 };
-var $author$project$Scripta$PDF$extractUrl = function (str) {
-	return $elm$core$List$head(
-		A2($elm$core$String$split, ' ', str));
-};
-var $author$project$Compiler$ASTTools$matchExprOnName = F2(
-	function (name, expr) {
-		switch (expr.$) {
-			case 'Fun':
-				var name2 = expr.a;
-				return _Utils_eq(name, name2);
-			case 'Verbatim':
-				var name2 = expr.a;
-				return _Utils_eq(name, name2);
-			default:
-				return false;
-		}
-	});
-var $author$project$Compiler$ASTTools$filterExpressionsOnName = F2(
-	function (name, exprs) {
-		return A2(
-			$elm$core$List$filter,
-			$author$project$Compiler$ASTTools$matchExprOnName(name),
-			exprs);
-	});
 var $elm$http$Http$Header = F2(
 	function (a, b) {
 		return {$: 'Header', a: a, b: b};
@@ -20267,6 +20338,12 @@ var $elm$http$Http$jsonBody = function (value) {
 		'application/json',
 		A2($elm$json$Json$Encode$encode, 0, value));
 };
+var $author$project$PDF$pdfServUrl = 'https://pdfServ.app/pdf/';
+var $author$project$PDF$prepareContent = F3(
+	function (currentTime, settings, syntaxTree) {
+		var contentForExport = A3($author$project$Render$Export$LaTeX$export, currentTime, settings, syntaxTree);
+		return contentForExport;
+	});
 var $elm$http$Http$Request = function (a) {
 	return {$: 'Request', a: a};
 };
@@ -20433,61 +20510,19 @@ var $elm$http$Http$request = function (r) {
 		$elm$http$Http$Request(
 			{allowCookiesFromOtherDomains: false, body: r.body, expect: r.expect, headers: r.headers, method: r.method, timeout: r.timeout, tracker: r.tracker, url: r.url}));
 };
-var $elm$core$List$singleton = function (value) {
-	return _List_fromArray(
-		[value]);
-};
-var $toastal$either$Either$unwrap = F3(
-	function (d, f, e) {
-		if (e.$ === 'Left') {
-			return d;
-		} else {
-			var a = e.a;
-			return f(a);
-		}
-	});
-var $toastal$either$Either$toListVia = function (f) {
-	return A2(
-		$toastal$either$Either$unwrap,
-		_List_Nil,
-		A2($elm$core$Basics$composeR, f, $elm$core$List$singleton));
-};
-var $toastal$either$Either$toList = $toastal$either$Either$toListVia($elm$core$Basics$identity);
-var $author$project$Scripta$PDF$generatePdf = F3(
+var $author$project$PDF$pdfCmd = F3(
 	function (currentTime, settings, syntaxTree) {
-		var imageUrls = $elm_community$maybe_extra$Maybe$Extra$values(
-			A2(
-				$elm$core$List$map,
-				$elm$core$Maybe$andThen($author$project$Scripta$PDF$extractUrl),
-				A2(
-					$elm$core$List$map,
-					A2(
-						$elm$core$Basics$composeR,
-						$author$project$Compiler$ASTTools$getText,
-						$elm$core$Maybe$map($elm$core$String$trim)),
-					A2(
-						$author$project$Compiler$ASTTools$filterExpressionsOnName,
-						'image',
-						$elm$core$List$concat(
-							$elm$core$List$concat(
-								A2(
-									$elm$core$List$map,
-									function (_v0) {
-										var content = _v0.a.content;
-										return $toastal$either$Either$toList(content);
-									},
-									$elm$core$List$concat(
-										A2($elm$core$List$map, $zwilias$elm_rosetree$Tree$flatten, syntaxTree)))))))));
+		var imageUrls = $author$project$PDF$getImageUrls(syntaxTree);
 		var fileName = $author$project$Scripta$API$fileNameForExport(syntaxTree);
-		var contentForExport = A3($author$project$Render$Export$LaTeX$export, currentTime, settings, syntaxTree);
+		var contentForExport = A3($author$project$PDF$prepareContent, currentTime, settings, syntaxTree);
 		return $elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
 					$elm$http$Http$request(
 					{
 						body: $elm$http$Http$jsonBody(
-							A3($author$project$Scripta$PDF$encodeForPDF, fileName, contentForExport, imageUrls)),
-						expect: $elm$http$Http$expectString($author$project$Scripta$PDF$GotPdfLink),
+							A3($author$project$PDF$encodeForPDF, fileName, contentForExport, imageUrls)),
+						expect: $elm$http$Http$expectString($author$project$PDF$GotPdfLink),
 						headers: _List_fromArray(
 							[
 								A2($elm$http$Http$header, 'Content-Type', 'application/json')
@@ -20495,12 +20530,12 @@ var $author$project$Scripta$PDF$generatePdf = F3(
 						method: 'POST',
 						timeout: $elm$core$Maybe$Nothing,
 						tracker: $elm$core$Maybe$Nothing,
-						url: 'https://pdfserv.app/pdf'
+						url: $author$project$PDF$pdfServUrl
 					})
 				]));
 	});
 var $elm$core$Process$sleep = _Process_sleep;
-var $author$project$Scripta$PDF$printCmd = F3(
+var $author$project$PDF$printCmd = F3(
 	function (currentTime, settings, forest) {
 		return $elm$core$Platform$Cmd$batch(
 			_List_fromArray(
@@ -20508,11 +20543,40 @@ var $author$project$Scripta$PDF$printCmd = F3(
 					A2(
 					$elm$core$Task$perform,
 					$elm$core$Basics$always(
-						$author$project$Scripta$PDF$ChangePrintingState($author$project$Scripta$PDF$PrintProcessing)),
+						$author$project$PDF$ChangePrintingState($author$project$PDF$PrintProcessing)),
 					$elm$core$Process$sleep(30)),
-					A3($author$project$Scripta$PDF$generatePdf, currentTime, settings, forest)
+					A3($author$project$PDF$pdfCmd, currentTime, settings, forest)
 				]));
 	});
+var $author$project$PDF$GotTarFile = function (a) {
+	return {$: 'GotTarFile', a: a};
+};
+var $author$project$PDF$tarArchiveUrl = 'https://pdfServ.app/tar/';
+var $author$project$PDF$tarCmd = F3(
+	function (currentTime, settings, syntaxTree) {
+		var imageUrls = $author$project$PDF$getImageUrls(syntaxTree);
+		var fileName = $author$project$Scripta$API$fileNameForExport(syntaxTree);
+		var contentForExport = A3($author$project$PDF$prepareContent, currentTime, settings, syntaxTree);
+		return $elm$core$Platform$Cmd$batch(
+			_List_fromArray(
+				[
+					$elm$http$Http$request(
+					{
+						body: $elm$http$Http$jsonBody(
+							A3($author$project$PDF$encodeForPDF, fileName, contentForExport, imageUrls)),
+						expect: $elm$http$Http$expectString($author$project$PDF$GotTarFile),
+						headers: _List_fromArray(
+							[
+								A2($elm$http$Http$header, 'Content-Type', 'application/json')
+							]),
+						method: 'POST',
+						timeout: $elm$core$Maybe$Nothing,
+						tracker: $elm$core$Maybe$Nothing,
+						url: $author$project$PDF$tarArchiveUrl
+					})
+				]));
+	});
+var $author$project$Text$testFile = '\n| title\nCartesian Closed Categories\n\n|| mathmacros\n\\newcommand{\\cat}[1]{\\mathcal{#1}}\n\\newcommand{\\op}[1]{\\mathop{\\text{#1}}}\n\n[tags jxxcarlson:cartesian-closed-categories, folder:category-theory-notes]\n\n| runninghead\n[ilink Category Theory Notes jxxcarlson:folder-category-theory]\n\n\nA [term cartesian-closed] category is a category $\\cat{C}$ which\n\n| item\nhas a terminal object\n\n| item\nis closed under formation of products. \n\n| item\nis closed under formation of exponentials. \n\n\n[b Exponentials.] Let $\\cat{C}$ be a category closed under formation\nof binary products.  An [term exponential object] in $\\cat{C}$ is\ngiven by an object $Z^Y$ and morphism $\\op{eval}: Z^Y \\times Y \\to Z$\nsatisfying a compatibility relation with the product \noperation.  The idea is that $Z^Y$ is like\na function space.  Thus, given $\\phi : Z$ (in the case of sets/types), \none has\n\n|| equation\n\\phi: Z^Y \\mapsto (y \\mapsto \\op{eval} (\\phi, y)): \\op{Hom(Y,Z)}\n\nThe last condition above (exponentials) is equivalent to the condition that $F$ have a \nright adjoint $\\cat{C} \\to \\cat{C}$.  For locally small categories,\nthis condition is equivelant to having an isomorphism \n\nCompatibility of $\\op{eval}$ with product goes like this.  Suppose\n$g : X \\times Y \\to Z$.  Suppose further there is a morphism $\\lambda g : X \\to Z^Y$.  One can form the composition \n\n|| equation\n[label eval-compat]\n\\op{eval} \\circ (\\lambda g \\times \\op{id}_Y ): X \\times Y \\to Z\n\nThe composition in [eqref eval-compat] has the same type\nas does $g$.\nThe compatibilty requirement is that $g$ and the composition [eqref eval-compat] be equal.\n\n\n\n\n[b Adjoints.] Fix an object  $Y$ of  $\\cat{C}$.  Then $F(X) = X \\times Y$  and $G(Y) = Y^Z$ are are adjoint functors $F: \\cat{C} \\to \\cat{C}$:\n\n|| equation\n[label hom-nat-iso]\n\\op{Hom}(X\\times Y, Z) \\cong \\op{Hom}(X, Z^Y)\n\n\n\n\n[b Sets.] The category of sets is Cartesian-closed.  The Cartesian\nproduct is the usual ones, and the exponential $Z^Y$ is the \nset of functions from $Y$ to $Z$. \nFor the category of sets, the map from left to right in [eqref hom-nat-iso] is given by\n\n|| aligned\n[label nat-left-right]\n(X\\times Y \\to Z) \\to (X \\to Y \\to Z)\n( (x,y) \\mapsto \\phi(x,y)) \\mapsto (x \\mapsto (y \\mapsto \\phi(x,y))): \n\nThis is the map $\\phi \\mapsto \\op{curry}(\\phi)$. The map from right to left is given by \n\n|| equation\n[label nat-right-left]\n\\psi \\mapsto ((x,y) \\mapsto \\psi(x)(y))\n\n\nThis is the map is $\\psi \\mapsto \\op{uncurry}(\\psi)$.\n\n';
 var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$Compiler$Differ$DiffRecord = F4(
 	function (commonInitialSegment, commonTerminalSegment, middleSegmentInSource, middleSegmentInTarget) {
@@ -20622,7 +20686,7 @@ var $author$project$Compiler$DifferentialParser$update = F2(
 			text);
 	});
 var $author$project$Scripta$API$update = $author$project$Compiler$DifferentialParser$update;
-var $author$project$Text$xMarkdown = '\n| title\nDemo (XMarkdown)\n\n| banner\n[Scripta.io](https://scripta.io)\n\n| contents\n\n# Images\n\n![Yellow bird](https://i.ibb.co/XFzZYby/image.png)\n\n# Math\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n*bold Tip:* Click on a section title to go back to the table of contents.\n\n';
+var $author$project$Text$xMarkdown = '\n| title\nDemo (XMarkdown)\n\n| banner\n[Scripta.io](https://scripta.io)\n\n| contents\n\n# Images\n\n![Yellow bird](https://i.ibb.co/XFzZYby/image.png width:400)\n\n# Math\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n*Tip:* Click on a section title to go back to the table of contents.\n\n';
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -20631,11 +20695,12 @@ var $author$project$Main$update = F2(
 			case 'Tick':
 				var newTime = msg.a;
 				var ticks = (model.ticks > 10) ? 0 : (model.ticks + 1);
-				var printingState = (_Utils_eq(model.printingState, $author$project$Scripta$PDF$PrintProcessing) && (model.ticks > 2)) ? $author$project$Scripta$PDF$PrintReady : ((_Utils_eq(model.printingState, $author$project$Scripta$PDF$PrintReady) && (model.ticks > 10)) ? $author$project$Scripta$PDF$PrintWaiting : model.printingState);
+				var tarFileState = (_Utils_eq(model.tarFileState, $author$project$PDF$TarFileProcessing) && (model.ticks > 2)) ? $author$project$PDF$TarFileReady : ((_Utils_eq(model.tarFileState, $author$project$PDF$TarFileReady) && (model.ticks > 10)) ? $author$project$PDF$TarFileWaiting : model.tarFileState);
+				var printingState = (_Utils_eq(model.printingState, $author$project$PDF$PrintProcessing) && (model.ticks > 2)) ? $author$project$PDF$PrintReady : ((_Utils_eq(model.printingState, $author$project$PDF$PrintReady) && (model.ticks > 10)) ? $author$project$PDF$PrintWaiting : model.printingState);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{currentTime: newTime, printingState: printingState, ticks: ticks}),
+						{currentTime: newTime, printingState: printingState, tarFileState: tarFileState, ticks: ticks}),
 					$elm$core$Platform$Cmd$none);
 			case 'InputText':
 				var str = msg.a;
@@ -20648,6 +20713,23 @@ var $author$project$Main$update = F2(
 							input: str
 						}),
 					$elm$core$Platform$Cmd$none);
+			case 'SetDocument':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							count: model.count + 1,
+							documentType: $author$project$Main$TestDocument,
+							editRecord: A3($author$project$Scripta$API$init, $elm$core$Dict$empty, $author$project$Scripta$Language$L0Lang, $author$project$Text$testFile),
+							input: $author$project$Text$testFile,
+							language: $author$project$Scripta$Language$L0Lang
+						}),
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[
+								$author$project$Main$jumpToTop('scripta-output'),
+								$author$project$Main$jumpToTop('input-text')
+							])));
 			case 'SetLanguage':
 				var lang = msg.a;
 				var docText = function () {
@@ -20695,16 +20777,33 @@ var $author$project$Main$update = F2(
 								$author$project$Main$jumpToTop('scripta-output'),
 								$author$project$Main$jumpToTop('input-text')
 							])));
-			case 'Export':
-				var fileName = $author$project$Scripta$API$fileNameForExport(model.editRecord.parsed);
-				var defaultSettings = $author$project$Scripta$API$defaultSettings;
-				var exportSettings = _Utils_update(
-					defaultSettings,
+			case 'GetTarFile':
+				var defaultSettings_ = $author$project$Scripta$API$defaultSettings;
+				var exportSettings_ = _Utils_update(
+					defaultSettings_,
 					{isStandaloneDocument: true});
-				var exportText = A3($author$project$Scripta$API$export, model.currentTime, exportSettings, model.editRecord.parsed);
-				return _Utils_Tuple2(
-					model,
-					A2($author$project$Main$download, fileName, exportText));
+				if (_Utils_eq(
+					$author$project$PDF$getImageUrls(model.editRecord.parsed),
+					_List_Nil)) {
+					var fileName = $author$project$Scripta$API$fileNameForExport(model.editRecord.parsed);
+					var defaultSettings = $author$project$Scripta$API$defaultSettings;
+					var exportSettings = _Utils_update(
+						defaultSettings,
+						{isStandaloneDocument: true});
+					var exportText = A3($author$project$Scripta$API$export, model.currentTime, exportSettings, model.editRecord.parsed);
+					return _Utils_Tuple2(
+						model,
+						A2($author$project$Main$download, fileName, exportText));
+				} else {
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{message: 'requesting TAR file', tarFileState: $author$project$PDF$TarFileProcessing, ticks: 0}),
+						A2(
+							$elm$core$Platform$Cmd$map,
+							$author$project$Main$PDF,
+							A3($author$project$PDF$tarCmd, model.currentTime, exportSettings_, model.editRecord.parsed)));
+				}
 			case 'PDF':
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			case 'GotPdfLink':
@@ -20714,7 +20813,7 @@ var $author$project$Main$update = F2(
 						model,
 						{
 							message: 'Got PDF Link' + $elm$core$Debug$toString(result),
-							printingState: $author$project$Scripta$PDF$PrintReady
+							printingState: $author$project$PDF$PrintReady
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'ChangePrintingState':
@@ -20732,11 +20831,30 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{message: 'requesting PDF', printingState: $author$project$Scripta$PDF$PrintProcessing, ticks: 0}),
+						{message: 'requesting PDF', printingState: $author$project$PDF$PrintProcessing, ticks: 0}),
 					A2(
 						$elm$core$Platform$Cmd$map,
 						$author$project$Main$PDF,
-						A3($author$project$Scripta$PDF$printCmd, model.currentTime, exportSettings, model.editRecord.parsed)));
+						A3($author$project$PDF$printCmd, model.currentTime, exportSettings, model.editRecord.parsed)));
+			case 'GotTarFile':
+				var result = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							message: 'Got TarFile' + $elm$core$Debug$toString(result),
+							printingState: $author$project$PDF$PrintReady
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 'ChangeTarFileState':
+				var tarFileState = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{message: 'Changing tar file state', tarFileState: tarFileState}),
+					$elm$core$Platform$Cmd$none);
+			case 'Render':
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
@@ -26419,7 +26537,7 @@ var $mdgriffith$elm_ui$Element$el = F2(
 				_List_fromArray(
 					[child])));
 	});
-var $author$project$Main$Export = {$: 'Export'};
+var $author$project$Main$Info = {$: 'Info'};
 var $mdgriffith$elm_ui$Internal$Model$Above = {$: 'Above'};
 var $mdgriffith$elm_ui$Internal$Model$Nearby = F2(
 	function (a, b) {
@@ -26442,6 +26560,7 @@ var $mdgriffith$elm_ui$Element$rgb255 = F3(
 	function (red, green, blue) {
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, 1);
 	});
+var $author$project$Main$darkRed = A3($mdgriffith$elm_ui$Element$rgb255, 140, 0, 0);
 var $author$project$Main$gray = A3($mdgriffith$elm_ui$Element$rgb255, 60, 60, 60);
 var $mdgriffith$elm_ui$Internal$Model$Px = function (a) {
 	return {$: 'Px', a: a};
@@ -27007,28 +27126,15 @@ var $author$project$Button$template = function (buttonData) {
 			]));
 };
 var $author$project$Main$white = A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255);
-var $author$project$Main$exportButton = $author$project$Button$template(
-	{
-		attributes: _List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$Font$color($author$project$Main$white),
-				$mdgriffith$elm_ui$Element$Background$color($author$project$Main$gray),
-				$mdgriffith$elm_ui$Element$width(
-				$mdgriffith$elm_ui$Element$px($author$project$Main$buttonWidth))
-			]),
-		label: 'Export',
-		msg: $author$project$Main$Export,
-		tooltipPlacement: $mdgriffith$elm_ui$Element$above,
-		tooltipText: 'Export text to standard LaTeX'
-	});
-var $author$project$Main$Info = {$: 'Info'};
-var $author$project$Main$darkRed = A3($mdgriffith$elm_ui$Element$rgb255, 140, 0, 0);
 var $author$project$Main$infoButton = function (documentType) {
 	var bgColor = function () {
-		if (documentType.$ === 'InfoDocument') {
-			return $author$project$Main$darkRed;
-		} else {
-			return $author$project$Main$gray;
+		switch (documentType.$) {
+			case 'InfoDocument':
+				return $author$project$Main$darkRed;
+			case 'Example':
+				return $author$project$Main$gray;
+			default:
+				return $author$project$Main$gray;
 		}
 	}();
 	return $author$project$Button$template(
@@ -27167,7 +27273,7 @@ var $author$project$Main$printToPDF = function (model) {
 						A2($mdgriffith$elm_ui$Element$paddingXY, 8, 8),
 						$mdgriffith$elm_ui$Element$Font$color($author$project$Color$blue),
 						$mdgriffith$elm_ui$Element$Events$onClick(
-						$author$project$Main$ChangePrintingState($author$project$Scripta$PDF$PrintWaiting)),
+						$author$project$Main$ChangePrintingState($author$project$PDF$PrintWaiting)),
 						A2($author$project$Main$elementAttribute, 'target', '_blank')
 					]),
 				{
@@ -27175,7 +27281,9 @@ var $author$project$Main$printToPDF = function (model) {
 						$mdgriffith$elm_ui$Element$el,
 						_List_Nil,
 						$mdgriffith$elm_ui$Element$text('Click for PDF')),
-					url: 'https://pdfserv.app/pdf/' + $author$project$Scripta$API$fileNameForExport(model.editRecord.parsed)
+					url: _Utils_ap(
+						$author$project$PDF$pdfServUrl,
+						$author$project$Scripta$API$fileNameForExport(model.editRecord.parsed))
 				});
 	}
 };
@@ -27219,6 +27327,92 @@ var $mdgriffith$elm_ui$Element$spacing = function (x) {
 			x,
 			x));
 };
+var $author$project$Main$ChangeTarFileState = function (a) {
+	return {$: 'ChangeTarFileState', a: a};
+};
+var $author$project$Main$GetTarFile = {$: 'GetTarFile'};
+var $author$project$Main$tarFileButton = function (model) {
+	var _v0 = model.tarFileState;
+	switch (_v0.$) {
+		case 'TarFileWaiting':
+			return A3(
+				$author$project$Button$simpleTemplate,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$width(
+						$mdgriffith$elm_ui$Element$px($author$project$Main$buttonWidth)),
+						A2($author$project$Main$elementAttribute, 'title', 'Get Tar File')
+					]),
+				$author$project$Main$GetTarFile,
+				'Export');
+		case 'TarFileProcessing':
+			return A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Font$size(14),
+						$mdgriffith$elm_ui$Element$padding(8),
+						$mdgriffith$elm_ui$Element$height(
+						$mdgriffith$elm_ui$Element$px(30)),
+						$mdgriffith$elm_ui$Element$Background$color($author$project$Color$blue),
+						$mdgriffith$elm_ui$Element$Font$color($author$project$Color$white)
+					]),
+				$mdgriffith$elm_ui$Element$text('Please wait ...'));
+		default:
+			return A2(
+				$mdgriffith$elm_ui$Element$link,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Font$size(14),
+						$mdgriffith$elm_ui$Element$Background$color($author$project$Color$white),
+						A2($mdgriffith$elm_ui$Element$paddingXY, 8, 8),
+						$mdgriffith$elm_ui$Element$Font$color($author$project$Color$blue),
+						$mdgriffith$elm_ui$Element$Events$onClick(
+						$author$project$Main$ChangeTarFileState($author$project$PDF$TarFileProcessing)),
+						A2($author$project$Main$elementAttribute, 'target', '_blank')
+					]),
+				{
+					label: A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_Nil,
+						$mdgriffith$elm_ui$Element$text('Click for Tar file')),
+					url: _Utils_ap(
+						$author$project$PDF$tarArchiveUrl,
+						A3(
+							$elm$core$String$replace,
+							'.tex',
+							'.tar',
+							$author$project$Scripta$API$fileNameForExport(model.editRecord.parsed)))
+				});
+	}
+};
+var $author$project$Main$SetDocument = {$: 'SetDocument'};
+var $author$project$Main$testFileButton = function (documentType) {
+	var bgColor = function () {
+		switch (documentType.$) {
+			case 'InfoDocument':
+				return $author$project$Main$gray;
+			case 'Example':
+				return $author$project$Main$gray;
+			default:
+				return $author$project$Main$darkRed;
+		}
+	}();
+	return $author$project$Button$template(
+		{
+			attributes: _List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$color($author$project$Main$white),
+					$mdgriffith$elm_ui$Element$Background$color(bgColor),
+					$mdgriffith$elm_ui$Element$width(
+					$mdgriffith$elm_ui$Element$px($author$project$Main$buttonWidth))
+				]),
+			label: 'Test Doc',
+			msg: $author$project$Main$SetDocument,
+			tooltipPlacement: $mdgriffith$elm_ui$Element$above,
+			tooltipText: 'Load Test file'
+		});
+};
 var $author$project$Main$controls = function (model) {
 	return A2(
 		$mdgriffith$elm_ui$Element$column,
@@ -27240,7 +27434,8 @@ var $author$project$Main$controls = function (model) {
 						A2($mdgriffith$elm_ui$Element$paddingXY, 0, 40)
 					]),
 				$author$project$Main$infoButton(model.documentType)),
-				$author$project$Main$exportButton,
+				$author$project$Main$testFileButton(model.documentType),
+				$author$project$Main$tarFileButton(model),
 				$author$project$Main$printToPDF(model)
 			]));
 };
@@ -38573,7 +38768,10 @@ var $author$project$Render$Math$displayedMath = F6(
 				A2(
 					$elm$core$List$filter,
 					function (line) {
-						return !(A2($elm$core$String$left, 2, line) === '$$');
+						return !(A2(
+							$elm$core$String$left,
+							2,
+							$elm$core$String$trim(line)) === '$$');
 					},
 					$elm$core$String$lines(str))));
 		var adjustedLines = A2(
@@ -38650,16 +38848,7 @@ var $author$project$Render$Math$equation = F6(
 					$elm$core$List$map,
 					$author$project$Parser$MathMacro$evalStr(acc.mathMacroDict),
 					filteredLines)));
-		var adjustedLines = A2(
-			$elm$core$List$cons,
-			'\\begin{equation}',
-			A2(
-				$elm$core$List$cons,
-				'\\nonumber',
-				_Utils_ap(
-					adjustedLines1,
-					_List_fromArray(
-						['\\end{equation}']))));
+		var adjustedLines = adjustedLines1;
 		var content = A2($elm$core$String$join, '\n', adjustedLines);
 		return A2(
 			$mdgriffith$elm_ui$Element$row,
