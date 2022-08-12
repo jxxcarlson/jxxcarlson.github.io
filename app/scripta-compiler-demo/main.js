@@ -11849,6 +11849,196 @@ var $author$project$XMarkdown$Expression$pushToken = F2(
 				return A2($author$project$XMarkdown$Expression$pushOnStack, token, state);
 		}
 	});
+var $author$project$XMarkdown$Token$Italic = function (a) {
+	return {$: 'Italic', a: a};
+};
+var $author$project$XMarkdown$Token$S = F2(
+	function (a, b) {
+		return {$: 'S', a: a, b: b};
+	});
+var $author$project$XMarkdown$Token$indexOf = function (token) {
+	switch (token.$) {
+		case 'LB':
+			var meta = token.a;
+			return meta.index;
+		case 'RB':
+			var meta = token.a;
+			return meta.index;
+		case 'S':
+			var meta = token.b;
+			return meta.index;
+		case 'W':
+			var meta = token.b;
+			return meta.index;
+		case 'MathToken':
+			var meta = token.a;
+			return meta.index;
+		case 'CodeToken':
+			var meta = token.a;
+			return meta.index;
+		case 'TokenError':
+			var meta = token.b;
+			return meta.index;
+		case 'LP':
+			var meta = token.a;
+			return meta.index;
+		case 'RP':
+			var meta = token.a;
+			return meta.index;
+		case 'Image':
+			var meta = token.a;
+			return meta.index;
+		case 'AT':
+			var meta = token.a;
+			return meta.index;
+		case 'Bold':
+			var meta = token.a;
+			return meta.index;
+		default:
+			var meta = token.a;
+			return meta.index;
+	}
+};
+var $author$project$XMarkdown$Token$AT = function (a) {
+	return {$: 'AT', a: a};
+};
+var $author$project$XMarkdown$Token$Bold = function (a) {
+	return {$: 'Bold', a: a};
+};
+var $author$project$XMarkdown$Token$CodeToken = function (a) {
+	return {$: 'CodeToken', a: a};
+};
+var $author$project$XMarkdown$Token$Image = function (a) {
+	return {$: 'Image', a: a};
+};
+var $author$project$XMarkdown$Token$LB = function (a) {
+	return {$: 'LB', a: a};
+};
+var $author$project$XMarkdown$Token$LP = function (a) {
+	return {$: 'LP', a: a};
+};
+var $author$project$XMarkdown$Token$MathToken = function (a) {
+	return {$: 'MathToken', a: a};
+};
+var $author$project$XMarkdown$Token$RB = function (a) {
+	return {$: 'RB', a: a};
+};
+var $author$project$XMarkdown$Token$RP = function (a) {
+	return {$: 'RP', a: a};
+};
+var $author$project$XMarkdown$Token$TokenError = F2(
+	function (a, b) {
+		return {$: 'TokenError', a: a, b: b};
+	});
+var $author$project$XMarkdown$Token$W = F2(
+	function (a, b) {
+		return {$: 'W', a: a, b: b};
+	});
+var $author$project$XMarkdown$Token$setIndex = F2(
+	function (k, token) {
+		switch (token.$) {
+			case 'LB':
+				var meta = token.a;
+				return $author$project$XMarkdown$Token$LB(
+					_Utils_update(
+						meta,
+						{index: k}));
+			case 'RB':
+				var meta = token.a;
+				return $author$project$XMarkdown$Token$RB(
+					_Utils_update(
+						meta,
+						{index: k}));
+			case 'LP':
+				var meta = token.a;
+				return $author$project$XMarkdown$Token$LP(
+					_Utils_update(
+						meta,
+						{index: k}));
+			case 'RP':
+				var meta = token.a;
+				return $author$project$XMarkdown$Token$RP(
+					_Utils_update(
+						meta,
+						{index: k}));
+			case 'Bold':
+				var meta = token.a;
+				return $author$project$XMarkdown$Token$Bold(
+					_Utils_update(
+						meta,
+						{index: k}));
+			case 'Italic':
+				var meta = token.a;
+				return $author$project$XMarkdown$Token$Italic(
+					_Utils_update(
+						meta,
+						{index: k}));
+			case 'Image':
+				var meta = token.a;
+				return $author$project$XMarkdown$Token$Image(
+					_Utils_update(
+						meta,
+						{index: k}));
+			case 'AT':
+				var meta = token.a;
+				return $author$project$XMarkdown$Token$AT(
+					_Utils_update(
+						meta,
+						{index: k}));
+			case 'S':
+				var str = token.a;
+				var meta = token.b;
+				return A2(
+					$author$project$XMarkdown$Token$S,
+					str,
+					_Utils_update(
+						meta,
+						{index: k}));
+			case 'W':
+				var str = token.a;
+				var meta = token.b;
+				return A2(
+					$author$project$XMarkdown$Token$W,
+					str,
+					_Utils_update(
+						meta,
+						{index: k}));
+			case 'MathToken':
+				var meta = token.a;
+				return $author$project$XMarkdown$Token$MathToken(
+					_Utils_update(
+						meta,
+						{index: k}));
+			case 'CodeToken':
+				var meta = token.a;
+				return $author$project$XMarkdown$Token$CodeToken(
+					_Utils_update(
+						meta,
+						{index: k}));
+			default:
+				var list = token.a;
+				var meta = token.b;
+				return A2(
+					$author$project$XMarkdown$Token$TokenError,
+					list,
+					_Utils_update(
+						meta,
+						{index: k}));
+		}
+	});
+var $author$project$XMarkdown$Token$changeTokenIndicesFrom = F3(
+	function (from, delta, tokens) {
+		var f = function (token) {
+			var k = $author$project$XMarkdown$Token$indexOf(token);
+			return (_Utils_cmp(k, from) > -1) ? A2($author$project$XMarkdown$Token$setIndex, k + delta, token) : token;
+		};
+		return A2(
+			$elm$core$List$map,
+			function (token) {
+				return f(token);
+			},
+			tokens);
+	});
 var $author$project$Parser$Meta$dummy = {begin: 0, end: 0, id: 'dummyId', index: 0};
 var $author$project$XMarkdown$Expression$dummyTokenIndex = 0;
 var $author$project$XMarkdown$Expression$dummyLocWithId = {begin: 0, end: 0, id: 'dummy (3)', index: $author$project$XMarkdown$Expression$dummyTokenIndex};
@@ -11879,6 +12069,48 @@ var $author$project$XMarkdown$Expression$errorMessageBold = function (message) {
 			]),
 		$author$project$XMarkdown$Expression$dummyLocWithId);
 };
+var $elm_community$list_extra$List$Extra$splitAt = F2(
+	function (n, xs) {
+		return _Utils_Tuple2(
+			A2($elm$core$List$take, n, xs),
+			A2($elm$core$List$drop, n, xs));
+	});
+var $author$project$XMarkdown$Expression$insertAt = F3(
+	function (k, a, list) {
+		var _v0 = A2($elm_community$list_extra$List$Extra$splitAt, k, list);
+		var p = _v0.a;
+		var q = _v0.b;
+		return _Utils_ap(
+			p,
+			A2($elm$core$List$cons, a, q));
+	});
+var $elm_community$list_extra$List$Extra$updateAt = F3(
+	function (index, fn, list) {
+		if (index < 0) {
+			return list;
+		} else {
+			var tail = A2($elm$core$List$drop, index, list);
+			if (tail.b) {
+				var x = tail.a;
+				var xs = tail.b;
+				return _Utils_ap(
+					A2($elm$core$List$take, index, list),
+					A2(
+						$elm$core$List$cons,
+						fn(x),
+						xs));
+			} else {
+				return list;
+			}
+		}
+	});
+var $elm_community$list_extra$List$Extra$setAt = F2(
+	function (index, value) {
+		return A2(
+			$elm_community$list_extra$List$Extra$updateAt,
+			index,
+			$elm$core$Basics$always(value));
+	});
 var $author$project$XMarkdown$Token$stringValue = function (token) {
 	switch (token.$) {
 		case 'LB':
@@ -11957,7 +12189,7 @@ var $author$project$XMarkdown$Token$toString2 = function (tokens) {
 };
 var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 	var _v0 = $elm$core$List$reverse(state.stack);
-	_v0$7:
+	_v0$12:
 	while (true) {
 		if (_v0.b) {
 			switch (_v0.a.$) {
@@ -11979,7 +12211,7 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 									stack: _List_Nil
 								}));
 					} else {
-						break _v0$7;
+						break _v0$12;
 					}
 				case 'Italic':
 					if (!_v0.b.b) {
@@ -11991,7 +12223,7 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 									{
 										committed: A2(
 											$elm$core$List$cons,
-											$author$project$XMarkdown$Expression$errorMessage('_'),
+											$author$project$XMarkdown$Expression$errorMessage('*'),
 											_List_Nil),
 										stack: _List_Nil
 									}));
@@ -12030,7 +12262,7 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 											expr,
 											A2(
 												$elm$core$List$cons,
-												$author$project$XMarkdown$Expression$errorMessage('_'),
+												$author$project$XMarkdown$Expression$errorMessage('*?1'),
 												A2($elm$core$List$drop, 1, state.committed))),
 										messages: _List_fromArray(
 											['!!']),
@@ -12039,36 +12271,247 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 									}));
 						}
 					} else {
-						if ((_v0.b.a.$ === 'S') && (!_v0.b.b.b)) {
-							var _v8 = _v0.b;
-							var _v9 = _v8.a;
-							var str = _v9.a;
-							var meta = _v9.b;
-							return $author$project$Parser$Helpers$Loop(
-								_Utils_update(
-									state,
-									{
-										committed: A2(
-											$elm$core$List$cons,
-											$author$project$XMarkdown$Expression$errorMessage('_'),
-											A2(
+						if (_v0.b.a.$ === 'S') {
+							if (!_v0.b.b.b) {
+								var meta1 = _v0.a.a;
+								var _v6 = _v0.b;
+								var _v7 = _v6.a;
+								var str = _v7.a;
+								var meta2 = _v7.b;
+								return $author$project$Parser$Helpers$Loop(
+									_Utils_update(
+										state,
+										{
+											committed: A2(
 												$elm$core$List$cons,
 												A3(
 													$author$project$Parser$Expr$Fun,
-													'italic',
+													'pink',
 													_List_fromArray(
 														[
-															A2($author$project$Parser$Expr$Text, str, meta)
+															A2($author$project$Parser$Expr$Text, '* << missing? ', $author$project$XMarkdown$Expression$dummyLocWithId)
 														]),
-													meta),
-												state.committed)),
-										messages: _List_fromArray(
-											['!!']),
-										stack: _List_Nil,
-										tokenIndex: meta.index + 1
-									}));
+													$author$project$XMarkdown$Expression$dummyLocWithId),
+												A2(
+													$elm$core$List$cons,
+													A3(
+														$author$project$Parser$Expr$Fun,
+														'italic',
+														_List_fromArray(
+															[
+																A2($author$project$Parser$Expr$Text, str, $author$project$XMarkdown$Expression$dummyLocWithId)
+															]),
+														$author$project$XMarkdown$Expression$dummyLocWithId),
+													state.committed)),
+											stack: _List_Nil,
+											tokenIndex: meta2.index + 1
+										}));
+							} else {
+								if (_v0.b.b.a.$ === 'Bold') {
+									if (!_v0.b.b.b.b) {
+										var meta1 = _v0.a.a;
+										var _v8 = _v0.b;
+										var _v9 = _v8.a;
+										var str = _v9.a;
+										var meta2 = _v9.b;
+										var _v10 = _v8.b;
+										var meta3 = _v10.a.a;
+										return $author$project$Parser$Helpers$Loop(
+											_Utils_update(
+												state,
+												{
+													committed: A2(
+														$elm$core$List$cons,
+														A3(
+															$author$project$Parser$Expr$Fun,
+															'pink',
+															_List_fromArray(
+																[
+																	A2($author$project$Parser$Expr$Text, '* << extra? ', $author$project$XMarkdown$Expression$dummyLocWithId)
+																]),
+															$author$project$XMarkdown$Expression$dummyLocWithId),
+														A2(
+															$elm$core$List$cons,
+															A3(
+																$author$project$Parser$Expr$Fun,
+																'italic',
+																_List_fromArray(
+																	[
+																		A2($author$project$Parser$Expr$Text, str, $author$project$XMarkdown$Expression$dummyLocWithId)
+																	]),
+																$author$project$XMarkdown$Expression$dummyLocWithId),
+															state.committed)),
+													stack: _List_Nil,
+													tokenIndex: meta3.index + 1
+												}));
+									} else {
+										var meta1 = _v0.a.a;
+										var _v11 = _v0.b;
+										var _v12 = _v11.a;
+										var str = _v12.a;
+										var meta2 = _v12.b;
+										var _v13 = _v11.b;
+										var meta3 = _v13.a.a;
+										var rest = _v13.b;
+										return (A2($elm$core$String$right, 1, str) === ' ') ? $author$project$Parser$Helpers$Loop(
+											_Utils_update(
+												state,
+												{
+													committed: A2(
+														$elm$core$List$cons,
+														A3(
+															$author$project$Parser$Expr$Fun,
+															'pink',
+															_List_fromArray(
+																[
+																	A2($author$project$Parser$Expr$Text, '* << missing? ', $author$project$XMarkdown$Expression$dummyLocWithId)
+																]),
+															$author$project$XMarkdown$Expression$dummyLocWithId),
+														A2(
+															$elm$core$List$cons,
+															A3(
+																$author$project$Parser$Expr$Fun,
+																'italic',
+																_List_fromArray(
+																	[
+																		A2($author$project$Parser$Expr$Text, str, $author$project$XMarkdown$Expression$dummyLocWithId)
+																	]),
+																$author$project$XMarkdown$Expression$dummyLocWithId),
+															state.committed)),
+													stack: _List_Nil,
+													tokenIndex: meta3.index
+												})) : $author$project$Parser$Helpers$Loop(
+											_Utils_update(
+												state,
+												{
+													committed: A2(
+														$elm$core$List$cons,
+														A3(
+															$author$project$Parser$Expr$Fun,
+															'pink',
+															_List_fromArray(
+																[
+																	A2($author$project$Parser$Expr$Text, '* << extra? ', $author$project$XMarkdown$Expression$dummyLocWithId)
+																]),
+															$author$project$XMarkdown$Expression$dummyLocWithId),
+														A2(
+															$elm$core$List$cons,
+															A3(
+																$author$project$Parser$Expr$Fun,
+																'italic',
+																_List_fromArray(
+																	[
+																		A2($author$project$Parser$Expr$Text, str, $author$project$XMarkdown$Expression$dummyLocWithId)
+																	]),
+																$author$project$XMarkdown$Expression$dummyLocWithId),
+															state.committed)),
+													stack: _List_Nil,
+													tokenIndex: meta3.index + 1
+												}));
+									}
+								} else {
+									var meta1 = _v0.a.a;
+									var _v14 = _v0.b;
+									var _v15 = _v14.a;
+									var str = _v15.a;
+									var meta2 = _v15.b;
+									var rest = _v14.b;
+									return $author$project$Parser$Helpers$Loop(
+										_Utils_update(
+											state,
+											{
+												committed: A2(
+													$elm$core$List$cons,
+													A3(
+														$author$project$Parser$Expr$Fun,
+														'pink',
+														_List_fromArray(
+															[
+																A2($author$project$Parser$Expr$Text, '* <<missing? ', $author$project$XMarkdown$Expression$dummyLocWithId)
+															]),
+														$author$project$XMarkdown$Expression$dummyLocWithId),
+													A2(
+														$elm$core$List$cons,
+														A3(
+															$author$project$Parser$Expr$Fun,
+															'italic',
+															_List_fromArray(
+																[
+																	A2($author$project$Parser$Expr$Text, str, $author$project$XMarkdown$Expression$dummyLocWithId)
+																]),
+															$author$project$XMarkdown$Expression$dummyLocWithId),
+														state.committed)),
+												stack: _List_Nil,
+												tokenIndex: meta2.index + 1
+											}));
+								}
+							}
 						} else {
-							break _v0$7;
+							var meta1 = _v0.a.a;
+							var rest = _v0.b;
+							var _v16 = $elm_community$list_extra$List$Extra$last(rest);
+							if (_v16.$ === 'Just') {
+								if (_v16.a.$ === 'Bold') {
+									var meta2 = _v16.a.a;
+									return $author$project$Parser$Helpers$Loop(
+										_Utils_update(
+											state,
+											{
+												stack: _List_Nil,
+												tokenIndex: meta2.index + 2,
+												tokens: A3(
+													$author$project$XMarkdown$Token$changeTokenIndicesFrom,
+													meta2.index + 2,
+													1,
+													A3(
+														$author$project$XMarkdown$Expression$insertAt,
+														meta2.index,
+														A2(
+															$author$project$XMarkdown$Token$S,
+															'* << extra? ',
+															_Utils_update(
+																meta2,
+																{index: meta2.index + 1})),
+														A3(
+															$elm_community$list_extra$List$Extra$setAt,
+															meta2.index,
+															$author$project$XMarkdown$Token$Italic(meta2),
+															state.tokens)))
+											}));
+								} else {
+									return $author$project$Parser$Helpers$Loop(
+										_Utils_update(
+											state,
+											{
+												committed: _Utils_ap(
+													state.committed,
+													A2(
+														$elm$core$List$cons,
+														$author$project$XMarkdown$Expression$errorMessage('*??1a'),
+														A2($elm$core$List$drop, 1, state.committed))),
+												messages: _List_fromArray(
+													['!!']),
+												stack: _List_Nil,
+												tokenIndex: meta1.index + 1
+											}));
+								}
+							} else {
+								return $author$project$Parser$Helpers$Loop(
+									_Utils_update(
+										state,
+										{
+											committed: _Utils_ap(
+												state.committed,
+												A2(
+													$elm$core$List$cons,
+													$author$project$XMarkdown$Expression$errorMessage('*??1b'),
+													A2($elm$core$List$drop, 1, state.committed))),
+											messages: _List_fromArray(
+												['!!']),
+											stack: _List_Nil,
+											tokenIndex: meta1.index + 1
+										}));
+							}
 						}
 					}
 				case 'Bold':
@@ -12081,17 +12524,17 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 									{
 										committed: A2(
 											$elm$core$List$cons,
-											$author$project$XMarkdown$Expression$errorMessage('*'),
+											$author$project$XMarkdown$Expression$errorMessage('**'),
 											_List_Nil),
 										stack: _List_Nil
 									}));
 						} else {
 							var expr = function () {
-								var _v6 = $elm$core$List$head(state.committed);
-								if ((_v6.$ === 'Just') && (_v6.a.$ === 'Text')) {
-									var _v7 = _v6.a;
-									var str1 = _v7.a;
-									var meta1 = _v7.b;
+								var _v17 = $elm$core$List$head(state.committed);
+								if ((_v17.$ === 'Just') && (_v17.a.$ === 'Text')) {
+									var _v18 = _v17.a;
+									var str1 = _v18.a;
+									var meta1 = _v18.b;
 									return A3(
 										$author$project$Parser$Expr$Fun,
 										'bold',
@@ -12120,7 +12563,7 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 											expr,
 											A2(
 												$elm$core$List$cons,
-												$author$project$XMarkdown$Expression$errorMessage('*'),
+												$author$project$XMarkdown$Expression$errorMessage('**?2'),
 												A2($elm$core$List$drop, 1, state.committed))),
 										messages: _List_fromArray(
 											['!!']),
@@ -12129,36 +12572,74 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 									}));
 						}
 					} else {
-						if ((_v0.b.a.$ === 'S') && (!_v0.b.b.b)) {
-							var _v10 = _v0.b;
-							var _v11 = _v10.a;
-							var str = _v11.a;
-							var meta = _v11.b;
-							return $author$project$Parser$Helpers$Loop(
-								_Utils_update(
-									state,
-									{
-										committed: A2(
-											$elm$core$List$cons,
-											$author$project$XMarkdown$Expression$errorMessage('*'),
-											A2(
+						if (_v0.b.a.$ === 'S') {
+							if (!_v0.b.b.b) {
+								var _v19 = _v0.b;
+								var _v20 = _v19.a;
+								var str = _v20.a;
+								var meta = _v20.b;
+								return $author$project$Parser$Helpers$Loop(
+									_Utils_update(
+										state,
+										{
+											committed: A2(
 												$elm$core$List$cons,
-												A3(
-													$author$project$Parser$Expr$Fun,
-													'bold',
-													_List_fromArray(
-														[
-															A2($author$project$Parser$Expr$Text, str, meta)
-														]),
-													meta),
-												state.committed)),
-										messages: _List_fromArray(
-											['!!']),
-										stack: _List_Nil,
-										tokenIndex: meta.index + 1
-									}));
+												$author$project$XMarkdown$Expression$errorMessage('** << missing?'),
+												A2(
+													$elm$core$List$cons,
+													A3(
+														$author$project$Parser$Expr$Fun,
+														'bold',
+														_List_fromArray(
+															[
+																A2($author$project$Parser$Expr$Text, str, meta)
+															]),
+														meta),
+													state.committed)),
+											messages: _List_fromArray(
+												['!!']),
+											stack: _List_Nil,
+											tokenIndex: meta.index + 1
+										}));
+							} else {
+								if (_v0.b.b.a.$ === 'Italic') {
+									var meta1 = _v0.a.a;
+									var _v21 = _v0.b;
+									var _v22 = _v21.a;
+									var str = _v22.a;
+									var meta2 = _v22.b;
+									var _v23 = _v21.b;
+									var meta3 = _v23.a.a;
+									var rest = _v23.b;
+									return $author$project$Parser$Helpers$Loop(
+										_Utils_update(
+											state,
+											{
+												committed: A2(
+													$elm$core$List$cons,
+													$author$project$XMarkdown$Expression$errorMessage('* << missing'),
+													A2(
+														$elm$core$List$cons,
+														A3(
+															$author$project$Parser$Expr$Fun,
+															'bold',
+															_List_fromArray(
+																[
+																	A2($author$project$Parser$Expr$Text, str, $author$project$XMarkdown$Expression$dummyLocWithId)
+																]),
+															$author$project$XMarkdown$Expression$dummyLocWithId),
+														state.committed)),
+												messages: _List_fromArray(
+													['!!']),
+												stack: _List_Nil,
+												tokenIndex: meta3.index + 1
+											}));
+								} else {
+									break _v0$12;
+								}
+							}
 						} else {
-							break _v0$7;
+							break _v0$12;
 						}
 					}
 				case 'MathToken':
@@ -12198,10 +12679,10 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 								tokenIndex: meta.index + 1
 							}));
 				default:
-					break _v0$7;
+					break _v0$12;
 			}
 		} else {
-			break _v0$7;
+			break _v0$12;
 		}
 	}
 	return $author$project$Parser$Helpers$Done(
@@ -14613,17 +15094,10 @@ var $author$project$XMarkdown$Token$finish = function (state) {
 		return $author$project$Parser$Helpers$Done(state.tokens);
 	}
 };
-var $author$project$XMarkdown$Token$TokenError = F2(
-	function (a, b) {
-		return {$: 'TokenError', a: a, b: b};
-	});
 var $author$project$XMarkdown$Token$makeId = F2(
 	function (a, b) {
 		return $elm$core$String$fromInt(a) + ('.' + $elm$core$String$fromInt(b));
 	});
-var $author$project$XMarkdown$Token$CodeToken = function (a) {
-	return {$: 'CodeToken', a: a};
-};
 var $author$project$XMarkdown$Token$codeParser = F2(
 	function (start, index) {
 		return A2(
@@ -14648,10 +15122,6 @@ var $author$project$XMarkdown$Token$codeParser = F2(
 					return false;
 				}));
 	});
-var $author$project$XMarkdown$Token$S = F2(
-	function (a, b) {
-		return {$: 'S', a: a, b: b};
-	});
 var $author$project$XMarkdown$Token$codeChars = _List_fromArray(
 	[
 		_Utils_chr('`')
@@ -14665,7 +15135,6 @@ var $author$project$XMarkdown$Token$languageChars = _List_fromArray(
 		_Utils_chr(')'),
 		_Utils_chr('`'),
 		_Utils_chr('*'),
-		_Utils_chr('_'),
 		_Utils_chr('$')
 	]);
 var $author$project$XMarkdown$Token$codeTextParser = F2(
@@ -14703,10 +15172,6 @@ var $author$project$XMarkdown$Token$codeTextParser = F2(
 							_Utils_chr(' '),
 							$author$project$XMarkdown$Token$languageChars));
 				}));
-	});
-var $author$project$XMarkdown$Token$W = F2(
-	function (a, b) {
-		return {$: 'W', a: a, b: b};
 	});
 var $author$project$XMarkdown$Token$whiteSpaceParser = F2(
 	function (start, index) {
@@ -14746,9 +15211,6 @@ var $author$project$XMarkdown$Token$codeParser_ = F2(
 					A2($author$project$XMarkdown$Token$whiteSpaceParser, start, index)
 				]));
 	});
-var $author$project$XMarkdown$Token$MathToken = function (a) {
-	return {$: 'MathToken', a: a};
-};
 var $author$project$XMarkdown$Token$mathParser = F2(
 	function (start, index) {
 		return A2(
@@ -14823,9 +15285,6 @@ var $author$project$XMarkdown$Token$mathParser_ = F2(
 					A2($author$project$XMarkdown$Token$whiteSpaceParser, start, index)
 				]));
 	});
-var $author$project$XMarkdown$Token$AT = function (a) {
-	return {$: 'AT', a: a};
-};
 var $author$project$Parser$Tools$ExpectingATStart = {$: 'ExpectingATStart'};
 var $author$project$XMarkdown$Token$atParser = F2(
 	function (start, index) {
@@ -14843,37 +15302,26 @@ var $author$project$XMarkdown$Token$atParser = F2(
 			$elm$parser$Parser$Advanced$symbol(
 				A2($elm$parser$Parser$Advanced$Token, '@[', $author$project$Parser$Tools$ExpectingATStart)));
 	});
-var $author$project$XMarkdown$Token$Bold = function (a) {
-	return {$: 'Bold', a: a};
-};
 var $author$project$XMarkdown$Token$boldParser = F2(
 	function (start, index) {
 		return A2(
 			$elm$parser$Parser$Advanced$map,
-			function (_v1) {
+			function (_v0) {
 				return $author$project$XMarkdown$Token$Bold(
 					{
 						begin: start,
-						end: start,
+						end: start + 1,
 						id: A2($author$project$XMarkdown$Token$makeId, start, index),
 						index: index
 					});
 			},
-			A2(
-				$author$project$Parser$Tools$text,
-				function (c) {
-					return _Utils_eq(
-						c,
-						_Utils_chr('*'));
-				},
-				function (_v0) {
-					return false;
-				}));
+			$elm$parser$Parser$Advanced$symbol(
+				A2(
+					$elm$parser$Parser$Advanced$Token,
+					'**',
+					$author$project$Parser$Tools$ExpectingSymbol('**'))));
 	});
 var $author$project$Parser$Tools$ExpectingImageStart = {$: 'ExpectingImageStart'};
-var $author$project$XMarkdown$Token$Image = function (a) {
-	return {$: 'Image', a: a};
-};
 var $author$project$XMarkdown$Token$imageParser = F2(
 	function (start, index) {
 		return A2(
@@ -14890,9 +15338,6 @@ var $author$project$XMarkdown$Token$imageParser = F2(
 			$elm$parser$Parser$Advanced$symbol(
 				A2($elm$parser$Parser$Advanced$Token, '![', $author$project$Parser$Tools$ExpectingImageStart)));
 	});
-var $author$project$XMarkdown$Token$Italic = function (a) {
-	return {$: 'Italic', a: a};
-};
 var $author$project$XMarkdown$Token$italicParser = F2(
 	function (start, index) {
 		return A2(
@@ -14911,15 +15356,12 @@ var $author$project$XMarkdown$Token$italicParser = F2(
 				function (c) {
 					return _Utils_eq(
 						c,
-						_Utils_chr('_'));
+						_Utils_chr('*'));
 				},
 				function (_v0) {
 					return false;
 				}));
 	});
-var $author$project$XMarkdown$Token$LB = function (a) {
-	return {$: 'LB', a: a};
-};
 var $author$project$XMarkdown$Token$leftBracketParser = F2(
 	function (start, index) {
 		return A2(
@@ -14944,9 +15386,6 @@ var $author$project$XMarkdown$Token$leftBracketParser = F2(
 					return false;
 				}));
 	});
-var $author$project$XMarkdown$Token$LP = function (a) {
-	return {$: 'LP', a: a};
-};
 var $author$project$XMarkdown$Token$leftParenParser = F2(
 	function (start, index) {
 		return A2(
@@ -14971,9 +15410,6 @@ var $author$project$XMarkdown$Token$leftParenParser = F2(
 					return false;
 				}));
 	});
-var $author$project$XMarkdown$Token$RB = function (a) {
-	return {$: 'RB', a: a};
-};
 var $author$project$XMarkdown$Token$rightBracketParser = F2(
 	function (start, index) {
 		return A2(
@@ -14998,9 +15434,6 @@ var $author$project$XMarkdown$Token$rightBracketParser = F2(
 					return false;
 				}));
 	});
-var $author$project$XMarkdown$Token$RP = function (a) {
-	return {$: 'RP', a: a};
-};
 var $author$project$XMarkdown$Token$rightParenParser = F2(
 	function (start, index) {
 		return A2(
@@ -15111,98 +15544,6 @@ var $author$project$XMarkdown$Token$get = F3(
 					id: A2($author$project$XMarkdown$Token$makeId, start, state.tokenIndex),
 					index: state.tokenIndex
 				});
-		}
-	});
-var $author$project$XMarkdown$Token$setIndex = F2(
-	function (k, token) {
-		switch (token.$) {
-			case 'LB':
-				var meta = token.a;
-				return $author$project$XMarkdown$Token$LB(
-					_Utils_update(
-						meta,
-						{index: k}));
-			case 'RB':
-				var meta = token.a;
-				return $author$project$XMarkdown$Token$RB(
-					_Utils_update(
-						meta,
-						{index: k}));
-			case 'LP':
-				var meta = token.a;
-				return $author$project$XMarkdown$Token$LP(
-					_Utils_update(
-						meta,
-						{index: k}));
-			case 'RP':
-				var meta = token.a;
-				return $author$project$XMarkdown$Token$RP(
-					_Utils_update(
-						meta,
-						{index: k}));
-			case 'Bold':
-				var meta = token.a;
-				return $author$project$XMarkdown$Token$Bold(
-					_Utils_update(
-						meta,
-						{index: k}));
-			case 'Italic':
-				var meta = token.a;
-				return $author$project$XMarkdown$Token$Italic(
-					_Utils_update(
-						meta,
-						{index: k}));
-			case 'Image':
-				var meta = token.a;
-				return $author$project$XMarkdown$Token$Image(
-					_Utils_update(
-						meta,
-						{index: k}));
-			case 'AT':
-				var meta = token.a;
-				return $author$project$XMarkdown$Token$AT(
-					_Utils_update(
-						meta,
-						{index: k}));
-			case 'S':
-				var str = token.a;
-				var meta = token.b;
-				return A2(
-					$author$project$XMarkdown$Token$S,
-					str,
-					_Utils_update(
-						meta,
-						{index: k}));
-			case 'W':
-				var str = token.a;
-				var meta = token.b;
-				return A2(
-					$author$project$XMarkdown$Token$W,
-					str,
-					_Utils_update(
-						meta,
-						{index: k}));
-			case 'MathToken':
-				var meta = token.a;
-				return $author$project$XMarkdown$Token$MathToken(
-					_Utils_update(
-						meta,
-						{index: k}));
-			case 'CodeToken':
-				var meta = token.a;
-				return $author$project$XMarkdown$Token$CodeToken(
-					_Utils_update(
-						meta,
-						{index: k}));
-			default:
-				var list = token.a;
-				var meta = token.b;
-				return A2(
-					$author$project$XMarkdown$Token$TokenError,
-					list,
-					_Utils_update(
-						meta,
-						{index: k}));
 		}
 	});
 var $author$project$XMarkdown$Token$handleDefault = F2(
@@ -16471,33 +16812,6 @@ var $author$project$Compiler$Vector$resetFrom = F2(
 			size: v.size
 		};
 	});
-var $elm_community$list_extra$List$Extra$updateAt = F3(
-	function (index, fn, list) {
-		if (index < 0) {
-			return list;
-		} else {
-			var tail = A2($elm$core$List$drop, index, list);
-			if (tail.b) {
-				var x = tail.a;
-				var xs = tail.b;
-				return _Utils_ap(
-					A2($elm$core$List$take, index, list),
-					A2(
-						$elm$core$List$cons,
-						fn(x),
-						xs));
-			} else {
-				return list;
-			}
-		}
-	});
-var $elm_community$list_extra$List$Extra$setAt = F2(
-	function (index, value) {
-		return A2(
-			$elm_community$list_extra$List$Extra$updateAt,
-			index,
-			$elm$core$Basics$always(value));
-	});
 var $author$project$Compiler$Vector$set = F3(
 	function (k, a, v) {
 		return _Utils_update(
@@ -17739,7 +18053,10 @@ var $author$project$Compiler$DifferentialParser$init = F3(
 			parsed: parsed
 		};
 	});
-var $author$project$Scripta$API$init = $author$project$Compiler$DifferentialParser$init;
+var $author$project$Scripta$API$init = F3(
+	function (importedFileDict, language, sourceText) {
+		return A3($author$project$Compiler$DifferentialParser$init, importedFileDict, language, sourceText);
+	});
 var $author$project$Main$NoOp = {$: 'NoOp'};
 var $elm$core$Task$onError = _Scheduler_onError;
 var $elm$core$Task$attempt = F2(
@@ -18069,7 +18386,7 @@ var $elm$time$Time$every = F2(
 			A2($elm$time$Time$Every, interval, tagger));
 	});
 var $author$project$Main$subscriptions = function (model) {
-	return A2($elm$time$Time$every, 400, $author$project$Main$Tick);
+	return A2($elm$time$Time$every, 40000, $author$project$Main$Tick);
 };
 var $author$project$Main$InfoDocument = {$: 'InfoDocument'};
 var $author$project$Main$PDF = function (a) {
@@ -18117,6 +18434,34 @@ var $author$project$Main$download = F2(
 	function (fileName, fileContents) {
 		return A3($elm$file$File$Download$string, fileName, 'application/x-tex', fileContents);
 	});
+var $author$project$Scripta$API$userReplace = F3(
+	function (userRegex, replacer, string) {
+		var _v0 = $elm$regex$Regex$fromString(userRegex);
+		if (_v0.$ === 'Nothing') {
+			return string;
+		} else {
+			var regex = _v0.a;
+			return A3($elm$regex$Regex$replace, regex, replacer, string);
+		}
+	});
+var $author$project$Scripta$API$compressWhitespace = function (string) {
+	return A3(
+		$author$project$Scripta$API$userReplace,
+		'\\s\\s+',
+		function (_v0) {
+			return ' ';
+		},
+		string);
+};
+var $author$project$Scripta$API$removeNonAlphaNum = function (string) {
+	return A3(
+		$author$project$Scripta$API$userReplace,
+		'[^A-Za-z0-9\\-]',
+		function (_v0) {
+			return '';
+		},
+		string);
+};
 var $author$project$Compiler$ASTTools$matchBlockName = F2(
 	function (key, _v0) {
 		var name = _v0.a.name;
@@ -18140,6 +18485,114 @@ var $author$project$Compiler$ASTTools$getBlockByName = F2(
 				$elm$core$List$concat(
 					A2($elm$core$List$map, $zwilias$elm_rosetree$Tree$flatten, ast))));
 	});
+var $author$project$Compiler$ASTTools$getValue = F2(
+	function (key, ast) {
+		var _v0 = A2($author$project$Compiler$ASTTools$getBlockByName, key, ast);
+		if (_v0.$ === 'Nothing') {
+			return '(' + (key + ')');
+		} else {
+			var content = _v0.a.a.content;
+			if (content.$ === 'Left') {
+				var str = content.a;
+				return str;
+			} else {
+				var exprList = content.a;
+				return A2(
+					$elm$core$String$join,
+					'',
+					$elm_community$maybe_extra$Maybe$Extra$values(
+						A2($elm$core$List$map, $author$project$Compiler$ASTTools$getText, exprList)));
+			}
+		}
+	});
+var $author$project$Compiler$ASTTools$title = function (ast) {
+	return A2($author$project$Compiler$ASTTools$getValue, 'title', ast);
+};
+var $author$project$Scripta$API$fileNameForExport = function (ast) {
+	return function (s) {
+		return s + '.tex';
+	}(
+		$author$project$Scripta$API$removeNonAlphaNum(
+			A3(
+				$elm$core$String$replace,
+				' ',
+				'-',
+				$author$project$Scripta$API$compressWhitespace(
+					$author$project$Compiler$ASTTools$title(ast)))));
+};
+var $author$project$Scripta$API$extractUrl = function (str) {
+	return $elm$core$List$head(
+		A2($elm$core$String$split, ' ', str));
+};
+var $author$project$Compiler$ASTTools$matchExprOnName = F2(
+	function (name, expr) {
+		switch (expr.$) {
+			case 'Fun':
+				var name2 = expr.a;
+				return _Utils_eq(name, name2);
+			case 'Verbatim':
+				var name2 = expr.a;
+				return _Utils_eq(name, name2);
+			default:
+				return false;
+		}
+	});
+var $author$project$Compiler$ASTTools$filterExpressionsOnName = F2(
+	function (name, exprs) {
+		return A2(
+			$elm$core$List$filter,
+			$author$project$Compiler$ASTTools$matchExprOnName(name),
+			exprs);
+	});
+var $elm$core$List$singleton = function (value) {
+	return _List_fromArray(
+		[value]);
+};
+var $toastal$either$Either$unwrap = F3(
+	function (d, f, e) {
+		if (e.$ === 'Left') {
+			return d;
+		} else {
+			var a = e.a;
+			return f(a);
+		}
+	});
+var $toastal$either$Either$toListVia = function (f) {
+	return A2(
+		$toastal$either$Either$unwrap,
+		_List_Nil,
+		A2($elm$core$Basics$composeR, f, $elm$core$List$singleton));
+};
+var $toastal$either$Either$toList = $toastal$either$Either$toListVia($elm$core$Basics$identity);
+var $author$project$Scripta$API$getImageUrls = function (syntaxTree) {
+	return $elm_community$maybe_extra$Maybe$Extra$values(
+		A2(
+			$elm$core$List$map,
+			$elm$core$Maybe$andThen($author$project$Scripta$API$extractUrl),
+			A2(
+				$elm$core$List$map,
+				A2(
+					$elm$core$Basics$composeR,
+					$author$project$Compiler$ASTTools$getText,
+					$elm$core$Maybe$map($elm$core$String$trim)),
+				A2(
+					$author$project$Compiler$ASTTools$filterExpressionsOnName,
+					'image',
+					$elm$core$List$concat(
+						$elm$core$List$concat(
+							A2(
+								$elm$core$List$map,
+								function (_v0) {
+									var content = _v0.a.content;
+									return $toastal$either$Either$toList(content);
+								},
+								$elm$core$List$concat(
+									A2($elm$core$List$map, $zwilias$elm_rosetree$Tree$flatten, syntaxTree)))))))));
+};
+var $author$project$Text$info = '\n\n| title\nAbout the Scripta compiler\n\n| contents\n\n[tags jxxcarlson:about-the-scripta-compiler]\n\n| runninghead\n[link Scripta.io https://scripta.io]\n\n\n| section 1 -\nWhat it is\n\nThe Scripta compiler transforms source text to HTML, where\nthe source text is one of the following markup languages:\n\n| item\nL0 — an experimental language with syntax inspired by Lisp.\nCan render LaTeX-style\nmathematical text.  This document is written in L0.\n\n| item\nMicroLaTeX — a cousin of LaTeX.  Source text can be exported\nto standard LaTeX\n\n| item\nXMarkdown — a cousin of Markdown.  Can render LaTeX-style\nmathematical text.\n\n\nThe Scripta compiler features real-time, fault-tolerant\nparsing and rendering, and so is suitable for an interactive\nediting system in which (a) changes to the source text\nare rendered "instantly," that is, with no perceptible delay,\nand (b) syntax errors are handled gracefully, marked as such\nin the rendered text, and with the following text rendered\nproperly to the greatest extent possible.\n\n\n| section 1 -\nOpen source\n\nThe Scripta compiler is open-source, and can be found at\n[link github.com/jxxcarlson/scripta-compiler  https://github.com/jxxcarlson/scripta-compiler].  In the Example\nfolder, you will find a small demo app.  It is hosted online\nat [link Github https://jxxcarlson.github.io/app/scripta-compiler-demo/assets/index.html].\n\nThe Scripta compiler is used to power\n[link Scripta.io https://scripta.io].  It features\ninteractive editing, a searchable store of documents,\nand facilities for collaboration and web publishing.\n\n\n| section 1 -\nCode\n\nIf you are interested in looking at the code, there are two\ngood places to start. The first is `compiler/Scripta/API.elm`.\nThe second is the folder `compiler/L0/Parser/` especially\nthe file `compiler/L0/Parser/Expression`.  The latter\nis the shift-reduce parser used for L0, the simplest\nof the three markup languages considered.\n\nA notable feature of the Scripta compiler is that\nall three markup languages use a common expression\ntype and parse to a common type (a list of syntax trees)\n\n|| code\ntype Expr\n    = Fun String (List Expr) Meta\n    | Text String Meta\n    | Verbatim String String Meta\n\nThe three variants of this type align with the three\nsyntactic elements of `L0`:\n\n| item\nFunction elements, e.g. `[italic This is italic text]`,\nwhich are bounded on left and right by brackets.\n\n| item\nStretches of pure text,\n\n| item\nVerbatim elements, which are bounded by\ndollar signs or by backtics, for inline\nmathematical text and inline code,\nrespectively.\n\n\n| section 1 -\nStatus and Roadmap\n\nThe Scripta compiler is serviceable — I\'ve used to to write\n[link these class notes https://scripta.io/s/jxxcarlson:wave-packets-dispersion], for example.\nThat said, there is still a great deal to be done. Please send bug reports,\nfeature requests, and comments in general to me at jxxcarlson (gmail).\nI am on the Elm Slack and Github as jxxcarlson and on Twitter as @epsilon2718.\n\n';
+var $author$project$Text$l0Demo = '\n| title\nDemo (L0)\n\n| banner\n[link Scripta.io https://scripta.io]\n\n| contents\n\n| section 1\nImages\n\n|| hide\n[image https://nas-national-prod.s3.amazonaws.com/styles/hero_image/s3/web_h_apa_2016-a1_2474_8_cedar-waxwing_peter_brannon_kk_female.jpg?itok=VdeVVmGA]\n\n[image https://www.birdsandblooms.com/wp-content/uploads/2018/10/BNBbyc18_patricia-warren.jpg width:400]\n\n\n| section 1\nMath\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n[bold Tip:] Click on a section title to go back to the table of contents.\n\n';
+var $elm$core$Platform$Cmd$map = _Platform_map;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Compiler$ASTTools$getBlockArgsByName = F2(
 	function (key, ast) {
 		var _v0 = A2($author$project$Compiler$ASTTools$getBlockByName, key, ast);
@@ -18304,29 +18757,6 @@ var $author$project$Compiler$ASTTools$frontMatterDict = function (ast) {
 				$elm$core$String$split,
 				'\n',
 				A2($author$project$Compiler$ASTTools$getVerbatimBlockValue, 'docinfo', ast))));
-};
-var $author$project$Compiler$ASTTools$getValue = F2(
-	function (key, ast) {
-		var _v0 = A2($author$project$Compiler$ASTTools$getBlockByName, key, ast);
-		if (_v0.$ === 'Nothing') {
-			return '(' + (key + ')');
-		} else {
-			var content = _v0.a.a.content;
-			if (content.$ === 'Left') {
-				var str = content.a;
-				return str;
-			} else {
-				var exprList = content.a;
-				return A2(
-					$elm$core$String$join,
-					'',
-					$elm_community$maybe_extra$Maybe$Extra$values(
-						A2($elm$core$List$map, $author$project$Compiler$ASTTools$getText, exprList)));
-			}
-		}
-	});
-var $author$project$Compiler$ASTTools$title = function (ast) {
-	return A2($author$project$Compiler$ASTTools$getValue, 'title', ast);
 };
 var $author$project$Render$Export$LaTeX$frontMatter = F2(
 	function (currentTime, ast) {
@@ -18912,6 +19342,10 @@ var $author$project$Render$Export$LaTeX$section = F3(
 	function (settings, args, body) {
 		return settings.isStandaloneDocument ? A2($author$project$Render$Export$LaTeX$section1, args, body) : A2($author$project$Render$Export$LaTeX$section2, args, body);
 	});
+var $author$project$Render$Export$LaTeX$subheading = F3(
+	function (settings, args, body) {
+		return '\\subheading{' + (body + '}');
+	});
 var $author$project$Render$Export$LaTeX$blockDict = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
@@ -18974,6 +19408,12 @@ var $author$project$Render$Export$LaTeX$blockDict = $elm$core$Dict$fromList(
 			F3(
 				function (settings_, args, body) {
 					return A3($author$project$Render$Export$LaTeX$section, settings_, args, body);
+				})),
+			_Utils_Tuple2(
+			'subheading',
+			F3(
+				function (settings_, args, body) {
+					return A3($author$project$Render$Export$LaTeX$subheading, settings_, args, body);
 				})),
 			_Utils_Tuple2(
 			'item',
@@ -19710,120 +20150,11 @@ var $author$project$Render$Export$LaTeX$export = F3(
 			$author$project$Render$Export$LaTeX$zeroOrSome(
 				$author$project$Render$Export$LaTeX$counterValue(ast))) + '}\n')) + ($author$project$Render$Export$LaTeX$tableofcontents(rawBlockNames) + ('\n\n' + (A2($author$project$Render$Export$LaTeX$rawExport, settings_, ast) + '\n\n\\end{document}\n')))));
 	});
-var $author$project$Scripta$API$export = $author$project$Render$Export$LaTeX$export;
-var $author$project$Scripta$API$userReplace = F3(
-	function (userRegex, replacer, string) {
-		var _v0 = $elm$regex$Regex$fromString(userRegex);
-		if (_v0.$ === 'Nothing') {
-			return string;
-		} else {
-			var regex = _v0.a;
-			return A3($elm$regex$Regex$replace, regex, replacer, string);
-		}
+var $author$project$Scripta$API$prepareContentForExport = F3(
+	function (currentTime, settings, syntaxTree) {
+		var contentForExport = A3($author$project$Render$Export$LaTeX$export, currentTime, settings, syntaxTree);
+		return contentForExport;
 	});
-var $author$project$Scripta$API$compressWhitespace = function (string) {
-	return A3(
-		$author$project$Scripta$API$userReplace,
-		'\\s\\s+',
-		function (_v0) {
-			return ' ';
-		},
-		string);
-};
-var $author$project$Scripta$API$removeNonAlphaNum = function (string) {
-	return A3(
-		$author$project$Scripta$API$userReplace,
-		'[^A-Za-z0-9\\-]',
-		function (_v0) {
-			return '';
-		},
-		string);
-};
-var $author$project$Scripta$API$fileNameForExport = function (ast) {
-	return function (s) {
-		return s + '.tex';
-	}(
-		$author$project$Scripta$API$removeNonAlphaNum(
-			A3(
-				$elm$core$String$replace,
-				' ',
-				'-',
-				$author$project$Scripta$API$compressWhitespace(
-					$author$project$Compiler$ASTTools$title(ast)))));
-};
-var $author$project$PDF$extractUrl = function (str) {
-	return $elm$core$List$head(
-		A2($elm$core$String$split, ' ', str));
-};
-var $author$project$Compiler$ASTTools$matchExprOnName = F2(
-	function (name, expr) {
-		switch (expr.$) {
-			case 'Fun':
-				var name2 = expr.a;
-				return _Utils_eq(name, name2);
-			case 'Verbatim':
-				var name2 = expr.a;
-				return _Utils_eq(name, name2);
-			default:
-				return false;
-		}
-	});
-var $author$project$Compiler$ASTTools$filterExpressionsOnName = F2(
-	function (name, exprs) {
-		return A2(
-			$elm$core$List$filter,
-			$author$project$Compiler$ASTTools$matchExprOnName(name),
-			exprs);
-	});
-var $elm$core$List$singleton = function (value) {
-	return _List_fromArray(
-		[value]);
-};
-var $toastal$either$Either$unwrap = F3(
-	function (d, f, e) {
-		if (e.$ === 'Left') {
-			return d;
-		} else {
-			var a = e.a;
-			return f(a);
-		}
-	});
-var $toastal$either$Either$toListVia = function (f) {
-	return A2(
-		$toastal$either$Either$unwrap,
-		_List_Nil,
-		A2($elm$core$Basics$composeR, f, $elm$core$List$singleton));
-};
-var $toastal$either$Either$toList = $toastal$either$Either$toListVia($elm$core$Basics$identity);
-var $author$project$PDF$getImageUrls = function (syntaxTree) {
-	return $elm_community$maybe_extra$Maybe$Extra$values(
-		A2(
-			$elm$core$List$map,
-			$elm$core$Maybe$andThen($author$project$PDF$extractUrl),
-			A2(
-				$elm$core$List$map,
-				A2(
-					$elm$core$Basics$composeR,
-					$author$project$Compiler$ASTTools$getText,
-					$elm$core$Maybe$map($elm$core$String$trim)),
-				A2(
-					$author$project$Compiler$ASTTools$filterExpressionsOnName,
-					'image',
-					$elm$core$List$concat(
-						$elm$core$List$concat(
-							A2(
-								$elm$core$List$map,
-								function (_v0) {
-									var content = _v0.a.content;
-									return $toastal$either$Either$toList(content);
-								},
-								$elm$core$List$concat(
-									A2($elm$core$List$map, $zwilias$elm_rosetree$Tree$flatten, syntaxTree)))))))));
-};
-var $author$project$Text$info = '\n\n| title\nAbout the Scripta compiler\n\n| contents\n\n[tags jxxcarlson:about-the-scripta-compiler]\n\n| runninghead\n[link Scripta.io https://scripta.io]\n\n\n| section 1 -\nWhat it is\n\nThe Scripta compiler transforms source text to HTML, where\nthe source text is one of the following markup languages:\n\n| item\nL0 — an experimental language with syntax inspired by Lisp.\nCan render LaTeX-style\nmathematical text.  This document is written in L0.\n\n| item\nMicroLaTeX — a cousin of LaTeX.  Source text can be exported\nto standard LaTeX\n\n| item\nXMarkdown — a cousin of Markdown.  Can render LaTeX-style\nmathematical text.\n\n\nThe Scripta compiler features real-time, fault-tolerant\nparsing and rendering, and so is suitable for an interactive\nediting system in which (a) changes to the source text\nare rendered "instantly," that is, with no perceptible delay,\nand (b) syntax errors are handled gracefully, marked as such\nin the rendered text, and with the following text rendered\nproperly to the greatest extent possible.\n\n\n| section 1 -\nOpen source\n\nThe Scripta compiler is open-source, and can be found at\n[link github.com/jxxcarlson/scripta-compiler  https://github.com/jxxcarlson/scripta-compiler].  In the Example\nfolder, you will find a small demo app.  It is hosted online\nat [link Github https://jxxcarlson.github.io/app/scripta-compiler-demo/assets/index.html].\n\nThe Scripta compiler is used to power\n[link Scripta.io https://scripta.io].  It features\ninteractive editing, a searchable store of documents,\nand facilities for collaboration and web publishing.\n\n\n| section 1 -\nCode\n\nIf you are interested in looking at the code, there are two\ngood places to start. The first is `compiler/Scripta/API.elm`.\nThe second is the folder `compiler/L0/Parser/` especially\nthe file `compiler/L0/Parser/Expression`.  The latter\nis the shift-reduce parser used for L0, the simplest\nof the three markup languages considered.\n\nA notable feature of the Scripta compiler is that\nall three markup languages use a common expression\ntype and parse to a common type (a list of syntax trees)\n\n|| code\ntype Expr\n    = Fun String (List Expr) Meta\n    | Text String Meta\n    | Verbatim String String Meta\n\nThe three variants of this type align with the three\nsyntactic elements of `L0`:\n\n| item\nFunction elements, e.g. `[italic This is italic text]`,\nwhich are bounded on left and right by brackets.\n\n| item\nStretches of pure text,\n\n| item\nVerbatim elements, which are bounded by\ndollar signs or by backtics, for inline\nmathematical text and inline code,\nrespectively.\n\n\n| section 1 -\nStatus and Roadmap\n\nThe Scripta compiler is serviceable — I\'ve used to to write\n[link these class notes https://scripta.io/s/jxxcarlson:wave-packets-dispersion], for example.\nThat said, there is still a great deal to be done. Please send bug reports,\nfeature requests, and comments in general to me at jxxcarlson (gmail).\nI am on the Elm Slack and Github as jxxcarlson and on Twitter as @epsilon2718.\n\n';
-var $author$project$Text$l0Demo = '\n| title\nDemo (L0)\n\n| banner\n[link Scripta.io https://scripta.io]\n\n| contents\n\n| section 1\nImages\n\n|| hide\n[image https://nas-national-prod.s3.amazonaws.com/styles/hero_image/s3/web_h_apa_2016-a1_2474_8_cedar-waxwing_peter_brannon_kk_female.jpg?itok=VdeVVmGA]\n\n[image https://www.birdsandblooms.com/wp-content/uploads/2018/10/BNBbyc18_patricia-warren.jpg width:400]\n\n\n| section 1\nMath\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n[bold Tip:] Click on a section title to go back to the table of contents.\n\n';
-var $elm$core$Platform$Cmd$map = _Platform_map;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$PDF$ChangePrintingState = function (a) {
 	return {$: 'ChangePrintingState', a: a};
 };
@@ -20339,11 +20670,6 @@ var $elm$http$Http$jsonBody = function (value) {
 		A2($elm$json$Json$Encode$encode, 0, value));
 };
 var $author$project$PDF$pdfServUrl = 'https://pdfServ.app/pdf/';
-var $author$project$PDF$prepareContent = F3(
-	function (currentTime, settings, syntaxTree) {
-		var contentForExport = A3($author$project$Render$Export$LaTeX$export, currentTime, settings, syntaxTree);
-		return contentForExport;
-	});
 var $elm$http$Http$Request = function (a) {
 	return {$: 'Request', a: a};
 };
@@ -20512,9 +20838,9 @@ var $elm$http$Http$request = function (r) {
 };
 var $author$project$PDF$pdfCmd = F3(
 	function (currentTime, settings, syntaxTree) {
-		var imageUrls = $author$project$PDF$getImageUrls(syntaxTree);
+		var imageUrls = $author$project$Scripta$API$getImageUrls(syntaxTree);
 		var fileName = $author$project$Scripta$API$fileNameForExport(syntaxTree);
-		var contentForExport = A3($author$project$PDF$prepareContent, currentTime, settings, syntaxTree);
+		var contentForExport = A3($author$project$Scripta$API$prepareContentForExport, currentTime, settings, syntaxTree);
 		return $elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -20554,9 +20880,9 @@ var $author$project$PDF$GotTarFile = function (a) {
 var $author$project$PDF$tarArchiveUrl = 'https://pdfServ.app/tar/';
 var $author$project$PDF$tarCmd = F3(
 	function (currentTime, settings, syntaxTree) {
-		var imageUrls = $author$project$PDF$getImageUrls(syntaxTree);
+		var imageUrls = $author$project$Scripta$API$getImageUrls(syntaxTree);
 		var fileName = $author$project$Scripta$API$fileNameForExport(syntaxTree);
-		var contentForExport = A3($author$project$PDF$prepareContent, currentTime, settings, syntaxTree);
+		var contentForExport = A3($author$project$Scripta$API$prepareContentForExport, currentTime, settings, syntaxTree);
 		return $elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -20576,7 +20902,7 @@ var $author$project$PDF$tarCmd = F3(
 					})
 				]));
 	});
-var $author$project$Text$testFile = '\n\n\\title{Wave Packets and the Dispersion Relation}\n\n\\tags{jxxcarlson:wave-packets-dispersion, quantum-mechanics, system:startup, folder:krakow}\n\n\n\\contents\n\n| banner\n\\link{Quantum Mechanics Notes https://scripta.io/s/jxxcarlson:quantum-mechanics-notes}\n\n| setcounter 2\n\n\\tags{system:startup jxxcarslon:wave-packets-dispersion}\n\n\\image{https://psurl.s3.amazonaws.com/images/jc/sinc2-bcbf.png  caption:Wave packet width:300}\n\n\\section{Introduction}\n\nAs we have seen with the sinc packet, wave packets can be localized in space.  A key feature of such packets is their \\term{group velocity} $v_g$.\n\n\n\nThis is the velocity which which the "body" of the wave packet travels.  Now a wave packet is synthesized by superposing many plane waves, so the natural question is how is the group velocity of the packet related to the phase velocities of its constituent plane waves.  We will answer this first in the simplest possible situation -- a superposition of two sine waves.  Next, we will reconsider the case of the sinc packet.  Finally, we will study a more realistic approximation to actual wave packets which gives insight into the manner and speed with which wave packets change shape as they evolve in time.  We end by applying this to an electron in a thought experiment in which it has been momentarily confned to an atom-size box -- about one Angstrom, or\n$10^{-10} \\text{ meter}$.\n\n\n\n\\section{A two-frequency packet: beats!!!!}\n\n\\image{https://psurl.s3.amazonaws.com/images/jc/beats-eca1.png width:300 caption: Two-frequency beats}\n\nConsider a wave\n$\\psi = \\psi_1 + \\psi_2$ which is the sum of two terms with slightly different frequencies.  If the waves are sound waves, then then what one will hear is a pitch that corresponding to the average of the two frequencies modulated in such a way that the volume goes up and down at a frequency corresponding to their difference.\n\nLet us analyze this phenomenon mathematically, setting\n\n\n\n\\begin{equation}\n\\psi_1(x,t)  = \\cos((k - \\Delta k/2)x - (\\omega - \\Delta \\omega/2)t)\n\\end{equation}\n\nand\n\n\\begin{equation}\n\\psi_2(x,t)  = \\cos((k + \\Delta k/2)x - (\\omega + \\Delta \\omega/2)t)\n\\end{equation}\n\nBy the addition law for the sine, this can be rewritten as\n\n\\begin{equation}\n\\psi(x,t) = 2\\sin(kx - \\omega t)\\sin((\\Delta k)x - (\\Delta \\omega)t)\n\\end{equation}\n\n\nThe resultant wave -- the sum -- consists of of a high-frequency sine wave oscillating according to the average of the component wave numbers and angular frequencies, modulated by a cosine factor that oscillates according to the difference of the wave numbers and the angular frequencies, respectively.  The velocity associated to the high frequency factor is\n\n\\begin{equation}\nv_{phase} = \\frac{\\omega}{k},\n\\end{equation}\n\nwhereas the velocity associated with the low-frequency factor is\n\n\\begin{equation}\nv_{group} = \\frac{\\Delta \\omega}{\\Delta k}\n\\end{equation}\n\nThis is the simplest situation in which one observes the phenomenon of the group velocity.  Take a look at this \\href{https://galileo.phys.virginia.edu/classes/109N/more_stuff/Applets/wavepacket/wavepacket.html}{animation}.\n\n\n\\section{Step function approximation}\n\nWe will now find an an approximation to\n\n\\begin{equation}\n\\psi(x,t) = \\int_{-\\infty}^\\infty a(k) e^{i(kx - \\omega(k)t)} dk\n\\end{equation}\n\nunder the assumption that $a(k)$ is nearly constant over an interval from $k_0 -\\Delta k/2$ to $k_0 + \\Delta k/2$ and that outside of that interval it approaches zero at a rapid rate.  In that case the Fourier integral is approximated by\n\n\\begin{equation}\n\\int_{k_0 - \\Delta k/2}^{k_0 + \\Delta k/2}  a(k_0)e^{i((k_0 + (k - k_0)x - (\\omega_0t + \\omega_0\'(k - k_0)t))}dk,\n\\end{equation}\n\nwhere $\\omega_0 = \\omega(k_0)$ and $\\omega_0\' = \\omega\'(k_0)$.\nThis integral can be written as a product $F(x,t)S(x,t)$, where the first factor is "fast" and the second is "slow."  The fast factor is just\n\n\\begin{equation}\nF(x,t) = a(k_0)e^{ i(k_0x - \\omega(k_0)t) }\n\\end{equation}\n\nIt travels with velocity $v_{phase} = \\omega(k_0)/k_0$.  Setting $k; = k- k_0$, the slow factor is\n\n\\begin{equation}\nS(x,t) = \\int_{-\\Delta k/2}^{\\Delta k/2} e^{ik\'\\left(x - \\omega\'(k_0)t\\right)} dk\',\n\\end{equation}\n\nThe slow factor be evaluated explicitly:\n\n\\begin{equation}\nI = \\int_{-\\Delta k/2}^{\\Delta k/2} e^{ik\'u} dk\' = \\frac{1}{iu} e^{ik\'u}\\Big\\vert_{k\' = - \\Delta k/2}^{k\' = +\\Delta k/2}.\n\\end{equation}\n\nWe find that\n\n\\begin{equation}\nI = \\Delta k\\thinspace \\text{sinc}\\frac{\\Delta k}{2}u\n\\end{equation}\n\nwhere $\\text{sinc } x = (\\sin x )/x$.  Thus the slow factor is\n\n\\begin{equation}\nS(x,t) = \\Delta k\\, \\text{sinc}(  (\\Delta k/2)(x - \\omega\'(k_0)t)  )\n\\end{equation}\n\n\nPutting this all together, we have\n\n\\begin{equation}\n\\psi(x,t) \\sim a(k_0)\\Delta k_0\\, e^{i(k_0x - \\omega(k_0)t)}\\text{sinc}(  (\\Delta k/2)(x - \\omega\'(k_0)t)  )\n\\end{equation}\n\nThus the body of the sinc packet moves steadily to the right at velocity $v_{group} = \\omega\'(k_0)$\n\n\n\\section{Gaussian approximation}\n\nThe approximation used in the preceding section is good enough to capture and explain the group velocity of a wave packet.  However, it is not enough to explain how wave packets change shape as they evolve with time.  To understand this phenomenon, we begin with  an arbitrary packet\n\n\\begin{equation}\n\\psi(x,t) = \\int_{\\infty}^\\infty a(k) e^{i\\phi(k)}\\,dk,\n\\end{equation}\n\nwhere $\\phi(k) = kx - \\omega(k)t$.  We shall assume that the spectrum $a(k)$ is has a maximum at $k = k_0$ and decays fairly rapidly away from the maximum.  Thus we assume that the Gaussian function\n\n\\begin{equation}\na(k) = e^{ -(k-k_0)^2/ 4(\\Delta k)^2}\n\\end{equation}\n\nis a good approximation.  To analyze the Fourier integral\n\n\\begin{equation}\n\\psi(x,t) = \\int_{-\\infty}^{\\infty} e^{ -(k-k_0)^2/ 4(\\Delta k)^2} e^{i(kx - \\omega(k) t)},\n\\end{equation}\n\nwe expand $\\omega(k)$ in a Taylor series up to order two, so that\n\n\\begin{equation}\n\\phi(k) = k_0x + (k - k_0)x - \\omega_0t - \\frac{d\\omega}{dk}(k_0) t- \\frac{1}{2}\\frac{ d^2\\omega }{ dk^2 }(k_0)( k - k_0)^2 t\n\\end{equation}\n\nWriting $\\phi(k) = k_0x - \\omega_0t + \\phi_2(k,x,t)$, we find that\n\n\\begin{equation}\n\\psi(x,t) = e^{i(k_0x - \\omega_0 t)} \\int_{-\\infty}^{\\infty} e^{ -(k-k_0)^2/ 4(\\Delta k)^2} e^{i\\phi_2(k,x,t)}.\n\\end{equation}\n\nMake the change of variables $k - k_0 = 2\\Delta k u$, and write $\\phi_2(k,x,t) = Q(u,x,t)$, where $Q$ is a quadratic polynomial in $u$ of the form $au + b$. One finds that\n\n\\begin{equation}\na = -(1 + 2i\\alpha t  (\\Delta k)^2),\n\\end{equation}\n\nwhere\n\n\\begin{equation}\n\\alpha = \\frac{ d^2\\omega }{ dk^2 }(k_0)\n\\end{equation}\n\nOne also finds that\n\n\\begin{equation}\nb = 2i\\Delta k(x - v_g t),\n\\end{equation}\n\nwhere $v_g = d\\omega/dk$ is the group velocity.  The integral is a standard one, of the form\n\n\\begin{equation}\n\\int_{-\\infty}^\\infty e^{- au^2 + bu} = \\sqrt{\\frac{\\pi}{a}}\\; e^{ b^2/4a }.\n\\end{equation}\n\nUsing this integral  formula and the reciprocity $\\Delta x\\Delta k = 1/2$, which we may take as a definition of $\\Delta x$, we find, after some algebra, that\n\n\\begin{equation}\n\\psi(x,t) \\sim A e^{-B} \\,e^{i(k_0 - \\omega_0t)}\n,\n\\end{equation}\n\nwhere\n\n\\begin{equation}\nA = 2\\Delta k \\sqrt{\\frac{\\pi}{1 + 2i\\alpha \\Delta k^2 t}}\n\\end{equation}\n\nand\n\n\\begin{equation}\nB = \\frac{( x-v_gt )^2 (1 - 2i\\alpha \\Delta k^2 t)}{4\\sigma^2}\n\\end{equation}\n\nwith\n\n\\begin{equation}\n\\sigma^2 = \\Delta x^2 + \\frac{\\alpha^2 t^2}{4 \\Delta x^2}\n\\end{equation}\n\nLook at the expression $B$. The first factor in the numerator controls the motion of motion of the packet and is what guides it to move with group velocity $v_g$.  The second factor is generally a small real term and a much larger imaginary one, and so only affects the phase.  The denominator controls the width of the packet, and as we can see, it increases with $t$ so long as $\\alpha$, the second derivative of $\\omega(k)$ at the center of the packet, is nonzero.\n\n\\section{The electron!}\n\nLet us apply what we have learned to an electron which has been confined to a box about the size of an atom, about $10^{-10}$ meters. That is, $\\Delta x \\sim 10^{-10}\\text{ m}$.  The extent of its wave packet will double when\n\n\\begin{equation}\n\\frac{\\alpha^2 t^2}{4 \\Delta x^2} \\sim \\Delta x^2,\n\\end{equation}\n\nthat is, after a time\n\n\\begin{equation}\nt_{double} \\sim \\frac{\\Delta x^2}{\\alpha}\n\\end{equation}\n\nThe dispersion relation for a free particle is\n\n\\begin{equation}\n\\omega(k) = \\hbar \\frac{k^2}{2m},\n\\end{equation}\n\nso that $\\alpha = \\hbar/m$.  Then\n\n\\begin{equation}\nt_{double} \\sim \\frac{m}{h}\\, \\Delta x^2 .\n\\end{equation}\n\nIn the case of our electron, we find that $t_{double} \\sim 10^{-16}\\,\\text{sec}$.\n\n\\section{ Code}\n\n\\begin{code}\n  # jupyter/python\n\n\n  matplotlib inline\n\n  # code for sinc(x)\n  import numpy as np\n  import matplotlib.pyplot as plt\n\n  # sinc function\n  x = np.arange(-30, 30, 0.1);\n  y = np.sin(x)/x\n  plt.plot(x, y)\n\n  # beats\n  x = np.arange(-50, 250, 0.1);\n  y = np.cos(0.5*x) + np.sin(0.55*x)\n  plt.plot(x, y)\n\\end{code}\n\n\n\n\\section{References}\n\n\n\\bibitem{QM}\n\\link{Quantum Mechanics for Engineers: Wave Packets https://www.eng.fsu.edu/~dommelen/quantum/style_a/packets.html}\n\n\n\n\\bibitem{WP}\n\\link{Wave Packets, Harvard Physics https://users.physics.harvard.edu/~schwartz/15cFiles/Lecture11-WavePackets.pdf}\n\n\\bibitem{TE}\n\\link{Time evolution in QM - MIT https//ocw.mit.edu/courses/nuclear-engineering/22-02-introduction-to-applied-nuclear-physics-spring-2012/lecture-notes/MIT22_02S12_lec_ch6.pdf}\n\n\n';
+var $author$project$Text$testFile = '\n\\title{Test Math Macros (MicroLaTeX)}\n\n\\tags{jxxcarlson:test-math-macros-microlatex, folder:scripta}\n\n|| mathmacros\n\\newcommand{\\cat}[1]{\\mathcal{#1}}\n\\newcommand{\\foo}[1]{a_{#1}}\n\\newcommand{\\op}[1]{\\mathop{\\text{#1}}}\n\\newcommand{\\bool}{\\mathop{\\text{Bool}}}\n\\newcommand{\\Type}{\\mathop{\\mathcal{U}}}\n\n\nFrom old type theory notes\n\n\n$$\ntrue : \\bool \\qquad \\bool : \\Type\n$$\n\n\n\n$$\n\\frac{\\Gamma \\vdash \\bool}{\\bool : \\Type}\n$$\n\nMacro expansion in superscript:\n\n$$\na^{\\cat{C}^{op}}\n$$\n\nMacro expansion in nested superscript:\n\n$$\na^{\\cat{C}^{\\cat{C}^{op}}}\n$$\n\n\n1: $\\red{\\cal{A}}$,\n2: $\\cal{\\red{A}}$\n3: $\\foo{x}$,\n4: $\\foo{\\cal{C}}$\n';
 var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$Compiler$Differ$DiffRecord = F4(
 	function (commonInitialSegment, commonTerminalSegment, middleSegmentInSource, middleSegmentInTarget) {
@@ -20686,7 +21012,7 @@ var $author$project$Compiler$DifferentialParser$update = F2(
 			text);
 	});
 var $author$project$Scripta$API$update = $author$project$Compiler$DifferentialParser$update;
-var $author$project$Text$xMarkdown = '\n| title\nDemo (XMarkdown)\n\n| banner\n[Scripta.io](https://scripta.io)\n\n| contents\n\n# Images\n\n![Yellow bird](https://i.ibb.co/XFzZYby/image.png width:400)\n\n# Math\n\nPythagoras says: $a^2 + b^2 = c^2$\n\nFrom calculus:\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n*Tip:* Click on a section title to go back to the table of contents.\n\n';
+var $author$project$Text$xMarkdown = '\n| title\nXMarkdown Visual Check\n\n| contents\n\n\n\n\n@[tags check]\n\n\n# Typography\n\n\nSome *italic* and  **bold** text.  @[blue Blue stuff.]\n(Cool, no!)\n\n\n# Link\n\n[New York Times](https://nytimes.com)\n\n# Image\n\n\n\n![Bird](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhXplhW5-ydbNOJiJe1fp7oAM9xjRwX28ung&usqp=CAU)\n\n# Mathematics\n\nThis is a formula: $a^2 + b^2 = c^2$.\n\n## Displayed formula\n\n$$\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n$$\n\n\n## Numbered formula\n\n|| equation\n\\int_0^1 x^n dx = \\frac{1}{n+1}\n\n## Aligned equations\n\n\n|| aligned\n\\label{foo}\na &= b + 1 \\\\\nc &= a^2 \\\\\n &= b^2 + 2b + 1 \\\\\n\n\n## Theorems\n\n| theorem\nThere are infinitely many primes $p \\equiv 1\\ mod\\ 4$. Isn\'t that nice?\n\n\n# Code\n\nSome inline code `a[0] := a[0] + 1`.  A block of code:\n\n```\n# multiplication table\n  for x in range(1, 11):\n      for y in range(1, 11):\n          print(\'%d ** %d = %d\' % (x, y, x**y)\n```\n\nHere is the source text:\n\n|| code\n```\n# multiplication table\n  for x in range(1, 11):\n      for y in range(1, 11):\n          print(\'%d ** %d = %d\' % (x, y, x**y)\n```\n\n# Bulleted Lists\n\n- One\n\n- Two\n\n  - Alpha\n\n  - Beta\n\n    - Ho ho ho!\n\n    - Ha ha !\n\n\n# Numbered Lists\n\n\n. One\n\n. Two\n\n  . Alpha\n\n  . Beta\n\n    . Ho ho ho!\n\n    . Ha ha!\n';
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -20783,14 +21109,14 @@ var $author$project$Main$update = F2(
 					defaultSettings_,
 					{isStandaloneDocument: true});
 				if (_Utils_eq(
-					$author$project$PDF$getImageUrls(model.editRecord.parsed),
+					$author$project$Scripta$API$getImageUrls(model.editRecord.parsed),
 					_List_Nil)) {
 					var fileName = $author$project$Scripta$API$fileNameForExport(model.editRecord.parsed);
 					var defaultSettings = $author$project$Scripta$API$defaultSettings;
 					var exportSettings = _Utils_update(
 						defaultSettings,
 						{isStandaloneDocument: true});
-					var exportText = A3($author$project$Scripta$API$export, model.currentTime, exportSettings, model.editRecord.parsed);
+					var exportText = A3($author$project$Scripta$API$prepareContentForExport, model.currentTime, exportSettings, model.editRecord.parsed);
 					return _Utils_Tuple2(
 						model,
 						A2($author$project$Main$download, fileName, exportText));
@@ -28377,7 +28703,13 @@ var $author$project$Parser$MathMacro$expandMacroWithDict = F2(
 				var args = expr.b;
 				var _v1 = A2($elm$core$Dict$get, macroName, dict);
 				if (_v1.$ === 'Nothing') {
-					return expr;
+					return A2(
+						$author$project$Parser$MathMacro$Macro,
+						macroName,
+						A2(
+							$elm$core$List$map,
+							$author$project$Parser$MathMacro$expandMacroWithDict(dict),
+							args));
 				} else {
 					var _v2 = _v1.a;
 					var k = _v2.a;
@@ -28545,6 +28877,7 @@ var $author$project$Parser$MathMacro$evalStr = F2(
 			$elm$core$String$trim(str));
 		if (_v0.$ === 'Ok') {
 			var result = _v0.a;
+			var _v1 = result;
 			return $author$project$Parser$MathMacro$printList(
 				A2(
 					$elm$core$List$map,
@@ -29316,6 +29649,12 @@ function $author$project$Render$Elm$cyclic$markupDict() {
 				F4(
 					function (g, acc, s, exprList) {
 						return A4($author$project$Render$Elm$italic, g, acc, s, exprList);
+					})),
+				_Utils_Tuple2(
+				'bi',
+				F4(
+					function (g, acc, s, exprList) {
+						return A4($author$project$Render$Elm$boldItalic, g, acc, s, exprList);
 					})),
 				_Utils_Tuple2(
 				'i',
@@ -39038,25 +39377,81 @@ var $author$project$Render$Graphics$quiver = F6(
 					]));
 		}
 	});
-var $author$project$Render$Block$renderVerbatimLine = function (str) {
-	return ($elm$core$String$trim(str) === '') ? A2(
-		$mdgriffith$elm_ui$Element$el,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$height(
-				$mdgriffith$elm_ui$Element$px(11))
-			]),
-		$mdgriffith$elm_ui$Element$text('')) : A2(
-		$mdgriffith$elm_ui$Element$el,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$height(
-				$mdgriffith$elm_ui$Element$px(22))
-			]),
-		$mdgriffith$elm_ui$Element$text(str));
-};
+var $author$project$Render$Block$cyan = $mdgriffith$elm_ui$Element$Font$color(
+	A3($mdgriffith$elm_ui$Element$rgb255, 11, 143, 158));
+var $author$project$Render$Block$green = $mdgriffith$elm_ui$Element$Font$color(
+	A3($mdgriffith$elm_ui$Element$rgb255, 11, 158, 26));
+var $author$project$Render$Block$orange = $mdgriffith$elm_ui$Element$Font$color(
+	A3($mdgriffith$elm_ui$Element$rgb255, 227, 81, 18));
+var $author$project$Render$Block$elmDict = $elm$core$Dict$fromList(
+	_List_fromArray(
+		[
+			_Utils_Tuple2('type', $author$project$Render$Block$orange),
+			_Utils_Tuple2('LB', $author$project$Render$Block$green),
+			_Utils_Tuple2('RB', $author$project$Render$Block$green),
+			_Utils_Tuple2('S', $author$project$Render$Block$green),
+			_Utils_Tuple2('String', $author$project$Render$Block$green),
+			_Utils_Tuple2('Meta', $author$project$Render$Block$cyan)
+		]));
+var $author$project$Render$Block$renderedColoredWord = F2(
+	function (lang, word) {
+		if (lang === 'elm') {
+			var _v1 = A2($elm$core$Dict$get, word, $author$project$Render$Block$elmDict);
+			if (_v1.$ === 'Just') {
+				var color = _v1.a;
+				return A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[color]),
+					$mdgriffith$elm_ui$Element$text(word + ' '));
+			} else {
+				return A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_Nil,
+					$mdgriffith$elm_ui$Element$text(word + ' '));
+			}
+		} else {
+			return A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_Nil,
+				$mdgriffith$elm_ui$Element$text(word + ' '));
+		}
+	});
+var $author$project$Render$Block$renderedColoredLine = F2(
+	function (lang, str) {
+		return A2(
+			$elm$core$List$map,
+			$author$project$Render$Block$renderedColoredWord(lang),
+			$elm$core$String$words(str));
+	});
+var $author$project$Render$Block$renderVerbatimLine = F2(
+	function (lang, str) {
+		return ($elm$core$String$trim(str) === '') ? A2(
+			$mdgriffith$elm_ui$Element$el,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$height(
+					$mdgriffith$elm_ui$Element$px(11))
+				]),
+			$mdgriffith$elm_ui$Element$text('')) : ((lang === 'plain') ? A2(
+			$mdgriffith$elm_ui$Element$el,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$height(
+					$mdgriffith$elm_ui$Element$px(22))
+				]),
+			$mdgriffith$elm_ui$Element$text(str)) : A2(
+			$mdgriffith$elm_ui$Element$paragraph,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$height(
+					$mdgriffith$elm_ui$Element$px(22))
+				]),
+			A2($author$project$Render$Block$renderedColoredLine, lang, str)));
+	});
 var $author$project$Render$Block$renderCode = F6(
-	function (_v0, _v1, _v2, _v3, id, str) {
+	function (_v0, _v1, _v2, args, id, str) {
+		var _v3 = $elm$core$List$head(args);
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -39074,18 +39469,31 @@ var $author$project$Render$Block$renderCode = F6(
 					$author$project$Render$Msg$SendId(id)),
 					A2($author$project$Render$Utility$elementAttribute, 'id', id)
 				]),
-			A2(
-				$elm$core$List$map,
-				$author$project$Render$Block$renderVerbatimLine,
-				$elm$core$String$lines(
-					$elm$core$String$trim(str))));
+			function () {
+				var _v4 = $elm$core$List$head(args);
+				if (_v4.$ === 'Just') {
+					var arg = _v4.a;
+					return A2(
+						$elm$core$List$map,
+						$author$project$Render$Block$renderVerbatimLine(arg),
+						$elm$core$String$lines(
+							$elm$core$String$trim(str)));
+				} else {
+					return A2(
+						$elm$core$List$map,
+						$author$project$Render$Block$renderVerbatimLine('plain'),
+						$elm$core$String$lines(
+							$elm$core$String$trim(str)));
+				}
+			}());
 	});
 var $author$project$Render$Block$renderNothing = F6(
 	function (_v0, _v1, _v2, _v3, _v4, _v5) {
 		return $mdgriffith$elm_ui$Element$none;
 	});
 var $author$project$Render$Block$renderVerbatim = F6(
-	function (_v0, _v1, _v2, _v3, id, str) {
+	function (_v0, _v1, _v2, args, id, str) {
+		var _v3 = $elm$core$List$head(args);
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -39103,11 +39511,23 @@ var $author$project$Render$Block$renderVerbatim = F6(
 					$author$project$Render$Msg$SendId(id)),
 					A2($author$project$Render$Utility$elementAttribute, 'id', id)
 				]),
-			A2(
-				$elm$core$List$map,
-				$author$project$Render$Block$renderVerbatimLine,
-				$elm$core$String$lines(
-					$elm$core$String$trim(str))));
+			function () {
+				var _v4 = $elm$core$List$head(args);
+				if (_v4.$ === 'Just') {
+					var lang = _v4.a;
+					return A2(
+						$elm$core$List$map,
+						$author$project$Render$Block$renderVerbatimLine(lang),
+						$elm$core$String$lines(
+							$elm$core$String$trim(str)));
+				} else {
+					return A2(
+						$elm$core$List$map,
+						$author$project$Render$Block$renderVerbatimLine('none'),
+						$elm$core$String$lines(
+							$elm$core$String$trim(str)));
+				}
+			}());
 	});
 var $author$project$Render$Block$renderVerse = F6(
 	function (_v0, _v1, _v2, _v3, id, str) {
@@ -39121,7 +39541,7 @@ var $author$project$Render$Block$renderVerse = F6(
 				]),
 			A2(
 				$elm$core$List$map,
-				$author$project$Render$Block$renderVerbatimLine,
+				$author$project$Render$Block$renderVerbatimLine('plain'),
 				$elm$core$String$lines(
 					$elm$core$String$trim(str))));
 	});
