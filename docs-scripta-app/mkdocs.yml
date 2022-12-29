@@ -10,7 +10,6 @@ theme: readthedocs
 nav:
   - Home: 'index.md'
   - Mkdocs Info: 'mkdocs-info.md'
-  - About: 'about.md'
   - Lamdera: 'lamdera.md'
   - The L0 Markup Language: 'L0.md'
   - Collection Documents: 'collectionDocs.md'

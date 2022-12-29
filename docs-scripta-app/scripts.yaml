@@ -1,4 +1,6 @@
 scripts:
 
-  update-site: cp -r * site/ /Users/carlson/dev/jxxcarlson.github.io/docs-scripta-app/
+  update-site:
+    - mkdocs build
+    - cp -r * site/ /Users/carlson/dev/jxxcarlson.github.io/docs-scripta-app/
   
