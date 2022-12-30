@@ -3,18 +3,18 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://example.com/smartfolders/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://example.com/newdocs/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Smart Folders - Scripta Docs</title>
+    <title>Making a New Document - Scripta Docs</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Smart Folders";
-        var mkdocs_page_input_path = "smartfolders.md";
-        var mkdocs_page_url = "/smartfolders/";
+        var mkdocs_page_name = "Making a New Document";
+        var mkdocs_page_input_path = "newdocs.md";
+        var mkdocs_page_url = "/newdocs/";
       </script>
     
     <script src="../js/jquery-3.6.0.min.js" defer></script>
@@ -56,16 +56,18 @@
                 <li class="toctree-l1"><a class="reference internal" href="../L0/">The L0 Markup Language</a>
                 </li>
               </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../newdocs/">Making a New Document</a>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Making a New Document</a>
+    <ul class="current">
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../collectionDocs/">Collection Documents</a>
                 </li>
               </ul>
-              <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="./">Smart Folders</a>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../smartfolders/">Smart Folders</a>
                 </li>
               </ul>
       </div>
@@ -82,7 +84,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
-      <li>Smart Folders</li>
+      <li>Making a New Document</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -91,38 +93,34 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <p>Sample smart folder:</p>
-<p>Old style:</p>
-<pre><code class="language-text">| title
-Jim
-
-[tags :folder]
-
-| type folder get:jim ; 
-
-</code></pre>
-<p>New style:</p>
-<pre><code class="language-text">| title
-Jim
-
-[tags :folder, gettag:jim]
-
-</code></pre>
-<pre><code>| title
-Dylan
-
-[tags :folder, gettag:dylan]
-
-| type folder get:dylan ; 
-</code></pre>
-<pre><code class="language-elm">makeSmartDocCommand : Document -&gt; Bool -&gt; String -&gt; Command FrontendOnly ToBackend FrontendMsg
-makeSmartDocCommand doc allowOpenFolder currentUserName
-</code></pre>
+                <h1 id="making-a-new-document">Making a New Document</h1>
+<p>A new document may stand by itself or be intended as a
+member of an existing smart folder or collection of 
+documents.  The <code>Frontend.Update.newDocument</code> must
+take into account these eventualities:</p>
+<ul>
+<li>
+<p>Suppose that the current master document is a smart folder.
+  Then creation of a new document should attach that document
+  to the smart folder.  See <code>refreshSmartFolderCmd</code>.</p>
+</li>
+<li>
+<p>Suppose that the current master document is a collection
+  and that one of its members is the current document.
+  Then creation of a new document should add it to the collection,
+  and it should be positioned immediately after the
+  current document. See <code>updateCollectionCmd</code>.∫</p>
+</li>
+</ul>
+<p>In both cases, the new document should be the selected
+document in the index for the folder or collection (this
+is not currently the case.)</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../collectionDocs/" class="btn btn-neutral float-left" title="Collection Documents"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../L0/" class="btn btn-neutral float-left" title="The L0 Markup Language"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../collectionDocs/" class="btn btn-neutral float-right" title="Collection Documents">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -145,8 +143,10 @@ makeSmartDocCommand doc allowOpenFolder currentUserName
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../collectionDocs/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../L0/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
+    
+      <span><a href="../collectionDocs/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

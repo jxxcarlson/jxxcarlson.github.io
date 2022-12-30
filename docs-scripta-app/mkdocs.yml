@@ -12,6 +12,7 @@ nav:
   - Mkdocs Info: 'mkdocs-info.md'
   - Lamdera: 'lamdera.md'
   - The L0 Markup Language: 'L0.md'
+  - Making a New Document: 'newdocs.md'
   - Collection Documents: 'collectionDocs.md'
   - Smart Folders: 'smartfolders.md'
 
