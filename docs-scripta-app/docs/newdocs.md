@@ -13,7 +13,7 @@ take into account these eventualities:
   and that one of its members is the current document.
   Then creation of a new document should add it to the collection,
   and it should be positioned immediately after the
-  current document. See `updateCollectionCmd`.∫
+  current document. See `updateCollectionCmd`.
 
 In both cases, the new document should be the selected
 document in the index for the folder or collection (this
