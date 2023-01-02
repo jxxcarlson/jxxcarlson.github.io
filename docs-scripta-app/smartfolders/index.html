@@ -66,6 +66,12 @@
               </ul>
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Smart Folders</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#creating-a-smart-folder">Creating a Smart Folder</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sort-options">Sort options</a>
+    </li>
+    </ul>
                 </li>
               </ul>
       </div>
@@ -91,33 +97,49 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <p>Sample smart folder:</p>
-<p>Old style:</p>
+                <h1 id="smart-folders">Smart Folders</h1>
+<p>A smart folder is a way of automatically producing a collection
+document, where the documents in the collection are those
+(belonging to the user) with a specified tag.  Such a 
+collection is created at the backend by the function 
+<code>SmartFolder.makeCollectionDocumentCmd</code>.   This function
+is invoked indirectly from the frontend by the function
+<code>SmartFolder.makeCollectionDocument</code>.</p>
+<p>The format of a smart folder document is</p>
 <pre><code class="language-text">| title
-Jim
+Notes (Foo)
+
+[tags :folder, gettag:foo]
+</code></pre>
+<p>The resulting collection document will be populated by all of
+the user's documents tagged with "foo".
+The old format is for the time being still
+operational:</p>
+<pre><code class="language-text">| title
+Notes (Foo)
 
 [tags :folder]
 
-| type folder get:jim ; 
-
+| type folder get:foo ; 
 </code></pre>
-<p>New style:</p>
-<pre><code class="language-text">| title
-Jim
-
-[tags :folder, gettag:jim]
-
-</code></pre>
-<pre><code>| title
-Dylan
-
-[tags :folder, gettag:dylan]
-
-| type folder get:dylan ; 
-</code></pre>
-<pre><code class="language-elm">makeSmartDocCommand : Document -&gt; Bool -&gt; String -&gt; Command FrontendOnly ToBackend FrontendMsg
-makeSmartDocCommand doc allowOpenFolder currentUserName
-</code></pre>
+<h2 id="creating-a-smart-folder">Creating a Smart Folder</h2>
+<p>A smart folder is created by the function
+<code>SmartFolder.create</code>.  It creates the document
+and sends to to the backend via the message
+<code>CreateDocument</code>, which invokes the function
+<code>Backend.Document.create</code></p>
+<h2 id="sort-options">Sort options</h2>
+<p>The default sort option is to sort titles 
+alphabetically (A to Z).  The sort option
+may be changed by specifying a tag:</p>
+<ul>
+<li><code>sort:created-oldest-first</code></li>
+<li><code>sort:created-newest-first</code></li>
+<li><code>sort:modified-oldest-first</code></li>
+<li><code>sort:modified-newest-first</code></li>
+<li><code>sort:a-to-z</code></li>
+<li><code>sort:z-to-a</code></li>
+</ul>
               
             </div>
           </div><footer>

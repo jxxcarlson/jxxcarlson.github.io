@@ -1,41 +1,60 @@
+# Smart Folders
+
+A smart folder is a way of automatically producing a collection
+document, where the documents in the collection are those
+(belonging to the user) with a specified tag.  Such a 
+collection is created at the backend by the function 
+`SmartFolder.makeCollectionDocumentCmd`.   This function
+is invoked indirectly from the frontend by the function
+`SmartFolder.makeCollectionDocument`.
 
 
-Sample smart folder:
 
-Old style:
+The format of a smart folder document is
+
 ```text
 | title
-Jim
+Notes (Foo)
+
+[tags :folder, gettag:foo]
+```
+
+The resulting collection document will be populated by all of
+the user's documents tagged with "foo".
+The old format is for the time being still
+operational:
+
+```text
+| title
+Notes (Foo)
 
 [tags :folder]
 
-| type folder get:jim ; 
-
+| type folder get:foo ; 
 ```
 
-New style:
-```text
-| title
-Jim
+## Creating a Smart Folder
 
-[tags :folder, gettag:jim]
-
-```
-
+A smart folder is created by the function
+`SmartFolder.create`.  It creates the document
+and sends to to the backend via the message
+`CreateDocument`, which invokes the function
+`Backend.Document.create`
 
 
+## Sort options
 
-```
-| title
-Dylan
+The default sort option is to sort titles 
+alphabetically (A to Z).  The sort option
+may be changed by specifying a tag:
 
-[tags :folder, gettag:dylan]
+- `sort:created-oldest-first`
+- `sort:created-newest-first`
+- `sort:modified-oldest-first`
+- `sort:modified-newest-first`
+- `sort:a-to-z`
+- `sort:z-to-a`
 
-| type folder get:dylan ; 
-```
 
 
-```elm
-makeSmartDocCommand : Document -> Bool -> String -> Command FrontendOnly ToBackend FrontendMsg
-makeSmartDocCommand doc allowOpenFolder currentUserName
-```
+
