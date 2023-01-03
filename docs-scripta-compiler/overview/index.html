@@ -47,6 +47,8 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Overview</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#flowchart">Flowchart</a>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -122,6 +124,50 @@ is brought into view and highlighted.</p>
         , error : Maybe { error : String }
         }
 </code></pre>
+<h2 id="flowchart">Flowchart</h2>
+<p>The Scripta compiler transforms text into <code>Element Msg</code>
+through a series of stages, as illustrated in the 
+following figure. Below we describe these stages.</p>
+<p><img alt="Flowchart" src="../image/scripta-compiler-flowchart.jpg" /></p>
+<p>The first step is to break the source text into chunks,
+namely a list of so-called <em>primitive blocks</em>. Ignoring
+for the moment the possibility of diff records and 
+differential compilation, we traverse the left branch 
+of the diagram, the penultimate step of which is the 
+production of an <code>EditRecord</code>.  Data of this type
+is transformed into an Elm representation of Html
+by the function </p>
+<pre><code class="language-elm">render : Int -&gt; Accumulator -&gt; Settings -&gt; ExpressionBlock -&gt; Element MarkupMsg
+</code></pre>
+<p>of module <code>Block.Render</code>.</p>
+<pre><code class="language-elm">type alias EditRecord chunk parsedChunk accumulator =
+    { chunks : List chunk
+    , parsed : List parsedChunk
+    , tree : List (Tree parsedChunk)
+    , accumulator : accumulator
+    , lang : Language
+    , messages : List String
+    , initialData : InitialData
+    }
+</code></pre>
+<p>In the case of L0 and XMarkdown, a primitive
+block is defined by</p>
+<pre><code class="language-elm">type alias PrimitiveBlock =
+    { indent : Int
+    , lineNumber : Int
+    , position : Int
+    , content : List String
+    , name : Maybe String
+    , args : List String
+    , properties : Dict String String
+    , sourceText : String
+    , blockType : PrimitiveBlockType
+    , error : Maybe { error : String }
+    }
+</code></pre>
+<p>In the case of
+MicroLaTeX, there are two additional fields,
+<code>level: Int</code> and <code>status: Status</code>.  </p>
               
             </div>
           </div><footer>

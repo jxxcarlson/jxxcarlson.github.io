@@ -1,5 +1,7 @@
 # About the Scripta Compiler
 
+_(( This document is very much a work in progress. ))_
+
 The Scripta compiler translates source text written
 in a markup language to an Elm representation of Html.
 The markup languages supported are
@@ -8,9 +10,13 @@ The markup languages supported are
 - microLaTeX
 - XMarkdown
 
-See [Scripta.io](https://scripta.io) for a web app that
-uses the compiler.   A feature of the compiler
-is interactive, real-time editing with error recovery.
+For a very simple use of the Scripta compiler, see
+[Scripta-example1](https://jxxcarlson.github.io/scripta-compiler-example1).
+For its use in a real web app, see
+[Scripta.io](https://scripta.io).   
+
+The compiler
+provides interactive, real-time editing with error recovery.
 See the [overview](/overview/) for more information.
 
 This project has been partially supported by the 
