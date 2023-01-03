@@ -3,18 +3,18 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://example.com/lamdera/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://example.com/search/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Lamdera - Scripta Docs</title>
+    <title>Search - Scripta Docs</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Lamdera";
-        var mkdocs_page_input_path = "lamdera.md";
-        var mkdocs_page_url = "/lamdera/";
+        var mkdocs_page_name = "Search";
+        var mkdocs_page_input_path = "search.md";
+        var mkdocs_page_url = "/search/";
       </script>
     
     <script src="../js/jquery-3.6.0.min.js" defer></script>
@@ -48,10 +48,8 @@
                 <li class="toctree-l1"><a class="reference internal" href="../mkdocs-info/">Mkdocs Info</a>
                 </li>
               </ul>
-              <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="./">Lamdera</a>
-    <ul class="current">
-    </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../lamdera/">Lamdera</a>
                 </li>
               </ul>
               <ul>
@@ -70,8 +68,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../smartfolders/">Smart Folders</a>
                 </li>
               </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../search/">Search</a>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Search</a>
+    <ul class="current">
+    </ul>
                 </li>
               </ul>
       </div>
@@ -88,7 +88,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
-      <li>Lamdera</li>
+      <li>Search</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -97,25 +97,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="lamdera">Lamdera</h1>
-<p>As a guide to what follows, we describe briefly the 
-architecture of a Lamdera app.  The basic idea
-is that there is a frontend and a backend, the two 
-communicating via a message protocol over websockets.
-Thus, to fetch a document from the backend, the frontend
-may issue the command</p>
-<pre><code class="language-elm">Lamdera.sendToBackend (FetchDocumentById SimpleHandling doc.id)
+                <h1 id="search">Search</h1>
+<p>Searches are initiated by the <code>Search</code> clause of 
+<code>Frontend.update</code>.  This clause invokes <code>Frontend.Search.search model</code>
+which send the message</p>
+<pre><code class="language-elm">Types.SearchForDocuments StandardHandling model.currentUser model.inputSearchKey
 </code></pre>
-<p>The backend would then retrieve the document using the id,
-and if found, send it to the frontend via</p>
-<pre><code class="language-elm">Lamdera.sendToFrontend clientId (ReceivedDocument SimpledHandling document)
+<p>to the backend where
+<code>Backend.Search.withQuery</code> is called.  The real work is done by
+this function from module <code>TextSearch.Search</code> (jxxcarlson/elm-text-search):</p>
+<pre><code class="language-elm">match = matchWithQueryString identity Search.NotCaseSensitive query
 </code></pre>
+<p>Query strings for <code>Search.queryWithString</code> 
+look like <code>foo bar</code>, <code>foo -bar</code>, and <code>foo -bar | baz</code>.  The first
+will match strings contaning both <code>foo</code> and <code>bar</code>,
+the second will  match strings matching <code>foo</code> but not <code>bar</code>,
+and the third will match either strings matching <code>foo</code> but not <code>bar</code>
+or strings matching <code>baz</code>.  That is, the query string represents
+a logical expression in disjunctive normal form.</p>
+<p><em>NOTE. There are other ways of invoking a search.  We need more 
+order and less chaos here.</em></p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../mkdocs-info/" class="btn btn-neutral float-left" title="Mkdocs Info"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../L0/" class="btn btn-neutral float-right" title="The L0 Markup Language">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../smartfolders/" class="btn btn-neutral float-left" title="Smart Folders"><span class="icon icon-circle-arrow-left"></span> Previous</a>
     </div>
 
   <hr/>
@@ -138,17 +144,15 @@ and if found, send it to the frontend via</p>
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../mkdocs-info/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../smartfolders/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
-    
-      <span><a href="../L0/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
     <script>var base_url = '..';</script>
     <script src="../js/theme_extra.js" defer></script>
     <script src="../js/theme.js" defer></script>
-      <script src="../search/main.js" defer></script>
+      <script src="main.js" defer></script>
     <script defer>
         window.onload = function () {
             SphinxRtdTheme.Navigation.enable(true);
