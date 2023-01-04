@@ -24,6 +24,9 @@ and "bar"
 phrase "foo bar".  This search excludes documents containing
 "bar foo", "foo baz bar", etc.
 
+To be technical any query in disjunctive normal form
+is accepted.
+
 A document abstract has type
 
 ```elm
