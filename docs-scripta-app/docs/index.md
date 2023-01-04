@@ -47,7 +47,7 @@ corresponding rendered text and bring it into view.
 
 
 The compiler is open-source, with the code hosted on [Github](https://github.com/jxxcarlson/scripta-compiler))
-and with [sone documentation (work in progress)](https://jxxcarlson.github.io/docs-scripta-compiler/).
+and with [some documentation (work in progress)](https://jxxcarlson.github.io/docs-scripta-compiler/).
 See also the [example source code](https://github.com/jxxcarlson/scripta-compiler/tree/main/Example1)
 
 ## Tech stack
