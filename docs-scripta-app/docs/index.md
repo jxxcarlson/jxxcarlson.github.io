@@ -22,3 +22,7 @@ that compiles to Javascript.  The app also uses
 the [Lamdera](https://lamdera.com/) framework, which
 permits one to write both the front and the backend in
 Elm.  See this [short note on Lamdera](/lamdera/).
+
+For a quick demo of the compiler as it applies to
+microLaTeX, please see [this example app](https://jxxcarlson.github.io/scripta-compiler-example1/
+).  You can edit the text of this app at will.

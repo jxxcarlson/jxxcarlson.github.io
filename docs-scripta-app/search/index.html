@@ -71,6 +71,10 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Search</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#search-by-abstract">Search by Abstract</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#code">Code</a>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -98,6 +102,59 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="search">Search</h1>
+<h2 id="search-by-abstract">Search by Abstract</h2>
+<p>Queries for documents using <a href="https://package.elm-lang.org/packages/jxxcarlson/elm-text-search/latest/">jxxcarlson/elm-text-search</a>
+look like the following:</p>
+<ul>
+<li>
+<p>"foo": retrieve documents whose abastract digest contains "foo"</p>
+</li>
+<li>
+<p>"foo bar": retrieve documents whose abastract digest contains "foo"
+and "bar"</p>
+</li>
+<li>
+<p>"foo -bar": retrieve documents whose abastract digest contains "foo"
+  but not "bar"</p>
+</li>
+<li>
+<p>"foo | bar": retrieve documents whose abastract digest contains "foo"
+    or "bar"</p>
+</li>
+<li>
+<p>"'foo bar'": retrieve documents whose abastract digest contains the
+phrase "foo bar".  This search excludes documents containing
+"bar foo", "foo baz bar", etc.</p>
+</li>
+</ul>
+<p>A document abstract has type</p>
+<pre><code class="language-elm">type alias Abstract =
+    { title : String
+    , author : String
+    , abstract : String
+    , tags : String
+    , digest : String }
+</code></pre>
+<p>The <code>digest</code> is computed by</p>
+<pre><code class="language-elm">toString : Abstract -&gt; String
+toString a =
+    [ a.title, a.author, a.tags ] |&gt; String.join &quot;; &quot;
+
+</code></pre>
+<p>Abstracts are held in the field 
+<code>abstractDict : Dict DocId Abstract</code> of the 
+backend model.  This dictionary is updated 
+every <code>Config.backendTickSeconds</code> by the 
+update function of the backend model:</p>
+<pre><code class="language-elm">Tick newTime -&gt;
+    -- Do regular tasks
+    ( { model | currentTime = newTime }
+        |&gt; updateAbstracts
+        |&gt; Backend.Update.updateDocumentTags
+    , Command.none
+    )
+</code></pre>
+<h2 id="code">Code</h2>
 <p>Searches are initiated by the <code>Search</code> clause of 
 <code>Frontend.update</code>.  This clause invokes <code>Frontend.Search.search model</code>
 which send the message</p>

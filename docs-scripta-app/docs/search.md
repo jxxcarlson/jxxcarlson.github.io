@@ -1,5 +1,72 @@
 # Search
 
+## Search by Abstract
+
+Queries for documents using [jxxcarlson/elm-text-search](https://package.elm-lang.org/packages/jxxcarlson/elm-text-search/latest/)
+look like the following:
+
+- "foo": retrieve documents whose abastract digest contains "foo"
+
+
+- "foo bar": retrieve documents whose abastract digest contains "foo"
+and "bar"
+
+
+- "foo -bar": retrieve documents whose abastract digest contains "foo"
+  but not "bar"
+
+
+- "foo | bar": retrieve documents whose abastract digest contains "foo"
+    or "bar"
+
+
+- "'foo bar'": retrieve documents whose abastract digest contains the
+phrase "foo bar".  This search excludes documents containing
+"bar foo", "foo baz bar", etc.
+
+A document abstract has type
+
+```elm
+type alias Abstract =
+    { title : String
+    , author : String
+    , abstract : String
+    , tags : String
+    , digest : String }
+```
+
+The `digest` is computed by
+
+```elm
+toString : Abstract -> String
+toString a =
+    [ a.title, a.author, a.tags ] |> String.join "; "
+
+```
+
+Abstracts are held in the field 
+`abstractDict : Dict DocId Abstract` of the 
+backend model.  This dictionary is updated 
+every `Config.backendTickSeconds` by the 
+update function of the backend model:
+
+```elm
+Tick newTime ->
+    -- Do regular tasks
+    ( { model | currentTime = newTime }
+        |> updateAbstracts
+        |> Backend.Update.updateDocumentTags
+    , Command.none
+    )
+```
+
+
+
+
+
+
+## Code
+
 Searches are initiated by the `Search` clause of 
 `Frontend.update`.  This clause invokes `Frontend.Search.search model`
 which send the message
