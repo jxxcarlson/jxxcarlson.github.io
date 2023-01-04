@@ -2,30 +2,39 @@
 
 ## Search by Abstract
 
+The abstract of a document summarizes information
+about a document, e.g, its title, author and tags.
+Thus a search by abstract with query "einstein" might match
+"einstein" in the title, author field, or it might
+match a document tag.
+
 Queries for documents using [jxxcarlson/elm-text-search](https://package.elm-lang.org/packages/jxxcarlson/elm-text-search/latest/)
 look like the following:
 
-- "foo": retrieve documents whose abastract digest contains "foo"
+- "foo": retrieve documents whose abstract digest contains "foo"
 
 
-- "foo bar": retrieve documents whose abastract digest contains "foo"
+- "foo bar": retrieve documents whose abstract digest contains "foo"
 and "bar"
 
 
-- "foo -bar": retrieve documents whose abastract digest contains "foo"
+- "foo -bar": retrieve documents whose abstract digest contains "foo"
   but not "bar"
 
 
-- "foo | bar": retrieve documents whose abastract digest contains "foo"
+- "foo | bar": retrieve documents whose abstract digest contains "foo"
     or "bar"
 
 
-- "'foo bar'": retrieve documents whose abastract digest contains the
+- "'foo bar'": retrieve documents whose abstract digest contains the
 phrase "foo bar".  This search excludes documents containing
 "bar foo", "foo baz bar", etc.
 
-To be technical any query in disjunctive normal form
+To be technical, any query in disjunctive normal form is
 is accepted.
+
+
+## Document Abstracts
 
 A document abstract has type
 
@@ -63,36 +72,35 @@ Tick newTime ->
     )
 ```
 
+## Initiating a Search by Astract
 
 
 
-
-
-## Code
-
-Searches are initiated by the `Search` clause of 
-`Frontend.update`.  This clause invokes `Frontend.Search.search model`
+User document searches are initiated by the `Search` clause of
+`Frontend.update`.  This clause invokes `Frontend.Search.search`
 which send the message
 
 ```elm
-Types.SearchForDocuments StandardHandling model.currentUser model.inputSearchKey
+SearchForDocuments StandardHandling model.currentUser model.inputSearchKey
 ```
 
-to the backend where
-`Backend.Search.withQuery` is called.  The real work is done by
-this function from module `TextSearch.Search` (jxxcarlson/elm-text-search):
+to the backend, where the code for `idsFromAbstractDict`
+is eventually invoked:
 
 ```elm
-match = matchWithQueryString identity Search.NotCaseSensitive query
+idsFromAbstractDict : Dict String Abstract -> String -> List DocId
+idsFromAbstractDict abstractDict query =
+    Dict.toList abstractDict
+        |> Text.Search.withQueryString digest Text.Search.NotCaseSensitive query
+        |> List.map (\( id, _ ) -> id)
 ```
 
-Query strings for `Search.queryWithString` 
-look like `foo bar`, `foo -bar`, and `foo -bar | baz`.  The first
-will match strings contaning both `foo` and `bar`,
-the second will  match strings matching `foo` but not `bar`,
-and the third will match either strings matching `foo` but not `bar`
-or strings matching `baz`.  That is, the query string represents
-a logical expression in disjunctive normal form.
+The result is a list of id's of documents which match
+the search query.  This is turned into a list of
+documents which is then forwarded to the front end.
 
-*NOTE. There are other ways of invoking a search.  We need more 
-order and less chaos here.*
+
+## Search by Tag
+
+
+((Under Construction))

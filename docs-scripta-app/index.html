@@ -43,6 +43,12 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#compiler">Compiler</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#tech-stack">Tech stack</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#web-app">Web App</a>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -98,28 +104,50 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="the-scripta-project">The Scripta Project</h1>
+<p>(( This document is a work-in-progress and
+will remain so for a good while. ))</p>
 <p>Scripta is an editing and publishing system for technical
 documents (mathematics, physics, etc.). It consists
 of two components, the web app <a href="https://scripta.io">Scripta.io</a>
-and the the <a href="https://github.com/jxxcarlson/scripta-compiler">Scripta compiler</a>.
-The Scripta compiler supports three markup languages</p>
+and the Scripta compiler.   </p>
+<h2 id="compiler">Compiler</h2>
+<p>The Scripta compiler supports three markup languages</p>
 <ul>
 <li>L0</li>
 <li>MicroLaTeX</li>
 <li>XMarkdown</li>
 </ul>
-<p>L0 has a syntax inspired by Lisp; MicroLaTeX is 
+<p>L0 has a syntax inspired by Lisp; MicroLaTeX is
 an implementation of LaTeX, and XMarkdown is
 like Markdown, but with some extra features,
 e.g., TeX-style mathematical text.</p>
+<p>See this  <a href="https://jxxcarlson.github.io/scripta-compiler-example1/">live example</a>
+for a simple demonstration of microLaTeX 
+(<a href="https://github.com/jxxcarlson/scripta-compiler/tree/main/Example1">source code here</a>). You can edit the text of the example app at will.
+<a href="https://scripta.io">Scripta.io</a> is a full-featured use case that
+makes use of the compiler's error recovery facilities and which implements
+synchronization of source and rendered text: click on rendered text to 
+highlight and bring into view the corresponding source text; select
+a block of source text and press ctrl-S (for "sync") to highlight the 
+corresponding rendered text and bring it into view.</p>
+<p>The compiler is open-source, with the code hosted on <a href="https://github.com/jxxcarlson/scripta-compiler">Github</a>)
+and with <a href="https://jxxcarlson.github.io/docs-scripta-compiler/">sone documentation (work in progress)</a>.
+See also the <a href="https://github.com/jxxcarlson/scripta-compiler/tree/main/Example1">example source code</a></p>
+<h2 id="tech-stack">Tech stack</h2>
 <p>Both the app and the compiler are written in 
 <a href="https://elm-lang.org">Elm</a>, a pure functional language
 that compiles to Javascript.  The app also uses
 the <a href="https://lamdera.com/">Lamdera</a> framework, which
 permits one to write both the front and the backend in
-Elm.  See this <a href="/lamdera/">short note on Lamdera</a>.</p>
-<p>For a quick demo of the compiler as it applies to
-microLaTeX, please see <a href="https://jxxcarlson.github.io/scripta-compiler-example1/">this example app</a>.  You can edit the text of this app at will.</p>
+Elm.  See this <a href="/lamdera/">short note on Lamdera</a>.
+Mathematical text is rendered using <a href="https://katex.org">KaTeX</a> and
+the editor relies on <a href="https://codemirror.net/6/">Codemirror 6</a>.
+The interface to Elm for both of these is via custom elements.</p>
+<h2 id="web-app">Web App</h2>
+<p>Most of this document concerns the web app and is 
+intended to help the app developers.
+The source code is not currently open-source, though
+one day it might be.</p>
               
             </div>
           </div><footer>
@@ -167,5 +195,5 @@ microLaTeX, please see <a href="https://jxxcarlson.github.io/scripta-compiler-ex
 
 <!--
 MkDocs version : 1.4.2
-Build Date UTC : 2023-01-04 15:59:09.537550+00:00
+Build Date UTC : 2023-01-04 19:54:59.632851+00:00
 -->
