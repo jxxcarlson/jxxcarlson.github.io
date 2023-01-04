@@ -6,7 +6,19 @@ will remain so for a good while. ))
 Scripta is an editing and publishing system for technical
 documents (mathematics, physics, etc.). It consists
 of two components, the web app [Scripta.io](https://scripta.io)
-and the Scripta compiler.   
+and the Scripta compiler. 
+
+## Screenshots
+
+### Notebbook, with editor closed
+
+![screenshot-editor-closed](image/scripta-qm-wave-packet.png)
+
+
+### Regular document, with editor open
+
+![screenshot-editor-open](image/harmonic.png)
+
 
 ## Compiler
 
