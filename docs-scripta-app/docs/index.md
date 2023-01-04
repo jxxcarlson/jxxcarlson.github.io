@@ -14,11 +14,13 @@ and the Scripta compiler.
 
 ![screenshot-editor-closed](image/scripta-qm-wave-packet.png)
 
+[Direct link](https://scripta.io/s/jxxcarlson:wave-packets-dispersion)
 
 ### Regular document, with editor open
 
 ![screenshot-editor-open](image/harmonic.png)
 
+[Direct link](https://scripta.io/s/jxxcarlson:harmonic-oscillator)
 
 ## Compiler
 
