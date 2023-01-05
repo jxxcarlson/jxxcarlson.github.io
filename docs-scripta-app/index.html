@@ -45,9 +45,11 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#screenshots">Screenshots</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#notebbook-with-editor-closed">Notebbook, with editor closed</a>
+    <li class="toctree-l3"><a class="reference internal" href="#scriptaio-a-notebbook-document">Scripta.io, a notebbook document</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#regular-document-with-editor-open">Regular document, with editor open</a>
+    <li class="toctree-l3"><a class="reference internal" href="#scriptaio-an-ordinary-document">Scripta.io, an ordinary document</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#scripta-desktop">Scripta Desktop</a>
     </li>
         </ul>
     </li>
@@ -120,19 +122,34 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="the-scripta-project">The Scripta Project</h1>
-<p>(( This document is a work-in-progress and
-will remain so for a good while. ))</p>
 <p>Scripta is an editing and publishing system for technical
 documents (mathematics, physics, etc.). It consists
-of two components, the web app <a href="https://scripta.io">Scripta.io</a>
-and the Scripta compiler. </p>
+of three components</p>
+<ul>
+<li><a href="https://scripta.io">Scripta.io</a>, a web app</li>
+<li><a href="https://github.com/jxxcarlson/scripta-tauri/releases">Scripta Desktop</a>, for 
+  Mac OS (fat binary), soon to be cross-compiled for Linux and Windows.</li>
+<li><a href="https://jxxcarlson.github.io/docs-scripta-compiler/">The Scripta compiler</a> </li>
+</ul>
+<p>There is also a <a href="https://jxxcarlson.github.io/scripta-compiler-example1/">very simple live demo app</a>.
+You can edit the text at will. Note, however, that this app 
+does not have the advanced editing features offered by Scripta.io
+and Scripta Desktop. </p>
+<p>All of the above are written in <a href="https://elm-lang.org">Elm</a>, a
+pure functional language that compiles to Javascript.  See the 
+Tech Stack  section below for more information.</p>
+<p>(( This document is a work-in-progress and
+will remain so for a good while. ))</p>
 <h2 id="screenshots">Screenshots</h2>
-<h3 id="notebbook-with-editor-closed">Notebbook, with editor closed</h3>
+<h3 id="scriptaio-a-notebbook-document">Scripta.io, a notebbook document</h3>
 <p><img alt="screenshot-editor-closed" src="image/scripta-qm-wave-packet.png" /></p>
 <p><a href="https://scripta.io/s/jxxcarlson:wave-packets-dispersion">Direct link</a></p>
-<h3 id="regular-document-with-editor-open">Regular document, with editor open</h3>
+<h3 id="scriptaio-an-ordinary-document">Scripta.io, an ordinary document</h3>
 <p><img alt="screenshot-editor-open" src="image/harmonic.png" /></p>
 <p><a href="https://scripta.io/s/jxxcarlson:harmonic-oscillator">Direct link</a></p>
+<h3 id="scripta-desktop">Scripta Desktop</h3>
+<p><img alt="Scripta Desktop" src="image/scripta-desktop.png" /></p>
+<p><a href="https://jxxcarlson.github.io/docs-scripta-compiler/">Download page</a></p>
 <h2 id="compiler">Compiler</h2>
 <p>The Scripta compiler supports three markup languages</p>
 <ul>
@@ -218,5 +235,5 @@ one day it might be.</p>
 
 <!--
 MkDocs version : 1.4.2
-Build Date UTC : 2023-01-05 21:47:55.635033+00:00
+Build Date UTC : 2023-01-05 22:25:11.109797+00:00
 -->

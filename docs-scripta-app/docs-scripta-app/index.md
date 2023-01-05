@@ -1,26 +1,48 @@
 # The Scripta Project
 
-(( This document is a work-in-progress and
-will remain so for a good while. ))
+
 
 Scripta is an editing and publishing system for technical
 documents (mathematics, physics, etc.). It consists
-of two components, the web app [Scripta.io](https://scripta.io)
-and the Scripta compiler. 
+of three components
+
+- [Scripta.io](https://scripta.io), a web app
+- [Scripta Desktop](https://github.com/jxxcarlson/scripta-tauri/releases), for 
+  Mac OS (fat binary), soon to be cross-compiled for Linux and Windows.
+- [The Scripta compiler](https://jxxcarlson.github.io/docs-scripta-compiler/) 
+
+There is also a [very simple live demo app](https://jxxcarlson.github.io/scripta-compiler-example1/).
+You can edit the text at will. Note, however, that this app 
+does not have the advanced editing features offered by Scripta.io
+and Scripta Desktop. 
+
+
+All of the above are written in [Elm](https://elm-lang.org), a
+pure functional language that compiles to Javascript.  See the 
+Tech Stack  section below for more information.
+
+(( This document is a work-in-progress and
+will remain so for a good while. ))
 
 ## Screenshots
 
-### Notebbook, with editor closed
+### Scripta.io, a notebbook document
 
 ![screenshot-editor-closed](image/scripta-qm-wave-packet.png)
 
 [Direct link](https://scripta.io/s/jxxcarlson:wave-packets-dispersion)
 
-### Regular document, with editor open
+### Scripta.io, an ordinary document
 
 ![screenshot-editor-open](image/harmonic.png)
 
 [Direct link](https://scripta.io/s/jxxcarlson:harmonic-oscillator)
+
+### Scripta Desktop
+
+![Scripta Desktop](image/scripta-desktop.png)
+
+[Download page](https://jxxcarlson.github.io/docs-scripta-compiler/)
 
 ## Compiler
 
