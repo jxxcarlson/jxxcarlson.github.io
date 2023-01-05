@@ -1,5 +1,6 @@
 site_name: Scripta Docs
 site_url: https://jxxcarlson.github.io/docs-scripta-app
+docs_dir: 'docs-scripta-app'
 
 theme: readthedocs
 
