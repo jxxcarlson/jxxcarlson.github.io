@@ -84,6 +84,14 @@ Mathematical text is rendered using [KaTeX](https://katex.org) and
 the editor relies on [Codemirror 6](https://codemirror.net/6/).
 The interface to Elm for both of these is via custom elements.
 
+Scripta Desktop is built with [Tauri.app](https://tauri.app).
+See [this article](https://jxxcarlson.medium.com/elm-tauri-befa59eab403)
+for some notes on how it was assembled.  Briefly, Tauri is a way
+of converting a web app built with most any language/framework
+including Elm into a desktop app.  It has both good security
+and small asset size.
+
+
 ## Web App
 
 Most of this document concerns the web app and is 
