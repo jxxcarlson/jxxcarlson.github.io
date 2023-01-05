@@ -1,5 +1,5 @@
 site_name: Scripta Docs
-site_url: https://jxxcarlson.github.io/docs-scripta-app/
+site_url: https://jxxcarlson.github.io/docs-scripta-app
 
 theme: readthedocs
 
@@ -11,6 +11,7 @@ nav:
   - The L0 Markup Language: 'L0.md'
   - Making a New Document: 'newdocs.md'
   - Opening a Document: 'openDoc.md'
+  - Document Index: 'documentIndex.md'
   - Collection Documents: 'collectionDocs.md'
   - Smart Folders: 'smartfolders.md'
   - Search: 'search.md'

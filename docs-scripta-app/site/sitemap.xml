@@ -21,6 +21,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://jxxcarlson.github.io/docs-scripta-app/documentIndex/</loc>
+         <lastmod>2023-01-05</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://jxxcarlson.github.io/docs-scripta-app/lamdera/</loc>
          <lastmod>2023-01-05</lastmod>
          <changefreq>daily</changefreq>

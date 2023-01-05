@@ -56,5 +56,9 @@ may be changed by specifying a tag:
 - `sort:z-to-a`
 
 
+## Rendering a smart folder
 
+When the user click on a smart folder, the normal 
+chaing of function calls is activated to make it the 
+current document.  (See the section on [opening a document](/openDoc/))
 
