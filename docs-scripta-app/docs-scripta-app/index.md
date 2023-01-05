@@ -8,8 +8,8 @@ of three components
 
 - [Scripta.io](https://scripta.io), a web app
 - [Scripta Desktop](https://github.com/jxxcarlson/scripta-tauri/releases), for 
-  Mac OS (fat binary), soon to be cross-compiled for Linux and Windows.
-- [The Scripta compiler](https://jxxcarlson.github.io/docs-scripta-compiler/) 
+  Mac OS (fat binary), soon to be cross-compiled for Linux and Windows. 
+- [The Scripta compiler](https://jxxcarlson.github.io/docs-scripta-compiler/)  
 
 There is also a [very simple live demo app](https://jxxcarlson.github.io/scripta-compiler-example1/).
 You can edit the text at will. Note, however, that this app 
@@ -19,7 +19,7 @@ and Scripta Desktop.
 
 All of the above are written in [Elm](https://elm-lang.org), a
 pure functional language that compiles to Javascript.  See the 
-Tech Stack  section below for more information.
+Tech Stack  section below for more information and links to source code.
 
 (( This document is a work-in-progress and
 will remain so for a good while. ))
@@ -91,10 +91,18 @@ of converting a web app built with most any language/framework
 including Elm into a desktop app.  It has both good security
 and small asset size.
 
+Source code:
 
-## Web App
 
-Most of this document concerns the web app and is 
+- [Scripta Compiler](https://github.com/jxxcarlson/scripta-compiler)
+
+- [Scripta Desktop](https://github.com/jxxcarlson/scripta-tauri)
+
+- Scripta.io: not currently open source
+
+
+
+## Note
+
+Most of the rest of this document concerns the web app and is 
 intended to help the app developers.
-The source code is not currently open-source, though
-one day it might be.
