@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jxxcarlson.github.io/docs-scripta-compiler/lx-parser/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>microLaTeX Parser - Scripta Compiler Docs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "microLaTeX Parser";
+        var mkdocs_page_input_path = "lx-parser.md";
+        var mkdocs_page_url = "/docs-scripta-compiler/lx-parser/";
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Scripta Compiler Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../introduction/">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../common-code/">Common code</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../primitiveBlocks/">Primitive Blocks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../render/">Rendering</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../l0-parser/">L0 Parser</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">microLaTeX Parser</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#primitive-blocks">Primitive Blocks</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#the-parser">The Parser</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mkdocs/">Mkdocs</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Scripta Compiler Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>microLaTeX Parser</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="microlatex-parser">MicroLaTeX Parser</h1>
+<h2 id="primitive-blocks">Primitive Blocks</h2>
+<p>A primitve LaTeX block is a 13-field record as displayed
+below.  </p>
+<pre><code class="language-elm">-- Parser.PrimitiveLaTeXBlock
+type alias PrimitiveLaTeXBlock =
+    { indent : Int
+    , lineNumber : Int
+    , position : Int
+    , level : Int
+    , content : List String
+    , firstLine : String
+    , name : Maybe String
+    , args : List String
+    , properties : Dict String String
+    , sourceText : String
+    , blockType : PrimitiveBlockType
+    , status : Status
+    , error : Maybe PrimitiveBlockError
+    }
+
+</code></pre>
+<ol>
+<li>
+<p>When the source text is parsed into a list of 
+blocks, it is grouped into lists of strings in the 
+<code>content</code> field. </p>
+</li>
+<li>
+<p>The content is also stored as a string
+in the <code>sourceText</code> field.  This is to facilitate 
+synchronization of source text and rendered text.
+The source text field is carried into the final
+syntax tree (forest of expression blocks).  Consequently,
+if a piece source text is selected, the syntax tree
+can can be searched, the matching element can be
+located and then used to highlight the corresponding
+part of the rendered text.</p>
+</li>
+<li>
+<p>The <code>indent</code> field is the number of spaces of indentation
+of the first line of the block; <code>lineNumber</code> is the
+line number of the first line of the text in the source
+string; <code>position</code> is its character position in that 
+string.  The <code>level</code> field is the depth of the block
+in the eventual tree structure.</p>
+</li>
+<li>
+<p>Blocks may be un-named, as in the case of paragraph,
+or named, in the case of a LaTeX environment.  This
+information is stored in the <code>name</code> field.  For example,
+the name of the block <code>\begin{theorem} ... \end{theorem}</code>
+is <code>Just "theorem"</code></p>
+</li>
+<li>
+<p>The <code>firstline</code> field is the first line of a block,
+i.e., its header. If the header of a 
+block is "\begin{theorem}[Pythagoras]", then
+its name is "theorem" and <code>args</code> is the list <code>["Pythagoras]</code>.
+If we had <code>"\begin{theorem}[Pythagoras, foo:bar]"</code> (XX)
+then <code>args</code> is still ["Pythagoras"], and <code>properties</code> is
+a dictionary with one key, "foo", whose value is "bar". 
+Thus <code>args</code> is a list of unnamed args and <code>properties</code>
+is a dictionary of key-value pairs derived from the named
+args. (XX: improve this discussion)</p>
+</li>
+<li>
+<p>The <code>blockType</code> field has type</p>
+<p><code>elm
+type PrimitiveBlockType
+    = PBVerbatim
+    | PBOrdinary
+    | PBParagraph</code></p>
+<p>It describes the type of block — unnamed, environment
+like "theorem" in which the body of the block is parsed,
+or environment like "equation" where it is passed 
+verbatim to the renderer.</p>
+</li>
+<li>
+<p>The <code>status</code> field has type </p>
+<p><code>elm
+type Status
+    = Finished
+    | Started
+    | Filled</code></p>
+</li>
+</ol>
+<p>It is used in parsing source text into blocks and 
+is needed to handle nested blocks.</p>
+<p>Lists of lines of text are parsed into lists 
+of primitive blocks by the function</p>
+<pre><code class="language-elm">-- Parser.PrimitiveLaTeXBlock
+parse : List String -&gt; List PrimitiveLaTeXBlock
+parse lines =
+    lines |&gt; parseLoop |&gt; .blocks
+</code></pre>
+<h3 id="the-parser">The Parser</h3>
+<p>This parser operates a <a href="/docs-scripta-compiler/common-code#functional-loops/">functional loop</a></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../l0-parser/" class="btn btn-neutral float-left" title="L0 Parser"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../cli/" class="btn btn-neutral float-right" title="CLI">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../l0-parser/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../cli/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
