@@ -53,11 +53,23 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#flowchart">Flowchart</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#error-recovery">Error Recovery</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#language-definition">Language definition</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#tokenization">Tokenization</a>
+    </li>
+        </ul>
+    </li>
     </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../primitiveBlocks/">Primitive Blocks</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../render/">Rendering</a>
                 </li>
               </ul>
               <ul>
@@ -92,19 +104,114 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="overview">Overview</h1>
-<h2 id="flowchart">Flowchart</h2>
 <p>The Scripta compiler transforms text into <code>Element Msg</code>
 through a series of stages, as illustrated in the
-following figure. Below we describe these stages.</p>
-<p><img alt="Flowchart" src="../image/scripta-compiler-flowchart.jpg" /></p>
-<p>The first step is to break the source text into chunks,
-namely a list of so-called <em>primitive blocks</em>. Ignoring
+following figure. </p>
+<ol>
+<li>
+<p>Break the source text into <em>chunks</em>,
+namely a list of so-called <em>primitive blocks</em>. </p>
+</li>
+<li>
+<p>Ignoring
 for the moment the possibility of diff records and
-differential compilation, we traverse the left branch
-of the diagram, the penultimate step of which is the
-production of an <code>EditRecord</code>.  Data of this type
-is transformed into an Elm representation of Html
-by the function </p>
+differential compilation,
+parse the content of the primitive blocks, transforming
+string data into lists of <code>Expr</code> 
+(see <a href="/docs-scripta-compiler/introduction/#internal-language">Intro, section "Internal Language"</a>)</p>
+</li>
+<li>
+<p>Transform the list of expression blocks into a forest
+  of expression blocks using the indentation structure 
+  or, in the case of microLaTeX, the level structure.</p>
+</li>
+<li>
+<p>Walk through the forest of expression blocks,
+accumulating data on section numbers, the
+table of contents, cross-references etc, while
+simultaneously updating the forest of expression 
+blocks where indicated.</p>
+</li>
+<li>
+<p>Use this data to produce a so-called
+<code>EditRecord</code>, a data structure containing all the
+information needed to render the original source
+text into <code>Element MarkupMsg</code>, an Elm representation
+of Html.</p>
+</li>
+<li>
+<p>Use the Edit Record to produce the final rendered
+text.</p>
+</li>
+</ol>
+<h2 id="flowchart">Flowchart</h2>
+<p><img alt="Flowchart" src="../image/scripta-compiler-flowchart.jpg" /></p>
+<h2 id="error-recovery">Error Recovery</h2>
+<p>Error recovery occurs in two places</p>
+<ol>
+<li>
+<p>Formation of 
+a list of primitive blocks from the source text,
+which is just a long string.</p>
+</li>
+<li>
+<p>Parsing the content of primitive blocks</p>
+</li>
+</ol>
+<h3 id="language-definition">Language definition</h3>
+<p>The strategy is basically the same in both cases.  Let
+us describe (2) for the case of pure L0.  </p>
+<p>For this we need a more precise definition of the
+internal language to be parsed.  An element
+of pure L0 text is</p>
+<ul>
+<li>
+<p>a span of pure text, e.g. "roses are red"</p>
+</li>
+<li>
+<p>a function element, e.g. "[italic roses are red]",
+consisting of a function name (italic here) and a body,
+which is a sequence consisting of pure text spans and 
+function elements.</p>
+</li>
+<li>
+<p>a sequence of the above.</p>
+</li>
+</ul>
+<p>Function elements can be nested, as in 
+"[italic roses [bold are] red]".  In this 
+example, "roses" and "red" are italicized,
+while "are" bold italic.  Text like
+"He said that [italic roses [bold are] red]"
+are also legitimate L0 text.</p>
+<h3 id="tokenization">Tokenization</h3>
+<p>Tokens for pure L0 are of the type listed below.
+The constructors <code>LB</code> and <code>RB</code> refer to left and 
+right brackets.  <code>Meta</code> is a meta data field that
+records the location of the part of the source text 
+corresponding to the token.  <code>S</code> stands for <code>String</code>
+and <code>W</code> stands for white space.</p>
+<pre><code class="language-elm">type Token
+    = LB Meta
+    | RB Meta
+    | S String Meta
+</code></pre>
+<p>As an example, the text "[italic roses]" tokenizes 
+as </p>
+<pre><code>LB, S &quot;italic&quot;, S &quot; roses&quot;, RB
+</code></pre>
+<p>where
+we have ignored the Meta component.  You can verify this 
+as follows:</p>
+<pre><code class="language-text">$ elm repl
+&gt; import L0.Parser.Token exposing(..)
+&gt; run &quot;[italic roses]&quot; |&gt; List.reverse
+</code></pre>
+<p>The second token in full form is</p>
+<pre><code class="language-text">S &quot;italic&quot; { begin = 1, end = 6, index = 1 }
+</code></pre>
+<p>The index refers to the index of the token in
+the token list.  This will be used in error recovery.</p>
               
             </div>
           </div><footer>
