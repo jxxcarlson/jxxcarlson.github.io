@@ -3,18 +3,18 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jxxcarlson.github.io/docs-scripta-compiler/tests/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jxxcarlson.github.io/docs-scripta-compiler/primitiveBlocks/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Tests - Scripta Compiler Docs</title>
+    <title>Primitive Blocks - Scripta Compiler Docs</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Tests";
-        var mkdocs_page_input_path = "tests.md";
-        var mkdocs_page_url = "/docs-scripta-compiler/tests/";
+        var mkdocs_page_name = "Primitive Blocks";
+        var mkdocs_page_input_path = "primitiveBlocks.md";
+        var mkdocs_page_url = "/docs-scripta-compiler/primitiveBlocks/";
       </script>
     
     <script src="../js/jquery-3.6.0.min.js" defer></script>
@@ -52,8 +52,12 @@
                 <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
                 </li>
               </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../primitiveBlocks/">Primitive Blocks</a>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Primitive Blocks</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#edit-records">Edit records</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
@@ -78,7 +82,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
-      <li>Tests</li>
+      <li>Primitive Blocks</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -87,12 +91,53 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="tests">Tests</h1>
-<p>To implement: round-trip tests for microLaTeX using the 
-pretty-printer: </p>
+                <h1 id="primitive-blocks">Primitive Blocks</h1>
+<p>Blocks have the rather elaborate type listed below.<br />
+This complex structure is necessary for interactive
+real-time editing with error recovery.  By real-time we mean
+that the rendered text is updated "instantaneously"
+in the browser as the user types in text.  By interactive,
+we mean (for example) that click on the rendered text
+brings the associated source text into view while
+simultaneously highlighting it.  In addition, if the
+user selects a block of source text and presses
+ctrl-S (S for 'sync'), the corresponding rendered text
+is brought into view and highlighted.</p>
+<pre><code class="language-elm">type ExpressionBlock
+    = ExpressionBlock
+        { name : Maybe String
+        , args : List String
+        , properties : Dict String String
+        , indent : Int
+        , lineNumber : Int
+        , numberOfLines : Int
+        , id : String
+        , tag : String
+        , blockType : BlockType
+        , content : Either String (List Expr)
+        , messages : List String
+        , sourceText : String
+        , error : Maybe { error : String }
+        }
+</code></pre>
+<h2 id="edit-records">Edit records</h2>
+<pre><code class="language-elm">type alias EditRecord chunk parsedChunk accumulator =
+    { chunks : List chunk
+    , parsed : List parsedChunk
+    , tree : List (Tree parsedChunk)
+    , accumulator : accumulator
+    , lang : Language
+    , messages : List String
+    , initialData : InitialData
+    }
+</code></pre>
               
             </div>
           </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../overview/" class="btn btn-neutral float-left" title="Overview"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../cli/" class="btn btn-neutral float-right" title="CLI">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
 
   <hr/>
 
@@ -114,6 +159,10 @@ pretty-printer: </p>
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
+      <span><a href="../overview/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../cli/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
