@@ -1,7 +1,8 @@
 
 scripts:
 
-  push: 
+  push:
+   - git add docs-scripta-app/
    - git ci -am "Update app"
    - git push
 
@@ -10,6 +11,7 @@ scripts:
     - git push
 
   push-c:
+    - git add docs-scripta-compiler/
     - git ci -m "Update doc-scripta-compiler" docs-scripta-compiler/
     - git push
 
