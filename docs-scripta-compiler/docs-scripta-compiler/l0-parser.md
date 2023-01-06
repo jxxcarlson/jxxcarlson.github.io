@@ -2,7 +2,9 @@
 
 (( Under construction! ))
 
-## Functional loops are used throughout the compiler:
+## Functional loops 
+
+Functional loops are used throughout the compiler:
 
 ```elm
 -- Parser.Helpers
