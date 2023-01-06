@@ -4,7 +4,14 @@
 
 ## Functional loops 
 
-Functional loops are used throughout the compiler:
+Functional loops are used throughout the compiler, and in
+particular in the L0 parser.  The key element of 
+such a loop is a driver function
+`f : state -> Step state a` that does some computation
+on the state and returns either a value of type `Done a`
+or a value of type `Loop state`.   In the first case
+the loop terminates with the indicated value.  In the
+second case it runs again with the new state value.˜
 
 ```elm
 -- Parser.Helpers
@@ -25,8 +32,8 @@ loop s f =
 
 ## Parser
 
-The parser is implemented as a functional loop the state
-is defined by
+The parser is implemented as a functional loop with state
+defined by
 
 ```elm
 -- L0.Parser.Expression
@@ -42,8 +49,8 @@ type alias State =
     }
 ```
 
-and the driving function `State -> Step State State`
-is defined by
+and driving function `State -> Step State State`
+defined by
 
 ```elm
 -- L0.Parser.Expression

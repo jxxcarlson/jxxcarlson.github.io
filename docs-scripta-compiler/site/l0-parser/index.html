@@ -106,7 +106,14 @@
                 <h1 id="the-l0-parser">The L0 Parser</h1>
 <p>(( Under construction! ))</p>
 <h2 id="functional-loops">Functional loops</h2>
-<p>Functional loops are used throughout the compiler:</p>
+<p>Functional loops are used throughout the compiler, and in
+particular in the L0 parser.  The key element of 
+such a loop is a driver function
+<code>f : state -&gt; Step state a</code> that does some computation
+on the state and returns either a value of type <code>Done a</code>
+or a value of type <code>Loop state</code>.   In the first case
+the loop terminates with the indicated value.  In the
+second case it runs again with the new state value.˜</p>
 <pre><code class="language-elm">-- Parser.Helpers
 type Step state a
     = Loop state
@@ -123,8 +130,8 @@ loop s f =
             b
 </code></pre>
 <h2 id="parser">Parser</h2>
-<p>The parser is implemented as a functional loop the state
-is defined by</p>
+<p>The parser is implemented as a functional loop with state
+defined by</p>
 <pre><code class="language-elm">-- L0.Parser.Expression
 type alias State =
     { step : Int
@@ -137,8 +144,8 @@ type alias State =
     , lineNumber : Int
     }
 </code></pre>
-<p>and the driving function <code>State -&gt; Step State State</code>
-is defined by</p>
+<p>and driving function <code>State -&gt; Step State State</code>
+defined by</p>
 <pre><code class="language-elm">-- L0.Parser.Expression
 nextStep : State -&gt; Step State State
 nextStep state =
