@@ -2,28 +2,29 @@
 
 (( Under construction! ))
 
-## Parser
-
-The parser is implemented as a functional loop:
+## Functional loops are used throughout the compiler:
 
 ```elm
--- L0.Parser.Expression
-parseTokenListToState : Int -> List Token -> State
-parseTokenListToState lineNumber tokens =
-    let
-        state =
-            tokens |> initWithTokens lineNumber |> run
-    in
-    state
+-- Parser.Helpers
+type Step state a
+    = Loop state
+    | Done a
 
 
-run : State -> State
-run state =
-    loop state nextStep
-        |> (\state_ -> { state_ | committed = List.reverse state_.committed })
+loop : state -> (state -> Step state a) -> a
+loop s f =
+    case f s of
+        Loop s_ ->
+            loop s_ f
+
+        Done b ->
+            b
 ```
 
-where
+## Parser
+
+The parser is implemented as a functional loop the state
+is defined by
 
 ```elm
 -- L0.Parser.Expression
@@ -39,7 +40,8 @@ type alias State =
     }
 ```
 
-The driver for the loop is the function
+and the driving function `State -> Step State State`
+is defined by
 
 ```elm
 -- L0.Parser.Expression
@@ -60,7 +62,7 @@ nextStep state =
                 |> reduceState
                 |> (\st -> { st | step = st.step + 1 })
                 |> Loop
- ```
+```
 
 The `reduceState` function asks whether the stack
 is reducible using the function  `isReducible` discussed
@@ -69,6 +71,7 @@ below.  If it is, it reduces the stack using
 the state is passed on unchanged.
 
 ```elm
+-- L0.Parser.Expression
 reduceState : State -> State
 reduceState state =
     if tokensAreReducible state then
@@ -76,9 +79,12 @@ reduceState state =
 
     else
         state
- ```
+```
 
 ## Reducibility
+
+
+
 
 ```elm
 -- L0.Parser.Match:
@@ -105,4 +111,4 @@ isReducible symbols_ =
 
         _ ->
             False
- ```
+```

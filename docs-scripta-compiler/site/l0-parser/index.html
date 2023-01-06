@@ -5,14 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jxxcarlson.github.io/docs-scripta-compiler/l0-parser/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>The L0 Parser - Scripta Compiler Docs</title>
+    <title>L0 Parser - Scripta Compiler Docs</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "The L0 Parser";
+        var mkdocs_page_name = "L0 Parser";
         var mkdocs_page_input_path = "l0-parser.md";
         var mkdocs_page_url = "/docs-scripta-compiler/l0-parser/";
       </script>
@@ -60,16 +60,17 @@
                 <li class="toctree-l1"><a class="reference internal" href="../render/">Rendering</a>
                 </li>
               </ul>
-              <p class="caption"><span class="caption-text">L0</span></p>
               <ul class="current">
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">The L0 Parser</a>
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">L0 Parser</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#functional-loops-are-used-throughout-the-compiler">Functional loops are used throughout the compiler:</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#parser">Parser</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#reducibility">Reducibility</a>
     </li>
     </ul>
-                  </li>
+                </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
@@ -93,8 +94,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
-          <li>L0 &raquo;</li>
-      <li>The L0 Parser</li>
+      <li>L0 Parser</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -105,24 +105,25 @@
               
                 <h1 id="the-l0-parser">The L0 Parser</h1>
 <p>(( Under construction! ))</p>
-<h2 id="parser">Parser</h2>
-<p>The parser is implemented as a functional loop:</p>
-<pre><code class="language-elm">-- L0.Parser.Expression
-parseTokenListToState : Int -&gt; List Token -&gt; State
-parseTokenListToState lineNumber tokens =
-    let
-        state =
-            tokens |&gt; initWithTokens lineNumber |&gt; run
-    in
-    state
+<h2 id="functional-loops-are-used-throughout-the-compiler">Functional loops are used throughout the compiler:</h2>
+<pre><code class="language-elm">-- Parser.Helpers
+type Step state a
+    = Loop state
+    | Done a
 
 
-run : State -&gt; State
-run state =
-    loop state nextStep
-        |&gt; (\state_ -&gt; { state_ | committed = List.reverse state_.committed })
+loop : state -&gt; (state -&gt; Step state a) -&gt; a
+loop s f =
+    case f s of
+        Loop s_ -&gt;
+            loop s_ f
+
+        Done b -&gt;
+            b
 </code></pre>
-<p>where</p>
+<h2 id="parser">Parser</h2>
+<p>The parser is implemented as a functional loop the state
+is defined by</p>
 <pre><code class="language-elm">-- L0.Parser.Expression
 type alias State =
     { step : Int
@@ -135,44 +136,43 @@ type alias State =
     , lineNumber : Int
     }
 </code></pre>
-<p>The driver for the loop is the function</p>
-<p>```elm
--- L0.Parser.Expression
+<p>and the driving function <code>State -&gt; Step State State</code>
+is defined by</p>
+<pre><code class="language-elm">-- L0.Parser.Expression
 nextStep : State -&gt; Step State State
 nextStep state =
     case getToken state of
         Nothing -&gt;
             if stackIsEmpty state then
-                Done state</p>
-<pre><code>        else
-            recoverFromError state
+                Done state
 
-    Just token -&gt;
-        state
-            |&gt; advanceTokenIndex
-            |&gt; pushOrCommit token
-            |&gt; reduceState
-            |&gt; (\st -&gt; { st | step = st.step + 1 })
-            |&gt; Loop
+            else
+                recoverFromError state
+
+        Just token -&gt;
+            state
+                |&gt; advanceTokenIndex
+                |&gt; pushOrCommit token
+                |&gt; reduceState
+                |&gt; (\st -&gt; { st | step = st.step + 1 })
+                |&gt; Loop
 </code></pre>
-<p>```</p>
 <p>The <code>reduceState</code> function asks whether the stack
 is reducible using the function  <code>isReducible</code> discussed
 below.  If it is, it reduces the stack using
 <code>reduceStack</code>, returning the updated state.  If not,
 the state is passed on unchanged.</p>
-<p>```elm
+<pre><code class="language-elm">-- L0.Parser.Expression
 reduceState : State -&gt; State
 reduceState state =
     if tokensAreReducible state then
-        { state | stack = [], committed = reduceStack state ++ state.committed }</p>
-<pre><code>else
-    state
+        { state | stack = [], committed = reduceStack state ++ state.committed }
+
+    else
+        state
 </code></pre>
-<p>```</p>
 <h2 id="reducibility">Reducibility</h2>
-<p>```elm
--- L0.Parser.Match:
+<pre><code class="language-elm">-- L0.Parser.Match:
 isReducible : List Symbol -&gt; Bool
 isReducible symbols_ =
     let
@@ -181,22 +181,22 @@ isReducible symbols_ =
     in
     case symbols of
         M :: rest -&gt;
-            List.head (List.reverse rest) == Just M</p>
-<pre><code>    C :: rest -&gt;
-        List.head (List.reverse rest) == Just C
+            List.head (List.reverse rest) == Just M
 
-    L :: ST :: rest -&gt;
-        case List.head (List.reverse rest) of
-            Just R -&gt;
-                hasReducibleArgs (dropLast rest)
+        C :: rest -&gt;
+            List.head (List.reverse rest) == Just C
 
-            _ -&gt;
-                False
+        L :: ST :: rest -&gt;
+            case List.head (List.reverse rest) of
+                Just R -&gt;
+                    hasReducibleArgs (dropLast rest)
 
-    _ -&gt;
-        False
+                _ -&gt;
+                    False
+
+        _ -&gt;
+            False
 </code></pre>
-<p>```</p>
               
             </div>
           </div><footer>

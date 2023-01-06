@@ -190,7 +190,7 @@ hand, the token list
 LB, S "italic", S " roses"
 ```
 is not reducible, since the opening `LB` is unmatched. 
-See the [detailed documentation of the L0 parser](/docs-scripta-compiler/#l0-parser#reducibility/)
+See the [detailed documentation of the L0 parser](/docs-scripta-compiler/l0-parser#reducibility/)
 to see how the function `isReducible : List Symbol -> Bool` works.
 
 
