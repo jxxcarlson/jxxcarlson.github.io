@@ -77,11 +77,13 @@
     </li>
         </ul>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#transform">Transform</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#tests">Tests</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#command-line-tools">Command line tools</a>
+    </li>
     </ul>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI</a>
                 </li>
               </ul>
               <ul>
@@ -207,12 +209,59 @@ parse lines =
 </code></pre>
 <h3 id="the-parser">The Parser</h3>
 <p>This parser operates a <a href="/docs-scripta-compiler/common-code#functional-loops/">functional loop</a></p>
+<h2 id="transform">Transform</h2>
+<p><strong>Module MicroLaTeX.Parser.Transform</strong></p>
+<p>The purpose of this function is to transform a primitive block
+like the one coming from a single-line paragraph with text
+"\section{Intro}" to an ordinary (blockType PBOrdinaryBlock)
+block with name "section", args ["1"], and content ["Introduction"].
+This is to coerce parsed MiniLaTeX source to our standard model.</p>
+<h2 id="tests">Tests</h2>
+<p>Test parsing of text to a list of primitive blocks:</p>
+<pre><code class="language-text">-- MicroLaTeXParserTest
+primitiveBlockRoundTripTest &quot;nested environments&quot; text1
+</code></pre>
+<p>Test the internal language:</p>
+<pre><code>-- MicroLaTeXParserTest
+roundTrip1 &quot;\\blue{\\italic{abc \\strong{def}}}&quot;
+</code></pre>
+<p>Test coercion of MicroLaTeX macros to blocks:</p>
+<pre><code class="language-text">-- TransformLaTeXTest
+test_ &quot;tags&quot; (toL0 [ &quot;\\tags{AAA}&quot; ]) [ &quot;| tags AAA &quot; ]
+</code></pre>
+<pre><code class="language-text">-- TransformTest
+test_ &quot;transform, args&quot;
+    (toPrimitiveBlocks &quot;\n\n\\section{Intro}\n\n&quot; |&gt; List.map transform |&gt; List.map .args)
+    [ [ &quot;1&quot; ] ]
+</code></pre>
+<p>where</p>
+<pre><code class="language-text">toPrimitiveBlocks = 
+  Markup.toPrimitiveBlocks MicroLaTeXLang
+
+</code></pre>
+<h2 id="command-line-tools">Command line tools</h2>
+<p>The <code>./CLI</code> folder contains various CLI tools for testing
+and benchmarking.  All use Albert Dahlin's
+<a href="https://package.elm-lang.org/packages/albertdahlin/elm-posix/latest/">elm/posix</a>
+package and can be run using velociraptor (command: <code>vr</code>).
+Some examples:</p>
+<ul>
+<li>
+<p>vr lxparse lxtest/a1.txt</p>
+</li>
+<li>
+<p>rt: elm-cli run src/RoundTrip.elm</p>
+</li>
+<li>
+<p>vr bench init 100 bench/harmonic.tex</p>
+</li>
+</ul>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../l0-parser/" class="btn btn-neutral float-left" title="L0 Parser"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../cli/" class="btn btn-neutral float-right" title="CLI">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../mkdocs/" class="btn btn-neutral float-right" title="Mkdocs">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -238,7 +287,7 @@ parse lines =
       <span><a href="../l0-parser/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../cli/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../mkdocs/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
