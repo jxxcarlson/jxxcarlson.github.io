@@ -148,7 +148,7 @@ phrase "foo bar".  This search excludes documents containing
 is accepted.</p>
 <h2 id="document-abstracts">Document Abstracts</h2>
 <p>A document abstract has type</p>
-<pre><code class="language-elm">type alias Abstract =
+<pre><code>type alias Abstract =
     { title : String
     , author : String
     , abstract : String
@@ -156,7 +156,7 @@ is accepted.</p>
     , digest : String }
 </code></pre>
 <p>The <code>digest</code> is computed by</p>
-<pre><code class="language-elm">toString : Abstract -&gt; String
+<pre><code>toString : Abstract -&gt; String
 toString a =
     [ a.title, a.author, a.tags ] |&gt; String.join &quot;; &quot;
 
@@ -166,7 +166,7 @@ toString a =
 backend model.  This dictionary is updated 
 every <code>Config.backendTickSeconds</code> by the 
 update function of the backend model:</p>
-<pre><code class="language-elm">Tick newTime -&gt;
+<pre><code>Tick newTime -&gt;
     -- Do regular tasks
     ( { model | currentTime = newTime }
         |&gt; updateAbstracts
@@ -178,11 +178,11 @@ update function of the backend model:</p>
 <p>User document searches are initiated by the <code>Search</code> clause of
 <code>Frontend.update</code>.  This clause invokes <code>Frontend.Search.search</code>
 which send the message</p>
-<pre><code class="language-elm">SearchForDocuments StandardHandling model.currentUser model.inputSearchKey
+<pre><code>SearchForDocuments StandardHandling model.currentUser model.inputSearchKey
 </code></pre>
 <p>to the backend, where the code for <code>idsFromAbstractDict</code>
 is eventually invoked:</p>
-<pre><code class="language-elm">idsFromAbstractDict : Dict String Abstract -&gt; String -&gt; List DocId
+<pre><code>idsFromAbstractDict : Dict String Abstract -&gt; String -&gt; List DocId
 idsFromAbstractDict abstractDict query =
     Dict.toList abstractDict
         |&gt; Text.Search.withQueryString digest Text.Search.NotCaseSensitive query

@@ -160,14 +160,14 @@ is the full data flow:</p>
 <em>Data flow for creating a collection document</em></p>
 <p>Continuing in words, <code>Frontend.Update.newCollection</code> calls
 <code>Frontend.Update.makeDocument</code>, which invokes the command</p>
-<pre><code class="language-elm">Lamdera.sendToBackend (CreateDocument model.currentUser newDoc)
+<pre><code>Lamdera.sendToBackend (CreateDocument model.currentUser newDoc)
 </code></pre>
 <p>The message <code>CreateDocument</code> calls 
 <code>Backend.Document.create</code>, which is responsible 
 for creating the document, adding to the application
 store, and sending the resulting document back to the
 frontend via </p>
-<pre><code class="language-elm">Lamdera.sendToFrontend clientId (ReceivedNewDocument handling doc)
+<pre><code>Lamdera.sendToFrontend clientId (ReceivedNewDocument handling doc)
 </code></pre>
 <h2 id="adding-a-new-document-to-a-collection">Adding a new document to a collection</h2>
 <p><img alt="Add new document to collection" src="../image/newDocumentInCollection.jpg" /></p>

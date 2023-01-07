@@ -112,11 +112,11 @@ is that there is a frontend and a backend, the two
 communicating via a message protocol over websockets.
 Thus, to fetch a document from the backend, the frontend
 may issue the command</p>
-<pre><code class="language-elm">Lamdera.sendToBackend (FetchDocumentById SimpleHandling doc.id)
+<pre><code>Lamdera.sendToBackend (FetchDocumentById SimpleHandling doc.id)
 </code></pre>
 <p>The backend would then retrieve the document using the id,
 and if found, send it to the frontend via</p>
-<pre><code class="language-elm">Lamdera.sendToFrontend clientId (ReceivedDocument SimpledHandling document)
+<pre><code>Lamdera.sendToFrontend clientId (ReceivedDocument SimpledHandling document)
 </code></pre>
               
             </div>

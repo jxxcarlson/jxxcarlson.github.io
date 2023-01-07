@@ -64,7 +64,7 @@ is the full data flow:
 Continuing in words, `Frontend.Update.newCollection` calls
 `Frontend.Update.makeDocument`, which invokes the command
 
-```elm
+```
 Lamdera.sendToBackend (CreateDocument model.currentUser newDoc)
 ```
 
@@ -74,7 +74,7 @@ for creating the document, adding to the application
 store, and sending the resulting document back to the
 frontend via 
 
-```elm
+```
 Lamdera.sendToFrontend clientId (ReceivedNewDocument handling doc)
 ```
 

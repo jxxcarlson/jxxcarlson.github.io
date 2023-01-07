@@ -38,7 +38,7 @@ is accepted.
 
 A document abstract has type
 
-```elm
+```
 type alias Abstract =
     { title : String
     , author : String
@@ -49,7 +49,7 @@ type alias Abstract =
 
 The `digest` is computed by
 
-```elm
+```
 toString : Abstract -> String
 toString a =
     [ a.title, a.author, a.tags ] |> String.join "; "
@@ -62,7 +62,7 @@ backend model.  This dictionary is updated
 every `Config.backendTickSeconds` by the 
 update function of the backend model:
 
-```elm
+```
 Tick newTime ->
     -- Do regular tasks
     ( { model | currentTime = newTime }
@@ -80,14 +80,14 @@ User document searches are initiated by the `Search` clause of
 `Frontend.update`.  This clause invokes `Frontend.Search.search`
 which send the message
 
-```elm
+```
 SearchForDocuments StandardHandling model.currentUser model.inputSearchKey
 ```
 
 to the backend, where the code for `idsFromAbstractDict`
 is eventually invoked:
 
-```elm
+```
 idsFromAbstractDict : Dict String Abstract -> String -> List DocId
 idsFromAbstractDict abstractDict query =
     Dict.toList abstractDict
