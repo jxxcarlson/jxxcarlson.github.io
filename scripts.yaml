@@ -15,6 +15,9 @@ scripts:
     - git ci -m "Update doc-scripta-compiler" docs-scripta-compiler/
     - git push
 
+  monitor:
+    - open -a /Applications/Firefox.app https://github.com/jxxcarlson/jxxcarlson.github.io/actions
+
   look: open -a /Applications/Firefox.app app/elm-editor2/index.html
 
   go: open -a /Applications/Firefox.app https://jxxcarlson.github.io/app/elm-editor2
