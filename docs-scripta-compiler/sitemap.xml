@@ -11,6 +11,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://jxxcarlson.github.io/docs-scripta-compiler/dataStructures/</loc>
+         <lastmod>2023-01-07</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://jxxcarlson.github.io/docs-scripta-compiler/introduction/</loc>
          <lastmod>2023-01-07</lastmod>
          <changefreq>daily</changefreq>
@@ -32,11 +37,6 @@
     </url>
     <url>
          <loc>https://jxxcarlson.github.io/docs-scripta-compiler/overview/</loc>
-         <lastmod>2023-01-07</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://jxxcarlson.github.io/docs-scripta-compiler/primitiveBlocks/</loc>
          <lastmod>2023-01-07</lastmod>
          <changefreq>daily</changefreq>
     </url>

@@ -57,7 +57,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../primitiveBlocks/">Primitive Blocks</a>
+                <li class="toctree-l1"><a class="reference internal" href="../dataStructures/">Data structures</a>
                 </li>
               </ul>
               <ul>
@@ -114,6 +114,10 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="microlatex-parser">MicroLaTeX Parser</h1>
+<p>The MicroLaTeX parser first transforms source
+into a list of primitive LaTeX blocks, then 
+by mapping the parser for the internal
+language over this list, into a list of expression blocks.</p>
 <h2 id="primitive-blocks">Primitive Blocks</h2>
 <p>A primitve LaTeX block is a 13-field record as displayed
 below.  </p>
@@ -208,7 +212,26 @@ parse lines =
     lines |&gt; parseLoop |&gt; .blocks
 </code></pre>
 <h3 id="the-parser">The Parser</h3>
-<p>This parser operates a <a href="/docs-scripta-compiler/common-code#functional-loops/">functional loop</a></p>
+<p>The parser is defined in 
+module <code>Parser.PrimitiveLaTeXBlock</code> 
+by functions</p>
+<pre><code class="language-text">parse : List String -&gt; List PrimitiveLaTeXBlock
+parse lines =
+    lines |&gt; parseLoop |&gt; .blocks
+</code></pre>
+<p>and</p>
+<pre><code class="language-text">parseLoop : List String -&gt; ParserOutput
+parseLoop lines =
+    loop (init lines) nextStep |&gt; finalize
+</code></pre>
+<p>where</p>
+<pre><code class="language-text">type alias ParserOutput =
+    { blocks : List PrimitiveLaTeXBlock
+    , stack : List PrimitiveLaTeXBlock
+    , holdingStack : List PrimitiveLaTeXBlock }
+</code></pre>
+<p>The parser operates a 
+<a href="/docs-scripta-compiler/common-code#functional-loops/">functional loop</a>.</p>
 <h2 id="transform">Transform</h2>
 <p><strong>Module MicroLaTeX.Parser.Transform</strong></p>
 <p>The purpose of this function is to transform a primitive block
@@ -250,7 +273,7 @@ Some examples:</p>
 <p>vr lxparse lxtest/a1.txt</p>
 </li>
 <li>
-<p>rt: elm-cli run src/RoundTrip.elm</p>
+<p>vr rt foo.txt</p>
 </li>
 <li>
 <p>vr bench init 100 bench/harmonic.tex</p>

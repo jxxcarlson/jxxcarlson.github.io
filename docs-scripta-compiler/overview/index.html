@@ -71,7 +71,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../primitiveBlocks/">Primitive Blocks</a>
+                <li class="toctree-l1"><a class="reference internal" href="../dataStructures/">Data structures</a>
                 </li>
               </ul>
               <ul>
@@ -254,7 +254,8 @@ as follows:</p>
 the token list.  It will be used in error recovery.</p>
 <h3 id="reduction-of-a-list-of-tokens">Reduction of a list of tokens</h3>
 <p>Recall that expressions are of type</p>
-<pre><code>type Expr
+<pre><code>-- Parser.Expr
+type Expr
     = Fun String (List Expr) Meta
     | Text String Meta
     | Verbatim String String Meta
