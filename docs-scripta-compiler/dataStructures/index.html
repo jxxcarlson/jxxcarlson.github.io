@@ -68,10 +68,6 @@
     <li class="toctree-l2"><a class="reference internal" href="#edit-records">Edit records</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#accumulator">Accumulator</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#updateaccumulator">updateAccumulator</a>
-    </li>
-        </ul>
     </li>
     </ul>
                 </li>
@@ -196,19 +192,36 @@ type alias EditRecord chunk parsedChunk accumulator =
     }
 </code></pre>
 <h2 id="accumulator">Accumulator</h2>
-<p>The <code>Accumulator</code> type is used to collect, build up, 
+<p>The <code>Accumulator</code> type, defined in module <code>Compiler.Acc</code>,
+is used to collect, build up, 
 and apply auxiliary information about the text.
-For example, the <code>headingIndex</code>, stores the current
+For example, the <code>headingIndex</code> stores the current
 section number, where "current" refers to the 
 the current section of the document as the 
 accumulator-building function walks through
 the current parse forest.  As it does, it simultaneously
-updates the accumulator using function 
-<a href="/docs-scripta-compiler/dataStructures/#update-accumulator/">updateAccumulator</a></p>
-<pre><code>
-
-```text
--- Compiler.Acc
+(1) updates the accumulator and (2) applies new "patches" 
+of the accumulator to the parse forest.  </p>
+<p>This process is managed by
+function <code>transformAccumulateTree</code> which is called every time 
+the parser pipeline runs.  For this reason one does not have
+to recompile to have up-to-date cross-references, etc., as
+in standard LaTeX.</p>
+<pre><code class="language-text">transformAccumulateTree : Tree ExpressionBlock -&gt; Accumulator -&gt; ( Accumulator, Tree ExpressionBlock )
+transformAccumulateTree tree acc =
+    Tree.mapAccumulate transformAccumulateBlock acc tree
+</code></pre>
+<p>where the function <code>transformAccumulateBlock</code> carries out the 
+per-block step:</p>
+<pre><code class="language-text">transformAccumulateBlock : Accumulator -&gt; ExpressionBlock -&gt; ( Accumulator, ExpressionBlock )
+</code></pre>
+<p>This function in turn calls upon functions <code>updateAccumulator</code> for (1) and 
+function <code>transformBlock</code> for (2):</p>
+<pre><code class="language-text">updateAccumulator : ExpressionBlock -&gt; Accumulator -&gt; Accumulator
+</code></pre>
+<pre><code class="language-text">transformBlock : Accumulator -&gt; ExpressionBlock -&gt; ExpressionBlock
+</code></pre>
+<pre><code class="language-text">-- Compiler.Acc
 type alias Accumulator =
     { language : Language
     , headingIndex : Vector
@@ -229,11 +242,6 @@ type alias Accumulator =
     , qAndAList : List ( String, String )
     , qAndADict : Dict String String
     }
-</code></pre>
-<h3 id="updateaccumulator">updateAccumulator</h3>
-<pre><code class="language-text">-- Compiler.Acc
-updateAccumulator : ExpressionBlock -&gt; Accumulator -&gt; Accumulator
-updateAccumulator (ExpressionBlock { name, indent, args, blockType, content, tag, id }) accumulator
 </code></pre>
               
             </div>
