@@ -216,7 +216,7 @@ depends on the language, the abstract syntax is the
 same for all tree.  Indeed, text in the internal 
 language always parses to <code>Either String (List Expr)</code>,
 where</p>
-<pre><code class="language-elm">type Expr
+<pre><code>type Expr
     = Fun String (List Expr) Meta
     | Text String Meta
     | Verbatim String String Meta
@@ -224,7 +224,7 @@ where</p>
 <h2 id="block-definition">Block Definition</h2>
 <p>In the case of L0 and XMarkdown, a primitive
 block is defined by</p>
-<pre><code class="language-elm">type alias PrimitiveBlock =
+<pre><code>type alias PrimitiveBlock =
     { indent : Int
     , lineNumber : Int
     , position : Int

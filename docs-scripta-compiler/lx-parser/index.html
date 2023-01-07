@@ -115,7 +115,7 @@
 <h2 id="primitive-blocks">Primitive Blocks</h2>
 <p>A primitve LaTeX block is a 13-field record as displayed
 below.  </p>
-<pre><code class="language-elm">-- Parser.PrimitiveLaTeXBlock
+<pre><code>-- Parser.PrimitiveLaTeXBlock
 type alias PrimitiveLaTeXBlock =
     { indent : Int
     , lineNumber : Int
@@ -179,8 +179,7 @@ args. (XX: improve this discussion)</p>
 </li>
 <li>
 <p>The <code>blockType</code> field has type</p>
-<p><code>elm
-type PrimitiveBlockType
+<p><code>type PrimitiveBlockType
     = PBVerbatim
     | PBOrdinary
     | PBParagraph</code></p>
@@ -191,8 +190,7 @@ verbatim to the renderer.</p>
 </li>
 <li>
 <p>The <code>status</code> field has type </p>
-<p><code>elm
-type Status
+<p><code>type Status
     = Finished
     | Started
     | Filled</code></p>
@@ -202,7 +200,7 @@ type Status
 is needed to handle nested blocks.</p>
 <p>Lists of lines of text are parsed into lists 
 of primitive blocks by the function</p>
-<pre><code class="language-elm">-- Parser.PrimitiveLaTeXBlock
+<pre><code>-- Parser.PrimitiveLaTeXBlock
 parse : List String -&gt; List PrimitiveLaTeXBlock
 parse lines =
     lines |&gt; parseLoop |&gt; .blocks

@@ -235,7 +235,7 @@ right brackets.  <code>Meta</code> is a meta data field that
 records the location of the part of the source text 
 corresponding to the token.  <code>S</code> stands for <code>String</code>
 and <code>W</code> stands for white space.</p>
-<pre><code class="language-elm">type Token
+<pre><code>type Token
     = LB Meta
     | RB Meta
     | S String Meta
@@ -258,7 +258,7 @@ as follows:</p>
 the token list.  It will be used in error recovery.</p>
 <h3 id="reduction-of-a-list-of-tokens">Reduction of a list of tokens</h3>
 <p>Recall that expressions are of type</p>
-<pre><code class="language-elm">type Expr
+<pre><code>type Expr
     = Fun String (List Expr) Meta
     | Text String Meta
     | Verbatim String String Meta
@@ -267,11 +267,11 @@ the token list.  It will be used in error recovery.</p>
 <pre><code>LB, S &quot;italic&quot;, S &quot; roses&quot;, RB
 </code></pre>
 <p>represents an expression, namely</p>
-<pre><code class="language-elm">Fun &quot;italic&quot; [S &quot; roses&quot;]
+<pre><code>Fun &quot;italic&quot; [S &quot; roses&quot;]
 </code></pre>
 <p>where again we ignore the metadata.  On the other
 hand, the token list </p>
-<pre><code class="language-elm">LB, S &quot;italic&quot;, S &quot; roses&quot;
+<pre><code>LB, S &quot;italic&quot;, S &quot; roses&quot;
 </code></pre>
 <p>is not reducible, since the opening <code>LB</code> is unmatched. 
 See the <a href="/docs-scripta-compiler/l0-parser#reducibility/">detailed documentation of the L0 parser</a>

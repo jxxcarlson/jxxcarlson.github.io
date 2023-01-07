@@ -114,7 +114,7 @@
 <h2 id="parser">Parser</h2>
 <p>The parser is implemented as a <a href="/docs-scripta-compiler/common-code#functional-loops/">functional loop</a> with state
 defined by</p>
-<pre><code class="language-elm">-- L0.Parser.Expression
+<pre><code>-- L0.Parser.Expression
 type alias State =
     { step : Int
     , tokens : List Token
@@ -128,7 +128,7 @@ type alias State =
 </code></pre>
 <p>and driving function <code>State -&gt; Step State State</code>
 defined by</p>
-<pre><code class="language-elm">-- L0.Parser.Expression
+<pre><code>-- L0.Parser.Expression
 nextStep : State -&gt; Step State State
 nextStep state =
     case getToken state of
@@ -152,7 +152,7 @@ is reducible using the function  <code>isReducible</code> discussed
 below.  If it is, it reduces the stack using
 <code>reduceStack</code>, returning the updated state.  If not,
 the state is passed on unchanged.</p>
-<pre><code class="language-elm">-- L0.Parser.Expression
+<pre><code>-- L0.Parser.Expression
 reduceState : State -&gt; State
 reduceState state =
     if tokensAreReducible state then
@@ -162,7 +162,7 @@ reduceState state =
         state
 </code></pre>
 <h2 id="reducibility">Reducibility</h2>
-<pre><code class="language-elm">-- L0.Parser.Match:
+<pre><code>-- L0.Parser.Match:
 isReducible : List Symbol -&gt; Bool
 isReducible symbols_ =
     let
