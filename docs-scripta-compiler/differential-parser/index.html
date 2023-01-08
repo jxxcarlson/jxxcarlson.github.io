@@ -65,6 +65,8 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#differ">Differ</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#differforest">DifferForest</a>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -140,6 +142,60 @@ using function <code>differentialTransform</code> and
 a function <code>transform: p -&gt; q</code>.</p>
 <pre><code class="language-text">-- Compiler.Differ
 differentialTransform : (p -&gt; q) -&gt; DiffRecord p -&gt; List q -&gt; List q
+</code></pre>
+<h2 id="differforest">DifferForest</h2>
+<p>Module <code>Compiler.DifferForest</code> is designed to diff lists with an 
+implicit forest structure (list of trees) defined by a 
+function <code>level: p -&gt; Int</code>. In the resulting <code>DiffRecord</code>,
+the prefix, suffix, and middle segments all 
+represent subforests.</p>
+<p>To illustrate
+the main issue, consider the lists <code>u</code> and <code>v</code> (below). These
+have an indentation structure like an outline for
+an article, and so define the structure
+of a forest. In the example
+below, the leaf <code>jkl</code> in the tree with root <code>def</code> is
+changed to <code>JKL</code>. </p>
+<pre><code class="language-text">    u:
+    ----
+    abc
+    def
+      ghi
+      jkl
+      mno
+    pqr
+
+    v:
+    ----
+    abc
+    def
+      ghi
+      JKL
+      mno
+    pqr
+</code></pre>
+<p>In this example the diff record represents the following structure:</p>
+<pre><code class="language-text">    commonPrefix:
+    ----
+    abc
+
+    middleSegmentInSource:
+    ---
+    def
+      ghi
+      jkl
+      mno
+
+    middleSegmentInTarget:
+    ---
+    def
+      ghi
+      JKL
+      mno
+
+    commonSuffix:  
+    ---
+    pqr
 </code></pre>
               
             </div>
