@@ -8,7 +8,7 @@ to only re-parse what has been changed after an edit.
 ## Differ
 
 We use an extremely primitive strategy.
-Let u and v be two lists of things of type `q`. Write them as
+Let u and v be two lists of things of type `p`. Write them as
 u = axb, v = ayb, where a is the greatest common prefix
 and b is the greatest common suffix. 
 Return DiffRecord a b x y.  This operation is carried
@@ -52,8 +52,7 @@ To illustrate
 the main issue, consider the lists `u` and `v` (below). These
 have an indentation structure like an outline for
 an article, and so define the structure
-of a forest. In the example
-below, the leaf `jkl` in the tree with root `def` is
+of a forest. Here the leaf `jkl` in the tree with root `def` is
 changed to `JKL`. 
 
 ```text
@@ -76,7 +75,7 @@ changed to `JKL`.
     pqr
 ```
 
-In this example the diff record represents the following structure:
+The resuting diff record represents the following structure:
 
 ```text
     commonPrefix:
@@ -101,3 +100,9 @@ In this example the diff record represents the following structure:
     ---
     pqr
 ```
+
+## Differential Parsing in Scripta
+
+In Scripta, differential parsing takes place
+at the level of primitive blocks, as indicated in
+the [flowchart](/docs-scripta-compiler/overview#flowchart).

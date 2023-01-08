@@ -145,7 +145,8 @@ ctrl-S (S for 'sync'), the corresponding rendered text
 is brought into view and highlighted.</p>
 <p>In the case of L0 and XMarkdown, a primitive
 block is defined by</p>
-<pre><code>type alias PrimitiveBlock =
+<pre><code>-- Parser.PrimitiveBlock
+type alias PrimitiveBlock =
 { indent : Int
 , lineNumber : Int
 , position : Int
