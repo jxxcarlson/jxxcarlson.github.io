@@ -3,18 +3,18 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jxxcarlson.github.io/docs-scripta-compiler/common-code/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jxxcarlson.github.io/docs-scripta-compiler/differential-parser/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Common code - Scripta Compiler Docs</title>
+    <title>Differential Parser - Scripta Compiler Docs</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Common code";
-        var mkdocs_page_input_path = "common-code.md";
-        var mkdocs_page_url = "/docs-scripta-compiler/common-code/";
+        var mkdocs_page_name = "Differential Parser";
+        var mkdocs_page_input_path = "differential-parser.md";
+        var mkdocs_page_url = "/docs-scripta-compiler/differential-parser/";
       </script>
     
     <script src="../js/jquery-3.6.0.min.js" defer></script>
@@ -56,16 +56,16 @@
                 <li class="toctree-l1"><a class="reference internal" href="../dataStructures/">Data structures</a>
                 </li>
               </ul>
-              <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="./">Common code</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#functional-loops">Functional loops</a>
-    </li>
-    </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../common-code/">Common code</a>
                 </li>
               </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../differential-parser/">Differential Parser</a>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Differential Parser</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#differ">Differ</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
@@ -102,7 +102,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
-      <li>Common code</li>
+      <li>Differential Parser</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -111,37 +111,42 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="common-code">Common Code</h1>
-<h2 id="functional-loops">Functional loops</h2>
-<p>Functional loops are used throughout the compiler, and in
-particular in the L0 parser.  The key element of
-such a loop is a driver function
-<code>f : state -&gt; Step state a</code> that does some computation
-on the state and returns either a value of type <code>Done a</code>
-or a value of type <code>Loop state</code>.   In the first case
-the loop terminates with the indicated value.  In the
-second case it runs again with the new state value.˜</p>
-<pre><code>-- Parser.Helpers
-type Step state a
-    = Loop state
-    | Done a
-
-
-loop : state -&gt; (state -&gt; Step state a) -&gt; a
-loop s f =
-    case f s of
-        Loop s_ -&gt;
-            loop s_ f
-
-        Done b -&gt;
-            b
+                <h1 id="differential-parser">Differential Parser</h1>
+<p>Differential parsing is an optimization used to speed up
+recompilation of large inputs.  Since parsing is the most
+expensive part of the compiler pipeline, the idea is
+to only re-parse what has been changed after an edit.</p>
+<h2 id="differ">Differ</h2>
+<p>We use an extremely primitive strategy.
+Let u and v be two lists of things of type <code>q</code>. Write them as
+u = axb, v = ayb, where a is the greatest common prefix
+and b is the greatest common suffix. 
+Return DiffRecord a b x y.  This operation is carried
+out by </p>
+<pre><code class="language-text">-- Compiler.Differ
+diff : List p -&gt; List p -&gt; DiffRecord p
+</code></pre>
+<p>where</p>
+<pre><code class="language-text">-- Compiler.Differ
+type alias DiffRecord p =
+    { commonPrefix : List p
+    , commonSuffix : List p
+    , middleSegmentInSource : List p
+    , middleSegmentInTarget : List p
+    }
+</code></pre>
+<p>A <code>DiffRecord</code> can be used to transform a list 
+using function <code>differentialTransform</code> and 
+a function <code>transform: p -&gt; q</code>.</p>
+<pre><code class="language-text">-- Compiler.Differ
+differentialTransform : (p -&gt; q) -&gt; DiffRecord p -&gt; List q -&gt; List q
 </code></pre>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../dataStructures/" class="btn btn-neutral float-left" title="Data structures"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../differential-parser/" class="btn btn-neutral float-right" title="Differential Parser">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../common-code/" class="btn btn-neutral float-left" title="Common code"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../l0-parser/" class="btn btn-neutral float-right" title="L0 Parser">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -164,10 +169,10 @@ loop s f =
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../dataStructures/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../common-code/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../differential-parser/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../l0-parser/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
