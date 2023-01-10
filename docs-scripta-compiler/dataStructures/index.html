@@ -63,6 +63,10 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#edit-records">Edit records</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#diff-records">Diff Records</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#diffing-a-forest">Diffing a Forest</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#accumulator">Accumulator</a>
     </li>
     </ul>
@@ -81,11 +85,11 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../l0-parser/">L0 Parser</a>
+                <li class="toctree-l1"><a class="reference internal" href="../l0/">L0</a>
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../lx-parser/">MicroLaTeX Parser</a>
+                <li class="toctree-l1"><a class="reference internal" href="../lx/">MicroLaTeX</a>
                 </li>
               </ul>
               <ul>
@@ -125,12 +129,16 @@
 <li>Primitive Blocks (<code>PrimitiveBlock</code>)</li>
 <li>Expressions (<code>Expr</code>)</li>
 <li>Expression blocks (<code>ExpressionBlock</code>)</li>
-<li>Accumulator (<code>Accumlator</code>)</li>
+<li>Accumulator (<code>Accumulator</code>)</li>
 </ol>
 <p>The parser first breaks source text into primitive
 blocks (1), then maps the internal language parser over 
 a list of primitive blocks to produce expression
-blocks (2).</p>
+blocks (3).  Finally, the function
+<a href="#accumulator">transformAccumulate</a> is mapped over the list 
+of expression blocks, simultaneously collecting
+information such as cross-references and updating
+the list of expression blocks with that information</p>
 <h2 id="primitive-blocks">Primitive Blocks</h2>
 <p>Blocks have the rather elaborate type listed below.<br />
 This complex structure is necessary for interactive
@@ -189,8 +197,15 @@ type ExpressionBlock
         }
 </code></pre>
 <h2 id="edit-records">Edit records</h2>
-<pre><code>-- Compiler.AbstractDifferentialCompiler
-type alias EditRecord chunk parsedChunk accumulator =
+<p><strong>Module:</strong> Compiler.AbstractDifferentialCompiler</p>
+<p>To manage differential compilation, one uses
+<em>EditRecords</em>.  The main idea is to keep track 
+of the current list of primitive blocks (<code>List chunk</code>)
+and the current parse structure (<code>tree</code>).  When an
+edit is made, the source is parsed into primitive
+blocks and the new and old lists are compared, producing
+a <em>diff record</em>.  ... TO BE CONTINUED</p>
+<pre><code>type alias EditRecord chunk parsedChunk accumulator =
     { chunks : List chunk
     , parsed : List parsedChunk
     , tree : List (Tree parsedChunk)
@@ -200,8 +215,102 @@ type alias EditRecord chunk parsedChunk accumulator =
     , initialData : InitialData
     }
 </code></pre>
+<h2 id="diff-records">Diff Records</h2>
+<p><strong>Module:</strong> Compiler.Differ</p>
+<p>Let u and v be two lists of things of type <code>p</code>. Write them as
+u = axb, v = ayb, where a is the greatest common prefix
+and b is the greatest common suffix. Return DiffRecord a b x y.
+The type parameter can be anything: characters, strings, 
+primitive blocks, etc.  In the example below, <code>p = Char</code>.</p>
+<pre><code class="language-text">type alias DiffRecord p =
+    { commonPrefix : List p
+    , commonSuffix : List p
+    , middleSegmentInSource : List p
+    , middleSegmentInTarget : List p
+    }
+</code></pre>
+<p><strong>Example</strong></p>
+<pre><code class="language-text">&gt; import Compiler.Differ exposing(..)
+&gt; a = &quot;abcxyzdef&quot; |&gt; String.split &quot;&quot;
+[&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;x&quot;,&quot;y&quot;,&quot;z&quot;,&quot;d&quot;,&quot;e&quot;,&quot;f&quot;]
+    : List String
+&gt; b = &quot;abcXYZdef&quot; |&gt; String.split &quot;&quot;
+[&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;X&quot;,&quot;Y&quot;,&quot;Z&quot;,&quot;d&quot;,&quot;e&quot;,&quot;f&quot;]
+    : List String
+&gt; diff a b
+{  commonPrefix = [&quot;a&quot;,&quot;b&quot;,&quot;c&quot;]
+ , commonSuffix = [&quot;d&quot;,&quot;e&quot;,&quot;f&quot;],
+ , middleSegmentInSource = [&quot;x&quot;,&quot;y&quot;,&quot;z&quot;]
+ , middleSegmentInTarget = [&quot;X&quot;,&quot;Y&quot;,&quot;Z&quot;] }
+</code></pre>
+<h2 id="diffing-a-forest">Diffing a Forest</h2>
+<p>Module <code>Compiler.DifferForest</code> is designed to diff lists with an
+implicit forest structure (list of trees) defined by a
+function <code>level: p -&gt; Int</code>. In the resulting <code>DiffRecord</code>,
+the prefix, suffix, and middle segments all
+represent subforests.</p>
+<pre><code class="language-text">diff : (p -&gt; p -&gt; Bool) 
+       -&gt; (p -&gt; Int) 
+       -&gt; List p 
+       -&gt; List p 
+       -&gt; DiffRecord p
+diff eq level u v =
+</code></pre>
+<p>The function <code>eq: p -&gt; p -&gt; Bool</code> tests for equality
+... XX: more detail.  In the case of primitive blocks ...
+important that line numbers be properly computed
+in the common suffix ...</p>
+<p>To illustrate
+the main issue, consider the lists <code>u</code> and <code>v</code> (below). These
+have an indentation structure like an outline for
+an article, and so define the structure
+of a forest. In the example
+below, the leaf <code>jkl</code> in the tree with root <code>def</code> is
+changed to <code>JKL</code>.</p>
+<pre><code class="language-text">    u:
+    ----
+    abc
+    def
+      ghi
+      jkl
+      mno
+    pqr
+
+    v:
+    ----
+    abc
+    def
+      ghi
+      JKL
+      mno
+    pqr
+</code></pre>
+<p>In this example the diff record represents the following structure:</p>
+<pre><code class="language-text">    commonPrefix:
+    ----
+    abc
+
+    middleSegmentInSource:
+    ---
+    def
+      ghi
+      jkl
+      mno
+
+    middleSegmentInTarget:
+    ---
+    def
+      ghi
+      JKL
+      mno
+
+    commonSuffix:
+    ---
+    pqr
+</code></pre>
 <h2 id="accumulator">Accumulator</h2>
-<p>The <code>Accumulator</code> type, defined in module <code>Compiler.Acc</code>,
+<p><strong>Module:</strong> <code>Compiler.Acc</code></p>
+<p>The <code>Accumulator</code> type
 is used to collect, build up, 
 and apply auxiliary information about the text.
 For example, the <code>headingIndex</code> stores the current
@@ -216,20 +325,12 @@ function <code>transformAccumulateTree</code> which is called every time
 the parser pipeline runs.  For this reason one does not have
 to recompile to have up-to-date cross-references, etc., as
 in standard LaTeX.</p>
-<pre><code class="language-text">transformAccumulateTree : Tree ExpressionBlock -&gt; Accumulator -&gt; ( Accumulator, Tree ExpressionBlock )
-transformAccumulateTree tree acc =
-    Tree.mapAccumulate transformAccumulateBlock acc tree
+<pre><code class="language-text">transformAccumulate : 
+        InitialAccumulatorData 
+        -&gt; Forest ExpressionBlock 
+        -&gt; ( Accumulator, Forest ExpressionBlock )
 </code></pre>
-<p>where the function <code>transformAccumulateBlock</code> carries out the 
-per-block step:</p>
-<pre><code class="language-text">transformAccumulateBlock : Accumulator -&gt; ExpressionBlock -&gt; ( Accumulator, ExpressionBlock )
-</code></pre>
-<p>This function in turn calls upon functions <code>updateAccumulator</code> for (1) and 
-function <code>transformBlock</code> for (2):</p>
-<pre><code class="language-text">updateAccumulator : ExpressionBlock -&gt; Accumulator -&gt; Accumulator
-</code></pre>
-<pre><code class="language-text">transformBlock : Accumulator -&gt; ExpressionBlock -&gt; ExpressionBlock
-</code></pre>
+<p>Type definition:</p>
 <pre><code class="language-text">-- Compiler.Acc
 type alias Accumulator =
     { language : Language

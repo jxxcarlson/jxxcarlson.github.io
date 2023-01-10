@@ -26,12 +26,12 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://jxxcarlson.github.io/docs-scripta-compiler/l0-parser/</loc>
+         <loc>https://jxxcarlson.github.io/docs-scripta-compiler/l0/</loc>
          <lastmod>2023-01-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://jxxcarlson.github.io/docs-scripta-compiler/lx-parser/</loc>
+         <loc>https://jxxcarlson.github.io/docs-scripta-compiler/lx/</loc>
          <lastmod>2023-01-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -57,6 +57,11 @@
     </url>
     <url>
          <loc>https://jxxcarlson.github.io/docs-scripta-compiler/tests/</loc>
+         <lastmod>2023-01-10</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://jxxcarlson.github.io/docs-scripta-compiler/l0/l0/</loc>
          <lastmod>2023-01-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
