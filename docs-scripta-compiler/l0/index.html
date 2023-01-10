@@ -61,17 +61,13 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../differential-compiler/">Differential Compilation</a>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../synchronization/">Synchronization</a>
                 </li>
               </ul>
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">L0</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#parser">Parser</a>
+    <li class="toctree-l2"><a class="reference internal" href="#parsing-expresssions">Parsing Expresssions</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#reducibility">Reducibility</a>
     </li>
@@ -117,9 +113,19 @@
               
                 <h1 id="l0">L0</h1>
 <p>(( Under construction! ))</p>
-<h2 id="parser">Parser</h2>
-<p>The parser is implemented as a <a href="/docs-scripta-compiler/common-code#functional-loops/">functional loop</a> with state
-defined by</p>
+<h2 id="parsing-expresssions">Parsing Expresssions</h2>
+<p>Recall that we use the same type for  L0 expressions as we do
+for MicroLaTeX and XMarkdown:</p>
+<pre><code class="language-text">-- Parser.Expr
+type Expr
+    = Fun String (List Expr) Meta
+    | Text String Meta
+    | Verbatim String String Meta
+</code></pre>
+<p>The parser for expressions uses the shift-reduce strategy
+and is implemented as a 
+<a href="/docs-scripta-compiler/common-code#functional-loops/">functional loop</a> with state
+where the state is given by</p>
 <pre><code>-- L0.Parser.Expression
 type alias State =
     { step : Int
@@ -132,7 +138,7 @@ type alias State =
     , lineNumber : Int
     }
 </code></pre>
-<p>and driving function <code>State -&gt; Step State State</code>
+<p>with driving function <code>State -&gt; Step State State</code>
 defined by</p>
 <pre><code>-- L0.Parser.Expression
 nextStep : State -&gt; Step State State

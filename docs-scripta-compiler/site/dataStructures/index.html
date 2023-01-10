@@ -77,10 +77,6 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../differential-compiler/">Differential Compilation</a>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../synchronization/">Synchronization</a>
                 </li>
               </ul>
@@ -248,7 +244,8 @@ primitive blocks, etc.  In the example below, <code>p = Char</code>.</p>
 implicit forest structure (list of trees) defined by a
 function <code>level: p -&gt; Int</code>. In the resulting <code>DiffRecord</code>,
 the prefix, suffix, and middle segments all
-represent subforests.</p>
+represent subforests.  The <code>diff</code> function in this 
+module is used to diff primitive blocks in the compiler.</p>
 <pre><code class="language-text">diff : (p -&gt; p -&gt; Bool) 
        -&gt; (p -&gt; Int) 
        -&gt; List p 
