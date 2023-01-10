@@ -75,6 +75,30 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Rendering</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#tex-macros-and-l0-function-elements">TeX Macros and L0 Function Elements</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#style">Style</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#color">Color</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#unclassified-and">Unclassified and ???</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#formatting">Formatting</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#reference">Reference</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#document">Document</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#links">Links</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#scripta">Scripta</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#character-latex">Character, LaTeX</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#tex-environments-and-l0-blocks">TeX Environments and L0 Blocks</a>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -109,6 +133,119 @@
 <pre><code>render : Int -&gt; Accumulator -&gt; Settings -&gt; ExpressionBlock -&gt; Element MarkupMsg
 </code></pre>
 <p>of module <code>Block.Render</code>.</p>
+<h2 id="tex-macros-and-l0-function-elements">TeX Macros and L0 Function Elements</h2>
+<p>Recall that running text in MicroLaTeX and L0
+is represented by a common <code>List Expr</code> type,
+where</p>
+<pre><code class="language-text">type Expr
+    = Fun String (List Expr) Meta
+    | Text String Meta
+    | Verbatim String String Meta
+</code></pre>
+<p>Thus both the LaTeX <code>\italic{stuff}</code>
+and the L0 <code>[italic stuff]</code> are represented by
+<code>Fun "italic" [Text "stuff"]</code>.  Values of 
+type <code>Expr</code> are rendered to Html by</p>
+<p>Expressions are rendered by the function
+<code>render</code>, the sole export of module <code>Render.Elm</code>:</p>
+<pre><code class="language-text">-- Render.Elm
+render : 
+    Int
+    -&gt; Accumulator
+    -&gt; Settings 
+    -&gt; Expr 
+    -&gt; Element MarkupMsg
+render generation acc settings expr = ...
+</code></pre>
+<p>Expressions of type <code>Fun ...</code> are handled
+by a dictionary that maps function names
+to rendering functions:</p>
+<pre><code class="language-text">markupDict : 
+  Dict 
+    String 
+    (Int -&gt; Accumulator -&gt; Settings  
+      -&gt; List Expr -&gt; Element MarkupMsg)
+</code></pre>
+<p>The entries in that dictionary are listed 
+below</p>
+<h3 id="style">Style</h3>
+<pre><code class="language-text">i, italic, textit, emph
+b, bold, strong, textbf
+bi, boldItalic
+strike
+underline
+large
+</code></pre>
+<h3 id="color">Color</h3>
+<pre><code class="language-text">red
+blue
+green
+pink
+magenta
+violet
+highlight
+gray
+errorHighlight
+</code></pre>
+<h3 id="unclassified-and">Unclassified and ???</h3>
+<pre><code class="language-text">var
+lambda
+group
+skip
+table
+image
+</code></pre>
+<h3 id="formatting">Formatting</h3>
+<pre><code class="language-text">vspace
+par
+</code></pre>
+<h3 id="reference">Reference</h3>
+<pre><code class="language-text">bibitem
+ref
+reflink
+eqref
+cite
+term
+term_
+footnote
+label
+</code></pre>
+<h3 id="document">Document</h3>
+<pre><code class="language-text">hide
+author
+date
+today
+comment
+title
+setcounter
+abstract
+</code></pre>
+<h3 id="links">Links</h3>
+<pre><code class="language-text">link
+href
+ilink
+ulink
+cslink
+</code></pre>
+<h3 id="scripta">Scripta</h3>
+<pre><code class="language-text">tags
+</code></pre>
+<h3 id="character-latex">Character, LaTeX</h3>
+<pre><code class="language-text">dollarSign
+dollar
+brackets
+rb
+lb
+bt
+ds
+bs
+texarg
+backTick
+underscore
+mdash
+ndash
+</code></pre>
+<h2 id="tex-environments-and-l0-blocks">TeX Environments and L0 Blocks</h2>
               
             </div>
           </div><footer>
