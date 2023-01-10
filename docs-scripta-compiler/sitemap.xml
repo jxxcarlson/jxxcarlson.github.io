@@ -2,62 +2,62 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://jxxcarlson.github.io/docs-scripta-compiler/</loc>
-         <lastmod>2023-01-08</lastmod>
+         <lastmod>2023-01-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://jxxcarlson.github.io/docs-scripta-compiler/common-code/</loc>
-         <lastmod>2023-01-08</lastmod>
+         <lastmod>2023-01-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://jxxcarlson.github.io/docs-scripta-compiler/dataStructures/</loc>
-         <lastmod>2023-01-08</lastmod>
+         <lastmod>2023-01-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://jxxcarlson.github.io/docs-scripta-compiler/differential-parser/</loc>
-         <lastmod>2023-01-08</lastmod>
+         <loc>https://jxxcarlson.github.io/docs-scripta-compiler/differential-compiler/</loc>
+         <lastmod>2023-01-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://jxxcarlson.github.io/docs-scripta-compiler/introduction/</loc>
-         <lastmod>2023-01-08</lastmod>
+         <lastmod>2023-01-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://jxxcarlson.github.io/docs-scripta-compiler/l0-parser/</loc>
-         <lastmod>2023-01-08</lastmod>
+         <lastmod>2023-01-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://jxxcarlson.github.io/docs-scripta-compiler/lx-parser/</loc>
-         <lastmod>2023-01-08</lastmod>
+         <lastmod>2023-01-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://jxxcarlson.github.io/docs-scripta-compiler/mkdocs/</loc>
-         <lastmod>2023-01-08</lastmod>
+         <lastmod>2023-01-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://jxxcarlson.github.io/docs-scripta-compiler/overview/</loc>
-         <lastmod>2023-01-08</lastmod>
+         <lastmod>2023-01-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://jxxcarlson.github.io/docs-scripta-compiler/render/</loc>
-         <lastmod>2023-01-08</lastmod>
+         <lastmod>2023-01-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://jxxcarlson.github.io/docs-scripta-compiler/synchronization/</loc>
-         <lastmod>2023-01-08</lastmod>
+         <lastmod>2023-01-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://jxxcarlson.github.io/docs-scripta-compiler/tests/</loc>
-         <lastmod>2023-01-08</lastmod>
+         <lastmod>2023-01-10</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

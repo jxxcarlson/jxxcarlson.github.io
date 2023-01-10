@@ -61,11 +61,17 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../differential-parser/">Differential Parser</a>
+                <li class="toctree-l1"><a class="reference internal" href="../differential-compiler/">Differential Compilation</a>
                 </li>
               </ul>
-              <ul>
-                <li class="toctree-l1"><a class="" href="../syncrhonization.md">Synchronization</a>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Synchronization</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#synchronizing-rendered-text-to-source-text">Synchronizing Rendered Text to Source Text</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#synchronizing-source-text-to-rendered-text">Synchronizing Source Text to Rendered Text</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
@@ -108,21 +114,68 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="synchronization">Synchronization</h1>
-<h2 id="sourcemap">Sourcemap</h2>
-<p>The <code>id</code> field of an <code>ExpressionBlock</code> is simply
-the string version of the line number field of the <code>PrimitiveBlock</code>
-from which it is derived.  The <code>id</code> field is used in rendered-to-source
-syncrhonization.  Namely, when the user clicks on a piece of rendered
-text, the message <code>SendId id</code> is sent.  When this is handled, the
+<h2 id="synchronizing-rendered-text-to-source-text">Synchronizing Rendered Text to Source Text</h2>
+<p>The <code>lineNumber</code> field of an <code>ExpressionBlock</code> is used for 
+rendered-text-to-source syncrhonization.  Namely, when the user 
+clicks on a piece of rendered
+text, the message <code>SendLineNumber lineNumber</code> is sent using</p>
+<pre><code class="language-text">sendLineNumberOnClick : Int -&gt; Element.Attribute MarkupMsg
+sendLineNumberOnClick lineNumber =
+    Events.onClick (SendLineNumber (String.fromInt lineNumber))
+</code></pre>
+<p>When the message is handled by the host app and editor, the
 corresponding source text is scrolled into view and highlighted.
 (NOTE: still quite innacurate).  In both Scripta.io and Scripta Desktop,
 the message is passed on to the Codemirror editor, whihc does the
 scrolling and highlighting.</p>
-<p>PROBLEM: when source text is edited and differential parsing is used,
-line numbers after the edited text are not update.</p>
+<p>PROBLEM: there are still some problems stemming from innaccurate
+computation of line numbers by the differential parser.  To 
+be resolved.</p>
+<h2 id="synchronizing-source-text-to-rendered-text">Synchronizing Source Text to Rendered Text</h2>
+<p>Although synchronization is carried out by the host
+app, we outine the process here.  First, the user
+highlights a block of source text, then pressed a button
+or key combination to send a message from the editor to
+the Elm app.  On the JS side, the editor code 
+for this in Codemirror 6 is</p>
+<pre><code class="language-text">attributeChangedCallback(attr, oldVal, newVal) {
+
+         function sendSelectedText(editor, str) {
+                     console.log(&quot;sendSelectedText (dispatch)&quot;, str)
+                     const event = new CustomEvent('selected-text', { 'detail': str , 'bubbles':true, 'composed': true});
+                     editor.dom.dispatchEvent(event);
+                  }
+
+        ...
+</code></pre>
+<p>The selected text is handle by</p>
+<pre><code class="language-text">onSelectionChange : Html.Attribute FrontendMsg
+onSelectionChange =
+    textDecoder
+        |&gt; Json.Decode.map SelectedText
+        |&gt; Html.Events.on &quot;selected-text&quot;
+</code></pre>
+<p>which passes it to the app's (front end) update function 
+in clause <code>SelectedText</code>:</p>
+<pre><code class="language-text">SelectedText selectedText -&gt;
+  Frontend.Update.firstSyncLR model selectedText
+</code></pre>
+<p>The <code>firstSyncLR</code> function searches the syntax tree (forest)
+for the given text using</p>
+<pre><code class="language-text">ompiler.ASTTools.matchingIdsInAST selectedText model.editRecord.tree
+</code></pre>
+<p>This is possible because one field of the corresponding 
+<code>ExpressionBlock</code> is the source text from which it was
+derived.  Once the id(s) for corresponding elements
+of the rendered text are found, they can be scrolled
+into view and highlighted.</p>
               
             </div>
           </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../differential-compiler/" class="btn btn-neutral float-left" title="Differential Compilation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../l0-parser/" class="btn btn-neutral float-right" title="L0 Parser">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
 
   <hr/>
 
@@ -144,6 +197,10 @@ line numbers after the edited text are not update.</p>
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
+      <span><a href="../differential-compiler/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../l0-parser/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
