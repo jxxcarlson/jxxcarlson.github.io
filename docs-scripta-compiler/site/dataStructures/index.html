@@ -200,7 +200,10 @@ of the current list of primitive blocks (<code>List chunk</code>)
 and the current parse structure (<code>tree</code>).  When an
 edit is made, the source is parsed into primitive
 blocks and the new and old lists are compared, producing
-a <em>diff record</em>.  ... TO BE CONTINUED</p>
+a <em>diff record</em> which shows which blocks have been
+changed.  The changed blocks are parsed,
+then incorporated into the current list of 
+expression blocks (<code>List parsedChunk</code>).  </p>
 <pre><code>type alias EditRecord chunk parsedChunk accumulator =
     { chunks : List chunk
     , parsed : List parsedChunk
@@ -211,6 +214,23 @@ a <em>diff record</em>.  ... TO BE CONTINUED</p>
     , initialData : InitialData
     }
 </code></pre>
+<p>Orchestration of the process outlined above
+is conducted by the <code>update</code> function listed
+below.  </p>
+<pre><code class="language-text">-- Compiler.AbstractDifferentialParser
+update :
+    UpdateFunctions chunk parsedChunk acc
+    -&gt; String
+    -&gt; EditRecord chunk parsedChunk acc
+    -&gt; EditRecord chunk parsedChunk acc
+</code></pre>
+<p>The first argument is a record that holds the 
+functions needed in any concrete instantiation
+of the <code>update</code> function, e.g, the field</p>
+<pre><code class="language-text">setLineNumber : Int -&gt; parsedChunk -&gt; parsedChunk
+</code></pre>
+<p>used in renumbering parsed chunks.</p>
+<p>XX: more on keeping the line numbers up-to-data.</p>
 <h2 id="diff-records">Diff Records</h2>
 <p><strong>Module:</strong> Compiler.Differ</p>
 <p>Let u and v be two lists of things of type <code>p</code>. Write them as
@@ -240,7 +260,9 @@ primitive blocks, etc.  In the example below, <code>p = Char</code>.</p>
  , middleSegmentInTarget = [&quot;X&quot;,&quot;Y&quot;,&quot;Z&quot;] }
 </code></pre>
 <h2 id="diffing-a-forest">Diffing a Forest</h2>
-<p>Module <code>Compiler.DifferForest</code> is designed to diff lists with an
+<p><strong>Module:</strong> <code>Compiler.DifferForest</code></p>
+<p>The <code>diff</code> function in this module 
+is designed to diff lists with an
 implicit forest structure (list of trees) defined by a
 function <code>level: p -&gt; Int</code>. In the resulting <code>DiffRecord</code>,
 the prefix, suffix, and middle segments all
@@ -304,6 +326,11 @@ changed to <code>JKL</code>.</p>
     commonSuffix:
     ---
     pqr
+</code></pre>
+<p>XX, Expand on this, explain it:</p>
+<pre><code>        -- IMPORTANT: taking y from v, the second argument
+        -- ensures that the line numbers in the common suffix
+        -- are correct
 </code></pre>
 <h2 id="accumulator">Accumulator</h2>
 <p><strong>Module:</strong> <code>Compiler.Acc</code></p>

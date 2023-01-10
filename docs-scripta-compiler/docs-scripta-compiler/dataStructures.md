@@ -102,7 +102,11 @@ of the current list of primitive blocks (`List chunk`)
 and the current parse structure (`tree`).  When an
 edit is made, the source is parsed into primitive
 blocks and the new and old lists are compared, producing
-a _diff record_.  ... TO BE CONTINUED
+a _diff record_ which shows which blocks have been
+changed.  The changed blocks are parsed,
+then incorporated into the current list of 
+expression blocks (`List parsedChunk`).  
+
 
 ```
 type alias EditRecord chunk parsedChunk accumulator =
@@ -115,6 +119,31 @@ type alias EditRecord chunk parsedChunk accumulator =
     , initialData : InitialData
     }
 ```
+
+Orchestration of the process outlined above
+is conducted by the `update` function listed
+below.  
+
+```text
+-- Compiler.AbstractDifferentialParser
+update :
+    UpdateFunctions chunk parsedChunk acc
+    -> String
+    -> EditRecord chunk parsedChunk acc
+    -> EditRecord chunk parsedChunk acc
+```
+The first argument is a record that holds the 
+functions needed in any concrete instantiation
+of the `update` function, e.g, the field
+
+```text
+setLineNumber : Int -> parsedChunk -> parsedChunk
+```
+
+used in renumbering parsed chunks.
+
+XX: more on keeping the line numbers up-to-data.
+
 
 ## Diff Records
 
@@ -154,7 +183,10 @@ type alias DiffRecord p =
 
 ## Diffing a Forest
 
-Module `Compiler.DifferForest` is designed to diff lists with an
+**Module:** `Compiler.DifferForest`
+
+The `diff` function in this module 
+is designed to diff lists with an
 implicit forest structure (list of trees) defined by a
 function `level: p -> Int`. In the resulting `DiffRecord`,
 the prefix, suffix, and middle segments all
@@ -228,8 +260,12 @@ In this example the diff record represents the following structure:
     ---
     pqr
 ```
+  
+XX, Expand on this, explain it:
 
-
+            -- IMPORTANT: taking y from v, the second argument
+            -- ensures that the line numbers in the common suffix
+            -- are correct
 
 ## Accumulator
 
