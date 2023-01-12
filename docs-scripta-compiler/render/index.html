@@ -53,15 +53,51 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../dataStructures/">Data structures</a>
+                <li class="toctree-l1"><a class="reference internal" href="../dataStructures/">Data Structures</a>
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../common-code/">Common code</a>
+                <li class="toctree-l1"><a class="reference internal" href="../common-code/">Common Code</a>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../synchronization/">Synchronization</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Rendering</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#tex-macros-and-l0-function-elements">TeX Macros and L0 Function Elements</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#function-elements">Function Elements</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#style">Style</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#color">Color</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#unclassified-and">Unclassified and ???</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#formatting">Formatting</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#reference">Reference</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#document">Document</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#links">Links</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#scripta">Scripta</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#character-latex">Character, LaTeX</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#verbatim-elements">Verbatim Elements</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#verbatim-blocks">Verbatim Blocks</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
@@ -70,40 +106,6 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../lx/">MicroLaTeX</a>
-                </li>
-              </ul>
-              <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="./">Rendering</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#tex-macros-and-l0-function-elements">TeX Macros and L0 Function Elements</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#style">Style</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#color">Color</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#unclassified-and">Unclassified and ???</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#formatting">Formatting</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#reference">Reference</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#document">Document</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#links">Links</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#scripta">Scripta</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#character-latex">Character, LaTeX</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#tex-environments-and-l0-blocks">TeX Environments and L0 Blocks</a>
-    </li>
-    </ul>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../mkdocs/">Mkdocs</a>
                 </li>
               </ul>
       </div>
@@ -168,7 +170,8 @@ to rendering functions:</p>
 </code></pre>
 <p>The entries in that dictionary are listed 
 below</p>
-<h3 id="style">Style</h3>
+<h3 id="function-elements">Function Elements</h3>
+<h4 id="style">Style</h4>
 <pre><code class="language-text">i, italic, textit, emph
 b, bold, strong, textbf
 bi, boldItalic
@@ -176,7 +179,7 @@ strike
 underline
 large
 </code></pre>
-<h3 id="color">Color</h3>
+<h4 id="color">Color</h4>
 <pre><code class="language-text">red
 blue
 green
@@ -187,7 +190,7 @@ highlight
 gray
 errorHighlight
 </code></pre>
-<h3 id="unclassified-and">Unclassified and ???</h3>
+<h4 id="unclassified-and">Unclassified and ???</h4>
 <pre><code class="language-text">var
 lambda
 group
@@ -195,11 +198,11 @@ skip
 table
 image
 </code></pre>
-<h3 id="formatting">Formatting</h3>
+<h4 id="formatting">Formatting</h4>
 <pre><code class="language-text">vspace
 par
 </code></pre>
-<h3 id="reference">Reference</h3>
+<h4 id="reference">Reference</h4>
 <pre><code class="language-text">bibitem
 ref
 reflink
@@ -210,7 +213,7 @@ term_
 footnote
 label
 </code></pre>
-<h3 id="document">Document</h3>
+<h4 id="document">Document</h4>
 <pre><code class="language-text">hide
 author
 date
@@ -220,17 +223,17 @@ title
 setcounter
 abstract
 </code></pre>
-<h3 id="links">Links</h3>
+<h4 id="links">Links</h4>
 <pre><code class="language-text">link
 href
 ilink
 ulink
 cslink
 </code></pre>
-<h3 id="scripta">Scripta</h3>
+<h4 id="scripta">Scripta</h4>
 <pre><code class="language-text">tags
 </code></pre>
-<h3 id="character-latex">Character, LaTeX</h3>
+<h4 id="character-latex">Character, LaTeX</h4>
 <pre><code class="language-text">dollarSign
 dollar
 brackets
@@ -245,13 +248,44 @@ underscore
 mdash
 ndash
 </code></pre>
-<h2 id="tex-environments-and-l0-blocks">TeX Environments and L0 Blocks</h2>
+<h3 id="verbatim-elements">Verbatim Elements</h3>
+<p>Under construction</p>
+<pre><code class="language-text">-- Render.Block
+renderVerbatimBlock : 
+   Int -&gt; Accumulator -&gt; Settings -&gt; 
+   ExpressionBlock -&gt; Element MarkupMsg
+</code></pre>
+<h2 id="verbatim-blocks">Verbatim Blocks</h2>
+<pre><code class="language-text">-- Render.Block and Parser.PrimitiveLaTeXBlock
+-- 21 blocks
+equation
+aligned
+math
+code
+verbatim
+verse
+mathmacros
+textmacros
+tabular
+hide
+docinfo
+datatable
+chart
+svg
+quiver
+image
+tikz
+load-files
+include
+iframe
+</code></pre>
+<p>Under construction</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../lx/" class="btn btn-neutral float-left" title="MicroLaTeX"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../mkdocs/" class="btn btn-neutral float-right" title="Mkdocs">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../synchronization/" class="btn btn-neutral float-left" title="Synchronization"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../l0/" class="btn btn-neutral float-right" title="L0">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -274,10 +308,10 @@ ndash
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../lx/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../synchronization/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../mkdocs/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../l0/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

@@ -53,15 +53,19 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../dataStructures/">Data structures</a>
+                <li class="toctree-l1"><a class="reference internal" href="../dataStructures/">Data Structures</a>
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../common-code/">Common code</a>
+                <li class="toctree-l1"><a class="reference internal" href="../common-code/">Common Code</a>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../synchronization/">Synchronization</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../render/">Rendering</a>
                 </li>
               </ul>
               <ul>
@@ -79,19 +83,13 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#transform">Transform</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#verbatim-blocks">Verbatim Blocks</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#tests">Tests</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#command-line-tools">Command line tools</a>
     </li>
     </ul>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../render/">Rendering</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../mkdocs/">Mkdocs</a>
                 </li>
               </ul>
       </div>
@@ -243,6 +241,36 @@ like the one coming from a single-line paragraph with text
 "\section{Intro}" to an ordinary (blockType PBOrdinaryBlock)
 block with name "section", args ["1"], and content ["Introduction"].
 This is to coerce parsed MiniLaTeX source to our standard model.</p>
+<h2 id="verbatim-blocks">Verbatim Blocks</h2>
+<p>If a block is to be treated as a verbatim block,
+its name must appear in </p>
+<pre><code class="language-text">Parser.LaTeXBlock.verbatimBlockNames : List String
+</code></pre>
+<p><strong>Note.</strong> What's the deal with <code>Parser.Common.verbatimBlockNames</code>?</p>
+<pre><code class="language-text">verbatimBlockNames =
+    [ &quot;equation&quot;
+    , &quot;aligned&quot;
+    , &quot;math&quot;
+    , &quot;code&quot;
+    , &quot;verbatim&quot;
+    , &quot;verse&quot;
+    , &quot;mathmacros&quot;
+    , &quot;textmacros&quot;
+    , &quot;tabular&quot;
+    , &quot;hide&quot;
+    , &quot;docinfo&quot;
+    , &quot;datatable&quot;
+    , &quot;chart&quot;
+    , &quot;svg&quot;
+    , &quot;quiver&quot;
+    , &quot;image&quot;
+    , &quot;tikz&quot;
+    , &quot;load-files&quot;
+    , &quot;include&quot;
+    , &quot;iframe&quot;
+    ]
+
+</code></pre>
 <h2 id="tests">Tests</h2>
 <p>Test parsing of text to a list of primitive blocks:</p>
 <pre><code class="language-text">-- MicroLaTeXParserTest
@@ -288,7 +316,6 @@ Some examples:</p>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../l0/" class="btn btn-neutral float-left" title="L0"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../render/" class="btn btn-neutral float-right" title="Rendering">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -313,8 +340,6 @@ Some examples:</p>
     
       <span><a href="../l0/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
-    
-      <span><a href="../render/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
