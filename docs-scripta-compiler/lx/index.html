@@ -89,6 +89,8 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#the-nextstep-function">The nextStep function</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#error-recovery">Error recovery</a>
+    </li>
         </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#transform">Transform</a>
@@ -236,11 +238,7 @@ All blocks are moved from the stack to the committed list
 when the "root" or first block on the stack 
 as well as all of its children are closed. If the stack is nonempty after all
 blocks have been consumed, there has been a syntax error, and
-so the error recovery procedure is invoked. The strategy is to close 
-the root block on the stack with an
-error message, then reparse after skipping over the root block.
-Error recovery always
-terminates and provides an indication of the nature of the error.</p>
+so the <a href="#error-recovery">error recovery procedure</a> is invoked. </p>
 <h3 id="data-structure">Data structure</h3>
 <pre><code class="language-text">-- Parser.PrimtiiveLaTeXBlock
 -- 14 fields
@@ -299,7 +297,9 @@ It operates as follows:</p>
   - If the input (state.lines) has been consumed and
         - the stack is empty, return Done state
         - the stack is non empty, return recoverFromError state
+
   - Let the current raw line be the string at index state.lineNumber of state.lines.
+
   - Classify the raw line, a value of type Classification:
 
         type Classification
@@ -314,38 +314,30 @@ It operates as follows:</p>
   - Invoke a handler based on the classification that returns a value
     of type Step State State
 </code></pre>
-<p>New blocks are constructed by</p>
+<p>New blocks are constructed by <code>nextStep</code> using</p>
 <pre><code class="language-text">blockFromLine : Int -&gt; Line -&gt; PrimitiveLaTeXBlock
 </code></pre>
-<p>This function makes the call <code>getBlockTypeAndLabel line.content</code> 
-to determine the <code>blockType</code> and <code>label</code>, which it does via</p>
-<pre><code class="language-text">getBlockTypeAndLabel : String -&gt; ( PrimitiveBlockType, Maybe String )
-getBlockTypeAndLabel str =
-    case ClassifyBlock.classify str of
-        CBeginBlock label -&gt;
-            if List.member label verbatimBlockNames then
-                ( PBVerbatim, Just label ) |&gt; Debug.log &quot;HOHOHO!&quot;
-
-            else
-                ( PBOrdinary, Just label )
-
-        CMathBlockDelim -&gt;
-            ( PBVerbatim, Just &quot;math&quot; )
-
-        CVerbatimBlockDelim -&gt;
-            ( PBVerbatim, Just &quot;code&quot; )
-
-        _ -&gt;
-            ( PBParagraph, Nothing )
-</code></pre>
-<p>For instance, in processing the data
-listed below, the <code>ClassifyBlock.classify str</code> call produces
-<code>(PBVerbatim, "verse")</code></p>
-<pre><code class="language-text">\begin{verse}
-one
-  two
-    three
-\end{verse}
+<p>The primitive block type (<code>PBVerbatim</code>, <code>PBOrdinary</code>, <code>PBParagraph</code>)
+and the label (in the case of the first two variants) is determined
+by examining the contents of the line.  For example, if the 
+line is <code>"\begin{equation}"</code> then the primitive block type
+is <code>PBVerbatim</code> and the label is <code>"equation"</code>.  The label is used
+to run the parser loop; when a block is committed, the label is
+used to form the <code>name: Maybe String</code> field of the primitive block.
+This field is <code>Nothing</code> in the case of <code>PBParagraph</code> and is a <code>Just String</code>
+in the case of the other two block types.</p>
+<h3 id="error-recovery">Error recovery</h3>
+<p>Recall that error recovery is invoked when the stack
+is nonempty after all input has been consumed.
+The recovery strategy is to commit
+the root block on the stack, setting the <code>error</code> field
+to <code>missingTagError block</code>,  then reparse 
+the input starting from the line immediately
+after that of the offending block.  Consequently
+error recovery is guaranteed to terminate and also
+to deal with additional errors.  Error recovery 
+is handled by</p>
+<pre><code class="language-text">recoverFromError : State -&gt; State
 </code></pre>
 <h2 id="transform">Transform</h2>
 <p><strong>Module MicroLaTeX.Parser.Transform</strong></p>
@@ -415,13 +407,13 @@ package and can be run using velociraptor (command: <code>vr</code>).
 Some examples:</p>
 <ul>
 <li>
-<p>vr lxparse lxtest/a1.txt</p>
+<p>vr lxpb lxtest/a1.txt</p>
 </li>
 <li>
-<p>vr rt foo.txt</p>
+<p>vr rt foo.txt         </p>
 </li>
 <li>
-<p>vr bench init 100 bench/harmonic.tex</p>
+<p>vr bench init 100 bench/harmonic.tex </p>
 </li>
 </ul>
               
