@@ -19,15 +19,17 @@ these languages.
 **Demos & Apps**
 
 - [Simple Demo](https://jxxcarlson.github.io/app/scripta-compiler-demo/)
+- [Scripta Desktop](https://github.com/jxxcarlson/scripta-tauri/blob/main/README.md)
 - [Scripta.io](https://scripta.io)
 
 Scripta.io is an editing, document management, and publishing system.
-It makes use of error recovery, while the simple demo does not.
+Scripta Desktop is simple editing app.  Both Scripta Desktop and
+Scripta.io make use of error recovery, while the simple demo does not.
 
 **Docs and Videos**
 
 - [Compiler documentation](/docs-scripta-compiler/introduction/)
-- [Web & Deskop App](https://jxxcarlson.github.io/docs-scripta-app)
+- [Scripta.io documentation](https://jxxcarlson.github.io/docs-scripta-app)
 - [Conference talk at Lambda Days](https://www.youtube.com/watch?v=AE_QzSIsmMI)
 — an outline of the error recovery strategy.
 
