@@ -314,6 +314,39 @@ It operates as follows:</p>
   - Invoke a handler based on the classification that returns a value
     of type Step State State
 </code></pre>
+<p>New blocks are constructed by</p>
+<pre><code class="language-text">blockFromLine : Int -&gt; Line -&gt; PrimitiveLaTeXBlock
+</code></pre>
+<p>This function makes the call <code>getBlockTypeAndLabel line.content</code> 
+to determine the <code>blockType</code> and <code>label</code>, which it does via</p>
+<pre><code class="language-text">getBlockTypeAndLabel : String -&gt; ( PrimitiveBlockType, Maybe String )
+getBlockTypeAndLabel str =
+    case ClassifyBlock.classify str of
+        CBeginBlock label -&gt;
+            if List.member label verbatimBlockNames then
+                ( PBVerbatim, Just label ) |&gt; Debug.log &quot;HOHOHO!&quot;
+
+            else
+                ( PBOrdinary, Just label )
+
+        CMathBlockDelim -&gt;
+            ( PBVerbatim, Just &quot;math&quot; )
+
+        CVerbatimBlockDelim -&gt;
+            ( PBVerbatim, Just &quot;code&quot; )
+
+        _ -&gt;
+            ( PBParagraph, Nothing )
+</code></pre>
+<p>For instance, in processing the data
+listed below, the <code>ClassifyBlock.classify str</code> call produces
+<code>(PBVerbatim, "verse")</code></p>
+<pre><code class="language-text">\begin{verse}
+one
+  two
+    three
+\end{verse}
+</code></pre>
 <h2 id="transform">Transform</h2>
 <p><strong>Module MicroLaTeX.Parser.Transform</strong></p>
 <p>The purpose of this function is to transform a primitive block

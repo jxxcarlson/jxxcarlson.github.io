@@ -226,6 +226,47 @@ It operates as follows:
     of type Step State State
 ```
 
+New blocks are constructed by
+
+```text
+blockFromLine : Int -> Line -> PrimitiveLaTeXBlock
+```
+
+This function makes the call `getBlockTypeAndLabel line.content` 
+to determine the `blockType` and `label`, which it does via
+
+```text
+getBlockTypeAndLabel : String -> ( PrimitiveBlockType, Maybe String )
+getBlockTypeAndLabel str =
+    case ClassifyBlock.classify str of
+        CBeginBlock label ->
+            if List.member label verbatimBlockNames then
+                ( PBVerbatim, Just label ) |> Debug.log "HOHOHO!"
+
+            else
+                ( PBOrdinary, Just label )
+
+        CMathBlockDelim ->
+            ( PBVerbatim, Just "math" )
+
+        CVerbatimBlockDelim ->
+            ( PBVerbatim, Just "code" )
+
+        _ ->
+            ( PBParagraph, Nothing )
+```
+
+For instance, in processing the data
+listed below, the `ClassifyBlock.classify str` call produces
+`(PBVerbatim, "verse")`
+
+```text
+\begin{verse}
+one
+  two
+    three
+\end{verse}
+```
 
 
 
