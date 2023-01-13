@@ -16,10 +16,13 @@ these languages.
 
 
 
-**Demos**
+**Demos & Apps**
 
-- [Scripta-example1](https://jxxcarlson.github.io/app/scripta-compiler-demo/)
+- [Simple Demo](https://jxxcarlson.github.io/app/scripta-compiler-demo/)
 - [Scripta.io](https://scripta.io)
+
+Scripta.io is an editing, document management, and publishing system.
+It makes use of error recovery, while the simple demo does not.
 
 **Docs and Videos**
 
@@ -28,7 +31,7 @@ these languages.
 - [Conference talk at Lambda Days](https://www.youtube.com/watch?v=AE_QzSIsmMI)
 — an outline of the error recovery strategy.
 
-[Source code](https://github.com/jxxcarlson/scripta-compiler)
+[Code](https://github.com/jxxcarlson/scripta-compiler) (open-source)
 
 This project has been partially supported by the 
 Simons Foundation.  We thank them for their generosity.
