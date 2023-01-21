@@ -7,4 +7,5 @@ scripts:
   view-site: /usr/bin/open -a /Applications/Firefox.app https:jxxcarlson.github.io/docs-scripta-app/
 
   view-local: /usr/bin/open -a /Applications/Firefox.app https:localhost:8000
-  
+
+  site-stats: cat docs-scripta-app/*.md | wc -w
