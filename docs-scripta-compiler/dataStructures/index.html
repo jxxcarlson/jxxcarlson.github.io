@@ -56,6 +56,14 @@
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Data Structures</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#primitive-blocks">Primitive Blocks</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#example-l0">Example (L0)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#example-microlatex">Example (MicroLaTeX)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#coercion-and-pseudoblocks">Coercion and Pseudoblocks</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#expressions">Expressions</a>
     </li>
@@ -162,6 +170,79 @@ type alias PrimitiveBlock =
 <p>In the case of
 MicroLaTeX, there are two additional fields,
 <code>level: Int</code> and <code>status: Status</code>.</p>
+<h3 id="example-l0">Example (L0)</h3>
+<p>Consider the block </p>
+<pre><code class="language-text">| theorem (Magnus Axelsson) note:this is a joke temperature:22
+If $a = b$ then $b = a$.
+</code></pre>
+<p>There "(Magnus Axelsson) note:this is a joke temperature:22"
+is the argument string.  This string is a sequences
+of words.  Normal words do not contain the ":" character.
+Words of the form <em>a:b</em>, where <em>a</em> is normal are key-value
+words, representing key-value pairs.  Normal words must
+precede key-value words.  The former make up the 
+argument list, whereas the latter define the entries
+of the property dictionary.  Thus we have</p>
+<pre><code class="language-text">args = [&quot;(Magnus&quot;, &quot;Axellson)&quot;]
+properties = Dict.fromList [(&quot;note&quot;, &quot;this is a joke&quot;), (&quot;temperature&quot;, &quot;22&quot;)]
+</code></pre>
+<p>Arguments and properties are treated the same for 
+verbatim blocks as for ordinary blocks.  </p>
+<h3 id="example-microlatex">Example (MicroLaTeX)</h3>
+<p>Below is a LaTeX environment with an LaTeX optional argument.  In this 
+case the args list is empty and their are three key-value pairs
+in the properties dictiononary</p>
+<pre><code class="language-text">\begin{theorem}[foo:1, hoho:a b c, bar:2]
+If $a = b$ then $b = a$
+\end{theorem}
+</code></pre>
+<pre><code class="language-text">args = []
+properties = Dict.fromList [(&quot;bar&quot;, &quot;2&quot;), (&quot;foo&quot;, &quot;1&quot;), (&quot;hoho&quot;, &quot;a b c&quot;]
+</code></pre>
+<p>At the moment, environments with normal arguemnts are not handled, e.g.,</p>
+<pre><code class="language-text">\begin{theorem}{X}{Y}[foo:1, hoho:a b c, bar:2]
+If $a = b$ then $b = a$
+\end{theorem}
+</code></pre>
+<p>This should produce <code>args = ["X", "Y"]</code></p>
+<h3 id="coercion-and-pseudoblocks">Coercion and Pseudoblocks</h3>
+<p>Certain constructs such as <code>\image{https://yadayada.org/sparrow.jpg width:300}</code> or
+<code>\item foo bar ...</code> look to be syntactically part of 
+the surface internal language of MicroLaTeX.  However, 
+in source text they alway appear with an empty line above and 
+below and so are parsed as an anonymous (paragraph)
+block.  They must be coerced into being an ordinary or 
+verbatim block, e.g.,</p>
+<pre><code class="language-text">{ name = &quot;image&quot;
+, blockType = PBVerbatim
+, properties = Dict.fromList [(&quot;width&quot;, &quot;200&quot;)]
+, content = [&quot;image{https://yadayada.org/sparrow.jpg&quot;]
+...
+}
+</code></pre>
+<p>or </p>
+<pre><code class="language-text">{ name = &quot;image&quot;
+, blockType = PBOrdinary
+, content = [&quot;foo bar ...&quot;]
+...
+}
+</code></pre>
+<p>This coercion is accomplished by functions in module <code>MicroLaTeX.Parser.Transform</code>, 
+e.g.,</p>
+<pre><code class="language-text">-- module MicroLaTeX.Parser.Transform
+handlePseudoBlockWithContent : String -&gt; Maybe String -&gt; PrimitiveBlock -&gt; PrimitiveBlock
+handlePseudoBlockWithContent name maybeArg block = ...
+
+handleImage : PrimitiveBlock -&gt; PrimitiveBlock
+</code></pre>
+<p>The names of these elements must appear in the <code>pseudoBlockNamesWithContent</code>
+list:</p>
+<pre><code class="language-text">-- module MicroLaTeX.Parser.Transform
+pseudoBlockNamesWithContent =
+    [ &quot;title&quot;, &quot;section&quot;, &quot;subsection&quot;, &quot;subsubsection&quot;
+    , &quot;subheading&quot;, &quot;setcounter&quot;, &quot;contents&quot;, &quot;endnotes&quot;, &quot;image&quot; ]
+
+</code></pre>
 <h2 id="expressions">Expressions</h2>
 <pre><code class="language-text">-- Parser.Expr
 type Expr
