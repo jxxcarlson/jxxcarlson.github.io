@@ -1,6 +1,7 @@
 # The Scripta Project
 
 
+*This document is intended for Scripta developers.*
 
 Scripta is an editing and publishing system for technical
 documents (mathematics, physics, etc.). It consists
