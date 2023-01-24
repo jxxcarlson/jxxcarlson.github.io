@@ -6459,6 +6459,21 @@ var $author$project$MicroLaTeX$Parser$ClassifyBlock$ordinaryBlockParser = A2(
 					$elm$parser$Parser$chompUntilEndOr(' '))),
 			$elm$parser$Parser$getOffset),
 		$elm$parser$Parser$getSource));
+var $author$project$MicroLaTeX$Parser$ClassifyBlock$pseudoBlockParser = A2(
+	$elm$parser$Parser$ignorer,
+	$elm$parser$Parser$succeed(
+		$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock($author$project$MicroLaTeX$Parser$ClassifyBlock$LXItem)),
+	$elm$parser$Parser$oneOf(
+		_List_fromArray(
+			[
+				$elm$parser$Parser$symbol('\\section'),
+				$elm$parser$Parser$symbol('\\subsection'),
+				$elm$parser$Parser$symbol('\\subsubsection'),
+				$elm$parser$Parser$symbol('\\image'),
+				$elm$parser$Parser$symbol('\\title'),
+				$elm$parser$Parser$symbol('\\contents'),
+				$elm$parser$Parser$symbol('\\setcounter')
+			])));
 var $author$project$MicroLaTeX$Parser$ClassifyBlock$CVerbatimBlockDelim = {$: 'CVerbatimBlockDelim'};
 var $author$project$MicroLaTeX$Parser$ClassifyBlock$verbatimBlockDelimParser = A2(
 	$elm$parser$Parser$map,
@@ -6496,7 +6511,7 @@ var $author$project$MicroLaTeX$Parser$ClassifyBlock$verbatimBlockParser = A2(
 		$elm$parser$Parser$getSource));
 var $author$project$MicroLaTeX$Parser$ClassifyBlock$classifierParser = $elm$parser$Parser$oneOf(
 	_List_fromArray(
-		[$author$project$MicroLaTeX$Parser$ClassifyBlock$beginBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$endBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$mathBlockDelimParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$verbatimBlockDelimParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$ordinaryBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$verbatimBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$itemParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$numberedParser]));
+		[$author$project$MicroLaTeX$Parser$ClassifyBlock$beginBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$endBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$mathBlockDelimParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$verbatimBlockDelimParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$ordinaryBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$verbatimBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$itemParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$pseudoBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$numberedParser]));
 var $elm$core$String$trimLeft = _String_trimLeft;
 var $author$project$MicroLaTeX$Parser$ClassifyBlock$classify = function (str) {
 	var str_ = $elm$core$String$trimLeft(str);
@@ -6701,23 +6716,6 @@ var $author$project$Parser$PrimitiveLaTeXBlock$getArgs = function (mstr) {
 			strs);
 	}
 };
-var $author$project$Parser$PrimitiveLaTeXBlock$getKVData = function (mstr) {
-	if (mstr.$ === 'Nothing') {
-		return _List_Nil;
-	} else {
-		var str = mstr.a;
-		var strs = A2(
-			$elm$core$List$map,
-			$elm$core$String$trim,
-			A2($elm$core$String$split, ', ', str));
-		return A2(
-			$elm$core$List$filter,
-			function (t) {
-				return A2($elm$core$String$contains, ':', t);
-			},
-			strs);
-	}
-};
 var $elm$parser$Parser$Advanced$spaces = $elm$parser$Parser$Advanced$chompWhile(
 	function (c) {
 		return _Utils_eq(
@@ -6757,6 +6755,137 @@ var $author$project$Compiler$Util$itemParser = F2(
 					$elm$parser$Parser$getOffset),
 				$elm$parser$Parser$getSource));
 	});
+var $author$project$Compiler$Util$bracedItemParser = A2($author$project$Compiler$Util$itemParser, '{', '}');
+var $elm$parser$Parser$Advanced$loopHelp = F4(
+	function (p, state, callback, s0) {
+		loopHelp:
+		while (true) {
+			var _v0 = callback(state);
+			var parse = _v0.a;
+			var _v1 = parse(s0);
+			if (_v1.$ === 'Good') {
+				var p1 = _v1.a;
+				var step = _v1.b;
+				var s1 = _v1.c;
+				if (step.$ === 'Loop') {
+					var newState = step.a;
+					var $temp$p = p || p1,
+						$temp$state = newState,
+						$temp$callback = callback,
+						$temp$s0 = s1;
+					p = $temp$p;
+					state = $temp$state;
+					callback = $temp$callback;
+					s0 = $temp$s0;
+					continue loopHelp;
+				} else {
+					var result = step.a;
+					return A3($elm$parser$Parser$Advanced$Good, p || p1, result, s1);
+				}
+			} else {
+				var p1 = _v1.a;
+				var x = _v1.b;
+				return A2($elm$parser$Parser$Advanced$Bad, p || p1, x);
+			}
+		}
+	});
+var $elm$parser$Parser$Advanced$loop = F2(
+	function (state, callback) {
+		return $elm$parser$Parser$Advanced$Parser(
+			function (s) {
+				return A4($elm$parser$Parser$Advanced$loopHelp, false, state, callback, s);
+			});
+	});
+var $elm$parser$Parser$Advanced$Done = function (a) {
+	return {$: 'Done', a: a};
+};
+var $elm$parser$Parser$Advanced$Loop = function (a) {
+	return {$: 'Loop', a: a};
+};
+var $elm$parser$Parser$toAdvancedStep = function (step) {
+	if (step.$ === 'Loop') {
+		var s = step.a;
+		return $elm$parser$Parser$Advanced$Loop(s);
+	} else {
+		var a = step.a;
+		return $elm$parser$Parser$Advanced$Done(a);
+	}
+};
+var $elm$parser$Parser$loop = F2(
+	function (state, callback) {
+		return A2(
+			$elm$parser$Parser$Advanced$loop,
+			state,
+			function (s) {
+				return A2(
+					$elm$parser$Parser$map,
+					$elm$parser$Parser$toAdvancedStep,
+					callback(s));
+			});
+	});
+var $elm$parser$Parser$Done = function (a) {
+	return {$: 'Done', a: a};
+};
+var $elm$parser$Parser$Loop = function (a) {
+	return {$: 'Loop', a: a};
+};
+var $author$project$Compiler$Util$manyHelp = F2(
+	function (p, vs) {
+		return $elm$parser$Parser$oneOf(
+			_List_fromArray(
+				[
+					A2(
+					$elm$parser$Parser$keeper,
+					$elm$parser$Parser$succeed(
+						function (v) {
+							return $elm$parser$Parser$Loop(
+								A2($elm$core$List$cons, v, vs));
+						}),
+					A2($elm$parser$Parser$ignorer, p, $elm$parser$Parser$spaces)),
+					A2(
+					$elm$parser$Parser$map,
+					function (_v0) {
+						return $elm$parser$Parser$Done(
+							$elm$core$List$reverse(vs));
+					},
+					$elm$parser$Parser$succeed(_Utils_Tuple0))
+				]));
+	});
+var $author$project$Compiler$Util$many = function (p) {
+	return A2(
+		$elm$parser$Parser$loop,
+		_List_Nil,
+		$author$project$Compiler$Util$manyHelp(p));
+};
+var $author$project$Compiler$Util$getBracedItems = function (str) {
+	var _v0 = A2(
+		$elm$parser$Parser$run,
+		$author$project$Compiler$Util$many($author$project$Compiler$Util$bracedItemParser),
+		str);
+	if (_v0.$ === 'Ok') {
+		var val = _v0.a;
+		return val;
+	} else {
+		return _List_Nil;
+	}
+};
+var $author$project$Parser$PrimitiveLaTeXBlock$getKVData = function (mstr) {
+	if (mstr.$ === 'Nothing') {
+		return _List_Nil;
+	} else {
+		var str = mstr.a;
+		var strs = A2(
+			$elm$core$List$map,
+			$elm$core$String$trim,
+			A2($elm$core$String$split, ', ', str));
+		return A2(
+			$elm$core$List$filter,
+			function (t) {
+				return A2($elm$core$String$contains, ':', t);
+			},
+			strs);
+	}
+};
 var $author$project$Compiler$Util$bracketedItemParser = A2($author$project$Compiler$Util$itemParser, '[', ']');
 var $author$project$Compiler$Util$getBracketedItem = function (str) {
 	var _v0 = A2($elm$parser$Parser$run, $author$project$Compiler$Util$bracketedItemParser, str);
@@ -7122,6 +7251,13 @@ var $author$project$Parser$PrimitiveLaTeXBlock$prepareList = function (strs) {
 			$author$project$Parser$PrimitiveLaTeXBlock$fix,
 			$author$project$Parser$PrimitiveLaTeXBlock$explode(strs)));
 };
+var $elm$core$String$replace = F3(
+	function (before, after, string) {
+		return A2(
+			$elm$core$String$join,
+			after,
+			A2($elm$core$String$split, before, string));
+	});
 var $author$project$Parser$PrimitiveLaTeXBlock$elaborate = F2(
 	function (line, pb) {
 		if (_Utils_eq(
@@ -7137,7 +7273,16 @@ var $author$project$Parser$PrimitiveLaTeXBlock$elaborate = F2(
 			var namedArgs = $author$project$Parser$PrimitiveLaTeXBlock$getKVData(args_);
 			var properties = $author$project$Parser$PrimitiveLaTeXBlock$prepareKVData(
 				$author$project$Parser$PrimitiveLaTeXBlock$prepareList(namedArgs));
-			var simpleArgs = $author$project$Parser$PrimitiveLaTeXBlock$getArgs(args_);
+			var simpleArgs = function () {
+				if (name.$ === 'Nothing') {
+					return $author$project$Parser$PrimitiveLaTeXBlock$getArgs(args_);
+				} else {
+					var name_ = name.a;
+					var prefix = '\\begin{' + (name_ + '}');
+					var adjustedLine = A3($elm$core$String$replace, prefix, '', line.content);
+					return $author$project$Compiler$Util$getBracedItems(adjustedLine);
+				}
+			}();
 			return _Utils_update(
 				pb,
 				{args: simpleArgs, content: content, name: name, properties: properties});
@@ -7432,13 +7577,6 @@ var $author$project$Parser$PrimitiveLaTeXBlock$addSource = F2(
 				});
 		}
 	});
-var $elm$core$String$replace = F3(
-	function (before, after, string) {
-		return A2(
-			$elm$core$String$join,
-			after,
-			A2($elm$core$String$split, before, string));
-	});
 var $author$project$Parser$PrimitiveLaTeXBlock$getContent = F3(
 	function (classifier, line, state) {
 		_v0$4:
@@ -7676,36 +7814,6 @@ var $author$project$Parser$PrimitiveLaTeXBlock$finishBlock = F2(
 				});
 		}
 	});
-var $author$project$MicroLaTeX$Parser$ClassifyBlock$classificationString = function (classification) {
-	switch (classification.$) {
-		case 'CBeginBlock':
-			var name = classification.a;
-			return name;
-		case 'CEndBlock':
-			var name = classification.a;
-			return name;
-		default:
-			return '??';
-	}
-};
-var $author$project$Parser$PrimitiveLaTeXBlock$getError = F2(
-	function (label, classifier) {
-		if (_Utils_eq(label.classification, $author$project$MicroLaTeX$Parser$ClassifyBlock$CPlainText)) {
-			return $elm$core$Maybe$Nothing;
-		} else {
-			if ($author$project$MicroLaTeX$Parser$ClassifyBlock$classificationString(classifier) === 'missing') {
-				return $elm$core$Maybe$Just(
-					{
-						error: 'Missing end tag (' + ($author$project$MicroLaTeX$Parser$ClassifyBlock$classificationString(label.classification) + ')')
-					});
-			} else {
-				var classification2 = '(' + ($author$project$MicroLaTeX$Parser$ClassifyBlock$classificationString(classifier) + ')');
-				var classfication1 = '(' + ($author$project$MicroLaTeX$Parser$ClassifyBlock$classificationString(label.classification) + ')');
-				return $elm$core$Maybe$Just(
-					{error: 'Missmatched tags: begin' + (classfication1 + (' ≠ end' + classification2))});
-			}
-		}
-	});
 var $author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMismatch = F4(
 	function (label_, classifier, line, state) {
 		var _v0 = $elm_community$list_extra$List$Extra$uncons(state.stack);
@@ -7721,8 +7829,19 @@ var $author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMismatch = F4(
 			} else {
 				var _v3 = _v2.a;
 				var label = _v3.a;
-				var name = A2($elm$core$Maybe$withDefault, '--', block.name);
-				var error = A2($author$project$Parser$PrimitiveLaTeXBlock$getError, label, classifier);
+				var name = function () {
+					var _v5 = block.name;
+					if (_v5.$ === 'Nothing') {
+						return '--';
+					} else {
+						var name_ = _v5.a;
+						return A2(
+							$elm$core$List$member,
+							name_,
+							_List_fromArray(
+								['math', 'equation', 'aligned'])) ? 'code' : name_;
+					}
+				}();
 				var newBlock = A2(
 					$author$project$Parser$PrimitiveLaTeXBlock$addSource,
 					line.content,
@@ -7737,7 +7856,25 @@ var $author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMismatch = F4(
 							content: A2($elm$core$List$member, name, $author$project$Parser$PrimitiveLaTeXBlock$verbatimBlockNames) ? $elm$core$List$reverse(
 								A3($author$project$Parser$PrimitiveLaTeXBlock$getContent, label_.classification, line, state)) : $elm$core$List$reverse(
 								A3($author$project$Parser$PrimitiveLaTeXBlock$getContent, label_.classification, line, state)),
-							error: error,
+							error: function () {
+								var _v4 = _Utils_Tuple2(label.classification, classifier);
+								if (_v4.a.$ === 'CBeginBlock') {
+									if (_v4.b.$ === 'CEndBlock') {
+										var a = _v4.a.a;
+										var b = _v4.b.a;
+										return $elm$core$Maybe$Just(
+											{error: 'Mismatch: \\begin{' + (a + ('} ≠ \\end{' + (b + '}')))});
+									} else {
+										var a = _v4.a.a;
+										return $elm$core$Maybe$Just(
+											{error: 'Missing \\end{' + (a + '}')});
+									}
+								} else {
+									return $elm$core$Maybe$Just(
+										{error: '— $$ ??'});
+								}
+							}(),
+							name: $elm$core$Maybe$Just(name),
 							status: $author$project$Parser$PrimitiveLaTeXBlock$Finished
 						}));
 				return $author$project$Parser$PrimitiveLaTeXBlock$resolveIfStackEmpty(
@@ -7793,133 +7930,126 @@ var $author$project$MicroLaTeX$Parser$ClassifyBlock$match = F2(
 		}
 		return false;
 	});
-var $author$project$Parser$PrimitiveLaTeXBlock$endBlock2 = F3(
-	function (classifier, line, state) {
-		var _v0 = $elm$core$List$head(state.labelStack);
-		if (_v0.$ === 'Nothing') {
-			return _Utils_update(
-				state,
-				{blockClassification: $elm$core$Maybe$Nothing});
-		} else {
-			var label = _v0.a;
-			return (A2($author$project$MicroLaTeX$Parser$ClassifyBlock$match, label.classification, classifier) && _Utils_eq(state.level, label.level)) ? A4(
-				$author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMatch,
-				$elm$core$Maybe$Just(label),
-				classifier,
-				line,
-				_Utils_update(
-					state,
-					{blockClassification: $elm$core$Maybe$Nothing})) : A4(
-				$author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMismatch,
-				label,
-				classifier,
-				line,
-				_Utils_update(
-					state,
-					{blockClassification: $elm$core$Maybe$Nothing}));
-		}
-	});
-var $author$project$Parser$PrimitiveLaTeXBlock$emptyLine = F2(
-	function (currentLine, state) {
-		var _v0 = A2(
-			$elm$core$Maybe$map,
-			function ($) {
-				return $.classification;
-			},
-			$elm$core$List$head(state.labelStack));
-		_v0$7:
-		while (true) {
-			if (_v0.$ === 'Just') {
-				switch (_v0.a.$) {
-					case 'CPlainText':
-						var _v1 = _v0.a;
-						return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-							A3($author$project$Parser$PrimitiveLaTeXBlock$endBlock2, $author$project$MicroLaTeX$Parser$ClassifyBlock$CPlainText, currentLine, state));
-					case 'CMathBlockDelim':
-						var _v2 = _v0.a;
-						return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-							A3($author$project$Parser$PrimitiveLaTeXBlock$endBlock2, $author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim, currentLine, state));
-					case 'CBeginBlock':
-						var name = _v0.a.a;
-						return A2(
-							$elm$core$List$member,
-							name,
-							_List_fromArray(
-								['equation', 'aligned'])) ? $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-							A3(
-								$author$project$Parser$PrimitiveLaTeXBlock$endBlock2,
-								$author$project$MicroLaTeX$Parser$ClassifyBlock$CEndBlock(name),
-								currentLine,
-								state)) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(state);
-					case 'CSpecialBlock':
-						switch (_v0.a.a.$) {
-							case 'LXItem':
-								var _v3 = _v0.a.a;
-								return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-									A3(
-										$author$project$Parser$PrimitiveLaTeXBlock$endBlock2,
-										$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock($author$project$MicroLaTeX$Parser$ClassifyBlock$LXItem),
-										currentLine,
-										state));
-							case 'LXNumbered':
-								var _v4 = _v0.a.a;
-								return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-									A3(
-										$author$project$Parser$PrimitiveLaTeXBlock$endBlock2,
-										$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock($author$project$MicroLaTeX$Parser$ClassifyBlock$LXNumbered),
-										currentLine,
-										state));
-							case 'LXOrdinaryBlock':
-								var name = _v0.a.a.a;
-								return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-									A3(
-										$author$project$Parser$PrimitiveLaTeXBlock$endBlock2,
-										$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock(
-											$author$project$MicroLaTeX$Parser$ClassifyBlock$LXOrdinaryBlock(name)),
-										currentLine,
-										state));
-							default:
-								var name = _v0.a.a.a;
-								return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-									A3(
-										$author$project$Parser$PrimitiveLaTeXBlock$endBlock2,
-										$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock(
-											$author$project$MicroLaTeX$Parser$ClassifyBlock$LXVerbatimBlock(name)),
-										currentLine,
-										state));
-						}
-					default:
-						break _v0$7;
-				}
-			} else {
-				break _v0$7;
-			}
-		}
-		return $author$project$Parser$PrimitiveLaTeXBlock$Loop(state);
-	});
-var $author$project$Parser$PrimitiveLaTeXBlock$endBlock1 = F3(
-	function (classification, currentLine, state) {
-		var _v0 = state.blockClassification;
-		if (_v0.$ === 'Nothing') {
-			return A3($author$project$Parser$PrimitiveLaTeXBlock$endBlock2, classification, currentLine, state);
-		} else {
-			var verbatimClassifier_ = _v0.a;
-			if (verbatimClassifier_.$ === 'CBeginBlock') {
-				return A2($author$project$MicroLaTeX$Parser$ClassifyBlock$match, verbatimClassifier_, classification) ? A3($author$project$Parser$PrimitiveLaTeXBlock$endBlock2, classification, currentLine, state) : state;
-			} else {
-				return state;
-			}
-		}
-	});
-var $author$project$Parser$PrimitiveLaTeXBlock$transfer = function (state) {
-	return state;
-};
 var $author$project$Parser$PrimitiveLaTeXBlock$endBlock = F3(
 	function (classification, currentLine, state) {
-		return (_Utils_cmp(state.level, -1) > 0) ? $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-			A3($author$project$Parser$PrimitiveLaTeXBlock$endBlock1, classification, currentLine, state)) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-			$author$project$Parser$PrimitiveLaTeXBlock$transfer(
-				A3($author$project$Parser$PrimitiveLaTeXBlock$endBlock1, classification, currentLine, state)));
+		var _v0 = $elm$core$List$head(state.labelStack);
+		if (_v0.$ === 'Nothing') {
+			return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+				_Utils_update(
+					state,
+					{level: state.level - 1}));
+		} else {
+			var label = _v0.a;
+			return (A2($author$project$MicroLaTeX$Parser$ClassifyBlock$match, label.classification, classification) && _Utils_eq(state.level, label.level)) ? $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+				A4(
+					$author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMatch,
+					$elm$core$Maybe$Just(label),
+					classification,
+					currentLine,
+					_Utils_update(
+						state,
+						{blockClassification: $elm$core$Maybe$Nothing}))) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+				A4(
+					$author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMismatch,
+					label,
+					classification,
+					currentLine,
+					_Utils_update(
+						state,
+						{blockClassification: $elm$core$Maybe$Nothing})));
+		}
+	});
+var $elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $author$project$Parser$PrimitiveLaTeXBlock$resetLevelIfStackIsEmpty = function (state) {
+	return $elm$core$List$isEmpty(state.stack) ? _Utils_update(
+		state,
+		{level: -1}) : state;
+};
+var $author$project$Parser$PrimitiveLaTeXBlock$emptyLine = F2(
+	function (currentLine, state) {
+		var _v0 = $elm$core$List$head(state.labelStack);
+		if (_v0.$ === 'Nothing') {
+			return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+				$author$project$Parser$PrimitiveLaTeXBlock$resetLevelIfStackIsEmpty(state));
+		} else {
+			var label = _v0.a;
+			var _v1 = label.classification;
+			switch (_v1.$) {
+				case 'CPlainText':
+					return A3($author$project$Parser$PrimitiveLaTeXBlock$endBlock, $author$project$MicroLaTeX$Parser$ClassifyBlock$CPlainText, currentLine, state);
+				case 'CMathBlockDelim':
+					return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+						A4($author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMismatch, label, $author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim, currentLine, state));
+				case 'CBeginBlock':
+					var name = _v1.a;
+					return A2(
+						$elm$core$List$member,
+						name,
+						_List_fromArray(
+							['equation', 'aligned'])) ? $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+						A4(
+							$author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMismatch,
+							label,
+							$author$project$MicroLaTeX$Parser$ClassifyBlock$CBeginBlock(name),
+							currentLine,
+							state)) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(state);
+				case 'CSpecialBlock':
+					switch (_v1.a.$) {
+						case 'LXPseudoBlock':
+							var _v2 = _v1.a;
+							return A3(
+								$author$project$Parser$PrimitiveLaTeXBlock$endBlock,
+								$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock($author$project$MicroLaTeX$Parser$ClassifyBlock$LXItem),
+								currentLine,
+								state);
+						case 'LXItem':
+							var _v3 = _v1.a;
+							return A3(
+								$author$project$Parser$PrimitiveLaTeXBlock$endBlock,
+								$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock($author$project$MicroLaTeX$Parser$ClassifyBlock$LXItem),
+								currentLine,
+								state);
+						case 'LXNumbered':
+							var _v4 = _v1.a;
+							return A3(
+								$author$project$Parser$PrimitiveLaTeXBlock$endBlock,
+								$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock($author$project$MicroLaTeX$Parser$ClassifyBlock$LXNumbered),
+								currentLine,
+								state);
+						case 'LXOrdinaryBlock':
+							var name = _v1.a.a;
+							return A3(
+								$author$project$Parser$PrimitiveLaTeXBlock$endBlock,
+								$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock(
+									$author$project$MicroLaTeX$Parser$ClassifyBlock$LXOrdinaryBlock(name)),
+								currentLine,
+								state);
+						default:
+							var name = _v1.a.a;
+							return A3(
+								$author$project$Parser$PrimitiveLaTeXBlock$endBlock,
+								$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock(
+									$author$project$MicroLaTeX$Parser$ClassifyBlock$LXVerbatimBlock(name)),
+								currentLine,
+								state);
+					}
+				case 'CEndBlock':
+					return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+						$author$project$Parser$PrimitiveLaTeXBlock$resetLevelIfStackIsEmpty(state));
+				case 'CVerbatimBlockDelim':
+					return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+						$author$project$Parser$PrimitiveLaTeXBlock$resetLevelIfStackIsEmpty(state));
+				default:
+					return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+						$author$project$Parser$PrimitiveLaTeXBlock$resetLevelIfStackIsEmpty(state));
+			}
+		}
 	});
 var $elm_community$list_extra$List$Extra$getAt = F2(
 	function (idx, xs) {
@@ -7938,58 +8068,64 @@ var $author$project$Parser$PrimitiveLaTeXBlock$handleSpecial_ = F3(
 			line,
 			A2($author$project$Parser$PrimitiveLaTeXBlock$blockFromLine, level, line));
 		var newBlock = function () {
-			if (classifier.$ === 'CSpecialBlock') {
-				switch (classifier.a.$) {
-					case 'LXItem':
-						var _v3 = classifier.a;
-						return _Utils_update(
-							newBlock_,
-							{
-								blockType: $author$project$Parser$Line$PBOrdinary,
-								name: $elm$core$Maybe$Just('item'),
-								properties: $elm$core$Dict$fromList(
-									_List_fromArray(
-										[
-											_Utils_Tuple2(
-											'firstLine',
-											A3($elm$core$String$replace, '\\item', '', line.content))
-										]))
-							});
-					case 'LXNumbered':
-						var _v4 = classifier.a;
-						return _Utils_update(
-							newBlock_,
-							{
-								blockType: $author$project$Parser$Line$PBOrdinary,
-								name: $elm$core$Maybe$Just('numbered'),
-								properties: $elm$core$Dict$fromList(
-									_List_fromArray(
-										[
-											_Utils_Tuple2(
-											'firstLine',
-											A3($elm$core$String$replace, '\\numbered', '', line.content))
-										]))
-							});
-					case 'LXOrdinaryBlock':
-						var name = classifier.a.a;
-						return _Utils_update(
-							newBlock_,
-							{
-								blockType: $author$project$Parser$Line$PBOrdinary,
-								name: $elm$core$Maybe$Just(name)
-							});
-					default:
-						var name = classifier.a.a;
-						return _Utils_update(
-							newBlock_,
-							{
-								blockType: $author$project$Parser$Line$PBVerbatim,
-								name: $elm$core$Maybe$Just(name)
-							});
+			_v2$4:
+			while (true) {
+				if (classifier.$ === 'CSpecialBlock') {
+					switch (classifier.a.$) {
+						case 'LXItem':
+							var _v3 = classifier.a;
+							return _Utils_update(
+								newBlock_,
+								{
+									blockType: $author$project$Parser$Line$PBOrdinary,
+									name: $elm$core$Maybe$Just('item'),
+									properties: $elm$core$Dict$fromList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2(
+												'firstLine',
+												A3($elm$core$String$replace, '\\item', '', line.content))
+											]))
+								});
+						case 'LXNumbered':
+							var _v4 = classifier.a;
+							return _Utils_update(
+								newBlock_,
+								{
+									blockType: $author$project$Parser$Line$PBOrdinary,
+									name: $elm$core$Maybe$Just('numbered'),
+									properties: $elm$core$Dict$fromList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2(
+												'firstLine',
+												A3($elm$core$String$replace, '\\numbered', '', line.content))
+											]))
+								});
+						case 'LXOrdinaryBlock':
+							var name = classifier.a.a;
+							return _Utils_update(
+								newBlock_,
+								{
+									blockType: $author$project$Parser$Line$PBOrdinary,
+									name: $elm$core$Maybe$Just(name)
+								});
+						case 'LXVerbatimBlock':
+							var name = classifier.a.a;
+							return _Utils_update(
+								newBlock_,
+								{
+									blockType: $author$project$Parser$Line$PBVerbatim,
+									name: $elm$core$Maybe$Just(name)
+								});
+						default:
+							break _v2$4;
+					}
+				} else {
+					break _v2$4;
 				}
-			} else {
-				return newBlock_;
 			}
+			return newBlock_;
 		}();
 		var labelStack = function () {
 			var _v0 = $elm_community$list_extra$List$Extra$uncons(state.labelStack);
@@ -8101,13 +8237,6 @@ var $author$project$Parser$PrimitiveLaTeXBlock$handleVerbatimBlock = F2(
 			}
 		}
 	});
-var $elm$core$List$isEmpty = function (xs) {
-	if (!xs.b) {
-		return true;
-	} else {
-		return false;
-	}
-};
 var $author$project$Parser$PrimitiveLaTeXBlock$handleComment = F2(
 	function (line, state) {
 		var newBlock = function (b) {
@@ -8368,7 +8497,13 @@ var $author$project$Parser$PrimitiveLaTeXBlock$nextStep = function (state_) {
 						A3($author$project$Parser$PrimitiveLaTeXBlock$dispatchBeginBlock, $author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim, currentLine, state));
 				} else {
 					var label = _v2.a;
-					return _Utils_eq(label.classification, $author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim) ? A3($author$project$Parser$PrimitiveLaTeXBlock$endBlock, $author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim, currentLine, state) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+					return _Utils_eq(label.classification, $author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim) ? $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+						A4(
+							$author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMatch,
+							$elm$core$Maybe$Just(label),
+							$author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim,
+							currentLine,
+							state)) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(
 						A3($author$project$Parser$PrimitiveLaTeXBlock$dispatchBeginBlock, $author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim, currentLine, state));
 				}
 			case 'CVerbatimBlockDelim':
@@ -8545,6 +8680,30 @@ var $author$project$Parser$PrimitiveBlock$advance = F2(
 				position: newPosition
 			});
 	});
+var $author$project$Parser$PrimitiveBlock$adjustBlock = function (block) {
+	return (_Utils_eq(
+		block.name,
+		$elm$core$Maybe$Just('section')) && _Utils_eq(block.args, _List_Nil)) ? _Utils_update(
+		block,
+		{
+			args: _List_fromArray(
+				['1'])
+		}) : ((_Utils_eq(
+		block.name,
+		$elm$core$Maybe$Just('subsection')) && _Utils_eq(block.args, _List_Nil)) ? _Utils_update(
+		block,
+		{
+			args: _List_fromArray(
+				['2'])
+		}) : ((_Utils_eq(
+		block.name,
+		$elm$core$Maybe$Just('subsubsection')) && _Utils_eq(block.args, _List_Nil)) ? _Utils_update(
+		block,
+		{
+			args: _List_fromArray(
+				['3'])
+		}) : block));
+};
 var $author$project$Scripta$Language$L0Lang = {$: 'L0Lang'};
 var $elm_community$list_extra$List$Extra$findIndexHelp = F3(
 	function (index, predicate, list) {
@@ -8584,200 +8743,6 @@ var $author$project$Parser$PrimitiveBlock$cleanArgs = function (strs) {
 		return A2($elm$core$List$take, k, strs);
 	}
 };
-var $elm$core$String$words = _String_words;
-var $author$project$L0$Parser$Line$getNameAndArgs = function (line) {
-	var normalizedLine = $elm$core$String$trim(line.content);
-	if (A2($elm$core$String$left, 2, normalizedLine) === '||') {
-		var words = $elm$core$String$words(
-			A2($elm$core$String$dropLeft, 3, normalizedLine));
-		var name = A2(
-			$elm$core$Maybe$withDefault,
-			'anon',
-			$elm$core$List$head(words));
-		var args = A2($elm$core$List$drop, 1, words);
-		return _Utils_Tuple2(
-			$elm$core$Maybe$Just(name),
-			args);
-	} else {
-		if (A2($elm$core$String$left, 1, normalizedLine) === '|') {
-			var words = $elm$core$String$words(
-				A2($elm$core$String$dropLeft, 2, normalizedLine));
-			var name = A2(
-				$elm$core$Maybe$withDefault,
-				'anon',
-				$elm$core$List$head(words));
-			var args = A2($elm$core$List$drop, 1, words);
-			return _Utils_Tuple2(
-				$elm$core$Maybe$Just(name),
-				args);
-		} else {
-			if (A2($elm$core$String$left, 2, line.content) === '$$') {
-				return _Utils_Tuple2(
-					$elm$core$Maybe$Just('math'),
-					_List_Nil);
-			} else {
-				return _Utils_Tuple2($elm$core$Maybe$Nothing, _List_Nil);
-			}
-		}
-	}
-};
-var $elm$parser$Parser$Advanced$loopHelp = F4(
-	function (p, state, callback, s0) {
-		loopHelp:
-		while (true) {
-			var _v0 = callback(state);
-			var parse = _v0.a;
-			var _v1 = parse(s0);
-			if (_v1.$ === 'Good') {
-				var p1 = _v1.a;
-				var step = _v1.b;
-				var s1 = _v1.c;
-				if (step.$ === 'Loop') {
-					var newState = step.a;
-					var $temp$p = p || p1,
-						$temp$state = newState,
-						$temp$callback = callback,
-						$temp$s0 = s1;
-					p = $temp$p;
-					state = $temp$state;
-					callback = $temp$callback;
-					s0 = $temp$s0;
-					continue loopHelp;
-				} else {
-					var result = step.a;
-					return A3($elm$parser$Parser$Advanced$Good, p || p1, result, s1);
-				}
-			} else {
-				var p1 = _v1.a;
-				var x = _v1.b;
-				return A2($elm$parser$Parser$Advanced$Bad, p || p1, x);
-			}
-		}
-	});
-var $elm$parser$Parser$Advanced$loop = F2(
-	function (state, callback) {
-		return $elm$parser$Parser$Advanced$Parser(
-			function (s) {
-				return A4($elm$parser$Parser$Advanced$loopHelp, false, state, callback, s);
-			});
-	});
-var $elm$parser$Parser$Advanced$Done = function (a) {
-	return {$: 'Done', a: a};
-};
-var $elm$parser$Parser$Advanced$Loop = function (a) {
-	return {$: 'Loop', a: a};
-};
-var $elm$parser$Parser$toAdvancedStep = function (step) {
-	if (step.$ === 'Loop') {
-		var s = step.a;
-		return $elm$parser$Parser$Advanced$Loop(s);
-	} else {
-		var a = step.a;
-		return $elm$parser$Parser$Advanced$Done(a);
-	}
-};
-var $elm$parser$Parser$loop = F2(
-	function (state, callback) {
-		return A2(
-			$elm$parser$Parser$Advanced$loop,
-			state,
-			function (s) {
-				return A2(
-					$elm$parser$Parser$map,
-					$elm$parser$Parser$toAdvancedStep,
-					callback(s));
-			});
-	});
-var $elm$parser$Parser$Done = function (a) {
-	return {$: 'Done', a: a};
-};
-var $elm$parser$Parser$Loop = function (a) {
-	return {$: 'Loop', a: a};
-};
-var $author$project$Compiler$Util$manyHelp = F2(
-	function (p, vs) {
-		return $elm$parser$Parser$oneOf(
-			_List_fromArray(
-				[
-					A2(
-					$elm$parser$Parser$keeper,
-					$elm$parser$Parser$succeed(
-						function (v) {
-							return $elm$parser$Parser$Loop(
-								A2($elm$core$List$cons, v, vs));
-						}),
-					A2($elm$parser$Parser$ignorer, p, $elm$parser$Parser$spaces)),
-					A2(
-					$elm$parser$Parser$map,
-					function (_v0) {
-						return $elm$parser$Parser$Done(
-							$elm$core$List$reverse(vs));
-					},
-					$elm$parser$Parser$succeed(_Utils_Tuple0))
-				]));
-	});
-var $author$project$Compiler$Util$many = function (p) {
-	return A2(
-		$elm$parser$Parser$loop,
-		_List_Nil,
-		$author$project$Compiler$Util$manyHelp(p));
-};
-var $author$project$Compiler$Util$getBracketedItems = function (str) {
-	var _v0 = A2(
-		$elm$parser$Parser$run,
-		$author$project$Compiler$Util$many($author$project$Compiler$Util$bracketedItemParser),
-		str);
-	if (_v0.$ === 'Ok') {
-		var val = _v0.a;
-		return val;
-	} else {
-		return _List_Nil;
-	}
-};
-var $author$project$MicroLaTeX$Parser$Line$getNameAndArgs = function (line) {
-	var normalizedLine = $elm$core$String$trim(line.content);
-	var name = function () {
-		var _v0 = A2($author$project$Compiler$Util$getMicroLaTeXItem, 'begin', normalizedLine);
-		if (_v0.$ === 'Just') {
-			var str = _v0.a;
-			return $elm$core$Maybe$Just(str);
-		} else {
-			return (normalizedLine === '$$') ? $elm$core$Maybe$Just('math') : $elm$core$Maybe$Nothing;
-		}
-	}();
-	return _Utils_Tuple2(
-		name,
-		$author$project$Compiler$Util$getBracketedItems(normalizedLine));
-};
-var $elm$core$String$trimRight = _String_trimRight;
-var $author$project$XMarkdown$Line$getNameAndArgs = function (line) {
-	return (A2($elm$core$String$left, 3, line.content) === '```') ? _Utils_Tuple2(
-		$elm$core$Maybe$Just('code'),
-		_List_Nil) : ((A2($elm$core$String$left, 3, line.content) === '|| ') ? _Utils_Tuple2(
-		$elm$core$Maybe$Just(
-			$elm$core$String$trimRight(
-				A2($elm$core$String$dropLeft, 3, line.content))),
-		_List_Nil) : ((A2($elm$core$String$left, 2, line.content) === '$$') ? _Utils_Tuple2(
-		$elm$core$Maybe$Just('math'),
-		_List_Nil) : ((A2($elm$core$String$left, 2, line.content) === '| ') ? _Utils_Tuple2(
-		$elm$core$Maybe$Just(
-			$elm$core$String$trimRight(
-				A2($elm$core$String$dropLeft, 2, line.content))),
-		_List_Nil) : _Utils_Tuple2($elm$core$Maybe$Nothing, _List_Nil))));
-};
-var $author$project$Parser$Line$getNameAndArgs = F2(
-	function (lang, line) {
-		switch (lang.$) {
-			case 'MicroLaTeXLang':
-				return $author$project$MicroLaTeX$Parser$Line$getNameAndArgs(line);
-			case 'L0Lang':
-				return $author$project$L0$Parser$Line$getNameAndArgs(line);
-			case 'PlainTextLang':
-				return _Utils_Tuple2($elm$core$Maybe$Nothing, _List_Nil);
-			default:
-				return $author$project$XMarkdown$Line$getNameAndArgs(line);
-		}
-	});
 var $author$project$Parser$PrimitiveBlock$KVInKey = {$: 'KVInKey'};
 var $author$project$Parser$PrimitiveBlock$KVInValue = {$: 'KVInValue'};
 var $author$project$Parser$PrimitiveBlock$nextKVStep = function (state) {
@@ -8933,6 +8898,109 @@ var $author$project$Parser$PrimitiveBlock$prepareList = function (strs) {
 			$author$project$Parser$PrimitiveBlock$fix,
 			$author$project$Parser$PrimitiveBlock$explode(strs)));
 };
+var $author$project$Parser$PrimitiveBlock$argsAndProperties = function (words) {
+	var args = $author$project$Parser$PrimitiveBlock$cleanArgs(words);
+	var namedArgs = A2(
+		$elm$core$List$drop,
+		$elm$core$List$length(args),
+		words);
+	var properties = $author$project$Parser$PrimitiveBlock$prepareKVData(
+		$author$project$Parser$PrimitiveBlock$prepareList(namedArgs));
+	return _Utils_Tuple2(words, properties);
+};
+var $elm$core$String$words = _String_words;
+var $author$project$L0$Parser$Line$getNameAndArgs = function (line) {
+	var normalizedLine = $elm$core$String$trim(line.content);
+	if (A2($elm$core$String$left, 2, normalizedLine) === '||') {
+		var words = $elm$core$String$words(
+			A2($elm$core$String$dropLeft, 3, normalizedLine));
+		var name = A2(
+			$elm$core$Maybe$withDefault,
+			'anon',
+			$elm$core$List$head(words));
+		var args = A2($elm$core$List$drop, 1, words);
+		return _Utils_Tuple2(
+			$elm$core$Maybe$Just(name),
+			args);
+	} else {
+		if (A2($elm$core$String$left, 1, normalizedLine) === '|') {
+			var words = $elm$core$String$words(
+				A2($elm$core$String$dropLeft, 2, normalizedLine));
+			var name = A2(
+				$elm$core$Maybe$withDefault,
+				'anon',
+				$elm$core$List$head(words));
+			var args = A2($elm$core$List$drop, 1, words);
+			return _Utils_Tuple2(
+				$elm$core$Maybe$Just(name),
+				args);
+		} else {
+			if (A2($elm$core$String$left, 2, line.content) === '$$') {
+				return _Utils_Tuple2(
+					$elm$core$Maybe$Just('math'),
+					_List_Nil);
+			} else {
+				return _Utils_Tuple2($elm$core$Maybe$Nothing, _List_Nil);
+			}
+		}
+	}
+};
+var $author$project$Compiler$Util$getBracketedItems = function (str) {
+	var _v0 = A2(
+		$elm$parser$Parser$run,
+		$author$project$Compiler$Util$many($author$project$Compiler$Util$bracketedItemParser),
+		str);
+	if (_v0.$ === 'Ok') {
+		var val = _v0.a;
+		return val;
+	} else {
+		return _List_Nil;
+	}
+};
+var $author$project$MicroLaTeX$Parser$Line$getNameAndArgs = function (line) {
+	var normalizedLine = $elm$core$String$trim(line.content);
+	var name = function () {
+		var _v0 = A2($author$project$Compiler$Util$getMicroLaTeXItem, 'begin', normalizedLine);
+		if (_v0.$ === 'Just') {
+			var str = _v0.a;
+			return $elm$core$Maybe$Just(str);
+		} else {
+			return (normalizedLine === '$$') ? $elm$core$Maybe$Just('math') : $elm$core$Maybe$Nothing;
+		}
+	}();
+	return _Utils_Tuple2(
+		name,
+		$author$project$Compiler$Util$getBracketedItems(normalizedLine));
+};
+var $elm$core$String$trimRight = _String_trimRight;
+var $author$project$XMarkdown$Line$getNameAndArgs = function (line) {
+	return (A2($elm$core$String$left, 3, line.content) === '```') ? _Utils_Tuple2(
+		$elm$core$Maybe$Just('code'),
+		_List_Nil) : ((A2($elm$core$String$left, 3, line.content) === '|| ') ? _Utils_Tuple2(
+		$elm$core$Maybe$Just(
+			$elm$core$String$trimRight(
+				A2($elm$core$String$dropLeft, 3, line.content))),
+		_List_Nil) : ((A2($elm$core$String$left, 2, line.content) === '$$') ? _Utils_Tuple2(
+		$elm$core$Maybe$Just('math'),
+		_List_Nil) : ((A2($elm$core$String$left, 2, line.content) === '| ') ? _Utils_Tuple2(
+		$elm$core$Maybe$Just(
+			$elm$core$String$trimRight(
+				A2($elm$core$String$dropLeft, 2, line.content))),
+		_List_Nil) : _Utils_Tuple2($elm$core$Maybe$Nothing, _List_Nil))));
+};
+var $author$project$Parser$Line$getNameAndArgs = F2(
+	function (lang, line) {
+		switch (lang.$) {
+			case 'MicroLaTeXLang':
+				return $author$project$MicroLaTeX$Parser$Line$getNameAndArgs(line);
+			case 'L0Lang':
+				return $author$project$L0$Parser$Line$getNameAndArgs(line);
+			case 'PlainTextLang':
+				return _Utils_Tuple2($elm$core$Maybe$Nothing, _List_Nil);
+			default:
+				return $author$project$XMarkdown$Line$getNameAndArgs(line);
+		}
+	});
 var $author$project$Parser$PrimitiveBlock$elaborate = F2(
 	function (line, pb) {
 		if (_Utils_eq(
@@ -8945,13 +9013,9 @@ var $author$project$Parser$PrimitiveBlock$elaborate = F2(
 			var _v0 = A2($author$project$Parser$Line$getNameAndArgs, $author$project$Scripta$Language$L0Lang, line);
 			var name = _v0.a;
 			var args_ = _v0.b;
-			var args = $author$project$Parser$PrimitiveBlock$cleanArgs(args_);
-			var namedArgs = A2(
-				$elm$core$List$drop,
-				$elm$core$List$length(args),
-				args_);
-			var properties = $author$project$Parser$PrimitiveBlock$prepareKVData(
-				$author$project$Parser$PrimitiveBlock$prepareList(namedArgs));
+			var _v1 = $author$project$Parser$PrimitiveBlock$argsAndProperties(args_);
+			var args = _v1.a;
+			var properties = _v1.b;
 			return _Utils_update(
 				pb,
 				{args: args, content: content, name: name, properties: properties});
@@ -9021,11 +9085,12 @@ var $author$project$Parser$PrimitiveBlock$commitBlock = F2(
 					case 'PBParagraph':
 						return block_;
 					case 'PBOrdinary':
-						return _Utils_update(
-							block_,
-							{
-								content: $author$project$Parser$PrimitiveBlock$dropLast(block_.content)
-							});
+						return $author$project$Parser$PrimitiveBlock$adjustBlock(
+							_Utils_update(
+								block_,
+								{
+									content: $author$project$Parser$PrimitiveBlock$dropLast(block_.content)
+								}));
 					default:
 						return _Utils_update(
 							block_,
@@ -9209,6 +9274,34 @@ var $author$project$Markup$toPrimitiveBlocks = F2(
 			$author$project$Markup$isVerbatimLine,
 			$elm$core$String$lines(str));
 	});
+var $author$project$MicroLaTeX$Parser$Transform$handleImage = function (block) {
+	var words = $elm$core$String$words(
+		A3(
+			$elm$core$String$replace,
+			'}',
+			'',
+			A3(
+				$elm$core$String$replace,
+				'\\image{',
+				'',
+				A2(
+					$elm$core$Maybe$withDefault,
+					'???',
+					$elm$core$List$head(block.content)))));
+	var _v0 = $author$project$Parser$PrimitiveBlock$argsAndProperties(
+		A2($elm$core$List$drop, 1, words));
+	var properties_ = _v0.b;
+	var properties = properties_;
+	return _Utils_update(
+		block,
+		{
+			args: _List_Nil,
+			blockType: $author$project$Parser$Line$PBVerbatim,
+			content: A2($elm$core$List$take, 1, words),
+			name: $elm$core$Maybe$Just('image'),
+			properties: properties
+		});
+};
 var $author$project$MicroLaTeX$Parser$Transform$sectionDict = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
@@ -9218,7 +9311,7 @@ var $author$project$MicroLaTeX$Parser$Transform$sectionDict = $elm$core$Dict$fro
 			_Utils_Tuple2('subheading', '4')
 		]));
 var $author$project$MicroLaTeX$Parser$Transform$handlePseudoBlockWithContent = F3(
-	function (block, name, maybeArg) {
+	function (name, maybeArg, block) {
 		if (maybeArg.$ === 'Nothing') {
 			return _Utils_update(
 				block,
@@ -9230,29 +9323,33 @@ var $author$project$MicroLaTeX$Parser$Transform$handlePseudoBlockWithContent = F
 				});
 		} else {
 			var arg = maybeArg.a;
-			var _v1 = A2($elm$core$Dict$get, name, $author$project$MicroLaTeX$Parser$Transform$sectionDict);
-			if (_v1.$ === 'Nothing') {
-				return _Utils_update(
-					block,
-					{
-						args: _List_fromArray(
-							[arg]),
-						blockType: $author$project$Parser$Line$PBOrdinary,
-						content: _List_fromArray(
-							[arg]),
-						name: $elm$core$Maybe$Just(name)
-					});
+			if (name === 'image') {
+				return $author$project$MicroLaTeX$Parser$Transform$handleImage(block);
 			} else {
-				var val = _v1.a;
-				return _Utils_update(
-					block,
-					{
-						args: A2($elm$core$List$cons, val, _List_Nil),
-						blockType: $author$project$Parser$Line$PBOrdinary,
-						content: _List_fromArray(
-							[arg]),
-						name: $elm$core$Maybe$Just('section')
-					});
+				var _v1 = A2($elm$core$Dict$get, name, $author$project$MicroLaTeX$Parser$Transform$sectionDict);
+				if (_v1.$ === 'Nothing') {
+					return _Utils_update(
+						block,
+						{
+							args: _List_fromArray(
+								[arg]),
+							blockType: $author$project$Parser$Line$PBOrdinary,
+							content: _List_fromArray(
+								[arg]),
+							name: $elm$core$Maybe$Just(name)
+						});
+				} else {
+					var val = _v1.a;
+					return _Utils_update(
+						block,
+						{
+							args: A2($elm$core$List$cons, val, _List_Nil),
+							blockType: $author$project$Parser$Line$PBOrdinary,
+							content: _List_fromArray(
+								[arg]),
+							name: $elm$core$Maybe$Just('section')
+						});
+				}
 			}
 		}
 	});
@@ -9292,7 +9389,7 @@ var $author$project$MicroLaTeX$Parser$Transform$normalize = function (list) {
 	}
 };
 var $author$project$MicroLaTeX$Parser$Transform$pseudoBlockNamesWithContent = _List_fromArray(
-	['title', 'section', 'subsection', 'subsubsection', 'subheading', 'setcounter', 'contents', 'endnotes']);
+	['title', 'section', 'subsection', 'subsubsection', 'subheading', 'setcounter', 'contents', 'endnotes', 'image']);
 var $author$project$MicroLaTeX$Parser$Transform$transform = function (block) {
 	var normalizedContent = $author$project$MicroLaTeX$Parser$Transform$normalize(
 		A2($elm$core$List$map, $elm$core$String$trimLeft, block.content));
@@ -9319,7 +9416,7 @@ var $author$project$MicroLaTeX$Parser$Transform$transform = function (block) {
 				return $elm$core$Maybe$Nothing;
 			}
 		}();
-		return A2($elm$core$List$member, name, $author$project$MicroLaTeX$Parser$Transform$pseudoBlockNamesWithContent) ? A3($author$project$MicroLaTeX$Parser$Transform$handlePseudoBlockWithContent, block, name, arg) : block;
+		return A2($elm$core$List$member, name, $author$project$MicroLaTeX$Parser$Transform$pseudoBlockNamesWithContent) ? A3($author$project$MicroLaTeX$Parser$Transform$handlePseudoBlockWithContent, name, arg, block) : block;
 	} else {
 		return block;
 	}
@@ -18469,7 +18566,7 @@ var $author$project$Compiler$Acc$updateReference = F4(
 	});
 var $author$project$Compiler$Acc$indentationQuantum = 2;
 var $author$project$Compiler$Acc$updateWithOrdinaryBlock = F6(
-	function (accumulator, name, content, tag, id, indent) {
+	function (name, content, tag, id, indent, accumulator) {
 		var _v0 = A2($author$project$Compiler$Acc$listData, accumulator, name);
 		var inList = _v0.a;
 		var initialNumberedVector = _v0.b;
@@ -18555,18 +18652,38 @@ var $author$project$Compiler$Acc$updateWithOrdinaryBlock = F6(
 							{inList: inList, itemVector: itemVector, numberedItemDict: numberedItemDict}));
 				default:
 					var name_ = name.a;
-					return A2(
+					if (A2(
 						$elm$core$List$member,
 						name_,
 						_List_fromArray(
-							['title', 'contents', 'banner', 'a'])) ? accumulator : (A2($elm$core$List$member, name_, $author$project$Parser$Settings$numberedBlockNames) ? A4(
-						$author$project$Compiler$Acc$updateReference,
-						tag,
-						id,
-						tag,
-						_Utils_update(
-							accumulator,
-							{blockCounter: accumulator.blockCounter + 1})) : accumulator);
+							['title', 'contents', 'banner', 'a']))) {
+						return accumulator;
+					} else {
+						if (A2($elm$core$List$member, name_, $author$project$Parser$Settings$numberedBlockNames)) {
+							var prefix = $author$project$Compiler$Vector$toString(accumulator.headingIndex);
+							var level = (indent / $author$project$Compiler$Acc$indentationQuantum) | 0;
+							var itemVector = A2($author$project$Compiler$Vector$increment, level, accumulator.itemVector);
+							var numberedItemDict = A3(
+								$elm$core$Dict$insert,
+								id,
+								{
+									index: A2($author$project$Compiler$Vector$get, level, itemVector),
+									level: level
+								},
+								accumulator.numberedItemDict);
+							var equationProp = (prefix === '') ? A2($author$project$Compiler$Acc$getCounterAsString, 'equation', accumulator.counter) : ($author$project$Compiler$Vector$toString(accumulator.headingIndex) + ('.' + $elm$core$String$fromInt(accumulator.blockCounter + 1)));
+							return A4(
+								$author$project$Compiler$Acc$updateReference,
+								tag,
+								id,
+								equationProp,
+								_Utils_update(
+									accumulator,
+									{blockCounter: accumulator.blockCounter + 1, itemVector: itemVector, numberedItemDict: numberedItemDict}));
+						} else {
+							return accumulator;
+						}
+					}
 			}
 		} else {
 			return accumulator;
@@ -18903,7 +19020,7 @@ var $author$project$Compiler$Acc$addTermsFromContent = F3(
 			dict);
 	});
 var $author$project$Compiler$Acc$updateWithParagraph = F5(
-	function (accumulator, name, content, tag, id) {
+	function (name, content, tag, id, accumulator) {
 		var _v0 = A2($author$project$Compiler$Acc$listData, accumulator, name);
 		var inList = _v0.a;
 		var _v1 = A3(
@@ -18992,7 +19109,7 @@ var $author$project$Compiler$Acc$verbatimBlockReference = F4(
 				newCounter))));
 	});
 var $author$project$Compiler$Acc$updateWithVerbatimBlock = F5(
-	function (accumulator, name_, args, tag_, id) {
+	function (name_, args, tag_, id, accumulator) {
 		var name = A2($elm$core$Maybe$withDefault, '---', name_);
 		var newCounter = A2($elm$core$List$member, name, accumulator.numberedBlockNames) ? A2(
 			$author$project$Compiler$Acc$incrementCounter,
@@ -19096,12 +19213,12 @@ var $author$project$Compiler$Acc$updateAccumulator = F2(
 											var name_ = _v1.a.a;
 											return A6(
 												$author$project$Compiler$Acc$updateWithOrdinaryBlock,
-												accumulator,
 												$elm$core$Maybe$Just(name_),
 												content,
 												tag,
 												id,
-												indent);
+												indent,
+												accumulator);
 									}
 								case 'VerbatimBlock':
 									switch (_v1.a.a) {
@@ -19148,7 +19265,7 @@ var $author$project$Compiler$Acc$updateAccumulator = F2(
 							if (_v1.b.$ === 'Paragraph') {
 								var _v9 = _v1.a;
 								var _v10 = _v1.b;
-								return A5($author$project$Compiler$Acc$updateWithParagraph, accumulator, $elm$core$Maybe$Nothing, content, tag, id);
+								return A5($author$project$Compiler$Acc$updateWithParagraph, $elm$core$Maybe$Nothing, content, tag, id, accumulator);
 							} else {
 								break _v1$12;
 							}
@@ -19160,7 +19277,7 @@ var $author$project$Compiler$Acc$updateAccumulator = F2(
 						accumulator,
 						{inList: inList});
 				}
-				return A5($author$project$Compiler$Acc$updateWithVerbatimBlock, accumulator, name, args, tag, id);
+				return A5($author$project$Compiler$Acc$updateWithVerbatimBlock, name, args, tag, id, accumulator);
 			}
 			var _v2 = $elm_community$list_extra$List$Extra$uncons(accumulator.qAndAList);
 			if (_v2.$ === 'Just') {
@@ -19212,7 +19329,7 @@ var $author$project$Compiler$Acc$transformAccumulateTree = F2(
 		return A3($zwilias$elm_rosetree$Tree$mapAccumulate, $author$project$Compiler$Acc$transformAccumulateBlock, acc, tree);
 	});
 var $author$project$Compiler$Acc$transformAccumulate = F2(
-	function (data, ast) {
+	function (data, forest) {
 		return function (_v1) {
 			var acc_ = _v1.a;
 			var ast_ = _v1.b;
@@ -19234,7 +19351,7 @@ var $author$project$Compiler$Acc$transformAccumulate = F2(
 				_Utils_Tuple2(
 					$author$project$Compiler$Acc$init(data),
 					_List_Nil),
-				ast));
+				forest));
 	});
 var $author$project$Compiler$DifferentialParser$updateFunctions = function (lang) {
 	return {
@@ -20989,7 +21106,7 @@ var $author$project$Render$Export$LaTeX$environment = F2(
 	});
 var $author$project$Render$Export$Image$exportCenteredFigure = F3(
 	function (url, options, caption) {
-		return (caption === '') ? A2(
+		return (caption === 'none') ? A2(
 			$elm$core$String$join,
 			'',
 			_List_fromArray(
@@ -21081,10 +21198,14 @@ var $author$project$Render$Export$Image$imageParameters3 = F2(
 				}
 			}
 		}();
-		var caption = A2(
-			$elm$core$Maybe$withDefault,
+		var caption = A3(
+			$elm$core$String$replace,
+			':',
 			'',
-			A2($elm$core$Dict$get, 'caption', properties));
+			A2(
+				$elm$core$Maybe$withDefault,
+				'',
+				A2($elm$core$Dict$get, 'caption', properties)));
 		var _arguments = args;
 		var _v1 = url;
 		return {caption: caption, description: caption, fractionalWidth: fractionalWidth, placement: placement, url: url, width: width};
@@ -21816,7 +21937,7 @@ var $author$project$Render$Export$LaTeX$exportBlock = F2(
 			default:
 				if (content.$ === 'Left') {
 					var str = content.a;
-					_v5$15:
+					_v5$16:
 					while (true) {
 						if (name.$ === 'Just') {
 							switch (name.a) {
@@ -21930,6 +22051,11 @@ var $author$project$Render$Export$LaTeX$exportBlock = F2(
 										return '\\begin{verbatim}\n' + (s + '\n\\end{verbatim}');
 									}(
 										$author$project$Render$Export$LaTeX$fixChars(str));
+								case 'tabular':
+									return function (s) {
+										return '\\begin{tabular}{' + (A2($elm$core$String$join, ' ', args) + ('}\n' + (s + '\n\\end{tabular}')));
+									}(
+										$author$project$Render$Export$LaTeX$fixChars(str));
 								case 'verbatim':
 									return function (s) {
 										return '\\begin{verbatim}\n' + (s + '\n\\end{verbatim}');
@@ -22031,10 +22157,10 @@ var $author$project$Render$Export$LaTeX$exportBlock = F2(
 								case 'docinfo':
 									return '';
 								default:
-									break _v5$15;
+									break _v5$16;
 							}
 						} else {
-							break _v5$15;
+							break _v5$16;
 						}
 					}
 					return A2($elm$core$Maybe$withDefault, '??', name) + ': export of this block is unimplemented';
@@ -33037,7 +33163,7 @@ var $author$project$Render$Block$env = F4(
 							]),
 						A5(
 							$author$project$Render$Block$renderWithDefault2,
-							'| ' + A2($elm$core$Maybe$withDefault, '(name)', name),
+							'??' + A2($elm$core$Maybe$withDefault, '(name)', name),
 							count,
 							acc,
 							settings,
@@ -33569,6 +33695,23 @@ var $author$project$Render$Utility$makeId = function (exprs) {
 				$author$project$Compiler$ASTTools$stringValueOfList(exprs))));
 };
 var $author$project$Render$Settings$maxHeadingFontSize = 32;
+var $author$project$Render$Block$renderWithDefaultWithSize = F6(
+	function (size, _default, count, acc, settings, exprs) {
+		return $elm$core$List$isEmpty(exprs) ? _List_fromArray(
+			[
+				A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Font$color($author$project$Render$Settings$redColor),
+						$mdgriffith$elm_ui$Element$Font$size(size)
+					]),
+				$mdgriffith$elm_ui$Element$text(_default))
+			]) : A2(
+			$elm$core$List$map,
+			A3($author$project$Render$Elm$render, count, acc, settings),
+			exprs);
+	});
 var $elm$core$Basics$sqrt = _Basics_sqrt;
 var $author$project$Render$Block$section = F4(
 	function (count, acc, settings, block) {
@@ -33629,7 +33772,7 @@ var $author$project$Render$Block$section = F4(
 					A2(
 						$elm$core$List$cons,
 						sectionNumber,
-						A5($author$project$Render$Block$renderWithDefault, '| section', count, acc, settings, exprs))),
+						A6($author$project$Render$Block$renderWithDefaultWithSize, 18, '??', count, acc, settings, exprs))),
 				url: $author$project$Render$Utility$internalLink(settings.titlePrefix + 'title')
 			});
 	});
@@ -41897,10 +42040,13 @@ var $author$project$Render$Graphics$image2 = F4(
 		var params = A2($author$project$Render$Graphics$parameters, settings, properties);
 		var caption = $author$project$Render$Graphics$getCaption(properties);
 		var label = function () {
-			if (caption === '') {
-				return 'Figure ' + $author$project$Render$Graphics$getFigureLabel(properties);
-			} else {
-				return 'Figure ' + ($author$project$Render$Graphics$getFigureLabel(properties) + ('. ' + caption));
+			switch (caption) {
+				case '*':
+					return 'Figure ' + $author$project$Render$Graphics$getFigureLabel(properties);
+				case 'none':
+					return '';
+				default:
+					return 'Figure ' + ($author$project$Render$Graphics$getFigureLabel(properties) + ('. ' + caption));
 			}
 		}();
 		var inner = A2(
@@ -41992,7 +42138,7 @@ var $author$project$Render$Graphics$quiver = F4(
 				$elm$core$String$words(imageData));
 			var desc = function () {
 				var _v4 = qArgs.caption;
-				if (_v4 === '') {
+				if (_v4 === '*') {
 					return 'Figure ' + $author$project$Render$Graphics$getFigureLabel(properties);
 				} else {
 					return 'Figure ' + ($author$project$Render$Graphics$getFigureLabel(properties) + ('. ' + qArgs.caption));
@@ -42191,9 +42337,7 @@ var $author$project$Render$Tabular$render = F4(
 			$elm$core$String$split,
 			'\\\\',
 			$author$project$Render$Utility$getVerbatimContent(block));
-		var formatString = A2(
-			$elm$core$String$split,
-			'',
+		var formatString = $elm$core$String$words(
 			A2(
 				$elm$core$Maybe$withDefault,
 				'',
@@ -43600,33 +43744,37 @@ var $author$project$Render$Settings$leftIndent = 18;
 var $author$project$Render$Markup$unravel = F2(
 	function (lang, tree) {
 		var children = $zwilias$elm_rosetree$Tree$children(tree);
-		return $elm$core$List$isEmpty(children) ? $zwilias$elm_rosetree$Tree$label(tree) : A2(
-			$mdgriffith$elm_ui$Element$column,
-			_List_Nil,
-			_List_fromArray(
-				[
-					$zwilias$elm_rosetree$Tree$label(tree),
-					A2(
-					$mdgriffith$elm_ui$Element$column,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$paddingEach(
-							{
-								bottom: 0,
-								left: _Utils_eq(lang, $author$project$Scripta$Language$MicroLaTeXLang) ? 0 : $author$project$Render$Settings$leftIndent,
-								right: 0,
-								top: $author$project$Render$Settings$topMarginForChildren
-							})
-						]),
-					A2(
-						$elm$core$List$map,
-						$author$project$Render$Markup$unravel(lang),
-						children))
-				]));
+		if ($elm$core$List$isEmpty(children)) {
+			return $zwilias$elm_rosetree$Tree$label(tree);
+		} else {
+			var root = $zwilias$elm_rosetree$Tree$label(tree);
+			return A2(
+				$mdgriffith$elm_ui$Element$column,
+				_List_Nil,
+				_List_fromArray(
+					[
+						root,
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$paddingEach(
+								{
+									bottom: 0,
+									left: _Utils_eq(lang, $author$project$Scripta$Language$MicroLaTeXLang) ? 0 : $author$project$Render$Settings$leftIndent,
+									right: 0,
+									top: $author$project$Render$Settings$topMarginForChildren
+								})
+							]),
+						A2(
+							$elm$core$List$map,
+							$author$project$Render$Markup$unravel(lang),
+							children))
+					]));
+		}
 	});
 var $author$project$Render$Markup$renderTree = F4(
 	function (count, accumulator, settings, tree) {
-		var root = $zwilias$elm_rosetree$Tree$label(tree);
 		var blockName = A2(
 			$elm$core$Maybe$withDefault,
 			'---',
