@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.hX.bT === region.bq.bT)
+	if (region.h0.bV === region.bs.bV)
 	{
-		return 'on line ' + region.hX.bT;
+		return 'on line ' + region.h0.bV;
 	}
-	return 'on lines ' + region.hX.bT + ' through ' + region.bq.bT;
+	return 'on lines ' + region.h0.bV + ' through ' + region.bs.bV;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.gW,
-		impl.iD,
-		impl.h1,
+		impl.g1,
+		impl.iI,
+		impl.h6,
 		function() { return function() {} }
 	);
 });
@@ -2719,9 +2719,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		X: func(record.X),
-		ev: record.ev,
-		el: record.el
+		Y: func(record.Y),
+		ez: record.ez,
+		ep: record.ep
 	}
 });
 
@@ -2989,11 +2989,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.X;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.ev;
+		var message = !tag ? value : tag < 3 ? value.a : value.Y;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.ez;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.el) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.ep) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3943,11 +3943,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.gW,
-		impl.iD,
-		impl.h1,
+		impl.g1,
+		impl.iI,
+		impl.h6,
 		function(sendToApp, initialModel) {
-			var view = impl.iG;
+			var view = impl.iL;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3979,12 +3979,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.gW,
-		impl.iD,
-		impl.h1,
+		impl.g1,
+		impl.iI,
+		impl.h6,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.es && impl.es(sendToApp)
-			var view = impl.iG;
+			var divertHrefToApp = impl.ew && impl.ew(sendToApp)
+			var view = impl.iL;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3992,12 +3992,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aS);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aT);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.ey) && (_VirtualDom_doc.title = title = doc.ey);
+				(title !== doc.eC) && (_VirtualDom_doc.title = title = doc.eC);
 			});
 		}
 	);
@@ -4053,12 +4053,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.ht;
-	var onUrlRequest = impl.hu;
+	var onUrlChange = impl.hy;
+	var onUrlRequest = impl.hz;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		es: function(sendToApp)
+		ew: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4074,9 +4074,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.fu === next.fu
-							&& curr.e8 === next.e8
-							&& curr.ft.a === next.ft.a
+							&& curr.fB === next.fB
+							&& curr.fe === next.fe
+							&& curr.fA.a === next.fA.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4084,13 +4084,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		gW: function(flags)
+		g1: function(flags)
 		{
-			return A3(impl.gW, flags, _Browser_getUrl(), key);
+			return A3(impl.g1, flags, _Browser_getUrl(), key);
 		},
-		iG: impl.iG,
-		iD: impl.iD,
-		h1: impl.h1
+		iL: impl.iL,
+		iI: impl.iI,
+		h6: impl.h6
 	});
 }
 
@@ -4156,17 +4156,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { gL: 'hidden', gn: 'visibilitychange' }
+		? { gS: 'hidden', gv: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { gL: 'mozHidden', gn: 'mozvisibilitychange' }
+		? { gS: 'mozHidden', gv: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { gL: 'msHidden', gn: 'msvisibilitychange' }
+		? { gS: 'msHidden', gv: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { gL: 'webkitHidden', gn: 'webkitvisibilitychange' }
-		: { gL: 'hidden', gn: 'visibilitychange' };
+		? { gS: 'webkitHidden', gv: 'webkitvisibilitychange' }
+		: { gS: 'hidden', gv: 'visibilitychange' };
 }
 
 
@@ -4247,12 +4247,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		aL: _Browser_getScene(),
+		aM: _Browser_getScene(),
 		aP: {
-			bD: _Browser_window.pageXOffset,
-			bk: _Browser_window.pageYOffset,
-			eC: _Browser_doc.documentElement.clientWidth,
-			e4: _Browser_doc.documentElement.clientHeight
+			bF: _Browser_window.pageXOffset,
+			bm: _Browser_window.pageYOffset,
+			eG: _Browser_doc.documentElement.clientWidth,
+			fa: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4262,8 +4262,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		eC: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		e4: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		eG: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		fa: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4286,15 +4286,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			aL: {
-				eC: node.scrollWidth,
-				e4: node.scrollHeight
+			aM: {
+				eG: node.scrollWidth,
+				fa: node.scrollHeight
 			},
 			aP: {
-				bD: node.scrollLeft,
-				bk: node.scrollTop,
-				eC: node.clientWidth,
-				e4: node.clientHeight
+				bF: node.scrollLeft,
+				bm: node.scrollTop,
+				eG: node.clientWidth,
+				fa: node.clientHeight
 			}
 		};
 	});
@@ -4324,18 +4324,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			aL: _Browser_getScene(),
+			aM: _Browser_getScene(),
 			aP: {
-				bD: x,
-				bk: y,
-				eC: _Browser_doc.documentElement.clientWidth,
-				e4: _Browser_doc.documentElement.clientHeight
+				bF: x,
+				bm: y,
+				eG: _Browser_doc.documentElement.clientWidth,
+				fa: _Browser_doc.documentElement.clientHeight
 			},
-			cu: {
-				bD: x + rect.left,
-				bk: y + rect.top,
-				eC: rect.width,
-				e4: rect.height
+			cv: {
+				bF: x + rect.left,
+				bm: y + rect.top,
+				eG: rect.width,
+				fa: rect.height
 			}
 		};
 	});
@@ -4546,8 +4546,8 @@ var _Regex_never = /.^/;
 var _Regex_fromStringWith = F2(function(options, string)
 {
 	var flags = 'g';
-	if (options.fk) { flags += 'm'; }
-	if (options.eP) { flags += 'i'; }
+	if (options.fq) { flags += 'm'; }
+	if (options.eT) { flags += 'i'; }
 
 	try
 	{
@@ -5044,25 +5044,25 @@ var $elm$core$Array$treeFromBuilder = F2(
 	});
 var $elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
-		if (!builder.J) {
+		if (!builder.K) {
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.N),
+				$elm$core$Elm$JsArray$length(builder.Q),
 				$elm$core$Array$shiftStep,
 				$elm$core$Elm$JsArray$empty,
-				builder.N);
+				builder.Q);
 		} else {
-			var treeLen = builder.J * $elm$core$Array$branchFactor;
+			var treeLen = builder.K * $elm$core$Array$branchFactor;
 			var depth = $elm$core$Basics$floor(
 				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.R) : builder.R;
-			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.J);
+			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.T) : builder.T;
+			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.K);
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.N) + treeLen,
+				$elm$core$Elm$JsArray$length(builder.Q) + treeLen,
 				A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep),
 				tree,
-				builder.N);
+				builder.Q);
 		}
 	});
 var $elm$core$Basics$idiv = _Basics_idiv;
@@ -5075,7 +5075,7 @@ var $elm$core$Array$initializeHelp = F5(
 				return A2(
 					$elm$core$Array$builderToArray,
 					false,
-					{R: nodeList, J: (len / $elm$core$Array$branchFactor) | 0, N: tail});
+					{T: nodeList, K: (len / $elm$core$Array$branchFactor) | 0, Q: tail});
 			} else {
 				var leaf = $elm$core$Array$Leaf(
 					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
@@ -5142,7 +5142,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {bO: fragment, e8: host, bZ: path, ft: port_, fu: protocol, b3: query};
+		return {bR: fragment, fe: host, b_: path, fA: port_, fB: protocol, b4: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5427,7 +5427,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (flags) {
 	return _Utils_Tuple2(
-		{cp: 0, fe: 1, hT: $author$project$Data$initialText},
+		{cq: 0, fk: 1, hY: $author$project$Data$initialText},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5445,7 +5445,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{cp: model.cp + 1, hT: str}),
+						{cq: model.cq + 1, hY: str}),
 					$elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -5504,7 +5504,7 @@ var $author$project$Main$bgGray = function (g) {
 	return $mdgriffith$elm_ui$Element$Background$color(
 		A3($mdgriffith$elm_ui$Element$rgb, g, g, g));
 };
-var $mdgriffith$elm_ui$Internal$Style$classes = {fX: 'a', dI: 'atv', fZ: 'ab', f_: 'cx', f$: 'cy', f0: 'acb', f1: 'accx', f2: 'accy', f3: 'acr', eJ: 'al', eK: 'ar', f4: 'at', dJ: 'ah', dK: 'av', f7: 's', gc: 'bh', gd: 'b', gf: 'w7', gg: 'bd', gh: 'bdt', c6: 'bn', gi: 'bs', c8: 'cpe', go: 'cp', gp: 'cpx', gq: 'cpy', bI: 'c', dc: 'ctr', dd: 'cb', de: 'ccx', ba: 'ccy', cn: 'cl', df: 'cr', gu: 'ct', gv: 'cptr', gw: 'ctxt', gI: 'fcs', e_: 'focus-within', gJ: 'fs', gK: 'g', d1: 'hbh', d2: 'hc', e5: 'he', d3: 'hf', e6: 'hfp', gP: 'hv', gS: 'ic', gU: 'fr', dp: 'lbl', gY: 'iml', gZ: 'imlf', g_: 'imlp', g$: 'implw', g0: 'it', g5: 'i', fg: 'lnk', bV: 'nb', fm: 'notxt', hq: 'ol', hs: 'or', bw: 'oq', hx: 'oh', fq: 'pg', fr: 'p', hy: 'ppe', hH: 'ui', b9: 'r', hK: 'sb', hL: 'sbx', hM: 'sby', hN: 'sbt', hR: 'e', hS: 'cap', hU: 'sev', h$: 'sk', h5: 't', h6: 'tc', h7: 'w8', h8: 'w2', h9: 'w9', ia: 'tj', dD: 'tja', ib: 'tl', ic: 'w3', ie: 'w5', $8: 'w4', ig: 'tr', ih: 'w6', ii: 'w1', ij: 'tun', fP: 'ts', bB: 'clr', iB: 'u', eD: 'wc', fT: 'we', eE: 'wf', fU: 'wfp', eG: 'wrp'};
+var $mdgriffith$elm_ui$Internal$Style$classes = {f3: 'a', dK: 'atv', f5: 'ab', f6: 'cx', f7: 'cy', f8: 'acb', f9: 'accx', ga: 'accy', gb: 'acr', eN: 'al', eO: 'ar', gc: 'at', dL: 'ah', dM: 'av', gf: 's', gk: 'bh', gl: 'b', gn: 'w7', go: 'bd', gp: 'bdt', c7: 'bn', gq: 'bs', c9: 'cpe', gw: 'cp', gx: 'cpx', gy: 'cpy', bL: 'c', dd: 'ctr', de: 'cb', df: 'ccx', ba: 'ccy', co: 'cl', dg: 'cr', gB: 'ct', gC: 'cptr', gD: 'ctxt', gP: 'fcs', e4: 'focus-within', gQ: 'fs', gR: 'g', d4: 'hbh', d5: 'hc', fb: 'he', d6: 'hf', fc: 'hfp', gW: 'hv', gZ: 'ic', g$: 'fr', dr: 'lbl', g3: 'iml', g4: 'imlf', g5: 'imlp', g6: 'implw', g7: 'it', hc: 'i', fl: 'lnk', bX: 'nb', fs: 'notxt', hv: 'ol', hx: 'or', by: 'oq', hC: 'oh', fx: 'pg', fy: 'p', hD: 'ppe', hM: 'ui', ca: 'r', hP: 'sb', hQ: 'sbx', hR: 'sby', hS: 'sbt', hW: 'e', hX: 'cap', hZ: 'sev', h4: 'sk', ia: 't', ib: 'tc', ic: 'w8', id: 'w2', ie: 'w9', $8: 'tj', dF: 'tja', ig: 'tl', ih: 'w3', ij: 'w5', ik: 'w4', il: 'tr', im: 'w6', $9: 'w1', io: 'tun', fX: 'ts', bD: 'clr', iG: 'u', eH: 'wc', f$: 'we', eI: 'wf', f0: 'wfp', eK: 'wrp'};
 var $mdgriffith$elm_ui$Internal$Model$Attr = function (a) {
 	return {$: 1, a: a};
 };
@@ -5537,12 +5537,12 @@ var $mdgriffith$elm_ui$Internal$Model$asEl = 2;
 var $mdgriffith$elm_ui$Internal$Model$Generic = {$: 0};
 var $mdgriffith$elm_ui$Internal$Model$div = $mdgriffith$elm_ui$Internal$Model$Generic;
 var $mdgriffith$elm_ui$Internal$Model$NoNearbyChildren = {$: 0};
-var $mdgriffith$elm_ui$Internal$Model$columnClass = $mdgriffith$elm_ui$Internal$Style$classes.f7 + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.bI);
-var $mdgriffith$elm_ui$Internal$Model$gridClass = $mdgriffith$elm_ui$Internal$Style$classes.f7 + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.gK);
-var $mdgriffith$elm_ui$Internal$Model$pageClass = $mdgriffith$elm_ui$Internal$Style$classes.f7 + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fq);
-var $mdgriffith$elm_ui$Internal$Model$paragraphClass = $mdgriffith$elm_ui$Internal$Style$classes.f7 + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fr);
-var $mdgriffith$elm_ui$Internal$Model$rowClass = $mdgriffith$elm_ui$Internal$Style$classes.f7 + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.b9);
-var $mdgriffith$elm_ui$Internal$Model$singleClass = $mdgriffith$elm_ui$Internal$Style$classes.f7 + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.hR);
+var $mdgriffith$elm_ui$Internal$Model$columnClass = $mdgriffith$elm_ui$Internal$Style$classes.gf + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.bL);
+var $mdgriffith$elm_ui$Internal$Model$gridClass = $mdgriffith$elm_ui$Internal$Style$classes.gf + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.gR);
+var $mdgriffith$elm_ui$Internal$Model$pageClass = $mdgriffith$elm_ui$Internal$Style$classes.gf + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fx);
+var $mdgriffith$elm_ui$Internal$Model$paragraphClass = $mdgriffith$elm_ui$Internal$Style$classes.gf + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fy);
+var $mdgriffith$elm_ui$Internal$Model$rowClass = $mdgriffith$elm_ui$Internal$Style$classes.gf + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.ca);
+var $mdgriffith$elm_ui$Internal$Model$singleClass = $mdgriffith$elm_ui$Internal$Style$classes.gf + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.hW);
 var $mdgriffith$elm_ui$Internal$Model$contextClasses = function (context) {
 	switch (context) {
 		case 0:
@@ -5754,13 +5754,13 @@ var $mdgriffith$elm_ui$Internal$Model$getStyleName = function (style) {
 			return 'grid-rows-' + (A2(
 				$elm$core$String$join,
 				'-',
-				A2($elm$core$List$map, $mdgriffith$elm_ui$Internal$Model$lengthClassName, template.hI)) + ('-cols-' + (A2(
+				A2($elm$core$List$map, $mdgriffith$elm_ui$Internal$Model$lengthClassName, template.hN)) + ('-cols-' + (A2(
 				$elm$core$String$join,
 				'-',
-				A2($elm$core$List$map, $mdgriffith$elm_ui$Internal$Model$lengthClassName, template.db)) + ('-space-x-' + ($mdgriffith$elm_ui$Internal$Model$lengthClassName(template.hV.a) + ('-space-y-' + $mdgriffith$elm_ui$Internal$Model$lengthClassName(template.hV.b)))))));
+				A2($elm$core$List$map, $mdgriffith$elm_ui$Internal$Model$lengthClassName, template.dc)) + ('-space-x-' + ($mdgriffith$elm_ui$Internal$Model$lengthClassName(template.h_.a) + ('-space-y-' + $mdgriffith$elm_ui$Internal$Model$lengthClassName(template.h_.b)))))));
 		case 9:
 			var pos = style.a;
-			return 'gp grid-pos-' + ($elm$core$String$fromInt(pos.b9) + ('-' + ($elm$core$String$fromInt(pos.bH) + ('-' + ($elm$core$String$fromInt(pos.eC) + ('-' + $elm$core$String$fromInt(pos.e4)))))));
+			return 'gp grid-pos-' + ($elm$core$String$fromInt(pos.ca) + ('-' + ($elm$core$String$fromInt(pos.bK) + ('-' + ($elm$core$String$fromInt(pos.eG) + ('-' + $elm$core$String$fromInt(pos.fa)))))));
 		case 11:
 			var selector = style.a;
 			var subStyle = style.b;
@@ -6014,17 +6014,17 @@ var $mdgriffith$elm_ui$Internal$Model$formatBoxShadow = function (shadow) {
 			$elm$core$Basics$identity,
 			_List_fromArray(
 				[
-					shadow.e9 ? $elm$core$Maybe$Just('inset') : $elm$core$Maybe$Nothing,
+					shadow.ff ? $elm$core$Maybe$Just('inset') : $elm$core$Maybe$Nothing,
 					$elm$core$Maybe$Just(
 					$elm$core$String$fromFloat(shadow.b.a) + 'px'),
 					$elm$core$Maybe$Just(
 					$elm$core$String$fromFloat(shadow.b.b) + 'px'),
 					$elm$core$Maybe$Just(
-					$elm$core$String$fromFloat(shadow.c5) + 'px'),
+					$elm$core$String$fromFloat(shadow.c6) + 'px'),
 					$elm$core$Maybe$Just(
-					$elm$core$String$fromFloat(shadow.fE) + 'px'),
+					$elm$core$String$fromFloat(shadow.fM) + 'px'),
 					$elm$core$Maybe$Just(
-					$mdgriffith$elm_ui$Internal$Model$formatColor(shadow.da))
+					$mdgriffith$elm_ui$Internal$Model$formatColor(shadow.db))
 				])));
 };
 var $elm$core$Maybe$map = F2(
@@ -6058,7 +6058,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderFocusStyle = function (focus) {
 		[
 			A2(
 			$mdgriffith$elm_ui$Internal$Model$Style,
-			$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.e_) + ':focus-within',
+			$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.e4) + ':focus-within',
 			A2(
 				$elm$core$List$filterMap,
 				$elm$core$Basics$identity,
@@ -6072,7 +6072,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderFocusStyle = function (focus) {
 								'border-color',
 								$mdgriffith$elm_ui$Internal$Model$formatColor(color));
 						},
-						focus.cl),
+						focus.cm),
 						A2(
 						$elm$core$Maybe$map,
 						function (color) {
@@ -6081,7 +6081,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderFocusStyle = function (focus) {
 								'background-color',
 								$mdgriffith$elm_ui$Internal$Model$formatColor(color));
 						},
-						focus.gb),
+						focus.gj),
 						A2(
 						$elm$core$Maybe$map,
 						function (shadow) {
@@ -6090,23 +6090,23 @@ var $mdgriffith$elm_ui$Internal$Model$renderFocusStyle = function (focus) {
 								'box-shadow',
 								$mdgriffith$elm_ui$Internal$Model$formatBoxShadow(
 									{
-										c5: shadow.c5,
-										da: shadow.da,
-										e9: false,
+										c6: shadow.c6,
+										db: shadow.db,
+										ff: false,
 										b: A2(
 											$elm$core$Tuple$mapSecond,
 											$elm$core$Basics$toFloat,
 											A2($elm$core$Tuple$mapFirst, $elm$core$Basics$toFloat, shadow.b)),
-										fE: shadow.fE
+										fM: shadow.fM
 									}));
 						},
-						focus.cV),
+						focus.cW),
 						$elm$core$Maybe$Just(
 						A2($mdgriffith$elm_ui$Internal$Model$Property, 'outline', 'none'))
 					]))),
 			A2(
 			$mdgriffith$elm_ui$Internal$Model$Style,
-			($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7) + ':focus .focusable, ') + (($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7) + '.focusable:focus, ') + ('.ui-slide-bar:focus + ' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7) + ' .focusable-thumb'))),
+			($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf) + ':focus .focusable, ') + (($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf) + '.focusable:focus, ') + ('.ui-slide-bar:focus + ' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf) + ' .focusable-thumb'))),
 			A2(
 				$elm$core$List$filterMap,
 				$elm$core$Basics$identity,
@@ -6120,7 +6120,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderFocusStyle = function (focus) {
 								'border-color',
 								$mdgriffith$elm_ui$Internal$Model$formatColor(color));
 						},
-						focus.cl),
+						focus.cm),
 						A2(
 						$elm$core$Maybe$map,
 						function (color) {
@@ -6129,7 +6129,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderFocusStyle = function (focus) {
 								'background-color',
 								$mdgriffith$elm_ui$Internal$Model$formatColor(color));
 						},
-						focus.gb),
+						focus.gj),
 						A2(
 						$elm$core$Maybe$map,
 						function (shadow) {
@@ -6138,17 +6138,17 @@ var $mdgriffith$elm_ui$Internal$Model$renderFocusStyle = function (focus) {
 								'box-shadow',
 								$mdgriffith$elm_ui$Internal$Model$formatBoxShadow(
 									{
-										c5: shadow.c5,
-										da: shadow.da,
-										e9: false,
+										c6: shadow.c6,
+										db: shadow.db,
+										ff: false,
 										b: A2(
 											$elm$core$Tuple$mapSecond,
 											$elm$core$Basics$toFloat,
 											A2($elm$core$Tuple$mapFirst, $elm$core$Basics$toFloat, shadow.b)),
-										fE: shadow.fE
+										fM: shadow.fM
 									}));
 						},
-						focus.cV),
+						focus.cW),
 						$elm$core$Maybe$Just(
 						A2($mdgriffith$elm_ui$Internal$Model$Property, 'outline', 'none'))
 					])))
@@ -6222,19 +6222,19 @@ var $mdgriffith$elm_ui$Internal$Style$contentName = function (desc) {
 	switch (desc) {
 		case 0:
 			var _v1 = desc;
-			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gu);
+			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gB);
 		case 1:
 			var _v2 = desc;
-			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.dd);
+			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.de);
 		case 2:
 			var _v3 = desc;
-			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.df);
+			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.dg);
 		case 3:
 			var _v4 = desc;
-			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.cn);
+			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.co);
 		case 4:
 			var _v5 = desc;
-			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.de);
+			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.df);
 		default:
 			var _v6 = desc;
 			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ba);
@@ -6244,22 +6244,22 @@ var $mdgriffith$elm_ui$Internal$Style$selfName = function (desc) {
 	switch (desc) {
 		case 0:
 			var _v1 = desc;
-			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f4);
+			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gc);
 		case 1:
 			var _v2 = desc;
-			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fZ);
+			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f5);
 		case 2:
 			var _v3 = desc;
-			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eK);
+			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eO);
 		case 3:
 			var _v4 = desc;
-			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eJ);
+			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eN);
 		case 4:
 			var _v5 = desc;
-			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f_);
+			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f6);
 		default:
 			var _v6 = desc;
-			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f$);
+			return $mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7);
 	}
 };
 var $mdgriffith$elm_ui$Internal$Style$describeAlignment = function (values) {
@@ -6275,7 +6275,7 @@ var $mdgriffith$elm_ui$Internal$Style$describeAlignment = function (values) {
 				content),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Child,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf),
 				_List_fromArray(
 					[
 						A2(
@@ -6295,13 +6295,13 @@ var $mdgriffith$elm_ui$Internal$Style$elDescription = _List_fromArray(
 		A2($mdgriffith$elm_ui$Internal$Style$Prop, 'white-space', 'pre'),
 		A2(
 		$mdgriffith$elm_ui$Internal$Style$Descriptor,
-		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d1),
+		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d4),
 		_List_fromArray(
 			[
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'z-index', '0'),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Child,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gc),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gk),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'z-index', '-1')
@@ -6309,24 +6309,24 @@ var $mdgriffith$elm_ui$Internal$Style$elDescription = _List_fromArray(
 			])),
 		A2(
 		$mdgriffith$elm_ui$Internal$Style$Descriptor,
-		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hN),
+		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hS),
 		_List_fromArray(
 			[
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Child,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.h5),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ia),
 				_List_fromArray(
 					[
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Descriptor,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d3),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d6),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '0')
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Descriptor,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eE),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eI),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'align-self', 'auto !important')
@@ -6335,35 +6335,35 @@ var $mdgriffith$elm_ui$Internal$Style$elDescription = _List_fromArray(
 			])),
 		A2(
 		$mdgriffith$elm_ui$Internal$Style$Child,
-		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d2),
+		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d5),
 		_List_fromArray(
 			[
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'height', 'auto')
 			])),
 		A2(
 		$mdgriffith$elm_ui$Internal$Style$Child,
-		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d3),
+		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d6),
 		_List_fromArray(
 			[
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '100000')
 			])),
 		A2(
 		$mdgriffith$elm_ui$Internal$Style$Child,
-		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eE),
+		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eI),
 		_List_fromArray(
 			[
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'width', '100%')
 			])),
 		A2(
 		$mdgriffith$elm_ui$Internal$Style$Child,
-		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fU),
+		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f0),
 		_List_fromArray(
 			[
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'width', '100%')
 			])),
 		A2(
 		$mdgriffith$elm_ui$Internal$Style$Child,
-		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eD),
+		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eH),
 		_List_fromArray(
 			[
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'align-self', 'flex-start')
@@ -6429,7 +6429,7 @@ var $mdgriffith$elm_ui$Internal$Style$elDescription = _List_fromArray(
 							[
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Child,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'margin-top', 'auto'),
@@ -6450,7 +6450,7 @@ var $mdgriffith$elm_ui$Internal$Style$gridAlignments = function (values) {
 			[
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Child,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf),
 				_List_fromArray(
 					[
 						A2(
@@ -6504,16 +6504,16 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 		A2(
 		$mdgriffith$elm_ui$Internal$Style$Class,
 		_Utils_ap(
-			$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7),
+			$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf),
 			_Utils_ap(
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hR),
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gS))),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hW),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gZ))),
 		_List_fromArray(
 			[
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'block'),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d3),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d6),
 				_List_fromArray(
 					[
 						A2(
@@ -6527,7 +6527,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eE),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eI),
 				_List_fromArray(
 					[
 						A2(
@@ -6542,14 +6542,14 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 			])),
 		A2(
 		$mdgriffith$elm_ui$Internal$Style$Class,
-		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7) + ':focus',
+		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf) + ':focus',
 		_List_fromArray(
 			[
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'outline', 'none')
 			])),
 		A2(
 		$mdgriffith$elm_ui$Internal$Style$Class,
-		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hH),
+		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hM),
 		_List_fromArray(
 			[
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'width', '100%'),
@@ -6559,14 +6559,14 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
 				_Utils_ap(
-					$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7),
-					$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d3)),
+					$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf),
+					$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d6)),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'height', '100%'),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d3),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d6),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'height', '100%')
@@ -6574,12 +6574,12 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Child,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gU),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.g$),
 				_List_fromArray(
 					[
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Descriptor,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.bV),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.bX),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'position', 'fixed'),
@@ -6589,7 +6589,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 			])),
 		A2(
 		$mdgriffith$elm_ui$Internal$Style$Class,
-		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.bV),
+		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.bX),
 		_List_fromArray(
 			[
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'position', 'relative'),
@@ -6599,7 +6599,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-basis', 'auto'),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hR),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hW),
 				$mdgriffith$elm_ui$Internal$Style$elDescription),
 				$mdgriffith$elm_ui$Internal$Style$Batch(
 				function (fn) {
@@ -6610,7 +6610,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							case 0:
 								return A2(
 									$mdgriffith$elm_ui$Internal$Style$Descriptor,
-									$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fX),
+									$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f3),
 									_List_fromArray(
 										[
 											A2($mdgriffith$elm_ui$Internal$Style$Prop, 'position', 'absolute'),
@@ -6621,14 +6621,14 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 											A2($mdgriffith$elm_ui$Internal$Style$Prop, 'margin', '0 !important'),
 											A2(
 											$mdgriffith$elm_ui$Internal$Style$Child,
-											$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d3),
+											$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d6),
 											_List_fromArray(
 												[
 													A2($mdgriffith$elm_ui$Internal$Style$Prop, 'height', 'auto')
 												])),
 											A2(
 											$mdgriffith$elm_ui$Internal$Style$Child,
-											$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eE),
+											$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eI),
 											_List_fromArray(
 												[
 													A2($mdgriffith$elm_ui$Internal$Style$Prop, 'width', '100%')
@@ -6645,7 +6645,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							case 1:
 								return A2(
 									$mdgriffith$elm_ui$Internal$Style$Descriptor,
-									$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gd),
+									$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gl),
 									_List_fromArray(
 										[
 											A2($mdgriffith$elm_ui$Internal$Style$Prop, 'position', 'absolute'),
@@ -6665,7 +6665,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 												])),
 											A2(
 											$mdgriffith$elm_ui$Internal$Style$Child,
-											$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d3),
+											$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d6),
 											_List_fromArray(
 												[
 													A2($mdgriffith$elm_ui$Internal$Style$Prop, 'height', 'auto')
@@ -6674,7 +6674,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							case 2:
 								return A2(
 									$mdgriffith$elm_ui$Internal$Style$Descriptor,
-									$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hs),
+									$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hx),
 									_List_fromArray(
 										[
 											A2($mdgriffith$elm_ui$Internal$Style$Prop, 'position', 'absolute'),
@@ -6695,7 +6695,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							case 3:
 								return A2(
 									$mdgriffith$elm_ui$Internal$Style$Descriptor,
-									$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hq),
+									$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hv),
 									_List_fromArray(
 										[
 											A2($mdgriffith$elm_ui$Internal$Style$Prop, 'position', 'absolute'),
@@ -6716,7 +6716,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							case 4:
 								return A2(
 									$mdgriffith$elm_ui$Internal$Style$Descriptor,
-									$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gU),
+									$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.g$),
 									_List_fromArray(
 										[
 											A2($mdgriffith$elm_ui$Internal$Style$Prop, 'position', 'absolute'),
@@ -6737,7 +6737,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							default:
 								return A2(
 									$mdgriffith$elm_ui$Internal$Style$Descriptor,
-									$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gc),
+									$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gk),
 									_List_fromArray(
 										[
 											A2($mdgriffith$elm_ui$Internal$Style$Prop, 'position', 'absolute'),
@@ -6761,7 +6761,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 			])),
 		A2(
 		$mdgriffith$elm_ui$Internal$Style$Class,
-		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7),
+		$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf),
 		_List_fromArray(
 			[
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'position', 'relative'),
@@ -6786,14 +6786,14 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 				A2($mdgriffith$elm_ui$Internal$Style$Prop, 'font-style', 'inherit'),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eG),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eK),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-wrap', 'wrap')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fm),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fs),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, '-moz-user-select', 'none'),
@@ -6803,42 +6803,42 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gv),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gC),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'cursor', 'pointer')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gw),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gD),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'cursor', 'text')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hy),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hD),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'pointer-events', 'none !important')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.c8),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.c9),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'pointer-events', 'auto !important')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.bB),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.bD),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'opacity', '0')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.bw),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.by),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'opacity', '1')
@@ -6846,7 +6846,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
 				$mdgriffith$elm_ui$Internal$Style$dot(
-					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.gP, $mdgriffith$elm_ui$Internal$Style$classes.bB)) + ':hover',
+					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.gW, $mdgriffith$elm_ui$Internal$Style$classes.bD)) + ':hover',
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'opacity', '0')
@@ -6854,7 +6854,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
 				$mdgriffith$elm_ui$Internal$Style$dot(
-					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.gP, $mdgriffith$elm_ui$Internal$Style$classes.bw)) + ':hover',
+					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.gW, $mdgriffith$elm_ui$Internal$Style$classes.by)) + ':hover',
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'opacity', '1')
@@ -6862,7 +6862,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
 				$mdgriffith$elm_ui$Internal$Style$dot(
-					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.gI, $mdgriffith$elm_ui$Internal$Style$classes.bB)) + ':focus',
+					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.gP, $mdgriffith$elm_ui$Internal$Style$classes.bD)) + ':focus',
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'opacity', '0')
@@ -6870,7 +6870,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
 				$mdgriffith$elm_ui$Internal$Style$dot(
-					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.gI, $mdgriffith$elm_ui$Internal$Style$classes.bw)) + ':focus',
+					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.gP, $mdgriffith$elm_ui$Internal$Style$classes.by)) + ':focus',
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'opacity', '1')
@@ -6878,7 +6878,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
 				$mdgriffith$elm_ui$Internal$Style$dot(
-					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.dI, $mdgriffith$elm_ui$Internal$Style$classes.bB)) + ':active',
+					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.dK, $mdgriffith$elm_ui$Internal$Style$classes.bD)) + ':active',
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'opacity', '0')
@@ -6886,14 +6886,14 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
 				$mdgriffith$elm_ui$Internal$Style$dot(
-					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.dI, $mdgriffith$elm_ui$Internal$Style$classes.bw)) + ':active',
+					_Utils_ap($mdgriffith$elm_ui$Internal$Style$classes.dK, $mdgriffith$elm_ui$Internal$Style$classes.by)) + ':active',
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'opacity', '1')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fP),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fX),
 				_List_fromArray(
 					[
 						A2(
@@ -6912,7 +6912,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hK),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hP),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'overflow', 'auto'),
@@ -6920,13 +6920,13 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hL),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hQ),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'overflow-x', 'auto'),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Descriptor,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.b9),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ca),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-shrink', '1')
@@ -6934,20 +6934,20 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hM),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hR),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'overflow-y', 'auto'),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Descriptor,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.bI),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.bL),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-shrink', '1')
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Descriptor,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hR),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hW),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-shrink', '1')
@@ -6955,63 +6955,63 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.go),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gw),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'overflow', 'hidden')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gp),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gx),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'overflow-x', 'hidden')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gq),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gy),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'overflow-y', 'hidden')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eD),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eH),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'width', 'auto')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.c6),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.c7),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'border-width', '0')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gg),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.go),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'border-style', 'dashed')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gh),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gp),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'border-style', 'dotted')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gi),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gq),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'border-style', 'solid')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.h5),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ia),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'white-space', 'pre'),
@@ -7019,7 +7019,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.g0),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.g7),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'line-height', '1.05'),
@@ -7028,31 +7028,31 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hR),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hW),
 				$mdgriffith$elm_ui$Internal$Style$elDescription),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.b9),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ca),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'flex'),
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-direction', 'row'),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-basis', '0%'),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Descriptor,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fT),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f$),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-basis', 'auto')
 									])),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Descriptor,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fg),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fl),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-basis', 'auto')
@@ -7060,28 +7060,28 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d3),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d6),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'align-self', 'stretch !important')
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.e6),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fc),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'align-self', 'stretch !important')
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eE),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eI),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '100000')
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.dc),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.dd),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '0'),
@@ -7090,20 +7090,20 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						'u:first-of-type.' + $mdgriffith$elm_ui$Internal$Style$classes.f3,
+						'u:first-of-type.' + $mdgriffith$elm_ui$Internal$Style$classes.gb,
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '1')
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						's:first-of-type.' + $mdgriffith$elm_ui$Internal$Style$classes.f1,
+						's:first-of-type.' + $mdgriffith$elm_ui$Internal$Style$classes.f9,
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '1'),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Child,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f_),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f6),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'margin-left', 'auto !important')
@@ -7111,13 +7111,13 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						's:last-of-type.' + $mdgriffith$elm_ui$Internal$Style$classes.f1,
+						's:last-of-type.' + $mdgriffith$elm_ui$Internal$Style$classes.f9,
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '1'),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Child,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f_),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f6),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'margin-right', 'auto !important')
@@ -7125,13 +7125,13 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						's:only-of-type.' + $mdgriffith$elm_ui$Internal$Style$classes.f1,
+						's:only-of-type.' + $mdgriffith$elm_ui$Internal$Style$classes.f9,
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '1'),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Child,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f$),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'margin-top', 'auto !important'),
@@ -7140,14 +7140,14 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						's:last-of-type.' + ($mdgriffith$elm_ui$Internal$Style$classes.f1 + ' ~ u'),
+						's:last-of-type.' + ($mdgriffith$elm_ui$Internal$Style$classes.f9 + ' ~ u'),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '0')
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						'u:first-of-type.' + ($mdgriffith$elm_ui$Internal$Style$classes.f3 + (' ~ s.' + $mdgriffith$elm_ui$Internal$Style$classes.f1)),
+						'u:first-of-type.' + ($mdgriffith$elm_ui$Internal$Style$classes.gb + (' ~ s.' + $mdgriffith$elm_ui$Internal$Style$classes.f9)),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '0')
@@ -7210,14 +7210,14 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 						}),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Descriptor,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hU),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hZ),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'justify-content', 'space-between')
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Descriptor,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.dp),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.dr),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'align-items', 'baseline')
@@ -7225,21 +7225,21 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.bI),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.bL),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'flex'),
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-direction', 'column'),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-basis', '0px'),
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'min-height', 'min-content'),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Descriptor,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.e5),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fb),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-basis', 'auto')
@@ -7247,48 +7247,48 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d3),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d6),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '100000')
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eE),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eI),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'width', '100%')
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fU),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f0),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'width', '100%')
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eD),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.eH),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'align-self', 'flex-start')
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						'u:first-of-type.' + $mdgriffith$elm_ui$Internal$Style$classes.f0,
+						'u:first-of-type.' + $mdgriffith$elm_ui$Internal$Style$classes.f8,
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '1')
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						's:first-of-type.' + $mdgriffith$elm_ui$Internal$Style$classes.f2,
+						's:first-of-type.' + $mdgriffith$elm_ui$Internal$Style$classes.ga,
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '1'),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Child,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f$),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'margin-top', 'auto !important'),
@@ -7297,13 +7297,13 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						's:last-of-type.' + $mdgriffith$elm_ui$Internal$Style$classes.f2,
+						's:last-of-type.' + $mdgriffith$elm_ui$Internal$Style$classes.ga,
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '1'),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Child,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f$),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'margin-bottom', 'auto !important'),
@@ -7312,13 +7312,13 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						's:only-of-type.' + $mdgriffith$elm_ui$Internal$Style$classes.f2,
+						's:only-of-type.' + $mdgriffith$elm_ui$Internal$Style$classes.ga,
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '1'),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Child,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f$),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'margin-top', 'auto !important'),
@@ -7327,14 +7327,14 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						's:last-of-type.' + ($mdgriffith$elm_ui$Internal$Style$classes.f2 + ' ~ u'),
+						's:last-of-type.' + ($mdgriffith$elm_ui$Internal$Style$classes.ga + ' ~ u'),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '0')
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						'u:first-of-type.' + ($mdgriffith$elm_ui$Internal$Style$classes.f0 + (' ~ s.' + $mdgriffith$elm_ui$Internal$Style$classes.f2)),
+						'u:first-of-type.' + ($mdgriffith$elm_ui$Internal$Style$classes.f8 + (' ~ s.' + $mdgriffith$elm_ui$Internal$Style$classes.ga)),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '0')
@@ -7403,7 +7403,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 						}),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.dc),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.dd),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-grow', '0'),
@@ -7413,7 +7413,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Descriptor,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hU),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hZ),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'justify-content', 'space-between')
@@ -7421,7 +7421,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gK),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gR),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', '-ms-grid'),
@@ -7432,7 +7432,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							[
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Child,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'width', '100%')
@@ -7483,13 +7483,13 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fq),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fx),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'block'),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7 + ':first-child'),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf + ':first-child'),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'margin', '0 !important')
@@ -7497,7 +7497,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
 						$mdgriffith$elm_ui$Internal$Style$dot(
-							$mdgriffith$elm_ui$Internal$Style$classes.f7 + ($mdgriffith$elm_ui$Internal$Style$selfName(3) + (':first-child + .' + $mdgriffith$elm_ui$Internal$Style$classes.f7))),
+							$mdgriffith$elm_ui$Internal$Style$classes.gf + ($mdgriffith$elm_ui$Internal$Style$selfName(3) + (':first-child + .' + $mdgriffith$elm_ui$Internal$Style$classes.gf))),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'margin', '0 !important')
@@ -7505,7 +7505,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
 						$mdgriffith$elm_ui$Internal$Style$dot(
-							$mdgriffith$elm_ui$Internal$Style$classes.f7 + ($mdgriffith$elm_ui$Internal$Style$selfName(2) + (':first-child + .' + $mdgriffith$elm_ui$Internal$Style$classes.f7))),
+							$mdgriffith$elm_ui$Internal$Style$classes.gf + ($mdgriffith$elm_ui$Internal$Style$selfName(2) + (':first-child + .' + $mdgriffith$elm_ui$Internal$Style$classes.gf))),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'margin', '0 !important')
@@ -7558,7 +7558,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gY),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.g3),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'white-space', 'pre-wrap !important'),
@@ -7568,12 +7568,12 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.g$),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.g6),
 				_List_fromArray(
 					[
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Descriptor,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hR),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hW),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'flex-basis', 'auto')
@@ -7581,14 +7581,14 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.g_),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.g5),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'white-space', 'pre-wrap !important'),
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'cursor', 'text'),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gZ),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.g4),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'white-space', 'pre-wrap !important'),
@@ -7597,7 +7597,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fr),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fy),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'block'),
@@ -7605,13 +7605,13 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'overflow-wrap', 'break-word'),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Descriptor,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d1),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.d4),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'z-index', '0'),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Child,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gc),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gk),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'z-index', '-1')
@@ -7619,7 +7619,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$AllChildren,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.h5),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ia),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'inline'),
@@ -7627,7 +7627,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$AllChildren,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fr),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fy),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'inline'),
@@ -7648,63 +7648,63 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$AllChildren,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hR),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hW),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'inline'),
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'white-space', 'normal'),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Descriptor,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fT),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f$),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'inline-block')
 									])),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Descriptor,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gU),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.g$),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'flex')
 									])),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Descriptor,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gc),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gk),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'flex')
 									])),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Descriptor,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.fX),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f3),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'flex')
 									])),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Descriptor,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gd),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gl),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'flex')
 									])),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Descriptor,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hs),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hx),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'flex')
 									])),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Descriptor,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hq),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hv),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'flex')
 									])),
 								A2(
 								$mdgriffith$elm_ui$Internal$Style$Child,
-								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.h5),
+								$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ia),
 								_List_fromArray(
 									[
 										A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'inline'),
@@ -7713,21 +7713,21 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.b9),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ca),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'inline')
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.bI),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.bL),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'inline-flex')
 							])),
 						A2(
 						$mdgriffith$elm_ui$Internal$Style$Child,
-						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gK),
+						$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gR),
 						_List_fromArray(
 							[
 								A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'inline-grid')
@@ -7769,84 +7769,84 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ii),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.$9),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'font-weight', '100')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.h8),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.id),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'font-weight', '200')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ic),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ih),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'font-weight', '300')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.$8),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ik),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'font-weight', '400')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ie),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ij),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'font-weight', '500')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ih),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.im),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'font-weight', '600')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gn),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'font-weight', '700')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.h7),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ic),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'font-weight', '800')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.h9),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ie),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'font-weight', '900')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.g5),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.hc),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'font-style', 'italic')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.h$),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.h4),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'text-decoration', 'line-through')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.iB),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.iG),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'text-decoration', 'underline'),
@@ -7856,8 +7856,8 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
 				_Utils_ap(
-					$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.iB),
-					$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.h$)),
+					$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.iG),
+					$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.h4)),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'text-decoration', 'line-through underline'),
@@ -7866,42 +7866,42 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ij),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.io),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'font-style', 'normal')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ia),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.$8),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'text-align', 'justify')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.dD),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.dF),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'text-align', 'justify-all')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.h6),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ib),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'text-align', 'center')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ig),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.il),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'text-align', 'right')
 					])),
 				A2(
 				$mdgriffith$elm_ui$Internal$Style$Descriptor,
-				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ib),
+				$mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ig),
 				_List_fromArray(
 					[
 						A2($mdgriffith$elm_ui$Internal$Style$Prop, 'text-align', 'left')
@@ -8013,19 +8013,19 @@ var $mdgriffith$elm_ui$Internal$Style$commonValues = $elm$core$List$concat(
 			$mdgriffith$elm_ui$Internal$Style$fontVariant('afrc'),
 			$mdgriffith$elm_ui$Internal$Style$fontVariant('frac')
 		]));
-var $mdgriffith$elm_ui$Internal$Style$explainer = '\n.explain {\n    border: 6px solid rgb(174, 121, 15) !important;\n}\n.explain > .' + ($mdgriffith$elm_ui$Internal$Style$classes.f7 + (' {\n    border: 4px dashed rgb(0, 151, 167) !important;\n}\n\n.ctr {\n    border: none !important;\n}\n.explain > .ctr > .' + ($mdgriffith$elm_ui$Internal$Style$classes.f7 + ' {\n    border: 4px dashed rgb(0, 151, 167) !important;\n}\n\n')));
+var $mdgriffith$elm_ui$Internal$Style$explainer = '\n.explain {\n    border: 6px solid rgb(174, 121, 15) !important;\n}\n.explain > .' + ($mdgriffith$elm_ui$Internal$Style$classes.gf + (' {\n    border: 4px dashed rgb(0, 151, 167) !important;\n}\n\n.ctr {\n    border: none !important;\n}\n.explain > .ctr > .' + ($mdgriffith$elm_ui$Internal$Style$classes.gf + ' {\n    border: 4px dashed rgb(0, 151, 167) !important;\n}\n\n')));
 var $mdgriffith$elm_ui$Internal$Style$inputTextReset = '\ninput[type="search"],\ninput[type="search"]::-webkit-search-decoration,\ninput[type="search"]::-webkit-search-cancel-button,\ninput[type="search"]::-webkit-search-results-button,\ninput[type="search"]::-webkit-search-results-decoration {\n  -webkit-appearance:none;\n}\n';
 var $mdgriffith$elm_ui$Internal$Style$sliderReset = '\ninput[type=range] {\n  -webkit-appearance: none; \n  background: transparent;\n  position:absolute;\n  left:0;\n  top:0;\n  z-index:10;\n  width: 100%;\n  outline: dashed 1px;\n  height: 100%;\n  opacity: 0;\n}\n';
 var $mdgriffith$elm_ui$Internal$Style$thumbReset = '\ninput[type=range]::-webkit-slider-thumb {\n    -webkit-appearance: none;\n    opacity: 0.5;\n    width: 80px;\n    height: 80px;\n    background-color: black;\n    border:none;\n    border-radius: 5px;\n}\ninput[type=range]::-moz-range-thumb {\n    opacity: 0.5;\n    width: 80px;\n    height: 80px;\n    background-color: black;\n    border:none;\n    border-radius: 5px;\n}\ninput[type=range]::-ms-thumb {\n    opacity: 0.5;\n    width: 80px;\n    height: 80px;\n    background-color: black;\n    border:none;\n    border-radius: 5px;\n}\ninput[type=range][orient=vertical]{\n    writing-mode: bt-lr; /* IE */\n    -webkit-appearance: slider-vertical;  /* WebKit */\n}\n';
 var $mdgriffith$elm_ui$Internal$Style$trackReset = '\ninput[type=range]::-moz-range-track {\n    background: transparent;\n    cursor: pointer;\n}\ninput[type=range]::-ms-track {\n    background: transparent;\n    cursor: pointer;\n}\ninput[type=range]::-webkit-slider-runnable-track {\n    background: transparent;\n    cursor: pointer;\n}\n';
-var $mdgriffith$elm_ui$Internal$Style$overrides = '@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7) + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.b9) + (' > ' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7) + (' { flex-basis: auto !important; } ' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7) + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.b9) + (' > ' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7) + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.dc) + (' { flex-basis: auto !important; }}' + ($mdgriffith$elm_ui$Internal$Style$inputTextReset + ($mdgriffith$elm_ui$Internal$Style$sliderReset + ($mdgriffith$elm_ui$Internal$Style$trackReset + ($mdgriffith$elm_ui$Internal$Style$thumbReset + $mdgriffith$elm_ui$Internal$Style$explainer)))))))))))))));
+var $mdgriffith$elm_ui$Internal$Style$overrides = '@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf) + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ca) + (' > ' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf) + (' { flex-basis: auto !important; } ' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf) + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.ca) + (' > ' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf) + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.dd) + (' { flex-basis: auto !important; }}' + ($mdgriffith$elm_ui$Internal$Style$inputTextReset + ($mdgriffith$elm_ui$Internal$Style$sliderReset + ($mdgriffith$elm_ui$Internal$Style$trackReset + ($mdgriffith$elm_ui$Internal$Style$thumbReset + $mdgriffith$elm_ui$Internal$Style$explainer)))))))))))))));
 var $elm$core$String$concat = function (strings) {
 	return A2($elm$core$String$join, '', strings);
 };
 var $mdgriffith$elm_ui$Internal$Style$Intermediate = $elm$core$Basics$identity;
 var $mdgriffith$elm_ui$Internal$Style$emptyIntermediate = F2(
 	function (selector, closing) {
-		return {a9: closing, G: _List_Nil, av: _List_Nil, al: selector};
+		return {a9: closing, G: _List_Nil, aw: _List_Nil, am: selector};
 	});
 var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 	function (_v0, rulesToRender) {
@@ -8039,10 +8039,10 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 						return _Utils_update(
 							rendered,
 							{
-								av: A2(
+								aw: A2(
 									$elm$core$List$cons,
 									_Utils_Tuple2(name, val),
-									rendered.av)
+									rendered.aw)
 							});
 					case 3:
 						var _v2 = rule.a;
@@ -8054,7 +8054,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 							{
 								G: A2(
 									$elm$core$List$cons,
-									{a9: '\n}', G: _List_Nil, av: props, al: '@supports (' + (prop + (':' + (value + (') {' + parent.al))))},
+									{a9: '\n}', G: _List_Nil, aw: props, am: '@supports (' + (prop + (':' + (value + (') {' + parent.am))))},
 									rendered.G)
 							});
 					case 5:
@@ -8067,7 +8067,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 									$elm$core$List$cons,
 									A2(
 										$mdgriffith$elm_ui$Internal$Style$renderRules,
-										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.al + (' + ' + selector), ''),
+										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.am + (' + ' + selector), ''),
 										adjRules),
 									rendered.G)
 							});
@@ -8081,7 +8081,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 									$elm$core$List$cons,
 									A2(
 										$mdgriffith$elm_ui$Internal$Style$renderRules,
-										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.al + (' > ' + child), ''),
+										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.am + (' > ' + child), ''),
 										childRules),
 									rendered.G)
 							});
@@ -8095,7 +8095,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 									$elm$core$List$cons,
 									A2(
 										$mdgriffith$elm_ui$Internal$Style$renderRules,
-										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.al + (' ' + child), ''),
+										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.am + (' ' + child), ''),
 										childRules),
 									rendered.G)
 							});
@@ -8111,7 +8111,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 										$mdgriffith$elm_ui$Internal$Style$renderRules,
 										A2(
 											$mdgriffith$elm_ui$Internal$Style$emptyIntermediate,
-											_Utils_ap(parent.al, descriptor),
+											_Utils_ap(parent.am, descriptor),
 											''),
 										descriptorRules),
 									rendered.G)
@@ -8125,7 +8125,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 									$elm$core$List$cons,
 									A2(
 										$mdgriffith$elm_ui$Internal$Style$renderRules,
-										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.al, ''),
+										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.am, ''),
 										batched),
 									rendered.G)
 							});
@@ -8146,11 +8146,11 @@ var $mdgriffith$elm_ui$Internal$Style$renderCompact = function (styleClasses) {
 				values));
 	};
 	var renderClass = function (rule) {
-		var _v2 = rule.av;
+		var _v2 = rule.aw;
 		if (!_v2.b) {
 			return '';
 		} else {
-			return rule.al + ('{' + (renderValues(rule.av) + (rule.a9 + '}')));
+			return rule.am + ('{' + (renderValues(rule.aw) + (rule.a9 + '}')));
 		}
 	};
 	var renderIntermediate = function (_v0) {
@@ -8187,7 +8187,7 @@ var $mdgriffith$elm_ui$Internal$Style$rules = _Utils_ap(
 		_Utils_ap($mdgriffith$elm_ui$Internal$Style$baseSheet, $mdgriffith$elm_ui$Internal$Style$commonValues)));
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $mdgriffith$elm_ui$Internal$Model$staticRoot = function (opts) {
-	var _v0 = opts.cK;
+	var _v0 = opts.cL;
 	switch (_v0) {
 		case 0:
 			return A3(
@@ -8280,7 +8280,7 @@ var $mdgriffith$elm_ui$Internal$Model$fontName = function (font) {
 			var url = font.b;
 			return '\"' + (name + '\"');
 		default:
-			var name = font.a.fl;
+			var name = font.a.fr;
 			return '\"' + (name + '\"');
 	}
 };
@@ -8301,7 +8301,7 @@ var $mdgriffith$elm_ui$Internal$Model$isSmallCaps = function (_var) {
 var $mdgriffith$elm_ui$Internal$Model$hasSmallCaps = function (typeface) {
 	if (typeface.$ === 5) {
 		var font = typeface.a;
-		return A2($elm$core$List$any, $mdgriffith$elm_ui$Internal$Model$isSmallCaps, font.cg);
+		return A2($elm$core$List$any, $mdgriffith$elm_ui$Internal$Model$isSmallCaps, font.ch);
 	} else {
 		return false;
 	}
@@ -8334,7 +8334,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderStyle = F4(
 			var pseudo = maybePseudo.a;
 			switch (pseudo) {
 				case 1:
-					var _v2 = options.gP;
+					var _v2 = options.gW;
 					switch (_v2) {
 						case 0:
 							return _List_Nil;
@@ -8366,9 +8366,9 @@ var $mdgriffith$elm_ui$Internal$Model$renderStyle = F4(
 					return _List_fromArray(
 						[
 							selector + ('-fs:focus {' + (renderedProps + '\n}')),
-							('.' + ($mdgriffith$elm_ui$Internal$Style$classes.f7 + (':focus ' + (selector + '-fs  {')))) + (renderedProps + '\n}'),
+							('.' + ($mdgriffith$elm_ui$Internal$Style$classes.gf + (':focus ' + (selector + '-fs  {')))) + (renderedProps + '\n}'),
 							(selector + '-fs:focus-within {') + (renderedProps + '\n}'),
-							('.ui-slide-bar:focus + ' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.f7) + (' .focusable-thumb' + (selector + '-fs {')))) + (renderedProps + '\n}')
+							('.ui-slide-bar:focus + ' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.gf) + (' .focusable-thumb' + (selector + '-fs {')))) + (renderedProps + '\n}')
 						]);
 				default:
 					return _List_fromArray(
@@ -8403,7 +8403,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderVariants = function (typeface) {
 			A2(
 				$elm$core$String$join,
 				', ',
-				A2($elm$core$List$map, $mdgriffith$elm_ui$Internal$Model$renderVariant, font.cg)));
+				A2($elm$core$List$map, $mdgriffith$elm_ui$Internal$Model$renderVariant, font.ch)));
 	} else {
 		return $elm$core$Maybe$Nothing;
 	}
@@ -8549,18 +8549,18 @@ var $mdgriffith$elm_ui$Internal$Model$renderStyleRule = F3(
 				var y = rule.c;
 				var yPx = $elm$core$String$fromInt(y) + 'px';
 				var xPx = $elm$core$String$fromInt(x) + 'px';
-				var single = '.' + $mdgriffith$elm_ui$Internal$Style$classes.hR;
-				var row = '.' + $mdgriffith$elm_ui$Internal$Style$classes.b9;
-				var wrappedRow = '.' + ($mdgriffith$elm_ui$Internal$Style$classes.eG + row);
-				var right = '.' + $mdgriffith$elm_ui$Internal$Style$classes.eK;
-				var paragraph = '.' + $mdgriffith$elm_ui$Internal$Style$classes.fr;
-				var page = '.' + $mdgriffith$elm_ui$Internal$Style$classes.fq;
-				var left = '.' + $mdgriffith$elm_ui$Internal$Style$classes.eJ;
+				var single = '.' + $mdgriffith$elm_ui$Internal$Style$classes.hW;
+				var row = '.' + $mdgriffith$elm_ui$Internal$Style$classes.ca;
+				var wrappedRow = '.' + ($mdgriffith$elm_ui$Internal$Style$classes.eK + row);
+				var right = '.' + $mdgriffith$elm_ui$Internal$Style$classes.eO;
+				var paragraph = '.' + $mdgriffith$elm_ui$Internal$Style$classes.fy;
+				var page = '.' + $mdgriffith$elm_ui$Internal$Style$classes.fx;
+				var left = '.' + $mdgriffith$elm_ui$Internal$Style$classes.eN;
 				var halfY = $elm$core$String$fromFloat(y / 2) + 'px';
 				var halfX = $elm$core$String$fromFloat(x / 2) + 'px';
-				var column = '.' + $mdgriffith$elm_ui$Internal$Style$classes.bI;
+				var column = '.' + $mdgriffith$elm_ui$Internal$Style$classes.bL;
 				var _class = '.' + cls;
-				var any = '.' + $mdgriffith$elm_ui$Internal$Style$classes.f7;
+				var any = '.' + $mdgriffith$elm_ui$Internal$Style$classes.gf;
 				return $elm$core$List$concat(
 					_List_fromArray(
 						[
@@ -8818,45 +8818,45 @@ var $mdgriffith$elm_ui$Internal$Model$renderStyleRule = F3(
 				var toGridLength = function (x) {
 					return A3(toGridLengthHelper, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, x);
 				};
-				var xSpacing = toGridLength(template.hV.a);
-				var ySpacing = toGridLength(template.hV.b);
+				var xSpacing = toGridLength(template.h_.a);
+				var ySpacing = toGridLength(template.h_.b);
 				var rows = function (x) {
 					return 'grid-template-rows: ' + (x + ';');
 				}(
 					A2(
 						$elm$core$String$join,
 						' ',
-						A2($elm$core$List$map, toGridLength, template.hI)));
+						A2($elm$core$List$map, toGridLength, template.hN)));
 				var msRows = function (x) {
 					return '-ms-grid-rows: ' + (x + ';');
 				}(
 					A2(
 						$elm$core$String$join,
 						ySpacing,
-						A2($elm$core$List$map, toGridLength, template.db)));
+						A2($elm$core$List$map, toGridLength, template.dc)));
 				var msColumns = function (x) {
 					return '-ms-grid-columns: ' + (x + ';');
 				}(
 					A2(
 						$elm$core$String$join,
 						ySpacing,
-						A2($elm$core$List$map, toGridLength, template.db)));
-				var gapY = 'grid-row-gap:' + (toGridLength(template.hV.b) + ';');
-				var gapX = 'grid-column-gap:' + (toGridLength(template.hV.a) + ';');
+						A2($elm$core$List$map, toGridLength, template.dc)));
+				var gapY = 'grid-row-gap:' + (toGridLength(template.h_.b) + ';');
+				var gapX = 'grid-column-gap:' + (toGridLength(template.h_.a) + ';');
 				var columns = function (x) {
 					return 'grid-template-columns: ' + (x + ';');
 				}(
 					A2(
 						$elm$core$String$join,
 						' ',
-						A2($elm$core$List$map, toGridLength, template.db)));
+						A2($elm$core$List$map, toGridLength, template.dc)));
 				var _class = '.grid-rows-' + (A2(
 					$elm$core$String$join,
 					'-',
-					A2($elm$core$List$map, $mdgriffith$elm_ui$Internal$Model$lengthClassName, template.hI)) + ('-cols-' + (A2(
+					A2($elm$core$List$map, $mdgriffith$elm_ui$Internal$Model$lengthClassName, template.hN)) + ('-cols-' + (A2(
 					$elm$core$String$join,
 					'-',
-					A2($elm$core$List$map, $mdgriffith$elm_ui$Internal$Model$lengthClassName, template.db)) + ('-space-x-' + ($mdgriffith$elm_ui$Internal$Model$lengthClassName(template.hV.a) + ('-space-y-' + $mdgriffith$elm_ui$Internal$Model$lengthClassName(template.hV.b)))))));
+					A2($elm$core$List$map, $mdgriffith$elm_ui$Internal$Model$lengthClassName, template.dc)) + ('-space-x-' + ($mdgriffith$elm_ui$Internal$Model$lengthClassName(template.h_.a) + ('-space-y-' + $mdgriffith$elm_ui$Internal$Model$lengthClassName(template.h_.b)))))));
 				var modernGrid = _class + ('{' + (columns + (rows + (gapX + (gapY + '}')))));
 				var supports = '@supports (display:grid) {' + (modernGrid + '}');
 				var base = _class + ('{' + (msColumns + (msRows + '}')));
@@ -8869,20 +8869,20 @@ var $mdgriffith$elm_ui$Internal$Model$renderStyleRule = F3(
 					' ',
 					_List_fromArray(
 						[
-							'-ms-grid-row: ' + ($elm$core$String$fromInt(position.b9) + ';'),
-							'-ms-grid-row-span: ' + ($elm$core$String$fromInt(position.e4) + ';'),
-							'-ms-grid-column: ' + ($elm$core$String$fromInt(position.bH) + ';'),
-							'-ms-grid-column-span: ' + ($elm$core$String$fromInt(position.eC) + ';')
+							'-ms-grid-row: ' + ($elm$core$String$fromInt(position.ca) + ';'),
+							'-ms-grid-row-span: ' + ($elm$core$String$fromInt(position.fa) + ';'),
+							'-ms-grid-column: ' + ($elm$core$String$fromInt(position.bK) + ';'),
+							'-ms-grid-column-span: ' + ($elm$core$String$fromInt(position.eG) + ';')
 						]));
 				var modernPosition = A2(
 					$elm$core$String$join,
 					' ',
 					_List_fromArray(
 						[
-							'grid-row: ' + ($elm$core$String$fromInt(position.b9) + (' / ' + ($elm$core$String$fromInt(position.b9 + position.e4) + ';'))),
-							'grid-column: ' + ($elm$core$String$fromInt(position.bH) + (' / ' + ($elm$core$String$fromInt(position.bH + position.eC) + ';')))
+							'grid-row: ' + ($elm$core$String$fromInt(position.ca) + (' / ' + ($elm$core$String$fromInt(position.ca + position.fa) + ';'))),
+							'grid-column: ' + ($elm$core$String$fromInt(position.bK) + (' / ' + ($elm$core$String$fromInt(position.bK + position.eG) + ';')))
 						]));
-				var _class = '.grid-pos-' + ($elm$core$String$fromInt(position.b9) + ('-' + ($elm$core$String$fromInt(position.bH) + ('-' + ($elm$core$String$fromInt(position.eC) + ('-' + $elm$core$String$fromInt(position.e4)))))));
+				var _class = '.grid-pos-' + ($elm$core$String$fromInt(position.ca) + ('-' + ($elm$core$String$fromInt(position.bK) + ('-' + ($elm$core$String$fromInt(position.eG) + ('-' + $elm$core$String$fromInt(position.fa)))))));
 				var modernGrid = _class + ('{' + (modernPosition + '}'));
 				var supports = '@supports (display:grid) {' + (modernGrid + '}');
 				var base = _class + ('{' + (msPosition + '}'));
@@ -8953,7 +8953,7 @@ var $mdgriffith$elm_ui$Internal$Model$fontRule = F3(
 		return _List_fromArray(
 			[
 				A2($mdgriffith$elm_ui$Internal$Model$bracket, '.' + (name + ('.' + (modifier + (', ' + ('.' + (name + (' .' + modifier))))))), parentAdj),
-				A2($mdgriffith$elm_ui$Internal$Model$bracket, '.' + (name + ('.' + (modifier + ('> .' + ($mdgriffith$elm_ui$Internal$Style$classes.h5 + (', .' + (name + (' .' + (modifier + (' > .' + $mdgriffith$elm_ui$Internal$Style$classes.h5)))))))))), textAdjustment)
+				A2($mdgriffith$elm_ui$Internal$Model$bracket, '.' + (name + ('.' + (modifier + ('> .' + ($mdgriffith$elm_ui$Internal$Style$classes.ia + (', .' + (name + (' .' + (modifier + (' > .' + $mdgriffith$elm_ui$Internal$Style$classes.ia)))))))))), textAdjustment)
 			]);
 	});
 var $mdgriffith$elm_ui$Internal$Model$renderFontAdjustmentRule = F3(
@@ -8965,8 +8965,8 @@ var $mdgriffith$elm_ui$Internal$Model$renderFontAdjustmentRule = F3(
 			$elm$core$String$join,
 			' ',
 			_Utils_ap(
-				A3($mdgriffith$elm_ui$Internal$Model$fontRule, name, $mdgriffith$elm_ui$Internal$Style$classes.hS, capital),
-				A3($mdgriffith$elm_ui$Internal$Model$fontRule, name, $mdgriffith$elm_ui$Internal$Style$classes.gJ, full)));
+				A3($mdgriffith$elm_ui$Internal$Model$fontRule, name, $mdgriffith$elm_ui$Internal$Style$classes.hX, capital),
+				A3($mdgriffith$elm_ui$Internal$Model$fontRule, name, $mdgriffith$elm_ui$Internal$Style$classes.gQ, full)));
 	});
 var $mdgriffith$elm_ui$Internal$Model$renderNullAdjustmentRule = F2(
 	function (fontToAdjust, otherFontName) {
@@ -8978,14 +8978,14 @@ var $mdgriffith$elm_ui$Internal$Model$renderNullAdjustmentRule = F2(
 				[
 					A2(
 					$mdgriffith$elm_ui$Internal$Model$bracket,
-					'.' + (name + ('.' + ($mdgriffith$elm_ui$Internal$Style$classes.hS + (', ' + ('.' + (name + (' .' + $mdgriffith$elm_ui$Internal$Style$classes.hS))))))),
+					'.' + (name + ('.' + ($mdgriffith$elm_ui$Internal$Style$classes.hX + (', ' + ('.' + (name + (' .' + $mdgriffith$elm_ui$Internal$Style$classes.hX))))))),
 					_List_fromArray(
 						[
 							_Utils_Tuple2('line-height', '1')
 						])),
 					A2(
 					$mdgriffith$elm_ui$Internal$Model$bracket,
-					'.' + (name + ('.' + ($mdgriffith$elm_ui$Internal$Style$classes.hS + ('> .' + ($mdgriffith$elm_ui$Internal$Style$classes.h5 + (', .' + (name + (' .' + ($mdgriffith$elm_ui$Internal$Style$classes.hS + (' > .' + $mdgriffith$elm_ui$Internal$Style$classes.h5)))))))))),
+					'.' + (name + ('.' + ($mdgriffith$elm_ui$Internal$Style$classes.hX + ('> .' + ($mdgriffith$elm_ui$Internal$Style$classes.ia + (', .' + (name + (' .' + ($mdgriffith$elm_ui$Internal$Style$classes.hX + (' > .' + $mdgriffith$elm_ui$Internal$Style$classes.ia)))))))))),
 					_List_fromArray(
 						[
 							_Utils_Tuple2('vertical-align', '0'),
@@ -8995,7 +8995,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderNullAdjustmentRule = F2(
 	});
 var $mdgriffith$elm_ui$Internal$Model$adjust = F3(
 	function (size, height, vertical) {
-		return {e4: height / size, fE: size, fQ: vertical};
+		return {fa: height / size, fM: size, fY: vertical};
 	});
 var $elm$core$List$filter = F2(
 	function (isGood, list) {
@@ -9031,17 +9031,17 @@ var $elm$core$List$minimum = function (list) {
 var $elm$core$Basics$neq = _Utils_notEqual;
 var $mdgriffith$elm_ui$Internal$Model$convertAdjustment = function (adjustment) {
 	var lines = _List_fromArray(
-		[adjustment.cm, adjustment.ck, adjustment.cq, adjustment.cI]);
+		[adjustment.cn, adjustment.cl, adjustment.cr, adjustment.cJ]);
 	var lineHeight = 1.5;
 	var normalDescender = (lineHeight - 1) / 2;
 	var oldMiddle = lineHeight / 2;
 	var descender = A2(
 		$elm$core$Maybe$withDefault,
-		adjustment.cq,
+		adjustment.cr,
 		$elm$core$List$minimum(lines));
 	var newBaseline = A2(
 		$elm$core$Maybe$withDefault,
-		adjustment.ck,
+		adjustment.cl,
 		$elm$core$List$minimum(
 			A2(
 				$elm$core$List$filter,
@@ -9052,7 +9052,7 @@ var $mdgriffith$elm_ui$Internal$Model$convertAdjustment = function (adjustment) 
 	var base = lineHeight;
 	var ascender = A2(
 		$elm$core$Maybe$withDefault,
-		adjustment.cm,
+		adjustment.cn,
 		$elm$core$List$maximum(lines));
 	var capitalSize = 1 / (ascender - newBaseline);
 	var capitalVertical = 1 - ascender;
@@ -9061,8 +9061,8 @@ var $mdgriffith$elm_ui$Internal$Model$convertAdjustment = function (adjustment) 
 	var newCapitalMiddle = ((ascender - newBaseline) / 2) + newBaseline;
 	var newFullMiddle = ((ascender - descender) / 2) + descender;
 	return {
-		cm: A3($mdgriffith$elm_ui$Internal$Model$adjust, capitalSize, ascender - newBaseline, capitalVertical),
-		e0: A3($mdgriffith$elm_ui$Internal$Model$adjust, fullSize, ascender - descender, fullVertical)
+		cn: A3($mdgriffith$elm_ui$Internal$Model$adjust, capitalSize, ascender - newBaseline, capitalVertical),
+		e6: A3($mdgriffith$elm_ui$Internal$Model$adjust, fullSize, ascender - descender, fullVertical)
 	};
 };
 var $mdgriffith$elm_ui$Internal$Model$fontAdjustmentRules = function (converted) {
@@ -9076,13 +9076,13 @@ var $mdgriffith$elm_ui$Internal$Model$fontAdjustmentRules = function (converted)
 				_Utils_Tuple2('display', 'inline-block'),
 				_Utils_Tuple2(
 				'line-height',
-				$elm$core$String$fromFloat(converted.e4)),
+				$elm$core$String$fromFloat(converted.fa)),
 				_Utils_Tuple2(
 				'vertical-align',
-				$elm$core$String$fromFloat(converted.fQ) + 'em'),
+				$elm$core$String$fromFloat(converted.fY) + 'em'),
 				_Utils_Tuple2(
 				'font-size',
-				$elm$core$String$fromFloat(converted.fE) + 'em')
+				$elm$core$String$fromFloat(converted.fM) + 'em')
 			]));
 };
 var $mdgriffith$elm_ui$Internal$Model$typefaceAdjustment = function (typefaces) {
@@ -9093,7 +9093,7 @@ var $mdgriffith$elm_ui$Internal$Model$typefaceAdjustment = function (typefaces) 
 				if (found.$ === 1) {
 					if (face.$ === 5) {
 						var _with = face.a;
-						var _v2 = _with.ci;
+						var _v2 = _with.cj;
 						if (_v2.$ === 1) {
 							return found;
 						} else {
@@ -9102,12 +9102,12 @@ var $mdgriffith$elm_ui$Internal$Model$typefaceAdjustment = function (typefaces) 
 								_Utils_Tuple2(
 									$mdgriffith$elm_ui$Internal$Model$fontAdjustmentRules(
 										function ($) {
-											return $.e0;
+											return $.e6;
 										}(
 											$mdgriffith$elm_ui$Internal$Model$convertAdjustment(adjustment))),
 									$mdgriffith$elm_ui$Internal$Model$fontAdjustmentRules(
 										function ($) {
-											return $.cm;
+											return $.cn;
 										}(
 											$mdgriffith$elm_ui$Internal$Model$convertAdjustment(adjustment)))));
 						}
@@ -9188,16 +9188,16 @@ var $mdgriffith$elm_ui$Internal$Model$toStyleSheetString = F2(
 		var combine = F2(
 			function (style, rendered) {
 				return {
-					dx: _Utils_ap(
-						rendered.dx,
+					dz: _Utils_ap(
+						rendered.dz,
 						A3($mdgriffith$elm_ui$Internal$Model$renderStyleRule, options, style, $elm$core$Maybe$Nothing)),
-					c3: function () {
+					c4: function () {
 						var _v1 = $mdgriffith$elm_ui$Internal$Model$topLevelValue(style);
 						if (_v1.$ === 1) {
-							return rendered.c3;
+							return rendered.c4;
 						} else {
 							var topLevel = _v1.a;
-							return A2($elm$core$List$cons, topLevel, rendered.c3);
+							return A2($elm$core$List$cons, topLevel, rendered.c4);
 						}
 					}()
 				};
@@ -9205,17 +9205,17 @@ var $mdgriffith$elm_ui$Internal$Model$toStyleSheetString = F2(
 		var _v0 = A3(
 			$elm$core$List$foldl,
 			combine,
-			{dx: _List_Nil, c3: _List_Nil},
+			{dz: _List_Nil, c4: _List_Nil},
 			stylesheet);
-		var rules = _v0.dx;
-		var topLevel = _v0.c3;
+		var rules = _v0.dz;
+		var topLevel = _v0.c4;
 		return _Utils_ap(
 			$mdgriffith$elm_ui$Internal$Model$renderTopLevelValues(topLevel),
 			$elm$core$String$concat(rules));
 	});
 var $mdgriffith$elm_ui$Internal$Model$toStyleSheet = F2(
 	function (options, styleSheet) {
-		var _v0 = options.cK;
+		var _v0 = options.cL;
 		switch (_v0) {
 			case 0:
 				return A3(
@@ -9275,7 +9275,7 @@ var $mdgriffith$elm_ui$Internal$Model$embedKeyed = F4(
 				$mdgriffith$elm_ui$Internal$Model$reduceStyles,
 				_Utils_Tuple2(
 					$elm$core$Set$empty,
-					$mdgriffith$elm_ui$Internal$Model$renderFocusStyle(opts.gI)),
+					$mdgriffith$elm_ui$Internal$Model$renderFocusStyle(opts.gP)),
 				styles).b);
 		return _static ? A2(
 			$elm$core$List$cons,
@@ -9300,7 +9300,7 @@ var $mdgriffith$elm_ui$Internal$Model$embedWith = F4(
 				$mdgriffith$elm_ui$Internal$Model$reduceStyles,
 				_Utils_Tuple2(
 					$elm$core$Set$empty,
-					$mdgriffith$elm_ui$Internal$Model$renderFocusStyle(opts.gI)),
+					$mdgriffith$elm_ui$Internal$Model$renderFocusStyle(opts.gP)),
 				styles).b);
 		return _static ? A2(
 			$elm$core$List$cons,
@@ -9407,7 +9407,7 @@ var $mdgriffith$elm_ui$Internal$Model$finalizeNode = F6(
 								internal,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class($mdgriffith$elm_ui$Internal$Style$classes.f7 + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.hR))
+										$elm$html$Html$Attributes$class($mdgriffith$elm_ui$Internal$Style$classes.gf + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.hW))
 									]))
 							]));
 			}
@@ -9423,7 +9423,7 @@ var $mdgriffith$elm_ui$Internal$Model$finalizeNode = F6(
 								$elm$core$String$join,
 								' ',
 								_List_fromArray(
-									[$mdgriffith$elm_ui$Internal$Style$classes.f7, $mdgriffith$elm_ui$Internal$Style$classes.hR, $mdgriffith$elm_ui$Internal$Style$classes.dc, $mdgriffith$elm_ui$Internal$Style$classes.ba, $mdgriffith$elm_ui$Internal$Style$classes.f3])))
+									[$mdgriffith$elm_ui$Internal$Style$classes.gf, $mdgriffith$elm_ui$Internal$Style$classes.hW, $mdgriffith$elm_ui$Internal$Style$classes.dd, $mdgriffith$elm_ui$Internal$Style$classes.ba, $mdgriffith$elm_ui$Internal$Style$classes.gb])))
 						]),
 					_List_fromArray(
 						[html])) : (A2($mdgriffith$elm_ui$Internal$Flag$present, $mdgriffith$elm_ui$Internal$Flag$centerX, has) ? A2(
@@ -9435,7 +9435,7 @@ var $mdgriffith$elm_ui$Internal$Model$finalizeNode = F6(
 								$elm$core$String$join,
 								' ',
 								_List_fromArray(
-									[$mdgriffith$elm_ui$Internal$Style$classes.f7, $mdgriffith$elm_ui$Internal$Style$classes.hR, $mdgriffith$elm_ui$Internal$Style$classes.dc, $mdgriffith$elm_ui$Internal$Style$classes.ba, $mdgriffith$elm_ui$Internal$Style$classes.f1])))
+									[$mdgriffith$elm_ui$Internal$Style$classes.gf, $mdgriffith$elm_ui$Internal$Style$classes.hW, $mdgriffith$elm_ui$Internal$Style$classes.dd, $mdgriffith$elm_ui$Internal$Style$classes.ba, $mdgriffith$elm_ui$Internal$Style$classes.f9])))
 						]),
 					_List_fromArray(
 						[html])) : html));
@@ -9449,7 +9449,7 @@ var $mdgriffith$elm_ui$Internal$Model$finalizeNode = F6(
 								$elm$core$String$join,
 								' ',
 								_List_fromArray(
-									[$mdgriffith$elm_ui$Internal$Style$classes.f7, $mdgriffith$elm_ui$Internal$Style$classes.hR, $mdgriffith$elm_ui$Internal$Style$classes.dc, $mdgriffith$elm_ui$Internal$Style$classes.f2])))
+									[$mdgriffith$elm_ui$Internal$Style$classes.gf, $mdgriffith$elm_ui$Internal$Style$classes.hW, $mdgriffith$elm_ui$Internal$Style$classes.dd, $mdgriffith$elm_ui$Internal$Style$classes.ga])))
 						]),
 					_List_fromArray(
 						[html])) : (A2($mdgriffith$elm_ui$Internal$Flag$present, $mdgriffith$elm_ui$Internal$Flag$alignBottom, has) ? A2(
@@ -9461,7 +9461,7 @@ var $mdgriffith$elm_ui$Internal$Model$finalizeNode = F6(
 								$elm$core$String$join,
 								' ',
 								_List_fromArray(
-									[$mdgriffith$elm_ui$Internal$Style$classes.f7, $mdgriffith$elm_ui$Internal$Style$classes.hR, $mdgriffith$elm_ui$Internal$Style$classes.dc, $mdgriffith$elm_ui$Internal$Style$classes.f0])))
+									[$mdgriffith$elm_ui$Internal$Style$classes.gf, $mdgriffith$elm_ui$Internal$Style$classes.hW, $mdgriffith$elm_ui$Internal$Style$classes.dd, $mdgriffith$elm_ui$Internal$Style$classes.f8])))
 						]),
 					_List_fromArray(
 						[html])) : html));
@@ -9477,7 +9477,7 @@ var $elm$core$List$isEmpty = function (xs) {
 	}
 };
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $mdgriffith$elm_ui$Internal$Model$textElementClasses = $mdgriffith$elm_ui$Internal$Style$classes.f7 + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.h5 + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.eD + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.d2)))));
+var $mdgriffith$elm_ui$Internal$Model$textElementClasses = $mdgriffith$elm_ui$Internal$Style$classes.gf + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.ia + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.eH + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.d5)))));
 var $mdgriffith$elm_ui$Internal$Model$textElement = function (str) {
 	return A2(
 		$elm$html$Html$div,
@@ -9490,7 +9490,7 @@ var $mdgriffith$elm_ui$Internal$Model$textElement = function (str) {
 				$elm$html$Html$text(str)
 			]));
 };
-var $mdgriffith$elm_ui$Internal$Model$textElementFillClasses = $mdgriffith$elm_ui$Internal$Style$classes.f7 + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.h5 + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.eE + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.d3)))));
+var $mdgriffith$elm_ui$Internal$Model$textElementFillClasses = $mdgriffith$elm_ui$Internal$Style$classes.gf + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.ia + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.eI + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.d6)))));
 var $mdgriffith$elm_ui$Internal$Model$textElementFill = function (str) {
 	return A2(
 		$elm$html$Html$div,
@@ -9536,16 +9536,16 @@ var $mdgriffith$elm_ui$Internal$Model$createElement = F3(
 								$elm$core$List$cons,
 								_Utils_Tuple2(
 									key,
-									A2(styled.gQ, $mdgriffith$elm_ui$Internal$Model$NoStyleSheet, context)),
+									A2(styled.gX, $mdgriffith$elm_ui$Internal$Model$NoStyleSheet, context)),
 								htmls),
-							$elm$core$List$isEmpty(existingStyles) ? styled.fJ : _Utils_ap(styled.fJ, existingStyles)) : _Utils_Tuple2(
+							$elm$core$List$isEmpty(existingStyles) ? styled.fR : _Utils_ap(styled.fR, existingStyles)) : _Utils_Tuple2(
 							A2(
 								$elm$core$List$cons,
 								_Utils_Tuple2(
 									key,
-									A2(styled.gQ, $mdgriffith$elm_ui$Internal$Model$NoStyleSheet, context)),
+									A2(styled.gX, $mdgriffith$elm_ui$Internal$Model$NoStyleSheet, context)),
 								htmls),
-							$elm$core$List$isEmpty(existingStyles) ? styled.fJ : _Utils_ap(styled.fJ, existingStyles));
+							$elm$core$List$isEmpty(existingStyles) ? styled.fR : _Utils_ap(styled.fR, existingStyles));
 					case 2:
 						var str = child.a;
 						return _Utils_Tuple2(
@@ -9583,14 +9583,14 @@ var $mdgriffith$elm_ui$Internal$Model$createElement = F3(
 						return _Utils_eq(context, $mdgriffith$elm_ui$Internal$Model$asParagraph) ? _Utils_Tuple2(
 							A2(
 								$elm$core$List$cons,
-								A2(styled.gQ, $mdgriffith$elm_ui$Internal$Model$NoStyleSheet, context),
+								A2(styled.gX, $mdgriffith$elm_ui$Internal$Model$NoStyleSheet, context),
 								htmls),
-							$elm$core$List$isEmpty(existingStyles) ? styled.fJ : _Utils_ap(styled.fJ, existingStyles)) : _Utils_Tuple2(
+							$elm$core$List$isEmpty(existingStyles) ? styled.fR : _Utils_ap(styled.fR, existingStyles)) : _Utils_Tuple2(
 							A2(
 								$elm$core$List$cons,
-								A2(styled.gQ, $mdgriffith$elm_ui$Internal$Model$NoStyleSheet, context),
+								A2(styled.gX, $mdgriffith$elm_ui$Internal$Model$NoStyleSheet, context),
 								htmls),
-							$elm$core$List$isEmpty(existingStyles) ? styled.fJ : _Utils_ap(styled.fJ, existingStyles));
+							$elm$core$List$isEmpty(existingStyles) ? styled.fR : _Utils_ap(styled.fR, existingStyles));
 					case 2:
 						var str = child.a;
 						return _Utils_Tuple2(
@@ -9612,14 +9612,14 @@ var $mdgriffith$elm_ui$Internal$Model$createElement = F3(
 				keyedChildren);
 			var keyed = _v1.a;
 			var styles = _v1.b;
-			var newStyles = $elm$core$List$isEmpty(styles) ? rendered.fJ : _Utils_ap(rendered.fJ, styles);
+			var newStyles = $elm$core$List$isEmpty(styles) ? rendered.fR : _Utils_ap(rendered.fR, styles);
 			if (!newStyles.b) {
 				return $mdgriffith$elm_ui$Internal$Model$Unstyled(
 					A5(
 						$mdgriffith$elm_ui$Internal$Model$finalizeNode,
-						rendered.aA,
-						rendered.fn,
-						rendered.bm,
+						rendered.aB,
+						rendered.ft,
+						rendered.bo,
 						$mdgriffith$elm_ui$Internal$Model$Keyed(
 							A3($mdgriffith$elm_ui$Internal$Model$addKeyedChildren, 'nearby-element-pls', keyed, rendered.a8)),
 						$mdgriffith$elm_ui$Internal$Model$NoStyleSheet));
@@ -9627,14 +9627,14 @@ var $mdgriffith$elm_ui$Internal$Model$createElement = F3(
 				var allStyles = newStyles;
 				return $mdgriffith$elm_ui$Internal$Model$Styled(
 					{
-						gQ: A4(
+						gX: A4(
 							$mdgriffith$elm_ui$Internal$Model$finalizeNode,
-							rendered.aA,
-							rendered.fn,
-							rendered.bm,
+							rendered.aB,
+							rendered.ft,
+							rendered.bo,
 							$mdgriffith$elm_ui$Internal$Model$Keyed(
 								A3($mdgriffith$elm_ui$Internal$Model$addKeyedChildren, 'nearby-element-pls', keyed, rendered.a8))),
-						fJ: allStyles
+						fR: allStyles
 					});
 			}
 		} else {
@@ -9646,14 +9646,14 @@ var $mdgriffith$elm_ui$Internal$Model$createElement = F3(
 				unkeyedChildren);
 			var unkeyed = _v3.a;
 			var styles = _v3.b;
-			var newStyles = $elm$core$List$isEmpty(styles) ? rendered.fJ : _Utils_ap(rendered.fJ, styles);
+			var newStyles = $elm$core$List$isEmpty(styles) ? rendered.fR : _Utils_ap(rendered.fR, styles);
 			if (!newStyles.b) {
 				return $mdgriffith$elm_ui$Internal$Model$Unstyled(
 					A5(
 						$mdgriffith$elm_ui$Internal$Model$finalizeNode,
-						rendered.aA,
-						rendered.fn,
-						rendered.bm,
+						rendered.aB,
+						rendered.ft,
+						rendered.bo,
 						$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 							A2($mdgriffith$elm_ui$Internal$Model$addChildren, unkeyed, rendered.a8)),
 						$mdgriffith$elm_ui$Internal$Model$NoStyleSheet));
@@ -9661,14 +9661,14 @@ var $mdgriffith$elm_ui$Internal$Model$createElement = F3(
 				var allStyles = newStyles;
 				return $mdgriffith$elm_ui$Internal$Model$Styled(
 					{
-						gQ: A4(
+						gX: A4(
 							$mdgriffith$elm_ui$Internal$Model$finalizeNode,
-							rendered.aA,
-							rendered.fn,
-							rendered.bm,
+							rendered.aB,
+							rendered.ft,
+							rendered.bo,
 							$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 								A2($mdgriffith$elm_ui$Internal$Model$addChildren, unkeyed, rendered.a8))),
-						fJ: allStyles
+						fR: allStyles
 					});
 			}
 		}
@@ -9721,37 +9721,37 @@ var $mdgriffith$elm_ui$Internal$Model$nearbyElement = F2(
 									$elm$core$String$join,
 									' ',
 									_List_fromArray(
-										[$mdgriffith$elm_ui$Internal$Style$classes.bV, $mdgriffith$elm_ui$Internal$Style$classes.hR, $mdgriffith$elm_ui$Internal$Style$classes.fX]));
+										[$mdgriffith$elm_ui$Internal$Style$classes.bX, $mdgriffith$elm_ui$Internal$Style$classes.hW, $mdgriffith$elm_ui$Internal$Style$classes.f3]));
 							case 1:
 								return A2(
 									$elm$core$String$join,
 									' ',
 									_List_fromArray(
-										[$mdgriffith$elm_ui$Internal$Style$classes.bV, $mdgriffith$elm_ui$Internal$Style$classes.hR, $mdgriffith$elm_ui$Internal$Style$classes.gd]));
+										[$mdgriffith$elm_ui$Internal$Style$classes.bX, $mdgriffith$elm_ui$Internal$Style$classes.hW, $mdgriffith$elm_ui$Internal$Style$classes.gl]));
 							case 2:
 								return A2(
 									$elm$core$String$join,
 									' ',
 									_List_fromArray(
-										[$mdgriffith$elm_ui$Internal$Style$classes.bV, $mdgriffith$elm_ui$Internal$Style$classes.hR, $mdgriffith$elm_ui$Internal$Style$classes.hs]));
+										[$mdgriffith$elm_ui$Internal$Style$classes.bX, $mdgriffith$elm_ui$Internal$Style$classes.hW, $mdgriffith$elm_ui$Internal$Style$classes.hx]));
 							case 3:
 								return A2(
 									$elm$core$String$join,
 									' ',
 									_List_fromArray(
-										[$mdgriffith$elm_ui$Internal$Style$classes.bV, $mdgriffith$elm_ui$Internal$Style$classes.hR, $mdgriffith$elm_ui$Internal$Style$classes.hq]));
+										[$mdgriffith$elm_ui$Internal$Style$classes.bX, $mdgriffith$elm_ui$Internal$Style$classes.hW, $mdgriffith$elm_ui$Internal$Style$classes.hv]));
 							case 4:
 								return A2(
 									$elm$core$String$join,
 									' ',
 									_List_fromArray(
-										[$mdgriffith$elm_ui$Internal$Style$classes.bV, $mdgriffith$elm_ui$Internal$Style$classes.hR, $mdgriffith$elm_ui$Internal$Style$classes.gU]));
+										[$mdgriffith$elm_ui$Internal$Style$classes.bX, $mdgriffith$elm_ui$Internal$Style$classes.hW, $mdgriffith$elm_ui$Internal$Style$classes.g$]));
 							default:
 								return A2(
 									$elm$core$String$join,
 									' ',
 									_List_fromArray(
-										[$mdgriffith$elm_ui$Internal$Style$classes.bV, $mdgriffith$elm_ui$Internal$Style$classes.hR, $mdgriffith$elm_ui$Internal$Style$classes.gc]));
+										[$mdgriffith$elm_ui$Internal$Style$classes.bX, $mdgriffith$elm_ui$Internal$Style$classes.hW, $mdgriffith$elm_ui$Internal$Style$classes.gk]));
 						}
 					}())
 				]),
@@ -9769,7 +9769,7 @@ var $mdgriffith$elm_ui$Internal$Model$nearbyElement = F2(
 							return html($mdgriffith$elm_ui$Internal$Model$asEl);
 						default:
 							var styled = elem.a;
-							return A2(styled.gQ, $mdgriffith$elm_ui$Internal$Model$NoStyleSheet, $mdgriffith$elm_ui$Internal$Model$asEl);
+							return A2(styled.gX, $mdgriffith$elm_ui$Internal$Model$NoStyleSheet, $mdgriffith$elm_ui$Internal$Model$asEl);
 					}
 				}()
 				]));
@@ -9852,21 +9852,21 @@ var $mdgriffith$elm_ui$Internal$Model$addNodeName = F2(
 var $mdgriffith$elm_ui$Internal$Model$alignXName = function (align) {
 	switch (align) {
 		case 0:
-			return $mdgriffith$elm_ui$Internal$Style$classes.dJ + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.eJ);
+			return $mdgriffith$elm_ui$Internal$Style$classes.dL + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.eN);
 		case 2:
-			return $mdgriffith$elm_ui$Internal$Style$classes.dJ + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.eK);
+			return $mdgriffith$elm_ui$Internal$Style$classes.dL + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.eO);
 		default:
-			return $mdgriffith$elm_ui$Internal$Style$classes.dJ + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.f_);
+			return $mdgriffith$elm_ui$Internal$Style$classes.dL + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.f6);
 	}
 };
 var $mdgriffith$elm_ui$Internal$Model$alignYName = function (align) {
 	switch (align) {
 		case 0:
-			return $mdgriffith$elm_ui$Internal$Style$classes.dK + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.f4);
+			return $mdgriffith$elm_ui$Internal$Style$classes.dM + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.gc);
 		case 2:
-			return $mdgriffith$elm_ui$Internal$Style$classes.dK + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fZ);
+			return $mdgriffith$elm_ui$Internal$Style$classes.dM + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.f5);
 		default:
-			return $mdgriffith$elm_ui$Internal$Style$classes.dK + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.f$);
+			return $mdgriffith$elm_ui$Internal$Style$classes.dM + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.f7);
 	}
 };
 var $elm$virtual_dom$VirtualDom$attribute = F2(
@@ -10025,7 +10025,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderHeight = function (h) {
 			var name = 'height-px-' + val;
 			return _Utils_Tuple3(
 				$mdgriffith$elm_ui$Internal$Flag$none,
-				$mdgriffith$elm_ui$Internal$Style$classes.e5 + (' ' + name),
+				$mdgriffith$elm_ui$Internal$Style$classes.fb + (' ' + name),
 				_List_fromArray(
 					[
 						A3($mdgriffith$elm_ui$Internal$Model$Single, name, 'height', val + 'px')
@@ -10033,21 +10033,21 @@ var $mdgriffith$elm_ui$Internal$Model$renderHeight = function (h) {
 		case 1:
 			return _Utils_Tuple3(
 				A2($mdgriffith$elm_ui$Internal$Flag$add, $mdgriffith$elm_ui$Internal$Flag$heightContent, $mdgriffith$elm_ui$Internal$Flag$none),
-				$mdgriffith$elm_ui$Internal$Style$classes.d2,
+				$mdgriffith$elm_ui$Internal$Style$classes.d5,
 				_List_Nil);
 		case 2:
 			var portion = h.a;
 			return (portion === 1) ? _Utils_Tuple3(
 				A2($mdgriffith$elm_ui$Internal$Flag$add, $mdgriffith$elm_ui$Internal$Flag$heightFill, $mdgriffith$elm_ui$Internal$Flag$none),
-				$mdgriffith$elm_ui$Internal$Style$classes.d3,
+				$mdgriffith$elm_ui$Internal$Style$classes.d6,
 				_List_Nil) : _Utils_Tuple3(
 				A2($mdgriffith$elm_ui$Internal$Flag$add, $mdgriffith$elm_ui$Internal$Flag$heightFill, $mdgriffith$elm_ui$Internal$Flag$none),
-				$mdgriffith$elm_ui$Internal$Style$classes.e6 + (' height-fill-' + $elm$core$String$fromInt(portion)),
+				$mdgriffith$elm_ui$Internal$Style$classes.fc + (' height-fill-' + $elm$core$String$fromInt(portion)),
 				_List_fromArray(
 					[
 						A3(
 						$mdgriffith$elm_ui$Internal$Model$Single,
-						$mdgriffith$elm_ui$Internal$Style$classes.f7 + ('.' + ($mdgriffith$elm_ui$Internal$Style$classes.bI + (' > ' + $mdgriffith$elm_ui$Internal$Style$dot(
+						$mdgriffith$elm_ui$Internal$Style$classes.gf + ('.' + ($mdgriffith$elm_ui$Internal$Style$classes.bL + (' > ' + $mdgriffith$elm_ui$Internal$Style$dot(
 							'height-fill-' + $elm$core$String$fromInt(portion))))),
 						'flex-grow',
 						$elm$core$String$fromInt(portion * 100000))
@@ -10095,7 +10095,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderWidth = function (w) {
 			var px = w.a;
 			return _Utils_Tuple3(
 				$mdgriffith$elm_ui$Internal$Flag$none,
-				$mdgriffith$elm_ui$Internal$Style$classes.fT + (' width-px-' + $elm$core$String$fromInt(px)),
+				$mdgriffith$elm_ui$Internal$Style$classes.f$ + (' width-px-' + $elm$core$String$fromInt(px)),
 				_List_fromArray(
 					[
 						A3(
@@ -10107,21 +10107,21 @@ var $mdgriffith$elm_ui$Internal$Model$renderWidth = function (w) {
 		case 1:
 			return _Utils_Tuple3(
 				A2($mdgriffith$elm_ui$Internal$Flag$add, $mdgriffith$elm_ui$Internal$Flag$widthContent, $mdgriffith$elm_ui$Internal$Flag$none),
-				$mdgriffith$elm_ui$Internal$Style$classes.eD,
+				$mdgriffith$elm_ui$Internal$Style$classes.eH,
 				_List_Nil);
 		case 2:
 			var portion = w.a;
 			return (portion === 1) ? _Utils_Tuple3(
 				A2($mdgriffith$elm_ui$Internal$Flag$add, $mdgriffith$elm_ui$Internal$Flag$widthFill, $mdgriffith$elm_ui$Internal$Flag$none),
-				$mdgriffith$elm_ui$Internal$Style$classes.eE,
+				$mdgriffith$elm_ui$Internal$Style$classes.eI,
 				_List_Nil) : _Utils_Tuple3(
 				A2($mdgriffith$elm_ui$Internal$Flag$add, $mdgriffith$elm_ui$Internal$Flag$widthFill, $mdgriffith$elm_ui$Internal$Flag$none),
-				$mdgriffith$elm_ui$Internal$Style$classes.fU + (' width-fill-' + $elm$core$String$fromInt(portion)),
+				$mdgriffith$elm_ui$Internal$Style$classes.f0 + (' width-fill-' + $elm$core$String$fromInt(portion)),
 				_List_fromArray(
 					[
 						A3(
 						$mdgriffith$elm_ui$Internal$Model$Single,
-						$mdgriffith$elm_ui$Internal$Style$classes.f7 + ('.' + ($mdgriffith$elm_ui$Internal$Style$classes.b9 + (' > ' + $mdgriffith$elm_ui$Internal$Style$dot(
+						$mdgriffith$elm_ui$Internal$Style$classes.gf + ('.' + ($mdgriffith$elm_ui$Internal$Style$classes.ca + (' > ' + $mdgriffith$elm_ui$Internal$Style$dot(
 							'width-fill-' + $elm$core$String$fromInt(portion))))),
 						'flex-grow',
 						$elm$core$String$fromInt(portion * 100000))
@@ -10218,26 +10218,26 @@ var $mdgriffith$elm_ui$Internal$Model$gatherAttrRecursive = F8(
 				var _v1 = $mdgriffith$elm_ui$Internal$Model$transformClass(transform);
 				if (_v1.$ === 1) {
 					return {
-						bm: A2(
+						bo: A2(
 							$elm$core$List$cons,
 							$elm$html$Html$Attributes$class(classes),
 							attrs),
 						a8: children,
-						aA: has,
-						fn: node,
-						fJ: styles
+						aB: has,
+						ft: node,
+						fR: styles
 					};
 				} else {
 					var _class = _v1.a;
 					return {
-						bm: A2(
+						bo: A2(
 							$elm$core$List$cons,
 							$elm$html$Html$Attributes$class(classes + (' ' + _class)),
 							attrs),
 						a8: children,
-						aA: has,
-						fn: node,
-						fJ: A2(
+						aB: has,
+						ft: node,
+						fR: A2(
 							$elm$core$List$cons,
 							$mdgriffith$elm_ui$Internal$Model$Transform(transform),
 							styles)
@@ -10428,7 +10428,7 @@ var $mdgriffith$elm_ui$Internal$Model$gatherAttrRecursive = F8(
 							switch (width.$) {
 								case 0:
 									var px = width.a;
-									var $temp$classes = ($mdgriffith$elm_ui$Internal$Style$classes.fT + (' width-px-' + $elm$core$String$fromInt(px))) + (' ' + classes),
+									var $temp$classes = ($mdgriffith$elm_ui$Internal$Style$classes.f$ + (' width-px-' + $elm$core$String$fromInt(px))) + (' ' + classes),
 										$temp$node = node,
 										$temp$has = A2($mdgriffith$elm_ui$Internal$Flag$add, $mdgriffith$elm_ui$Internal$Flag$width, has),
 										$temp$transform = transform,
@@ -10453,7 +10453,7 @@ var $mdgriffith$elm_ui$Internal$Model$gatherAttrRecursive = F8(
 									elementAttrs = $temp$elementAttrs;
 									continue gatherAttrRecursive;
 								case 1:
-									var $temp$classes = classes + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.eD),
+									var $temp$classes = classes + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.eH),
 										$temp$node = node,
 										$temp$has = A2(
 										$mdgriffith$elm_ui$Internal$Flag$add,
@@ -10476,7 +10476,7 @@ var $mdgriffith$elm_ui$Internal$Model$gatherAttrRecursive = F8(
 								case 2:
 									var portion = width.a;
 									if (portion === 1) {
-										var $temp$classes = classes + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.eE),
+										var $temp$classes = classes + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.eI),
 											$temp$node = node,
 											$temp$has = A2(
 											$mdgriffith$elm_ui$Internal$Flag$add,
@@ -10497,7 +10497,7 @@ var $mdgriffith$elm_ui$Internal$Model$gatherAttrRecursive = F8(
 										elementAttrs = $temp$elementAttrs;
 										continue gatherAttrRecursive;
 									} else {
-										var $temp$classes = classes + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.fU + (' width-fill-' + $elm$core$String$fromInt(portion)))),
+										var $temp$classes = classes + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.f0 + (' width-fill-' + $elm$core$String$fromInt(portion)))),
 											$temp$node = node,
 											$temp$has = A2(
 											$mdgriffith$elm_ui$Internal$Flag$add,
@@ -10508,7 +10508,7 @@ var $mdgriffith$elm_ui$Internal$Model$gatherAttrRecursive = F8(
 											$elm$core$List$cons,
 											A3(
 												$mdgriffith$elm_ui$Internal$Model$Single,
-												$mdgriffith$elm_ui$Internal$Style$classes.f7 + ('.' + ($mdgriffith$elm_ui$Internal$Style$classes.b9 + (' > ' + $mdgriffith$elm_ui$Internal$Style$dot(
+												$mdgriffith$elm_ui$Internal$Style$classes.gf + ('.' + ($mdgriffith$elm_ui$Internal$Style$classes.ca + (' > ' + $mdgriffith$elm_ui$Internal$Style$dot(
 													'width-fill-' + $elm$core$String$fromInt(portion))))),
 												'flex-grow',
 												$elm$core$String$fromInt(portion * 100000)),
@@ -10579,7 +10579,7 @@ var $mdgriffith$elm_ui$Internal$Model$gatherAttrRecursive = F8(
 									var px = height.a;
 									var val = $elm$core$String$fromInt(px) + 'px';
 									var name = 'height-px-' + val;
-									var $temp$classes = $mdgriffith$elm_ui$Internal$Style$classes.e5 + (' ' + (name + (' ' + classes))),
+									var $temp$classes = $mdgriffith$elm_ui$Internal$Style$classes.fb + (' ' + (name + (' ' + classes))),
 										$temp$node = node,
 										$temp$has = A2($mdgriffith$elm_ui$Internal$Flag$add, $mdgriffith$elm_ui$Internal$Flag$height, has),
 										$temp$transform = transform,
@@ -10600,7 +10600,7 @@ var $mdgriffith$elm_ui$Internal$Model$gatherAttrRecursive = F8(
 									elementAttrs = $temp$elementAttrs;
 									continue gatherAttrRecursive;
 								case 1:
-									var $temp$classes = $mdgriffith$elm_ui$Internal$Style$classes.d2 + (' ' + classes),
+									var $temp$classes = $mdgriffith$elm_ui$Internal$Style$classes.d5 + (' ' + classes),
 										$temp$node = node,
 										$temp$has = A2(
 										$mdgriffith$elm_ui$Internal$Flag$add,
@@ -10623,7 +10623,7 @@ var $mdgriffith$elm_ui$Internal$Model$gatherAttrRecursive = F8(
 								case 2:
 									var portion = height.a;
 									if (portion === 1) {
-										var $temp$classes = $mdgriffith$elm_ui$Internal$Style$classes.d3 + (' ' + classes),
+										var $temp$classes = $mdgriffith$elm_ui$Internal$Style$classes.d6 + (' ' + classes),
 											$temp$node = node,
 											$temp$has = A2(
 											$mdgriffith$elm_ui$Internal$Flag$add,
@@ -10644,7 +10644,7 @@ var $mdgriffith$elm_ui$Internal$Model$gatherAttrRecursive = F8(
 										elementAttrs = $temp$elementAttrs;
 										continue gatherAttrRecursive;
 									} else {
-										var $temp$classes = classes + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.e6 + (' height-fill-' + $elm$core$String$fromInt(portion)))),
+										var $temp$classes = classes + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.fc + (' height-fill-' + $elm$core$String$fromInt(portion)))),
 											$temp$node = node,
 											$temp$has = A2(
 											$mdgriffith$elm_ui$Internal$Flag$add,
@@ -10655,7 +10655,7 @@ var $mdgriffith$elm_ui$Internal$Model$gatherAttrRecursive = F8(
 											$elm$core$List$cons,
 											A3(
 												$mdgriffith$elm_ui$Internal$Model$Single,
-												$mdgriffith$elm_ui$Internal$Style$classes.f7 + ('.' + ($mdgriffith$elm_ui$Internal$Style$classes.bI + (' > ' + $mdgriffith$elm_ui$Internal$Style$dot(
+												$mdgriffith$elm_ui$Internal$Style$classes.gf + ('.' + ($mdgriffith$elm_ui$Internal$Style$classes.bL + (' > ' + $mdgriffith$elm_ui$Internal$Style$dot(
 													'height-fill-' + $elm$core$String$fromInt(portion))))),
 												'flex-grow',
 												$elm$core$String$fromInt(portion * 100000)),
@@ -10956,7 +10956,7 @@ var $mdgriffith$elm_ui$Internal$Model$gatherAttrRecursive = F8(
 									return styles;
 								default:
 									var styled = elem.a;
-									return _Utils_ap(styles, styled.fJ);
+									return _Utils_ap(styles, styled.fR);
 							}
 						}();
 						var $temp$classes = classes,
@@ -11100,14 +11100,14 @@ var $mdgriffith$elm_ui$Internal$Model$element = F4(
 var $mdgriffith$elm_ui$Internal$Model$AllowHover = 1;
 var $mdgriffith$elm_ui$Internal$Model$Layout = 0;
 var $mdgriffith$elm_ui$Internal$Model$focusDefaultStyle = {
-	gb: $elm$core$Maybe$Nothing,
-	cl: $elm$core$Maybe$Nothing,
-	cV: $elm$core$Maybe$Just(
+	gj: $elm$core$Maybe$Nothing,
+	cm: $elm$core$Maybe$Nothing,
+	cW: $elm$core$Maybe$Just(
 		{
-			c5: 0,
-			da: A4($mdgriffith$elm_ui$Internal$Model$Rgba, 155 / 255, 203 / 255, 1, 1),
+			c6: 0,
+			db: A4($mdgriffith$elm_ui$Internal$Model$Rgba, 155 / 255, 203 / 255, 1, 1),
 			b: _Utils_Tuple2(0, 0),
-			fE: 3
+			fM: 3
 		})
 };
 var $mdgriffith$elm_ui$Internal$Model$optionsToRecord = function (options) {
@@ -11116,36 +11116,36 @@ var $mdgriffith$elm_ui$Internal$Model$optionsToRecord = function (options) {
 			switch (opt.$) {
 				case 0:
 					var hoverable = opt.a;
-					var _v4 = record.gP;
+					var _v4 = record.gW;
 					if (_v4.$ === 1) {
 						return _Utils_update(
 							record,
 							{
-								gP: $elm$core$Maybe$Just(hoverable)
+								gW: $elm$core$Maybe$Just(hoverable)
 							});
 					} else {
 						return record;
 					}
 				case 1:
 					var focusStyle = opt.a;
-					var _v5 = record.gI;
+					var _v5 = record.gP;
 					if (_v5.$ === 1) {
 						return _Utils_update(
 							record,
 							{
-								gI: $elm$core$Maybe$Just(focusStyle)
+								gP: $elm$core$Maybe$Just(focusStyle)
 							});
 					} else {
 						return record;
 					}
 				default:
 					var renderMode = opt.a;
-					var _v6 = record.cK;
+					var _v6 = record.cL;
 					if (_v6.$ === 1) {
 						return _Utils_update(
 							record,
 							{
-								cK: $elm$core$Maybe$Just(renderMode)
+								cL: $elm$core$Maybe$Just(renderMode)
 							});
 					} else {
 						return record;
@@ -11154,8 +11154,8 @@ var $mdgriffith$elm_ui$Internal$Model$optionsToRecord = function (options) {
 		});
 	var andFinally = function (record) {
 		return {
-			gI: function () {
-				var _v0 = record.gI;
+			gP: function () {
+				var _v0 = record.gP;
 				if (_v0.$ === 1) {
 					return $mdgriffith$elm_ui$Internal$Model$focusDefaultStyle;
 				} else {
@@ -11163,8 +11163,8 @@ var $mdgriffith$elm_ui$Internal$Model$optionsToRecord = function (options) {
 					return focusable;
 				}
 			}(),
-			gP: function () {
-				var _v1 = record.gP;
+			gW: function () {
+				var _v1 = record.gW;
 				if (_v1.$ === 1) {
 					return 1;
 				} else {
@@ -11172,8 +11172,8 @@ var $mdgriffith$elm_ui$Internal$Model$optionsToRecord = function (options) {
 					return hoverable;
 				}
 			}(),
-			cK: function () {
-				var _v2 = record.cK;
+			cL: function () {
+				var _v2 = record.cL;
 				if (_v2.$ === 1) {
 					return 0;
 				} else {
@@ -11187,7 +11187,7 @@ var $mdgriffith$elm_ui$Internal$Model$optionsToRecord = function (options) {
 		A3(
 			$elm$core$List$foldr,
 			combine,
-			{gI: $elm$core$Maybe$Nothing, gP: $elm$core$Maybe$Nothing, cK: $elm$core$Maybe$Nothing},
+			{gP: $elm$core$Maybe$Nothing, gW: $elm$core$Maybe$Nothing, cL: $elm$core$Maybe$Nothing},
 			options));
 };
 var $mdgriffith$elm_ui$Internal$Model$toHtml = F2(
@@ -11197,8 +11197,8 @@ var $mdgriffith$elm_ui$Internal$Model$toHtml = F2(
 				var html = el.a;
 				return html($mdgriffith$elm_ui$Internal$Model$asEl);
 			case 1:
-				var html = el.a.gQ;
-				var styles = el.a.fJ;
+				var html = el.a.gX;
+				var styles = el.a.fR;
 				return A2(
 					html,
 					mode(styles),
@@ -11214,7 +11214,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderRoot = F3(
 	function (optionList, attributes, child) {
 		var options = $mdgriffith$elm_ui$Internal$Model$optionsToRecord(optionList);
 		var embedStyle = function () {
-			var _v0 = options.cK;
+			var _v0 = options.cL;
 			if (_v0 === 1) {
 				return $mdgriffith$elm_ui$Internal$Model$OnlyDynamic(options);
 			} else {
@@ -11277,7 +11277,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderFontClassName = F2(
 							$elm$core$String$words(
 								$elm$core$String$toLower(name)));
 					default:
-						var name = font.a.fl;
+						var name = font.a.fr;
 						return A2(
 							$elm$core$String$join,
 							'-',
@@ -11329,7 +11329,7 @@ var $mdgriffith$elm_ui$Internal$Model$rootStyle = function () {
 }();
 var $mdgriffith$elm_ui$Element$layoutWith = F3(
 	function (_v0, attrs, child) {
-		var options = _v0.hw;
+		var options = _v0.hB;
 		return A3(
 			$mdgriffith$elm_ui$Internal$Model$renderRoot,
 			options,
@@ -11340,7 +11340,7 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 						$elm$core$String$join,
 						' ',
 						_List_fromArray(
-							[$mdgriffith$elm_ui$Internal$Style$classes.hH, $mdgriffith$elm_ui$Internal$Style$classes.f7, $mdgriffith$elm_ui$Internal$Style$classes.hR]))),
+							[$mdgriffith$elm_ui$Internal$Style$classes.hM, $mdgriffith$elm_ui$Internal$Style$classes.gf, $mdgriffith$elm_ui$Internal$Style$classes.hW]))),
 				_Utils_ap($mdgriffith$elm_ui$Internal$Model$rootStyle, attrs)),
 			child);
 	});
@@ -11364,7 +11364,7 @@ var $mdgriffith$elm_ui$Element$column = F2(
 			$mdgriffith$elm_ui$Internal$Model$div,
 			A2(
 				$elm$core$List$cons,
-				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.gu + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.cn)),
+				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.gB + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.co)),
 				A2(
 					$elm$core$List$cons,
 					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
@@ -11379,24 +11379,24 @@ var $author$project$Main$Render = function (a) {
 };
 var $author$project$Compiler$AbstractDifferentialParser$init = F3(
 	function (f, initialData, content) {
-		var chunks = f.dQ(content);
-		var parsed_ = A2($elm$core$List$map, f.dP, chunks);
-		var tree_ = f.dZ(parsed_);
-		var _v0 = A2(f.dG, initialData, tree_);
+		var chunks = f.dS(content);
+		var parsed_ = A2($elm$core$List$map, f.dR, chunks);
+		var tree_ = f.d0(parsed_);
+		var _v0 = A2(f.dI, initialData, tree_);
 		var newAccumulator = _v0.a;
 		var tree = _v0.b;
 		return {
-			dH: newAccumulator,
-			c9: chunks,
-			cH: initialData,
-			dr: initialData.fe,
-			eb: f.d$(tree),
-			cO: parsed_,
-			ez: tree
+			dJ: newAccumulator,
+			da: chunks,
+			cI: initialData,
+			dt: initialData.fk,
+			ef: f.d2(tree),
+			cP: parsed_,
+			eD: tree
 		};
 	});
 var $author$project$Compiler$DifferentialParser$default = function (lang) {
-	return {fe: lang, ha: '', id: '', iF: 4};
+	return {fk: lang, hg: '', ii: '', iK: 4};
 };
 var $elm$parser$Parser$Advanced$Bad = F2(
 	function (a, b) {
@@ -11414,7 +11414,7 @@ var $elm$parser$Parser$Advanced$AddRight = F2(
 	});
 var $elm$parser$Parser$Advanced$DeadEnd = F4(
 	function (row, col, problem, contextStack) {
-		return {bH: col, co: contextStack, b0: problem, b9: row};
+		return {bK: col, cp: contextStack, b1: problem, ca: row};
 	});
 var $elm$parser$Parser$Advanced$Empty = {$: 0};
 var $elm$parser$Parser$Advanced$fromInfo = F4(
@@ -11428,7 +11428,7 @@ var $elm$parser$Parser$Advanced$chompUntil = function (_v0) {
 	var str = _v0.a;
 	var expecting = _v0.b;
 	return function (s) {
-		var _v1 = A5($elm$parser$Parser$Advanced$findSubString, str, s.b, s.b9, s.bH, s.fH);
+		var _v1 = A5($elm$parser$Parser$Advanced$findSubString, str, s.b, s.ca, s.bK, s.fP);
 		var newOffset = _v1.a;
 		var newRow = _v1.b;
 		var newCol = _v1.c;
@@ -11439,7 +11439,7 @@ var $elm$parser$Parser$Advanced$chompUntil = function (_v0) {
 			$elm$parser$Parser$Advanced$Good,
 			_Utils_cmp(s.b, newOffset) < 0,
 			0,
-			{bH: newCol, c: s.c, gV: s.gV, b: newOffset, b9: newRow, fH: s.fH});
+			{bK: newCol, c: s.c, g0: s.g0, b: newOffset, ca: newRow, fP: s.fP});
 	};
 };
 var $elm$parser$Parser$Expecting = function (a) {
@@ -11464,7 +11464,7 @@ var $elm$parser$Parser$Advanced$getOffset = function (s) {
 };
 var $elm$parser$Parser$getOffset = $elm$parser$Parser$Advanced$getOffset;
 var $elm$parser$Parser$Advanced$getSource = function (s) {
-	return A3($elm$parser$Parser$Advanced$Good, false, s.fH, s);
+	return A3($elm$parser$Parser$Advanced$Good, false, s.fP, s);
 };
 var $elm$parser$Parser$getSource = $elm$parser$Parser$Advanced$getSource;
 var $elm$core$Basics$always = F2(
@@ -11543,10 +11543,10 @@ var $author$project$Parser$Utility$keyedParagraphParser = function (headline) {
 };
 var $elm$parser$Parser$DeadEnd = F3(
 	function (row, col, problem) {
-		return {bH: col, b0: problem, b9: row};
+		return {bK: col, b1: problem, ca: row};
 	});
 var $elm$parser$Parser$problemToDeadEnd = function (p) {
-	return A3($elm$parser$Parser$DeadEnd, p.b9, p.bH, p.b0);
+	return A3($elm$parser$Parser$DeadEnd, p.ca, p.bK, p.b1);
 };
 var $elm$parser$Parser$Advanced$bagToList = F2(
 	function (bag, list) {
@@ -11578,7 +11578,7 @@ var $elm$parser$Parser$Advanced$run = F2(
 	function (_v0, src) {
 		var parse = _v0;
 		var _v1 = parse(
-			{bH: 1, c: _List_Nil, gV: 1, b: 0, b9: 1, fH: src});
+			{bK: 1, c: _List_Nil, g0: 1, b: 0, ca: 1, fP: src});
 		if (!_v1.$) {
 			var value = _v1.b;
 			return $elm$core$Result$Ok(value);
@@ -11647,25 +11647,38 @@ var $author$project$Compiler$DifferentialParser$makeInitialData = F2(
 				var macroText = macroText_ + '\n\n';
 				var _v2 = macroText;
 				return {
-					fe: lang,
-					ha: A2(
+					fk: lang,
+					hg: A2(
 						$elm$core$Maybe$withDefault,
 						'',
 						A2($author$project$Parser$Utility$getKeyedParagraph, '|| mathmacros', macroText)),
-					id: A2(
+					ii: A2(
 						$elm$core$Maybe$withDefault,
 						'',
 						A2($author$project$Parser$Utility$getKeyedParagraph, '|| textmacros', macroText)),
-					iF: 4
+					iK: 4
 				};
 			}
 		}
 	});
+var $author$project$Parser$Block$ExpressionBlock = $elm$core$Basics$identity;
+var $author$project$Parser$Block$setLineNumber = F2(
+	function (k, _v0) {
+		var data = _v0;
+		return _Utils_update(
+			data,
+			{ed: k});
+	});
+var $author$project$Compiler$DifferentialParser$changeLineNumber = F2(
+	function (delta, block) {
+		var lineNumber = block.ed;
+		return A2($author$project$Parser$Block$setLineNumber, lineNumber + delta, block);
+	});
 var $author$project$Compiler$DifferentialParser$chunkLevel = function (block) {
-	return block.gV + ((_Utils_eq(
-		block.fl,
+	return block.g0 + ((_Utils_eq(
+		block.fr,
 		$elm$core$Maybe$Just('item')) || _Utils_eq(
-		block.fl,
+		block.fr,
 		$elm$core$Maybe$Just('numbered'))) ? 1 : 0);
 };
 var $author$project$Markup$isVerbatimLine = function (str) {
@@ -11674,13 +11687,13 @@ var $author$project$Markup$isVerbatimLine = function (str) {
 var $elm$core$String$lines = _String_lines;
 var $author$project$Parser$PrimitiveLaTeXBlock$finalize = function (state) {
 	return {
-		aq: $elm$core$List$reverse(state.aq),
-		at: state.at,
+		ar: $elm$core$List$reverse(state.Z),
+		au: state.au,
 		y: state.y
 	};
 };
 var $author$project$Parser$PrimitiveLaTeXBlock$init = function (lines) {
-	return {aq: _List_Nil, cp: -1, an: 0, at: _List_Nil, gV: 0, g6: '0, START', f: _List_Nil, ff: -1, g7: -1, _: lines, ej: 0, hT: '', y: _List_Nil, aN: $elm$core$Maybe$Nothing};
+	return {bH: $elm$core$Maybe$Nothing, Z: _List_Nil, cq: -1, ao: 0, au: _List_Nil, g0: 0, hd: '0, START', d: _List_Nil, ec: -1, ed: -1, ab: lines, en: 0, hY: '', y: _List_Nil};
 };
 var $author$project$Parser$PrimitiveLaTeXBlock$loop = F2(
 	function (s, f) {
@@ -11716,11 +11729,6 @@ var $author$project$Parser$PrimitiveLaTeXBlock$Done = function (a) {
 var $author$project$Parser$PrimitiveLaTeXBlock$Loop = function (a) {
 	return {$: 0, a: a};
 };
-var $author$project$Parser$PrimitiveLaTeXBlock$Filled = 2;
-var $author$project$Parser$PrimitiveLaTeXBlock$Started = 1;
-var $author$project$Parser$Line$PBOrdinary = 1;
-var $author$project$Parser$Line$PBParagraph = 2;
-var $author$project$Parser$Line$PBVerbatim = 0;
 var $author$project$MicroLaTeX$Parser$ClassifyBlock$CEmpty = {$: 6};
 var $author$project$MicroLaTeX$Parser$ClassifyBlock$CPlainText = {$: 5};
 var $elm$parser$Parser$Advanced$map = F2(
@@ -11753,7 +11761,7 @@ var $elm$parser$Parser$Advanced$fromState = F2(
 		return A2(
 			$elm$parser$Parser$Advanced$AddRight,
 			$elm$parser$Parser$Advanced$Empty,
-			A4($elm$parser$Parser$Advanced$DeadEnd, s.b9, s.bH, x, s.c));
+			A4($elm$parser$Parser$Advanced$DeadEnd, s.ca, s.bK, x, s.c));
 	});
 var $elm$parser$Parser$Advanced$isSubString = _Parser_isSubString;
 var $elm$parser$Parser$Advanced$token = function (_v0) {
@@ -11761,7 +11769,7 @@ var $elm$parser$Parser$Advanced$token = function (_v0) {
 	var expecting = _v0.b;
 	var progress = !$elm$core$String$isEmpty(str);
 	return function (s) {
-		var _v1 = A5($elm$parser$Parser$Advanced$isSubString, str, s.b, s.b9, s.bH, s.fH);
+		var _v1 = A5($elm$parser$Parser$Advanced$isSubString, str, s.b, s.ca, s.bK, s.fP);
 		var newOffset = _v1.a;
 		var newRow = _v1.b;
 		var newCol = _v1.c;
@@ -11772,7 +11780,7 @@ var $elm$parser$Parser$Advanced$token = function (_v0) {
 			$elm$parser$Parser$Advanced$Good,
 			progress,
 			0,
-			{bH: newCol, c: s.c, gV: s.gV, b: newOffset, b9: newRow, fH: s.fH});
+			{bK: newCol, c: s.c, g0: s.g0, b: newOffset, ca: newRow, fP: s.fP});
 	};
 };
 var $elm$parser$Parser$Advanced$symbol = $elm$parser$Parser$Advanced$token;
@@ -11885,20 +11893,20 @@ var $elm$parser$Parser$Advanced$oneOf = function (parsers) {
 };
 var $elm$parser$Parser$oneOf = $elm$parser$Parser$Advanced$oneOf;
 var $author$project$MicroLaTeX$Parser$ClassifyBlock$LXOrdinaryBlock = function (a) {
-	return {$: 2, a: a};
+	return {$: 3, a: a};
 };
 var $elm$parser$Parser$Advanced$chompUntilEndOr = function (str) {
 	return function (s) {
-		var _v0 = A5(_Parser_findSubString, str, s.b, s.b9, s.bH, s.fH);
+		var _v0 = A5(_Parser_findSubString, str, s.b, s.ca, s.bK, s.fP);
 		var newOffset = _v0.a;
 		var newRow = _v0.b;
 		var newCol = _v0.c;
-		var adjustedOffset = (newOffset < 0) ? $elm$core$String$length(s.fH) : newOffset;
+		var adjustedOffset = (newOffset < 0) ? $elm$core$String$length(s.fP) : newOffset;
 		return A3(
 			$elm$parser$Parser$Advanced$Good,
 			_Utils_cmp(s.b, adjustedOffset) < 0,
 			0,
-			{bH: newCol, c: s.c, gV: s.gV, b: adjustedOffset, b9: newRow, fH: s.fH});
+			{bK: newCol, c: s.c, g0: s.g0, b: adjustedOffset, ca: newRow, fP: s.fP});
 	};
 };
 var $elm$parser$Parser$chompUntilEndOr = $elm$parser$Parser$Advanced$chompUntilEndOr;
@@ -11924,6 +11932,21 @@ var $author$project$MicroLaTeX$Parser$ClassifyBlock$ordinaryBlockParser = A2(
 					$elm$parser$Parser$chompUntilEndOr(' '))),
 			$elm$parser$Parser$getOffset),
 		$elm$parser$Parser$getSource));
+var $author$project$MicroLaTeX$Parser$ClassifyBlock$pseudoBlockParser = A2(
+	$elm$parser$Parser$ignorer,
+	$elm$parser$Parser$succeed(
+		$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock($author$project$MicroLaTeX$Parser$ClassifyBlock$LXItem)),
+	$elm$parser$Parser$oneOf(
+		_List_fromArray(
+			[
+				$elm$parser$Parser$symbol('\\section'),
+				$elm$parser$Parser$symbol('\\subsection'),
+				$elm$parser$Parser$symbol('\\subsubsection'),
+				$elm$parser$Parser$symbol('\\image'),
+				$elm$parser$Parser$symbol('\\title'),
+				$elm$parser$Parser$symbol('\\contents'),
+				$elm$parser$Parser$symbol('\\setcounter')
+			])));
 var $author$project$MicroLaTeX$Parser$ClassifyBlock$CVerbatimBlockDelim = {$: 4};
 var $author$project$MicroLaTeX$Parser$ClassifyBlock$verbatimBlockDelimParser = A2(
 	$elm$parser$Parser$map,
@@ -11935,7 +11958,7 @@ var $author$project$MicroLaTeX$Parser$ClassifyBlock$verbatimBlockDelimParser = A
 		$elm$parser$Parser$succeed(0),
 		$elm$parser$Parser$symbol('```')));
 var $author$project$MicroLaTeX$Parser$ClassifyBlock$LXVerbatimBlock = function (a) {
-	return {$: 3, a: a};
+	return {$: 4, a: a};
 };
 var $author$project$MicroLaTeX$Parser$ClassifyBlock$verbatimBlockParser = A2(
 	$elm$parser$Parser$map,
@@ -11961,141 +11984,16 @@ var $author$project$MicroLaTeX$Parser$ClassifyBlock$verbatimBlockParser = A2(
 		$elm$parser$Parser$getSource));
 var $author$project$MicroLaTeX$Parser$ClassifyBlock$classifierParser = $elm$parser$Parser$oneOf(
 	_List_fromArray(
-		[$author$project$MicroLaTeX$Parser$ClassifyBlock$beginBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$endBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$mathBlockDelimParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$verbatimBlockDelimParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$ordinaryBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$verbatimBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$itemParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$numberedParser]));
-var $author$project$MicroLaTeX$Parser$ClassifyBlock$match = F2(
-	function (c1, c2) {
-		var _v0 = _Utils_Tuple2(c1, c2);
-		_v0$4:
-		while (true) {
-			switch (_v0.a.$) {
-				case 0:
-					if (_v0.b.$ === 1) {
-						var label1 = _v0.a.a;
-						var label2 = _v0.b.a;
-						return _Utils_eq(label1, label2);
-					} else {
-						break _v0$4;
-					}
-				case 3:
-					if (_v0.b.$ === 3) {
-						var _v1 = _v0.a;
-						var _v2 = _v0.b;
-						return true;
-					} else {
-						break _v0$4;
-					}
-				case 4:
-					if (_v0.b.$ === 4) {
-						var _v3 = _v0.a;
-						var _v4 = _v0.b;
-						return false;
-					} else {
-						break _v0$4;
-					}
-				case 2:
-					return true;
-				default:
-					break _v0$4;
-			}
-		}
-		return false;
-	});
+		[$author$project$MicroLaTeX$Parser$ClassifyBlock$beginBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$endBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$mathBlockDelimParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$verbatimBlockDelimParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$ordinaryBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$verbatimBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$itemParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$pseudoBlockParser, $author$project$MicroLaTeX$Parser$ClassifyBlock$numberedParser]));
 var $elm$core$String$trimLeft = _String_trimLeft;
-var $author$project$MicroLaTeX$Parser$ClassifyBlock$classify = F2(
-	function (str, verbatimClassif_) {
-		var str_ = $elm$core$String$trimLeft(str);
-		var _v0 = A2($elm$parser$Parser$run, $author$project$MicroLaTeX$Parser$ClassifyBlock$classifierParser, str_);
-		if (!_v0.$) {
-			var classif = _v0.a;
-			if (verbatimClassif_.$ === 1) {
-				return classif;
-			} else {
-				var verbatimClassif = verbatimClassif_.a;
-				return A2($author$project$MicroLaTeX$Parser$ClassifyBlock$match, verbatimClassif, classif) ? classif : $author$project$MicroLaTeX$Parser$ClassifyBlock$CPlainText;
-			}
-		} else {
-			return (str === '') ? $author$project$MicroLaTeX$Parser$ClassifyBlock$CEmpty : $author$project$MicroLaTeX$Parser$ClassifyBlock$CPlainText;
-		}
-	});
-var $elm$core$List$member = F2(
-	function (x, xs) {
-		return A2(
-			$elm$core$List$any,
-			function (a) {
-				return _Utils_eq(a, x);
-			},
-			xs);
-	});
-var $author$project$Parser$PrimitiveLaTeXBlock$verbatimBlockNames = _List_fromArray(
-	['equation', 'aligned', 'math', 'code', 'verbatim', 'verse', 'mathmacros', 'textmacros', 'hide', 'docinfo', 'datatable', 'chart', 'svg', 'quiver', 'image', 'tikz', 'load-files', 'include', 'iframe']);
-var $author$project$Parser$PrimitiveLaTeXBlock$getBlockTypeAndLabel = F2(
-	function (str, verbatimClassification) {
-		var _v0 = A2($author$project$MicroLaTeX$Parser$ClassifyBlock$classify, str, verbatimClassification);
-		switch (_v0.$) {
-			case 0:
-				var label = _v0.a;
-				return A2($elm$core$List$member, label, $author$project$Parser$PrimitiveLaTeXBlock$verbatimBlockNames) ? _Utils_Tuple2(
-					0,
-					$elm$core$Maybe$Just(label)) : _Utils_Tuple2(
-					1,
-					$elm$core$Maybe$Just(label));
-			case 3:
-				return _Utils_Tuple2(
-					0,
-					$elm$core$Maybe$Just('math'));
-			case 4:
-				return _Utils_Tuple2(
-					0,
-					$elm$core$Maybe$Just('code'));
-			default:
-				return _Utils_Tuple2(2, $elm$core$Maybe$Nothing);
-		}
-	});
-var $author$project$Parser$PrimitiveLaTeXBlock$blockFromLine = F2(
-	function (level, line) {
-		var indent = line.gV;
-		var lineNumber = line.g7;
-		var position = line.ej;
-		var prefix = line.ek;
-		var content = line.bJ;
-		var _v0 = A2($author$project$Parser$PrimitiveLaTeXBlock$getBlockTypeAndLabel, line.bJ, $elm$core$Maybe$Nothing);
-		var blockType = _v0.a;
-		var label = _v0.b;
-		return {f9: _List_Nil, dM: blockType, bJ: _List_Nil, eW: $elm$core$Maybe$Nothing, dk: line.bJ, gV: indent, ff: level, g7: lineNumber, fl: label, ej: position, H: $elm$core$Dict$empty, hT: '', s: 1};
-	});
-var $elm$core$String$trim = _String_trim;
-var $author$project$Parser$PrimitiveLaTeXBlock$getArgs = function (mstr) {
-	if (mstr.$ === 1) {
-		return _List_Nil;
+var $author$project$MicroLaTeX$Parser$ClassifyBlock$classify = function (str) {
+	var str_ = $elm$core$String$trimLeft(str);
+	var _v0 = A2($elm$parser$Parser$run, $author$project$MicroLaTeX$Parser$ClassifyBlock$classifierParser, str_);
+	if (!_v0.$) {
+		var classificationOfLine = _v0.a;
+		return classificationOfLine;
 	} else {
-		var str = mstr.a;
-		var strs = A2(
-			$elm$core$List$map,
-			$elm$core$String$trim,
-			A2($elm$core$String$split, ', ', str));
-		return A2(
-			$elm$core$List$filter,
-			function (t) {
-				return !A2($elm$core$String$contains, ':', t);
-			},
-			strs);
-	}
-};
-var $author$project$Parser$PrimitiveLaTeXBlock$getKVData = function (mstr) {
-	if (mstr.$ === 1) {
-		return _List_Nil;
-	} else {
-		var str = mstr.a;
-		var strs = A2(
-			$elm$core$List$map,
-			$elm$core$String$trim,
-			A2($elm$core$String$split, ', ', str));
-		return A2(
-			$elm$core$List$filter,
-			function (t) {
-				return A2($elm$core$String$contains, ':', t);
-			},
-			strs);
+		return (str === '') ? $author$project$MicroLaTeX$Parser$ClassifyBlock$CEmpty : $author$project$MicroLaTeX$Parser$ClassifyBlock$CPlainText;
 	}
 };
 var $elm$parser$Parser$Advanced$isSubChar = _Parser_isSubChar;
@@ -12103,13 +12001,13 @@ var $elm$parser$Parser$Advanced$chompWhileHelp = F5(
 	function (isGood, offset, row, col, s0) {
 		chompWhileHelp:
 		while (true) {
-			var newOffset = A3($elm$parser$Parser$Advanced$isSubChar, isGood, offset, s0.fH);
+			var newOffset = A3($elm$parser$Parser$Advanced$isSubChar, isGood, offset, s0.fP);
 			if (_Utils_eq(newOffset, -1)) {
 				return A3(
 					$elm$parser$Parser$Advanced$Good,
 					_Utils_cmp(s0.b, offset) < 0,
 					0,
-					{bH: col, c: s0.c, gV: s0.gV, b: offset, b9: row, fH: s0.fH});
+					{bK: col, c: s0.c, g0: s0.g0, b: offset, ca: row, fP: s0.fP});
 			} else {
 				if (_Utils_eq(newOffset, -2)) {
 					var $temp$isGood = isGood,
@@ -12141,8 +12039,128 @@ var $elm$parser$Parser$Advanced$chompWhileHelp = F5(
 	});
 var $elm$parser$Parser$Advanced$chompWhile = function (isGood) {
 	return function (s) {
-		return A5($elm$parser$Parser$Advanced$chompWhileHelp, isGood, s.b, s.b9, s.bH, s);
+		return A5($elm$parser$Parser$Advanced$chompWhileHelp, isGood, s.b, s.ca, s.bK, s);
 	};
+};
+var $elm$parser$Parser$chompWhile = $elm$parser$Parser$Advanced$chompWhile;
+var $author$project$Parser$Line$prefixParser = F2(
+	function (position, lineNumber) {
+		return A2(
+			$elm$parser$Parser$keeper,
+			A2(
+				$elm$parser$Parser$keeper,
+				A2(
+					$elm$parser$Parser$keeper,
+					A2(
+						$elm$parser$Parser$keeper,
+						$elm$parser$Parser$succeed(
+							F4(
+								function (prefixStart, prefixEnd, lineEnd, content) {
+									return {
+										bM: A3($elm$core$String$slice, prefixEnd, lineEnd, content),
+										g0: prefixEnd - prefixStart,
+										ed: lineNumber,
+										en: position,
+										eo: A3($elm$core$String$slice, 0, prefixEnd, content)
+									};
+								})),
+						A2(
+							$elm$parser$Parser$ignorer,
+							$elm$parser$Parser$getOffset,
+							$elm$parser$Parser$chompWhile(
+								function (c) {
+									return c === ' ';
+								}))),
+					A2(
+						$elm$parser$Parser$ignorer,
+						$elm$parser$Parser$getOffset,
+						$elm$parser$Parser$chompWhile(
+							function (c) {
+								return c !== '\n';
+							}))),
+				$elm$parser$Parser$getOffset),
+			$elm$parser$Parser$getSource);
+	});
+var $author$project$Parser$Line$classify = F3(
+	function (position, lineNumber, str) {
+		var _v0 = A2(
+			$elm$parser$Parser$run,
+			A2($author$project$Parser$Line$prefixParser, position, lineNumber),
+			str);
+		if (_v0.$ === 1) {
+			return {bM: '!!ERROR', g0: 0, ed: lineNumber, en: position, eo: ''};
+		} else {
+			var result = _v0.a;
+			return result;
+		}
+	});
+var $author$project$Parser$PrimitiveLaTeXBlock$Filled = 2;
+var $author$project$Parser$PrimitiveLaTeXBlock$Started = 1;
+var $author$project$Parser$Line$PBOrdinary = 1;
+var $author$project$Parser$Line$PBParagraph = 2;
+var $author$project$Parser$Line$PBVerbatim = 0;
+var $elm$core$List$member = F2(
+	function (x, xs) {
+		return A2(
+			$elm$core$List$any,
+			function (a) {
+				return _Utils_eq(a, x);
+			},
+			xs);
+	});
+var $author$project$Parser$PrimitiveLaTeXBlock$verbatimBlockNames = _List_fromArray(
+	['equation', 'aligned', 'math', 'code', 'verbatim', 'verse', 'mathmacros', 'textmacros', 'tabular', 'hide', 'docinfo', 'datatable', 'chart', 'svg', 'quiver', 'image', 'tikz', 'load-files', 'include', 'iframe']);
+var $author$project$Parser$PrimitiveLaTeXBlock$getBlockTypeAndLabel = function (str) {
+	var _v0 = $author$project$MicroLaTeX$Parser$ClassifyBlock$classify(str);
+	switch (_v0.$) {
+		case 0:
+			var label = _v0.a;
+			return A2($elm$core$List$member, label, $author$project$Parser$PrimitiveLaTeXBlock$verbatimBlockNames) ? _Utils_Tuple2(
+				0,
+				$elm$core$Maybe$Just(label)) : _Utils_Tuple2(
+				1,
+				$elm$core$Maybe$Just(label));
+		case 3:
+			return _Utils_Tuple2(
+				0,
+				$elm$core$Maybe$Just('math'));
+		case 4:
+			return _Utils_Tuple2(
+				0,
+				$elm$core$Maybe$Just('code'));
+		default:
+			return _Utils_Tuple2(2, $elm$core$Maybe$Nothing);
+	}
+};
+var $author$project$Parser$PrimitiveLaTeXBlock$blockFromLine = F2(
+	function (level, line) {
+		var indent = line.g0;
+		var lineNumber = line.ed;
+		var position = line.en;
+		var prefix = line.eo;
+		var content = line.bM;
+		var _v0 = $author$project$Parser$PrimitiveLaTeXBlock$getBlockTypeAndLabel(line.bM);
+		var blockType = _v0.a;
+		var label = _v0.b;
+		return {gh: _List_Nil, dO: blockType, bM: _List_Nil, e0: $elm$core$Maybe$Nothing, dl: line.bM, g0: indent, ec: level, ed: lineNumber, fr: label, en: position, H: $elm$core$Dict$empty, hY: '', s: 1};
+	});
+var $elm$core$String$trim = _String_trim;
+var $author$project$Parser$PrimitiveLaTeXBlock$getArgs = function (mstr) {
+	if (mstr.$ === 1) {
+		return _List_Nil;
+	} else {
+		var str = mstr.a;
+		var strs = A2(
+			$elm$core$List$map,
+			$elm$core$String$trim,
+			A2($elm$core$String$split, ', ', str));
+		return A2(
+			$elm$core$List$filter,
+			function (t) {
+				return !A2($elm$core$String$contains, ':', t);
+			},
+			strs);
+	}
 };
 var $elm$parser$Parser$Advanced$spaces = $elm$parser$Parser$Advanced$chompWhile(
 	function (c) {
@@ -12177,6 +12195,136 @@ var $author$project$Compiler$Util$itemParser = F2(
 					$elm$parser$Parser$getOffset),
 				$elm$parser$Parser$getSource));
 	});
+var $author$project$Compiler$Util$bracedItemParser = A2($author$project$Compiler$Util$itemParser, '{', '}');
+var $elm$parser$Parser$Advanced$loopHelp = F4(
+	function (p, state, callback, s0) {
+		loopHelp:
+		while (true) {
+			var _v0 = callback(state);
+			var parse = _v0;
+			var _v1 = parse(s0);
+			if (!_v1.$) {
+				var p1 = _v1.a;
+				var step = _v1.b;
+				var s1 = _v1.c;
+				if (!step.$) {
+					var newState = step.a;
+					var $temp$p = p || p1,
+						$temp$state = newState,
+						$temp$callback = callback,
+						$temp$s0 = s1;
+					p = $temp$p;
+					state = $temp$state;
+					callback = $temp$callback;
+					s0 = $temp$s0;
+					continue loopHelp;
+				} else {
+					var result = step.a;
+					return A3($elm$parser$Parser$Advanced$Good, p || p1, result, s1);
+				}
+			} else {
+				var p1 = _v1.a;
+				var x = _v1.b;
+				return A2($elm$parser$Parser$Advanced$Bad, p || p1, x);
+			}
+		}
+	});
+var $elm$parser$Parser$Advanced$loop = F2(
+	function (state, callback) {
+		return function (s) {
+			return A4($elm$parser$Parser$Advanced$loopHelp, false, state, callback, s);
+		};
+	});
+var $elm$parser$Parser$Advanced$Done = function (a) {
+	return {$: 1, a: a};
+};
+var $elm$parser$Parser$Advanced$Loop = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$parser$Parser$toAdvancedStep = function (step) {
+	if (!step.$) {
+		var s = step.a;
+		return $elm$parser$Parser$Advanced$Loop(s);
+	} else {
+		var a = step.a;
+		return $elm$parser$Parser$Advanced$Done(a);
+	}
+};
+var $elm$parser$Parser$loop = F2(
+	function (state, callback) {
+		return A2(
+			$elm$parser$Parser$Advanced$loop,
+			state,
+			function (s) {
+				return A2(
+					$elm$parser$Parser$map,
+					$elm$parser$Parser$toAdvancedStep,
+					callback(s));
+			});
+	});
+var $elm$parser$Parser$Done = function (a) {
+	return {$: 1, a: a};
+};
+var $elm$parser$Parser$Loop = function (a) {
+	return {$: 0, a: a};
+};
+var $author$project$Compiler$Util$manyHelp = F2(
+	function (p, vs) {
+		return $elm$parser$Parser$oneOf(
+			_List_fromArray(
+				[
+					A2(
+					$elm$parser$Parser$keeper,
+					$elm$parser$Parser$succeed(
+						function (v) {
+							return $elm$parser$Parser$Loop(
+								A2($elm$core$List$cons, v, vs));
+						}),
+					A2($elm$parser$Parser$ignorer, p, $elm$parser$Parser$spaces)),
+					A2(
+					$elm$parser$Parser$map,
+					function (_v0) {
+						return $elm$parser$Parser$Done(
+							$elm$core$List$reverse(vs));
+					},
+					$elm$parser$Parser$succeed(0))
+				]));
+	});
+var $author$project$Compiler$Util$many = function (p) {
+	return A2(
+		$elm$parser$Parser$loop,
+		_List_Nil,
+		$author$project$Compiler$Util$manyHelp(p));
+};
+var $author$project$Compiler$Util$getBracedItems = function (str) {
+	var _v0 = A2(
+		$elm$parser$Parser$run,
+		$author$project$Compiler$Util$many($author$project$Compiler$Util$bracedItemParser),
+		str);
+	if (!_v0.$) {
+		var val = _v0.a;
+		return val;
+	} else {
+		return _List_Nil;
+	}
+};
+var $author$project$Parser$PrimitiveLaTeXBlock$getKVData = function (mstr) {
+	if (mstr.$ === 1) {
+		return _List_Nil;
+	} else {
+		var str = mstr.a;
+		var strs = A2(
+			$elm$core$List$map,
+			$elm$core$String$trim,
+			A2($elm$core$String$split, ', ', str));
+		return A2(
+			$elm$core$List$filter,
+			function (t) {
+				return A2($elm$core$String$contains, ':', t);
+			},
+			strs);
+	}
+};
 var $author$project$Compiler$Util$bracketedItemParser = A2($author$project$Compiler$Util$itemParser, '[', ']');
 var $author$project$Compiler$Util$getBracketedItem = function (str) {
 	var _v0 = A2($elm$parser$Parser$run, $author$project$Compiler$Util$bracketedItemParser, str);
@@ -12227,8 +12375,8 @@ var $author$project$Compiler$Util$getMicroLaTeXItem = F2(
 			return $elm$core$Maybe$Nothing;
 		}
 	});
-var $author$project$MicroLaTeX$Parser$Line$getNameAndArgs2 = function (line) {
-	var normalizedLine = $elm$core$String$trim(line.bJ);
+var $author$project$MicroLaTeX$Parser$Line$getNameAndArgString = function (line) {
+	var normalizedLine = $elm$core$String$trim(line.bM);
 	var name = function () {
 		var _v0 = A2($author$project$Compiler$Util$getMicroLaTeXItem, 'begin', normalizedLine);
 		if (!_v0.$) {
@@ -12271,12 +12419,12 @@ var $elm_community$list_extra$List$Extra$uncons = function (list) {
 	}
 };
 var $author$project$Parser$PrimitiveLaTeXBlock$nextKVStep = function (state) {
-	var _v0 = $elm_community$list_extra$List$Extra$uncons(state.aY);
+	var _v0 = $elm_community$list_extra$List$Extra$uncons(state.aZ);
 	if (_v0.$ === 1) {
 		var kvList_ = function () {
-			var _v2 = state.aV;
+			var _v2 = state.aW;
 			if (_v2.$ === 1) {
-				return state.be;
+				return state.bf;
 			} else {
 				var key = _v2.a;
 				return A2(
@@ -12290,8 +12438,8 @@ var $author$project$Parser$PrimitiveLaTeXBlock$nextKVStep = function (state) {
 					},
 					A2(
 						$elm$core$List$cons,
-						_Utils_Tuple2(key, state.aG),
-						state.be));
+						_Utils_Tuple2(key, state.aH),
+						state.bf));
 			}
 		}();
 		return $author$project$Parser$PrimitiveLaTeXBlock$Done(
@@ -12310,54 +12458,54 @@ var $author$project$Parser$PrimitiveLaTeXBlock$nextKVStep = function (state) {
 		var _v4 = _v0.a;
 		var item = _v4.a;
 		var rest = _v4.b;
-		var _v5 = state.bs;
+		var _v5 = state.bu;
 		if (!_v5) {
 			if (A2($elm$core$String$contains, ':', item)) {
-				var _v6 = state.aV;
+				var _v6 = state.aW;
 				if (_v6.$ === 1) {
 					return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
 						_Utils_update(
 							state,
 							{
-								aV: $elm$core$Maybe$Just(
+								aW: $elm$core$Maybe$Just(
 									A2($elm$core$String$dropRight, 1, item)),
-								aY: rest,
-								bs: 1
+								aZ: rest,
+								bu: 1
 							}));
 				} else {
 					var key = _v6.a;
 					return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
 						{
-							aV: $elm$core$Maybe$Just(
+							aW: $elm$core$Maybe$Just(
 								A2($elm$core$String$dropRight, 1, item)),
-							aG: _List_Nil,
-							aY: rest,
-							be: A2(
+							aH: _List_Nil,
+							aZ: rest,
+							bf: A2(
 								$elm$core$List$cons,
-								_Utils_Tuple2(key, state.aG),
-								state.be),
-							bs: 1
+								_Utils_Tuple2(key, state.aH),
+								state.bf),
+							bu: 1
 						});
 				}
 			} else {
 				return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
 					_Utils_update(
 						state,
-						{aY: rest}));
+						{aZ: rest}));
 			}
 		} else {
 			if (A2($elm$core$String$contains, ':', item)) {
-				var _v7 = state.aV;
+				var _v7 = state.aW;
 				if (_v7.$ === 1) {
 					return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
 						_Utils_update(
 							state,
 							{
-								aV: $elm$core$Maybe$Just(
+								aW: $elm$core$Maybe$Just(
 									A2($elm$core$String$dropRight, 1, item)),
-								aG: _List_Nil,
-								aY: rest,
-								bs: 1
+								aH: _List_Nil,
+								aZ: rest,
+								bu: 1
 							}));
 				} else {
 					var key = _v7.a;
@@ -12365,15 +12513,15 @@ var $author$project$Parser$PrimitiveLaTeXBlock$nextKVStep = function (state) {
 						_Utils_update(
 							state,
 							{
-								aV: $elm$core$Maybe$Just(
+								aW: $elm$core$Maybe$Just(
 									A2($elm$core$String$dropRight, 1, item)),
-								aG: _List_Nil,
-								aY: rest,
-								be: A2(
+								aH: _List_Nil,
+								aZ: rest,
+								bf: A2(
 									$elm$core$List$cons,
-									_Utils_Tuple2(key, state.aG),
-									state.be),
-								bs: 1
+									_Utils_Tuple2(key, state.aH),
+									state.bf),
+								bu: 1
 							}));
 				}
 			} else {
@@ -12381,15 +12529,15 @@ var $author$project$Parser$PrimitiveLaTeXBlock$nextKVStep = function (state) {
 					_Utils_update(
 						state,
 						{
-							aG: A2($elm$core$List$cons, item, state.aG),
-							aY: rest
+							aH: A2($elm$core$List$cons, item, state.aH),
+							aZ: rest
 						}));
 			}
 		}
 	}
 };
 var $author$project$Parser$PrimitiveLaTeXBlock$prepareKVData = function (data_) {
-	var initialState = {aV: $elm$core$Maybe$Nothing, aG: _List_Nil, aY: data_, be: _List_Nil, bs: 0};
+	var initialState = {aW: $elm$core$Maybe$Nothing, aH: _List_Nil, aZ: data_, bf: _List_Nil, bu: 0};
 	return A2($author$project$Parser$PrimitiveLaTeXBlock$loop, initialState, $author$project$Parser$PrimitiveLaTeXBlock$nextKVStep);
 };
 var $author$project$Parser$PrimitiveLaTeXBlock$explode = function (txt) {
@@ -12423,30 +12571,46 @@ var $author$project$Parser$PrimitiveLaTeXBlock$prepareList = function (strs) {
 			$author$project$Parser$PrimitiveLaTeXBlock$fix,
 			$author$project$Parser$PrimitiveLaTeXBlock$explode(strs)));
 };
+var $elm$core$String$replace = F3(
+	function (before, after, string) {
+		return A2(
+			$elm$core$String$join,
+			after,
+			A2($elm$core$String$split, before, string));
+	});
 var $author$project$Parser$PrimitiveLaTeXBlock$elaborate = F2(
 	function (line, pb) {
 		if (_Utils_eq(
-			pb.bJ,
+			pb.bM,
 			_List_fromArray(
 				['']))) {
 			return pb;
 		} else {
-			var content = (!pb.dM) ? A2($elm$core$List$map, $elm$core$String$trimLeft, pb.bJ) : pb.bJ;
-			var _v0 = $author$project$MicroLaTeX$Parser$Line$getNameAndArgs2(line);
+			var content = (!pb.dO) ? A2($elm$core$List$map, $elm$core$String$trimLeft, pb.bM) : pb.bM;
+			var _v0 = $author$project$MicroLaTeX$Parser$Line$getNameAndArgString(line);
 			var name = _v0.a;
 			var args_ = _v0.b;
-			var args = $author$project$Parser$PrimitiveLaTeXBlock$getArgs(args_);
 			var namedArgs = $author$project$Parser$PrimitiveLaTeXBlock$getKVData(args_);
 			var properties = $author$project$Parser$PrimitiveLaTeXBlock$prepareKVData(
 				$author$project$Parser$PrimitiveLaTeXBlock$prepareList(namedArgs));
+			var simpleArgs = function () {
+				if (name.$ === 1) {
+					return $author$project$Parser$PrimitiveLaTeXBlock$getArgs(args_);
+				} else {
+					var name_ = name.a;
+					var prefix = '\\begin{' + (name_ + '}');
+					var adjustedLine = A3($elm$core$String$replace, prefix, '', line.bM);
+					return $author$project$Compiler$Util$getBracedItems(adjustedLine);
+				}
+			}();
 			return _Utils_update(
 				pb,
-				{f9: args, bJ: content, fl: name, H: properties});
+				{gh: simpleArgs, bM: content, fr: name, H: properties});
 		}
 	});
-var $author$project$Parser$PrimitiveLaTeXBlock$beginBlock2 = F3(
+var $author$project$Parser$PrimitiveLaTeXBlock$beginBlock = F3(
 	function (classifier, line, state) {
-		var newVerbatimClassifier = function () {
+		var newBlockClassifier = function () {
 			if (!classifier.$) {
 				var name = classifier.a;
 				return A2($elm$core$List$member, name, $author$project$Parser$PrimitiveLaTeXBlock$verbatimBlockNames) ? $elm$core$Maybe$Just(classifier) : $elm$core$Maybe$Nothing;
@@ -12454,15 +12618,15 @@ var $author$project$Parser$PrimitiveLaTeXBlock$beginBlock2 = F3(
 				return $elm$core$Maybe$Nothing;
 			}
 		}();
-		var level = state.ff + 1;
+		var level = state.ec + 1;
 		var newBlock = A2(
 			$author$project$Parser$PrimitiveLaTeXBlock$elaborate,
 			line,
 			A2($author$project$Parser$PrimitiveLaTeXBlock$blockFromLine, level, line));
 		var labelStack = function () {
-			var _v0 = $elm_community$list_extra$List$Extra$uncons(state.f);
+			var _v0 = $elm_community$list_extra$List$Extra$uncons(state.d);
 			if (_v0.$ === 1) {
-				return state.f;
+				return state.d;
 			} else {
 				var _v1 = _v0.a;
 				var label = _v1.a;
@@ -12478,26 +12642,17 @@ var $author$project$Parser$PrimitiveLaTeXBlock$beginBlock2 = F3(
 		return _Utils_update(
 			state,
 			{
-				an: line.g7,
-				gV: line.gV,
-				f: A2(
+				bH: newBlockClassifier,
+				ao: line.ed,
+				g0: line.g0,
+				d: A2(
 					$elm$core$List$cons,
-					{ag: classifier, ff: level, g7: line.g7, s: 1},
+					{I: classifier, ec: level, ed: line.ed, s: 1},
 					labelStack),
-				ff: level,
-				g7: line.g7,
-				y: A2($elm$core$List$cons, newBlock, state.y),
-				aN: newVerbatimClassifier
+				ec: level,
+				ed: line.ed,
+				y: A2($elm$core$List$cons, newBlock, state.y)
 			});
-	});
-var $author$project$Parser$PrimitiveLaTeXBlock$beginBlock1 = F3(
-	function (classifier, line, state) {
-		var _v0 = state.aN;
-		if (_v0.$ === 1) {
-			return A3($author$project$Parser$PrimitiveLaTeXBlock$beginBlock2, classifier, line, state);
-		} else {
-			return state;
-		}
 	});
 var $elm$core$List$drop = F2(
 	function (n, list) {
@@ -12653,21 +12808,15 @@ var $author$project$Parser$PrimitiveLaTeXBlock$slice = F3(
 			a,
 			A2($elm$core$List$take, b + 1, list));
 	});
-var $author$project$Parser$PrimitiveLaTeXBlock$fillBlockOnStack = function (state) {
-	var _v0 = $elm_community$list_extra$List$Extra$uncons(state.y);
-	if (_v0.$ === 1) {
-		return state.y;
-	} else {
-		var _v1 = _v0.a;
-		var block = _v1.a;
-		var rest = _v1.b;
+var $author$project$Parser$PrimitiveLaTeXBlock$changeStatusOfStackTop = F3(
+	function (block, rest, state) {
 		if (_Utils_eq(
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
 					return $.s;
 				},
-				$elm$core$List$head(state.f)),
+				$elm$core$List$head(state.d)),
 			$elm$core$Maybe$Just(2))) {
 			return state.y;
 		} else {
@@ -12677,7 +12826,7 @@ var $author$project$Parser$PrimitiveLaTeXBlock$fillBlockOnStack = function (stat
 					function ($) {
 						return $.s;
 					},
-					$elm$core$List$head(state.f)),
+					$elm$core$List$head(state.d)),
 				$elm$core$Maybe$Just(1))) {
 				var firstBlockLine = A2(
 					$elm$core$Maybe$withDefault,
@@ -12685,13 +12834,13 @@ var $author$project$Parser$PrimitiveLaTeXBlock$fillBlockOnStack = function (stat
 					A2(
 						$elm$core$Maybe$map,
 						function ($) {
-							return $.g7;
+							return $.ed;
 						},
-						$elm$core$List$head(state.f)));
+						$elm$core$List$head(state.d)));
 				var newBlock = _Utils_update(
 					block,
 					{
-						bJ: A3($author$project$Parser$PrimitiveLaTeXBlock$slice, firstBlockLine + 1, state.g7 - 1, state._),
+						bM: A3($author$project$Parser$PrimitiveLaTeXBlock$slice, firstBlockLine + 1, state.ed - 1, state.ab),
 						s: 2
 					});
 				return A2($elm$core$List$cons, newBlock, rest);
@@ -12699,101 +12848,44 @@ var $author$project$Parser$PrimitiveLaTeXBlock$fillBlockOnStack = function (stat
 				return state.y;
 			}
 		}
-	}
-};
-var $author$project$Parser$PrimitiveLaTeXBlock$beginBlock = F3(
+	});
+var $author$project$Parser$PrimitiveLaTeXBlock$dispatchBeginBlock = F3(
 	function (classifier, line, state) {
 		var _v0 = $elm_community$list_extra$List$Extra$uncons(state.y);
 		if (_v0.$ === 1) {
-			return A3($author$project$Parser$PrimitiveLaTeXBlock$beginBlock1, classifier, line, state);
+			return A3($author$project$Parser$PrimitiveLaTeXBlock$beginBlock, classifier, line, state);
 		} else {
+			var _v1 = _v0.a;
+			var block = _v1.a;
+			var rest = _v1.b;
 			return A3(
-				$author$project$Parser$PrimitiveLaTeXBlock$beginBlock1,
+				$author$project$Parser$PrimitiveLaTeXBlock$beginBlock,
 				classifier,
 				line,
 				_Utils_update(
 					state,
 					{
-						y: $author$project$Parser$PrimitiveLaTeXBlock$fillBlockOnStack(state)
+						y: A3($author$project$Parser$PrimitiveLaTeXBlock$changeStatusOfStackTop, block, rest, state)
 					}));
-		}
-	});
-var $elm$parser$Parser$chompWhile = $elm$parser$Parser$Advanced$chompWhile;
-var $author$project$Parser$Line$prefixParser = F2(
-	function (position, lineNumber) {
-		return A2(
-			$elm$parser$Parser$keeper,
-			A2(
-				$elm$parser$Parser$keeper,
-				A2(
-					$elm$parser$Parser$keeper,
-					A2(
-						$elm$parser$Parser$keeper,
-						$elm$parser$Parser$succeed(
-							F4(
-								function (prefixStart, prefixEnd, lineEnd, content) {
-									return {
-										bJ: A3($elm$core$String$slice, prefixEnd, lineEnd, content),
-										gV: prefixEnd - prefixStart,
-										g7: lineNumber,
-										ej: position,
-										ek: A3($elm$core$String$slice, 0, prefixEnd, content)
-									};
-								})),
-						A2(
-							$elm$parser$Parser$ignorer,
-							$elm$parser$Parser$getOffset,
-							$elm$parser$Parser$chompWhile(
-								function (c) {
-									return c === ' ';
-								}))),
-					A2(
-						$elm$parser$Parser$ignorer,
-						$elm$parser$Parser$getOffset,
-						$elm$parser$Parser$chompWhile(
-							function (c) {
-								return c !== '\n';
-							}))),
-				$elm$parser$Parser$getOffset),
-			$elm$parser$Parser$getSource);
-	});
-var $author$project$Parser$Line$classify = F3(
-	function (position, lineNumber, str) {
-		var _v0 = A2(
-			$elm$parser$Parser$run,
-			A2($author$project$Parser$Line$prefixParser, position, lineNumber),
-			str);
-		if (_v0.$ === 1) {
-			return {bJ: '!!ERROR', gV: 0, g7: lineNumber, ej: position, ek: ''};
-		} else {
-			var result = _v0.a;
-			return result;
 		}
 	});
 var $author$project$Parser$PrimitiveLaTeXBlock$Finished = 0;
 var $author$project$Parser$PrimitiveLaTeXBlock$addSource = F2(
 	function (lastLine, block) {
-		var _v0 = block.fl;
+		var _v0 = block.fr;
 		if (_v0.$ === 1) {
 			return _Utils_update(
 				block,
 				{
-					hT: A2($elm$core$String$join, '\n', block.bJ)
+					hY: A2($elm$core$String$join, '\n', block.bM)
 				});
 		} else {
 			return _Utils_update(
 				block,
 				{
-					hT: block.dk + ('\n' + (A2($elm$core$String$join, '\n', block.bJ) + ('\n' + lastLine)))
+					hY: block.dl + ('\n' + (A2($elm$core$String$join, '\n', block.bM) + ('\n' + lastLine)))
 				});
 		}
-	});
-var $elm$core$String$replace = F3(
-	function (before, after, string) {
-		return A2(
-			$elm$core$String$join,
-			after,
-			A2($elm$core$String$split, before, string));
 	});
 var $author$project$Parser$PrimitiveLaTeXBlock$getContent = F3(
 	function (classifier, line, state) {
@@ -12802,7 +12894,7 @@ var $author$project$Parser$PrimitiveLaTeXBlock$getContent = F3(
 			switch (classifier.$) {
 				case 5:
 					return $elm$core$List$reverse(
-						A3($author$project$Parser$PrimitiveLaTeXBlock$slice, state.an, line.g7 - 1, state._));
+						A3($author$project$Parser$PrimitiveLaTeXBlock$slice, state.ao, line.ed - 1, state.ab));
 				case 2:
 					switch (classifier.a.$) {
 						case 0:
@@ -12814,7 +12906,7 @@ var $author$project$Parser$PrimitiveLaTeXBlock$getContent = F3(
 										A3($elm$core$String$replace, '\\item', '', line_));
 								},
 								$elm$core$List$reverse(
-									A3($author$project$Parser$PrimitiveLaTeXBlock$slice, state.an, line.g7, state._)));
+									A3($author$project$Parser$PrimitiveLaTeXBlock$slice, state.ao, line.ed, state.ab)));
 						case 1:
 							var _v2 = classifier.a;
 							return A2(
@@ -12824,26 +12916,26 @@ var $author$project$Parser$PrimitiveLaTeXBlock$getContent = F3(
 										A3($elm$core$String$replace, '\\numbered', '', line_));
 								},
 								$elm$core$List$reverse(
-									A3($author$project$Parser$PrimitiveLaTeXBlock$slice, state.an, line.g7, state._)));
+									A3($author$project$Parser$PrimitiveLaTeXBlock$slice, state.ao, line.ed, state.ab)));
 						default:
 							break _v0$4;
 					}
 				case 1:
 					return $elm$core$List$reverse(
-						A3($author$project$Parser$PrimitiveLaTeXBlock$slice, state.an + 1, line.g7 - 1, state._));
+						A3($author$project$Parser$PrimitiveLaTeXBlock$slice, state.ao + 1, line.ed - 1, state.ab));
 				default:
 					break _v0$4;
 			}
 		}
 		return $elm$core$List$reverse(
-			A3($author$project$Parser$PrimitiveLaTeXBlock$slice, state.an + 1, line.g7 - 1, state._));
+			A3($author$project$Parser$PrimitiveLaTeXBlock$slice, state.ao + 1, line.ed - 1, state.ab));
 	});
 var $author$project$Parser$PrimitiveLaTeXBlock$getSource = F2(
 	function (line, state) {
 		return A2(
 			$elm$core$String$join,
 			'\n',
-			A3($author$project$Parser$PrimitiveLaTeXBlock$slice, state.an, line.g7, state._));
+			A3($author$project$Parser$PrimitiveLaTeXBlock$slice, state.ao, line.ed, state.ab));
 	});
 var $author$project$Parser$PrimitiveLaTeXBlock$newBlockWithError = F3(
 	function (classifier, content, block) {
@@ -12854,18 +12946,18 @@ var $author$project$Parser$PrimitiveLaTeXBlock$newBlockWithError = F3(
 					return _Utils_update(
 						block,
 						{
-							bJ: $elm$core$List$reverse(content),
-							eW: $elm$core$Maybe$Just(
-								{eW: 'Missing $$ at end'}),
+							bM: $elm$core$List$reverse(content),
+							e0: $elm$core$Maybe$Just(
+								{e0: 'Missing $$ at end'}),
 							s: 0
 						});
 				case 4:
 					return _Utils_update(
 						block,
 						{
-							bJ: $elm$core$List$reverse(content),
-							eW: $elm$core$Maybe$Just(
-								{eW: 'Missing ``` at end'}),
+							bM: $elm$core$List$reverse(content),
+							e0: $elm$core$Maybe$Just(
+								{e0: 'Missing ``` at end'}),
 							s: 0
 						});
 				case 2:
@@ -12875,7 +12967,7 @@ var $author$project$Parser$PrimitiveLaTeXBlock$newBlockWithError = F3(
 							return _Utils_update(
 								block,
 								{
-									bJ: A2(
+									bM: A2(
 										$elm$core$List$filter,
 										function (line_) {
 											return line_ !== '';
@@ -12889,7 +12981,7 @@ var $author$project$Parser$PrimitiveLaTeXBlock$newBlockWithError = F3(
 							return _Utils_update(
 								block,
 								{
-									bJ: A2(
+									bM: A2(
 										$elm$core$List$filter,
 										function (line_) {
 											return line_ !== '';
@@ -12908,7 +13000,7 @@ var $author$project$Parser$PrimitiveLaTeXBlock$newBlockWithError = F3(
 		return _Utils_update(
 			block,
 			{
-				bJ: $elm$core$List$reverse(content),
+				bM: $elm$core$List$reverse(content),
 				s: 0
 			});
 	});
@@ -12917,7 +13009,7 @@ var $author$project$Parser$PrimitiveLaTeXBlock$newBlockWithOutError = F2(
 		return _Utils_update(
 			block,
 			{
-				bJ: $elm$core$List$reverse(content),
+				bM: $elm$core$List$reverse(content),
 				s: 0
 			});
 	});
@@ -12925,8 +13017,8 @@ var $author$project$Parser$PrimitiveLaTeXBlock$resolveIfStackEmpty = function (s
 	return _Utils_eq(state.y, _List_Nil) ? _Utils_update(
 		state,
 		{
-			aq: _Utils_ap(state.at, state.aq),
-			at: _List_Nil
+			Z: _Utils_ap(state.au, state.Z),
+			au: _List_Nil
 		}) : state;
 };
 var $author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMatch = F4(
@@ -12950,15 +13042,16 @@ var $author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMatch = F4(
 					_Utils_update(
 						state,
 						{
-							aq: A2(
+							Z: A2(
 								$elm$core$List$cons,
 								A2(
 									$author$project$Parser$PrimitiveLaTeXBlock$addSource,
-									line.bJ,
+									line.bM,
 									_Utils_update(
 										block,
 										{s: 0})),
-								state.aq),
+								state.Z),
+							ec: state.ec - 1,
 							y: rest
 						}));
 			} else {
@@ -12967,14 +13060,14 @@ var $author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMatch = F4(
 					$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock(
 						$author$project$MicroLaTeX$Parser$ClassifyBlock$LXVerbatimBlock('texComment'))) ? A2(
 					$author$project$Parser$PrimitiveLaTeXBlock$addSource,
-					line.bJ,
+					line.bM,
 					A3(
 						$author$project$Parser$PrimitiveLaTeXBlock$newBlockWithError,
 						classifier,
 						_Utils_ap(
 							A3($author$project$Parser$PrimitiveLaTeXBlock$getContent, classifier, line, state),
 							_List_fromArray(
-								[block.dk])),
+								[block.dl])),
 						block)) : (A2(
 					$elm$core$List$member,
 					classifier,
@@ -12985,10 +13078,10 @@ var $author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMatch = F4(
 					_Utils_update(
 						block,
 						{
-							hT: A2($author$project$Parser$PrimitiveLaTeXBlock$getSource, line, state)
+							hY: A2($author$project$Parser$PrimitiveLaTeXBlock$getSource, line, state)
 						})) : A2(
 					$author$project$Parser$PrimitiveLaTeXBlock$addSource,
-					line.bJ,
+					line.bM,
 					A2(
 						$author$project$Parser$PrimitiveLaTeXBlock$newBlockWithOutError,
 						A3($author$project$Parser$PrimitiveLaTeXBlock$getContent, classifier, line, state),
@@ -12997,13 +13090,13 @@ var $author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMatch = F4(
 					_Utils_update(
 						state,
 						{
-							at: A2($elm$core$List$cons, newBlock, state.at),
-							f: A2($elm$core$List$drop, 1, state.f),
-							ff: state.ff - 1,
+							au: A2($elm$core$List$cons, newBlock, state.au),
+							d: A2($elm$core$List$drop, 1, state.d),
+							ec: state.ec - 1,
 							y: A2(
 								$elm$core$List$drop,
 								1,
-								$author$project$Parser$PrimitiveLaTeXBlock$fillBlockOnStack(state))
+								A3($author$project$Parser$PrimitiveLaTeXBlock$changeStatusOfStackTop, block, rest, state))
 						}));
 			}
 		}
@@ -13025,40 +13118,10 @@ var $author$project$Parser$PrimitiveLaTeXBlock$finishBlock = F2(
 			return _Utils_update(
 				state,
 				{
-					aq: A2($elm$core$List$cons, updatedBlock, state.aq),
-					f: A2($elm$core$List$drop, 1, state.f),
+					Z: A2($elm$core$List$cons, updatedBlock, state.Z),
+					d: A2($elm$core$List$drop, 1, state.d),
 					y: A2($elm$core$List$drop, 1, state.y)
 				});
-		}
-	});
-var $author$project$MicroLaTeX$Parser$ClassifyBlock$classificationString = function (classification) {
-	switch (classification.$) {
-		case 0:
-			var name = classification.a;
-			return name;
-		case 1:
-			var name = classification.a;
-			return name;
-		default:
-			return '??';
-	}
-};
-var $author$project$Parser$PrimitiveLaTeXBlock$getError = F2(
-	function (label, classifier) {
-		if (_Utils_eq(label.ag, $author$project$MicroLaTeX$Parser$ClassifyBlock$CPlainText)) {
-			return $elm$core$Maybe$Nothing;
-		} else {
-			if ($author$project$MicroLaTeX$Parser$ClassifyBlock$classificationString(classifier) === 'missing') {
-				return $elm$core$Maybe$Just(
-					{
-						eW: 'Missing end tag (' + ($author$project$MicroLaTeX$Parser$ClassifyBlock$classificationString(label.ag) + ')')
-					});
-			} else {
-				var classification2 = '(' + ($author$project$MicroLaTeX$Parser$ClassifyBlock$classificationString(classifier) + ')');
-				var classfication1 = '(' + ($author$project$MicroLaTeX$Parser$ClassifyBlock$classificationString(label.ag) + ')');
-				return $elm$core$Maybe$Just(
-					{eW: 'Missmatched tags: begin' + (classfication1 + (' ≠ end' + classification2))});
-			}
 		}
 	});
 var $author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMismatch = F4(
@@ -13070,173 +13133,471 @@ var $author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMismatch = F4(
 			var _v1 = _v0.a;
 			var block = _v1.a;
 			var rest = _v1.b;
-			var _v2 = $elm_community$list_extra$List$Extra$uncons(state.f);
+			var _v2 = $elm_community$list_extra$List$Extra$uncons(state.d);
 			if (_v2.$ === 1) {
 				return state;
 			} else {
 				var _v3 = _v2.a;
 				var label = _v3.a;
-				var name = A2($elm$core$Maybe$withDefault, '--', block.fl);
-				var error = A2($author$project$Parser$PrimitiveLaTeXBlock$getError, label, classifier);
+				var name = function () {
+					var _v5 = block.fr;
+					if (_v5.$ === 1) {
+						return '--';
+					} else {
+						var name_ = _v5.a;
+						return A2(
+							$elm$core$List$member,
+							name_,
+							_List_fromArray(
+								['math', 'equation', 'aligned'])) ? 'code' : name_;
+					}
+				}();
 				var newBlock = A2(
 					$author$project$Parser$PrimitiveLaTeXBlock$addSource,
-					line.bJ,
+					line.bM,
 					_Utils_update(
 						block,
 						{
-							f9: A2(
+							gh: A2(
 								$elm$core$List$member,
 								name,
 								_List_fromArray(
-									['item', 'numbered'])) ? block.bJ : block.f9,
-							bJ: A2($elm$core$List$member, name, $author$project$Parser$PrimitiveLaTeXBlock$verbatimBlockNames) ? $elm$core$List$reverse(
-								A3($author$project$Parser$PrimitiveLaTeXBlock$getContent, label_.ag, line, state)) : $elm$core$List$reverse(
-								A3($author$project$Parser$PrimitiveLaTeXBlock$getContent, label_.ag, line, state)),
-							eW: error,
+									['item', 'numbered'])) ? block.bM : block.gh,
+							bM: A2($elm$core$List$member, name, $author$project$Parser$PrimitiveLaTeXBlock$verbatimBlockNames) ? $elm$core$List$reverse(
+								A3($author$project$Parser$PrimitiveLaTeXBlock$getContent, label_.I, line, state)) : $elm$core$List$reverse(
+								A3($author$project$Parser$PrimitiveLaTeXBlock$getContent, label_.I, line, state)),
+							e0: function () {
+								var _v4 = _Utils_Tuple2(label.I, classifier);
+								if (!_v4.a.$) {
+									if (_v4.b.$ === 1) {
+										var a = _v4.a.a;
+										var b = _v4.b.a;
+										return $elm$core$Maybe$Just(
+											{e0: 'Mismatch: \\begin{' + (a + ('} ≠ \\end{' + (b + '}')))});
+									} else {
+										var a = _v4.a.a;
+										return $elm$core$Maybe$Just(
+											{e0: 'Missing \\end{' + (a + '}')});
+									}
+								} else {
+									return $elm$core$Maybe$Nothing;
+								}
+							}(),
+							fr: $elm$core$Maybe$Just(name),
 							s: 0
 						}));
 				return $author$project$Parser$PrimitiveLaTeXBlock$resolveIfStackEmpty(
 					A2(
 						$author$project$Parser$PrimitiveLaTeXBlock$finishBlock,
-						line.bJ,
+						line.bM,
 						_Utils_update(
 							state,
 							{
-								at: A2($elm$core$List$cons, newBlock, state.at),
-								f: A2($elm$core$List$drop, 1, state.f),
-								ff: state.ff - 1,
+								au: A2($elm$core$List$cons, newBlock, state.au),
+								d: A2($elm$core$List$drop, 1, state.d),
+								ec: state.ec - 1,
 								y: rest
 							})));
 			}
 		}
 	});
-var $author$project$Parser$PrimitiveLaTeXBlock$endBlock2 = F3(
+var $author$project$MicroLaTeX$Parser$ClassifyBlock$match = F2(
+	function (c1, c2) {
+		var _v0 = _Utils_Tuple2(c1, c2);
+		_v0$4:
+		while (true) {
+			switch (_v0.a.$) {
+				case 0:
+					if (_v0.b.$ === 1) {
+						var label1 = _v0.a.a;
+						var label2 = _v0.b.a;
+						return _Utils_eq(label1, label2);
+					} else {
+						break _v0$4;
+					}
+				case 3:
+					if (_v0.b.$ === 3) {
+						var _v1 = _v0.a;
+						var _v2 = _v0.b;
+						return true;
+					} else {
+						break _v0$4;
+					}
+				case 4:
+					if (_v0.b.$ === 4) {
+						var _v3 = _v0.a;
+						var _v4 = _v0.b;
+						return false;
+					} else {
+						break _v0$4;
+					}
+				case 2:
+					return true;
+				default:
+					break _v0$4;
+			}
+		}
+		return false;
+	});
+var $author$project$Parser$PrimitiveLaTeXBlock$endBlock = F3(
+	function (classification, currentLine, state) {
+		var _v0 = $elm$core$List$head(state.d);
+		if (_v0.$ === 1) {
+			return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+				_Utils_update(
+					state,
+					{ec: state.ec - 1}));
+		} else {
+			var label = _v0.a;
+			return (A2($author$project$MicroLaTeX$Parser$ClassifyBlock$match, label.I, classification) && _Utils_eq(state.ec, label.ec)) ? $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+				A4(
+					$author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMatch,
+					$elm$core$Maybe$Just(label),
+					classification,
+					currentLine,
+					_Utils_update(
+						state,
+						{bH: $elm$core$Maybe$Nothing}))) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+				A4(
+					$author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMismatch,
+					label,
+					classification,
+					currentLine,
+					_Utils_update(
+						state,
+						{bH: $elm$core$Maybe$Nothing})));
+		}
+	});
+var $author$project$Parser$PrimitiveLaTeXBlock$resetLevelIfStackIsEmpty = function (state) {
+	return $elm$core$List$isEmpty(state.y) ? _Utils_update(
+		state,
+		{ec: -1}) : state;
+};
+var $author$project$Parser$PrimitiveLaTeXBlock$emptyLine = F2(
+	function (currentLine, state) {
+		var _v0 = $elm$core$List$head(state.d);
+		if (_v0.$ === 1) {
+			return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+				$author$project$Parser$PrimitiveLaTeXBlock$resetLevelIfStackIsEmpty(state));
+		} else {
+			var label = _v0.a;
+			var _v1 = label.I;
+			switch (_v1.$) {
+				case 5:
+					return A3($author$project$Parser$PrimitiveLaTeXBlock$endBlock, $author$project$MicroLaTeX$Parser$ClassifyBlock$CPlainText, currentLine, state);
+				case 3:
+					return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+						A4($author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMismatch, label, $author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim, currentLine, state));
+				case 0:
+					var name = _v1.a;
+					return A2(
+						$elm$core$List$member,
+						name,
+						_List_fromArray(
+							['equation', 'aligned'])) ? $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+						A4(
+							$author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMismatch,
+							label,
+							$author$project$MicroLaTeX$Parser$ClassifyBlock$CBeginBlock(name),
+							currentLine,
+							state)) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(state);
+				case 2:
+					switch (_v1.a.$) {
+						case 2:
+							var _v2 = _v1.a;
+							return A3(
+								$author$project$Parser$PrimitiveLaTeXBlock$endBlock,
+								$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock($author$project$MicroLaTeX$Parser$ClassifyBlock$LXItem),
+								currentLine,
+								state);
+						case 0:
+							var _v3 = _v1.a;
+							return A3(
+								$author$project$Parser$PrimitiveLaTeXBlock$endBlock,
+								$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock($author$project$MicroLaTeX$Parser$ClassifyBlock$LXItem),
+								currentLine,
+								state);
+						case 1:
+							var _v4 = _v1.a;
+							return A3(
+								$author$project$Parser$PrimitiveLaTeXBlock$endBlock,
+								$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock($author$project$MicroLaTeX$Parser$ClassifyBlock$LXNumbered),
+								currentLine,
+								state);
+						case 3:
+							var name = _v1.a.a;
+							return A3(
+								$author$project$Parser$PrimitiveLaTeXBlock$endBlock,
+								$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock(
+									$author$project$MicroLaTeX$Parser$ClassifyBlock$LXOrdinaryBlock(name)),
+								currentLine,
+								state);
+						default:
+							var name = _v1.a.a;
+							return A3(
+								$author$project$Parser$PrimitiveLaTeXBlock$endBlock,
+								$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock(
+									$author$project$MicroLaTeX$Parser$ClassifyBlock$LXVerbatimBlock(name)),
+								currentLine,
+								state);
+					}
+				case 1:
+					return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+						$author$project$Parser$PrimitiveLaTeXBlock$resetLevelIfStackIsEmpty(state));
+				case 4:
+					return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+						$author$project$Parser$PrimitiveLaTeXBlock$resetLevelIfStackIsEmpty(state));
+				default:
+					return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+						$author$project$Parser$PrimitiveLaTeXBlock$resetLevelIfStackIsEmpty(state));
+			}
+		}
+	});
+var $elm_community$list_extra$List$Extra$getAt = F2(
+	function (idx, xs) {
+		return (idx < 0) ? $elm$core$Maybe$Nothing : $elm$core$List$head(
+			A2($elm$core$List$drop, idx, xs));
+	});
+var $author$project$Parser$PrimitiveLaTeXBlock$getPosition = F2(
+	function (rawLine, state) {
+		return (rawLine === '') ? (state.en + 1) : ((state.en + $elm$core$String$length(rawLine)) + 1);
+	});
+var $author$project$Parser$PrimitiveLaTeXBlock$handleSpecial_ = F3(
 	function (classifier, line, state) {
-		var _v0 = $elm$core$List$head(state.f);
+		var level = state.ec + 1;
+		var newBlock_ = A2(
+			$author$project$Parser$PrimitiveLaTeXBlock$elaborate,
+			line,
+			A2($author$project$Parser$PrimitiveLaTeXBlock$blockFromLine, level, line));
+		var newBlock = function () {
+			_v2$4:
+			while (true) {
+				if (classifier.$ === 2) {
+					switch (classifier.a.$) {
+						case 0:
+							var _v3 = classifier.a;
+							return _Utils_update(
+								newBlock_,
+								{
+									dO: 1,
+									fr: $elm$core$Maybe$Just('item'),
+									H: $elm$core$Dict$fromList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2(
+												'firstLine',
+												A3($elm$core$String$replace, '\\item', '', line.bM))
+											]))
+								});
+						case 1:
+							var _v4 = classifier.a;
+							return _Utils_update(
+								newBlock_,
+								{
+									dO: 1,
+									fr: $elm$core$Maybe$Just('numbered'),
+									H: $elm$core$Dict$fromList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2(
+												'firstLine',
+												A3($elm$core$String$replace, '\\numbered', '', line.bM))
+											]))
+								});
+						case 3:
+							var name = classifier.a.a;
+							return _Utils_update(
+								newBlock_,
+								{
+									dO: 1,
+									fr: $elm$core$Maybe$Just(name)
+								});
+						case 4:
+							var name = classifier.a.a;
+							return _Utils_update(
+								newBlock_,
+								{
+									dO: 0,
+									fr: $elm$core$Maybe$Just(name)
+								});
+						default:
+							break _v2$4;
+					}
+				} else {
+					break _v2$4;
+				}
+			}
+			return newBlock_;
+		}();
+		var labelStack = function () {
+			var _v0 = $elm_community$list_extra$List$Extra$uncons(state.d);
+			if (_v0.$ === 1) {
+				return state.d;
+			} else {
+				var _v1 = _v0.a;
+				var label = _v1.a;
+				var rest_ = _v1.b;
+				return A2(
+					$elm$core$List$cons,
+					_Utils_update(
+						label,
+						{s: 2}),
+					rest_);
+			}
+		}();
+		return _Utils_update(
+			state,
+			{
+				ao: line.ed,
+				g0: line.g0,
+				d: A2(
+					$elm$core$List$cons,
+					{I: classifier, ec: level, ed: line.ed, s: 1},
+					labelStack),
+				ec: level,
+				ed: line.ed,
+				y: A2($elm$core$List$cons, newBlock, state.y)
+			});
+	});
+var $author$project$Parser$PrimitiveLaTeXBlock$handleSpecialBlock = F3(
+	function (classifier, line, state) {
+		var _v0 = $elm_community$list_extra$List$Extra$uncons(state.y);
+		if (_v0.$ === 1) {
+			return A3($author$project$Parser$PrimitiveLaTeXBlock$handleSpecial_, classifier, line, state);
+		} else {
+			var _v1 = _v0.a;
+			var block = _v1.a;
+			var rest = _v1.b;
+			return A3(
+				$author$project$Parser$PrimitiveLaTeXBlock$handleSpecial_,
+				classifier,
+				line,
+				_Utils_update(
+					state,
+					{
+						y: A3($author$project$Parser$PrimitiveLaTeXBlock$changeStatusOfStackTop, block, rest, state)
+					}));
+		}
+	});
+var $author$project$Parser$PrimitiveLaTeXBlock$handleVerbatimBlock = F2(
+	function (line, state) {
+		var _v0 = $elm$core$List$head(state.d);
 		if (_v0.$ === 1) {
 			return _Utils_update(
 				state,
-				{aN: $elm$core$Maybe$Nothing});
+				{
+					ao: line.ed,
+					g0: line.g0,
+					d: A2(
+						$elm$core$List$cons,
+						{I: $author$project$MicroLaTeX$Parser$ClassifyBlock$CVerbatimBlockDelim, ec: state.ec + 1, ed: line.ed, s: 1},
+						state.d),
+					ec: state.ec + 1,
+					ed: line.ed,
+					y: A2(
+						$elm$core$List$cons,
+						A2(
+							$author$project$Parser$PrimitiveLaTeXBlock$elaborate,
+							line,
+							A2($author$project$Parser$PrimitiveLaTeXBlock$blockFromLine, state.ec + 1, line)),
+						state.y)
+				});
 		} else {
 			var label = _v0.a;
-			return (A2($author$project$MicroLaTeX$Parser$ClassifyBlock$match, label.ag, classifier) && _Utils_eq(state.ff, label.ff)) ? A4(
-				$author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMatch,
-				$elm$core$Maybe$Just(label),
-				classifier,
-				line,
-				_Utils_update(
-					state,
-					{aN: $elm$core$Maybe$Nothing})) : A4(
-				$author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMismatch,
-				label,
-				classifier,
-				line,
-				_Utils_update(
-					state,
-					{aN: $elm$core$Maybe$Nothing}));
-		}
-	});
-var $author$project$Parser$PrimitiveLaTeXBlock$emptyLine = F2(
-	function (currentLine, state) {
-		var _v0 = A2(
-			$elm$core$Maybe$map,
-			function ($) {
-				return $.ag;
-			},
-			$elm$core$List$head(state.f));
-		_v0$7:
-		while (true) {
-			if (!_v0.$) {
-				switch (_v0.a.$) {
-					case 5:
-						var _v1 = _v0.a;
-						return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-							A3($author$project$Parser$PrimitiveLaTeXBlock$endBlock2, $author$project$MicroLaTeX$Parser$ClassifyBlock$CPlainText, currentLine, state));
-					case 3:
-						var _v2 = _v0.a;
-						return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-							A3($author$project$Parser$PrimitiveLaTeXBlock$endBlock2, $author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim, currentLine, state));
-					case 0:
-						var name = _v0.a.a;
-						return A2(
-							$elm$core$List$member,
-							name,
-							_List_fromArray(
-								['equation', 'aligned'])) ? $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-							A3(
-								$author$project$Parser$PrimitiveLaTeXBlock$endBlock2,
-								$author$project$MicroLaTeX$Parser$ClassifyBlock$CEndBlock(name),
-								currentLine,
-								state)) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(state);
-					case 2:
-						switch (_v0.a.a.$) {
-							case 0:
-								var _v3 = _v0.a.a;
-								return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-									A3(
-										$author$project$Parser$PrimitiveLaTeXBlock$endBlock2,
-										$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock($author$project$MicroLaTeX$Parser$ClassifyBlock$LXItem),
-										currentLine,
-										state));
-							case 1:
-								var _v4 = _v0.a.a;
-								return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-									A3(
-										$author$project$Parser$PrimitiveLaTeXBlock$endBlock2,
-										$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock($author$project$MicroLaTeX$Parser$ClassifyBlock$LXNumbered),
-										currentLine,
-										state));
-							case 2:
-								var name = _v0.a.a.a;
-								return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-									A3(
-										$author$project$Parser$PrimitiveLaTeXBlock$endBlock2,
-										$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock(
-											$author$project$MicroLaTeX$Parser$ClassifyBlock$LXOrdinaryBlock(name)),
-										currentLine,
-										state));
-							default:
-								var name = _v0.a.a.a;
-								return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-									A3(
-										$author$project$Parser$PrimitiveLaTeXBlock$endBlock2,
-										$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock(
-											$author$project$MicroLaTeX$Parser$ClassifyBlock$LXVerbatimBlock(name)),
-										currentLine,
-										state));
-						}
-					default:
-						break _v0$7;
-				}
-			} else {
-				break _v0$7;
-			}
-		}
-		return $author$project$Parser$PrimitiveLaTeXBlock$Loop(state);
-	});
-var $author$project$Parser$PrimitiveLaTeXBlock$endBlock1 = F3(
-	function (classification, currentLine, state) {
-		var _v0 = state.aN;
-		if (_v0.$ === 1) {
-			return A3($author$project$Parser$PrimitiveLaTeXBlock$endBlock2, classification, currentLine, state);
-		} else {
-			var verbatimClassifier_ = _v0.a;
-			if (!verbatimClassifier_.$) {
-				return A2($author$project$MicroLaTeX$Parser$ClassifyBlock$match, verbatimClassifier_, classification) ? A3($author$project$Parser$PrimitiveLaTeXBlock$endBlock2, classification, currentLine, state) : state;
-			} else {
+			var _v1 = $elm_community$list_extra$List$Extra$uncons(state.y);
+			if (_v1.$ === 1) {
 				return state;
+			} else {
+				var _v2 = _v1.a;
+				var block = _v2.a;
+				var rest = _v2.b;
+				var _v3 = $elm_community$list_extra$List$Extra$uncons(state.d);
+				if (_v3.$ === 1) {
+					return state;
+				} else {
+					var _v4 = _v3.a;
+					var topLabel = _v4.a;
+					var otherLabels = _v4.b;
+					var newBlock = A2(
+						$author$project$Parser$PrimitiveLaTeXBlock$addSource,
+						line.bM,
+						_Utils_update(
+							block,
+							{
+								bM: A3($author$project$Parser$PrimitiveLaTeXBlock$slice, topLabel.ed + 1, state.ed - 1, state.ab),
+								s: 0
+							}));
+					return _Utils_update(
+						state,
+						{
+							Z: A2($elm$core$List$cons, newBlock, state.Z),
+							d: otherLabels,
+							ec: state.ec - 1,
+							y: rest
+						});
+				}
 			}
 		}
 	});
-var $author$project$Parser$PrimitiveLaTeXBlock$transfer = function (state) {
-	return state;
-};
-var $author$project$Parser$PrimitiveLaTeXBlock$endBlock = F3(
-	function (classification, currentLine, state) {
-		return (_Utils_cmp(state.ff, -1) > 0) ? $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-			A3($author$project$Parser$PrimitiveLaTeXBlock$endBlock1, classification, currentLine, state)) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-			$author$project$Parser$PrimitiveLaTeXBlock$transfer(
-				A3($author$project$Parser$PrimitiveLaTeXBlock$endBlock1, classification, currentLine, state)));
+var $author$project$Parser$PrimitiveLaTeXBlock$handleComment = F2(
+	function (line, state) {
+		var newBlock = function (b) {
+			return _Utils_update(
+				b,
+				{
+					dO: 0,
+					fr: $elm$core$Maybe$Just('texComment')
+				});
+		}(
+			A2($author$project$Parser$PrimitiveLaTeXBlock$blockFromLine, 0, line));
+		var labelStack = function () {
+			var _v0 = $elm_community$list_extra$List$Extra$uncons(state.d);
+			if (_v0.$ === 1) {
+				return state.d;
+			} else {
+				var _v1 = _v0.a;
+				var label = _v1.a;
+				var rest_ = _v1.b;
+				return A2(
+					$elm$core$List$cons,
+					_Utils_update(
+						label,
+						{s: 2}),
+					rest_);
+			}
+		}();
+		return _Utils_update(
+			state,
+			{
+				ao: line.ed,
+				g0: line.g0,
+				d: A2(
+					$elm$core$List$cons,
+					{
+						I: $author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock(
+							$author$project$MicroLaTeX$Parser$ClassifyBlock$LXVerbatimBlock('texComment')),
+						ec: 0,
+						ed: line.ed,
+						s: 1
+					},
+					labelStack),
+				ec: 0,
+				ed: line.ed,
+				y: A2($elm$core$List$cons, newBlock, state.y)
+			});
+	});
+var $author$project$Parser$PrimitiveLaTeXBlock$plainText = F2(
+	function (state, currentLine) {
+		return (_Utils_eq(
+			A2(
+				$elm$core$Maybe$map,
+				function ($) {
+					return $.s;
+				},
+				$elm$core$List$head(state.d)),
+			$elm$core$Maybe$Just(2)) || _Utils_eq(state.d, _List_Nil)) ? ((A2($elm$core$String$left, 1, currentLine.bM) === '%') ? $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+			A2($author$project$Parser$PrimitiveLaTeXBlock$handleComment, currentLine, state)) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+			A3($author$project$Parser$PrimitiveLaTeXBlock$dispatchBeginBlock, $author$project$MicroLaTeX$Parser$ClassifyBlock$CPlainText, currentLine, state))) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(state);
 	});
 var $author$project$Compiler$Util$dropLast = function (list) {
 	var n = $elm$core$List$length(list);
@@ -13261,13 +13622,13 @@ var $elm_community$list_extra$List$Extra$last = function (items) {
 	}
 };
 var $author$project$Parser$PrimitiveLaTeXBlock$missingTagError = function (block) {
-	var _v0 = block.fl;
+	var _v0 = block.fr;
 	if (!_v0.$) {
 		if (_v0.a === 'item') {
 			return $elm$core$Maybe$Nothing;
 		} else {
 			var name = function () {
-				var _v1 = block.fl;
+				var _v1 = block.fr;
 				_v1$2:
 				while (true) {
 					if (!_v1.$) {
@@ -13275,7 +13636,7 @@ var $author$project$Parser$PrimitiveLaTeXBlock$missingTagError = function (block
 							case 'math':
 								return '$$';
 							case 'code':
-								return '```';
+								return 'code';
 							default:
 								break _v1$2;
 						}
@@ -13283,10 +13644,10 @@ var $author$project$Parser$PrimitiveLaTeXBlock$missingTagError = function (block
 						break _v1$2;
 					}
 				}
-				return A2($elm$core$Maybe$withDefault, '(anon)', block.fl);
+				return A2($elm$core$Maybe$withDefault, '(anon)', block.fr);
 			}();
 			return $elm$core$Maybe$Just(
-				{eW: 'missing or mismatched end tag (' + (name + ')')});
+				{e0: 'Missing \\end{' + (name + '}')});
 		}
 	} else {
 		return $elm$core$Maybe$Nothing;
@@ -13329,28 +13690,27 @@ var $elm_community$list_extra$List$Extra$unconsLast = function (list) {
 				$elm$core$List$reverse(rest)));
 	}
 };
-var $author$project$Parser$PrimitiveLaTeXBlock$fixAndRewind = function (state) {
+var $author$project$Parser$PrimitiveLaTeXBlock$recoverFromError = function (state) {
 	var _v0 = $elm_community$list_extra$List$Extra$unconsLast(state.y);
 	if (_v0.$ === 1) {
 		return state;
 	} else {
 		var _v1 = _v0.a;
 		var block = _v1.a;
-		var _v2 = $elm_community$list_extra$List$Extra$unconsLast(state.f);
+		var _v2 = $elm_community$list_extra$List$Extra$unconsLast(state.d);
 		if (_v2.$ === 1) {
 			return state;
 		} else {
 			var _v3 = _v2.a;
 			var topLabel = _v3.a;
-			var remainingLabels = _v3.b;
-			var lastLineNumber = state.g7;
-			var firstLineNumber = topLabel.g7;
+			var lastLineNumber = state.ed;
+			var firstLineNumber = topLabel.ed;
 			var provisionalContent = function () {
 				var _v5 = topLabel.s;
 				if (_v5 === 2) {
-					return block.bJ;
+					return block.bM;
 				} else {
-					return A3($author$project$Parser$PrimitiveLaTeXBlock$slice, firstLineNumber + 1, lastLineNumber, state._);
+					return A3($author$project$Parser$PrimitiveLaTeXBlock$slice, firstLineNumber + 1, lastLineNumber, state.ab);
 				}
 			}();
 			var content = A2(
@@ -13375,309 +13735,127 @@ var $author$project$Parser$PrimitiveLaTeXBlock$fixAndRewind = function (state) {
 				_Utils_update(
 					block,
 					{
-						bJ: revisedContent,
-						eW: $author$project$Parser$PrimitiveLaTeXBlock$missingTagError(block),
+						bM: revisedContent,
+						e0: $author$project$Parser$PrimitiveLaTeXBlock$missingTagError(block),
 						s: 0
 					}));
 			return _Utils_update(
 				state,
 				{
-					aq: A2($elm$core$List$cons, newBlock, state.aq),
-					at: _List_Nil,
-					f: _List_Nil,
-					g7: lineNumber,
-					y: _List_Nil,
-					aN: $elm$core$Maybe$Nothing
+					bH: $elm$core$Maybe$Nothing,
+					Z: A2($elm$core$List$cons, newBlock, state.Z),
+					au: _List_Nil,
+					d: _List_Nil,
+					ed: lineNumber,
+					y: _List_Nil
 				});
 		}
 	}
 };
-var $elm_community$list_extra$List$Extra$getAt = F2(
-	function (idx, xs) {
-		return (idx < 0) ? $elm$core$Maybe$Nothing : $elm$core$List$head(
-			A2($elm$core$List$drop, idx, xs));
-	});
-var $author$project$Parser$PrimitiveLaTeXBlock$getPosition = F2(
-	function (rawLine, state) {
-		return (rawLine === '') ? (state.ej + 1) : ((state.ej + $elm$core$String$length(rawLine)) + 1);
-	});
-var $author$project$Parser$PrimitiveLaTeXBlock$handleSpecial_ = F3(
-	function (classifier, line, state) {
-		var level = state.ff + 1;
-		var newBlock_ = A2(
-			$author$project$Parser$PrimitiveLaTeXBlock$elaborate,
-			line,
-			A2($author$project$Parser$PrimitiveLaTeXBlock$blockFromLine, level, line));
-		var newBlock = function () {
-			if (classifier.$ === 2) {
-				switch (classifier.a.$) {
-					case 0:
-						var _v3 = classifier.a;
-						return _Utils_update(
-							newBlock_,
-							{
-								dM: 1,
-								fl: $elm$core$Maybe$Just('item'),
-								H: $elm$core$Dict$fromList(
-									_List_fromArray(
-										[
-											_Utils_Tuple2(
-											'firstLine',
-											A3($elm$core$String$replace, '\\item', '', line.bJ))
-										]))
-							});
-					case 1:
-						var _v4 = classifier.a;
-						return _Utils_update(
-							newBlock_,
-							{
-								dM: 1,
-								fl: $elm$core$Maybe$Just('numbered'),
-								H: $elm$core$Dict$fromList(
-									_List_fromArray(
-										[
-											_Utils_Tuple2(
-											'firstLine',
-											A3($elm$core$String$replace, '\\numbered', '', line.bJ))
-										]))
-							});
-					case 2:
-						var name = classifier.a.a;
-						return _Utils_update(
-							newBlock_,
-							{
-								dM: 1,
-								fl: $elm$core$Maybe$Just(name)
-							});
-					default:
-						var name = classifier.a.a;
-						return _Utils_update(
-							newBlock_,
-							{
-								dM: 0,
-								fl: $elm$core$Maybe$Just(name)
-							});
-				}
-			} else {
-				return newBlock_;
-			}
-		}();
-		var labelStack = function () {
-			var _v0 = $elm_community$list_extra$List$Extra$uncons(state.f);
-			if (_v0.$ === 1) {
-				return state.f;
-			} else {
-				var _v1 = _v0.a;
-				var label = _v1.a;
-				var rest_ = _v1.b;
-				return A2(
-					$elm$core$List$cons,
-					_Utils_update(
-						label,
-						{s: 2}),
-					rest_);
-			}
-		}();
-		return _Utils_update(
-			state,
-			{
-				an: line.g7,
-				gV: line.gV,
-				f: A2(
-					$elm$core$List$cons,
-					{ag: classifier, ff: level, g7: line.g7, s: 1},
-					labelStack),
-				ff: level,
-				g7: line.g7,
-				y: A2($elm$core$List$cons, newBlock, state.y)
-			});
-	});
-var $author$project$Parser$PrimitiveLaTeXBlock$handleSpecial = F3(
-	function (classifier, line, state) {
-		var _v0 = $elm_community$list_extra$List$Extra$uncons(state.y);
-		if (_v0.$ === 1) {
-			return A3($author$project$Parser$PrimitiveLaTeXBlock$handleSpecial_, classifier, line, state);
-		} else {
-			return A3(
-				$author$project$Parser$PrimitiveLaTeXBlock$handleSpecial_,
-				classifier,
-				line,
-				_Utils_update(
-					state,
-					{
-						y: $author$project$Parser$PrimitiveLaTeXBlock$fillBlockOnStack(state)
-					}));
-		}
-	});
-var $author$project$Parser$PrimitiveLaTeXBlock$handleVerbatimBlock = F2(
-	function (line, state) {
-		var _v0 = $elm$core$List$head(state.f);
-		if (_v0.$ === 1) {
-			return _Utils_update(
-				state,
-				{
-					an: line.g7,
-					gV: line.gV,
-					f: A2(
-						$elm$core$List$cons,
-						{ag: $author$project$MicroLaTeX$Parser$ClassifyBlock$CVerbatimBlockDelim, ff: state.ff + 1, g7: line.g7, s: 1},
-						state.f),
-					ff: state.ff + 1,
-					g7: line.g7,
-					y: A2(
-						$elm$core$List$cons,
-						A2(
-							$author$project$Parser$PrimitiveLaTeXBlock$elaborate,
-							line,
-							A2($author$project$Parser$PrimitiveLaTeXBlock$blockFromLine, state.ff + 1, line)),
-						state.y)
-				});
-		} else {
-			var label = _v0.a;
-			var _v1 = $elm_community$list_extra$List$Extra$uncons(state.y);
-			if (_v1.$ === 1) {
-				return state;
-			} else {
-				var _v2 = _v1.a;
-				var block = _v2.a;
-				var rest = _v2.b;
-				var _v3 = $elm_community$list_extra$List$Extra$uncons(state.f);
-				if (_v3.$ === 1) {
-					return state;
-				} else {
-					var _v4 = _v3.a;
-					var topLabel = _v4.a;
-					var otherLabels = _v4.b;
-					var newBlock = A2(
-						$author$project$Parser$PrimitiveLaTeXBlock$addSource,
-						line.bJ,
-						_Utils_update(
-							block,
-							{
-								bJ: A3($author$project$Parser$PrimitiveLaTeXBlock$slice, topLabel.g7 + 1, state.g7 - 1, state._),
-								s: 0
-							}));
-					return _Utils_update(
-						state,
-						{
-							aq: A2($elm$core$List$cons, newBlock, state.aq),
-							f: otherLabels,
-							ff: state.ff - 1,
-							y: rest
-						});
-				}
-			}
-		}
-	});
-var $author$project$Parser$PrimitiveLaTeXBlock$handleComment = F2(
-	function (line, state) {
-		var newBlock = function (b) {
-			return _Utils_update(
-				b,
-				{
-					dM: 0,
-					fl: $elm$core$Maybe$Just('texComment')
-				});
-		}(
-			A2($author$project$Parser$PrimitiveLaTeXBlock$blockFromLine, 0, line));
-		var labelStack = function () {
-			var _v0 = $elm_community$list_extra$List$Extra$uncons(state.f);
-			if (_v0.$ === 1) {
-				return state.f;
-			} else {
-				var _v1 = _v0.a;
-				var label = _v1.a;
-				var rest_ = _v1.b;
-				return A2(
-					$elm$core$List$cons,
-					_Utils_update(
-						label,
-						{s: 2}),
-					rest_);
-			}
-		}();
-		return _Utils_update(
-			state,
-			{
-				an: line.g7,
-				gV: line.gV,
-				f: A2(
-					$elm$core$List$cons,
-					{
-						ag: $author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock(
-							$author$project$MicroLaTeX$Parser$ClassifyBlock$LXVerbatimBlock('texComment')),
-						ff: 0,
-						g7: line.g7,
-						s: 1
-					},
-					labelStack),
-				ff: 0,
-				g7: line.g7,
-				y: A2($elm$core$List$cons, newBlock, state.y)
-			});
-	});
-var $author$project$Parser$PrimitiveLaTeXBlock$plainText = F2(
-	function (state, currentLine) {
-		return (_Utils_eq(
-			A2(
-				$elm$core$Maybe$map,
-				function ($) {
-					return $.s;
-				},
-				$elm$core$List$head(state.f)),
-			$elm$core$Maybe$Just(2)) || _Utils_eq(state.f, _List_Nil)) ? ((A2($elm$core$String$left, 1, currentLine.bJ) === '%') ? $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-			A2($author$project$Parser$PrimitiveLaTeXBlock$handleComment, currentLine, state)) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-			A3($author$project$Parser$PrimitiveLaTeXBlock$beginBlock, $author$project$MicroLaTeX$Parser$ClassifyBlock$CPlainText, currentLine, state))) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(state);
-	});
 var $author$project$Parser$PrimitiveLaTeXBlock$nextStep = function (state_) {
 	var state = _Utils_update(
 		state_,
-		{cp: state_.cp + 1, g7: state_.g7 + 1});
-	var _v0 = A2($elm_community$list_extra$List$Extra$getAt, state.g7, state._);
+		{cq: state_.cq + 1, ed: state_.ed + 1});
+	var _v0 = A2($elm_community$list_extra$List$Extra$getAt, state.ed, state.ab);
 	if (_v0.$ === 1) {
 		return $elm$core$List$isEmpty(state.y) ? $author$project$Parser$PrimitiveLaTeXBlock$Done(state) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-			$author$project$Parser$PrimitiveLaTeXBlock$fixAndRewind(state));
+			$author$project$Parser$PrimitiveLaTeXBlock$recoverFromError(state));
 	} else {
 		var rawLine = _v0.a;
 		var currentLine = A3(
 			$author$project$Parser$Line$classify,
 			A2($author$project$Parser$PrimitiveLaTeXBlock$getPosition, rawLine, state),
-			state.g7,
+			state.ed,
 			rawLine);
-		var _v1 = A2($author$project$MicroLaTeX$Parser$ClassifyBlock$classify, currentLine.bJ, state.aN);
+		var _v1 = $author$project$MicroLaTeX$Parser$ClassifyBlock$classify(currentLine.bM);
 		switch (_v1.$) {
 			case 0:
 				var label = _v1.a;
-				return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+				return A2(
+					$elm$core$List$member,
+					A2(
+						$elm$core$Maybe$map,
+						function ($) {
+							return $.I;
+						},
+						$elm$core$List$head(state.d)),
+					_List_fromArray(
+						[
+							$elm$core$Maybe$Just(
+							$author$project$MicroLaTeX$Parser$ClassifyBlock$CBeginBlock('code'))
+						])) ? $author$project$Parser$PrimitiveLaTeXBlock$Loop(state) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(
 					A3(
-						$author$project$Parser$PrimitiveLaTeXBlock$beginBlock,
+						$author$project$Parser$PrimitiveLaTeXBlock$dispatchBeginBlock,
 						$author$project$MicroLaTeX$Parser$ClassifyBlock$CBeginBlock(label),
 						currentLine,
 						state));
 			case 1:
 				var label = _v1.a;
-				return A3(
+				return A2(
+					$elm$core$List$member,
+					A2(
+						$elm$core$Maybe$map,
+						function ($) {
+							return $.I;
+						},
+						$elm$core$List$head(
+							$elm$core$List$reverse(state.d))),
+					_List_fromArray(
+						[
+							$elm$core$Maybe$Just(
+							$author$project$MicroLaTeX$Parser$ClassifyBlock$CBeginBlock('code'))
+						])) ? $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+					A4(
+						$author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMatch,
+						$elm$core$Maybe$Nothing,
+						$author$project$MicroLaTeX$Parser$ClassifyBlock$CBeginBlock('code'),
+						currentLine,
+						state)) : A3(
 					$author$project$Parser$PrimitiveLaTeXBlock$endBlock,
 					$author$project$MicroLaTeX$Parser$ClassifyBlock$CEndBlock(label),
 					currentLine,
 					state);
 			case 2:
 				var label = _v1.a;
-				return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+				return A2(
+					$elm$core$List$member,
+					A2(
+						$elm$core$Maybe$map,
+						function ($) {
+							return $.I;
+						},
+						$elm$core$List$head(state.d)),
+					_List_fromArray(
+						[
+							$elm$core$Maybe$Just(
+							$author$project$MicroLaTeX$Parser$ClassifyBlock$CBeginBlock('code'))
+						])) ? $author$project$Parser$PrimitiveLaTeXBlock$Loop(state) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(
 					A3(
-						$author$project$Parser$PrimitiveLaTeXBlock$handleSpecial,
+						$author$project$Parser$PrimitiveLaTeXBlock$handleSpecialBlock,
 						$author$project$MicroLaTeX$Parser$ClassifyBlock$CSpecialBlock(label),
 						currentLine,
 						state));
 			case 3:
-				var _v2 = $elm$core$List$head(state.f);
+				var _v2 = $elm$core$List$head(state.d);
 				if (_v2.$ === 1) {
 					return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-						A3($author$project$Parser$PrimitiveLaTeXBlock$beginBlock, $author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim, currentLine, state));
+						A3($author$project$Parser$PrimitiveLaTeXBlock$dispatchBeginBlock, $author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim, currentLine, state));
 				} else {
 					var label = _v2.a;
-					return _Utils_eq(label.ag, $author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim) ? A3($author$project$Parser$PrimitiveLaTeXBlock$endBlock, $author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim, currentLine, state) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(
-						A3($author$project$Parser$PrimitiveLaTeXBlock$beginBlock, $author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim, currentLine, state));
+					return A2(
+						$elm$core$List$member,
+						label.I,
+						_List_fromArray(
+							[
+								$author$project$MicroLaTeX$Parser$ClassifyBlock$CBeginBlock('code')
+							])) ? $author$project$Parser$PrimitiveLaTeXBlock$Loop(state) : (_Utils_eq(label.I, $author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim) ? $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+						A4(
+							$author$project$Parser$PrimitiveLaTeXBlock$endBlockOnMatch,
+							$elm$core$Maybe$Just(label),
+							$author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim,
+							currentLine,
+							state)) : $author$project$Parser$PrimitiveLaTeXBlock$Loop(
+						A3($author$project$Parser$PrimitiveLaTeXBlock$dispatchBeginBlock, $author$project$MicroLaTeX$Parser$ClassifyBlock$CMathBlockDelim, currentLine, state)));
 				}
 			case 4:
 				return $author$project$Parser$PrimitiveLaTeXBlock$Loop(
@@ -13689,7 +13867,7 @@ var $author$project$Parser$PrimitiveLaTeXBlock$nextStep = function (state_) {
 		}
 	}
 };
-var $author$project$Parser$PrimitiveLaTeXBlock$parse_ = function (lines) {
+var $author$project$Parser$PrimitiveLaTeXBlock$parseLoop = function (lines) {
 	return $author$project$Parser$PrimitiveLaTeXBlock$finalize(
 		A2(
 			$author$project$Parser$PrimitiveLaTeXBlock$loop,
@@ -13697,35 +13875,35 @@ var $author$project$Parser$PrimitiveLaTeXBlock$parse_ = function (lines) {
 			$author$project$Parser$PrimitiveLaTeXBlock$nextStep));
 };
 var $author$project$Parser$PrimitiveLaTeXBlock$parse = function (lines) {
-	return $author$project$Parser$PrimitiveLaTeXBlock$parse_(lines).aq;
+	return $author$project$Parser$PrimitiveLaTeXBlock$parseLoop(lines).ar;
 };
 var $author$project$Parser$PrimitiveBlock$empty = {
-	f9: _List_Nil,
-	dM: 2,
-	bJ: _List_fromArray(
+	gh: _List_Nil,
+	dO: 2,
+	bM: _List_fromArray(
 		['???']),
-	eW: $elm$core$Maybe$Nothing,
-	gV: 0,
-	g7: 0,
-	fl: $elm$core$Maybe$Nothing,
-	ej: 0,
+	e0: $elm$core$Maybe$Nothing,
+	g0: 0,
+	ed: 0,
+	fr: $elm$core$Maybe$Nothing,
+	en: 0,
 	H: $elm$core$Dict$empty,
-	hT: '???'
+	hY: '???'
 };
 var $author$project$Parser$PrimitiveBlock$parsePlainText_ = function (lines) {
 	return _List_fromArray(
 		[
 			{
-			f9: _List_Nil,
-			dM: 0,
-			bJ: lines,
-			eW: $elm$core$Maybe$Nothing,
-			gV: 0,
-			g7: 0,
-			fl: $elm$core$Maybe$Just('verbatim'),
-			ej: 0,
+			gh: _List_Nil,
+			dO: 0,
+			bM: lines,
+			e0: $elm$core$Maybe$Nothing,
+			g0: 0,
+			ed: 0,
+			fr: $elm$core$Maybe$Just('verbatim'),
+			en: 0,
 			H: $elm$core$Dict$empty,
-			hT: A2($elm$core$String$join, '\n', lines)
+			hY: A2($elm$core$String$join, '\n', lines)
 		}
 		]);
 };
@@ -13746,12 +13924,12 @@ var $author$project$Parser$PrimitiveBlock$parsePlainText = function (lines) {
 	var titleBLock = _Utils_update(
 		$author$project$Parser$PrimitiveBlock$empty,
 		{
-			f9: _List_Nil,
-			dM: 1,
-			bJ: _List_fromArray(
+			gh: _List_Nil,
+			dO: 1,
+			bM: _List_fromArray(
 				['| title', title, '']),
-			fl: $elm$core$Maybe$Just('title'),
-			hT: A2($elm$core$String$join, '\n', lines)
+			fr: $elm$core$Maybe$Just('title'),
+			hY: A2($elm$core$String$join, '\n', lines)
 		});
 	return A2(
 		$elm$core$List$cons,
@@ -13759,15 +13937,15 @@ var $author$project$Parser$PrimitiveBlock$parsePlainText = function (lines) {
 		$author$project$Parser$PrimitiveBlock$parsePlainText_(rest));
 };
 var $author$project$Parser$PrimitiveBlock$finalize = function (block) {
-	var content = $elm$core$List$reverse(block.bJ);
+	var content = $elm$core$List$reverse(block.bM);
 	var sourceText = A2($elm$core$String$join, '\n', content);
 	return _Utils_update(
 		block,
-		{bJ: content, hT: sourceText});
+		{bM: content, hY: sourceText});
 };
 var $author$project$Parser$PrimitiveBlock$init = F3(
 	function (lang, isVerbatimLine, lines) {
-		return {aq: _List_Nil, cp: 0, aU: $elm$core$Maybe$Nothing, cz: false, d6: false, gV: 0, d8: isVerbatimLine, g6: '0, START', dr: lang, g7: 0, _: lines, ej: 0};
+		return {ar: _List_Nil, cq: 0, aV: $elm$core$Maybe$Nothing, cA: false, d9: false, g0: 0, ea: isVerbatimLine, hd: '0, START', dt: lang, ed: 0, ab: lines, en: 0};
 	});
 var $author$project$Parser$PrimitiveBlock$loop = F2(
 	function (s, f) {
@@ -13795,50 +13973,50 @@ var $author$project$Parser$PrimitiveBlock$Loop = function (a) {
 };
 var $author$project$Parser$PrimitiveBlock$addCurrentLine_ = F2(
 	function (line, block) {
-		var prefix = line.ek;
-		var content = line.bJ;
-		return (!block.dM) ? (_Utils_eq(
-			block.fl,
+		var prefix = line.eo;
+		var content = line.bM;
+		return (!block.dO) ? (_Utils_eq(
+			block.fr,
 			$elm$core$Maybe$Just('math')) ? _Utils_update(
 			block,
 			{
-				bJ: A2($elm$core$List$cons, line.bJ, block.bJ),
-				hT: block.hT + ('\n' + (prefix + content))
+				bM: A2($elm$core$List$cons, line.bM, block.bM),
+				hY: block.hY + ('\n' + (prefix + content))
 			}) : _Utils_update(
 			block,
 			{
-				bJ: A2(
+				bM: A2(
 					$elm$core$List$cons,
-					_Utils_ap(line.ek, line.bJ),
-					block.bJ),
-				hT: block.hT + ('\n' + (prefix + content))
+					_Utils_ap(line.eo, line.bM),
+					block.bM),
+				hY: block.hY + ('\n' + (prefix + content))
 			})) : _Utils_update(
 			block,
 			{
-				bJ: A2($elm$core$List$cons, line.bJ, block.bJ),
-				hT: block.hT + ('\n' + (prefix + content))
+				bM: A2($elm$core$List$cons, line.bM, block.bM),
+				hY: block.hY + ('\n' + (prefix + content))
 			});
 	});
 var $author$project$Parser$PrimitiveBlock$addCurrentLine2 = F2(
 	function (state, currentLine) {
-		var _v0 = state.aU;
+		var _v0 = state.aV;
 		if (_v0.$ === 1) {
 			return _Utils_update(
 				state,
 				{
-					_: A2($elm$core$List$drop, 1, state._)
+					ab: A2($elm$core$List$drop, 1, state.ab)
 				});
 		} else {
 			var block = _v0.a;
 			return _Utils_update(
 				state,
 				{
-					cp: state.cp + 1,
-					aU: $elm$core$Maybe$Just(
+					cq: state.cq + 1,
+					aV: $elm$core$Maybe$Just(
 						A2($author$project$Parser$PrimitiveBlock$addCurrentLine_, currentLine, block)),
-					g7: state.g7 + 1,
-					_: A2($elm$core$List$drop, 1, state._),
-					ej: state.ej + $elm$core$String$length(currentLine.bJ)
+					ed: state.ed + 1,
+					ab: A2($elm$core$List$drop, 1, state.ab),
+					en: state.en + $elm$core$String$length(currentLine.bM)
 				});
 		}
 	});
@@ -13847,12 +14025,36 @@ var $author$project$Parser$PrimitiveBlock$advance = F2(
 		return _Utils_update(
 			state,
 			{
-				cp: state.cp + 1,
-				g7: state.g7 + 1,
-				_: A2($elm$core$List$drop, 1, state._),
-				ej: newPosition
+				cq: state.cq + 1,
+				ed: state.ed + 1,
+				ab: A2($elm$core$List$drop, 1, state.ab),
+				en: newPosition
 			});
 	});
+var $author$project$Parser$PrimitiveBlock$adjustBlock = function (block) {
+	return (_Utils_eq(
+		block.fr,
+		$elm$core$Maybe$Just('section')) && _Utils_eq(block.gh, _List_Nil)) ? _Utils_update(
+		block,
+		{
+			gh: _List_fromArray(
+				['1'])
+		}) : ((_Utils_eq(
+		block.fr,
+		$elm$core$Maybe$Just('subsection')) && _Utils_eq(block.gh, _List_Nil)) ? _Utils_update(
+		block,
+		{
+			gh: _List_fromArray(
+				['2'])
+		}) : ((_Utils_eq(
+		block.fr,
+		$elm$core$Maybe$Just('subsubsection')) && _Utils_eq(block.gh, _List_Nil)) ? _Utils_update(
+		block,
+		{
+			gh: _List_fromArray(
+				['3'])
+		}) : block));
+};
 var $author$project$Scripta$Language$L0Lang = 0;
 var $elm_community$list_extra$List$Extra$findIndexHelp = F3(
 	function (index, predicate, list) {
@@ -13892,207 +14094,15 @@ var $author$project$Parser$PrimitiveBlock$cleanArgs = function (strs) {
 		return A2($elm$core$List$take, k, strs);
 	}
 };
-var $author$project$L0$Parser$Line$getNameAndArgs = function (line) {
-	var normalizedLine = $elm$core$String$trim(line.bJ);
-	if (A2($elm$core$String$left, 2, normalizedLine) === '||') {
-		var words = $elm$core$String$words(
-			A2($elm$core$String$dropLeft, 3, normalizedLine));
-		var name = A2(
-			$elm$core$Maybe$withDefault,
-			'anon',
-			$elm$core$List$head(words));
-		var args = A2($elm$core$List$drop, 1, words);
-		return _Utils_Tuple2(
-			$elm$core$Maybe$Just(name),
-			args);
-	} else {
-		if (A2($elm$core$String$left, 1, normalizedLine) === '|') {
-			var words = $elm$core$String$words(
-				A2($elm$core$String$dropLeft, 2, normalizedLine));
-			var name = A2(
-				$elm$core$Maybe$withDefault,
-				'anon',
-				$elm$core$List$head(words));
-			var args = A2($elm$core$List$drop, 1, words);
-			return _Utils_Tuple2(
-				$elm$core$Maybe$Just(name),
-				args);
-		} else {
-			if (A2($elm$core$String$left, 2, line.bJ) === '$$') {
-				return _Utils_Tuple2(
-					$elm$core$Maybe$Just('math'),
-					_List_Nil);
-			} else {
-				return _Utils_Tuple2($elm$core$Maybe$Nothing, _List_Nil);
-			}
-		}
-	}
-};
-var $elm$parser$Parser$Advanced$loopHelp = F4(
-	function (p, state, callback, s0) {
-		loopHelp:
-		while (true) {
-			var _v0 = callback(state);
-			var parse = _v0;
-			var _v1 = parse(s0);
-			if (!_v1.$) {
-				var p1 = _v1.a;
-				var step = _v1.b;
-				var s1 = _v1.c;
-				if (!step.$) {
-					var newState = step.a;
-					var $temp$p = p || p1,
-						$temp$state = newState,
-						$temp$callback = callback,
-						$temp$s0 = s1;
-					p = $temp$p;
-					state = $temp$state;
-					callback = $temp$callback;
-					s0 = $temp$s0;
-					continue loopHelp;
-				} else {
-					var result = step.a;
-					return A3($elm$parser$Parser$Advanced$Good, p || p1, result, s1);
-				}
-			} else {
-				var p1 = _v1.a;
-				var x = _v1.b;
-				return A2($elm$parser$Parser$Advanced$Bad, p || p1, x);
-			}
-		}
-	});
-var $elm$parser$Parser$Advanced$loop = F2(
-	function (state, callback) {
-		return function (s) {
-			return A4($elm$parser$Parser$Advanced$loopHelp, false, state, callback, s);
-		};
-	});
-var $elm$parser$Parser$Advanced$Done = function (a) {
-	return {$: 1, a: a};
-};
-var $elm$parser$Parser$Advanced$Loop = function (a) {
-	return {$: 0, a: a};
-};
-var $elm$parser$Parser$toAdvancedStep = function (step) {
-	if (!step.$) {
-		var s = step.a;
-		return $elm$parser$Parser$Advanced$Loop(s);
-	} else {
-		var a = step.a;
-		return $elm$parser$Parser$Advanced$Done(a);
-	}
-};
-var $elm$parser$Parser$loop = F2(
-	function (state, callback) {
-		return A2(
-			$elm$parser$Parser$Advanced$loop,
-			state,
-			function (s) {
-				return A2(
-					$elm$parser$Parser$map,
-					$elm$parser$Parser$toAdvancedStep,
-					callback(s));
-			});
-	});
-var $elm$parser$Parser$Done = function (a) {
-	return {$: 1, a: a};
-};
-var $elm$parser$Parser$Loop = function (a) {
-	return {$: 0, a: a};
-};
-var $author$project$Compiler$Util$manyHelp = F2(
-	function (p, vs) {
-		return $elm$parser$Parser$oneOf(
-			_List_fromArray(
-				[
-					A2(
-					$elm$parser$Parser$keeper,
-					$elm$parser$Parser$succeed(
-						function (v) {
-							return $elm$parser$Parser$Loop(
-								A2($elm$core$List$cons, v, vs));
-						}),
-					A2($elm$parser$Parser$ignorer, p, $elm$parser$Parser$spaces)),
-					A2(
-					$elm$parser$Parser$map,
-					function (_v0) {
-						return $elm$parser$Parser$Done(
-							$elm$core$List$reverse(vs));
-					},
-					$elm$parser$Parser$succeed(0))
-				]));
-	});
-var $author$project$Compiler$Util$many = function (p) {
-	return A2(
-		$elm$parser$Parser$loop,
-		_List_Nil,
-		$author$project$Compiler$Util$manyHelp(p));
-};
-var $author$project$Compiler$Util$getBracketedItems = function (str) {
-	var _v0 = A2(
-		$elm$parser$Parser$run,
-		$author$project$Compiler$Util$many($author$project$Compiler$Util$bracketedItemParser),
-		str);
-	if (!_v0.$) {
-		var val = _v0.a;
-		return val;
-	} else {
-		return _List_Nil;
-	}
-};
-var $author$project$MicroLaTeX$Parser$Line$getNameAndArgs = function (line) {
-	var normalizedLine = $elm$core$String$trim(line.bJ);
-	var name = function () {
-		var _v0 = A2($author$project$Compiler$Util$getMicroLaTeXItem, 'begin', normalizedLine);
-		if (!_v0.$) {
-			var str = _v0.a;
-			return $elm$core$Maybe$Just(str);
-		} else {
-			return (normalizedLine === '$$') ? $elm$core$Maybe$Just('math') : $elm$core$Maybe$Nothing;
-		}
-	}();
-	return _Utils_Tuple2(
-		name,
-		$author$project$Compiler$Util$getBracketedItems(normalizedLine));
-};
-var $elm$core$String$trimRight = _String_trimRight;
-var $author$project$XMarkdown$Line$getNameAndArgs = function (line) {
-	return (A2($elm$core$String$left, 3, line.bJ) === '```') ? _Utils_Tuple2(
-		$elm$core$Maybe$Just('code'),
-		_List_Nil) : ((A2($elm$core$String$left, 3, line.bJ) === '|| ') ? _Utils_Tuple2(
-		$elm$core$Maybe$Just(
-			$elm$core$String$trimRight(
-				A2($elm$core$String$dropLeft, 3, line.bJ))),
-		_List_Nil) : ((A2($elm$core$String$left, 2, line.bJ) === '$$') ? _Utils_Tuple2(
-		$elm$core$Maybe$Just('math'),
-		_List_Nil) : ((A2($elm$core$String$left, 2, line.bJ) === '| ') ? _Utils_Tuple2(
-		$elm$core$Maybe$Just(
-			$elm$core$String$trimRight(
-				A2($elm$core$String$dropLeft, 2, line.bJ))),
-		_List_Nil) : _Utils_Tuple2($elm$core$Maybe$Nothing, _List_Nil))));
-};
-var $author$project$Parser$Line$getNameAndArgs = F2(
-	function (lang, line) {
-		switch (lang) {
-			case 1:
-				return $author$project$MicroLaTeX$Parser$Line$getNameAndArgs(line);
-			case 0:
-				return $author$project$L0$Parser$Line$getNameAndArgs(line);
-			case 2:
-				return _Utils_Tuple2($elm$core$Maybe$Nothing, _List_Nil);
-			default:
-				return $author$project$XMarkdown$Line$getNameAndArgs(line);
-		}
-	});
 var $author$project$Parser$PrimitiveBlock$KVInKey = 0;
 var $author$project$Parser$PrimitiveBlock$KVInValue = 1;
 var $author$project$Parser$PrimitiveBlock$nextKVStep = function (state) {
-	var _v0 = $elm_community$list_extra$List$Extra$uncons(state.aY);
+	var _v0 = $elm_community$list_extra$List$Extra$uncons(state.aZ);
 	if (_v0.$ === 1) {
 		var kvList_ = function () {
-			var _v2 = state.aV;
+			var _v2 = state.aW;
 			if (_v2.$ === 1) {
-				return state.be;
+				return state.bf;
 			} else {
 				var key = _v2.a;
 				return A2(
@@ -14106,8 +14116,8 @@ var $author$project$Parser$PrimitiveBlock$nextKVStep = function (state) {
 					},
 					A2(
 						$elm$core$List$cons,
-						_Utils_Tuple2(key, state.aG),
-						state.be));
+						_Utils_Tuple2(key, state.aH),
+						state.bf));
 			}
 		}();
 		return $author$project$Parser$PrimitiveBlock$Done(
@@ -14126,54 +14136,54 @@ var $author$project$Parser$PrimitiveBlock$nextKVStep = function (state) {
 		var _v4 = _v0.a;
 		var item = _v4.a;
 		var rest = _v4.b;
-		var _v5 = state.bs;
+		var _v5 = state.bu;
 		if (!_v5) {
 			if (A2($elm$core$String$contains, ':', item)) {
-				var _v6 = state.aV;
+				var _v6 = state.aW;
 				if (_v6.$ === 1) {
 					return $author$project$Parser$PrimitiveBlock$Loop(
 						_Utils_update(
 							state,
 							{
-								aV: $elm$core$Maybe$Just(
+								aW: $elm$core$Maybe$Just(
 									A2($elm$core$String$dropRight, 1, item)),
-								aY: rest,
-								bs: 1
+								aZ: rest,
+								bu: 1
 							}));
 				} else {
 					var key = _v6.a;
 					return $author$project$Parser$PrimitiveBlock$Loop(
 						{
-							aV: $elm$core$Maybe$Just(
+							aW: $elm$core$Maybe$Just(
 								A2($elm$core$String$dropRight, 1, item)),
-							aG: _List_Nil,
-							aY: rest,
-							be: A2(
+							aH: _List_Nil,
+							aZ: rest,
+							bf: A2(
 								$elm$core$List$cons,
-								_Utils_Tuple2(key, state.aG),
-								state.be),
-							bs: 1
+								_Utils_Tuple2(key, state.aH),
+								state.bf),
+							bu: 1
 						});
 				}
 			} else {
 				return $author$project$Parser$PrimitiveBlock$Loop(
 					_Utils_update(
 						state,
-						{aY: rest}));
+						{aZ: rest}));
 			}
 		} else {
 			if (A2($elm$core$String$contains, ':', item)) {
-				var _v7 = state.aV;
+				var _v7 = state.aW;
 				if (_v7.$ === 1) {
 					return $author$project$Parser$PrimitiveBlock$Loop(
 						_Utils_update(
 							state,
 							{
-								aV: $elm$core$Maybe$Just(
+								aW: $elm$core$Maybe$Just(
 									A2($elm$core$String$dropRight, 1, item)),
-								aG: _List_Nil,
-								aY: rest,
-								bs: 1
+								aH: _List_Nil,
+								aZ: rest,
+								bu: 1
 							}));
 				} else {
 					var key = _v7.a;
@@ -14181,15 +14191,15 @@ var $author$project$Parser$PrimitiveBlock$nextKVStep = function (state) {
 						_Utils_update(
 							state,
 							{
-								aV: $elm$core$Maybe$Just(
+								aW: $elm$core$Maybe$Just(
 									A2($elm$core$String$dropRight, 1, item)),
-								aG: _List_Nil,
-								aY: rest,
-								be: A2(
+								aH: _List_Nil,
+								aZ: rest,
+								bf: A2(
 									$elm$core$List$cons,
-									_Utils_Tuple2(key, state.aG),
-									state.be),
-								bs: 1
+									_Utils_Tuple2(key, state.aH),
+									state.bf),
+								bu: 1
 							}));
 				}
 			} else {
@@ -14197,15 +14207,15 @@ var $author$project$Parser$PrimitiveBlock$nextKVStep = function (state) {
 					_Utils_update(
 						state,
 						{
-							aG: A2($elm$core$List$cons, item, state.aG),
-							aY: rest
+							aH: A2($elm$core$List$cons, item, state.aH),
+							aZ: rest
 						}));
 			}
 		}
 	}
 };
 var $author$project$Parser$PrimitiveBlock$prepareKVData = function (data_) {
-	var initialState = {aV: $elm$core$Maybe$Nothing, aG: _List_Nil, aY: data_, be: _List_Nil, bs: 0};
+	var initialState = {aW: $elm$core$Maybe$Nothing, aH: _List_Nil, aZ: data_, bf: _List_Nil, bu: 0};
 	return A2($author$project$Parser$PrimitiveBlock$loop, initialState, $author$project$Parser$PrimitiveBlock$nextKVStep);
 };
 var $author$project$Parser$PrimitiveBlock$explode = function (txt) {
@@ -14239,28 +14249,126 @@ var $author$project$Parser$PrimitiveBlock$prepareList = function (strs) {
 			$author$project$Parser$PrimitiveBlock$fix,
 			$author$project$Parser$PrimitiveBlock$explode(strs)));
 };
+var $author$project$Parser$PrimitiveBlock$argsAndProperties = function (words) {
+	var args = $author$project$Parser$PrimitiveBlock$cleanArgs(words);
+	var namedArgs = A2(
+		$elm$core$List$drop,
+		$elm$core$List$length(args),
+		words);
+	var properties = $author$project$Parser$PrimitiveBlock$prepareKVData(
+		$author$project$Parser$PrimitiveBlock$prepareList(namedArgs));
+	return _Utils_Tuple2(words, properties);
+};
+var $author$project$L0$Parser$Line$getNameAndArgs = function (line) {
+	var normalizedLine = $elm$core$String$trim(line.bM);
+	if (A2($elm$core$String$left, 2, normalizedLine) === '||') {
+		var words = $elm$core$String$words(
+			A2($elm$core$String$dropLeft, 3, normalizedLine));
+		var name = A2(
+			$elm$core$Maybe$withDefault,
+			'anon',
+			$elm$core$List$head(words));
+		var args = A2($elm$core$List$drop, 1, words);
+		return _Utils_Tuple2(
+			$elm$core$Maybe$Just(name),
+			args);
+	} else {
+		if (A2($elm$core$String$left, 1, normalizedLine) === '|') {
+			var words = $elm$core$String$words(
+				A2($elm$core$String$dropLeft, 2, normalizedLine));
+			var name = A2(
+				$elm$core$Maybe$withDefault,
+				'anon',
+				$elm$core$List$head(words));
+			var args = A2($elm$core$List$drop, 1, words);
+			return _Utils_Tuple2(
+				$elm$core$Maybe$Just(name),
+				args);
+		} else {
+			if (A2($elm$core$String$left, 2, line.bM) === '$$') {
+				return _Utils_Tuple2(
+					$elm$core$Maybe$Just('math'),
+					_List_Nil);
+			} else {
+				return _Utils_Tuple2($elm$core$Maybe$Nothing, _List_Nil);
+			}
+		}
+	}
+};
+var $author$project$Compiler$Util$getBracketedItems = function (str) {
+	var _v0 = A2(
+		$elm$parser$Parser$run,
+		$author$project$Compiler$Util$many($author$project$Compiler$Util$bracketedItemParser),
+		str);
+	if (!_v0.$) {
+		var val = _v0.a;
+		return val;
+	} else {
+		return _List_Nil;
+	}
+};
+var $author$project$MicroLaTeX$Parser$Line$getNameAndArgs = function (line) {
+	var normalizedLine = $elm$core$String$trim(line.bM);
+	var name = function () {
+		var _v0 = A2($author$project$Compiler$Util$getMicroLaTeXItem, 'begin', normalizedLine);
+		if (!_v0.$) {
+			var str = _v0.a;
+			return $elm$core$Maybe$Just(str);
+		} else {
+			return (normalizedLine === '$$') ? $elm$core$Maybe$Just('math') : $elm$core$Maybe$Nothing;
+		}
+	}();
+	return _Utils_Tuple2(
+		name,
+		$author$project$Compiler$Util$getBracketedItems(normalizedLine));
+};
+var $elm$core$String$trimRight = _String_trimRight;
+var $author$project$XMarkdown$Line$getNameAndArgs = function (line) {
+	return (A2($elm$core$String$left, 3, line.bM) === '```') ? _Utils_Tuple2(
+		$elm$core$Maybe$Just('code'),
+		_List_Nil) : ((A2($elm$core$String$left, 3, line.bM) === '|| ') ? _Utils_Tuple2(
+		$elm$core$Maybe$Just(
+			$elm$core$String$trimRight(
+				A2($elm$core$String$dropLeft, 3, line.bM))),
+		_List_Nil) : ((A2($elm$core$String$left, 2, line.bM) === '$$') ? _Utils_Tuple2(
+		$elm$core$Maybe$Just('math'),
+		_List_Nil) : ((A2($elm$core$String$left, 2, line.bM) === '| ') ? _Utils_Tuple2(
+		$elm$core$Maybe$Just(
+			$elm$core$String$trimRight(
+				A2($elm$core$String$dropLeft, 2, line.bM))),
+		_List_Nil) : _Utils_Tuple2($elm$core$Maybe$Nothing, _List_Nil))));
+};
+var $author$project$Parser$Line$getNameAndArgs = F2(
+	function (lang, line) {
+		switch (lang) {
+			case 1:
+				return $author$project$MicroLaTeX$Parser$Line$getNameAndArgs(line);
+			case 0:
+				return $author$project$L0$Parser$Line$getNameAndArgs(line);
+			case 2:
+				return _Utils_Tuple2($elm$core$Maybe$Nothing, _List_Nil);
+			default:
+				return $author$project$XMarkdown$Line$getNameAndArgs(line);
+		}
+	});
 var $author$project$Parser$PrimitiveBlock$elaborate = F2(
 	function (line, pb) {
 		if (_Utils_eq(
-			pb.bJ,
+			pb.bM,
 			_List_fromArray(
 				['']))) {
 			return pb;
 		} else {
-			var content = (!pb.dM) ? A2($elm$core$List$map, $elm$core$String$trimLeft, pb.bJ) : pb.bJ;
+			var content = (!pb.dO) ? A2($elm$core$List$map, $elm$core$String$trimLeft, pb.bM) : pb.bM;
 			var _v0 = A2($author$project$Parser$Line$getNameAndArgs, 0, line);
 			var name = _v0.a;
 			var args_ = _v0.b;
-			var args = $author$project$Parser$PrimitiveBlock$cleanArgs(args_);
-			var namedArgs = A2(
-				$elm$core$List$drop,
-				$elm$core$List$length(args),
-				args_);
-			var properties = $author$project$Parser$PrimitiveBlock$prepareKVData(
-				$author$project$Parser$PrimitiveBlock$prepareList(namedArgs));
+			var _v1 = $author$project$Parser$PrimitiveBlock$argsAndProperties(args_);
+			var args = _v1.a;
+			var properties = _v1.b;
 			return _Utils_update(
 				pb,
-				{f9: args, bJ: content, fl: name, H: properties});
+				{gh: args, bM: content, fr: name, H: properties});
 		}
 	});
 var $author$project$Parser$Line$getBlockType = F2(
@@ -14279,28 +14387,28 @@ var $author$project$Parser$Line$getBlockType = F2(
 	});
 var $author$project$Parser$PrimitiveBlock$blockFromLine = F2(
 	function (lang, line) {
-		var indent = line.gV;
-		var lineNumber = line.g7;
-		var position = line.ej;
-		var prefix = line.ek;
-		var content = line.bJ;
+		var indent = line.g0;
+		var lineNumber = line.ed;
+		var position = line.en;
+		var prefix = line.eo;
+		var content = line.bM;
 		return A2(
 			$author$project$Parser$PrimitiveBlock$elaborate,
 			line,
 			{
-				f9: _List_Nil,
-				dM: A2($author$project$Parser$Line$getBlockType, lang, line.bJ),
-				bJ: _List_fromArray(
+				gh: _List_Nil,
+				dO: A2($author$project$Parser$Line$getBlockType, lang, line.bM),
+				bM: _List_fromArray(
 					[
 						_Utils_ap(prefix, content)
 					]),
-				eW: $elm$core$Maybe$Nothing,
-				gV: indent,
-				g7: lineNumber,
-				fl: $elm$core$Maybe$Nothing,
-				ej: position,
+				e0: $elm$core$Maybe$Nothing,
+				g0: indent,
+				ed: lineNumber,
+				fr: $elm$core$Maybe$Nothing,
+				en: position,
 				H: $elm$core$Dict$empty,
-				hT: ''
+				hY: ''
 			});
 	});
 var $author$project$Parser$PrimitiveBlock$dropLast = function (list) {
@@ -14311,120 +14419,121 @@ var $author$project$Parser$PrimitiveBlock$dropLast = function (list) {
 };
 var $author$project$Parser$PrimitiveBlock$commitBlock = F2(
 	function (state, currentLine) {
-		var _v0 = state.aU;
+		var _v0 = state.aV;
 		if (_v0.$ === 1) {
 			return _Utils_update(
 				state,
 				{
-					gV: currentLine.gV,
-					_: A2($elm$core$List$drop, 1, state._)
+					g0: currentLine.g0,
+					ab: A2($elm$core$List$drop, 1, state.ab)
 				});
 		} else {
 			var block_ = _v0.a;
 			var block = function () {
-				var _v2 = block_.dM;
+				var _v2 = block_.dO;
 				switch (_v2) {
 					case 2:
 						return block_;
 					case 1:
-						return _Utils_update(
-							block_,
-							{
-								bJ: $author$project$Parser$PrimitiveBlock$dropLast(block_.bJ)
-							});
+						return $author$project$Parser$PrimitiveBlock$adjustBlock(
+							_Utils_update(
+								block_,
+								{
+									bM: $author$project$Parser$PrimitiveBlock$dropLast(block_.bM)
+								}));
 					default:
 						return _Utils_update(
 							block_,
 							{
-								bJ: $author$project$Parser$PrimitiveBlock$dropLast(block_.bJ)
+								bM: $author$project$Parser$PrimitiveBlock$dropLast(block_.bM)
 							});
 				}
 			}();
 			var _v1 = _Utils_eq(
-				block.bJ,
+				block.bM,
 				_List_fromArray(
-					[''])) ? _Utils_Tuple2($elm$core$Maybe$Nothing, state.aq) : _Utils_Tuple2(
+					[''])) ? _Utils_Tuple2($elm$core$Maybe$Nothing, state.ar) : _Utils_Tuple2(
 				$elm$core$Maybe$Just(
-					A2($author$project$Parser$PrimitiveBlock$blockFromLine, state.dr, currentLine)),
-				A2($elm$core$List$cons, block, state.aq));
+					A2($author$project$Parser$PrimitiveBlock$blockFromLine, state.dt, currentLine)),
+				A2($elm$core$List$cons, block, state.ar));
 			var currentBlock = _v1.a;
 			var newBlocks = _v1.b;
 			return _Utils_update(
 				state,
 				{
-					aq: newBlocks,
-					cp: state.cp + 1,
-					aU: currentBlock,
-					cz: false,
-					d6: state.d8(currentLine.bJ),
-					g7: state.g7 + 1,
-					_: A2($elm$core$List$drop, 1, state._),
-					ej: state.ej + $elm$core$String$length(currentLine.bJ)
+					ar: newBlocks,
+					cq: state.cq + 1,
+					aV: currentBlock,
+					cA: false,
+					d9: state.ea(currentLine.bM),
+					ed: state.ed + 1,
+					ab: A2($elm$core$List$drop, 1, state.ab),
+					en: state.en + $elm$core$String$length(currentLine.bM)
 				});
 		}
 	});
 var $author$project$Parser$PrimitiveBlock$createBlock = F2(
 	function (state, currentLine) {
 		var newBlock = $elm$core$Maybe$Just(
-			A2($author$project$Parser$PrimitiveBlock$blockFromLine, state.dr, currentLine));
+			A2($author$project$Parser$PrimitiveBlock$blockFromLine, state.dt, currentLine));
 		var blocks = function () {
-			var _v0 = state.aU;
+			var _v0 = state.aV;
 			if (_v0.$ === 1) {
-				return state.aq;
+				return state.ar;
 			} else {
 				var block = _v0.a;
 				return _Utils_eq(
-					block.bJ,
+					block.bM,
 					_List_fromArray(
-						[''])) ? state.aq : A2($elm$core$List$cons, block, state.aq);
+						[''])) ? state.ar : A2($elm$core$List$cons, block, state.ar);
 			}
 		}();
 		return _Utils_update(
 			state,
 			{
-				aq: blocks,
-				cp: state.cp + 1,
-				aU: newBlock,
-				cz: true,
-				gV: currentLine.gV,
-				g7: state.g7 + 1,
-				_: A2($elm$core$List$drop, 1, state._),
-				ej: state.ej + $elm$core$String$length(currentLine.bJ)
+				ar: blocks,
+				cq: state.cq + 1,
+				aV: newBlock,
+				cA: true,
+				g0: currentLine.g0,
+				ed: state.ed + 1,
+				ab: A2($elm$core$List$drop, 1, state.ab),
+				en: state.en + $elm$core$String$length(currentLine.bM)
 			});
 	});
 var $author$project$Parser$Line$isEmpty = function (line) {
-	return (!line.gV) && (line.bJ === '');
+	return (!line.g0) && (line.bM === '');
 };
 var $author$project$Parser$Line$isNonEmptyBlank = function (line) {
-	return (line.gV > 0) && (line.bJ === '');
+	return (line.g0 > 0) && (line.bM === '');
 };
 var $author$project$Parser$PrimitiveBlock$nextStep = function (state) {
-	var _v0 = $elm$core$List$head(state._);
+	var _v0 = $elm$core$List$head(state.ab);
 	if (_v0.$ === 1) {
-		var _v1 = state.aU;
+		var _v1 = state.aV;
 		if (_v1.$ === 1) {
 			return $author$project$Parser$PrimitiveBlock$Done(
-				$elm$core$List$reverse(state.aq));
+				$elm$core$List$reverse(state.ar));
 		} else {
 			var block_ = _v1.a;
 			var block = _Utils_update(
 				block_,
 				{
-					bJ: $author$project$Parser$PrimitiveBlock$dropLast(block_.bJ)
+					bM: $author$project$Parser$PrimitiveBlock$dropLast(block_.bM)
 				});
 			var blocks = _Utils_eq(
-				block.bJ,
+				block.bM,
 				_List_fromArray(
-					[''])) ? $elm$core$List$reverse(state.aq) : $elm$core$List$reverse(
-				A2($elm$core$List$cons, block, state.aq));
+					[''])) ? $elm$core$List$reverse(state.ar) : $elm$core$List$reverse(
+				A2($elm$core$List$cons, block, state.ar));
 			return $author$project$Parser$PrimitiveBlock$Done(blocks);
 		}
 	} else {
 		var rawLine = _v0.a;
-		var newPosition = (rawLine === '') ? (state.ej + 1) : ((state.ej + $elm$core$String$length(rawLine)) + 1);
-		var currentLine = A3($author$project$Parser$Line$classify, state.ej, state.g7 + 1, rawLine);
+		var newPosition = (rawLine === '') ? (state.en + 1) : ((state.en + $elm$core$String$length(rawLine)) + 1);
+		var currentLine = A3($author$project$Parser$Line$classify, state.en, state.ed + 1, rawLine);
 		var _v2 = _Utils_Tuple3(
-			state.cz,
+			state.cA,
 			$author$project$Parser$Line$isEmpty(currentLine),
 			$author$project$Parser$Line$isNonEmptyBlank(currentLine));
 		if (!_v2.a) {
@@ -14435,7 +14544,7 @@ var $author$project$Parser$PrimitiveBlock$nextStep = function (state) {
 						newPosition,
 						_Utils_update(
 							state,
-							{g6: '1, EMPTY'})));
+							{hd: '1, EMPTY'})));
 			} else {
 				if (_v2.c) {
 					return $author$project$Parser$PrimitiveBlock$Loop(
@@ -14444,14 +14553,14 @@ var $author$project$Parser$PrimitiveBlock$nextStep = function (state) {
 							newPosition,
 							_Utils_update(
 								state,
-								{g6: '2, PASS'})));
+								{hd: '2, PASS'})));
 				} else {
 					return $author$project$Parser$PrimitiveBlock$Loop(
 						A2(
 							$author$project$Parser$PrimitiveBlock$createBlock,
 							_Utils_update(
 								state,
-								{g6: '3, NEW'}),
+								{hd: '3, NEW'}),
 							currentLine));
 				}
 			}
@@ -14462,7 +14571,7 @@ var $author$project$Parser$PrimitiveBlock$nextStep = function (state) {
 						$author$project$Parser$PrimitiveBlock$addCurrentLine2,
 						_Utils_update(
 							state,
-							{g6: '4, ADD'}),
+							{hd: '4, ADD'}),
 						currentLine));
 			} else {
 				return $author$project$Parser$PrimitiveBlock$Loop(
@@ -14470,7 +14579,7 @@ var $author$project$Parser$PrimitiveBlock$nextStep = function (state) {
 						$author$project$Parser$PrimitiveBlock$commitBlock,
 						_Utils_update(
 							state,
-							{g6: '5, COMMIT'}),
+							{hd: '5, COMMIT'}),
 						currentLine));
 			}
 		}
@@ -14489,7 +14598,7 @@ var $author$project$Parser$PrimitiveBlock$parse_ = F3(
 				$author$project$Parser$PrimitiveBlock$nextStep));
 	});
 var $author$project$Parser$PrimitiveBlock$toPrimitiveBlock = function (block) {
-	return {f9: block.f9, dM: block.dM, bJ: block.bJ, eW: block.eW, gV: block.ff, g7: block.g7, fl: block.fl, ej: block.ej, H: block.H, hT: block.hT};
+	return {gh: block.gh, dO: block.dO, bM: block.bM, e0: block.e0, g0: block.ec, ed: block.ed, fr: block.fr, en: block.en, H: block.H, hY: block.hY};
 };
 var $author$project$Parser$PrimitiveBlock$parse = F3(
 	function (lang, isVerbatimLine, lines) {
@@ -14515,6 +14624,34 @@ var $author$project$Markup$toPrimitiveBlocks = F2(
 			$author$project$Markup$isVerbatimLine,
 			$elm$core$String$lines(str));
 	});
+var $author$project$MicroLaTeX$Parser$Transform$handleImage = function (block) {
+	var words = $elm$core$String$words(
+		A3(
+			$elm$core$String$replace,
+			'}',
+			'',
+			A3(
+				$elm$core$String$replace,
+				'\\image{',
+				'',
+				A2(
+					$elm$core$Maybe$withDefault,
+					'???',
+					$elm$core$List$head(block.bM)))));
+	var _v0 = $author$project$Parser$PrimitiveBlock$argsAndProperties(
+		A2($elm$core$List$drop, 1, words));
+	var properties_ = _v0.b;
+	var properties = properties_;
+	return _Utils_update(
+		block,
+		{
+			gh: _List_Nil,
+			dO: 0,
+			bM: A2($elm$core$List$take, 1, words),
+			fr: $elm$core$Maybe$Just('image'),
+			H: properties
+		});
+};
 var $author$project$MicroLaTeX$Parser$Transform$sectionDict = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
@@ -14524,41 +14661,45 @@ var $author$project$MicroLaTeX$Parser$Transform$sectionDict = $elm$core$Dict$fro
 			_Utils_Tuple2('subheading', '4')
 		]));
 var $author$project$MicroLaTeX$Parser$Transform$handlePseudoBlockWithContent = F3(
-	function (block, name, maybeArg) {
+	function (name, maybeArg, block) {
 		if (maybeArg.$ === 1) {
 			return _Utils_update(
 				block,
 				{
-					f9: _List_Nil,
-					dM: 1,
-					bJ: _List_Nil,
-					fl: $elm$core$Maybe$Just(name)
+					gh: _List_Nil,
+					dO: 1,
+					bM: _List_Nil,
+					fr: $elm$core$Maybe$Just(name)
 				});
 		} else {
 			var arg = maybeArg.a;
-			var _v1 = A2($elm$core$Dict$get, name, $author$project$MicroLaTeX$Parser$Transform$sectionDict);
-			if (_v1.$ === 1) {
-				return _Utils_update(
-					block,
-					{
-						f9: _List_fromArray(
-							[arg]),
-						dM: 1,
-						bJ: _List_fromArray(
-							[arg]),
-						fl: $elm$core$Maybe$Just(name)
-					});
+			if (name === 'image') {
+				return $author$project$MicroLaTeX$Parser$Transform$handleImage(block);
 			} else {
-				var val = _v1.a;
-				return _Utils_update(
-					block,
-					{
-						f9: A2($elm$core$List$cons, val, _List_Nil),
-						dM: 1,
-						bJ: _List_fromArray(
-							[arg]),
-						fl: $elm$core$Maybe$Just('section')
-					});
+				var _v1 = A2($elm$core$Dict$get, name, $author$project$MicroLaTeX$Parser$Transform$sectionDict);
+				if (_v1.$ === 1) {
+					return _Utils_update(
+						block,
+						{
+							gh: _List_fromArray(
+								[arg]),
+							dO: 1,
+							bM: _List_fromArray(
+								[arg]),
+							fr: $elm$core$Maybe$Just(name)
+						});
+				} else {
+					var val = _v1.a;
+					return _Utils_update(
+						block,
+						{
+							gh: A2($elm$core$List$cons, val, _List_Nil),
+							dO: 1,
+							bM: _List_fromArray(
+								[arg]),
+							fr: $elm$core$Maybe$Just('section')
+						});
+				}
 			}
 		}
 	});
@@ -14598,36 +14739,43 @@ var $author$project$MicroLaTeX$Parser$Transform$normalize = function (list) {
 	}
 };
 var $author$project$MicroLaTeX$Parser$Transform$pseudoBlockNamesWithContent = _List_fromArray(
-	['title', 'section', 'subsection', 'subsubsection', 'subheading', 'setcounter', 'contents', 'endnotes']);
+	['title', 'section', 'subsection', 'subsubsection', 'subheading', 'setcounter', 'contents', 'endnotes', 'image']);
 var $author$project$MicroLaTeX$Parser$Transform$transform = function (block) {
 	var normalizedContent = $author$project$MicroLaTeX$Parser$Transform$normalize(
-		A2($elm$core$List$map, $elm$core$String$trimLeft, block.bJ));
-	if (normalizedContent.b) {
-		var firstLine = normalizedContent.a;
-		var name = (A2($elm$core$String$left, 1, firstLine) === '\\') ? A2(
-			$elm$core$Maybe$withDefault,
-			'---',
-			$elm$core$List$head(
-				A2(
-					$elm$core$String$split,
-					'{',
-					A2($elm$core$String$dropLeft, 1, firstLine)))) : firstLine;
-		var arg = function () {
-			var _v1 = A2(
-				$elm$parser$Parser$run,
-				$author$project$Compiler$Util$macroValParserX(name),
-				firstLine);
-			if (!_v1.$) {
-				var result = _v1.a;
-				return $elm$core$Maybe$Just(
-					A2($elm$core$String$dropRight, 1, result));
-			} else {
-				return $elm$core$Maybe$Nothing;
-			}
-		}();
-		return A2($elm$core$List$member, name, $author$project$MicroLaTeX$Parser$Transform$pseudoBlockNamesWithContent) ? A3($author$project$MicroLaTeX$Parser$Transform$handlePseudoBlockWithContent, block, name, arg) : block;
-	} else {
+		A2($elm$core$List$map, $elm$core$String$trimLeft, block.bM));
+	var _v0 = _Utils_Tuple2(block.dO, normalizedContent);
+	if (!_v0.a) {
+		var _v1 = _v0.a;
 		return block;
+	} else {
+		if (_v0.b.b) {
+			var _v2 = _v0.b;
+			var firstLine = _v2.a;
+			var name = (A2($elm$core$String$left, 1, firstLine) === '\\') ? A2(
+				$elm$core$Maybe$withDefault,
+				'---',
+				$elm$core$List$head(
+					A2(
+						$elm$core$String$split,
+						'{',
+						A2($elm$core$String$dropLeft, 1, firstLine)))) : firstLine;
+			var arg = function () {
+				var _v3 = A2(
+					$elm$parser$Parser$run,
+					$author$project$Compiler$Util$macroValParserX(name),
+					firstLine);
+				if (!_v3.$) {
+					var result = _v3.a;
+					return $elm$core$Maybe$Just(
+						A2($elm$core$String$dropRight, 1, result));
+				} else {
+					return $elm$core$Maybe$Nothing;
+				}
+			}();
+			return A2($elm$core$List$member, name, $author$project$MicroLaTeX$Parser$Transform$pseudoBlockNamesWithContent) ? A3($author$project$MicroLaTeX$Parser$Transform$handlePseudoBlockWithContent, name, arg, block) : block;
+		} else {
+			return block;
+		}
 	}
 };
 var $author$project$XMarkdown$Transform$handleItem = F3(
@@ -14635,23 +14783,23 @@ var $author$project$XMarkdown$Transform$handleItem = F3(
 		return _Utils_update(
 			block,
 			{
-				dM: 1,
-				bJ: A2($elm$core$List$cons, firstLine, rest),
-				fl: $elm$core$Maybe$Just('item')
+				dO: 1,
+				bM: A2($elm$core$List$cons, firstLine, rest),
+				fr: $elm$core$Maybe$Just('item')
 			});
 	});
 var $author$project$XMarkdown$Transform$handleMath = function (block) {
 	return _Utils_update(
 		block,
 		{
-			dM: 0,
-			bJ: A2(
+			dO: 0,
+			bM: A2(
 				$elm$core$List$filter,
 				function (item) {
 					return item !== '';
 				},
-				block.bJ),
-			fl: $elm$core$Maybe$Just('math')
+				block.bM),
+			fr: $elm$core$Maybe$Just('math')
 		});
 };
 var $author$project$XMarkdown$Transform$handleNumberedItem = F3(
@@ -14659,9 +14807,9 @@ var $author$project$XMarkdown$Transform$handleNumberedItem = F3(
 		return _Utils_update(
 			block,
 			{
-				dM: 1,
-				bJ: A2($elm$core$List$cons, firstLine, rest),
-				fl: $elm$core$Maybe$Just('numbered')
+				dO: 1,
+				bM: A2($elm$core$List$cons, firstLine, rest),
+				fr: $elm$core$Maybe$Just('numbered')
 			});
 	});
 var $author$project$XMarkdown$Transform$handleQuotation = F2(
@@ -14671,13 +14819,13 @@ var $author$project$XMarkdown$Transform$handleQuotation = F2(
 		return _Utils_update(
 			block,
 			{
-				f9: args,
-				dM: 1,
-				bJ: A2(
+				gh: args,
+				dO: 1,
+				bM: A2(
 					$elm$core$List$cons,
 					A2($elm$core$String$join, ' ', args),
-					A2($elm$core$List$drop, 1, block.bJ)),
-				fl: $elm$core$Maybe$Just('quotation')
+					A2($elm$core$List$drop, 1, block.bM)),
+				fr: $elm$core$Maybe$Just('quotation')
 			});
 	});
 var $author$project$XMarkdown$Transform$handleTitle = F2(
@@ -14699,17 +14847,17 @@ var $author$project$XMarkdown$Transform$handleTitle = F2(
 				return _Utils_update(
 					block,
 					{
-						f9: _List_fromArray(
+						gh: _List_fromArray(
 							[level]),
-						dM: 1,
-						bJ: _List_fromArray(
+						dO: 1,
+						bM: _List_fromArray(
 							[
 								A2(
 								$elm$core$String$join,
 								' ',
 								A2($elm$core$List$drop, 1, words))
 							]),
-						fl: $elm$core$Maybe$Just('section')
+						fr: $elm$core$Maybe$Just('section')
 					});
 			}
 		}
@@ -14719,14 +14867,14 @@ var $author$project$XMarkdown$Transform$handleVerbatim = F2(
 		return _Utils_update(
 			block,
 			{
-				dM: 0,
-				bJ: _Utils_eq(
+				dO: 0,
+				bM: _Utils_eq(
 					A2(
 						$elm$core$Maybe$map,
 						$elm$core$String$trim,
 						$elm_community$list_extra$List$Extra$last(rest)),
-					$elm$core$Maybe$Just('```')) ? $author$project$Compiler$Util$dropLast(block.bJ) : block.bJ,
-				fl: $elm$core$Maybe$Just('code')
+					$elm$core$Maybe$Just('```')) ? $author$project$Compiler$Util$dropLast(block.bM) : block.bM,
+				fr: $elm$core$Maybe$Just('code')
 			});
 	});
 var $author$project$XMarkdown$Transform$normalize = function (list) {
@@ -14741,8 +14889,8 @@ var $author$project$XMarkdown$Transform$transform = function (block) {
 	var normalizedContent = $author$project$XMarkdown$Transform$normalize(
 		A2(
 			$elm$core$List$map,
-			$elm$core$String$dropLeft(block.gV),
-			block.bJ));
+			$elm$core$String$dropLeft(block.g0),
+			block.bM));
 	if (normalizedContent.b) {
 		var firstLine = normalizedContent.a;
 		var rest_ = normalizedContent.b;
@@ -14754,16 +14902,16 @@ var $author$project$XMarkdown$Transform$transform = function (block) {
 			$author$project$XMarkdown$Transform$handleNumberedItem,
 			block,
 			A2($elm$core$String$dropLeft, 2, firstLine),
-			rest_) : ((A2($elm$core$String$left, 2, firstLine) === '> ') ? A2($author$project$XMarkdown$Transform$handleQuotation, block, firstLine) : ((!block.dM) ? _Utils_update(
+			rest_) : ((A2($elm$core$String$left, 2, firstLine) === '> ') ? A2($author$project$XMarkdown$Transform$handleQuotation, block, firstLine) : ((!block.dO) ? _Utils_update(
 			block,
 			{
-				bJ: A2(
+				bM: A2(
 					$elm$core$List$filter,
 					function (line) {
 						return line !== '```';
 					},
-					block.bJ),
-				fl: $elm$core$Maybe$Just('code')
+					block.bM),
+				fr: $elm$core$Maybe$Just('code')
 			}) : block))))));
 	} else {
 		return block;
@@ -14791,9 +14939,8 @@ var $author$project$Compiler$DifferentialParser$chunker = F2(
 	});
 var $author$project$Parser$PrimitiveBlock$eq = F2(
 	function (b1, b2) {
-		return (!_Utils_eq(b1.hT, b2.hT)) ? false : ((!_Utils_eq(b1.fl, b2.fl)) ? false : ((!_Utils_eq(b1.f9, b2.f9)) ? false : true));
+		return (!_Utils_eq(b1.hY, b2.hY)) ? false : ((!_Utils_eq(b1.fr, b2.fr)) ? false : ((!_Utils_eq(b1.gh, b2.gh)) ? false : true));
 	});
-var $author$project$Parser$Block$ExpressionBlock = $elm$core$Basics$identity;
 var $toastal$either$Either$Left = function (a) {
 	return {$: 0, a: a};
 };
@@ -14801,19 +14948,19 @@ var $author$project$Parser$Block$VerbatimBlock = function (a) {
 	return {$: 2, a: a};
 };
 var $author$project$Parser$Block$empty_ = {
-	f9: _List_Nil,
-	dM: $author$project$Parser$Block$VerbatimBlock(_List_Nil),
-	bJ: $toastal$either$Either$Left('-'),
-	eW: $elm$core$Maybe$Nothing,
-	gR: '-',
-	gV: 0,
-	g7: 0,
-	eb: _List_Nil,
-	fl: $elm$core$Maybe$Nothing,
-	ho: 0,
+	gh: _List_Nil,
+	dO: $author$project$Parser$Block$VerbatimBlock(_List_Nil),
+	bM: $toastal$either$Either$Left('-'),
+	e0: $elm$core$Maybe$Nothing,
+	gY: '-',
+	g0: 0,
+	ed: 0,
+	ef: _List_Nil,
+	fr: $elm$core$Maybe$Nothing,
+	ht: 0,
 	H: $elm$core$Dict$empty,
-	hT: '-',
-	h3: '-'
+	hY: '-',
+	h8: '-'
 };
 var $author$project$Parser$Block$empty = $author$project$Parser$Block$empty_;
 var $zwilias$elm_rosetree$Tree$children = function (_v0) {
@@ -14823,7 +14970,7 @@ var $zwilias$elm_rosetree$Tree$children = function (_v0) {
 var $author$project$Parser$Tree$EmptyBlocks = 0;
 var $zwilias$elm_rosetree$Tree$Zipper$Zipper = $elm$core$Basics$identity;
 var $zwilias$elm_rosetree$Tree$Zipper$fromTree = function (t) {
-	return {g: _List_Nil, k: _List_Nil, E: _List_Nil, gI: t};
+	return {g: _List_Nil, k: _List_Nil, E: _List_Nil, gP: t};
 };
 var $zwilias$elm_rosetree$Tree$Tree = F2(
 	function (a, b) {
@@ -14839,14 +14986,14 @@ var $author$project$Parser$Tree$init = F3(
 			var rootBlock = _v0.a;
 			return $elm$core$Result$Ok(
 				{
-					aq: A2($elm$core$List$drop, 1, blocks),
-					eU: $zwilias$elm_rosetree$Tree$Zipper$fromTree(
+					ar: A2($elm$core$List$drop, 1, blocks),
+					eZ: $zwilias$elm_rosetree$Tree$Zipper$fromTree(
 						A2($zwilias$elm_rosetree$Tree$tree, defaultNode, _List_Nil)),
-					gV: 0,
-					cG: indentation,
+					g0: 0,
+					cH: indentation,
 					bd: _List_Nil,
-					ff: 0,
-					aE: $zwilias$elm_rosetree$Tree$Zipper$fromTree(
+					ec: 0,
+					aF: $zwilias$elm_rosetree$Tree$Zipper$fromTree(
 						A2($zwilias$elm_rosetree$Tree$tree, defaultNode, _List_Nil))
 				});
 		}
@@ -14888,7 +15035,7 @@ var $zwilias$elm_rosetree$Tree$appendChild = F2(
 					[c])));
 	});
 var $zwilias$elm_rosetree$Tree$Zipper$tree = function (_v0) {
-	var focus = _v0.gI;
+	var focus = _v0.gP;
 	return focus;
 };
 var $author$project$Parser$Tree$appendChild = F2(
@@ -14903,7 +15050,7 @@ var $zwilias$elm_rosetree$Tree$Zipper$replaceTree = F2(
 		var zipper = _v0;
 		return _Utils_update(
 			zipper,
-			{gI: t});
+			{gP: t});
 	});
 var $author$project$Parser$Tree$attachAtFocus = F2(
 	function (t, z) {
@@ -14921,9 +15068,9 @@ var $author$project$Parser$Tree$handleEQ = F3(
 		return _Utils_update(
 			state,
 			{
-				aq: A2($elm$core$List$drop, 1, state.aq),
-				gV: indent,
-				aE: A2($author$project$Parser$Tree$attachAtFocus, newTree, state.aE)
+				ar: A2($elm$core$List$drop, 1, state.ar),
+				g0: indent,
+				aF: A2($author$project$Parser$Tree$attachAtFocus, newTree, state.aF)
 			});
 	});
 var $zwilias$elm_rosetree$Tree$label = function (_v0) {
@@ -14933,7 +15080,7 @@ var $zwilias$elm_rosetree$Tree$label = function (_v0) {
 var $zwilias$elm_rosetree$Tree$Zipper$lastChild = function (_v0) {
 	var zipper = _v0;
 	var _v1 = $elm$core$List$reverse(
-		$zwilias$elm_rosetree$Tree$children(zipper.gI));
+		$zwilias$elm_rosetree$Tree$children(zipper.gP));
 	if (!_v1.b) {
 		return $elm$core$Maybe$Nothing;
 	} else {
@@ -14948,10 +15095,10 @@ var $zwilias$elm_rosetree$Tree$Zipper$lastChild = function (_v0) {
 					{
 						g: zipper.g,
 						k: zipper.k,
-						g6: $zwilias$elm_rosetree$Tree$label(zipper.gI)
+						hd: $zwilias$elm_rosetree$Tree$label(zipper.gP)
 					},
 					zipper.E),
-				gI: c
+				gP: c
 			});
 	}
 };
@@ -14968,33 +15115,33 @@ var $author$project$Parser$Tree$pushIndentationChange = F2(
 var $author$project$Parser$Tree$handleGT = F3(
 	function (indent, block, state) {
 		var newTree = $zwilias$elm_rosetree$Tree$singleton(block);
-		var _v0 = $zwilias$elm_rosetree$Tree$Zipper$lastChild(state.aE);
+		var _v0 = $zwilias$elm_rosetree$Tree$Zipper$lastChild(state.aF);
 		if (_v0.$ === 1) {
 			return _Utils_update(
 				state,
 				{
-					aq: A2($elm$core$List$drop, 1, state.aq),
-					gV: indent,
+					ar: A2($elm$core$List$drop, 1, state.ar),
+					g0: indent,
 					bd: A2(
 						$author$project$Parser$Tree$pushIndentationChange,
-						state.cG(block),
+						state.cH(block),
 						state.bd),
-					ff: state.ff + 1,
-					aE: A2($author$project$Parser$Tree$attachAtFocus, newTree, state.aE)
+					ec: state.ec + 1,
+					aF: A2($author$project$Parser$Tree$attachAtFocus, newTree, state.aF)
 				});
 		} else {
 			var newZipper = _v0.a;
 			return _Utils_update(
 				state,
 				{
-					aq: A2($elm$core$List$drop, 1, state.aq),
-					gV: indent,
+					ar: A2($elm$core$List$drop, 1, state.ar),
+					g0: indent,
 					bd: A2(
 						$author$project$Parser$Tree$pushIndentationChange,
-						state.cG(block),
+						state.cH(block),
 						state.bd),
-					ff: state.ff + 1,
-					aE: A2($author$project$Parser$Tree$attachAtFocus, newTree, newZipper)
+					ec: state.ec + 1,
+					aF: A2($author$project$Parser$Tree$attachAtFocus, newTree, newZipper)
 				});
 		}
 	});
@@ -15023,7 +15170,7 @@ var $zwilias$elm_rosetree$Tree$Zipper$parent = function (_v0) {
 				g: crumb.g,
 				k: crumb.k,
 				E: rest,
-				gI: A4($zwilias$elm_rosetree$Tree$Zipper$reconstruct, zipper.gI, zipper.k, zipper.g, crumb.g6)
+				gP: A4($zwilias$elm_rosetree$Tree$Zipper$reconstruct, zipper.gP, zipper.k, zipper.g, crumb.hd)
 			});
 	}
 };
@@ -15031,30 +15178,30 @@ var $author$project$Parser$Tree$popUntilAux = F2(
 	function (goal, _v0) {
 		popUntilAux:
 		while (true) {
-			var sum = _v0.c0;
-			var popped = _v0.b$;
-			var remaining = _v0.b5;
+			var sum = _v0.c1;
+			var popped = _v0.b0;
+			var remaining = _v0.b6;
 			var _v1 = $elm$core$List$head(remaining);
 			if (_v1.$ === 1) {
-				return {b$: popped, b5: remaining, c0: sum};
+				return {b0: popped, b6: remaining, c1: sum};
 			} else {
 				var k = _v1.a;
 				var newSum = sum + k;
 				if (_Utils_cmp(newSum, goal) < 0) {
 					var $temp$goal = goal,
 						$temp$_v0 = {
-						b$: popped + 1,
-						b5: A2($elm$core$List$drop, 1, remaining),
-						c0: newSum
+						b0: popped + 1,
+						b6: A2($elm$core$List$drop, 1, remaining),
+						c1: newSum
 					};
 					goal = $temp$goal;
 					_v0 = $temp$_v0;
 					continue popUntilAux;
 				} else {
 					return {
-						b$: popped + 1,
-						b5: A2($elm$core$List$drop, 1, remaining),
-						c0: newSum
+						b0: popped + 1,
+						b6: A2($elm$core$List$drop, 1, remaining),
+						c1: newSum
 					};
 				}
 			}
@@ -15065,7 +15212,7 @@ var $author$project$Parser$Tree$popUntil = F2(
 		return A2(
 			$author$project$Parser$Tree$popUntilAux,
 			goal,
-			{b$: 0, b5: input, c0: 0});
+			{b0: 0, b6: input, c1: 0});
 	});
 var $elm$core$Maybe$andThen = F2(
 	function (callback, maybeValue) {
@@ -15110,19 +15257,19 @@ var $author$project$Parser$Tree$repeat = F3(
 var $author$project$Parser$Tree$handleLT = F3(
 	function (indent, block, state) {
 		var newTree = $zwilias$elm_rosetree$Tree$singleton(block);
-		var deltaInfo = A2($author$project$Parser$Tree$popUntil, state.gV - indent, state.bd);
-		var deltaLevel = deltaInfo.b$;
+		var deltaInfo = A2($author$project$Parser$Tree$popUntil, state.g0 - indent, state.bd);
+		var deltaLevel = deltaInfo.b0;
 		return _Utils_update(
 			state,
 			{
-				aq: A2($elm$core$List$drop, 1, state.aq),
-				gV: indent,
-				bd: deltaInfo.b5,
-				ff: state.ff - deltaLevel,
-				aE: A2(
+				ar: A2($elm$core$List$drop, 1, state.ar),
+				g0: indent,
+				bd: deltaInfo.b6,
+				ec: state.ec - deltaLevel,
+				aF: A2(
 					$author$project$Parser$Tree$attachAtFocus,
 					newTree,
-					A3($author$project$Parser$Tree$repeat, deltaLevel, $zwilias$elm_rosetree$Tree$Zipper$parent, state.aE))
+					A3($author$project$Parser$Tree$repeat, deltaLevel, $zwilias$elm_rosetree$Tree$Zipper$parent, state.aF))
 			});
 	});
 var $elm$core$Basics$composeL = F3(
@@ -15140,10 +15287,10 @@ var $zwilias$elm_rosetree$Tree$Zipper$previousSibling = function (_v0) {
 		var rest = _v1.b;
 		return $elm$core$Maybe$Just(
 			{
-				g: A2($elm$core$List$cons, zipper.gI, zipper.g),
+				g: A2($elm$core$List$cons, zipper.gP, zipper.g),
 				k: rest,
 				E: zipper.E,
-				gI: previous
+				gP: previous
 			});
 	}
 };
@@ -15177,14 +15324,14 @@ var $zwilias$elm_rosetree$Tree$Zipper$root = function (zipper) {
 };
 var $zwilias$elm_rosetree$Tree$Zipper$toTree = A2($elm$core$Basics$composeL, $zwilias$elm_rosetree$Tree$Zipper$tree, $zwilias$elm_rosetree$Tree$Zipper$root);
 var $author$project$Parser$Tree$nextStep = function (state) {
-	var _v0 = $elm$core$List$head(state.aq);
+	var _v0 = $elm$core$List$head(state.ar);
 	if (_v0.$ === 1) {
 		return $author$project$Parser$Tree$Done(
-			$zwilias$elm_rosetree$Tree$Zipper$toTree(state.aE));
+			$zwilias$elm_rosetree$Tree$Zipper$toTree(state.aF));
 	} else {
 		var block = _v0.a;
-		var blockIndentaton = state.cG(block);
-		var _v1 = A2($elm$core$Basics$compare, blockIndentaton, state.gV);
+		var blockIndentaton = state.cH(block);
+		var _v1 = A2($elm$core$Basics$compare, blockIndentaton, state.g0);
 		switch (_v1) {
 			case 2:
 				return $author$project$Parser$Tree$Loop(
@@ -15234,7 +15381,7 @@ var $author$project$Parser$Tree$forestFromBlocks = F3(
 	});
 var $author$project$Compiler$DifferentialParser$indentation = function (_v0) {
 	var data = _v0;
-	return data.gV;
+	return data.g0;
 };
 var $elm$core$Result$withDefault = F2(
 	function (def, result) {
@@ -15250,6 +15397,10 @@ var $author$project$Compiler$DifferentialParser$forestFromBlocks = function (blo
 		$elm$core$Result$withDefault,
 		_List_Nil,
 		A3($author$project$Parser$Tree$forestFromBlocks, $author$project$Parser$Block$empty, $author$project$Compiler$DifferentialParser$indentation, blocks));
+};
+var $author$project$Parser$Block$getLineNumber = function (_v0) {
+	var lineNumber = _v0.ed;
+	return lineNumber;
 };
 var $zwilias$elm_rosetree$Tree$foldlHelp = F4(
 	function (f, acc, trees, nextSets) {
@@ -15324,15 +15475,15 @@ var $zwilias$elm_rosetree$Tree$foldr = F3(
 var $zwilias$elm_rosetree$Tree$flatten = function (t) {
 	return A3($zwilias$elm_rosetree$Tree$foldr, $elm$core$List$cons, _List_Nil, t);
 };
-var $author$project$Parser$BlockUtil$getMessages = function (_v0) {
-	var messages = _v0.eb;
+var $author$project$Parser$Transform$getMessages = function (_v0) {
+	var messages = _v0.ef;
 	return messages;
 };
 var $author$project$Markup$messagesFromTree = function (tree) {
 	return $elm$core$List$concat(
 		A2(
 			$elm$core$List$map,
-			$author$project$Parser$BlockUtil$getMessages,
+			$author$project$Parser$Transform$getMessages,
 			$zwilias$elm_rosetree$Tree$flatten(tree)));
 };
 var $author$project$Markup$messagesFromForest = function (forest) {
@@ -15345,13 +15496,13 @@ var $author$project$MicroLaTeX$Parser$Expression$initWithTokens = F2(
 	function (lineNumber, tokens) {
 		return {
 			l: _List_Nil,
-			g7: lineNumber,
-			eb: _List_Nil,
-			bW: $elm$core$List$length(tokens),
+			ed: lineNumber,
+			ef: _List_Nil,
+			bY: $elm$core$List$length(tokens),
 			y: _List_Nil,
-			dB: 0,
-			ac: 0,
-			cf: $elm$core$List$reverse(tokens)
+			dD: 0,
+			ae: 0,
+			cg: $elm$core$List$reverse(tokens)
 		};
 	});
 var $author$project$Parser$Helpers$loop = F2(
@@ -15442,7 +15593,7 @@ var $author$project$MicroLaTeX$Parser$Expression$boostMeta = F2(
 		return _Utils_update(
 			meta,
 			{
-				gR: $elm$core$String$fromInt(lineNumber) + ('.' + meta.gR)
+				gY: $elm$core$String$fromInt(lineNumber) + ('.' + meta.gY)
 			});
 	});
 var $author$project$MicroLaTeX$Parser$Expression$exprOfToken = F2(
@@ -15479,7 +15630,7 @@ var $author$project$MicroLaTeX$Parser$Expression$exprOfToken = F2(
 	});
 var $author$project$MicroLaTeX$Parser$Expression$commit = F2(
 	function (token, state) {
-		var _v0 = A2($author$project$MicroLaTeX$Parser$Expression$exprOfToken, state.g7, token);
+		var _v0 = A2($author$project$MicroLaTeX$Parser$Expression$exprOfToken, state.ed, token);
 		if (_v0.$ === 1) {
 			return state;
 		} else {
@@ -15539,7 +15690,7 @@ var $author$project$MicroLaTeX$Parser$Expression$pushToken = F2(
 		}
 	});
 var $author$project$MicroLaTeX$Parser$Expression$dummyTokenIndex = 0;
-var $author$project$MicroLaTeX$Parser$Expression$dummyLocWithId = {bn: 0, bq: 0, gR: 'dummy (3)', d7: $author$project$MicroLaTeX$Parser$Expression$dummyTokenIndex};
+var $author$project$MicroLaTeX$Parser$Expression$dummyLocWithId = {bp: 0, bs: 0, gY: 'dummy (3)', dq: $author$project$MicroLaTeX$Parser$Expression$dummyTokenIndex};
 var $author$project$MicroLaTeX$Parser$Expression$errorMessage = function (message) {
 	return A3(
 		$author$project$Parser$Expr$Fun,
@@ -15645,14 +15796,14 @@ var $author$project$MicroLaTeX$Parser$Expression$makeId = F2(
 	});
 var $author$project$MicroLaTeX$Parser$Expression$boostMeta_ = F3(
 	function (lineNumber, tokenIndex, _v0) {
-		var begin = _v0.bn;
-		var end = _v0.bq;
-		var index = _v0.d7;
+		var begin = _v0.bp;
+		var end = _v0.bs;
+		var index = _v0.dq;
 		return {
-			bn: begin,
-			bq: end,
-			gR: A2($author$project$MicroLaTeX$Parser$Expression$makeId, lineNumber, tokenIndex),
-			d7: index
+			bp: begin,
+			bs: end,
+			gY: A2($author$project$MicroLaTeX$Parser$Expression$makeId, lineNumber, tokenIndex),
+			dq: index
 		};
 	});
 var $author$project$MicroLaTeX$Parser$Expression$braceErrorAsString = function (k) {
@@ -15735,7 +15886,7 @@ var $author$project$MicroLaTeX$Parser$Symbol$toSymbol2 = function (token) {
 var $author$project$MicroLaTeX$Parser$Symbol$convertTokens2 = function (tokens) {
 	return A2($elm$core$List$map, $author$project$MicroLaTeX$Parser$Symbol$toSymbol2, tokens);
 };
-var $author$project$MicroLaTeX$Parser$Expression$dummyLoc = {bn: 0, bq: 0, d7: $author$project$MicroLaTeX$Parser$Expression$dummyTokenIndex};
+var $author$project$MicroLaTeX$Parser$Expression$dummyLoc = {bp: 0, bs: 0, dq: $author$project$MicroLaTeX$Parser$Expression$dummyTokenIndex};
 var $author$project$MicroLaTeX$Parser$Token$TLB = 1;
 var $author$project$MicroLaTeX$Parser$Match$getSegment = F2(
 	function (sym, symbols) {
@@ -15765,18 +15916,18 @@ var $author$project$Compiler$Util$middle = function (list) {
 		A2($elm$core$List$drop, 1, list));
 };
 var $author$project$MicroLaTeX$Parser$Match$nextStep = function (state) {
-	var _v0 = $elm$core$List$head(state.c1);
+	var _v0 = $elm$core$List$head(state.c2);
 	if (_v0.$ === 1) {
 		return $author$project$Parser$Helpers$Done($elm$core$Maybe$Nothing);
 	} else {
 		var sym = _v0.a;
-		var brackets = state.c7 + $author$project$MicroLaTeX$Parser$Symbol$value(sym);
+		var brackets = state.c8 + $author$project$MicroLaTeX$Parser$Symbol$value(sym);
 		return (brackets < 0) ? $author$project$Parser$Helpers$Done($elm$core$Maybe$Nothing) : ((!brackets) ? $author$project$Parser$Helpers$Done(
-			$elm$core$Maybe$Just(state.d7)) : $author$project$Parser$Helpers$Loop(
+			$elm$core$Maybe$Just(state.dq)) : $author$project$Parser$Helpers$Loop(
 			{
-				c7: brackets,
-				d7: state.d7 + 1,
-				c1: A2($elm$core$List$drop, 1, state.c1)
+				c8: brackets,
+				dq: state.dq + 1,
+				c2: A2($elm$core$List$drop, 1, state.c2)
 			}));
 	}
 };
@@ -15795,9 +15946,9 @@ var $author$project$MicroLaTeX$Parser$Match$match = function (symbols) {
 				A2($author$project$MicroLaTeX$Parser$Match$getSegment, symbol, symbols)) - 1) : (($author$project$MicroLaTeX$Parser$Symbol$value(symbol) < 0) ? $elm$core$Maybe$Nothing : A2(
 			$author$project$Parser$Helpers$loop,
 			{
-				c7: $author$project$MicroLaTeX$Parser$Symbol$value(symbol),
-				d7: 1,
-				c1: A2($elm$core$List$drop, 1, symbols)
+				c8: $author$project$MicroLaTeX$Parser$Symbol$value(symbol),
+				dq: 1,
+				c2: A2($elm$core$List$drop, 1, symbols)
 			},
 			$author$project$MicroLaTeX$Parser$Match$nextStep));
 	}
@@ -16038,9 +16189,9 @@ var $author$project$MicroLaTeX$Parser$Expression$handleBracketedMath = function 
 				A2($elm$core$String$dropLeft, 2, content)),
 			A3(
 				$author$project$MicroLaTeX$Parser$Expression$boostMeta_,
-				state.ac,
+				state.ae,
 				2,
-				{bn: 0, bq: 0, d7: 0})),
+				{bp: 0, bs: 0, dq: 0})),
 		state.l) : A2(
 		$elm$core$List$cons,
 		A3(
@@ -16058,10 +16209,10 @@ var $author$project$MicroLaTeX$Parser$Expression$handleBracketedMath = function 
 				'math',
 				A3($elm$core$String$replace, '$', '', content),
 				{
-					bn: 0,
-					bq: 0,
-					gR: A2($author$project$MicroLaTeX$Parser$Expression$makeId, state.g7, state.ac),
-					d7: 0
+					bp: 0,
+					bs: 0,
+					gY: A2($author$project$MicroLaTeX$Parser$Expression$makeId, state.ed, state.ae),
+					dq: 0
 				}),
 			state.l));
 	return _Utils_update(
@@ -16090,7 +16241,7 @@ var $author$project$MicroLaTeX$Parser$Expression$handleCode = function (state) {
 									A2(
 									$author$project$Parser$Expr$Text,
 									'????(4)',
-									A3($author$project$MicroLaTeX$Parser$Expression$boostMeta_, state.g7, state.ac, $author$project$MicroLaTeX$Parser$Expression$dummyLoc))
+									A3($author$project$MicroLaTeX$Parser$Expression$boostMeta_, state.ed, state.ae, $author$project$MicroLaTeX$Parser$Expression$dummyLoc))
 								]),
 							$author$project$MicroLaTeX$Parser$Expression$dummyLocWithId),
 						_List_Nil);
@@ -16111,7 +16262,7 @@ var $author$project$MicroLaTeX$Parser$Expression$handleCode = function (state) {
 								A2(
 								$author$project$Parser$Expr$Text,
 								'`',
-								A3($author$project$MicroLaTeX$Parser$Expression$boostMeta_, state.g7, state.ac, $author$project$MicroLaTeX$Parser$Expression$dummyLoc))
+								A3($author$project$MicroLaTeX$Parser$Expression$boostMeta_, state.ed, state.ae, $author$project$MicroLaTeX$Parser$Expression$dummyLoc))
 							]),
 						$author$project$MicroLaTeX$Parser$Expression$dummyLocWithId),
 					rest_));
@@ -16125,9 +16276,9 @@ var $author$project$MicroLaTeX$Parser$Expression$handleCode = function (state) {
 						A3($elm$core$String$replace, '`', '', content),
 						A3(
 							$author$project$MicroLaTeX$Parser$Expression$boostMeta_,
-							state.g7,
-							state.ac,
-							{bn: 0, bq: 0, d7: 0})),
+							state.ed,
+							state.ae,
+							{bp: 0, bs: 0, dq: 0})),
 					state.l);
 			} else {
 				return A2(
@@ -16148,9 +16299,9 @@ var $author$project$MicroLaTeX$Parser$Expression$handleCode = function (state) {
 							A3($elm$core$String$replace, '`', '', content),
 							A3(
 								$author$project$MicroLaTeX$Parser$Expression$boostMeta_,
-								state.g7,
-								state.ac,
-								{bn: 0, bq: 0, d7: 0})),
+								state.ed,
+								state.ae,
+								{bp: 0, bs: 0, dq: 0})),
 						state.l));
 			}
 		}
@@ -16176,7 +16327,7 @@ var $author$project$MicroLaTeX$Parser$Expression$handleMath = function (state) {
 						$author$project$Parser$Expr$Verbatim,
 						'math',
 						str,
-						A2($author$project$MicroLaTeX$Parser$Expression$boostMeta, state.g7, m2)),
+						A2($author$project$MicroLaTeX$Parser$Expression$boostMeta, state.ed, m2)),
 					state.l),
 				y: _List_Nil
 			});
@@ -16479,7 +16630,7 @@ var $author$project$MicroLaTeX$Parser$Expression$reduceState_ = function (state)
 					var _v1 = _v0.a;
 					var _v2 = A2(
 						$author$project$MicroLaTeX$Parser$Expression$reduceTokens,
-						state.g7,
+						state.ed,
 						$elm$core$List$reverse(state.y));
 					if (((((_v2.b && (!_v2.a.$)) && (_v2.a.a === 'ERROR')) && _v2.a.b.b) && (_v2.a.b.a.$ === 1)) && (!_v2.a.b.b.b)) {
 						var _v3 = _v2.a;
@@ -16491,7 +16642,7 @@ var $author$project$MicroLaTeX$Parser$Expression$reduceState_ = function (state)
 							state,
 							{
 								l: _Utils_ap(rest, state.l),
-								eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, message, state.eb),
+								ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, message, state.ef),
 								y: _List_Nil
 							});
 					} else {
@@ -16558,7 +16709,7 @@ var $author$project$MicroLaTeX$Parser$Token$type_ = function (token) {
 	}
 };
 var $author$project$MicroLaTeX$Parser$Expression$reduceState = function (state) {
-	var peek = A2($elm_community$list_extra$List$Extra$getAt, state.ac, state.cf);
+	var peek = A2($elm_community$list_extra$List$Extra$getAt, state.ae, state.cg);
 	return ($author$project$MicroLaTeX$Parser$Expression$isReducible(state.y) && (!_Utils_eq(
 		A2($elm$core$Maybe$map, $author$project$MicroLaTeX$Parser$Token$type_, peek),
 		$elm$core$Maybe$Just(1)))) ? $author$project$MicroLaTeX$Parser$Expression$reduceState_(state) : A4(
@@ -16580,7 +16731,7 @@ var $author$project$MicroLaTeX$Parser$Expression$recoverFromError1 = function (s
 			$elm$core$List$repeat,
 			k,
 			$author$project$MicroLaTeX$Parser$Token$RB(
-				A3($author$project$MicroLaTeX$Parser$Expression$boostMeta_, state.g7, state.ac, $author$project$MicroLaTeX$Parser$Expression$dummyLoc))),
+				A3($author$project$MicroLaTeX$Parser$Expression$boostMeta_, state.ed, state.ae, $author$project$MicroLaTeX$Parser$Expression$dummyLoc))),
 		state.y);
 	var newSymbols = $author$project$MicroLaTeX$Parser$Symbol$convertTokens2(
 		$elm$core$List$reverse(newStack));
@@ -16597,9 +16748,9 @@ var $author$project$MicroLaTeX$Parser$Expression$recoverFromError1 = function (s
 							$elm$core$List$cons,
 							$author$project$MicroLaTeX$Parser$Expression$errorMessage('{'),
 							state.l),
-						bW: $elm$core$List$length(newStack),
+						bY: $elm$core$List$length(newStack),
 						y: newStack,
-						ac: 0
+						ae: 0
 					})))) : $author$project$Parser$Helpers$Done(
 		_Utils_update(
 			state,
@@ -16608,11 +16759,11 @@ var $author$project$MicroLaTeX$Parser$Expression$recoverFromError1 = function (s
 					$elm$core$List$cons,
 					$author$project$MicroLaTeX$Parser$Expression$bracketError(k),
 					state.l),
-				eb: A3(
+				ef: A3(
 					$author$project$Parser$Helpers$prependMessage,
-					state.g7,
+					state.ed,
 					$author$project$MicroLaTeX$Parser$Expression$braceErrorAsString(k),
-					state.eb)
+					state.ef)
 			}));
 };
 var $author$project$MicroLaTeX$Parser$Expression$recoverFromError = function (state) {
@@ -16653,13 +16804,13 @@ var $author$project$MicroLaTeX$Parser$Expression$recoverFromError = function (st
 												$elm$core$List$cons,
 												$author$project$MicroLaTeX$Parser$Expression$errorMessage('\\' + (fname + '{')),
 												state.l),
-											eb: A3(
+											ef: A3(
 												$author$project$Parser$Helpers$prependMessage,
-												state.g7,
-												'Missing right brace, column ' + $elm$core$String$fromInt(m3.bn),
-												state.eb),
+												state.ed,
+												'Missing right brace, column ' + $elm$core$String$fromInt(m3.bp),
+												state.ef),
 											y: _List_Nil,
-											ac: m3.d7 + 1
+											ae: m3.dq + 1
 										}));
 							} else {
 								break _v0$10;
@@ -16682,9 +16833,9 @@ var $author$project$MicroLaTeX$Parser$Expression$recoverFromError = function (st
 												$elm$core$List$cons,
 												$author$project$MicroLaTeX$Parser$Expression$errorMessage('{?}'),
 												state.l),
-											eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'Brackets need to enclose something', state.eb),
+											ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'Brackets need to enclose something', state.ef),
 											y: _List_Nil,
-											ac: meta.d7 + 1
+											ae: meta.dq + 1
 										}));
 							case 1:
 								var _v7 = _v0.b;
@@ -16697,9 +16848,9 @@ var $author$project$MicroLaTeX$Parser$Expression$recoverFromError = function (st
 												$elm$core$List$cons,
 												$author$project$MicroLaTeX$Parser$Expression$errorMessage('{'),
 												state.l),
-											eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'You have consecutive left brackets', state.eb),
+											ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'You have consecutive left brackets', state.ef),
 											y: _List_Nil,
-											ac: meta.d7
+											ae: meta.dq
 										}));
 							case 6:
 								var _v8 = _v0.b;
@@ -16719,9 +16870,9 @@ var $author$project$MicroLaTeX$Parser$Expression$recoverFromError = function (st
 													$elm$core$List$cons,
 													$author$project$MicroLaTeX$Parser$Expression$errorMessage2('{' + fName),
 													state.l)),
-											eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'Missing right bracket', state.eb),
+											ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'Missing right bracket', state.ef),
 											y: _List_Nil,
-											ac: meta.d7 + 1
+											ae: meta.dq + 1
 										}));
 							case 7:
 								if (_v0.b.a.a === ' ') {
@@ -16736,9 +16887,9 @@ var $author$project$MicroLaTeX$Parser$Expression$recoverFromError = function (st
 													$elm$core$List$cons,
 													$author$project$MicroLaTeX$Parser$Expression$errorMessage('{ - can\'t have space after the brace '),
 													state.l),
-												eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'Can\'t have space after left bracket - try [something ...', state.eb),
+												ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'Can\'t have space after left bracket - try [something ...', state.ef),
 												y: _List_Nil,
-												ac: meta.d7 + 1
+												ae: meta.dq + 1
 											}));
 								} else {
 									break _v0$10;
@@ -16755,10 +16906,10 @@ var $author$project$MicroLaTeX$Parser$Expression$recoverFromError = function (st
 										$elm$core$List$cons,
 										$author$project$MicroLaTeX$Parser$Expression$errorMessage('..extra{?'),
 										state.l),
-									eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'That left bracket needs something after it', state.eb),
-									bW: 0,
+									ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'That left bracket needs something after it', state.ef),
+									bY: 0,
 									y: _List_Nil,
-									ac: 0
+									ae: 0
 								}));
 					}
 				case 2:
@@ -16771,9 +16922,9 @@ var $author$project$MicroLaTeX$Parser$Expression$recoverFromError = function (st
 									$elm$core$List$cons,
 									$author$project$MicroLaTeX$Parser$Expression$errorMessage(' extra }?'),
 									state.l),
-								eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'Extra right braces(s)', state.eb),
+								ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'Extra right braces(s)', state.ef),
 								y: _List_Nil,
-								ac: meta.d7 + 1
+								ae: meta.dq + 1
 							}));
 				case 8:
 					var meta = _v0.a.a;
@@ -16788,10 +16939,10 @@ var $author$project$MicroLaTeX$Parser$Expression$recoverFromError = function (st
 									$elm$core$List$cons,
 									$author$project$MicroLaTeX$Parser$Expression$errorMessage(message),
 									state.l),
-								eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'opening dollar sign needs to be matched with a closing one', state.eb),
-								bW: 0,
+								ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'opening dollar sign needs to be matched with a closing one', state.ef),
+								bY: 0,
 								y: _List_Nil,
-								ac: meta.d7 + 1
+								ae: meta.dq + 1
 							}));
 				case 9:
 					var meta = _v0.a.a;
@@ -16806,10 +16957,10 @@ var $author$project$MicroLaTeX$Parser$Expression$recoverFromError = function (st
 									$elm$core$List$cons,
 									$author$project$MicroLaTeX$Parser$Expression$errorMessageBold(message),
 									state.l),
-								eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'opening backtick needs to be matched with a closing one', state.eb),
-								bW: 0,
+								ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'opening backtick needs to be matched with a closing one', state.ef),
+								bY: 0,
 								y: _List_Nil,
-								ac: meta.d7 + 1
+								ae: meta.dq + 1
 							}));
 				default:
 					break _v0$10;
@@ -16853,38 +17004,38 @@ var $author$project$MicroLaTeX$Parser$Token$stringValue2 = function (token) {
 	switch (token.$) {
 		case 0:
 			var m = token.a;
-			return 'BS:' + $elm$core$String$fromInt(m.d7);
+			return 'BS:' + $elm$core$String$fromInt(m.dq);
 		case 3:
 			var m = token.b;
-			return 'F:' + $elm$core$String$fromInt(m.d7);
+			return 'F:' + $elm$core$String$fromInt(m.dq);
 		case 1:
 			var m = token.a;
-			return 'LB:' + $elm$core$String$fromInt(m.d7);
+			return 'LB:' + $elm$core$String$fromInt(m.dq);
 		case 2:
 			var m = token.a;
-			return 'RB:' + $elm$core$String$fromInt(m.d7);
+			return 'RB:' + $elm$core$String$fromInt(m.dq);
 		case 4:
 			var m = token.a;
-			return 'LTB:' + $elm$core$String$fromInt(m.d7);
+			return 'LTB:' + $elm$core$String$fromInt(m.dq);
 		case 5:
 			var m = token.a;
-			return 'RTB:' + $elm$core$String$fromInt(m.d7);
+			return 'RTB:' + $elm$core$String$fromInt(m.dq);
 		case 6:
 			var str = token.a;
 			var m = token.b;
-			return 'S ' + (str + (': ' + $elm$core$String$fromInt(m.d7)));
+			return 'S ' + (str + (': ' + $elm$core$String$fromInt(m.dq)));
 		case 7:
 			var m = token.b;
-			return 'W:' + $elm$core$String$fromInt(m.d7);
+			return 'W:' + $elm$core$String$fromInt(m.dq);
 		case 8:
 			var m = token.a;
-			return '$:' + $elm$core$String$fromInt(m.d7);
+			return '$:' + $elm$core$String$fromInt(m.dq);
 		case 9:
 			var m = token.a;
-			return 'C:' + $elm$core$String$fromInt(m.d7);
+			return 'C:' + $elm$core$String$fromInt(m.dq);
 		default:
 			var m = token.b;
-			return 'tokenError:' + $elm$core$String$fromInt(m.d7);
+			return 'tokenError:' + $elm$core$String$fromInt(m.dq);
 	}
 };
 var $author$project$MicroLaTeX$Parser$Token$toString2 = function (tokens) {
@@ -16900,7 +17051,7 @@ var $author$project$MicroLaTeX$Parser$Expression$show = function (state) {
 		A2($elm$core$List$map, $author$project$Parser$Expr$simplify, state.l));
 };
 var $author$project$MicroLaTeX$Parser$Expression$nextStep = function (state) {
-	var _v0 = A2($elm_community$list_extra$List$Extra$getAt, state.ac, state.cf);
+	var _v0 = A2($elm_community$list_extra$List$Extra$getAt, state.ae, state.cg);
 	if (_v0.$ === 1) {
 		return $elm$core$List$isEmpty(state.y) ? $author$project$Parser$Helpers$Done(
 			A4($author$project$Tools$forklogBlue, 'Done', 12, $author$project$MicroLaTeX$Parser$Expression$show, state)) : $author$project$MicroLaTeX$Parser$Expression$recoverFromError(
@@ -16916,7 +17067,7 @@ var $author$project$MicroLaTeX$Parser$Expression$nextStep = function (state) {
 				function (st) {
 					return _Utils_update(
 						st,
-						{dB: st.dB + 1});
+						{dD: st.dD + 1});
 				}(
 					$author$project$MicroLaTeX$Parser$Expression$reduceState(
 						A2(
@@ -16924,7 +17075,7 @@ var $author$project$MicroLaTeX$Parser$Expression$nextStep = function (state) {
 							token,
 							_Utils_update(
 								state,
-								{ac: state.ac + 1}))))));
+								{ae: state.ae + 1}))))));
 	}
 };
 var $author$project$MicroLaTeX$Parser$Expression$run = function (state) {
@@ -16940,23 +17091,23 @@ var $author$project$MicroLaTeX$Parser$Expression$run = function (state) {
 var $author$project$MicroLaTeX$Parser$Token$Normal = 0;
 var $author$project$MicroLaTeX$Parser$Token$init = function (str) {
 	return {
-		bp: $elm$core$Maybe$Nothing,
-		cK: 0,
-		bz: 0,
-		et: str,
-		eu: $elm$core$String$length(str),
-		ac: 0,
-		cf: _List_Nil
+		br: $elm$core$Maybe$Nothing,
+		cL: 0,
+		bB: 0,
+		ex: str,
+		ey: $elm$core$String$length(str),
+		ae: 0,
+		cg: _List_Nil
 	};
 };
 var $author$project$MicroLaTeX$Parser$Token$finish = function (state) {
-	var _v0 = state.bp;
+	var _v0 = state.br;
 	if (!_v0.$) {
 		var token = _v0.a;
 		return $author$project$Parser$Helpers$Done(
-			A2($elm$core$List$cons, token, state.cf));
+			A2($elm$core$List$cons, token, state.cg));
 	} else {
-		return $author$project$Parser$Helpers$Done(state.cf);
+		return $author$project$Parser$Helpers$Done(state.cg);
 	}
 };
 var $author$project$MicroLaTeX$Parser$Token$TokenError = F2(
@@ -16974,7 +17125,7 @@ var $author$project$Parser$Tools$ExpectingPrefix = {$: 0};
 var $elm$parser$Parser$Advanced$chompIf = F2(
 	function (isGood, expecting) {
 		return function (s) {
-			var newOffset = A3($elm$parser$Parser$Advanced$isSubChar, isGood, s.b, s.fH);
+			var newOffset = A3($elm$parser$Parser$Advanced$isSubChar, isGood, s.b, s.fP);
 			return _Utils_eq(newOffset, -1) ? A2(
 				$elm$parser$Parser$Advanced$Bad,
 				false,
@@ -16982,11 +17133,11 @@ var $elm$parser$Parser$Advanced$chompIf = F2(
 				$elm$parser$Parser$Advanced$Good,
 				true,
 				0,
-				{bH: 1, c: s.c, gV: s.gV, b: s.b + 1, b9: s.b9 + 1, fH: s.fH}) : A3(
+				{bK: 1, c: s.c, g0: s.g0, b: s.b + 1, ca: s.ca + 1, fP: s.fP}) : A3(
 				$elm$parser$Parser$Advanced$Good,
 				true,
 				0,
-				{bH: s.bH + 1, c: s.c, gV: s.gV, b: newOffset, b9: s.b9, fH: s.fH}));
+				{bK: s.bK + 1, c: s.c, g0: s.g0, b: newOffset, ca: s.ca, fP: s.fP}));
 		};
 	});
 var $author$project$Parser$Tools$text = F2(
@@ -17001,9 +17152,9 @@ var $author$project$Parser$Tools$text = F2(
 						F3(
 							function (start, finish, content) {
 								return {
-									bn: start,
-									bJ: A3($elm$core$String$slice, start, finish, content),
-									bq: finish
+									bp: start,
+									bM: A3($elm$core$String$slice, start, finish, content),
+									bs: finish
 								};
 							})),
 					A2(
@@ -17031,10 +17182,10 @@ var $author$project$MicroLaTeX$Parser$Token$codeParser = F2(
 			function (_v1) {
 				return $author$project$MicroLaTeX$Parser$Token$CodeToken(
 					{
-						bn: start,
-						bq: start,
-						gR: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start,
+						gY: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -17061,12 +17212,12 @@ var $author$project$MicroLaTeX$Parser$Token$codeTextParser = F2(
 			function (data) {
 				return A2(
 					$author$project$MicroLaTeX$Parser$Token$S,
-					data.bJ,
+					data.bM,
 					{
-						bn: start,
-						bq: ((start + data.bq) - data.bn) - 1,
-						gR: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: ((start + data.bs) - data.bp) - 1,
+						gY: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -17095,12 +17246,12 @@ var $author$project$MicroLaTeX$Parser$Token$whiteSpaceParser = F2(
 			function (data) {
 				return A2(
 					$author$project$MicroLaTeX$Parser$Token$W,
-					data.bJ,
+					data.bM,
 					{
-						bn: start,
-						bq: start,
-						gR: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start,
+						gY: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -17136,7 +17287,7 @@ var $author$project$Parser$Tools$symbol = function (symb) {
 			$elm$parser$Parser$Advanced$succeed(
 				F2(
 					function (start, finish) {
-						return {bn: start, bJ: symb, bq: finish};
+						return {bp: start, bM: symb, bs: finish};
 					})),
 			A2(
 				$elm$parser$Parser$Advanced$ignorer,
@@ -17155,10 +17306,10 @@ var $author$project$MicroLaTeX$Parser$Token$leftMathBracketParser = F2(
 			function (_v0) {
 				return $author$project$MicroLaTeX$Parser$Token$LMathBracket(
 					{
-						bn: start,
-						bq: start + 1,
-						gR: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start + 1,
+						gY: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			$author$project$Parser$Tools$symbol('\\['));
@@ -17173,10 +17324,10 @@ var $author$project$MicroLaTeX$Parser$Token$mathParser = F2(
 			function (_v1) {
 				return $author$project$MicroLaTeX$Parser$Token$MathToken(
 					{
-						bn: start,
-						bq: start,
-						gR: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start,
+						gY: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -17197,12 +17348,12 @@ var $author$project$MicroLaTeX$Parser$Token$mathTextParser = F2(
 			function (data) {
 				return A2(
 					$author$project$MicroLaTeX$Parser$Token$S,
-					data.bJ,
+					data.bM,
 					{
-						bn: start,
-						bq: ((start + data.bq) - data.bn) - 1,
-						gR: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: ((start + data.bs) - data.bp) - 1,
+						gY: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -17230,10 +17381,10 @@ var $author$project$MicroLaTeX$Parser$Token$rightMathBracketParser = F2(
 			function (_v0) {
 				return $author$project$MicroLaTeX$Parser$Token$RMathBracket(
 					{
-						bn: start,
-						bq: start + 1,
-						gR: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start + 1,
+						gY: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			$author$project$Parser$Tools$symbol('\\]'));
@@ -17257,10 +17408,10 @@ var $author$project$MicroLaTeX$Parser$Token$backslashParser1 = F2(
 			function (_v1) {
 				return $author$project$MicroLaTeX$Parser$Token$BS(
 					{
-						bn: start,
-						bq: start,
-						gR: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start,
+						gY: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -17326,12 +17477,12 @@ var $author$project$MicroLaTeX$Parser$Token$backslashParser2 = F2(
 			function (data) {
 				return A2(
 					$author$project$MicroLaTeX$Parser$Token$F,
-					A2($elm$core$String$dropLeft, 1, data.bJ),
+					A2($elm$core$String$dropLeft, 1, data.bM),
 					{
-						bn: start,
-						bq: ((start + data.bq) - data.bn) - 1,
-						gR: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: ((start + data.bs) - data.bp) - 1,
+						gY: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -17380,10 +17531,10 @@ var $author$project$MicroLaTeX$Parser$Token$leftBraceParser = F2(
 			function (_v1) {
 				return $author$project$MicroLaTeX$Parser$Token$LB(
 					{
-						bn: start,
-						bq: start,
-						gR: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start,
+						gY: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -17402,10 +17553,10 @@ var $author$project$MicroLaTeX$Parser$Token$rightBraceParser = F2(
 			function (_v1) {
 				return $author$project$MicroLaTeX$Parser$Token$RB(
 					{
-						bn: start,
-						bq: start,
-						gR: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start,
+						gY: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -17424,12 +17575,12 @@ var $author$project$MicroLaTeX$Parser$Token$textParser = F2(
 			function (data) {
 				return A2(
 					$author$project$MicroLaTeX$Parser$Token$S,
-					data.bJ,
+					data.bM,
 					{
-						bn: start,
-						bq: ((start + data.bq) - data.bn) - 1,
-						gR: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: ((start + data.bs) - data.bp) - 1,
+						gY: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -17478,7 +17629,7 @@ var $author$project$MicroLaTeX$Parser$Token$get = F3(
 	function (state, start, input) {
 		var _v0 = A2(
 			$elm$parser$Parser$Advanced$run,
-			A3($author$project$MicroLaTeX$Parser$Token$tokenParser, state.cK, start, state.ac),
+			A3($author$project$MicroLaTeX$Parser$Token$tokenParser, state.cL, start, state.ae),
 			input);
 		if (!_v0.$) {
 			var token = _v0.a;
@@ -17489,10 +17640,10 @@ var $author$project$MicroLaTeX$Parser$Token$get = F3(
 				$author$project$MicroLaTeX$Parser$Token$TokenError,
 				errorList,
 				{
-					bn: start,
-					bq: start + 1,
-					gR: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, state.ac),
-					d7: state.ac
+					bp: start,
+					bs: start + 1,
+					gY: A2($author$project$MicroLaTeX$Parser$Token$makeId, start, state.ae),
+					dq: state.ae
 				});
 		}
 	});
@@ -17504,7 +17655,7 @@ var $author$project$MicroLaTeX$Parser$Token$setIndex = F2(
 				return $author$project$MicroLaTeX$Parser$Token$BS(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 3:
 				var str = token.a;
 				var meta = token.b;
@@ -17513,31 +17664,31 @@ var $author$project$MicroLaTeX$Parser$Token$setIndex = F2(
 					str,
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 1:
 				var meta = token.a;
 				return $author$project$MicroLaTeX$Parser$Token$LB(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 2:
 				var meta = token.a;
 				return $author$project$MicroLaTeX$Parser$Token$RB(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 4:
 				var meta = token.a;
 				return $author$project$MicroLaTeX$Parser$Token$LMathBracket(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 5:
 				var meta = token.a;
 				return $author$project$MicroLaTeX$Parser$Token$RMathBracket(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 6:
 				var str = token.a;
 				var meta = token.b;
@@ -17546,7 +17697,7 @@ var $author$project$MicroLaTeX$Parser$Token$setIndex = F2(
 					str,
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 7:
 				var str = token.a;
 				var meta = token.b;
@@ -17555,19 +17706,19 @@ var $author$project$MicroLaTeX$Parser$Token$setIndex = F2(
 					str,
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 8:
 				var meta = token.a;
 				return $author$project$MicroLaTeX$Parser$Token$MathToken(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 9:
 				var meta = token.a;
 				return $author$project$MicroLaTeX$Parser$Token$CodeToken(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			default:
 				var list = token.a;
 				var meta = token.b;
@@ -17576,91 +17727,91 @@ var $author$project$MicroLaTeX$Parser$Token$setIndex = F2(
 					list,
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 		}
 	});
 var $author$project$MicroLaTeX$Parser$Token$handleBS = F2(
 	function (state, token) {
-		var _v0 = state.bp;
+		var _v0 = state.br;
 		if (_v0.$ === 1) {
 			return _Utils_Tuple3(
 				A2(
 					$elm$core$List$cons,
-					A2($author$project$MicroLaTeX$Parser$Token$setIndex, state.ac, token),
-					state.cf),
-				state.ac + 1,
+					A2($author$project$MicroLaTeX$Parser$Token$setIndex, state.ae, token),
+					state.cg),
+				state.ae + 1,
 				$elm$core$Maybe$Nothing);
 		} else {
 			var textToken = _v0.a;
 			return _Utils_Tuple3(
 				A2(
 					$elm$core$List$cons,
-					A2($author$project$MicroLaTeX$Parser$Token$setIndex, state.ac + 1, token),
+					A2($author$project$MicroLaTeX$Parser$Token$setIndex, state.ae + 1, token),
 					A2(
 						$elm$core$List$cons,
-						A2($author$project$MicroLaTeX$Parser$Token$setIndex, state.ac, textToken),
-						state.cf)),
-				state.ac + 2,
+						A2($author$project$MicroLaTeX$Parser$Token$setIndex, state.ae, textToken),
+						state.cg)),
+				state.ae + 2,
 				$elm$core$Maybe$Nothing);
 		}
 	});
 var $author$project$MicroLaTeX$Parser$Token$handleDefault = F2(
 	function (state, token) {
-		var _v0 = state.bp;
+		var _v0 = state.br;
 		if (_v0.$ === 1) {
 			return _Utils_Tuple3(
 				A2(
 					$elm$core$List$cons,
-					A2($author$project$MicroLaTeX$Parser$Token$setIndex, state.ac, token),
-					state.cf),
-				state.ac + 1,
+					A2($author$project$MicroLaTeX$Parser$Token$setIndex, state.ae, token),
+					state.cg),
+				state.ae + 1,
 				$elm$core$Maybe$Nothing);
 		} else {
 			var textToken = _v0.a;
 			return _Utils_Tuple3(
 				A2(
 					$elm$core$List$cons,
-					A2($author$project$MicroLaTeX$Parser$Token$setIndex, state.ac + 1, token),
-					A2($elm$core$List$cons, textToken, state.cf)),
-				state.ac + 2,
+					A2($author$project$MicroLaTeX$Parser$Token$setIndex, state.ae + 1, token),
+					A2($elm$core$List$cons, textToken, state.cg)),
+				state.ae + 2,
 				$elm$core$Maybe$Nothing);
 		}
 	});
 var $author$project$MicroLaTeX$Parser$Token$handleLB = F2(
 	function (state, token) {
-		var _v0 = state.bp;
+		var _v0 = state.br;
 		if (_v0.$ === 1) {
 			return _Utils_Tuple3(
 				A2(
 					$elm$core$List$cons,
-					A2($author$project$MicroLaTeX$Parser$Token$setIndex, state.ac, token),
-					state.cf),
-				state.ac + 1,
+					A2($author$project$MicroLaTeX$Parser$Token$setIndex, state.ae, token),
+					state.cg),
+				state.ae + 1,
 				$elm$core$Maybe$Nothing);
 		} else {
 			var textToken = _v0.a;
 			return _Utils_Tuple3(
 				A2(
 					$elm$core$List$cons,
-					A2($author$project$MicroLaTeX$Parser$Token$setIndex, state.ac + 1, token),
+					A2($author$project$MicroLaTeX$Parser$Token$setIndex, state.ae + 1, token),
 					A2(
 						$elm$core$List$cons,
-						A2($author$project$MicroLaTeX$Parser$Token$setIndex, state.ac, textToken),
-						state.cf)),
-				state.ac + 2,
+						A2($author$project$MicroLaTeX$Parser$Token$setIndex, state.ae, textToken),
+						state.cg)),
+				state.ae + 2,
 				$elm$core$Maybe$Nothing);
 		}
 	});
 var $author$project$MicroLaTeX$Parser$Token$boostMeta = F3(
 	function (lineNumber, tokenIndex, _v0) {
-		var begin = _v0.bn;
-		var end = _v0.bq;
-		var index = _v0.d7;
+		var begin = _v0.bp;
+		var end = _v0.bs;
+		var index = _v0.dq;
 		return {
-			bn: begin,
-			bq: end,
-			gR: A2($author$project$MicroLaTeX$Parser$Token$makeId, lineNumber, tokenIndex),
-			d7: index
+			bp: begin,
+			bs: end,
+			gY: A2($author$project$MicroLaTeX$Parser$Token$makeId, lineNumber, tokenIndex),
+			dq: index
 		};
 	});
 var $author$project$MicroLaTeX$Parser$Token$getMeta = function (token) {
@@ -17704,13 +17855,13 @@ var $author$project$MicroLaTeX$Parser$Token$mergeToken = F2(
 	function (lastToken, currentToken) {
 		var lastTokenMeta = $author$project$MicroLaTeX$Parser$Token$getMeta(lastToken);
 		var currentTokenMeta = $author$project$MicroLaTeX$Parser$Token$getMeta(currentToken);
-		var meta = {bn: lastTokenMeta.bn, bq: currentTokenMeta.bq, d7: -1};
+		var meta = {bp: lastTokenMeta.bp, bs: currentTokenMeta.bs, dq: -1};
 		return A2(
 			$author$project$MicroLaTeX$Parser$Token$S,
 			_Utils_ap(
 				$author$project$MicroLaTeX$Parser$Token$stringValue(lastToken),
 				$author$project$MicroLaTeX$Parser$Token$stringValue(currentToken)),
-			A3($author$project$MicroLaTeX$Parser$Token$boostMeta, meta.bn, meta.bq, meta));
+			A3($author$project$MicroLaTeX$Parser$Token$boostMeta, meta.bp, meta.bs, meta));
 	});
 var $author$project$MicroLaTeX$Parser$Token$updateCurrentToken = F3(
 	function (index, token, currentToken) {
@@ -17729,9 +17880,9 @@ var $author$project$MicroLaTeX$Parser$Token$updateCurrentToken = F3(
 var $author$project$MicroLaTeX$Parser$Token$handleMerge = F2(
 	function (state, token) {
 		return _Utils_Tuple3(
-			state.cf,
-			state.ac,
-			A3($author$project$MicroLaTeX$Parser$Token$updateCurrentToken, state.ac, token, state.bp));
+			state.cg,
+			state.ae,
+			A3($author$project$MicroLaTeX$Parser$Token$updateCurrentToken, state.ae, token, state.br));
 	});
 var $author$project$MicroLaTeX$Parser$Token$isTextToken = function (token) {
 	return A2(
@@ -17744,37 +17895,37 @@ var $author$project$MicroLaTeX$Parser$Token$length = function (token) {
 	switch (token.$) {
 		case 0:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 3:
 			var meta = token.b;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 1:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 2:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 4:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 5:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 6:
 			var meta = token.b;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 8:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 9:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 7:
 			var meta = token.b;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		default:
 			var meta = token.b;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 	}
 };
 var $author$project$MicroLaTeX$Parser$Token$InCode = 2;
@@ -17806,15 +17957,15 @@ var $author$project$MicroLaTeX$Parser$Token$newMode = F2(
 		}
 	});
 var $author$project$MicroLaTeX$Parser$Token$nextStep = function (state) {
-	if (_Utils_cmp(state.bz, state.eu) > -1) {
+	if (_Utils_cmp(state.bB, state.ey) > -1) {
 		return $author$project$MicroLaTeX$Parser$Token$finish(state);
 	} else {
 		var token = A3(
 			$author$project$MicroLaTeX$Parser$Token$get,
 			state,
-			state.bz,
-			A2($elm$core$String$dropLeft, state.bz, state.et));
-		var newScanPointer = (state.bz + $author$project$MicroLaTeX$Parser$Token$length(token)) + 1;
+			state.bB,
+			A2($elm$core$String$dropLeft, state.bB, state.ex));
+		var newScanPointer = (state.bB + $author$project$MicroLaTeX$Parser$Token$length(token)) + 1;
 		var _v0 = $author$project$MicroLaTeX$Parser$Token$isTextToken(token) ? A2($author$project$MicroLaTeX$Parser$Token$handleMerge, state, token) : ((!$author$project$MicroLaTeX$Parser$Token$type_(token)) ? A2($author$project$MicroLaTeX$Parser$Token$handleBS, state, token) : (($author$project$MicroLaTeX$Parser$Token$type_(token) === 1) ? A2($author$project$MicroLaTeX$Parser$Token$handleLB, state, token) : A2($author$project$MicroLaTeX$Parser$Token$handleDefault, state, token)));
 		var tokens = _v0.a;
 		var tokenIndex = _v0.b;
@@ -17824,11 +17975,11 @@ var $author$project$MicroLaTeX$Parser$Token$nextStep = function (state) {
 			_Utils_update(
 				state,
 				{
-					bp: currentToken,
-					cK: A2($author$project$MicroLaTeX$Parser$Token$newMode, token, state.cK),
-					bz: newScanPointer,
-					ac: tokenIndex,
-					cf: tokens
+					br: currentToken,
+					cL: A2($author$project$MicroLaTeX$Parser$Token$newMode, token, state.cL),
+					bB: newScanPointer,
+					ae: tokenIndex,
+					cg: tokens
 				}));
 	}
 };
@@ -17845,7 +17996,7 @@ var $author$project$MicroLaTeX$Parser$Expression$parse = F2(
 				$author$project$MicroLaTeX$Parser$Expression$initWithTokens,
 				lineNumber,
 				$author$project$MicroLaTeX$Parser$Token$run(str)));
-		var messages = state.eb;
+		var messages = state.ef;
 		var exprs = state.l;
 		return _Utils_Tuple2(exprs, messages);
 	});
@@ -17854,19 +18005,19 @@ var $author$project$XMarkdown$Expression$initWithTokens = F2(
 	function (lineNumber, tokens) {
 		return {
 			l: _List_Nil,
-			g7: lineNumber,
-			eb: _List_Nil,
-			bW: $elm$core$List$length(tokens),
+			ed: lineNumber,
+			ef: _List_Nil,
+			bY: $elm$core$List$length(tokens),
 			y: _List_Nil,
-			dB: 0,
-			ac: 0,
-			cf: $elm$core$List$reverse(tokens)
+			dD: 0,
+			ae: 0,
+			cg: $elm$core$List$reverse(tokens)
 		};
 	});
 var $author$project$XMarkdown$Expression$advanceTokenIndex = function (state) {
 	return _Utils_update(
 		state,
-		{ac: state.ac + 1});
+		{ae: state.ae + 1});
 };
 var $elm$core$Basics$composeR = F3(
 	function (f, g, x) {
@@ -17938,7 +18089,7 @@ var $author$project$XMarkdown$Expression$pushToken = F2(
 				if (A2($elm$core$String$right, 1, str) === ' ') {
 					return A2($author$project$XMarkdown$Expression$pushOrCommit, token, state);
 				} else {
-					var _v1 = A2($elm_community$list_extra$List$Extra$getAt, meta.d7 + 1, state.cf);
+					var _v1 = A2($elm_community$list_extra$List$Extra$getAt, meta.dq + 1, state.cg);
 					_v1$2:
 					while (true) {
 						if (!_v1.$) {
@@ -18026,43 +18177,43 @@ var $author$project$XMarkdown$Token$indexOf = function (token) {
 	switch (token.$) {
 		case 0:
 			var meta = token.a;
-			return meta.d7;
+			return meta.dq;
 		case 1:
 			var meta = token.a;
-			return meta.d7;
+			return meta.dq;
 		case 8:
 			var meta = token.b;
-			return meta.d7;
+			return meta.dq;
 		case 9:
 			var meta = token.b;
-			return meta.d7;
+			return meta.dq;
 		case 10:
 			var meta = token.a;
-			return meta.d7;
+			return meta.dq;
 		case 11:
 			var meta = token.a;
-			return meta.d7;
+			return meta.dq;
 		case 12:
 			var meta = token.b;
-			return meta.d7;
+			return meta.dq;
 		case 2:
 			var meta = token.a;
-			return meta.d7;
+			return meta.dq;
 		case 3:
 			var meta = token.a;
-			return meta.d7;
+			return meta.dq;
 		case 4:
 			var meta = token.a;
-			return meta.d7;
+			return meta.dq;
 		case 5:
 			var meta = token.a;
-			return meta.d7;
+			return meta.dq;
 		case 6:
 			var meta = token.a;
-			return meta.d7;
+			return meta.dq;
 		default:
 			var meta = token.a;
-			return meta.d7;
+			return meta.dq;
 	}
 };
 var $author$project$XMarkdown$Token$AT = function (a) {
@@ -18105,49 +18256,49 @@ var $author$project$XMarkdown$Token$setIndex = F2(
 				return $author$project$XMarkdown$Token$LB(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 1:
 				var meta = token.a;
 				return $author$project$XMarkdown$Token$RB(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 2:
 				var meta = token.a;
 				return $author$project$XMarkdown$Token$LP(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 3:
 				var meta = token.a;
 				return $author$project$XMarkdown$Token$RP(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 6:
 				var meta = token.a;
 				return $author$project$XMarkdown$Token$Bold(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 7:
 				var meta = token.a;
 				return $author$project$XMarkdown$Token$Italic(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 4:
 				var meta = token.a;
 				return $author$project$XMarkdown$Token$Image(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 5:
 				var meta = token.a;
 				return $author$project$XMarkdown$Token$AT(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 8:
 				var str = token.a;
 				var meta = token.b;
@@ -18156,7 +18307,7 @@ var $author$project$XMarkdown$Token$setIndex = F2(
 					str,
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 9:
 				var str = token.a;
 				var meta = token.b;
@@ -18165,19 +18316,19 @@ var $author$project$XMarkdown$Token$setIndex = F2(
 					str,
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 10:
 				var meta = token.a;
 				return $author$project$XMarkdown$Token$MathToken(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 11:
 				var meta = token.a;
 				return $author$project$XMarkdown$Token$CodeToken(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			default:
 				var list = token.a;
 				var meta = token.b;
@@ -18186,7 +18337,7 @@ var $author$project$XMarkdown$Token$setIndex = F2(
 					list,
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 		}
 	});
 var $author$project$XMarkdown$Token$changeTokenIndicesFrom = F3(
@@ -18202,9 +18353,9 @@ var $author$project$XMarkdown$Token$changeTokenIndicesFrom = F3(
 			},
 			tokens);
 	});
-var $author$project$Parser$Meta$dummy = {bn: 0, bq: 0, gR: 'dummyId', d7: 0};
+var $author$project$Parser$Meta$dummy = {bp: 0, bs: 0, gY: 'dummyId', dq: 0};
 var $author$project$XMarkdown$Expression$dummyTokenIndex = 0;
-var $author$project$XMarkdown$Expression$dummyLocWithId = {bn: 0, bq: 0, gR: 'dummy (3)', d7: $author$project$XMarkdown$Expression$dummyTokenIndex};
+var $author$project$XMarkdown$Expression$dummyLocWithId = {bp: 0, bs: 0, gY: 'dummy (3)', dq: $author$project$XMarkdown$Expression$dummyTokenIndex};
 var $author$project$XMarkdown$Expression$errorMessage = function (message) {
 	return A3(
 		$author$project$Parser$Expr$Fun,
@@ -18354,20 +18505,20 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 													$author$project$XMarkdown$Expression$dummyLocWithId),
 												state.l),
 											y: _List_Nil,
-											ac: meta.d7,
-											cf: A3(
+											ae: meta.dq,
+											cg: A3(
 												$author$project$XMarkdown$Token$changeTokenIndicesFrom,
-												meta.d7 + 1,
+												meta.dq + 1,
 												1,
 												A3(
 													$author$project$XMarkdown$Expression$insertAt,
-													meta.d7,
+													meta.dq,
 													$author$project$XMarkdown$Token$Italic(meta),
 													A3(
 														$author$project$XMarkdown$Token$changeTokenContentAt,
-														meta.d7,
+														meta.dq,
 														$elm$core$String$trim(content),
-														state.cf)))
+														state.cg)))
 										}));
 							case 6:
 								var _v3 = _v0.a;
@@ -18391,20 +18542,20 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 													$author$project$XMarkdown$Expression$dummyLocWithId),
 												state.l),
 											y: _List_Nil,
-											ac: meta.d7,
-											cf: A3(
+											ae: meta.dq,
+											cg: A3(
 												$author$project$XMarkdown$Token$changeTokenIndicesFrom,
-												meta.d7 + 1,
+												meta.dq + 1,
 												1,
 												A3(
 													$author$project$XMarkdown$Expression$insertAt,
-													meta.d7,
+													meta.dq,
 													$author$project$XMarkdown$Token$Bold(meta),
 													A3(
 														$author$project$XMarkdown$Token$changeTokenContentAt,
-														meta.d7,
+														meta.dq,
 														$elm$core$String$trim(content),
-														state.cf)))
+														state.cg)))
 										}));
 							default:
 								break _v0$14;
@@ -18483,10 +18634,10 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 												$elm$core$List$cons,
 												$author$project$XMarkdown$Expression$errorMessage('*?1'),
 												A2($elm$core$List$drop, 1, state.l))),
-										eb: _List_fromArray(
+										ef: _List_fromArray(
 											['!!']),
 										y: _List_Nil,
-										ac: meta.d7 + 1
+										ae: meta.dq + 1
 									}));
 						}
 					} else {
@@ -18523,7 +18674,7 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 														$author$project$XMarkdown$Expression$dummyLocWithId),
 													state.l)),
 											y: _List_Nil,
-											ac: meta2.d7 + 1
+											ae: meta2.dq + 1
 										}));
 							} else {
 								if (_v0.b.b.a.$ === 6) {
@@ -18561,7 +18712,7 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 																$author$project$XMarkdown$Expression$dummyLocWithId),
 															state.l)),
 													y: _List_Nil,
-													ac: meta3.d7 + 1
+													ae: meta3.dq + 1
 												}));
 									} else {
 										var meta1 = _v0.a.a;
@@ -18598,7 +18749,7 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 																$author$project$XMarkdown$Expression$dummyLocWithId),
 															state.l)),
 													y: _List_Nil,
-													ac: meta3.d7
+													ae: meta3.dq
 												})) : $author$project$Parser$Helpers$Loop(
 											_Utils_update(
 												state,
@@ -18625,7 +18776,7 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 																$author$project$XMarkdown$Expression$dummyLocWithId),
 															state.l)),
 													y: _List_Nil,
-													ac: meta3.d7 + 1
+													ae: meta3.dq + 1
 												}));
 									}
 								} else {
@@ -18661,7 +18812,7 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 															$author$project$XMarkdown$Expression$dummyLocWithId),
 														state.l)),
 												y: _List_Nil,
-												ac: meta2.d7 + 1
+												ae: meta2.dq + 1
 											}));
 								}
 							}
@@ -18677,25 +18828,25 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 											state,
 											{
 												y: _List_Nil,
-												ac: meta2.d7 + 2,
-												cf: A3(
+												ae: meta2.dq + 2,
+												cg: A3(
 													$author$project$XMarkdown$Token$changeTokenIndicesFrom,
-													meta2.d7 + 2,
+													meta2.dq + 2,
 													1,
 													A3(
 														$author$project$XMarkdown$Expression$insertAt,
-														meta2.d7,
+														meta2.dq,
 														A2(
 															$author$project$XMarkdown$Token$S,
 															'* << extra? ',
 															_Utils_update(
 																meta2,
-																{d7: meta2.d7 + 1})),
+																{dq: meta2.dq + 1})),
 														A3(
 															$elm_community$list_extra$List$Extra$setAt,
-															meta2.d7,
+															meta2.dq,
 															$author$project$XMarkdown$Token$Italic(meta2),
-															state.cf)))
+															state.cg)))
 											}));
 								} else {
 									return $author$project$Parser$Helpers$Loop(
@@ -18708,10 +18859,10 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 														$elm$core$List$cons,
 														$author$project$XMarkdown$Expression$errorMessage('*??1a'),
 														A2($elm$core$List$drop, 1, state.l))),
-												eb: _List_fromArray(
+												ef: _List_fromArray(
 													['!!']),
 												y: _List_Nil,
-												ac: meta1.d7 + 1
+												ae: meta1.dq + 1
 											}));
 								}
 							} else {
@@ -18725,10 +18876,10 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 													$elm$core$List$cons,
 													$author$project$XMarkdown$Expression$errorMessage('*??1b'),
 													A2($elm$core$List$drop, 1, state.l))),
-											eb: _List_fromArray(
+											ef: _List_fromArray(
 												['!!']),
 											y: _List_Nil,
-											ac: meta1.d7 + 1
+											ae: meta1.dq + 1
 										}));
 							}
 						}
@@ -18784,10 +18935,10 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 												$elm$core$List$cons,
 												$author$project$XMarkdown$Expression$errorMessage('**?2'),
 												A2($elm$core$List$drop, 1, state.l))),
-										eb: _List_fromArray(
+										ef: _List_fromArray(
 											['!!']),
 										y: _List_Nil,
-										ac: meta.d7 + 1
+										ae: meta.dq + 1
 									}));
 						}
 					} else {
@@ -18815,10 +18966,10 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 															]),
 														meta),
 													state.l)),
-											eb: _List_fromArray(
+											ef: _List_fromArray(
 												['!!']),
 											y: _List_Nil,
-											ac: meta.d7 + 1
+											ae: meta.dq + 1
 										}));
 							} else {
 								if (_v0.b.b.a.$ === 7) {
@@ -18848,10 +18999,10 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 																]),
 															$author$project$XMarkdown$Expression$dummyLocWithId),
 														state.l)),
-												eb: _List_fromArray(
+												ef: _List_fromArray(
 													['!!']),
 												y: _List_Nil,
-												ac: meta3.d7 + 1
+												ae: meta3.dq + 1
 											}));
 								} else {
 									break _v0$14;
@@ -18874,10 +19025,10 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 									$elm$core$List$cons,
 									$author$project$XMarkdown$Expression$errorMessage(message),
 									state.l),
-								eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'opening dollar sign needs to be matched with a closing one', state.eb),
-								bW: 0,
+								ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'opening dollar sign needs to be matched with a closing one', state.ef),
+								bY: 0,
 								y: _List_Nil,
-								ac: meta.d7 + 1
+								ae: meta.dq + 1
 							}));
 				case 11:
 					var meta = _v0.a.a;
@@ -18892,10 +19043,10 @@ var $author$project$XMarkdown$Expression$recoverFromError = function (state) {
 									$elm$core$List$cons,
 									$author$project$XMarkdown$Expression$errorMessageBold(message),
 									state.l),
-								eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'opening backtick needs to be matched with a closing one', state.eb),
-								bW: 0,
+								ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'opening backtick needs to be matched with a closing one', state.ef),
+								bY: 0,
 								y: _List_Nil,
-								ac: meta.d7 + 1
+								ae: meta.dq + 1
 							}));
 				default:
 					break _v0$14;
@@ -18980,22 +19131,22 @@ var $author$project$L0$Parser$Expression$initWithTokens = F2(
 	function (lineNumber, tokens) {
 		return {
 			l: _List_Nil,
-			g7: lineNumber,
-			eb: _List_Nil,
-			bW: $elm$core$List$length(tokens),
+			ed: lineNumber,
+			ef: _List_Nil,
+			bY: $elm$core$List$length(tokens),
 			y: _List_Nil,
-			dB: 0,
-			ac: 0,
-			cf: $elm$core$List$reverse(tokens)
+			dD: 0,
+			ae: 0,
+			cg: $elm$core$List$reverse(tokens)
 		};
 	});
 var $author$project$L0$Parser$Expression$advanceTokenIndex = function (state) {
 	return _Utils_update(
 		state,
-		{ac: state.ac + 1});
+		{ae: state.ae + 1});
 };
 var $author$project$L0$Parser$Expression$getToken = function (state) {
-	return A2($elm_community$list_extra$List$Extra$getAt, state.ac, state.cf);
+	return A2($elm_community$list_extra$List$Extra$getAt, state.ae, state.cg);
 };
 var $author$project$L0$Parser$Expression$pushOnStack_ = F2(
 	function (token, state) {
@@ -19011,42 +19162,42 @@ var $author$project$L0$Parser$Expression$makeId = F2(
 	});
 var $author$project$L0$Parser$Expression$boostMeta = F3(
 	function (lineNumber, tokenIndex, _v0) {
-		var begin = _v0.bn;
-		var end = _v0.bq;
-		var index = _v0.d7;
+		var begin = _v0.bp;
+		var end = _v0.bs;
+		var index = _v0.dq;
 		return {
-			bn: begin,
-			bq: end,
-			gR: A2($author$project$L0$Parser$Expression$makeId, lineNumber, tokenIndex),
-			d7: index
+			bp: begin,
+			bs: end,
+			gY: A2($author$project$L0$Parser$Expression$makeId, lineNumber, tokenIndex),
+			dq: index
 		};
 	});
 var $author$project$L0$Parser$Token$indexOf = function (token) {
 	switch (token.$) {
 		case 0:
 			var meta = token.a;
-			return meta.d7;
+			return meta.dq;
 		case 1:
 			var meta = token.a;
-			return meta.d7;
+			return meta.dq;
 		case 2:
 			var meta = token.b;
-			return meta.d7;
+			return meta.dq;
 		case 3:
 			var meta = token.b;
-			return meta.d7;
+			return meta.dq;
 		case 4:
 			var meta = token.a;
-			return meta.d7;
+			return meta.dq;
 		case 5:
 			var meta = token.b;
-			return meta.d7;
+			return meta.dq;
 		case 6:
 			var meta = token.a;
-			return meta.d7;
+			return meta.dq;
 		default:
 			var meta = token.b;
-			return meta.d7;
+			return meta.dq;
 	}
 };
 var $author$project$L0$Parser$Expression$stringTokenToExpr = function (token) {
@@ -19175,13 +19326,13 @@ var $author$project$L0$Parser$Token$setIndex = F2(
 				return $author$project$L0$Parser$Token$LB(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 1:
 				var meta = token.a;
 				return $author$project$L0$Parser$Token$RB(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 2:
 				var str = token.a;
 				var meta = token.b;
@@ -19190,7 +19341,7 @@ var $author$project$L0$Parser$Token$setIndex = F2(
 					str,
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 3:
 				var str = token.a;
 				var meta = token.b;
@@ -19199,13 +19350,13 @@ var $author$project$L0$Parser$Token$setIndex = F2(
 					str,
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 4:
 				var meta = token.a;
 				return $author$project$L0$Parser$Token$MathToken(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 5:
 				var str = token.a;
 				var meta = token.b;
@@ -19214,13 +19365,13 @@ var $author$project$L0$Parser$Token$setIndex = F2(
 					str,
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			case 6:
 				var meta = token.a;
 				return $author$project$L0$Parser$Token$CodeToken(
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 			default:
 				var list = token.a;
 				var meta = token.b;
@@ -19229,7 +19380,7 @@ var $author$project$L0$Parser$Token$setIndex = F2(
 					list,
 					_Utils_update(
 						meta,
-						{d7: k}));
+						{dq: k}));
 		}
 	});
 var $author$project$L0$Parser$Token$changeTokenIndicesFrom = F3(
@@ -19246,8 +19397,8 @@ var $author$project$L0$Parser$Token$changeTokenIndicesFrom = F3(
 			tokens);
 	});
 var $author$project$L0$Parser$Expression$dummyTokenIndex = 0;
-var $author$project$L0$Parser$Expression$dummyLoc = {bn: 0, bq: 0, d7: $author$project$L0$Parser$Expression$dummyTokenIndex};
-var $author$project$L0$Parser$Expression$dummyLocWithId = {bn: 0, bq: 0, gR: 'dummy (2)', d7: $author$project$L0$Parser$Expression$dummyTokenIndex};
+var $author$project$L0$Parser$Expression$dummyLoc = {bp: 0, bs: 0, dq: $author$project$L0$Parser$Expression$dummyTokenIndex};
+var $author$project$L0$Parser$Expression$dummyLocWithId = {bp: 0, bs: 0, gY: 'dummy (2)', dq: $author$project$L0$Parser$Expression$dummyTokenIndex};
 var $author$project$L0$Parser$Expression$errorMessage = function (message) {
 	return A3(
 		$author$project$Parser$Expr$Fun,
@@ -19355,18 +19506,18 @@ var $author$project$L0$Parser$Match$getSegment = F2(
 		}
 	});
 var $author$project$L0$Parser$Match$nextStep = function (state) {
-	var _v0 = $elm$core$List$head(state.c1);
+	var _v0 = $elm$core$List$head(state.c2);
 	if (_v0.$ === 1) {
 		return $author$project$Parser$Helpers$Done($elm$core$Maybe$Nothing);
 	} else {
 		var sym = _v0.a;
-		var brackets = state.c7 + $author$project$L0$Parser$Symbol$value(sym);
+		var brackets = state.c8 + $author$project$L0$Parser$Symbol$value(sym);
 		return (brackets < 0) ? $author$project$Parser$Helpers$Done($elm$core$Maybe$Nothing) : ((!brackets) ? $author$project$Parser$Helpers$Done(
-			$elm$core$Maybe$Just(state.d7)) : $author$project$Parser$Helpers$Loop(
+			$elm$core$Maybe$Just(state.dq)) : $author$project$Parser$Helpers$Loop(
 			{
-				c7: brackets,
-				d7: state.d7 + 1,
-				c1: A2($elm$core$List$drop, 1, state.c1)
+				c8: brackets,
+				dq: state.dq + 1,
+				c2: A2($elm$core$List$drop, 1, state.c2)
 			}));
 	}
 };
@@ -19385,9 +19536,9 @@ var $author$project$L0$Parser$Match$match = function (symbols) {
 				A2($author$project$L0$Parser$Match$getSegment, symbol, symbols)) - 1) : (($author$project$L0$Parser$Symbol$value(symbol) < 0) ? $elm$core$Maybe$Nothing : A2(
 			$author$project$Parser$Helpers$loop,
 			{
-				c7: $author$project$L0$Parser$Symbol$value(symbol),
-				d7: 1,
-				c1: A2($elm$core$List$drop, 1, symbols)
+				c8: $author$project$L0$Parser$Symbol$value(symbol),
+				dq: 1,
+				c2: A2($elm$core$List$drop, 1, symbols)
 			},
 			$author$project$L0$Parser$Match$nextStep));
 	}
@@ -19727,7 +19878,7 @@ var $author$project$L0$Parser$Expression$reduceTokens = F2(
 							$author$project$L0$Parser$Expression$reduceRestOfTokens,
 							lineNumber,
 							A2($elm$core$List$drop, 1, args)),
-						A3($author$project$L0$Parser$Expression$boostMeta, lineNumber, meta.d7, meta))
+						A3($author$project$L0$Parser$Expression$boostMeta, lineNumber, meta.dq, meta))
 					]);
 			} else {
 				return _List_fromArray(
@@ -19754,7 +19905,7 @@ var $author$project$L0$Parser$Expression$reduceTokens = F2(
 										$author$project$Parser$Expr$Verbatim,
 										'math',
 										str,
-										A3($author$project$L0$Parser$Expression$boostMeta, lineNumber, meta.d7, meta)),
+										A3($author$project$L0$Parser$Expression$boostMeta, lineNumber, meta.dq, meta)),
 									A2($author$project$L0$Parser$Expression$reduceRestOfTokens, lineNumber, rest));
 							} else {
 								break _v2$2;
@@ -19773,7 +19924,7 @@ var $author$project$L0$Parser$Expression$reduceTokens = F2(
 										$author$project$Parser$Expr$Verbatim,
 										'code',
 										str,
-										A3($author$project$L0$Parser$Expression$boostMeta, lineNumber, meta.d7, meta)),
+										A3($author$project$L0$Parser$Expression$boostMeta, lineNumber, meta.dq, meta)),
 									A2($author$project$L0$Parser$Expression$reduceRestOfTokens, lineNumber, rest));
 							} else {
 								break _v2$2;
@@ -19794,7 +19945,7 @@ var $author$project$L0$Parser$Expression$reduceTokens = F2(
 var $author$project$L0$Parser$Expression$reduceStack = function (state) {
 	return A2(
 		$author$project$L0$Parser$Expression$reduceTokens,
-		state.g7,
+		state.ed,
 		$elm$core$List$reverse(state.y));
 };
 var $author$project$L0$Parser$Expression$tokensAreReducible = function (state) {
@@ -19837,14 +19988,14 @@ var $author$project$L0$Parser$Expression$recoverFromUnknownError = function (sta
 							$elm$core$List$cons,
 							$author$project$L0$Parser$Expression$errorMessage(' ?!?(2) '),
 							state.l),
-						eb: A3(
+						ef: A3(
 							$author$project$Parser$Helpers$prependMessage,
-							state.g7,
+							state.ed,
 							' ?!?(3) ' + ($elm$core$String$fromInt(k) + ' right brackets'),
-							state.eb),
-						bW: $elm$core$List$length(newStack),
+							state.ef),
+						bY: $elm$core$List$length(newStack),
 						y: newStack,
-						ac: 0
+						ae: 0
 					})))) : $author$project$Parser$Helpers$Done(
 		_Utils_update(
 			state,
@@ -19853,11 +20004,11 @@ var $author$project$L0$Parser$Expression$recoverFromUnknownError = function (sta
 					$elm$core$List$cons,
 					$author$project$L0$Parser$Expression$bracketError(k),
 					state.l),
-				eb: A3(
+				ef: A3(
 					$author$project$Parser$Helpers$prependMessage,
-					state.g7,
+					state.ed,
 					$author$project$L0$Parser$Expression$bracketErrorAsString(k),
-					state.eb)
+					state.ef)
 			}));
 };
 var $author$project$L0$Parser$Token$stringValue = function (token) {
@@ -19909,24 +20060,24 @@ var $author$project$L0$Parser$Expression$recoverFromError = function (state) {
 												$elm$core$List$cons,
 												$author$project$L0$Parser$Expression$errorMessage('[?]'),
 												state.l),
-											eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'Brackets must enclose something', state.eb),
+											ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'Brackets must enclose something', state.ef),
 											y: _List_Nil,
-											ac: meta.d7 + 1
+											ae: meta.dq + 1
 										}));
 							case 0:
 								var meta1 = _v0.a.a;
 								var _v2 = _v0.b;
-								var k = meta1.d7;
-								var shiftedTokens = A3($author$project$L0$Parser$Token$changeTokenIndicesFrom, k + 1, 1, state.cf);
+								var k = meta1.dq;
+								var shiftedTokens = A3($author$project$L0$Parser$Token$changeTokenIndicesFrom, k + 1, 1, state.cg);
 								return $author$project$Parser$Helpers$Loop(
 									_Utils_update(
 										state,
 										{
-											eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'Consecutive left brackets', state.eb),
+											ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'Consecutive left brackets', state.ef),
 											y: _List_Nil,
-											ac: meta1.d7,
-											cf: _Utils_ap(
-												A2($elm$core$List$take, k + 1, state.cf),
+											ae: meta1.dq,
+											cg: _Utils_ap(
+												A2($elm$core$List$take, k + 1, state.cg),
 												A2(
 													$elm$core$List$cons,
 													A2(
@@ -19934,7 +20085,7 @@ var $author$project$L0$Parser$Expression$recoverFromError = function (state) {
 														'[??',
 														_Utils_update(
 															$author$project$L0$Parser$Expression$dummyLoc,
-															{d7: k + 1})),
+															{dq: k + 1})),
 													A2($elm$core$List$drop, k + 1, shiftedTokens)))
 										}));
 							case 2:
@@ -19955,9 +20106,9 @@ var $author$project$L0$Parser$Expression$recoverFromError = function (state) {
 													$elm$core$List$cons,
 													$author$project$L0$Parser$Expression$errorMessage('[' + fName),
 													state.l)),
-											eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'Missing right bracket', state.eb),
+											ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'Missing right bracket', state.ef),
 											y: _List_Nil,
-											ac: meta.d7 + 1
+											ae: meta.dq + 1
 										}));
 							case 3:
 								if (_v0.b.a.a === ' ') {
@@ -19972,9 +20123,9 @@ var $author$project$L0$Parser$Expression$recoverFromError = function (state) {
 													$elm$core$List$cons,
 													$author$project$L0$Parser$Expression$errorMessage('[ - can\'t have space after the bracket '),
 													state.l),
-												eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'Can\'t have space after left bracket - try [something ...', state.eb),
+												ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'Can\'t have space after left bracket - try [something ...', state.ef),
 												y: _List_Nil,
-												ac: meta.d7 + 1
+												ae: meta.dq + 1
 											}));
 								} else {
 									break _v0$9;
@@ -19991,10 +20142,10 @@ var $author$project$L0$Parser$Expression$recoverFromError = function (state) {
 										$elm$core$List$cons,
 										$author$project$L0$Parser$Expression$errorMessage('[...?'),
 										state.l),
-									eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'That left bracket needs something after it', state.eb),
-									bW: 0,
+									ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'That left bracket needs something after it', state.ef),
+									bY: 0,
 									y: _List_Nil,
-									ac: 0
+									ae: 0
 								}));
 					}
 				case 1:
@@ -20007,9 +20158,9 @@ var $author$project$L0$Parser$Expression$recoverFromError = function (state) {
 									$elm$core$List$cons,
 									$author$project$L0$Parser$Expression$errorMessage(' extra ]?'),
 									state.l),
-								eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'Extra right bracket(s)', state.eb),
+								ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'Extra right bracket(s)', state.ef),
 								y: _List_Nil,
-								ac: meta.d7 + 1
+								ae: meta.dq + 1
 							}));
 				case 4:
 					var meta = _v0.a.a;
@@ -20024,10 +20175,10 @@ var $author$project$L0$Parser$Expression$recoverFromError = function (state) {
 									$elm$core$List$cons,
 									$author$project$L0$Parser$Expression$errorMessage(message),
 									state.l),
-								eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'opening dollar sign needs to be matched with a closing one', state.eb),
-								bW: 0,
+								ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'opening dollar sign needs to be matched with a closing one', state.ef),
+								bY: 0,
 								y: _List_Nil,
-								ac: meta.d7 + 1
+								ae: meta.dq + 1
 							}));
 				case 6:
 					var meta = _v0.a.a;
@@ -20042,10 +20193,10 @@ var $author$project$L0$Parser$Expression$recoverFromError = function (state) {
 									$elm$core$List$cons,
 									$author$project$L0$Parser$Expression$errorMessage(message),
 									state.l),
-								eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'opening backtick needs to be matched with a closing one', state.eb),
-								bW: 0,
+								ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'opening backtick needs to be matched with a closing one', state.ef),
+								bY: 0,
 								y: _List_Nil,
-								ac: meta.d7 + 1
+								ae: meta.dq + 1
 							}));
 				case 7:
 					var _v7 = _v0.a;
@@ -20058,9 +20209,9 @@ var $author$project$L0$Parser$Expression$recoverFromError = function (state) {
 									$elm$core$List$cons,
 									$author$project$L0$Parser$Expression$errorMessage('\\[..??'),
 									state.l),
-								eb: A3($author$project$Parser$Helpers$prependMessage, state.g7, 'No mathching \\]??', state.eb),
+								ef: A3($author$project$Parser$Helpers$prependMessage, state.ed, 'No mathching \\]??', state.ef),
 								y: _List_Nil,
-								ac: meta.d7 + 1
+								ae: meta.dq + 1
 							}));
 				default:
 					break _v0$9;
@@ -20084,7 +20235,7 @@ var $author$project$L0$Parser$Expression$nextStep = function (state) {
 			function (st) {
 				return _Utils_update(
 					st,
-					{dB: st.dB + 1});
+					{dD: st.dD + 1});
 			}(
 				$author$project$L0$Parser$Expression$reduceState(
 					A2(
@@ -20112,13 +20263,13 @@ var $author$project$L0$Parser$Expression$parseTokenListToState = F2(
 var $author$project$L0$Parser$Token$Normal = 0;
 var $author$project$L0$Parser$Token$init = function (str) {
 	return {
-		bp: $elm$core$Maybe$Nothing,
-		cK: 0,
-		bz: 0,
-		et: str,
-		eu: $elm$core$String$length(str),
-		ac: 0,
-		cf: _List_Nil
+		br: $elm$core$Maybe$Nothing,
+		cL: 0,
+		bB: 0,
+		ex: str,
+		ey: $elm$core$String$length(str),
+		ae: 0,
+		cg: _List_Nil
 	};
 };
 var $author$project$L0$Parser$Token$codeParser = F2(
@@ -20127,7 +20278,7 @@ var $author$project$L0$Parser$Token$codeParser = F2(
 			$elm$parser$Parser$Advanced$map,
 			function (_v1) {
 				return $author$project$L0$Parser$Token$CodeToken(
-					{bn: start, bq: start, d7: index});
+					{bp: start, bs: start, dq: index});
 			},
 			A2(
 				$author$project$Parser$Tools$text,
@@ -20149,8 +20300,8 @@ var $author$project$L0$Parser$Token$codeTextParser = F2(
 			function (data) {
 				return A2(
 					$author$project$L0$Parser$Token$S,
-					data.bJ,
-					{bn: start, bq: ((start + data.bq) - data.bn) - 1, d7: index});
+					data.bM,
+					{bp: start, bs: ((start + data.bs) - data.bp) - 1, dq: index});
 			},
 			A2(
 				$author$project$Parser$Tools$text,
@@ -20174,8 +20325,8 @@ var $author$project$L0$Parser$Token$whiteSpaceParser = F2(
 			function (data) {
 				return A2(
 					$author$project$L0$Parser$Token$W,
-					data.bJ,
-					{bn: start, bq: start, d7: index});
+					data.bM,
+					{bp: start, bs: start, dq: index});
 			},
 			A2(
 				$author$project$Parser$Tools$text,
@@ -20202,7 +20353,7 @@ var $author$project$L0$Parser$Token$mathParser = F2(
 			$elm$parser$Parser$Advanced$map,
 			function (_v1) {
 				return $author$project$L0$Parser$Token$MathToken(
-					{bn: start, bq: start, d7: index});
+					{bp: start, bs: start, dq: index});
 			},
 			A2(
 				$author$project$Parser$Tools$text,
@@ -20222,8 +20373,8 @@ var $author$project$L0$Parser$Token$mathTextParser = F2(
 			function (data) {
 				return A2(
 					$author$project$L0$Parser$Token$S,
-					data.bJ,
-					{bn: start, bq: ((start + data.bq) - data.bn) - 1, d7: index});
+					data.bM,
+					{bp: start, bs: ((start + data.bs) - data.bp) - 1, dq: index});
 			},
 			A2(
 				$author$project$Parser$Tools$text,
@@ -20266,7 +20417,7 @@ var $author$project$L0$Parser$Token$bracketedMathParser = F2(
 									return A2(
 										$author$project$L0$Parser$Token$BracketedMath,
 										A3($elm$core$String$slice, a, b - 2, content),
-										{bn: start, bq: ((start + b) - a) + 1, d7: index});
+										{bp: start, bs: ((start + b) - a) + 1, dq: index});
 								})),
 						$elm$parser$Parser$Advanced$symbol(
 							A2(
@@ -20297,7 +20448,7 @@ var $author$project$L0$Parser$Token$leftBracketParser = F2(
 			$elm$parser$Parser$Advanced$map,
 			function (_v1) {
 				return $author$project$L0$Parser$Token$LB(
-					{bn: start, bq: start, d7: index});
+					{bp: start, bs: start, dq: index});
 			},
 			A2(
 				$author$project$Parser$Tools$text,
@@ -20314,7 +20465,7 @@ var $author$project$L0$Parser$Token$rightBracketParser = F2(
 			$elm$parser$Parser$Advanced$map,
 			function (_v1) {
 				return $author$project$L0$Parser$Token$RB(
-					{bn: start, bq: start, d7: index});
+					{bp: start, bs: start, dq: index});
 			},
 			A2(
 				$author$project$Parser$Tools$text,
@@ -20332,8 +20483,8 @@ var $author$project$L0$Parser$Token$textParser = F2(
 			function (data) {
 				return A2(
 					$author$project$L0$Parser$Token$S,
-					data.bJ,
-					{bn: start, bq: ((start + data.bq) - data.bn) - 1, d7: index});
+					data.bM,
+					{bp: start, bs: ((start + data.bs) - data.bp) - 1, dq: index});
 			},
 			A2(
 				$author$project$Parser$Tools$text,
@@ -20379,7 +20530,7 @@ var $author$project$L0$Parser$Token$get = F3(
 	function (state, start, input) {
 		var _v0 = A2(
 			$elm$parser$Parser$Advanced$run,
-			A3($author$project$L0$Parser$Token$tokenParser, state.cK, start, state.ac),
+			A3($author$project$L0$Parser$Token$tokenParser, state.cL, start, state.ae),
 			input);
 		if (!_v0.$) {
 			var token = _v0.a;
@@ -20389,7 +20540,7 @@ var $author$project$L0$Parser$Token$get = F3(
 			return A2(
 				$author$project$L0$Parser$Token$TokenError,
 				errorList,
-				{bn: start, bq: start + 1, d7: state.ac});
+				{bp: start, bs: start + 1, dq: state.ae});
 		}
 	});
 var $author$project$L0$Parser$Token$isTextToken = function (token) {
@@ -20403,28 +20554,28 @@ var $author$project$L0$Parser$Token$length = function (token) {
 	switch (token.$) {
 		case 0:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 1:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 2:
 			var meta = token.b;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 4:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 6:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 5:
 			var meta = token.b;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 3:
 			var meta = token.b;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		default:
 			var meta = token.b;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 	}
 };
 var $author$project$L0$Parser$Token$InCode = 2;
@@ -20487,7 +20638,7 @@ var $author$project$L0$Parser$Token$mergeToken = F2(
 	function (lastToken, currentToken) {
 		var lastTokenMeta = $author$project$L0$Parser$Token$getMeta(lastToken);
 		var currentTokenMeta = $author$project$L0$Parser$Token$getMeta(currentToken);
-		var meta = {bn: lastTokenMeta.bn, bq: currentTokenMeta.bq, d7: -1};
+		var meta = {bp: lastTokenMeta.bp, bs: currentTokenMeta.bs, dq: -1};
 		return A2(
 			$author$project$L0$Parser$Token$S,
 			_Utils_ap(
@@ -20510,81 +20661,81 @@ var $author$project$L0$Parser$Token$updateCurrentToken = F3(
 		}
 	});
 var $author$project$L0$Parser$Token$nextStep = function (state) {
-	if (_Utils_cmp(state.bz, state.eu) > -1) {
-		var _v0 = state.bp;
+	if (_Utils_cmp(state.bB, state.ey) > -1) {
+		var _v0 = state.br;
 		if (!_v0.$) {
 			var token = _v0.a;
 			return $author$project$Parser$Helpers$Done(
-				A2($elm$core$List$cons, token, state.cf));
+				A2($elm$core$List$cons, token, state.cg));
 		} else {
-			return $author$project$Parser$Helpers$Done(state.cf);
+			return $author$project$Parser$Helpers$Done(state.cg);
 		}
 	} else {
 		var token = A3(
 			$author$project$L0$Parser$Token$get,
 			state,
-			state.bz,
-			A2($elm$core$String$dropLeft, state.bz, state.et));
-		var newScanPointer = (state.bz + $author$project$L0$Parser$Token$length(token)) + 1;
+			state.bB,
+			A2($elm$core$String$dropLeft, state.bB, state.ex));
+		var newScanPointer = (state.bB + $author$project$L0$Parser$Token$length(token)) + 1;
 		var _v1 = function () {
 			if ($author$project$L0$Parser$Token$isTextToken(token)) {
 				return _Utils_eq(
 					A2(
 						$elm$core$Maybe$map,
 						$author$project$L0$Parser$Token$type_,
-						$elm$core$List$head(state.cf)),
+						$elm$core$List$head(state.cg)),
 					$elm$core$Maybe$Just(0)) ? _Utils_Tuple3(
 					A2(
 						$elm$core$List$cons,
-						A2($author$project$L0$Parser$Token$setIndex, state.ac, token),
-						state.cf),
-					state.ac + 1,
+						A2($author$project$L0$Parser$Token$setIndex, state.ae, token),
+						state.cg),
+					state.ae + 1,
 					$elm$core$Maybe$Nothing) : _Utils_Tuple3(
-					state.cf,
-					state.ac,
-					A3($author$project$L0$Parser$Token$updateCurrentToken, state.ac, token, state.bp));
+					state.cg,
+					state.ae,
+					A3($author$project$L0$Parser$Token$updateCurrentToken, state.ae, token, state.br));
 			} else {
 				if (!$author$project$L0$Parser$Token$type_(token)) {
-					var _v2 = state.bp;
+					var _v2 = state.br;
 					if (_v2.$ === 1) {
 						return _Utils_Tuple3(
 							A2(
 								$elm$core$List$cons,
-								A2($author$project$L0$Parser$Token$setIndex, state.ac, token),
-								state.cf),
-							state.ac + 1,
+								A2($author$project$L0$Parser$Token$setIndex, state.ae, token),
+								state.cg),
+							state.ae + 1,
 							$elm$core$Maybe$Nothing);
 					} else {
 						var textToken = _v2.a;
 						return _Utils_Tuple3(
 							A2(
 								$elm$core$List$cons,
-								A2($author$project$L0$Parser$Token$setIndex, state.ac + 1, token),
+								A2($author$project$L0$Parser$Token$setIndex, state.ae + 1, token),
 								A2(
 									$elm$core$List$cons,
-									A2($author$project$L0$Parser$Token$setIndex, state.ac, textToken),
-									state.cf)),
-							state.ac + 2,
+									A2($author$project$L0$Parser$Token$setIndex, state.ae, textToken),
+									state.cg)),
+							state.ae + 2,
 							$elm$core$Maybe$Nothing);
 					}
 				} else {
-					var _v3 = state.bp;
+					var _v3 = state.br;
 					if (_v3.$ === 1) {
 						return _Utils_Tuple3(
 							A2(
 								$elm$core$List$cons,
-								A2($author$project$L0$Parser$Token$setIndex, state.ac, token),
-								state.cf),
-							state.ac + 1,
+								A2($author$project$L0$Parser$Token$setIndex, state.ae, token),
+								state.cg),
+							state.ae + 1,
 							$elm$core$Maybe$Nothing);
 					} else {
 						var textToken = _v3.a;
 						return _Utils_Tuple3(
 							A2(
 								$elm$core$List$cons,
-								A2($author$project$L0$Parser$Token$setIndex, state.ac + 1, token),
-								A2($elm$core$List$cons, textToken, state.cf)),
-							state.ac + 2,
+								A2($author$project$L0$Parser$Token$setIndex, state.ae + 1, token),
+								A2($elm$core$List$cons, textToken, state.cg)),
+							state.ae + 2,
 							$elm$core$Maybe$Nothing);
 					}
 				}
@@ -20598,11 +20749,11 @@ var $author$project$L0$Parser$Token$nextStep = function (state) {
 			_Utils_update(
 				state,
 				{
-					bp: currentToken,
-					cK: A2($author$project$L0$Parser$Token$newMode, token, state.cK),
-					bz: newScanPointer,
-					ac: tokenIndex,
-					cf: tokens
+					br: currentToken,
+					cL: A2($author$project$L0$Parser$Token$newMode, token, state.cL),
+					bB: newScanPointer,
+					ae: tokenIndex,
+					cg: tokens
 				}));
 	}
 };
@@ -20622,7 +20773,7 @@ var $author$project$L0$Parser$Expression$parseToState = F2(
 var $author$project$L0$Parser$Expression$parseWithMessages = F2(
 	function (lineNumber, str) {
 		var state = A2($author$project$L0$Parser$Expression$parseToState, lineNumber, str);
-		return _Utils_Tuple2(state.l, state.eb);
+		return _Utils_Tuple2(state.l, state.ef);
 	});
 var $author$project$XMarkdown$Expression$handleAt = function (state) {
 	var content = A4(
@@ -20656,10 +20807,10 @@ var $author$project$XMarkdown$Expression$takeMiddle = function (list) {
 };
 var $author$project$XMarkdown$Expression$handleBoldItalic = function (state) {
 	var meta = {
-		bn: 0,
-		bq: 0,
-		gR: A2($author$project$XMarkdown$Expression$makeId, state.g7, state.ac),
-		d7: 0
+		bp: 0,
+		bs: 0,
+		gY: A2($author$project$XMarkdown$Expression$makeId, state.ed, state.ae),
+		dq: 0
 	};
 	var content = $author$project$XMarkdown$Token$toString2(
 		$author$project$XMarkdown$Expression$takeMiddle(
@@ -20693,10 +20844,10 @@ var $author$project$XMarkdown$Expression$handleBoldSymbol = F2(
 			_List_fromArray(
 				[4, 4]))) {
 			var meta = {
-				bn: 0,
-				bq: 0,
-				gR: A2($author$project$XMarkdown$Expression$makeId, state.g7, state.ac),
-				d7: 0
+				bp: 0,
+				bs: 0,
+				gY: A2($author$project$XMarkdown$Expression$makeId, state.ed, state.ae),
+				dq: 0
 			};
 			var content = $author$project$XMarkdown$Token$toString2(
 				$author$project$XMarkdown$Expression$takeMiddle(state.y));
@@ -20733,10 +20884,10 @@ var $author$project$XMarkdown$Expression$handleBracketedText = function (state) 
 		}
 	}();
 	var meta = {
-		bn: 0,
-		bq: 0,
-		gR: A2($author$project$XMarkdown$Expression$makeId, state.g7, state.ac),
-		d7: 0
+		bp: 0,
+		bs: 0,
+		gY: A2($author$project$XMarkdown$Expression$makeId, state.ed, state.ae),
+		dq: 0
 	};
 	var expr = A2($author$project$Parser$Expr$Text, str, meta);
 	return _Utils_update(
@@ -20759,10 +20910,10 @@ var $author$project$XMarkdown$Expression$handleCodeSymbol = F2(
 				'code',
 				content,
 				{
-					bn: 0,
-					bq: 0,
-					gR: A2($author$project$XMarkdown$Expression$makeId, state.g7, state.ac),
-					d7: 0
+					bp: 0,
+					bs: 0,
+					gY: A2($author$project$XMarkdown$Expression$makeId, state.ed, state.ae),
+					dq: 0
 				});
 			return _Utils_update(
 				state,
@@ -20776,10 +20927,10 @@ var $author$project$XMarkdown$Expression$handleCodeSymbol = F2(
 	});
 var $author$project$XMarkdown$Expression$handleImage = function (state) {
 	var meta = {
-		bn: 0,
-		bq: 0,
-		gR: A2($author$project$XMarkdown$Expression$makeId, state.g7, state.ac),
-		d7: 0
+		bp: 0,
+		bs: 0,
+		gY: A2($author$project$XMarkdown$Expression$makeId, state.ed, state.ae),
+		dq: 0
 	};
 	var data = function () {
 		var _v0 = state.y;
@@ -20794,9 +20945,9 @@ var $author$project$XMarkdown$Expression$handleImage = function (state) {
 			var label = _v6.a;
 			var _v7 = _v5.b;
 			var _v8 = _v7.b;
-			return {g6: label, eA: url};
+			return {hd: label, eE: url};
 		} else {
-			return {g6: 'no image label', eA: 'no image url'};
+			return {hd: 'no image label', eE: 'no image url'};
 		}
 	}();
 	var expr = A4(
@@ -20809,7 +20960,7 @@ var $author$project$XMarkdown$Expression$handleImage = function (state) {
 			'image',
 			_List_fromArray(
 				[
-					A2($author$project$Parser$Expr$Text, data.eA + (' ' + data.g6), meta)
+					A2($author$project$Parser$Expr$Text, data.eE + (' ' + data.hd), meta)
 				]),
 			meta));
 	return _Utils_update(
@@ -20826,10 +20977,10 @@ var $author$project$XMarkdown$Expression$handleItalicSymbol = F2(
 			_List_fromArray(
 				[5, 5]))) {
 			var meta = {
-				bn: 0,
-				bq: 0,
-				gR: A2($author$project$XMarkdown$Expression$makeId, state.g7, state.ac),
-				d7: 0
+				bp: 0,
+				bs: 0,
+				gY: A2($author$project$XMarkdown$Expression$makeId, state.ed, state.ae),
+				dq: 0
 			};
 			var content = $author$project$XMarkdown$Token$toString2(
 				$author$project$XMarkdown$Expression$takeMiddle(state.y));
@@ -20853,10 +21004,10 @@ var $author$project$XMarkdown$Expression$handleItalicSymbol = F2(
 	});
 var $author$project$XMarkdown$Expression$handleLink = function (state) {
 	var meta = {
-		bn: 0,
-		bq: 0,
-		gR: A2($author$project$XMarkdown$Expression$makeId, state.g7, state.ac),
-		d7: 0
+		bp: 0,
+		bs: 0,
+		gY: A2($author$project$XMarkdown$Expression$makeId, state.ed, state.ae),
+		dq: 0
 	};
 	var expr = function () {
 		var _v0 = state.y;
@@ -20966,10 +21117,10 @@ var $author$project$XMarkdown$Expression$handleMathSymbol = F2(
 				'math',
 				content,
 				{
-					bn: 0,
-					bq: 0,
-					gR: A2($author$project$XMarkdown$Expression$makeId, state.g7, state.ac),
-					d7: 0
+					bp: 0,
+					bs: 0,
+					gY: A2($author$project$XMarkdown$Expression$makeId, state.ed, state.ae),
+					dq: 0
 				});
 			return _Utils_update(
 				state,
@@ -20996,10 +21147,10 @@ var $author$project$XMarkdown$Expression$handleParens = function (state) {
 		}
 	}();
 	var meta = {
-		bn: 0,
-		bq: 0,
-		gR: A2($author$project$XMarkdown$Expression$makeId, state.g7, state.ac),
-		d7: 0
+		bp: 0,
+		bs: 0,
+		gY: A2($author$project$XMarkdown$Expression$makeId, state.ed, state.ae),
+		dq: 0
 	};
 	var expr = A2($author$project$Parser$Expr$Text, str, meta);
 	return _Utils_update(
@@ -21125,7 +21276,7 @@ var $author$project$XMarkdown$Expression$reduceState = function (state) {
 		$author$project$XMarkdown$Expression$forkLogWidth,
 		$elm$core$Basics$identity,
 		$author$project$XMarkdown$Expression$isReducible(state.y));
-	if ((_Utils_cmp(state.ac, state.bW) > -1) || reducible1) {
+	if ((_Utils_cmp(state.ae, state.bY) > -1) || reducible1) {
 		var symbols = A4(
 			$author$project$Tools$forklogRed,
 			'SYMBOLS',
@@ -21194,7 +21345,7 @@ var $author$project$XMarkdown$Expression$reduceState = function (state) {
 	}
 };
 var $author$project$XMarkdown$Expression$nextStep = function (state) {
-	var _v0 = A2($elm_community$list_extra$List$Extra$getAt, state.ac, state.cf);
+	var _v0 = A2($elm_community$list_extra$List$Extra$getAt, state.ae, state.cg);
 	if (_v0.$ === 1) {
 		return $elm$core$List$isEmpty(state.y) ? $author$project$Parser$Helpers$Done(state) : $author$project$XMarkdown$Expression$recoverFromError(
 			A4(
@@ -21214,7 +21365,7 @@ var $author$project$XMarkdown$Expression$nextStep = function (state) {
 			function (st) {
 				return _Utils_update(
 					st,
-					{dB: st.dB + 1});
+					{dD: st.dD + 1});
 			}(
 				$author$project$XMarkdown$Expression$reduceState(
 					A4(
@@ -21246,13 +21397,13 @@ var $author$project$XMarkdown$Expression$run = function (state) {
 var $author$project$XMarkdown$Token$Normal = 0;
 var $author$project$XMarkdown$Token$init = function (str) {
 	return {
-		bp: $elm$core$Maybe$Nothing,
-		cK: 0,
-		bz: 0,
-		et: str,
-		eu: $elm$core$String$length(str),
-		ac: 0,
-		cf: _List_Nil
+		br: $elm$core$Maybe$Nothing,
+		cL: 0,
+		bB: 0,
+		ex: str,
+		ey: $elm$core$String$length(str),
+		ae: 0,
+		cg: _List_Nil
 	};
 };
 var $author$project$XMarkdown$Token$TLB = 0;
@@ -21260,13 +21411,13 @@ var $author$project$XMarkdown$Token$fakeDebugLog = function (_v0) {
 	return $elm$core$Basics$identity;
 };
 var $author$project$XMarkdown$Token$finish = function (state) {
-	var _v0 = state.bp;
+	var _v0 = state.br;
 	if (!_v0.$) {
 		var token = _v0.a;
 		return $author$project$Parser$Helpers$Done(
-			A2($elm$core$List$cons, token, state.cf));
+			A2($elm$core$List$cons, token, state.cg));
 	} else {
-		return $author$project$Parser$Helpers$Done(state.cf);
+		return $author$project$Parser$Helpers$Done(state.cg);
 	}
 };
 var $author$project$XMarkdown$Token$makeId = F2(
@@ -21280,10 +21431,10 @@ var $author$project$XMarkdown$Token$codeParser = F2(
 			function (_v1) {
 				return $author$project$XMarkdown$Token$CodeToken(
 					{
-						bn: start,
-						bq: start,
-						gR: A2($author$project$XMarkdown$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start,
+						gY: A2($author$project$XMarkdown$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -21306,12 +21457,12 @@ var $author$project$XMarkdown$Token$codeTextParser = F2(
 			function (data) {
 				return A2(
 					$author$project$XMarkdown$Token$S,
-					data.bJ,
+					data.bM,
 					{
-						bn: start,
-						bq: ((start + data.bq) - data.bn) - 1,
-						gR: A2($author$project$XMarkdown$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: ((start + data.bs) - data.bp) - 1,
+						gY: A2($author$project$XMarkdown$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -21336,12 +21487,12 @@ var $author$project$XMarkdown$Token$whiteSpaceParser = F2(
 			function (data) {
 				return A2(
 					$author$project$XMarkdown$Token$W,
-					data.bJ,
+					data.bM,
 					{
-						bn: start,
-						bq: start,
-						gR: A2($author$project$XMarkdown$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start,
+						gY: A2($author$project$XMarkdown$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -21370,10 +21521,10 @@ var $author$project$XMarkdown$Token$mathParser = F2(
 			function (_v1) {
 				return $author$project$XMarkdown$Token$MathToken(
 					{
-						bn: start,
-						bq: start,
-						gR: A2($author$project$XMarkdown$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start,
+						gY: A2($author$project$XMarkdown$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -21394,12 +21545,12 @@ var $author$project$XMarkdown$Token$mathTextParser = F2(
 			function (data) {
 				return A2(
 					$author$project$XMarkdown$Token$S,
-					data.bJ,
+					data.bM,
 					{
-						bn: start,
-						bq: ((start + data.bq) - data.bn) - 1,
-						gR: A2($author$project$XMarkdown$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: ((start + data.bs) - data.bp) - 1,
+						gY: A2($author$project$XMarkdown$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -21435,10 +21586,10 @@ var $author$project$XMarkdown$Token$atParser = F2(
 			function (_v0) {
 				return $author$project$XMarkdown$Token$AT(
 					{
-						bn: start,
-						bq: start,
-						gR: A2($author$project$XMarkdown$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start,
+						gY: A2($author$project$XMarkdown$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			$elm$parser$Parser$Advanced$symbol(
@@ -21451,10 +21602,10 @@ var $author$project$XMarkdown$Token$boldParser = F2(
 			function (_v0) {
 				return $author$project$XMarkdown$Token$Bold(
 					{
-						bn: start,
-						bq: start + 1,
-						gR: A2($author$project$XMarkdown$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start + 1,
+						gY: A2($author$project$XMarkdown$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			$elm$parser$Parser$Advanced$symbol(
@@ -21471,10 +21622,10 @@ var $author$project$XMarkdown$Token$imageParser = F2(
 			function (_v0) {
 				return $author$project$XMarkdown$Token$Image(
 					{
-						bn: start,
-						bq: start,
-						gR: A2($author$project$XMarkdown$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start,
+						gY: A2($author$project$XMarkdown$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			$elm$parser$Parser$Advanced$symbol(
@@ -21487,10 +21638,10 @@ var $author$project$XMarkdown$Token$italicParser = F2(
 			function (_v1) {
 				return $author$project$XMarkdown$Token$Italic(
 					{
-						bn: start,
-						bq: start,
-						gR: A2($author$project$XMarkdown$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start,
+						gY: A2($author$project$XMarkdown$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -21509,10 +21660,10 @@ var $author$project$XMarkdown$Token$leftBracketParser = F2(
 			function (_v1) {
 				return $author$project$XMarkdown$Token$LB(
 					{
-						bn: start,
-						bq: start,
-						gR: A2($author$project$XMarkdown$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start,
+						gY: A2($author$project$XMarkdown$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -21531,10 +21682,10 @@ var $author$project$XMarkdown$Token$leftParenParser = F2(
 			function (_v1) {
 				return $author$project$XMarkdown$Token$LP(
 					{
-						bn: start,
-						bq: start,
-						gR: A2($author$project$XMarkdown$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start,
+						gY: A2($author$project$XMarkdown$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -21553,10 +21704,10 @@ var $author$project$XMarkdown$Token$rightBracketParser = F2(
 			function (_v1) {
 				return $author$project$XMarkdown$Token$RB(
 					{
-						bn: start,
-						bq: start,
-						gR: A2($author$project$XMarkdown$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start,
+						gY: A2($author$project$XMarkdown$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -21575,10 +21726,10 @@ var $author$project$XMarkdown$Token$rightParenParser = F2(
 			function (_v1) {
 				return $author$project$XMarkdown$Token$RP(
 					{
-						bn: start,
-						bq: start,
-						gR: A2($author$project$XMarkdown$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: start,
+						gY: A2($author$project$XMarkdown$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -21597,12 +21748,12 @@ var $author$project$XMarkdown$Token$textParser = F2(
 			function (data) {
 				return A2(
 					$author$project$XMarkdown$Token$S,
-					data.bJ,
+					data.bM,
 					{
-						bn: start,
-						bq: ((start + data.bq) - data.bn) - 1,
-						gR: A2($author$project$XMarkdown$Token$makeId, start, index),
-						d7: index
+						bp: start,
+						bs: ((start + data.bs) - data.bp) - 1,
+						gY: A2($author$project$XMarkdown$Token$makeId, start, index),
+						dq: index
 					});
 			},
 			A2(
@@ -21654,7 +21805,7 @@ var $author$project$XMarkdown$Token$get = F3(
 	function (state, start, input) {
 		var _v0 = A2(
 			$elm$parser$Parser$Advanced$run,
-			A3($author$project$XMarkdown$Token$tokenParser, state.cK, start, state.ac),
+			A3($author$project$XMarkdown$Token$tokenParser, state.cL, start, state.ae),
 			input);
 		if (!_v0.$) {
 			var token = _v0.a;
@@ -21665,70 +21816,70 @@ var $author$project$XMarkdown$Token$get = F3(
 				$author$project$XMarkdown$Token$TokenError,
 				errorList,
 				{
-					bn: start,
-					bq: start + 1,
-					gR: A2($author$project$XMarkdown$Token$makeId, start, state.ac),
-					d7: state.ac
+					bp: start,
+					bs: start + 1,
+					gY: A2($author$project$XMarkdown$Token$makeId, start, state.ae),
+					dq: state.ae
 				});
 		}
 	});
 var $author$project$XMarkdown$Token$handleDefault = F2(
 	function (state, token) {
-		var _v0 = state.bp;
+		var _v0 = state.br;
 		if (_v0.$ === 1) {
 			return _Utils_Tuple3(
 				A2(
 					$elm$core$List$cons,
-					A2($author$project$XMarkdown$Token$setIndex, state.ac, token),
-					state.cf),
-				state.ac + 1,
+					A2($author$project$XMarkdown$Token$setIndex, state.ae, token),
+					state.cg),
+				state.ae + 1,
 				$elm$core$Maybe$Nothing);
 		} else {
 			var textToken = _v0.a;
 			return _Utils_Tuple3(
 				A2(
 					$elm$core$List$cons,
-					A2($author$project$XMarkdown$Token$setIndex, state.ac + 1, token),
-					A2($elm$core$List$cons, textToken, state.cf)),
-				state.ac + 2,
+					A2($author$project$XMarkdown$Token$setIndex, state.ae + 1, token),
+					A2($elm$core$List$cons, textToken, state.cg)),
+				state.ae + 2,
 				$elm$core$Maybe$Nothing);
 		}
 	});
 var $author$project$XMarkdown$Token$handleLB = F2(
 	function (state, token) {
-		var _v0 = state.bp;
+		var _v0 = state.br;
 		if (_v0.$ === 1) {
 			return _Utils_Tuple3(
 				A2(
 					$elm$core$List$cons,
-					A2($author$project$XMarkdown$Token$setIndex, state.ac, token),
-					state.cf),
-				state.ac + 1,
+					A2($author$project$XMarkdown$Token$setIndex, state.ae, token),
+					state.cg),
+				state.ae + 1,
 				$elm$core$Maybe$Nothing);
 		} else {
 			var textToken = _v0.a;
 			return _Utils_Tuple3(
 				A2(
 					$elm$core$List$cons,
-					A2($author$project$XMarkdown$Token$setIndex, state.ac + 1, token),
+					A2($author$project$XMarkdown$Token$setIndex, state.ae + 1, token),
 					A2(
 						$elm$core$List$cons,
-						A2($author$project$XMarkdown$Token$setIndex, state.ac, textToken),
-						state.cf)),
-				state.ac + 2,
+						A2($author$project$XMarkdown$Token$setIndex, state.ae, textToken),
+						state.cg)),
+				state.ae + 2,
 				$elm$core$Maybe$Nothing);
 		}
 	});
 var $author$project$XMarkdown$Token$boostMeta = F3(
 	function (lineNumber, tokenIndex, _v0) {
-		var begin = _v0.bn;
-		var end = _v0.bq;
-		var index = _v0.d7;
+		var begin = _v0.bp;
+		var end = _v0.bs;
+		var index = _v0.dq;
 		return {
-			bn: begin,
-			bq: end,
-			gR: A2($author$project$XMarkdown$Token$makeId, lineNumber, tokenIndex),
-			d7: index
+			bp: begin,
+			bs: end,
+			gY: A2($author$project$XMarkdown$Token$makeId, lineNumber, tokenIndex),
+			dq: index
 		};
 	});
 var $author$project$XMarkdown$Token$getMeta = function (token) {
@@ -21778,13 +21929,13 @@ var $author$project$XMarkdown$Token$mergeToken = F2(
 	function (lastToken, currentToken) {
 		var lastTokenMeta = $author$project$XMarkdown$Token$getMeta(lastToken);
 		var currentTokenMeta = $author$project$XMarkdown$Token$getMeta(currentToken);
-		var meta = {bn: lastTokenMeta.bn, bq: currentTokenMeta.bq, d7: -1};
+		var meta = {bp: lastTokenMeta.bp, bs: currentTokenMeta.bs, dq: -1};
 		return A2(
 			$author$project$XMarkdown$Token$S,
 			_Utils_ap(
 				$author$project$XMarkdown$Token$stringValue(lastToken),
 				$author$project$XMarkdown$Token$stringValue(currentToken)),
-			A3($author$project$XMarkdown$Token$boostMeta, meta.bn, meta.bq, meta));
+			A3($author$project$XMarkdown$Token$boostMeta, meta.bp, meta.bs, meta));
 	});
 var $author$project$XMarkdown$Token$updateCurrentToken = F3(
 	function (index, token, currentToken) {
@@ -21803,9 +21954,9 @@ var $author$project$XMarkdown$Token$updateCurrentToken = F3(
 var $author$project$XMarkdown$Token$handleMerge = F2(
 	function (state, token) {
 		return _Utils_Tuple3(
-			state.cf,
-			state.ac,
-			A3($author$project$XMarkdown$Token$updateCurrentToken, state.ac, token, state.bp));
+			state.cg,
+			state.ae,
+			A3($author$project$XMarkdown$Token$updateCurrentToken, state.ae, token, state.br));
 	});
 var $author$project$XMarkdown$Token$TS = 8;
 var $author$project$XMarkdown$Token$TW = 9;
@@ -21860,43 +22011,43 @@ var $author$project$XMarkdown$Token$length = function (token) {
 	switch (token.$) {
 		case 0:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 1:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 2:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 3:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 6:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 7:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 4:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 5:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 8:
 			var meta = token.b;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 10:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 11:
 			var meta = token.a;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		case 9:
 			var meta = token.b;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 		default:
 			var meta = token.b;
-			return meta.bq - meta.bn;
+			return meta.bs - meta.bp;
 	}
 };
 var $author$project$XMarkdown$Token$InCode = 2;
@@ -21928,15 +22079,15 @@ var $author$project$XMarkdown$Token$newMode = F2(
 		}
 	});
 var $author$project$XMarkdown$Token$nextStep = function (state) {
-	if (_Utils_cmp(state.bz, state.eu) > -1) {
+	if (_Utils_cmp(state.bB, state.ey) > -1) {
 		return $author$project$XMarkdown$Token$finish(state);
 	} else {
 		var token = A3(
 			$author$project$XMarkdown$Token$get,
 			state,
-			state.bz,
-			A2($elm$core$String$dropLeft, state.bz, state.et));
-		var newScanPointer = (state.bz + $author$project$XMarkdown$Token$length(token)) + 1;
+			state.bB,
+			A2($elm$core$String$dropLeft, state.bB, state.ex));
+		var newScanPointer = (state.bB + $author$project$XMarkdown$Token$length(token)) + 1;
 		var _v0 = $author$project$XMarkdown$Token$isTextToken(token) ? A2(
 			$author$project$XMarkdown$Token$fakeDebugLog,
 			'(1)',
@@ -21955,11 +22106,11 @@ var $author$project$XMarkdown$Token$nextStep = function (state) {
 			_Utils_update(
 				state,
 				{
-					bp: currentToken,
-					cK: A2($author$project$XMarkdown$Token$newMode, token, state.cK),
-					bz: newScanPointer,
-					ac: tokenIndex,
-					cf: tokens
+					br: currentToken,
+					cL: A2($author$project$XMarkdown$Token$newMode, token, state.cL),
+					bB: newScanPointer,
+					ae: tokenIndex,
+					cg: tokens
 				}));
 	}
 };
@@ -21993,7 +22144,7 @@ var $author$project$Markup$parsePlainText = function (str) {
 			A2(
 			$author$project$Parser$Expr$Text,
 			str,
-			{bn: 0, bq: 0, gR: '??', d7: 0})
+			{bp: 0, bs: 0, gY: '??', dq: 0})
 		]);
 };
 var $author$project$Compiler$Util$keyValParser = function (key) {
@@ -22065,7 +22216,7 @@ var $author$project$Compiler$Util$getItem = F3(
 var $toastal$either$Either$Right = function (a) {
 	return {$: 1, a: a};
 };
-var $author$project$Parser$BlockUtil$mapContentAux = F3(
+var $author$project$Parser$Transform$mapContentAux = F3(
 	function (blockType, parsed, content) {
 		switch (blockType.$) {
 			case 0:
@@ -22082,20 +22233,20 @@ var $author$project$Parser$BlockUtil$mapContentAux = F3(
 				return content_;
 		}
 	});
-var $author$project$Parser$BlockUtil$mapContent = F4(
+var $author$project$Parser$Transform$mapContent = F4(
 	function (parse, lineNumber, blockType, content) {
 		var _v0 = A2(parse, lineNumber, content);
 		var parsed = _v0.a;
 		var messages = _v0.b;
 		return _Utils_Tuple2(
-			A3($author$project$Parser$BlockUtil$mapContentAux, blockType, parsed, content),
+			A3($author$project$Parser$Transform$mapContentAux, blockType, parsed, content),
 			messages);
 	});
 var $author$project$Parser$Block$OrdinaryBlock = function (a) {
 	return {$: 1, a: a};
 };
 var $author$project$Parser$Block$Paragraph = {$: 0};
-var $author$project$Parser$BlockUtil$toBlockType = F2(
+var $author$project$Parser$Transform$toBlockType = F2(
 	function (pbt, args) {
 		switch (pbt) {
 			case 2:
@@ -22106,23 +22257,23 @@ var $author$project$Parser$BlockUtil$toBlockType = F2(
 				return $author$project$Parser$Block$VerbatimBlock(args);
 		}
 	});
-var $author$project$Parser$BlockUtil$toExpressionBlock = F3(
+var $author$project$Parser$Transform$toExpressionBlock = F3(
 	function (lang, parse, _v0) {
-		var name = _v0.fl;
-		var args = _v0.f9;
+		var name = _v0.fr;
+		var args = _v0.gh;
 		var properties = _v0.H;
-		var indent = _v0.gV;
-		var error = _v0.eW;
-		var lineNumber = _v0.g7;
-		var blockType = _v0.dM;
-		var content = _v0.bJ;
-		var sourceText = _v0.hT;
+		var indent = _v0.g0;
+		var error = _v0.e0;
+		var lineNumber = _v0.ed;
+		var blockType = _v0.dO;
+		var content = _v0.bM;
+		var sourceText = _v0.hY;
 		var blockType_ = A2(
-			$author$project$Parser$BlockUtil$toBlockType,
+			$author$project$Parser$Transform$toBlockType,
 			blockType,
 			A2($elm$core$List$drop, 1, args));
 		var _v1 = A4(
-			$author$project$Parser$BlockUtil$mapContent,
+			$author$project$Parser$Transform$mapContent,
 			parse,
 			lineNumber,
 			blockType_,
@@ -22130,30 +22281,30 @@ var $author$project$Parser$BlockUtil$toExpressionBlock = F3(
 		var exprs = _v1.a;
 		var messages = _v1.b;
 		return {
-			f9: args,
-			dM: blockType_,
-			bJ: exprs,
-			eW: error,
-			gR: $elm$core$String$fromInt(lineNumber),
-			gV: indent,
-			g7: lineNumber,
-			eb: messages,
-			fl: name,
-			ho: $elm$core$List$length(content),
+			gh: args,
+			dO: blockType_,
+			bM: exprs,
+			e0: error,
+			gY: $elm$core$String$fromInt(lineNumber),
+			g0: indent,
+			ed: lineNumber,
+			ef: messages,
+			fr: name,
+			ht: $elm$core$List$length(content),
 			H: properties,
-			hT: sourceText,
-			h3: A3($author$project$Compiler$Util$getItem, lang, 'label', sourceText)
+			hY: sourceText,
+			h8: A3($author$project$Compiler$Util$getItem, lang, 'label', sourceText)
 		};
 	});
 var $author$project$Compiler$DifferentialParser$toExprBlock = function (lang) {
 	switch (lang) {
 		case 1:
-			return A2($author$project$Parser$BlockUtil$toExpressionBlock, 1, $author$project$MicroLaTeX$Parser$Expression$parse);
+			return A2($author$project$Parser$Transform$toExpressionBlock, 1, $author$project$MicroLaTeX$Parser$Expression$parse);
 		case 0:
-			return A2($author$project$Parser$BlockUtil$toExpressionBlock, 0, $author$project$L0$Parser$Expression$parseWithMessages);
+			return A2($author$project$Parser$Transform$toExpressionBlock, 0, $author$project$L0$Parser$Expression$parseWithMessages);
 		case 2:
 			return A2(
-				$author$project$Parser$BlockUtil$toExpressionBlock,
+				$author$project$Parser$Transform$toExpressionBlock,
 				2,
 				F2(
 					function (_v1, s) {
@@ -22163,7 +22314,7 @@ var $author$project$Compiler$DifferentialParser$toExprBlock = function (lang) {
 					}));
 		default:
 			return A2(
-				$author$project$Parser$BlockUtil$toExpressionBlock,
+				$author$project$Parser$Transform$toExpressionBlock,
 				3,
 				F2(
 					function (i, s) {
@@ -22175,8 +22326,8 @@ var $author$project$Compiler$DifferentialParser$toExprBlock = function (lang) {
 };
 var $author$project$Compiler$Vector$init = function (k) {
 	return {
-		bJ: A2($elm$core$List$repeat, k, 0),
-		fE: k
+		bM: A2($elm$core$List$repeat, k, 0),
+		fM: k
 	};
 };
 var $author$project$Parser$Settings$numberedBlockNames = _List_fromArray(
@@ -22378,7 +22529,7 @@ var $elm$parser$Parser$Advanced$consumeBase = _Parser_consumeBase;
 var $elm$parser$Parser$Advanced$consumeBase16 = _Parser_consumeBase16;
 var $elm$parser$Parser$Advanced$bumpOffset = F2(
 	function (newOffset, s) {
-		return {bH: s.bH + (newOffset - s.b), c: s.c, gV: s.gV, b: newOffset, b9: s.b9, fH: s.fH};
+		return {bK: s.bK + (newOffset - s.b), c: s.c, g0: s.g0, b: newOffset, ca: s.ca, fP: s.fP};
 	});
 var $elm$parser$Parser$Advanced$chompBase10 = _Parser_chompBase10;
 var $elm$parser$Parser$Advanced$isAsciiCode = _Parser_isAsciiCode;
@@ -22426,12 +22577,12 @@ var $elm$core$String$toFloat = _String_toFloat;
 var $elm$parser$Parser$Advanced$finalizeFloat = F6(
 	function (invalid, expecting, intSettings, floatSettings, intPair, s) {
 		var intOffset = intPair.a;
-		var floatOffset = A2($elm$parser$Parser$Advanced$consumeDotAndExp, intOffset, s.fH);
+		var floatOffset = A2($elm$parser$Parser$Advanced$consumeDotAndExp, intOffset, s.fP);
 		if (floatOffset < 0) {
 			return A2(
 				$elm$parser$Parser$Advanced$Bad,
 				true,
-				A4($elm$parser$Parser$Advanced$fromInfo, s.b9, s.bH - (floatOffset + s.b), invalid, s.c));
+				A4($elm$parser$Parser$Advanced$fromInfo, s.ca, s.bK - (floatOffset + s.b), invalid, s.c));
 		} else {
 			if (_Utils_eq(s.b, floatOffset)) {
 				return A2(
@@ -22451,7 +22602,7 @@ var $elm$parser$Parser$Advanced$finalizeFloat = F6(
 					} else {
 						var toValue = floatSettings.a;
 						var _v1 = $elm$core$String$toFloat(
-							A3($elm$core$String$slice, s.b, floatOffset, s.fH));
+							A3($elm$core$String$slice, s.b, floatOffset, s.fP));
 						if (_v1.$ === 1) {
 							return A2(
 								$elm$parser$Parser$Advanced$Bad,
@@ -22472,43 +22623,43 @@ var $elm$parser$Parser$Advanced$finalizeFloat = F6(
 	});
 var $elm$parser$Parser$Advanced$number = function (c) {
 	return function (s) {
-		if (A3($elm$parser$Parser$Advanced$isAsciiCode, 48, s.b, s.fH)) {
+		if (A3($elm$parser$Parser$Advanced$isAsciiCode, 48, s.b, s.fP)) {
 			var zeroOffset = s.b + 1;
 			var baseOffset = zeroOffset + 1;
-			return A3($elm$parser$Parser$Advanced$isAsciiCode, 120, zeroOffset, s.fH) ? A5(
+			return A3($elm$parser$Parser$Advanced$isAsciiCode, 120, zeroOffset, s.fP) ? A5(
 				$elm$parser$Parser$Advanced$finalizeInt,
-				c.g2,
-				c.e7,
+				c.g9,
+				c.fd,
 				baseOffset,
-				A2($elm$parser$Parser$Advanced$consumeBase16, baseOffset, s.fH),
-				s) : (A3($elm$parser$Parser$Advanced$isAsciiCode, 111, zeroOffset, s.fH) ? A5(
+				A2($elm$parser$Parser$Advanced$consumeBase16, baseOffset, s.fP),
+				s) : (A3($elm$parser$Parser$Advanced$isAsciiCode, 111, zeroOffset, s.fP) ? A5(
 				$elm$parser$Parser$Advanced$finalizeInt,
-				c.g2,
-				c.fp,
+				c.g9,
+				c.fv,
 				baseOffset,
-				A3($elm$parser$Parser$Advanced$consumeBase, 8, baseOffset, s.fH),
-				s) : (A3($elm$parser$Parser$Advanced$isAsciiCode, 98, zeroOffset, s.fH) ? A5(
+				A3($elm$parser$Parser$Advanced$consumeBase, 8, baseOffset, s.fP),
+				s) : (A3($elm$parser$Parser$Advanced$isAsciiCode, 98, zeroOffset, s.fP) ? A5(
 				$elm$parser$Parser$Advanced$finalizeInt,
-				c.g2,
-				c.eN,
+				c.g9,
+				c.eR,
 				baseOffset,
-				A3($elm$parser$Parser$Advanced$consumeBase, 2, baseOffset, s.fH),
+				A3($elm$parser$Parser$Advanced$consumeBase, 2, baseOffset, s.fP),
 				s) : A6(
 				$elm$parser$Parser$Advanced$finalizeFloat,
-				c.g2,
-				c.eX,
-				c.fa,
-				c.eZ,
+				c.g9,
+				c.e1,
+				c.fg,
+				c.e3,
 				_Utils_Tuple2(zeroOffset, 0),
 				s)));
 		} else {
 			return A6(
 				$elm$parser$Parser$Advanced$finalizeFloat,
-				c.g2,
-				c.eX,
-				c.fa,
-				c.eZ,
-				A3($elm$parser$Parser$Advanced$consumeBase, 10, s.b, s.fH),
+				c.g9,
+				c.e1,
+				c.fg,
+				c.e3,
+				A3($elm$parser$Parser$Advanced$consumeBase, 10, s.b, s.fP),
 				s);
 		}
 	};
@@ -22517,13 +22668,13 @@ var $elm$parser$Parser$Advanced$int = F2(
 	function (expecting, invalid) {
 		return $elm$parser$Parser$Advanced$number(
 			{
-				eN: $elm$core$Result$Err(invalid),
-				eX: expecting,
-				eZ: $elm$core$Result$Err(invalid),
-				e7: $elm$core$Result$Err(invalid),
-				fa: $elm$core$Result$Ok($elm$core$Basics$identity),
-				g2: invalid,
-				fp: $elm$core$Result$Err(invalid)
+				eR: $elm$core$Result$Err(invalid),
+				e1: expecting,
+				e3: $elm$core$Result$Err(invalid),
+				fd: $elm$core$Result$Err(invalid),
+				fg: $elm$core$Result$Ok($elm$core$Basics$identity),
+				g9: invalid,
+				fv: $elm$core$Result$Err(invalid)
 			});
 	});
 var $author$project$Parser$MathMacro$numericDecoParser = A2(
@@ -22780,7 +22931,7 @@ var $author$project$Compiler$Acc$updateWithMathMacros = F2(
 			$elm$core$String$trim(definitions));
 		return _Utils_update(
 			accumulator,
-			{ea: mathMacroDict});
+			{ee: mathMacroDict});
 	});
 var $author$project$Compiler$TextMacro$insert = F2(
 	function (data, dict) {
@@ -22788,7 +22939,7 @@ var $author$project$Compiler$TextMacro$insert = F2(
 			return dict;
 		} else {
 			var macro = data.a;
-			return A3($elm$core$Dict$insert, macro.fl, macro, dict);
+			return A3($elm$core$Dict$insert, macro.fr, macro, dict);
 		}
 	});
 var $author$project$Compiler$TextMacro$extract = function (expr_) {
@@ -22803,7 +22954,7 @@ var $author$project$Compiler$TextMacro$extract = function (expr_) {
 			var name = _v3.a;
 			var rest = _v3.b;
 			return $elm$core$Maybe$Just(
-				{aS: exprs, fl: name, bj: rest});
+				{aT: exprs, fr: name, bl: rest});
 		} else {
 			return $elm$core$Maybe$Nothing;
 		}
@@ -22921,9 +23072,9 @@ var $author$project$Compiler$TextMacro$getVars = function (exprs) {
 var $author$project$Compiler$TextMacro$extract3Aux = F3(
 	function (name, rest, meta) {
 		return {
-			aS: rest,
-			fl: name,
-			bj: $author$project$Compiler$TextMacro$getVars(rest)
+			aT: rest,
+			fr: name,
+			bl: $author$project$Compiler$TextMacro$getVars(rest)
 		};
 	});
 var $author$project$Compiler$TextMacro$extract2Aux = F2(
@@ -23000,7 +23151,7 @@ var $author$project$Compiler$Acc$updateWithTextMacros = F2(
 		return _Utils_update(
 			accumulator,
 			{
-				c2: $author$project$Compiler$TextMacro$buildDictionary(
+				c3: $author$project$Compiler$TextMacro$buildDictionary(
 					$author$project$Compiler$Acc$normalzeLines(
 						$elm$core$String$lines(content)))
 			});
@@ -23008,29 +23159,29 @@ var $author$project$Compiler$Acc$updateWithTextMacros = F2(
 var $author$project$Compiler$Acc$init = function (data) {
 	return A2(
 		$author$project$Compiler$Acc$updateWithTextMacros,
-		data.id,
+		data.ii,
 		A2(
 			$author$project$Compiler$Acc$updateWithMathMacros,
-			data.ha,
+			data.hg,
 			{
-				a6: 0,
-				P: $elm$core$Dict$empty,
-				cs: $author$project$Compiler$Vector$init(data.iF),
-				dl: $elm$core$Dict$empty,
+				aS: 0,
+				M: $elm$core$Dict$empty,
+				ct: $author$project$Compiler$Vector$init(data.iK),
 				dm: $elm$core$Dict$empty,
-				W: $author$project$Compiler$Vector$init(data.iF),
-				aI: false,
-				bQ: $author$project$Compiler$Vector$init(data.iF),
-				dq: $elm$core$Dict$empty,
-				fe: data.fe,
-				ea: $elm$core$Dict$empty,
-				eh: $author$project$Parser$Settings$numberedBlockNames,
-				bX: $elm$core$Dict$empty,
-				em: $elm$core$Dict$empty,
-				b2: _List_Nil,
-				b4: $elm$core$Dict$empty,
-				dC: $elm$core$Dict$empty,
-				c2: $elm$core$Dict$empty
+				dn: $elm$core$Dict$empty,
+				O: $author$project$Compiler$Vector$init(data.iK),
+				aJ: false,
+				be: $author$project$Compiler$Vector$init(data.iK),
+				ds: $elm$core$Dict$empty,
+				fk: data.fk,
+				ee: $elm$core$Dict$empty,
+				el: $author$project$Parser$Settings$numberedBlockNames,
+				bh: $elm$core$Dict$empty,
+				eq: $elm$core$Dict$empty,
+				b3: _List_Nil,
+				b5: $elm$core$Dict$empty,
+				dE: $elm$core$Dict$empty,
+				c3: $elm$core$Dict$empty
 			}));
 };
 var $author$project$Compiler$Acc$mapper = F2(
@@ -23049,7 +23200,7 @@ var $zwilias$elm_rosetree$Tree$mapAccumulateHelp = F4(
 			if (!_v0.b) {
 				var node = A2(
 					$zwilias$elm_rosetree$Tree$Tree,
-					acc.g6,
+					acc.hd,
 					$elm$core$List$reverse(acc.a));
 				if (!stack.b) {
 					return _Utils_Tuple2(state, node);
@@ -23105,7 +23256,7 @@ var $zwilias$elm_rosetree$Tree$mapAccumulateHelp = F4(
 					var label_ = _v5.b;
 					var $temp$f = f,
 						$temp$state = state_,
-						$temp$acc = {a: _List_Nil, g6: label_, t: cs},
+						$temp$acc = {a: _List_Nil, hd: label_, t: cs},
 						$temp$stack = A2(
 						$elm$core$List$cons,
 						_Utils_update(
@@ -23132,7 +23283,7 @@ var $zwilias$elm_rosetree$Tree$mapAccumulate = F3(
 			$zwilias$elm_rosetree$Tree$mapAccumulateHelp,
 			f,
 			s_,
-			{a: _List_Nil, g6: d_, t: cs},
+			{a: _List_Nil, hd: d_, t: cs},
 			_List_Nil);
 	});
 var $author$project$Compiler$ASTTools$filterExprs = F2(
@@ -23244,12 +23395,12 @@ var $author$project$Compiler$TextMacro$expandWithMacro = F2(
 		if (!expr.$) {
 			var name = expr.a;
 			var fArgs = expr.b;
-			return _Utils_eq(name, macro.fl) ? $author$project$Compiler$TextMacro$group(
+			return _Utils_eq(name, macro.fr) ? $author$project$Compiler$TextMacro$group(
 				A3(
 					$author$project$Compiler$TextMacro$listSubst,
 					$author$project$Compiler$TextMacro$filterOutBlanks(fArgs),
-					macro.bj,
-					macro.aS)) : expr;
+					macro.bl,
+					macro.aT)) : expr;
 		} else {
 			return expr;
 		}
@@ -23286,11 +23437,11 @@ var $author$project$Compiler$Acc$expand = F2(
 		return _Utils_update(
 			block,
 			{
-				bJ: A2(
+				bM: A2(
 					$toastal$either$Either$map,
 					$elm$core$List$map(
 						$author$project$Compiler$TextMacro$expand(dict)),
-					block.bJ)
+					block.bM)
 			});
 	});
 var $author$project$Compiler$Acc$getCounterAsString = F2(
@@ -23315,7 +23466,7 @@ var $author$project$Compiler$Vector$toString = function (v) {
 				function (x) {
 					return x > 0;
 				},
-				v.bJ)));
+				v.bM)));
 };
 var $author$project$Compiler$Acc$vectorPrefix = function (headingIndex) {
 	var prefix = $author$project$Compiler$Vector$toString(headingIndex);
@@ -23324,7 +23475,7 @@ var $author$project$Compiler$Acc$vectorPrefix = function (headingIndex) {
 var $author$project$Compiler$Acc$transformBlock = F2(
 	function (acc, _v0) {
 		var block = _v0;
-		var _v1 = _Utils_Tuple2(block.fl, block.f9);
+		var _v1 = _Utils_Tuple2(block.fr, block.gh);
 		_v1$9:
 		while (true) {
 			if (!_v1.a.$) {
@@ -23336,7 +23487,7 @@ var $author$project$Compiler$Acc$transformBlock = F2(
 								H: A3(
 									$elm$core$Dict$insert,
 									'figure',
-									A2($author$project$Compiler$Acc$getCounterAsString, 'figure', acc.P),
+									A2($author$project$Compiler$Acc$getCounterAsString, 'figure', acc.M),
 									block.H)
 							});
 					case 'chart':
@@ -23346,7 +23497,7 @@ var $author$project$Compiler$Acc$transformBlock = F2(
 								H: A3(
 									$elm$core$Dict$insert,
 									'figure',
-									A2($author$project$Compiler$Acc$getCounterAsString, 'figure', acc.P),
+									A2($author$project$Compiler$Acc$getCounterAsString, 'figure', acc.M),
 									block.H)
 							});
 					case 'image':
@@ -23356,7 +23507,7 @@ var $author$project$Compiler$Acc$transformBlock = F2(
 								H: A3(
 									$elm$core$Dict$insert,
 									'figure',
-									A2($author$project$Compiler$Acc$getCounterAsString, 'figure', acc.P),
+									A2($author$project$Compiler$Acc$getCounterAsString, 'figure', acc.M),
 									block.H)
 							});
 					case 'iframe':
@@ -23366,7 +23517,7 @@ var $author$project$Compiler$Acc$transformBlock = F2(
 								H: A3(
 									$elm$core$Dict$insert,
 									'figure',
-									A2($author$project$Compiler$Acc$getCounterAsString, 'figure', acc.P),
+									A2($author$project$Compiler$Acc$getCounterAsString, 'figure', acc.M),
 									block.H)
 							});
 					case 'section':
@@ -23380,7 +23531,7 @@ var $author$project$Compiler$Acc$transformBlock = F2(
 										H: A3(
 											$elm$core$Dict$insert,
 											'label',
-											$author$project$Compiler$Vector$toString(acc.W),
+											$author$project$Compiler$Vector$toString(acc.O),
 											block.H)
 									});
 							} else {
@@ -23391,7 +23542,7 @@ var $author$project$Compiler$Acc$transformBlock = F2(
 									return _Utils_update(
 										block,
 										{
-											f9: A2(
+											gh: A2(
 												$elm$core$List$cons,
 												level,
 												A2($elm$core$List$cons, '-', _List_Nil))
@@ -23410,20 +23561,20 @@ var $author$project$Compiler$Acc$transformBlock = F2(
 								H: A3(
 									$elm$core$Dict$insert,
 									'label',
-									$author$project$Compiler$Vector$toString(acc.cs),
+									$author$project$Compiler$Vector$toString(acc.ct),
 									block.H)
 							});
 					case 'equation':
-						var prefix = $author$project$Compiler$Vector$toString(acc.W);
-						var equationProp = (prefix === '') ? A2($author$project$Compiler$Acc$getCounterAsString, 'equation', acc.P) : ($author$project$Compiler$Vector$toString(acc.W) + ('.' + A2($author$project$Compiler$Acc$getCounterAsString, 'equation', acc.P)));
+						var prefix = $author$project$Compiler$Vector$toString(acc.O);
+						var equationProp = (prefix === '') ? A2($author$project$Compiler$Acc$getCounterAsString, 'equation', acc.M) : ($author$project$Compiler$Vector$toString(acc.O) + ('.' + A2($author$project$Compiler$Acc$getCounterAsString, 'equation', acc.M)));
 						return _Utils_update(
 							block,
 							{
 								H: A3($elm$core$Dict$insert, 'equation', equationProp, block.H)
 							});
 					case 'aligned':
-						var prefix = $author$project$Compiler$Vector$toString(acc.W);
-						var equationProp = (prefix === '') ? A2($author$project$Compiler$Acc$getCounterAsString, 'equation', acc.P) : ($author$project$Compiler$Vector$toString(acc.W) + ('.' + A2($author$project$Compiler$Acc$getCounterAsString, 'equation', acc.P)));
+						var prefix = $author$project$Compiler$Vector$toString(acc.O);
+						var equationProp = (prefix === '') ? A2($author$project$Compiler$Acc$getCounterAsString, 'equation', acc.M) : ($author$project$Compiler$Vector$toString(acc.O) + ('.' + A2($author$project$Compiler$Acc$getCounterAsString, 'equation', acc.M)));
 						return _Utils_update(
 							block,
 							{
@@ -23433,7 +23584,7 @@ var $author$project$Compiler$Acc$transformBlock = F2(
 						break _v1$9;
 				}
 			} else {
-				return A2($author$project$Compiler$Acc$expand, acc.c2, block);
+				return A2($author$project$Compiler$Acc$expand, acc.c3, block);
 			}
 		}
 		var name_ = _v1.a.a;
@@ -23442,8 +23593,8 @@ var $author$project$Compiler$Acc$transformBlock = F2(
 			name_,
 			_List_fromArray(
 				['section']))) {
-			var prefix = $author$project$Compiler$Vector$toString(acc.W);
-			var equationProp = (prefix === '') ? A2($author$project$Compiler$Acc$getCounterAsString, 'equation', acc.P) : ($author$project$Compiler$Vector$toString(acc.W) + ('.' + A2($author$project$Compiler$Acc$getCounterAsString, 'equation', acc.P)));
+			var prefix = $author$project$Compiler$Vector$toString(acc.O);
+			var equationProp = (prefix === '') ? A2($author$project$Compiler$Acc$getCounterAsString, 'equation', acc.M) : ($author$project$Compiler$Vector$toString(acc.O) + ('.' + A2($author$project$Compiler$Acc$getCounterAsString, 'equation', acc.M)));
 			return _Utils_update(
 				block,
 				{
@@ -23452,7 +23603,7 @@ var $author$project$Compiler$Acc$transformBlock = F2(
 		} else {
 			return A2(
 				$author$project$Compiler$Acc$expand,
-				acc.c2,
+				acc.c3,
 				A2($elm$core$List$member, name_, $author$project$Parser$Settings$numberedBlockNames) ? _Utils_update(
 					block,
 					{
@@ -23460,8 +23611,8 @@ var $author$project$Compiler$Acc$transformBlock = F2(
 							$elm$core$Dict$insert,
 							'label',
 							_Utils_ap(
-								$author$project$Compiler$Acc$vectorPrefix(acc.W),
-								$elm$core$String$fromInt(acc.a6)),
+								$author$project$Compiler$Acc$vectorPrefix(acc.O),
+								$elm$core$String$fromInt(acc.aS)),
 							block.H)
 					}) : block);
 		}
@@ -23471,15 +23622,15 @@ var $author$project$Compiler$Vector$get = F2(
 		return A2(
 			$elm$core$Maybe$withDefault,
 			0,
-			A2($elm_community$list_extra$List$Extra$getAt, k, v.bJ));
+			A2($elm_community$list_extra$List$Extra$getAt, k, v.bM));
 	});
 var $author$project$Compiler$Vector$resetFrom = F2(
 	function (k, v) {
-		var suffix = A2($elm$core$List$repeat, v.fE - k, 0);
-		var prefix = A2($elm$core$List$take, k, v.bJ);
+		var suffix = A2($elm$core$List$repeat, v.fM - k, 0);
+		var prefix = A2($elm$core$List$take, k, v.bM);
 		return {
-			bJ: _Utils_ap(prefix, suffix),
-			fE: v.fE
+			bM: _Utils_ap(prefix, suffix),
+			fM: v.fM
 		};
 	});
 var $author$project$Compiler$Vector$set = F3(
@@ -23487,12 +23638,12 @@ var $author$project$Compiler$Vector$set = F3(
 		return _Utils_update(
 			v,
 			{
-				bJ: A3($elm_community$list_extra$List$Extra$setAt, k, a, v.bJ)
+				bM: A3($elm_community$list_extra$List$Extra$setAt, k, a, v.bM)
 			});
 	});
 var $author$project$Compiler$Vector$increment = F2(
 	function (k, v) {
-		return ((k < 0) || (_Utils_cmp(k, v.fE) > -1)) ? v : A2(
+		return ((k < 0) || (_Utils_cmp(k, v.fM) > -1)) ? v : A2(
 			$author$project$Compiler$Vector$resetFrom,
 			k + 1,
 			A3(
@@ -23503,7 +23654,7 @@ var $author$project$Compiler$Vector$increment = F2(
 	});
 var $author$project$Compiler$Acc$listData = F2(
 	function (accumulator, name) {
-		var _v0 = _Utils_Tuple2(accumulator.aI, name);
+		var _v0 = _Utils_Tuple2(accumulator.aJ, name);
 		_v0$2:
 		while (true) {
 			if (!_v0.a) {
@@ -23559,11 +23710,11 @@ var $author$project$Compiler$Acc$updateBibItemBlock = F3(
 			return _Utils_update(
 				accumulator,
 				{
-					b4: A3(
+					b5: A3(
 						$elm$core$Dict$insert,
 						label,
-						{gR: id, fo: '_irrelevant_'},
-						accumulator.b4)
+						{gY: id, fu: '_irrelevant_'},
+						accumulator.b5)
 				});
 		}
 	});
@@ -23572,16 +23723,16 @@ var $author$project$Compiler$Acc$updateReference = F4(
 		return (tag_ !== '') ? _Utils_update(
 			acc,
 			{
-				b4: A3(
+				b5: A3(
 					$elm$core$Dict$insert,
 					tag_,
-					{gR: id_, fo: numRef_},
-					acc.b4)
+					{gY: id_, fu: numRef_},
+					acc.b5)
 			}) : acc;
 	});
 var $author$project$Compiler$Acc$indentationQuantum = 2;
 var $author$project$Compiler$Acc$updateWithOrdinaryBlock = F6(
-	function (accumulator, name, content, tag, id, indent) {
+	function (name, content, tag, id, indent, accumulator) {
 		var _v0 = A2($author$project$Compiler$Acc$listData, accumulator, name);
 		var inList = _v0.a;
 		var initialNumberedVector = _v0.b;
@@ -23608,10 +23759,10 @@ var $author$project$Compiler$Acc$updateWithOrdinaryBlock = F6(
 							$author$project$Compiler$Vector$set,
 							0,
 							ctr - 1,
-							$author$project$Compiler$Vector$init(accumulator.W.fE));
+							$author$project$Compiler$Vector$init(accumulator.O.fM));
 						return _Utils_update(
 							accumulator,
-							{W: headingIndex});
+							{O: headingIndex});
 					}
 				case 'numbered':
 					var level = (indent / $author$project$Compiler$Acc$indentationQuantum) | 0;
@@ -23620,15 +23771,15 @@ var $author$project$Compiler$Acc$updateWithOrdinaryBlock = F6(
 							var v = initialNumberedVector.a;
 							return v;
 						} else {
-							return A2($author$project$Compiler$Vector$increment, level, accumulator.bQ);
+							return A2($author$project$Compiler$Vector$increment, level, accumulator.be);
 						}
 					}();
 					var index = A2($author$project$Compiler$Vector$get, level, itemVector);
 					var numberedItemDict = A3(
 						$elm$core$Dict$insert,
 						id,
-						{d7: index, ff: level},
-						accumulator.bX);
+						{dq: index, ec: level},
+						accumulator.bh);
 					return A4(
 						$author$project$Compiler$Acc$updateReference,
 						tag,
@@ -23637,7 +23788,7 @@ var $author$project$Compiler$Acc$updateWithOrdinaryBlock = F6(
 							A2($author$project$Compiler$Vector$get, level, itemVector)),
 						_Utils_update(
 							accumulator,
-							{aI: inList, bQ: itemVector, bX: numberedItemDict}));
+							{aJ: inList, be: itemVector, bh: numberedItemDict}));
 				case 'item':
 					var level = (indent / $author$project$Compiler$Acc$indentationQuantum) | 0;
 					var itemVector = function () {
@@ -23645,17 +23796,17 @@ var $author$project$Compiler$Acc$updateWithOrdinaryBlock = F6(
 							var v = initialNumberedVector.a;
 							return v;
 						} else {
-							return A2($author$project$Compiler$Vector$increment, level, accumulator.bQ);
+							return A2($author$project$Compiler$Vector$increment, level, accumulator.be);
 						}
 					}();
 					var numberedItemDict = A3(
 						$elm$core$Dict$insert,
 						id,
 						{
-							d7: A2($author$project$Compiler$Vector$get, level, itemVector),
-							ff: level
+							dq: A2($author$project$Compiler$Vector$get, level, itemVector),
+							ec: level
 						},
-						accumulator.bX);
+						accumulator.bh);
 					return A4(
 						$author$project$Compiler$Acc$updateReference,
 						tag,
@@ -23664,21 +23815,41 @@ var $author$project$Compiler$Acc$updateWithOrdinaryBlock = F6(
 							A2($author$project$Compiler$Vector$get, level, itemVector)),
 						_Utils_update(
 							accumulator,
-							{aI: inList, bQ: itemVector, bX: numberedItemDict}));
+							{aJ: inList, be: itemVector, bh: numberedItemDict}));
 				default:
 					var name_ = name.a;
-					return A2(
+					if (A2(
 						$elm$core$List$member,
 						name_,
 						_List_fromArray(
-							['title', 'contents', 'banner', 'a'])) ? accumulator : (A2($elm$core$List$member, name_, $author$project$Parser$Settings$numberedBlockNames) ? A4(
-						$author$project$Compiler$Acc$updateReference,
-						tag,
-						id,
-						tag,
-						_Utils_update(
-							accumulator,
-							{a6: accumulator.a6 + 1})) : accumulator);
+							['title', 'contents', 'banner', 'a']))) {
+						return accumulator;
+					} else {
+						if (A2($elm$core$List$member, name_, $author$project$Parser$Settings$numberedBlockNames)) {
+							var prefix = $author$project$Compiler$Vector$toString(accumulator.O);
+							var level = (indent / $author$project$Compiler$Acc$indentationQuantum) | 0;
+							var itemVector = A2($author$project$Compiler$Vector$increment, level, accumulator.be);
+							var numberedItemDict = A3(
+								$elm$core$Dict$insert,
+								id,
+								{
+									dq: A2($author$project$Compiler$Vector$get, level, itemVector),
+									ec: level
+								},
+								accumulator.bh);
+							var equationProp = (prefix === '') ? A2($author$project$Compiler$Acc$getCounterAsString, 'equation', accumulator.M) : ($author$project$Compiler$Vector$toString(accumulator.O) + ('.' + $elm$core$String$fromInt(accumulator.aS + 1)));
+							return A4(
+								$author$project$Compiler$Acc$updateReference,
+								tag,
+								id,
+								equationProp,
+								_Utils_update(
+									accumulator,
+									{aS: accumulator.aS + 1, be: itemVector, bh: numberedItemDict}));
+						} else {
+							return accumulator;
+						}
+					}
 			}
 		} else {
 			return accumulator;
@@ -23729,7 +23900,7 @@ var $author$project$Compiler$Acc$updateWithOrdinaryDocumentBlock = F5(
 				$elm$core$Maybe$withDefault,
 				0,
 				$elm$core$String$toInt(level)),
-			accumulator.cs);
+			accumulator.ct);
 		var _v0 = A2($author$project$Compiler$Acc$listData, accumulator, name);
 		var inList = _v0.a;
 		return A4(
@@ -23739,21 +23910,21 @@ var $author$project$Compiler$Acc$updateWithOrdinaryDocumentBlock = F5(
 			$author$project$Compiler$Vector$toString(documentIndex),
 			_Utils_update(
 				accumulator,
-				{cs: documentIndex, aI: inList}));
+				{ct: documentIndex, aJ: inList}));
 	});
 var $elm$regex$Regex$Match = F4(
 	function (match, index, number, submatches) {
-		return {d7: index, cJ: match, cL: number, h0: submatches};
+		return {dq: index, cK: match, cM: number, h5: submatches};
 	});
 var $elm$regex$Regex$fromStringWith = _Regex_fromStringWith;
 var $elm$regex$Regex$fromString = function (string) {
 	return A2(
 		$elm$regex$Regex$fromStringWith,
-		{eP: false, fk: false},
+		{eT: false, fq: false},
 		string);
 };
 var $elm$regex$Regex$replace = _Regex_replaceAtMost(_Regex_infinity);
-var $author$project$Compiler$Util$userReplace = F3(
+var $author$project$Utility$userReplace = F3(
 	function (userRegex, replacer, string) {
 		var _v0 = $elm$regex$Regex$fromString(userRegex);
 		if (_v0.$ === 1) {
@@ -23763,19 +23934,19 @@ var $author$project$Compiler$Util$userReplace = F3(
 			return A3($elm$regex$Regex$replace, regex, replacer, string);
 		}
 	});
-var $author$project$Compiler$Util$compressWhitespace = function (string) {
+var $author$project$Utility$compressWhitespace = function (string) {
 	return A3(
-		$author$project$Compiler$Util$userReplace,
+		$author$project$Utility$userReplace,
 		'\\s\\s+',
-		function (m) {
+		function (_v0) {
 			return ' ';
 		},
 		string);
 };
-var $author$project$Compiler$Util$removeNonAlphaNum = function (string) {
+var $author$project$Utility$removeNonAlphaNum = function (string) {
 	return A3(
-		$author$project$Compiler$Util$userReplace,
-		'[^a-zA-Z0-9 ]',
+		$author$project$Utility$userReplace,
+		'[^A-Za-z0-9\\-]',
 		function (_v0) {
 			return '';
 		},
@@ -23788,13 +23959,13 @@ var $author$project$Compiler$Acc$updateWithOrdinarySectionBlock = F5(
 				var str = content.a;
 				return _List_fromArray(
 					[
-						$author$project$Compiler$Util$compressWhitespace(str)
+						$author$project$Utility$compressWhitespace(str)
 					]);
 			} else {
 				var expr = content.a;
 				return A2(
 					$elm$core$List$map,
-					$author$project$Compiler$Util$compressWhitespace,
+					$author$project$Utility$compressWhitespace,
 					$elm_community$maybe_extra$Maybe$Extra$values(
 						A2($elm$core$List$map, $author$project$Compiler$ASTTools$getText, expr)));
 			}
@@ -23809,10 +23980,10 @@ var $author$project$Compiler$Acc$updateWithOrdinarySectionBlock = F5(
 					$elm$core$String$toLower,
 					A2(
 						$elm$core$Basics$composeR,
-						$author$project$Compiler$Util$compressWhitespace,
+						$author$project$Utility$compressWhitespace,
 						A2(
 							$elm$core$Basics$composeR,
-							$author$project$Compiler$Util$removeNonAlphaNum,
+							$author$project$Utility$removeNonAlphaNum,
 							A2($elm$core$String$replace, ' ', '-')))),
 				titleWords));
 		var headingIndex = A2(
@@ -23821,7 +23992,7 @@ var $author$project$Compiler$Acc$updateWithOrdinarySectionBlock = F5(
 				$elm$core$Maybe$withDefault,
 				0,
 				$elm$core$String$toInt(level)),
-			accumulator.W);
+			accumulator.O);
 		var blockCounter = 0;
 		var _v0 = A2($author$project$Compiler$Acc$listData, accumulator, name);
 		var inList = _v0.a;
@@ -23833,15 +24004,15 @@ var $author$project$Compiler$Acc$updateWithOrdinarySectionBlock = F5(
 			_Utils_update(
 				accumulator,
 				{
-					a6: blockCounter,
-					P: A3($elm$core$Dict$insert, 'equation', 0, accumulator.P),
-					W: headingIndex,
-					aI: inList
+					aS: blockCounter,
+					M: A3($elm$core$Dict$insert, 'equation', 0, accumulator.M),
+					O: headingIndex,
+					aJ: inList
 				}));
 	});
 var $author$project$Compiler$Acc$addFootnote = F2(
 	function (footnoteData, dict) {
-		return A3($elm$core$Dict$insert, footnoteData.cd, footnoteData.bt, dict);
+		return A3($elm$core$Dict$insert, footnoteData.ce, footnoteData.bv, dict);
 	});
 var $elm$core$Dict$sizeHelp = F2(
 	function (n, dict) {
@@ -23867,7 +24038,7 @@ var $author$project$Compiler$Acc$addFootnoteLabel = F2(
 	function (footnoteData, dict) {
 		return A3(
 			$elm$core$Dict$insert,
-			footnoteData.bt.gR,
+			footnoteData.bv.gY,
 			$elm$core$Dict$size(dict) + 1,
 			dict);
 	});
@@ -23894,14 +24065,14 @@ var $author$project$Compiler$Acc$extractFootnote = F2(
 			var _v1 = expr.b;
 			var _v2 = _v1.a;
 			var content = _v2.a;
-			var begin = _v2.b.bn;
-			var end = _v2.b.bq;
-			var index = _v2.b.d7;
-			var id = _v2.b.gR;
+			var begin = _v2.b.bp;
+			var end = _v2.b.bs;
+			var index = _v2.b.dq;
+			var id = _v2.b.gY;
 			return $elm$core$Maybe$Just(
 				{
-					bt: {bn: begin, bq: end, gR: id},
-					cd: content
+					bv: {bp: begin, bs: end, gY: id},
+					ce: content
 				});
 		} else {
 			return $elm$core$Maybe$Nothing;
@@ -23951,7 +24122,7 @@ var $author$project$Compiler$Acc$addFootnotesFromContent = F3(
 	});
 var $author$project$Compiler$Acc$addTerm = F2(
 	function (termData, dict) {
-		return A3($elm$core$Dict$insert, termData.cd, termData.bt, dict);
+		return A3($elm$core$Dict$insert, termData.ce, termData.bv, dict);
 	});
 var $author$project$Compiler$Acc$addTerms = F2(
 	function (termDataList, dict) {
@@ -23967,23 +24138,23 @@ var $author$project$Compiler$Acc$extract = F2(
 						var _v1 = expr.b;
 						var _v2 = _v1.a;
 						var name = _v2.a;
-						var begin = _v2.b.bn;
-						var end = _v2.b.bq;
+						var begin = _v2.b.bp;
+						var end = _v2.b.bs;
 						return $elm$core$Maybe$Just(
 							{
-								bt: {bn: begin, bq: end, gR: id},
-								cd: name
+								bv: {bp: begin, bs: end, gY: id},
+								ce: name
 							});
 					case 'term_':
 						var _v3 = expr.b;
 						var _v4 = _v3.a;
 						var name = _v4.a;
-						var begin = _v4.b.bn;
-						var end = _v4.b.bq;
+						var begin = _v4.b.bp;
+						var end = _v4.b.bs;
 						return $elm$core$Maybe$Just(
 							{
-								bt: {bn: begin, bq: end, gR: id},
-								cd: name
+								bv: {bp: begin, bs: end, gY: id},
+								ce: name
 							});
 					default:
 						break _v0$2;
@@ -24015,14 +24186,14 @@ var $author$project$Compiler$Acc$addTermsFromContent = F3(
 			dict);
 	});
 var $author$project$Compiler$Acc$updateWithParagraph = F5(
-	function (accumulator, name, content, tag, id) {
+	function (name, content, tag, id, accumulator) {
 		var _v0 = A2($author$project$Compiler$Acc$listData, accumulator, name);
 		var inList = _v0.a;
 		var _v1 = A3(
 			$author$project$Compiler$Acc$addFootnotesFromContent,
 			id,
 			content,
-			_Utils_Tuple2(accumulator.dm, accumulator.dl));
+			_Utils_Tuple2(accumulator.dn, accumulator.dm));
 		var footnotes = _v1.a;
 		var footnoteNumbers = _v1.b;
 		return A4(
@@ -24033,10 +24204,10 @@ var $author$project$Compiler$Acc$updateWithParagraph = F5(
 			_Utils_update(
 				accumulator,
 				{
-					dl: footnoteNumbers,
-					dm: footnotes,
-					aI: inList,
-					dC: A3($author$project$Compiler$Acc$addTermsFromContent, id, content, accumulator.dC)
+					dm: footnoteNumbers,
+					dn: footnotes,
+					aJ: inList,
+					dE: A3($author$project$Compiler$Acc$addTermsFromContent, id, content, accumulator.dE)
 				}));
 	});
 var $author$project$Compiler$Acc$getCounter = F2(
@@ -24104,12 +24275,12 @@ var $author$project$Compiler$Acc$verbatimBlockReference = F4(
 				newCounter))));
 	});
 var $author$project$Compiler$Acc$updateWithVerbatimBlock = F5(
-	function (accumulator, name_, args, tag_, id) {
+	function (name_, args, tag_, id, accumulator) {
 		var name = A2($elm$core$Maybe$withDefault, '---', name_);
-		var newCounter = A2($elm$core$List$member, name, accumulator.eh) ? A2(
+		var newCounter = A2($elm$core$List$member, name, accumulator.el) ? A2(
 			$author$project$Compiler$Acc$incrementCounter,
 			$author$project$Compiler$Acc$reduceName(name),
-			accumulator.P) : accumulator.P;
+			accumulator.M) : accumulator.M;
 		var isSimple = A2(
 			$elm$core$List$member,
 			name,
@@ -24128,20 +24299,20 @@ var $author$project$Compiler$Acc$updateWithVerbatimBlock = F5(
 			$author$project$Compiler$Acc$updateReference,
 			tag,
 			id,
-			A4($author$project$Compiler$Acc$verbatimBlockReference, isSimple, accumulator.W, name, newCounter),
+			A4($author$project$Compiler$Acc$verbatimBlockReference, isSimple, accumulator.O, name, newCounter),
 			_Utils_update(
 				accumulator,
-				{P: newCounter, aI: inList}));
+				{M: newCounter, aJ: inList}));
 	});
 var $author$project$Compiler$Acc$updateAccumulator = F2(
 	function (_v0, accumulator) {
-		var name = _v0.fl;
-		var indent = _v0.gV;
-		var args = _v0.f9;
-		var blockType = _v0.dM;
-		var content = _v0.bJ;
-		var tag = _v0.h3;
-		var id = _v0.gR;
+		var name = _v0.fr;
+		var indent = _v0.g0;
+		var args = _v0.gh;
+		var blockType = _v0.dO;
+		var content = _v0.bM;
+		var tag = _v0.h8;
+		var id = _v0.gY;
 		var _v1 = _Utils_Tuple2(name, blockType);
 		_v1$0:
 		while (true) {
@@ -24168,7 +24339,7 @@ var $author$project$Compiler$Acc$updateAccumulator = F2(
 												return _Utils_update(
 													accumulator,
 													{
-														dq: A3($elm$core$Dict$insert, key, value, accumulator.dq)
+														ds: A3($elm$core$Dict$insert, key, value, accumulator.ds)
 													});
 											} else {
 												return accumulator;
@@ -24196,10 +24367,10 @@ var $author$project$Compiler$Acc$updateAccumulator = F2(
 											return _Utils_update(
 												accumulator,
 												{
-													W: {
-														bJ: _List_fromArray(
+													O: {
+														bM: _List_fromArray(
 															[n, 0, 0, 0]),
-														fE: 4
+														fM: 4
 													}
 												});
 										case 'bibitem':
@@ -24208,12 +24379,12 @@ var $author$project$Compiler$Acc$updateAccumulator = F2(
 											var name_ = _v1.a.a;
 											return A6(
 												$author$project$Compiler$Acc$updateWithOrdinaryBlock,
-												accumulator,
 												$elm$core$Maybe$Just(name_),
 												content,
 												tag,
 												id,
-												indent);
+												indent,
+												accumulator);
 									}
 								case 2:
 									switch (_v1.a.a) {
@@ -24260,7 +24431,7 @@ var $author$project$Compiler$Acc$updateAccumulator = F2(
 							if (!_v1.b.$) {
 								var _v9 = _v1.a;
 								var _v10 = _v1.b;
-								return A5($author$project$Compiler$Acc$updateWithParagraph, accumulator, $elm$core$Maybe$Nothing, content, tag, id);
+								return A5($author$project$Compiler$Acc$updateWithParagraph, $elm$core$Maybe$Nothing, content, tag, id, accumulator);
 							} else {
 								break _v1$12;
 							}
@@ -24270,11 +24441,11 @@ var $author$project$Compiler$Acc$updateAccumulator = F2(
 					var inList = _v11.a;
 					return _Utils_update(
 						accumulator,
-						{aI: inList});
+						{aJ: inList});
 				}
-				return A5($author$project$Compiler$Acc$updateWithVerbatimBlock, accumulator, name, args, tag, id);
+				return A5($author$project$Compiler$Acc$updateWithVerbatimBlock, name, args, tag, id, accumulator);
 			}
-			var _v2 = $elm_community$list_extra$List$Extra$uncons(accumulator.b2);
+			var _v2 = $elm_community$list_extra$List$Extra$uncons(accumulator.b3);
 			if (!_v2.$) {
 				var _v3 = _v2.a;
 				var _v4 = _v3.a;
@@ -24283,12 +24454,12 @@ var $author$project$Compiler$Acc$updateAccumulator = F2(
 				return _Utils_update(
 					accumulator,
 					{
-						em: $elm$core$Dict$fromList(
+						eq: $elm$core$Dict$fromList(
 							A2(
 								$elm$core$List$cons,
 								_Utils_Tuple2(q, id),
 								rest)),
-						b2: A2(
+						b3: A2(
 							$elm$core$List$cons,
 							_Utils_Tuple2(q, id),
 							rest)
@@ -24305,11 +24476,11 @@ var $author$project$Compiler$Acc$updateAccumulator = F2(
 			_Utils_update(
 				accumulator,
 				{
-					a6: accumulator.a6 + 1,
-					b2: A2(
+					aS: accumulator.aS + 1,
+					b3: A2(
 						$elm$core$List$cons,
 						_Utils_Tuple2(id, '??'),
-						accumulator.b2)
+						accumulator.b3)
 				}));
 	});
 var $author$project$Compiler$Acc$transformAccumulateBlock = F2(
@@ -24324,7 +24495,7 @@ var $author$project$Compiler$Acc$transformAccumulateTree = F2(
 		return A3($zwilias$elm_rosetree$Tree$mapAccumulate, $author$project$Compiler$Acc$transformAccumulateBlock, acc, tree);
 	});
 var $author$project$Compiler$Acc$transformAccumulate = F2(
-	function (data, ast) {
+	function (data, forest) {
 		return function (_v1) {
 			var acc_ = _v1.a;
 			var ast_ = _v1.b;
@@ -24346,17 +24517,24 @@ var $author$project$Compiler$Acc$transformAccumulate = F2(
 				_Utils_Tuple2(
 					$author$project$Compiler$Acc$init(data),
 					_List_Nil),
-				ast));
+				forest));
 	});
 var $author$project$Compiler$DifferentialParser$updateFunctions = function (lang) {
 	return {
-		dG: $author$project$Compiler$Acc$transformAccumulate,
-		eR: $author$project$Parser$PrimitiveBlock$eq,
-		eS: $author$project$Compiler$DifferentialParser$chunkLevel,
-		dP: $author$project$Compiler$DifferentialParser$toExprBlock(lang),
-		dQ: $author$project$Compiler$DifferentialParser$chunker(lang),
-		dZ: $author$project$Compiler$DifferentialParser$forestFromBlocks,
-		d$: $author$project$Markup$messagesFromForest
+		dI: $author$project$Compiler$Acc$transformAccumulate,
+		eU: $author$project$Compiler$DifferentialParser$changeLineNumber,
+		eW: $author$project$Parser$PrimitiveBlock$eq,
+		eX: $author$project$Compiler$DifferentialParser$chunkLevel,
+		dR: $author$project$Compiler$DifferentialParser$toExprBlock(lang),
+		dS: $author$project$Compiler$DifferentialParser$chunker(lang),
+		e$: $elm$core$Basics$identity,
+		d0: $author$project$Compiler$DifferentialParser$forestFromBlocks,
+		d2: $author$project$Markup$messagesFromForest,
+		ed: function (pb) {
+			return pb.ed;
+		},
+		fw: $author$project$Parser$Block$getLineNumber,
+		fI: $author$project$Parser$Block$setLineNumber
 	};
 };
 var $author$project$Compiler$DifferentialParser$init = F3(
@@ -24374,7 +24552,7 @@ var $author$project$Scripta$API$init = F3(
 	});
 var $author$project$Compiler$ASTTools$matchBlockName = F2(
 	function (key, _v0) {
-		var name = _v0.fl;
+		var name = _v0.fr;
 		return _Utils_eq(
 			$elm$core$Maybe$Just(key),
 			name);
@@ -24413,7 +24591,7 @@ var $mdgriffith$elm_ui$Internal$Model$Class = F2(
 		return {$: 3, a: a, b: b};
 	});
 var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
-var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.gf);
+var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.gn);
 var $mdgriffith$elm_ui$Element$Font$color = function (fontColor) {
 	return A2(
 		$mdgriffith$elm_ui$Internal$Model$StyleClass,
@@ -24441,15 +24619,8 @@ var $mdgriffith$elm_ui$Element$el = F2(
 				_List_fromArray(
 					[child])));
 	});
-var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
-var $mdgriffith$elm_ui$Element$htmlAttribute = $mdgriffith$elm_ui$Internal$Model$Attr;
-var $author$project$Render$Utility$elementAttribute = F2(
-	function (key, value) {
-		return $mdgriffith$elm_ui$Element$htmlAttribute(
-			A2($elm$html$Html$Attributes$attribute, key, value));
-	});
 var $author$project$Render$Block$getExprs = function (_v0) {
-	var content = _v0.bJ;
+	var content = _v0.bM;
 	if (!content.$) {
 		return _List_Nil;
 	} else {
@@ -24457,7 +24628,7 @@ var $author$project$Render$Block$getExprs = function (_v0) {
 		return stuff;
 	}
 };
-var $author$project$Render$Msg$SendId = function (a) {
+var $author$project$Render$Msg$SendLineNumber = function (a) {
 	return {$: 1, a: a};
 };
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -24478,21 +24649,39 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		$elm$json$Json$Decode$succeed(msg));
 };
 var $mdgriffith$elm_ui$Element$Events$onClick = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Attr, $elm$html$Html$Events$onClick);
+var $author$project$Render$Utility$sendLineNumberOnClick = function (lineNumber) {
+	return $mdgriffith$elm_ui$Element$Events$onClick(
+		$author$project$Render$Msg$SendLineNumber(
+			$elm$core$String$fromInt(lineNumber)));
+};
 var $author$project$Render$Block$highlightAttrs = F2(
-	function (id, settings) {
-		return _Utils_eq(id, settings.hO) ? _List_fromArray(
+	function (lineNumber, settings) {
+		return _Utils_eq(
+			$elm$core$String$fromInt(lineNumber),
+			settings.hT) ? _List_fromArray(
 			[
-				$mdgriffith$elm_ui$Element$Events$onClick(
-				$author$project$Render$Msg$SendId(id)),
+				$author$project$Render$Utility$sendLineNumberOnClick(lineNumber),
 				$mdgriffith$elm_ui$Element$Background$color(
 				A3($mdgriffith$elm_ui$Element$rgb, 0.8, 0.8, 1.0))
 			]) : _List_fromArray(
 			[
-				$mdgriffith$elm_ui$Element$Events$onClick(
-				$author$project$Render$Msg$SendId(id))
+				$author$project$Render$Utility$sendLineNumberOnClick(lineNumber)
 			]);
 	});
-var $mdgriffith$elm_ui$Element$Font$italic = $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.g5);
+var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
+var $mdgriffith$elm_ui$Element$htmlAttribute = $mdgriffith$elm_ui$Internal$Model$Attr;
+var $author$project$Render$Utility$elementAttribute = F2(
+	function (key, value) {
+		return $mdgriffith$elm_ui$Element$htmlAttribute(
+			A2($elm$html$Html$Attributes$attribute, key, value));
+	});
+var $author$project$Render$Utility$idAttribute = function (k) {
+	return A2(
+		$author$project$Render$Utility$elementAttribute,
+		'id',
+		$elm$core$String$fromInt(k));
+};
+var $mdgriffith$elm_ui$Element$Font$italic = $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.hc);
 var $mdgriffith$elm_ui$Internal$Model$PaddingStyle = F5(
 	function (a, b, c, d, e) {
 		return {$: 7, a: a, b: b, c: c, d: d, e: e};
@@ -24503,10 +24692,10 @@ var $mdgriffith$elm_ui$Internal$Model$paddingName = F4(
 		return 'pad-' + ($elm$core$String$fromInt(top) + ('-' + ($elm$core$String$fromInt(right) + ('-' + ($elm$core$String$fromInt(bottom) + ('-' + $elm$core$String$fromInt(left)))))));
 	});
 var $mdgriffith$elm_ui$Element$paddingEach = function (_v0) {
-	var left = _v0.bf;
+	var left = _v0.bg;
 	var bottom = _v0.a7;
-	var right = _v0.bh;
-	var top = _v0.bi;
+	var right = _v0.bj;
+	var top = _v0.bk;
 	if (_Utils_eq(top, right) && (_Utils_eq(top, bottom) && _Utils_eq(top, left))) {
 		var topFloat = top;
 		return A2(
@@ -24663,16 +24852,16 @@ var $author$project$Render$Elm$cite = F2(
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
-					return $.gR;
+					return $.gY;
 				},
-				A2($elm$core$Dict$get, tag, acc.b4)));
+				A2($elm$core$Dict$get, tag, acc.b5)));
 		return A2(
 			$mdgriffith$elm_ui$Element$paragraph,
 			_List_fromArray(
 				[
 					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 					$mdgriffith$elm_ui$Element$Events$onClick(
-					$author$project$Render$Msg$SendId(id)),
+					$author$project$Render$Msg$SendLineNumber(id)),
 					$mdgriffith$elm_ui$Element$Events$onClick(
 					$author$project$Render$Msg$SelectId(id)),
 					$mdgriffith$elm_ui$Element$Font$color(
@@ -24769,7 +24958,7 @@ var $mdgriffith$elm_ui$Element$Input$onKeyLookup = function (lookup) {
 				isKey)));
 };
 var $mdgriffith$elm_ui$Internal$Flag$cursor = $mdgriffith$elm_ui$Internal$Flag$flag(21);
-var $mdgriffith$elm_ui$Element$pointer = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$cursor, $mdgriffith$elm_ui$Internal$Style$classes.gv);
+var $mdgriffith$elm_ui$Element$pointer = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$cursor, $mdgriffith$elm_ui$Internal$Style$classes.gC);
 var $mdgriffith$elm_ui$Element$Input$space = ' ';
 var $elm$html$Html$Attributes$tabindex = function (n) {
 	return A2(
@@ -24779,8 +24968,8 @@ var $elm$html$Html$Attributes$tabindex = function (n) {
 };
 var $mdgriffith$elm_ui$Element$Input$button = F2(
 	function (attrs, _v0) {
-		var label = _v0.g6;
-		var onPress = _v0.hr;
+		var label = _v0.hd;
+		var onPress = _v0.hw;
 		return A4(
 			$mdgriffith$elm_ui$Internal$Model$element,
 			$mdgriffith$elm_ui$Internal$Model$asEl,
@@ -24793,7 +24982,7 @@ var $mdgriffith$elm_ui$Element$Input$button = F2(
 					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
 					A2(
 						$elm$core$List$cons,
-						$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.de + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.ba + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.hN + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fm)))))),
+						$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.df + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.ba + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.hS + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fs)))))),
 						A2(
 							$elm$core$List$cons,
 							$mdgriffith$elm_ui$Element$pointer,
@@ -24885,7 +25074,7 @@ var $author$project$Render$Elm$cslink = F4(
 				$mdgriffith$elm_ui$Element$Input$button,
 				_List_Nil,
 				{
-					g6: A2(
+					hd: A2(
 						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
 							[
@@ -24896,7 +25085,7 @@ var $author$project$Render$Elm$cslink = F4(
 								A3($mdgriffith$elm_ui$Element$rgb, 0, 0, 0.8))
 							]),
 						$mdgriffith$elm_ui$Element$text(label)),
-					hr: $elm$core$Maybe$Just(
+					hw: $elm$core$Maybe$Just(
 						A3($author$project$Render$Msg$GetPublicDocumentFromAuthor, 1, username, fragment))
 				});
 		}
@@ -24920,8 +25109,8 @@ var $elm$html$Html$Attributes$href = function (url) {
 var $elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
 var $mdgriffith$elm_ui$Element$link = F2(
 	function (attrs, _v0) {
-		var label = _v0.g6;
-		var url = _v0.eA;
+		var label = _v0.hd;
+		var url = _v0.eE;
 		return A4(
 			$mdgriffith$elm_ui$Internal$Model$element,
 			$mdgriffith$elm_ui$Internal$Model$asEl,
@@ -24942,7 +25131,7 @@ var $mdgriffith$elm_ui$Element$link = F2(
 							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
 							A2(
 								$elm$core$List$cons,
-								$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.de + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.ba + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fg)))),
+								$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.df + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.ba + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fl)))),
 								attrs))))),
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 				_List_fromArray(
@@ -24960,14 +25149,14 @@ var $author$project$Render$Elm$eqref = F2(
 					'',
 					$elm_community$maybe_extra$Maybe$Extra$values(
 						A2($elm$core$List$map, $author$project$Compiler$ASTTools$getText, exprList)))));
-		var ref_ = A2($elm$core$Dict$get, key, acc.b4);
+		var ref_ = A2($elm$core$Dict$get, key, acc.b5);
 		var val = A2(
 			$elm$core$Maybe$withDefault,
 			'',
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
-					return $.fo;
+					return $.fu;
 				},
 				ref_));
 		var id = A2(
@@ -24976,7 +25165,7 @@ var $author$project$Render$Elm$eqref = F2(
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
-					return $.gR;
+					return $.gY;
 				},
 				ref_));
 		return A2(
@@ -24989,14 +25178,14 @@ var $author$project$Render$Elm$eqref = F2(
 					$author$project$Render$Msg$SelectId(id))
 				]),
 			{
-				g6: A2(
+				hd: A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$text('(' + (val + ')'))
 						])),
-				eA: $author$project$Render$Utility$internalLink(id)
+				eE: $author$project$Render$Utility$internalLink(id)
 			});
 	});
 var $author$project$Render$Elm$errorBackgroundColor = A3($mdgriffith$elm_ui$Element$rgb, 1, 0.8, 0.8);
@@ -25037,7 +25226,7 @@ var $author$project$Render$Elm$footnote = F2(
 		if ((exprList.b && (exprList.a.$ === 1)) && (!exprList.b.b)) {
 			var _v1 = exprList.a;
 			var meta = _v1.b;
-			var _v2 = A2($elm$core$Dict$get, meta.gR, acc.dl);
+			var _v2 = A2($elm$core$Dict$get, meta.gY, acc.dm);
 			if (!_v2.$) {
 				var k = _v2.a;
 				return A2(
@@ -25048,10 +25237,10 @@ var $author$project$Render$Elm$footnote = F2(
 							A3($mdgriffith$elm_ui$Element$rgb, 0, 0, 0.7)),
 							$mdgriffith$elm_ui$Element$Font$bold,
 							$mdgriffith$elm_ui$Element$Events$onClick(
-							$author$project$Render$Msg$SelectId(meta.gR + '_'))
+							$author$project$Render$Msg$SelectId(meta.gY + '_'))
 						]),
 					{
-						g6: A2(
+						hd: A2(
 							$mdgriffith$elm_ui$Element$el,
 							_List_Nil,
 							$mdgriffith$elm_ui$Element$html(
@@ -25064,7 +25253,7 @@ var $author$project$Render$Elm$footnote = F2(
 											$elm$html$Html$text(
 											$elm$core$String$fromInt(k))
 										])))),
-						eA: $author$project$Render$Utility$internalLink(meta.gR + '_')
+						eE: $author$project$Render$Utility$internalLink(meta.gY + '_')
 					});
 			} else {
 				return $mdgriffith$elm_ui$Element$none;
@@ -25077,8 +25266,8 @@ var $author$project$Render$Elm$linkColor = A3($mdgriffith$elm_ui$Element$rgb, 0,
 var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty('target');
 var $mdgriffith$elm_ui$Element$newTabLink = F2(
 	function (attrs, _v0) {
-		var label = _v0.g6;
-		var url = _v0.eA;
+		var label = _v0.hd;
+		var url = _v0.eE;
 		return A4(
 			$mdgriffith$elm_ui$Internal$Model$element,
 			$mdgriffith$elm_ui$Internal$Model$asEl,
@@ -25103,7 +25292,7 @@ var $mdgriffith$elm_ui$Element$newTabLink = F2(
 								$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
 								A2(
 									$elm$core$List$cons,
-									$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.de + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.ba + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fg)))),
+									$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.df + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.ba + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.fl)))),
 									attrs)))))),
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 				_List_fromArray(
@@ -25129,14 +25318,14 @@ var $author$project$Render$Elm$href = F4(
 			$mdgriffith$elm_ui$Element$newTabLink,
 			_List_Nil,
 			{
-				g6: A2(
+				hd: A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$Font$color($author$project$Render$Elm$linkColor)
 						]),
 					$mdgriffith$elm_ui$Element$text(label)),
-				eA: url
+				eE: url
 			});
 	});
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
@@ -25171,7 +25360,7 @@ var $author$project$Render$Elm$ilink = F4(
 				$mdgriffith$elm_ui$Element$Input$button,
 				_List_Nil,
 				{
-					g6: A2(
+					hd: A2(
 						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
 							[
@@ -25182,7 +25371,7 @@ var $author$project$Render$Elm$ilink = F4(
 								A3($mdgriffith$elm_ui$Element$rgb, 0, 0, 0.8))
 							]),
 						$mdgriffith$elm_ui$Element$text(label)),
-					hr: $elm$core$Maybe$Just(
+					hw: $elm$core$Maybe$Just(
 						A2($author$project$Render$Msg$GetDocumentWithSlug, 0, slug))
 				});
 		}
@@ -25203,8 +25392,8 @@ var $elm$html$Html$Attributes$src = function (url) {
 };
 var $mdgriffith$elm_ui$Element$image = F2(
 	function (attrs, _v0) {
-		var description = _v0.dV;
-		var src = _v0.fH;
+		var description = _v0.dY;
+		var src = _v0.fP;
 		var imageAttributes = A2(
 			$elm$core$List$filter,
 			function (a) {
@@ -25224,7 +25413,7 @@ var $mdgriffith$elm_ui$Element$image = F2(
 			$mdgriffith$elm_ui$Internal$Model$div,
 			A2(
 				$elm$core$List$cons,
-				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.gS),
+				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.gZ),
 				attrs),
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 				_List_fromArray(
@@ -25263,7 +25452,7 @@ var $mdgriffith$elm_ui$Element$row = F2(
 			$mdgriffith$elm_ui$Internal$Model$div,
 			A2(
 				$elm$core$List$cons,
-				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.cn + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.ba)),
+				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.co + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.ba)),
 				A2(
 					$elm$core$List$cons,
 					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
@@ -25292,7 +25481,7 @@ var $author$project$Render$Graphics$imageParameters = F2(
 				return !A2($elm$core$String$contains, 'caption', s);
 			},
 			keyValueStrings_);
-		var displayWidth = settings.eC;
+		var displayWidth = settings.eG;
 		var dict = $author$project$Render$Utility$keyValueDict(keyValueStrings);
 		var placement = function () {
 			var _v2 = A2($elm$core$Dict$get, 'placement', dict);
@@ -25376,7 +25565,7 @@ var $author$project$Render$Graphics$imageParameters = F2(
 						]),
 					$mdgriffith$elm_ui$Element$text(captionPhrase))
 				]));
-		return {dO: caption, dV: description, cQ: placement, eA: url, eC: width};
+		return {dQ: caption, dY: description, cR: placement, eE: url, eG: width};
 	});
 var $author$project$Render$Graphics$image = F2(
 	function (settings, body) {
@@ -25390,8 +25579,8 @@ var $author$project$Render$Graphics$image = F2(
 				[
 					$mdgriffith$elm_ui$Element$spacing(8),
 					$mdgriffith$elm_ui$Element$width(
-					$mdgriffith$elm_ui$Element$px(settings.eC)),
-					params.cQ,
+					$mdgriffith$elm_ui$Element$px(settings.eG)),
+					params.cR,
 					A2($mdgriffith$elm_ui$Element$paddingXY, 0, 18)
 				]),
 			_List_fromArray(
@@ -25400,20 +25589,20 @@ var $author$project$Render$Graphics$image = F2(
 					$mdgriffith$elm_ui$Element$image,
 					_List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$width(params.eC),
-							params.cQ
+							$mdgriffith$elm_ui$Element$width(params.eG),
+							params.cR
 						]),
-					{dV: params.dV, fH: params.eA}),
+					{dY: params.dY, fP: params.eE}),
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
-						[params.cQ]),
-					params.dO)
+						[params.cR]),
+					params.dQ)
 				]));
 		return A2(
 			$mdgriffith$elm_ui$Element$newTabLink,
 			_List_Nil,
-			{g6: inner, eA: params.eA});
+			{hd: inner, eE: params.eE});
 	});
 var $author$project$Render$Elm$leftBracket = $mdgriffith$elm_ui$Element$text('[');
 var $author$project$Render$Elm$link = F4(
@@ -25438,14 +25627,14 @@ var $author$project$Render$Elm$link = F4(
 				$mdgriffith$elm_ui$Element$newTabLink,
 				_List_Nil,
 				{
-					g6: A2(
+					hd: A2(
 						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$Font$color($author$project$Render$Elm$linkColor)
 							]),
 						$mdgriffith$elm_ui$Element$text(label)),
-					eA: url
+					eE: url
 				});
 		}
 	});
@@ -25471,14 +25660,14 @@ var $author$project$Render$Elm$ref = F2(
 				'',
 				$elm_community$maybe_extra$Maybe$Extra$values(
 					A2($elm$core$List$map, $author$project$Compiler$ASTTools$getText, exprList))));
-		var ref_ = A2($elm$core$Dict$get, key, acc.b4);
+		var ref_ = A2($elm$core$Dict$get, key, acc.b5);
 		var val = A2(
 			$elm$core$Maybe$withDefault,
 			'',
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
-					return $.fo;
+					return $.fu;
 				},
 				ref_));
 		var id = A2(
@@ -25487,7 +25676,7 @@ var $author$project$Render$Elm$ref = F2(
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
-					return $.gR;
+					return $.gY;
 				},
 				ref_));
 		return A2(
@@ -25501,14 +25690,14 @@ var $author$project$Render$Elm$ref = F2(
 					$author$project$Render$Msg$SelectId(id))
 				]),
 			{
-				g6: A2(
+				hd: A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$text(val)
 						])),
-				eA: $author$project$Render$Utility$internalLink(id)
+				eE: $author$project$Render$Utility$internalLink(id)
 			});
 	});
 var $author$project$Render$Elm$reflink = F2(
@@ -25524,14 +25713,14 @@ var $author$project$Render$Elm$reflink = F2(
 			$elm$core$String$join,
 			'',
 			A2($elm$core$List$drop, n - 1, args));
-		var ref_ = A2($elm$core$Dict$get, key, acc.b4);
+		var ref_ = A2($elm$core$Dict$get, key, acc.b5);
 		var id = A2(
 			$elm$core$Maybe$withDefault,
 			'',
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
-					return $.gR;
+					return $.gY;
 				},
 				ref_));
 		var label = A2(
@@ -25548,14 +25737,14 @@ var $author$project$Render$Elm$reflink = F2(
 					$author$project$Render$Msg$SelectId(id))
 				]),
 			{
-				g6: A2(
+				hd: A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$text(label)
 						])),
-				eA: $author$project$Render$Utility$internalLink(id)
+				eE: $author$project$Render$Utility$internalLink(id)
 			});
 	});
 var $author$project$Render$Elm$errorText = F2(
@@ -25583,7 +25772,7 @@ var $mdgriffith$elm_ui$Element$Font$family = function (families) {
 var $mdgriffith$elm_ui$Internal$Model$Monospace = {$: 2};
 var $mdgriffith$elm_ui$Element$Font$monospace = $mdgriffith$elm_ui$Internal$Model$Monospace;
 var $mdgriffith$elm_ui$Element$Font$typeface = $mdgriffith$elm_ui$Internal$Model$Typeface;
-var $mdgriffith$elm_ui$Element$Font$unitalicized = $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.ij);
+var $mdgriffith$elm_ui$Element$Font$unitalicized = $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.io);
 var $author$project$Render$Elm$codeStyle = _List_fromArray(
 	[
 		$mdgriffith$elm_ui$Element$Font$family(
@@ -25595,7 +25784,7 @@ var $author$project$Render$Elm$codeStyle = _List_fromArray(
 		$mdgriffith$elm_ui$Element$Font$unitalicized,
 		$mdgriffith$elm_ui$Element$Font$color($author$project$Render$Settings$codeColor),
 		$mdgriffith$elm_ui$Element$paddingEach(
-		{a7: 0, bf: 2, bh: 2, bi: 0})
+		{a7: 0, bg: 2, bj: 2, bk: 0})
 	]);
 var $author$project$Render$Elm$verbatimElement = F3(
 	function (formatList, meta, str) {
@@ -25603,7 +25792,7 @@ var $author$project$Render$Elm$verbatimElement = F3(
 			$mdgriffith$elm_ui$Element$el,
 			A2(
 				$elm$core$List$cons,
-				$author$project$Render$Elm$htmlId(meta.gR),
+				$author$project$Render$Elm$htmlId(meta.gY),
 				formatList),
 			$mdgriffith$elm_ui$Element$text(str));
 	});
@@ -26081,9 +26270,9 @@ var $author$project$Render$Elm$mathElement = F4(
 			$author$project$Render$Math$mathText,
 			generation,
 			'width',
-			meta.gR,
+			meta.gY,
 			0,
-			A2($author$project$Parser$MathMacro$evalStr, acc.ea, str));
+			A2($author$project$Parser$MathMacro$evalStr, acc.ee, str));
 	});
 var $author$project$Render$Elm$math = F4(
 	function (g, a, m, str) {
@@ -26180,7 +26369,7 @@ var $author$project$Render$Elm$skip = function (exprList) {
 	};
 	return A2($author$project$Render$Elm$f1, f, exprList);
 };
-var $mdgriffith$elm_ui$Element$Font$strike = $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.h$);
+var $mdgriffith$elm_ui$Element$Font$strike = $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.h4);
 var $author$project$Render$Elm$ulink = F4(
 	function (_v0, _v1, _v2, exprList) {
 		var _v3 = $elm$core$List$head(
@@ -26208,7 +26397,7 @@ var $author$project$Render$Elm$ulink = F4(
 				$mdgriffith$elm_ui$Element$Input$button,
 				_List_Nil,
 				{
-					g6: A2(
+					hd: A2(
 						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
 							[
@@ -26219,12 +26408,12 @@ var $author$project$Render$Elm$ulink = F4(
 								A3($mdgriffith$elm_ui$Element$rgb, 0, 0, 0.8))
 							]),
 						$mdgriffith$elm_ui$Element$text(label)),
-					hr: $elm$core$Maybe$Just(
+					hw: $elm$core$Maybe$Just(
 						A3($author$project$Render$Msg$GetPublicDocumentFromAuthor, 0, username, fragment))
 				});
 		}
 	});
-var $mdgriffith$elm_ui$Element$Font$underline = $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.iB);
+var $mdgriffith$elm_ui$Element$Font$underline = $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.iG);
 var $author$project$Render$Elm$underscore = F4(
 	function (_v0, _v1, _v2, _v3) {
 		return A2(
@@ -26294,7 +26483,7 @@ var $author$project$Render$Elm$boldItalic = F4(
 					$mdgriffith$elm_ui$Element$Font$italic,
 					$mdgriffith$elm_ui$Element$Font$bold,
 					$mdgriffith$elm_ui$Element$paddingEach(
-					{a7: 0, bf: 0, bh: 2, bi: 0})
+					{a7: 0, bg: 0, bj: 2, bk: 0})
 				]),
 			g,
 			acc,
@@ -26324,7 +26513,7 @@ var $author$project$Render$Elm$emph = F4(
 				[
 					$mdgriffith$elm_ui$Element$Font$italic,
 					$mdgriffith$elm_ui$Element$paddingEach(
-					{a7: 0, bf: 0, bh: 2, bi: 0})
+					{a7: 0, bg: 0, bj: 2, bk: 0})
 				]),
 			g,
 			acc,
@@ -26420,7 +26609,7 @@ var $author$project$Render$Elm$italic = F4(
 				[
 					$mdgriffith$elm_ui$Element$Font$italic,
 					$mdgriffith$elm_ui$Element$paddingEach(
-					{a7: 0, bf: 0, bh: 2, bi: 0})
+					{a7: 0, bg: 0, bj: 2, bk: 0})
 				]),
 			g,
 			acc,
@@ -26494,7 +26683,7 @@ var $author$project$Render$Elm$render = F4(
 						[
 							$mdgriffith$elm_ui$Element$Events$onClick(
 							$author$project$Render$Msg$SendMeta(meta)),
-							$author$project$Render$Elm$htmlId(meta.gR)
+							$author$project$Render$Elm$htmlId(meta.gY)
 						]),
 					$mdgriffith$elm_ui$Element$text(string));
 			case 0:
@@ -26505,7 +26694,7 @@ var $author$project$Render$Elm$render = F4(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
 						[
-							$author$project$Render$Elm$htmlId(meta.gR)
+							$author$project$Render$Elm$htmlId(meta.gY)
 						]),
 					A5($author$project$Render$Elm$renderMarked, name, generation, acc, settings, exprList));
 			default:
@@ -26637,7 +26826,7 @@ var $author$project$Render$Elm$term = F4(
 				[
 					$mdgriffith$elm_ui$Element$Font$italic,
 					$mdgriffith$elm_ui$Element$paddingEach(
-					{a7: 0, bf: 0, bh: 2, bi: 0})
+					{a7: 0, bg: 0, bj: 2, bk: 0})
 				]),
 			g,
 			acc,
@@ -26652,7 +26841,7 @@ var $author$project$Render$Elm$title = F4(
 				[
 					$mdgriffith$elm_ui$Element$Font$size(36),
 					$mdgriffith$elm_ui$Element$paddingEach(
-					{a7: 0, bf: 0, bh: 2, bi: 0})
+					{a7: 0, bg: 0, bj: 2, bk: 0})
 				]),
 			g,
 			acc,
@@ -27144,13 +27333,14 @@ var $author$project$Render$Block$renderWithDefault = F5(
 	});
 var $author$project$Render$Block$answer = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var lineNumber = block.ed;
+		var args = block.gh;
 		var title = A2(
 			$elm$core$String$join,
 			' ',
 			A2($elm$core$List$drop, 1, args));
-		var clicker = _Utils_eq(settings.hO, id) ? $mdgriffith$elm_ui$Element$Events$onClick(
+		var id = $elm$core$String$fromInt(lineNumber);
+		var clicker = _Utils_eq(settings.hT, id) ? $mdgriffith$elm_ui$Element$Events$onClick(
 			$author$project$Render$Msg$ProposeSolution($author$project$Render$Msg$Unsolved)) : $mdgriffith$elm_ui$Element$Events$onClick(
 			$author$project$Render$Msg$ProposeSolution(
 				$author$project$Render$Msg$Solved(id)));
@@ -27161,7 +27351,7 @@ var $author$project$Render$Block$answer = F4(
 				[
 					$mdgriffith$elm_ui$Element$spacing(12),
 					$mdgriffith$elm_ui$Element$paddingEach(
-					{a7: 24, bf: 0, bh: 0, bi: 0})
+					{a7: 24, bg: 0, bj: 0, bk: 0})
 				]),
 			_List_fromArray(
 				[
@@ -27174,7 +27364,7 @@ var $author$project$Render$Block$answer = F4(
 							clicker
 						]),
 					$mdgriffith$elm_ui$Element$text(title)),
-					_Utils_eq(settings.hO, id) ? A2(
+					_Utils_eq(settings.hT, id) ? A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
 						[
@@ -27187,10 +27377,10 @@ var $author$project$Render$Block$answer = F4(
 							_List_fromArray(
 								[
 									$mdgriffith$elm_ui$Element$Font$italic,
-									A2($author$project$Render$Utility$elementAttribute, 'id', id),
+									$author$project$Render$Utility$idAttribute(lineNumber),
 									A2($mdgriffith$elm_ui$Element$paddingXY, 8, 8)
 								]),
-							A2($author$project$Render$Block$highlightAttrs, id, settings)),
+							A2($author$project$Render$Block$highlightAttrs, lineNumber, settings)),
 						A5(
 							$author$project$Render$Block$renderWithDefault,
 							'...',
@@ -27206,13 +27396,13 @@ var $author$project$Render$Settings$topMarginForChildren = 6;
 var $author$project$Render$Utility$vspace = F2(
 	function (top, bottom) {
 		return $mdgriffith$elm_ui$Element$paddingEach(
-			{a7: bottom, bf: 0, bh: 0, bi: top});
+			{a7: bottom, bg: 0, bj: 0, bk: top});
 	});
 var $author$project$Render$Block$vspace = $author$project$Render$Utility$vspace;
 var $author$project$Render$Block$bibitem = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var lineNumber = block.ed;
+		var args = block.gh;
 		var label = function (s) {
 			return '[' + (s + ']');
 		}(
@@ -27226,10 +27416,10 @@ var $author$project$Render$Block$bibitem = F4(
 				_List_fromArray(
 					[
 						$mdgriffith$elm_ui$Element$alignTop,
-						A2($author$project$Render$Utility$elementAttribute, 'id', id),
+						$author$project$Render$Utility$idAttribute(lineNumber),
 						A2($author$project$Render$Block$vspace, 0, $author$project$Render$Settings$topMarginForChildren)
 					]),
-				A2($author$project$Render$Block$highlightAttrs, id, settings)),
+				A2($author$project$Render$Block$highlightAttrs, lineNumber, settings)),
 			_List_fromArray(
 				[
 					A2(
@@ -27249,11 +27439,10 @@ var $author$project$Render$Block$bibitem = F4(
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$paddingEach(
-								{a7: 0, bf: 25, bh: 0, bi: 0}),
-								$mdgriffith$elm_ui$Element$Events$onClick(
-								$author$project$Render$Msg$SendId(id))
+								{a7: 0, bg: 25, bj: 0, bk: 0}),
+								$author$project$Render$Utility$sendLineNumberOnClick(lineNumber)
 							]),
-						A2($author$project$Render$Block$highlightAttrs, id, settings)),
+						A2($author$project$Render$Block$highlightAttrs, lineNumber, settings)),
 					A5(
 						$author$project$Render$Block$renderWithDefault,
 						'bibitem',
@@ -27297,7 +27486,7 @@ var $elm_community$string_extra$String$Extra$toTitleCase = function (ws) {
 		A2(
 			$elm$core$Basics$composeR,
 			function ($) {
-				return $.cJ;
+				return $.cK;
 			},
 			$elm_community$string_extra$String$Extra$toSentenceCase));
 	return A3(
@@ -27306,7 +27495,7 @@ var $elm_community$string_extra$String$Extra$toTitleCase = function (ws) {
 		A2(
 			$elm$core$Basics$composeR,
 			function ($) {
-				return $.cJ;
+				return $.cK;
 			},
 			uppercaseMatch),
 		ws);
@@ -27342,9 +27531,9 @@ var $mdgriffith$elm_ui$Element$padding = function (x) {
 };
 var $author$project$Render$Block$box = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var name = block.fl;
-		var args = block.f9;
+		var lineNumber = block.ed;
+		var name = block.fr;
+		var args = block.gh;
 		var properties = block.H;
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
@@ -27361,12 +27550,11 @@ var $author$project$Render$Block$box = F4(
 							[
 								$mdgriffith$elm_ui$Element$Background$color($author$project$Render$Color$lightBlue),
 								$mdgriffith$elm_ui$Element$padding(20),
-								$mdgriffith$elm_ui$Element$Events$onClick(
-								$author$project$Render$Msg$SendId(id)),
-								A2($author$project$Render$Utility$elementAttribute, 'id', id),
+								$author$project$Render$Utility$sendLineNumberOnClick(lineNumber),
+								$author$project$Render$Utility$idAttribute(lineNumber),
 								$mdgriffith$elm_ui$Element$spacing(18)
 							]),
-						A2($author$project$Render$Block$highlightAttrs, id, settings)),
+						A2($author$project$Render$Block$highlightAttrs, lineNumber, settings)),
 					_List_fromArray(
 						[
 							A2(
@@ -27394,8 +27582,8 @@ var $author$project$Render$Block$collection = F4(
 	});
 var $author$project$Render$Block$comment = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var lineNumber = block.ed;
+		var args = block.gh;
 		var author_ = A2($elm$core$String$join, ' ', args);
 		var author = (author_ === '') ? '' : (author_ + ':');
 		return A2(
@@ -27421,11 +27609,10 @@ var $author$project$Render$Block$comment = F4(
 							[
 								$mdgriffith$elm_ui$Element$Font$italic,
 								$mdgriffith$elm_ui$Element$Font$color($author$project$Render$Color$blue),
-								$mdgriffith$elm_ui$Element$Events$onClick(
-								$author$project$Render$Msg$SendId(id)),
-								A2($author$project$Render$Utility$elementAttribute, 'id', id)
+								$author$project$Render$Utility$sendLineNumberOnClick(lineNumber),
+								$author$project$Render$Utility$idAttribute(lineNumber)
 							]),
-						A2($author$project$Render$Block$highlightAttrs, id, settings)),
+						A2($author$project$Render$Block$highlightAttrs, lineNumber, settings)),
 					A5(
 						$author$project$Render$Block$renderWithDefault,
 						'| comment',
@@ -27447,22 +27634,23 @@ var $author$project$Render$Block$argString = function (args) {
 			args));
 };
 var $author$project$Render$Settings$leftIndentation = $mdgriffith$elm_ui$Element$paddingEach(
-	{a7: 0, bf: 18, bh: 0, bi: 0});
+	{a7: 0, bg: 18, bj: 0, bk: 0});
 var $author$project$Render$Block$desc = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var lineNumber = block.ed;
+		var args = block.gh;
 		var label = $author$project$Render$Block$argString(args);
+		var id = $elm$core$String$fromInt(lineNumber);
 		return A2(
 			$mdgriffith$elm_ui$Element$row,
 			_Utils_ap(
 				_List_fromArray(
 					[
 						$mdgriffith$elm_ui$Element$alignTop,
-						A2($author$project$Render$Utility$elementAttribute, 'id', id),
+						$author$project$Render$Utility$idAttribute(lineNumber),
 						A2($author$project$Render$Block$vspace, 0, $author$project$Render$Settings$topMarginForChildren)
 					]),
-				A2($author$project$Render$Block$highlightAttrs, id, settings)),
+				A2($author$project$Render$Block$highlightAttrs, lineNumber, settings)),
 			_List_fromArray(
 				[
 					A2(
@@ -27480,8 +27668,7 @@ var $author$project$Render$Block$desc = F4(
 					_List_fromArray(
 						[
 							$author$project$Render$Settings$leftIndentation,
-							$mdgriffith$elm_ui$Element$Events$onClick(
-							$author$project$Render$Msg$SendId(id))
+							$author$project$Render$Utility$sendLineNumberOnClick(lineNumber)
 						]),
 					A5(
 						$author$project$Render$Block$renderWithDefault,
@@ -27511,7 +27698,7 @@ var $author$project$Render$Block$ilink = F4(
 			$mdgriffith$elm_ui$Element$Input$button,
 			_List_Nil,
 			{
-				g6: A2(
+				hd: A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
 						[
@@ -27521,7 +27708,7 @@ var $author$project$Render$Block$ilink = F4(
 							A3($author$project$Render$Block$fontColor, selectedId, selecteSlug, docId)
 						]),
 					$mdgriffith$elm_ui$Element$text(docTitle)),
-				hr: $elm$core$Maybe$Just(
+				hw: $elm$core$Maybe$Just(
 					A2($author$project$Render$Msg$GetPublicDocument, 0, docId))
 			});
 	});
@@ -27564,8 +27751,8 @@ var $author$project$Render$Block$truncateString = F2(
 	});
 var $author$project$Render$Block$document = F4(
 	function (_v0, _v1, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var id = block.gY;
+		var args = block.gh;
 		var properties = block.H;
 		var title = A2(
 			$author$project$Render$Block$truncateString,
@@ -27627,10 +27814,10 @@ var $author$project$Render$Block$document = F4(
 			_List_fromArray(
 				[
 					$mdgriffith$elm_ui$Element$alignTop,
-					A2($author$project$Render$Utility$elementAttribute, 'id', settings.hO),
+					A2($author$project$Render$Utility$elementAttribute, 'id', settings.hT),
 					A2($author$project$Render$Block$vspace, 0, $author$project$Render$Settings$topMarginForChildren),
 					$mdgriffith$elm_ui$Element$moveRight(15 * (level - 1)),
-					A3($author$project$Render$Block$fontColor, settings.hO, settings.hP, docId)
+					A3($author$project$Render$Block$fontColor, settings.hT, settings.hU, docId)
 				]),
 			_List_fromArray(
 				[
@@ -27644,7 +27831,7 @@ var $author$project$Render$Block$document = F4(
 							$mdgriffith$elm_ui$Element$px(30))
 						]),
 					$mdgriffith$elm_ui$Element$text(sectionNumber)),
-					A4($author$project$Render$Block$ilink, title, settings.hO, settings.hP, docId)
+					A4($author$project$Render$Block$ilink, title, settings.hT, settings.hU, docId)
 				]));
 	});
 var $author$project$Render$Block$htmlId = function (str) {
@@ -27652,9 +27839,9 @@ var $author$project$Render$Block$htmlId = function (str) {
 		$elm$html$Html$Attributes$id(str));
 };
 var $author$project$Render$Block$renderFootnote = function (_v0) {
-	var label = _v0.g6;
-	var content = _v0.bJ;
-	var id = _v0.gR;
+	var label = _v0.hd;
+	var content = _v0.bM;
+	var id = _v0.gY;
 	return A2(
 		$mdgriffith$elm_ui$Element$paragraph,
 		_List_fromArray(
@@ -27678,12 +27865,12 @@ var $author$project$Render$Block$renderFootnote = function (_v0) {
 };
 var $author$project$Render$Block$endnotes = F4(
 	function (_v0, acc, _v1, _v2) {
-		var id = _v2.gR;
-		var args = _v2.f9;
+		var lineNumber = _v2.ed;
+		var args = _v2.gh;
 		var endnoteList = A2(
 			$elm$core$List$sortBy,
 			function ($) {
-				return $.g6;
+				return $.hd;
 			},
 			A2(
 				$elm$core$List$map,
@@ -27691,15 +27878,15 @@ var $author$project$Render$Block$endnotes = F4(
 					var content = _v3.a;
 					var meta = _v3.b;
 					return {
-						bJ: content,
-						gR: meta.gR + '_',
-						g6: A2(
+						bM: content,
+						gY: meta.gY + '_',
+						hd: A2(
 							$elm$core$Maybe$withDefault,
 							0,
-							A2($elm$core$Dict$get, meta.gR, acc.dl))
+							A2($elm$core$Dict$get, meta.gY, acc.dm))
 					};
 				},
-				$elm$core$Dict$toList(acc.dm)));
+				$elm$core$Dict$toList(acc.dn)));
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -27724,12 +27911,12 @@ var $author$project$Render$Block$renderWithDefault2 = F5(
 	});
 var $author$project$Render$Block$env = F4(
 	function (count, acc, settings, _v0) {
-		var name = _v0.fl;
-		var indent = _v0.gV;
-		var args = _v0.f9;
-		var blockType = _v0.dM;
-		var content = _v0.bJ;
-		var id = _v0.gR;
+		var name = _v0.fr;
+		var indent = _v0.g0;
+		var args = _v0.gh;
+		var blockType = _v0.dO;
+		var content = _v0.bM;
+		var lineNumber = _v0.ed;
 		var properties = _v0.H;
 		if (!content.$) {
 			return $mdgriffith$elm_ui$Element$none;
@@ -27741,9 +27928,9 @@ var $author$project$Render$Block$env = F4(
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$spacing(8),
-							A2($author$project$Render$Utility$elementAttribute, 'id', id)
+							$author$project$Render$Utility$idAttribute(lineNumber)
 						]),
-					A2($author$project$Render$Block$highlightAttrs, id, settings)),
+					A2($author$project$Render$Block$highlightAttrs, lineNumber, settings)),
 				_List_fromArray(
 					[
 						A2(
@@ -27751,8 +27938,7 @@ var $author$project$Render$Block$env = F4(
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$Font$bold,
-								$mdgriffith$elm_ui$Element$Events$onClick(
-								$author$project$Render$Msg$SendId(id))
+								$author$project$Render$Utility$sendLineNumberOnClick(lineNumber)
 							]),
 						$mdgriffith$elm_ui$Element$text(
 							A3($author$project$Render$Block$blockHeading, name, args, properties))),
@@ -27761,12 +27947,11 @@ var $author$project$Render$Block$env = F4(
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$Font$italic,
-								$mdgriffith$elm_ui$Element$Events$onClick(
-								$author$project$Render$Msg$SendId(id))
+								$author$project$Render$Utility$sendLineNumberOnClick(lineNumber)
 							]),
 						A5(
 							$author$project$Render$Block$renderWithDefault2,
-							'| ' + A2($elm$core$Maybe$withDefault, '(name)', name),
+							'??' + A2($elm$core$Maybe$withDefault, '(name)', name),
 							count,
 							acc,
 							settings,
@@ -27776,12 +27961,12 @@ var $author$project$Render$Block$env = F4(
 	});
 var $author$project$Render$Block$env_ = F4(
 	function (count, acc, settings, block) {
-		var name = block.fl;
-		var indent = block.gV;
-		var args = block.f9;
-		var blockType = block.dM;
-		var content = block.bJ;
-		var id = block.gR;
+		var name = block.fr;
+		var lineNumber = block.ed;
+		var indent = block.g0;
+		var args = block.gh;
+		var blockType = block.dO;
+		var content = block.bM;
 		var properties = block.H;
 		var _v0 = $elm$core$List$head(args);
 		if (_v0.$ === 1) {
@@ -27789,10 +27974,9 @@ var $author$project$Render$Block$env_ = F4(
 				$mdgriffith$elm_ui$Element$paragraph,
 				_List_fromArray(
 					[
-						A2($author$project$Render$Utility$elementAttribute, 'id', id),
+						$author$project$Render$Utility$idAttribute(lineNumber),
 						$mdgriffith$elm_ui$Element$Font$color($author$project$Render$Settings$redColor),
-						$mdgriffith$elm_ui$Element$Events$onClick(
-						$author$project$Render$Msg$SendId(id))
+						$author$project$Render$Utility$sendLineNumberOnClick(lineNumber)
 					]),
 				_List_fromArray(
 					[
@@ -27804,18 +27988,17 @@ var $author$project$Render$Block$env_ = F4(
 	});
 var $author$project$Render$Block$indented = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
+		var lineNumber = block.ed;
 		return A2(
 			$mdgriffith$elm_ui$Element$paragraph,
 			_Utils_ap(
 				_List_fromArray(
 					[
 						$author$project$Render$Settings$leftIndentation,
-						$mdgriffith$elm_ui$Element$Events$onClick(
-						$author$project$Render$Msg$SendId(id)),
-						A2($author$project$Render$Utility$elementAttribute, 'id', id)
+						$author$project$Render$Utility$sendLineNumberOnClick(lineNumber),
+						$author$project$Render$Utility$idAttribute(lineNumber)
 					]),
-				A2($author$project$Render$Block$highlightAttrs, id, settings)),
+				A2($author$project$Render$Block$highlightAttrs, lineNumber, settings)),
 			A5(
 				$author$project$Render$Block$renderWithDefault,
 				'indent',
@@ -27922,15 +28105,15 @@ var $author$project$Render$Block$indexItem_ = function (_v0) {
 				$mdgriffith$elm_ui$Element$Font$color(
 				A3($mdgriffith$elm_ui$Element$rgb, 0, 0, 0.8)),
 				$mdgriffith$elm_ui$Element$Events$onClick(
-				$author$project$Render$Msg$SelectId(loc.gR))
+				$author$project$Render$Msg$SelectId(loc.gY))
 			]),
 		{
-			g6: A2(
+			hd: A2(
 				$mdgriffith$elm_ui$Element$el,
 				_List_Nil,
 				$mdgriffith$elm_ui$Element$text(
 					$elm$core$String$toLower(name))),
-			eA: $author$project$Render$Utility$internalLink(loc.gR)
+			eE: $author$project$Render$Utility$internalLink(loc.gY)
 		});
 };
 var $author$project$Render$Block$indexItem = function (groupItem) {
@@ -27962,8 +28145,8 @@ var $author$project$Render$Block$renderGroup = function (groupItems) {
 };
 var $author$project$Render$Block$index = F4(
 	function (_v0, acc, _v1, _v2) {
-		var id = _v2.gR;
-		var args = _v2.f9;
+		var lineNumber = _v2.ed;
+		var args = _v2.gh;
 		var groupItemList = $elm$core$List$concat(
 			A2(
 				$elm$core$List$map,
@@ -27993,7 +28176,7 @@ var $author$project$Render$Block$index = F4(
 									$elm$core$String$trim(name),
 									item_);
 							},
-							$elm$core$Dict$toList(acc.dC))))));
+							$elm$core$Dict$toList(acc.dE))))));
 		var groupItemListList = A2(
 			$elm$core$List$map,
 			$author$project$Render$Block$normalize,
@@ -28013,17 +28196,18 @@ var $author$project$Render$Block$indentationScale = 15;
 var $elm$core$Basics$modBy = _Basics_modBy;
 var $author$project$Render$Block$item = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var lineNumber = block.ed;
+		var args = block.gh;
+		var id = $elm$core$String$fromInt(lineNumber);
 		var level = A2(
 			$elm$core$Maybe$withDefault,
 			0,
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
-					return $.ff;
+					return $.ec;
 				},
-				A2($elm$core$Dict$get, id, acc.bX)));
+				A2($elm$core$Dict$get, id, acc.bh)));
 		var label = function () {
 			var _v0 = A2($elm$core$Basics$modBy, 3, level);
 			switch (_v0) {
@@ -28041,7 +28225,7 @@ var $author$project$Render$Block$item = F4(
 				[
 					$mdgriffith$elm_ui$Element$moveRight($author$project$Render$Block$indentationScale * level),
 					$mdgriffith$elm_ui$Element$alignTop,
-					A2($author$project$Render$Utility$elementAttribute, 'id', id),
+					$author$project$Render$Utility$idAttribute(lineNumber),
 					A2($author$project$Render$Block$vspace, 0, $author$project$Render$Settings$topMarginForChildren)
 				]),
 			_List_fromArray(
@@ -28063,8 +28247,7 @@ var $author$project$Render$Block$item = F4(
 					_List_fromArray(
 						[
 							$author$project$Render$Settings$leftIndentation,
-							$mdgriffith$elm_ui$Element$Events$onClick(
-							$author$project$Render$Msg$SendId(id))
+							$author$project$Render$Utility$sendLineNumberOnClick(lineNumber)
 						]),
 					A5(
 						$author$project$Render$Block$renderWithDefault,
@@ -28076,12 +28259,11 @@ var $author$project$Render$Block$item = F4(
 				]));
 	});
 var $author$project$Render$Settings$leftRightIndentation = $mdgriffith$elm_ui$Element$paddingEach(
-	{a7: 0, bf: 18, bh: 8, bi: 0});
+	{a7: 0, bg: 18, bj: 8, bk: 0});
 var $author$project$Render$Block$numbered = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
-		var val = A2($elm$core$Dict$get, id, acc.bX);
+		var lineNumber = block.ed;
+		var args = block.gh;
 		var romanNumerals = _List_fromArray(
 			['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx', 'xi', 'xxii', 'xxiii', 'xxiv', 'xxv', 'vi']);
 		var roman = function (k) {
@@ -28093,22 +28275,24 @@ var $author$project$Render$Block$numbered = F4(
 					A2($elm$core$Basics$modBy, 26, k - 1),
 					romanNumerals));
 		};
-		var level = A2(
-			$elm$core$Maybe$withDefault,
-			0,
-			A2(
-				$elm$core$Maybe$map,
-				function ($) {
-					return $.ff;
-				},
-				val));
+		var id = $elm$core$String$fromInt(lineNumber);
+		var val = A2($elm$core$Dict$get, id, acc.bh);
 		var index_ = A2(
 			$elm$core$Maybe$withDefault,
 			1,
 			A2(
 				$elm$core$Maybe$map,
 				function ($) {
-					return $.d7;
+					return $.dq;
+				},
+				val));
+		var level = A2(
+			$elm$core$Maybe$withDefault,
+			0,
+			A2(
+				$elm$core$Maybe$map,
+				function ($) {
+					return $.ec;
 				},
 				val));
 		var alphabet = _List_fromArray(
@@ -28139,7 +28323,7 @@ var $author$project$Render$Block$numbered = F4(
 				[
 					$mdgriffith$elm_ui$Element$moveRight($author$project$Render$Block$indentationScale * level),
 					$mdgriffith$elm_ui$Element$alignTop,
-					A2($author$project$Render$Utility$elementAttribute, 'id', id),
+					$author$project$Render$Utility$idAttribute(lineNumber),
 					A2($author$project$Render$Block$vspace, 0, $author$project$Render$Settings$topMarginForChildren)
 				]),
 			_List_fromArray(
@@ -28160,8 +28344,7 @@ var $author$project$Render$Block$numbered = F4(
 					_List_fromArray(
 						[
 							$author$project$Render$Settings$leftIndentation,
-							$mdgriffith$elm_ui$Element$Events$onClick(
-							$author$project$Render$Msg$SendId(id))
+							$author$project$Render$Utility$sendLineNumberOnClick(lineNumber)
 						]),
 					A5(
 						$author$project$Render$Block$renderWithDefault,
@@ -28183,15 +28366,16 @@ var $author$project$Render$Block$getLabel = function (dict) {
 };
 var $author$project$Render$Block$question = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var lineNumber = block.ed;
+		var args = block.gh;
 		var properties = block.H;
 		var title = A2($elm$core$String$join, ' ', args);
+		var label = ' ' + $author$project$Render$Block$getLabel(properties);
+		var id = $elm$core$String$fromInt(lineNumber);
 		var qId = A2(
 			$elm$core$Maybe$withDefault,
 			id,
-			A2($elm$core$Dict$get, id, acc.em));
-		var label = ' ' + $author$project$Render$Block$getLabel(properties);
+			A2($elm$core$Dict$get, id, acc.eq));
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -28218,9 +28402,9 @@ var $author$project$Render$Block$question = F4(
 								$mdgriffith$elm_ui$Element$Font$italic,
 								$mdgriffith$elm_ui$Element$Events$onClick(
 								$author$project$Render$Msg$HighlightId(qId)),
-								A2($author$project$Render$Utility$elementAttribute, 'id', id)
+								$author$project$Render$Utility$idAttribute(lineNumber)
 							]),
-						A2($author$project$Render$Block$highlightAttrs, id, settings)),
+						A2($author$project$Render$Block$highlightAttrs, lineNumber, settings)),
 					A5(
 						$author$project$Render$Block$renderWithDefault,
 						'...',
@@ -28232,8 +28416,8 @@ var $author$project$Render$Block$question = F4(
 	});
 var $author$project$Render$Block$quotation = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var lineNumber = block.ed;
+		var args = block.gh;
 		var properties = block.H;
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
@@ -28250,11 +28434,10 @@ var $author$project$Render$Block$quotation = F4(
 							[
 								$mdgriffith$elm_ui$Element$Font$italic,
 								$author$project$Render$Settings$leftIndentation,
-								$mdgriffith$elm_ui$Element$Events$onClick(
-								$author$project$Render$Msg$SendId(id)),
-								A2($author$project$Render$Utility$elementAttribute, 'id', id)
+								$author$project$Render$Utility$sendLineNumberOnClick(lineNumber),
+								$author$project$Render$Utility$idAttribute(lineNumber)
 							]),
-						A2($author$project$Render$Block$highlightAttrs, id, settings)),
+						A2($author$project$Render$Block$highlightAttrs, lineNumber, settings)),
 					A5(
 						$author$project$Render$Block$renderWithDefault,
 						'(quotation)',
@@ -28301,11 +28484,28 @@ var $author$project$Render$Utility$makeId = function (exprs) {
 				$author$project$Compiler$ASTTools$stringValueOfList(exprs))));
 };
 var $author$project$Render$Settings$maxHeadingFontSize = 32;
+var $author$project$Render$Block$renderWithDefaultWithSize = F6(
+	function (size, _default, count, acc, settings, exprs) {
+		return $elm$core$List$isEmpty(exprs) ? _List_fromArray(
+			[
+				A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Font$color($author$project$Render$Settings$redColor),
+						$mdgriffith$elm_ui$Element$Font$size(size)
+					]),
+				$mdgriffith$elm_ui$Element$text(_default))
+			]) : A2(
+			$elm$core$List$map,
+			A3($author$project$Render$Elm$render, count, acc, settings),
+			exprs);
+	});
 var $elm$core$Basics$sqrt = _Basics_sqrt;
 var $author$project$Render$Block$section = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var lineNumber = block.ed;
+		var args = block.gh;
 		var properties = block.H;
 		var headingLevel = function () {
 			var _v1 = $elm$core$List$head(args);
@@ -28347,28 +28547,28 @@ var $author$project$Render$Block$section = F4(
 					[
 						$mdgriffith$elm_ui$Element$Font$size(fontSize),
 						$author$project$Render$Utility$makeId(exprs),
-						A2($author$project$Render$Utility$elementAttribute, 'id', id),
+						$author$project$Render$Utility$idAttribute(lineNumber),
 						$mdgriffith$elm_ui$Element$Events$onClick(
-						$author$project$Render$Msg$SendId('title')),
+						$author$project$Render$Msg$SendLineNumber('title')),
 						$mdgriffith$elm_ui$Element$paddingEach(
-						{a7: 0, bf: 0, bh: 0, bi: 20})
+						{a7: 0, bg: 0, bj: 0, bk: 20})
 					]),
-				A2($author$project$Render$Block$highlightAttrs, id, settings)),
+				A2($author$project$Render$Block$highlightAttrs, lineNumber, settings)),
 			{
-				g6: A2(
+				hd: A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
 					A2(
 						$elm$core$List$cons,
 						sectionNumber,
-						A5($author$project$Render$Block$renderWithDefault, '| section', count, acc, settings, exprs))),
-				eA: $author$project$Render$Utility$internalLink(settings.fK + 'title')
+						A6($author$project$Render$Block$renderWithDefaultWithSize, 18, '??', count, acc, settings, exprs))),
+				eE: $author$project$Render$Utility$internalLink(settings.fS + 'title')
 			});
 	});
 var $author$project$Render$Block$subheading = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var lineNumber = block.ed;
+		var args = block.gh;
 		return A2(
 			$mdgriffith$elm_ui$Element$link,
 			_Utils_ap(
@@ -28378,15 +28578,15 @@ var $author$project$Render$Block$subheading = F4(
 						$mdgriffith$elm_ui$Element$Font$bold,
 						$author$project$Render$Utility$makeId(
 						$author$project$Render$Block$getExprs(block)),
-						A2($author$project$Render$Utility$elementAttribute, 'id', id),
+						$author$project$Render$Utility$idAttribute(lineNumber),
 						$mdgriffith$elm_ui$Element$Events$onClick(
-						$author$project$Render$Msg$SendId('title')),
+						$author$project$Render$Msg$SendLineNumber('title')),
 						$mdgriffith$elm_ui$Element$paddingEach(
-						{a7: 0, bf: 0, bh: 0, bi: 10})
+						{a7: 0, bg: 0, bj: 0, bk: 10})
 					]),
-				A2($author$project$Render$Block$highlightAttrs, id, settings)),
+				A2($author$project$Render$Block$highlightAttrs, lineNumber, settings)),
 			{
-				g6: A2(
+				hd: A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
 					A5(
@@ -28396,7 +28596,7 @@ var $author$project$Render$Block$subheading = F4(
 						acc,
 						settings,
 						$author$project$Render$Block$getExprs(block))),
-				eA: $author$project$Render$Utility$internalLink(settings.fK + 'title')
+				eE: $author$project$Render$Utility$internalLink(settings.fS + 'title')
 			});
 	});
 var $author$project$Render$Block$blockDict = $elm$core$Dict$fromList(
@@ -28488,8 +28688,8 @@ var $author$project$Render$Block$blockDict = $elm$core$Dict$fromList(
 		]));
 var $author$project$Render$Block$selectedColor = F2(
 	function (id, settings) {
-		return _Utils_eq(id, settings.hO) ? $mdgriffith$elm_ui$Element$Background$color(
-			A3($mdgriffith$elm_ui$Element$rgb, 0.9, 0.9, 1.0)) : $mdgriffith$elm_ui$Element$Background$color(settings.gb);
+		return _Utils_eq(id, settings.hT) ? $mdgriffith$elm_ui$Element$Background$color(
+			A3($mdgriffith$elm_ui$Element$rgb, 0.9, 0.9, 1.0)) : $mdgriffith$elm_ui$Element$Background$color(settings.gj);
 	});
 var $author$project$Render$Block$topPaddingForIndentedElements = 10;
 var $author$project$Render$Block$indentOrdinaryBlock = F4(
@@ -28500,13 +28700,13 @@ var $author$project$Render$Block$indentOrdinaryBlock = F4(
 				[
 					A2($author$project$Render$Block$selectedColor, id, settings),
 					$mdgriffith$elm_ui$Element$paddingEach(
-					{a7: 0, bf: 0, bh: 0, bi: $author$project$Render$Block$topPaddingForIndentedElements})
+					{a7: 0, bg: 0, bj: 0, bk: $author$project$Render$Block$topPaddingForIndentedElements})
 				]),
 			x) : x;
 	});
 var $author$project$Render$Block$noSuchOrdinaryBlock = F4(
 	function (count, acc, settings, block) {
-		var args = block.f9;
+		var args = block.gh;
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -28538,13 +28738,13 @@ var $author$project$Render$Block$noSuchOrdinaryBlock = F4(
 	});
 var $author$project$Render$Block$renderOrdinaryBlock = F4(
 	function (count, acc, settings, block) {
-		var name = block.fl;
-		var indent = block.gV;
-		var error = block.eW;
-		var args = block.f9;
-		var blockType = block.dM;
-		var content = block.bJ;
-		var id = block.gR;
+		var name = block.fr;
+		var indent = block.g0;
+		var error = block.e0;
+		var args = block.gh;
+		var blockType = block.dO;
+		var content = block.bM;
+		var lineNumber = block.ed;
 		if (!content.$) {
 			return $mdgriffith$elm_ui$Element$none;
 		} else {
@@ -28557,7 +28757,7 @@ var $author$project$Render$Block$renderOrdinaryBlock = F4(
 					return A4(
 						$author$project$Render$Block$indentOrdinaryBlock,
 						indent,
-						id,
+						$elm$core$String$fromInt(lineNumber),
 						settings,
 						A4($author$project$Render$Block$env, count, acc, settings, block));
 				} else {
@@ -28565,7 +28765,7 @@ var $author$project$Render$Block$renderOrdinaryBlock = F4(
 					return A4(
 						$author$project$Render$Block$indentOrdinaryBlock,
 						indent,
-						id,
+						$elm$core$String$fromInt(lineNumber),
 						settings,
 						A4(f, count, acc, settings, block));
 				}
@@ -28573,14 +28773,14 @@ var $author$project$Render$Block$renderOrdinaryBlock = F4(
 		}
 	});
 var $author$project$Render$Block$clickableParagraph = F3(
-	function (id, color, elements) {
+	function (lineNumber, color, elements) {
+		var id = $elm$core$String$fromInt(lineNumber);
 		return A2(
 			$mdgriffith$elm_ui$Element$paragraph,
 			_List_fromArray(
 				[
 					color,
-					$mdgriffith$elm_ui$Element$Events$onClick(
-					$author$project$Render$Msg$SendId(id)),
+					$author$project$Render$Utility$sendLineNumberOnClick(lineNumber),
 					$author$project$Render$Block$htmlId(id)
 				]),
 			elements);
@@ -28592,18 +28792,19 @@ var $author$project$Render$Block$indentParagraph = F2(
 			_List_fromArray(
 				[
 					$mdgriffith$elm_ui$Element$paddingEach(
-					{a7: 0, bf: 0, bh: 0, bi: $author$project$Render$Block$topPaddingForIndentedElements})
+					{a7: 0, bg: 0, bj: 0, bk: $author$project$Render$Block$topPaddingForIndentedElements})
 				]),
 			x) : x;
 	});
 var $author$project$Render$Block$renderParagraph = F4(
 	function (count, acc, settings, _v0) {
-		var name = _v0.fl;
-		var indent = _v0.gV;
-		var args = _v0.f9;
-		var blockType = _v0.dM;
-		var content = _v0.bJ;
-		var id = _v0.gR;
+		var name = _v0.fr;
+		var indent = _v0.g0;
+		var args = _v0.gh;
+		var blockType = _v0.dO;
+		var content = _v0.bM;
+		var lineNumber = _v0.ed;
+		var id = _v0.gY;
 		if (content.$ === 1) {
 			var exprs = content.a;
 			return A2(
@@ -28611,7 +28812,7 @@ var $author$project$Render$Block$renderParagraph = F4(
 				indent,
 				A3(
 					$author$project$Render$Block$clickableParagraph,
-					id,
+					lineNumber,
 					A2($author$project$Render$Block$selectedColor, id, settings),
 					A2(
 						$elm$core$List$map,
@@ -28662,9 +28863,9 @@ var $author$project$Render$Block$noSuchVerbatimBlock = F2(
 var $author$project$Render$Math$DisplayMathMode = 1;
 var $author$project$Render$Math$aligned_ = F6(
 	function (count, acc, settings, _v0, id, str) {
-		var w = $elm$core$String$fromInt(settings.eC) + 'px';
+		var w = $elm$core$String$fromInt(settings.eG) + 'px';
 		var leftPadding = $mdgriffith$elm_ui$Element$paddingEach(
-			{a7: 0, bf: 45, bh: 0, bi: 0});
+			{a7: 0, bg: 45, bj: 0, bk: 0});
 		var filteredLines = A2(
 			$elm$core$List$filter,
 			function (line) {
@@ -28674,17 +28875,17 @@ var $author$project$Render$Math$aligned_ = F6(
 		var deleteTrailingSlashes = function (str_) {
 			return (A2($elm$core$String$right, 2, str_) === '\\\\') ? A2($elm$core$String$dropRight, 2, str_) : str_;
 		};
-		var attrs = _Utils_eq(id, settings.hO) ? _List_fromArray(
+		var attrs = _Utils_eq(id, settings.hT) ? _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$Events$onClick(
-				$author$project$Render$Msg$SendId(id)),
+				$author$project$Render$Msg$SendLineNumber(id)),
 				leftPadding,
 				$mdgriffith$elm_ui$Element$Background$color(
 				A3($mdgriffith$elm_ui$Element$rgb, 0.8, 0.8, 1.0))
 			]) : _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$Events$onClick(
-				$author$project$Render$Msg$SendId(id)),
+				$author$project$Render$Msg$SendLineNumber(id)),
 				leftPadding
 			]);
 		var adjustedLines_ = A2(
@@ -28702,7 +28903,7 @@ var $author$project$Render$Math$aligned_ = F6(
 					A2(
 						$elm$core$Basics$composeR,
 						deleteTrailingSlashes,
-						$author$project$Parser$MathMacro$evalStr(acc.ea)),
+						$author$project$Parser$MathMacro$evalStr(acc.ee)),
 					filteredLines)));
 		var adjustedLines = A2(
 			$elm$core$List$cons,
@@ -28721,9 +28922,9 @@ var $author$project$Render$Math$aligned_ = F6(
 				]));
 	});
 var $author$project$Render$Math$equationLabelPadding = $mdgriffith$elm_ui$Element$paddingEach(
-	{a7: 0, bf: 0, bh: 18, bi: 0});
+	{a7: 0, bg: 0, bj: 18, bk: 0});
 var $author$project$Render$Math$getContent = function (_v0) {
-	var content = _v0.bJ;
+	var content = _v0.bM;
 	if (!content.$) {
 		var str = content.a;
 		return str;
@@ -28740,10 +28941,10 @@ var $author$project$Render$Math$getLabel = F2(
 	});
 var $author$project$Render$Math$aligned = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var id = block.gY;
+		var args = block.gh;
 		var properties = block.H;
-		var error = block.eW;
+		var error = block.e0;
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_Nil,
@@ -28754,7 +28955,7 @@ var $author$project$Render$Math$aligned = F4(
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$width(
-							$mdgriffith$elm_ui$Element$px(settings.eC)),
+							$mdgriffith$elm_ui$Element$px(settings.eG)),
 							A2($author$project$Render$Utility$elementAttribute, 'id', id)
 						]),
 					_List_fromArray(
@@ -28814,7 +29015,7 @@ var $author$project$Render$Data$listTo2DPoint = function (list) {
 			function (_v2) {
 				var u = _v2.a;
 				var v = _v2.b;
-				return {bD: u, bk: v};
+				return {bF: u, bm: v};
 			},
 			$author$project$Render$Data$valueOfPair(
 				_Utils_Tuple2(
@@ -28859,7 +29060,7 @@ var $author$project$Render$Data$listTo3DPoint = function (list) {
 				var u = _v3.a;
 				var v = _v3.b;
 				var w = _v3.c;
-				return {bD: u, bk: v, fW: w};
+				return {bF: u, bm: v, f2: w};
 			},
 			$author$project$Render$Data$valueOfTriple(
 				_Utils_Tuple3(
@@ -28983,7 +29184,7 @@ var $author$project$Render$Data$csvToChartData = F2(
 	function (options, str) {
 		var dataLines = A3(
 			$author$project$Render$Data$maybeApply,
-			options.ep,
+			options.et,
 			$elm$core$List$reverse,
 			A2(
 				$elm$core$List$filter,
@@ -28992,14 +29193,14 @@ var $author$project$Render$Data$csvToChartData = F2(
 				},
 				$elm$core$String$lines(str)));
 		var data_ = function () {
-			var _v3 = options.ex;
+			var _v3 = options.eB;
 			if (!_v3.$) {
 				return A2(
 					$elm$core$Maybe$map,
 					$author$project$Render$Data$makeTimeseries,
 					A2(
 						$author$project$Render$Data$selectColumns,
-						options.db,
+						options.dc,
 						A2(
 							$elm$core$List$map,
 							A2(
@@ -29010,7 +29211,7 @@ var $author$project$Render$Data$csvToChartData = F2(
 			} else {
 				return A2(
 					$author$project$Render$Data$selectColumns,
-					options.db,
+					options.dc,
 					A2(
 						$elm$core$List$map,
 						A2(
@@ -29074,15 +29275,15 @@ var $author$project$Render$Data$getRange = function (str) {
 		var high = _v1.a;
 		return $elm$core$Maybe$Just(
 			{
-				d4: $elm$core$String$toFloat(high),
-				bU: $elm$core$String$toFloat(low)
+				d7: $elm$core$String$toFloat(high),
+				bW: $elm$core$String$toFloat(low)
 			});
 	} else {
 		return $elm$core$Maybe$Nothing;
 	}
 };
 var $author$project$Render$Data$getVerbatimContent = function (_v0) {
-	var content = _v0.bJ;
+	var content = _v0.bM;
 	if (!content.$) {
 		var str = content.a;
 		return str;
@@ -29097,8 +29298,8 @@ var $terezka$charts$Internal$Property$property = F3(
 	function (value, inter, attrs) {
 		return $terezka$charts$Internal$Property$Property(
 			{
-				d: attrs,
-				gF: F5(
+				e: attrs,
+				gM: F5(
 					function (_v0, _v1, _v2, _v3, _v4) {
 						return _List_Nil;
 					}),
@@ -29109,10 +29310,10 @@ var $terezka$charts$Internal$Property$property = F3(
 						$elm$core$Basics$composeR,
 						$elm$core$Maybe$map($elm$core$String$fromFloat),
 						$elm$core$Maybe$withDefault('N/A'))),
-				g1: inter,
-				fi: $elm$core$Maybe$Nothing,
-				ap: value,
-				c4: value
+				g8: inter,
+				fn: $elm$core$Maybe$Nothing,
+				aq: value,
+				c5: value
 			});
 	});
 var $terezka$charts$Chart$bar = function (y) {
@@ -29153,30 +29354,30 @@ var $terezka$charts$Internal$Many$editLimits = F2(
 		return _Utils_update(
 			group_,
 			{
-				is: function (c) {
+				ix: function (c) {
 					return function (_v1) {
 						var x = _v1.a;
 						var xs = _v1.b;
 						return A2(
 							edit,
 							x,
-							group_.is(c));
-					}(c.Z);
+							group_.ix(c));
+					}(c.aa);
 				}
 			});
 	});
 var $terezka$charts$Internal$Item$getPosition = F2(
 	function (plane, _v0) {
 		var item = _v0;
-		return A2(item.iv, plane, item.gt);
+		return A2(item.iA, plane, item.gA);
 	});
 var $terezka$charts$Internal$Item$getX1 = function (_v0) {
 	var item = _v0;
-	return item.gt.iE.aQ;
+	return item.gA.iJ.aQ;
 };
 var $terezka$charts$Internal$Item$getX2 = function (_v0) {
 	var item = _v0;
-	return item.gt.iE.a3;
+	return item.gA.iJ.a4;
 };
 var $elm$core$List$partition = F2(
 	function (pred, list) {
@@ -29225,7 +29426,7 @@ var $terezka$charts$Internal$Helpers$gatherWith = F2(
 var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
 var $terezka$charts$Internal$Coordinates$Position = F4(
 	function (x1, x2, y1, y2) {
-		return {aQ: x1, a3: x2, iL: y1, eH: y2};
+		return {aQ: x1, a4: x2, iQ: y1, eL: y2};
 	});
 var $terezka$charts$Internal$Coordinates$foldPosition = F2(
 	function (func, data) {
@@ -29239,18 +29440,18 @@ var $terezka$charts$Internal$Coordinates$foldPosition = F2(
 								$elm$core$Basics$min,
 								func(datum).aQ,
 								pos.aQ),
-							a3: A2(
+							a4: A2(
 								$elm$core$Basics$max,
-								func(datum).a3,
-								pos.a3),
-							iL: A2(
+								func(datum).a4,
+								pos.a4),
+							iQ: A2(
 								$elm$core$Basics$min,
-								func(datum).iL,
-								pos.iL),
-							eH: A2(
+								func(datum).iQ,
+								pos.iQ),
+							eL: A2(
 								$elm$core$Basics$max,
-								func(datum).eH,
-								pos.eH)
+								func(datum).eL,
+								pos.eL)
 						});
 				} else {
 					return $elm$core$Maybe$Just(
@@ -29266,21 +29467,21 @@ var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var $elm$svg$Svg$g = $elm$svg$Svg$trustedNode('g');
 var $terezka$charts$Internal$Item$getLimits = function (_v0) {
 	var item = _v0;
-	return item.is(item.gt);
+	return item.ix(item.gA);
 };
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $terezka$charts$Internal$Item$toHtml = function (_v0) {
 	var item = _v0;
-	return item.ir(item.gt);
+	return item.iw(item.gA);
 };
 var $terezka$charts$Internal$Item$toSvg = F2(
 	function (plane, _v0) {
 		var item = _v0;
 		return A3(
-			item.iw,
+			item.iB,
 			plane,
-			item.gt,
-			A2(item.iv, plane, item.gt));
+			item.gA,
+			A2(item.iA, plane, item.gA));
 	});
 var $terezka$charts$Internal$Many$toGroup = F2(
 	function (first, rest) {
@@ -29290,10 +29491,10 @@ var $terezka$charts$Internal$Many$toGroup = F2(
 			return A2($elm$core$List$cons, x, xs);
 		};
 		return {
-			gt: {
-				Z: _Utils_Tuple2(first, rest)
+			gA: {
+				aa: _Utils_Tuple2(first, rest)
 			},
-			ir: function (c) {
+			iw: function (c) {
 				return _List_fromArray(
 					[
 						A2(
@@ -29302,23 +29503,23 @@ var $terezka$charts$Internal$Many$toGroup = F2(
 						A2(
 							$elm$core$List$concatMap,
 							$terezka$charts$Internal$Item$toHtml,
-							concatTuple(c.Z)))
+							concatTuple(c.aa)))
 					]);
 			},
-			is: function (c) {
+			ix: function (c) {
 				return A2(
 					$terezka$charts$Internal$Coordinates$foldPosition,
 					$terezka$charts$Internal$Item$getLimits,
-					concatTuple(c.Z));
+					concatTuple(c.aa));
 			},
-			iv: F2(
+			iA: F2(
 				function (p, c) {
 					return A2(
 						$terezka$charts$Internal$Coordinates$foldPosition,
 						$terezka$charts$Internal$Item$getPosition(p),
-						concatTuple(c.Z));
+						concatTuple(c.aa));
 				}),
-			iw: F3(
+			iB: F3(
 				function (p, c, _v0) {
 					return A2(
 						$elm$svg$Svg$g,
@@ -29329,18 +29530,18 @@ var $terezka$charts$Internal$Many$toGroup = F2(
 						A2(
 							$elm$core$List$map,
 							$terezka$charts$Internal$Item$toSvg(p),
-							concatTuple(c.Z)));
+							concatTuple(c.aa)));
 				})
 		};
 	});
 var $terezka$charts$Internal$Many$groupingHelp = F2(
 	function (_v0, items) {
-		var edits = _v0.dh;
-		var equality = _v0.di;
-		var shared = _v0.dA;
+		var edits = _v0.di;
+		var equality = _v0.dj;
+		var shared = _v0.dC;
 		var toShared = function (_v2) {
 			var item = _v2;
-			return shared(item.gt);
+			return shared(item.gA);
 		};
 		var toNewGroup = function (_v1) {
 			var i = _v1.a;
@@ -29365,47 +29566,47 @@ var $terezka$charts$Internal$Many$bins = A2(
 	$terezka$charts$Internal$Item$getPosition,
 	$terezka$charts$Internal$Many$groupingHelp(
 		{
-			dh: $terezka$charts$Internal$Many$editLimits(
+			di: $terezka$charts$Internal$Many$editLimits(
 				F2(
 					function (item, pos) {
 						return _Utils_update(
 							pos,
 							{
 								aQ: $terezka$charts$Internal$Item$getX1(item),
-								a3: $terezka$charts$Internal$Item$getX2(item)
+								a4: $terezka$charts$Internal$Item$getX2(item)
 							});
 					})),
-			di: F2(
+			dj: F2(
 				function (a, b) {
-					return _Utils_eq(a.aQ, b.aQ) && (_Utils_eq(a.a3, b.a3) && (_Utils_eq(a.gB, b.gB) && _Utils_eq(a.dS, b.dS)));
+					return _Utils_eq(a.aQ, b.aQ) && (_Utils_eq(a.a4, b.a4) && (_Utils_eq(a.gI, b.gI) && _Utils_eq(a.dV, b.dV)));
 				}),
-			dA: function (config) {
-				return {dS: config.dE.bN, gB: config.dE.gB, aQ: config.iE.aQ, a3: config.iE.a3};
+			dC: function (config) {
+				return {dV: config.dG.bQ, gI: config.dG.gI, aQ: config.iJ.aQ, a4: config.iJ.a4};
 			}
 		}));
 var $terezka$charts$Chart$Item$bins = $terezka$charts$Internal$Many$bins;
-var $terezka$charts$Internal$Produce$defaultBars = {gK: false, cy: true, aa: 0.1, cT: 0, cU: 0, hV: 0.05, aQ: $elm$core$Maybe$Nothing, a3: $elm$core$Maybe$Nothing};
+var $terezka$charts$Internal$Produce$defaultBars = {gR: false, cz: true, ac: 0.1, cU: 0, cV: 0, h_: 0.05, aQ: $elm$core$Maybe$Nothing, a4: $elm$core$Maybe$Nothing};
 var $terezka$charts$Internal$Item$generalize = F2(
 	function (toAny, _v0) {
 		var item = _v0;
 		return {
-			gt: {
-				hA: toAny(item.gt.hA),
-				iq: $elm$core$Basics$identity,
-				dE: item.gt.dE,
-				iE: item.gt.iE
+			gA: {
+				hF: toAny(item.gA.hF),
+				iv: $elm$core$Basics$identity,
+				dG: item.gA.dG,
+				iJ: item.gA.iJ
 			},
-			ir: function (c) {
+			iw: function (c) {
 				return $terezka$charts$Internal$Item$toHtml(item);
 			},
-			is: function (_v1) {
-				return item.is(item.gt);
+			ix: function (_v1) {
+				return item.ix(item.gA);
 			},
-			iv: F2(
+			iA: F2(
 				function (plane, _v2) {
-					return A2(item.iv, plane, item.gt);
+					return A2(item.iA, plane, item.gA);
 				}),
-			iw: F3(
+			iB: F3(
 				function (plane, _v3, _v4) {
 					return A2($terezka$charts$Internal$Item$toSvg, plane, item);
 				})
@@ -29417,12 +29618,12 @@ var $terezka$charts$Internal$Many$getMembers = function (_v0) {
 		var x = _v1.a;
 		var xs = _v1.b;
 		return A2($elm$core$List$cons, x, xs);
-	}(group_.gt.Z);
+	}(group_.gA.aa);
 };
 var $terezka$charts$Internal$Many$getGenerals = function (group_) {
 	var generalize = function (_v0) {
 		var item = _v0;
-		return A2($terezka$charts$Internal$Item$generalize, item.gt.iq, item);
+		return A2($terezka$charts$Internal$Item$generalize, item.gA.iv, item);
 	};
 	return A2(
 		$elm$core$List$map,
@@ -29434,29 +29635,29 @@ var $terezka$charts$Internal$Item$map = F2(
 	function (func, _v0) {
 		var item = _v0;
 		return {
-			gt: {
-				hA: item.gt.hA,
-				iq: item.gt.iq,
-				dE: item.gt.dE,
-				iE: {
-					gz: func(item.gt.iE.gz),
-					g3: item.gt.iE.g3,
-					aQ: item.gt.iE.aQ,
-					a3: item.gt.iE.a3,
-					bk: item.gt.iE.bk
+			gA: {
+				hF: item.gA.hF,
+				iv: item.gA.iv,
+				dG: item.gA.dG,
+				iJ: {
+					gG: func(item.gA.iJ.gG),
+					ha: item.gA.iJ.ha,
+					aQ: item.gA.iJ.aQ,
+					a4: item.gA.iJ.a4,
+					bm: item.gA.iJ.bm
 				}
 			},
-			ir: function (_v1) {
+			iw: function (_v1) {
 				return $terezka$charts$Internal$Item$toHtml(item);
 			},
-			is: function (_v2) {
-				return item.is(item.gt);
+			ix: function (_v2) {
+				return item.ix(item.gA);
 			},
-			iv: F2(
+			iA: F2(
 				function (plane, _v3) {
-					return A2(item.iv, plane, item.gt);
+					return A2(item.iA, plane, item.gA);
 				}),
-			iw: F3(
+			iB: F3(
 				function (plane, _v4, _v5) {
 					return A2($terezka$charts$Internal$Item$toSvg, plane, item);
 				})
@@ -29478,21 +29679,21 @@ var $terezka$charts$Chart$Attributes$color = F2(
 	function (v, config) {
 		return (v === '') ? config : _Utils_update(
 			config,
-			{da: v});
+			{db: v});
 	});
 var $terezka$charts$Internal$Helpers$pink = '#ea60df';
-var $terezka$charts$Internal$Svg$defaultBar = {d: _List_Nil, v: 'white', C: 0, da: $terezka$charts$Internal$Helpers$pink, dW: $elm$core$Maybe$Nothing, gM: 0, gN: '', gO: 10, aJ: 1, cT: 0, cU: 0};
+var $terezka$charts$Internal$Svg$defaultBar = {e: _List_Nil, v: 'white', C: 0, db: $terezka$charts$Internal$Helpers$pink, dZ: $elm$core$Maybe$Nothing, gT: 0, gU: '', gV: 10, aK: 1, cU: 0, cV: 0};
 var $terezka$charts$Chart$Attributes$roundBottom = F2(
 	function (v, config) {
 		return _Utils_update(
 			config,
-			{cT: v});
+			{cU: v});
 	});
 var $terezka$charts$Chart$Attributes$roundTop = F2(
 	function (v, config) {
 		return _Utils_update(
 			config,
-			{cU: v});
+			{cV: v});
 	});
 var $terezka$charts$Internal$Property$toConfigs = function (prop) {
 	if (!prop.$) {
@@ -29541,7 +29742,7 @@ var $terezka$charts$Internal$Legend$toBarLegends = F3(
 		var barsConfig = A2($terezka$charts$Internal$Helpers$apply, barsAttrs, $terezka$charts$Internal$Produce$defaultBars);
 		var toBarLegend = F2(
 			function (colorIndex, prop) {
-				var rounding = A2($elm$core$Basics$max, barsConfig.cU, barsConfig.cT);
+				var rounding = A2($elm$core$Basics$max, barsConfig.cV, barsConfig.cU);
 				var defaultName = 'Property #' + $elm$core$String$fromInt(colorIndex + 1);
 				var defaultColor = $terezka$charts$Internal$Helpers$toDefaultColor(colorIndex);
 				var defaultAttrs = _List_fromArray(
@@ -29551,17 +29752,17 @@ var $terezka$charts$Internal$Legend$toBarLegends = F3(
 						$terezka$charts$Chart$Attributes$color(defaultColor),
 						$terezka$charts$Chart$Attributes$border(defaultColor)
 					]);
-				var attrsOrg = _Utils_ap(defaultAttrs, prop.d);
+				var attrsOrg = _Utils_ap(defaultAttrs, prop.e);
 				var productOrg = toBarConfig(attrsOrg);
 				var attrs = _Utils_eq(productOrg.v, defaultColor) ? _Utils_ap(
 					attrsOrg,
 					_List_fromArray(
 						[
-							$terezka$charts$Chart$Attributes$border(productOrg.da)
+							$terezka$charts$Chart$Attributes$border(productOrg.db)
 						])) : attrsOrg;
 				return A2(
 					$terezka$charts$Internal$Legend$BarLegend,
-					A2($elm$core$Maybe$withDefault, defaultName, prop.fi),
+					A2($elm$core$Maybe$withDefault, defaultName, prop.fn),
 					attrs);
 			});
 		return A2(
@@ -29705,33 +29906,33 @@ var $terezka$charts$Internal$Commands$QuadraticBeziersShort = F2(
 		return {$: 5, a: a, b: b};
 	});
 var $terezka$charts$Internal$Coordinates$innerLength = function (axis) {
-	return A2($elm$core$Basics$max, 1, (axis.ai - axis.g9) - axis.g8);
+	return A2($elm$core$Basics$max, 1, (axis.aj - axis.hf) - axis.he);
 };
 var $terezka$charts$Internal$Coordinates$innerWidth = function (plane) {
-	return $terezka$charts$Internal$Coordinates$innerLength(plane.bD);
+	return $terezka$charts$Internal$Coordinates$innerLength(plane.bF);
 };
 var $terezka$charts$Internal$Coordinates$range = function (axis) {
-	var diff = axis.fh - axis.ed;
+	var diff = axis.fm - axis.eh;
 	return (diff > 0) ? diff : 1;
 };
 var $terezka$charts$Internal$Coordinates$scaleSVGX = F2(
 	function (plane, value) {
-		return (value * $terezka$charts$Internal$Coordinates$innerWidth(plane)) / $terezka$charts$Internal$Coordinates$range(plane.bD);
+		return (value * $terezka$charts$Internal$Coordinates$innerWidth(plane)) / $terezka$charts$Internal$Coordinates$range(plane.bF);
 	});
 var $terezka$charts$Internal$Coordinates$toSVGX = F2(
 	function (plane, value) {
-		return A2($terezka$charts$Internal$Coordinates$scaleSVGX, plane, value - plane.bD.ed) + plane.bD.g9;
+		return A2($terezka$charts$Internal$Coordinates$scaleSVGX, plane, value - plane.bF.eh) + plane.bF.hf;
 	});
 var $terezka$charts$Internal$Coordinates$innerHeight = function (plane) {
-	return $terezka$charts$Internal$Coordinates$innerLength(plane.bk);
+	return $terezka$charts$Internal$Coordinates$innerLength(plane.bm);
 };
 var $terezka$charts$Internal$Coordinates$scaleSVGY = F2(
 	function (plane, value) {
-		return (value * $terezka$charts$Internal$Coordinates$innerHeight(plane)) / $terezka$charts$Internal$Coordinates$range(plane.bk);
+		return (value * $terezka$charts$Internal$Coordinates$innerHeight(plane)) / $terezka$charts$Internal$Coordinates$range(plane.bm);
 	});
 var $terezka$charts$Internal$Coordinates$toSVGY = F2(
 	function (plane, value) {
-		return A2($terezka$charts$Internal$Coordinates$scaleSVGY, plane, plane.bk.fh - value) + plane.bk.g9;
+		return A2($terezka$charts$Internal$Coordinates$scaleSVGY, plane, plane.bm.fm - value) + plane.bm.hf;
 	});
 var $terezka$charts$Internal$Commands$translate = F2(
 	function (plane, command) {
@@ -29831,11 +30032,11 @@ var $elm$svg$Svg$Attributes$fillOpacity = _VirtualDom_attribute('fill-opacity');
 var $elm$svg$Svg$path = $elm$svg$Svg$trustedNode('path');
 var $terezka$charts$Internal$Coordinates$scaleCartesianX = F2(
 	function (plane, value) {
-		return (value * $terezka$charts$Internal$Coordinates$range(plane.bD)) / $terezka$charts$Internal$Coordinates$innerWidth(plane);
+		return (value * $terezka$charts$Internal$Coordinates$range(plane.bF)) / $terezka$charts$Internal$Coordinates$innerWidth(plane);
 	});
 var $terezka$charts$Internal$Coordinates$scaleCartesianY = F2(
 	function (plane, value) {
-		return (value * $terezka$charts$Internal$Coordinates$range(plane.bk)) / $terezka$charts$Internal$Coordinates$innerHeight(plane);
+		return (value * $terezka$charts$Internal$Coordinates$range(plane.bm)) / $terezka$charts$Internal$Coordinates$innerHeight(plane);
 	});
 var $elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
 var $elm$svg$Svg$Attributes$strokeOpacity = _VirtualDom_attribute('stroke-opacity');
@@ -29943,20 +30144,20 @@ var $terezka$charts$Internal$Svg$toPattern = F2(
 					var config = A2(
 						$terezka$charts$Internal$Svg$apply,
 						edits,
-						{da: defaultColor, q: 45, hV: 4, eC: 3});
+						{db: defaultColor, q: 45, h_: 4, eG: 3});
 					var theId = toPatternId(
 						_List_fromArray(
 							[
-								config.da,
-								$elm$core$String$fromFloat(config.eC),
-								$elm$core$String$fromFloat(config.hV),
+								config.db,
+								$elm$core$String$fromFloat(config.eG),
+								$elm$core$String$fromFloat(config.h_),
 								$elm$core$String$fromFloat(config.q)
 							]));
 					return _Utils_Tuple2(
 						A4(
 							toPatternDefs,
 							theId,
-							config.hV,
+							config.h_,
 							config.q,
 							A2(
 								$elm$svg$Svg$line,
@@ -29966,10 +30167,10 @@ var $terezka$charts$Internal$Svg$toPattern = F2(
 										$elm$svg$Svg$Attributes$y('0'),
 										$elm$svg$Svg$Attributes$x2('0'),
 										$elm$svg$Svg$Attributes$y2(
-										$elm$core$String$fromFloat(config.hV)),
-										$elm$svg$Svg$Attributes$stroke(config.da),
+										$elm$core$String$fromFloat(config.h_)),
+										$elm$svg$Svg$Attributes$stroke(config.db),
 										$elm$svg$Svg$Attributes$strokeWidth(
-										$elm$core$String$fromFloat(config.eC))
+										$elm$core$String$fromFloat(config.eG))
 									]),
 								_List_Nil)),
 						theId);
@@ -29978,32 +30179,32 @@ var $terezka$charts$Internal$Svg$toPattern = F2(
 					var config = A2(
 						$terezka$charts$Internal$Svg$apply,
 						edits,
-						{da: defaultColor, q: 45, hV: 4, eC: 3});
+						{db: defaultColor, q: 45, h_: 4, eG: 3});
 					var theId = toPatternId(
 						_List_fromArray(
 							[
-								config.da,
-								$elm$core$String$fromFloat(config.eC),
-								$elm$core$String$fromFloat(config.hV),
+								config.db,
+								$elm$core$String$fromFloat(config.eG),
+								$elm$core$String$fromFloat(config.h_),
 								$elm$core$String$fromFloat(config.q)
 							]));
 					return _Utils_Tuple2(
 						A4(
 							toPatternDefs,
 							theId,
-							config.hV,
+							config.h_,
 							config.q,
 							A2(
 								$elm$svg$Svg$circle,
 								_List_fromArray(
 									[
-										$elm$svg$Svg$Attributes$fill(config.da),
+										$elm$svg$Svg$Attributes$fill(config.db),
 										$elm$svg$Svg$Attributes$cx(
-										$elm$core$String$fromFloat(config.eC / 3)),
+										$elm$core$String$fromFloat(config.eG / 3)),
 										$elm$svg$Svg$Attributes$cy(
-										$elm$core$String$fromFloat(config.eC / 3)),
+										$elm$core$String$fromFloat(config.eG / 3)),
 										$elm$svg$Svg$Attributes$r(
-										$elm$core$String$fromFloat(config.eC / 3))
+										$elm$core$String$fromFloat(config.eG / 3))
 									]),
 								_List_Nil)),
 						theId);
@@ -30078,16 +30279,16 @@ var $terezka$charts$Internal$Coordinates$toId = function (plane) {
 		_List_fromArray(
 			[
 				'elm-charts__id',
-				numToStr(plane.bD.ai),
-				numToStr(plane.bD.ed),
-				numToStr(plane.bD.fh),
-				numToStr(plane.bD.g9),
-				numToStr(plane.bD.g8),
-				numToStr(plane.bk.ai),
-				numToStr(plane.bk.ed),
-				numToStr(plane.bk.fh),
-				numToStr(plane.bk.g9),
-				numToStr(plane.bk.g8)
+				numToStr(plane.bF.aj),
+				numToStr(plane.bF.eh),
+				numToStr(plane.bF.fm),
+				numToStr(plane.bF.hf),
+				numToStr(plane.bF.he),
+				numToStr(plane.bm.aj),
+				numToStr(plane.bm.eh),
+				numToStr(plane.bm.fm),
+				numToStr(plane.bm.hf),
+				numToStr(plane.bm.he)
 			]));
 };
 var $terezka$charts$Internal$Svg$withinChartArea = function (plane) {
@@ -30100,7 +30301,7 @@ var $terezka$charts$Internal$Svg$bar = F3(
 			function (fill, fillOpacity, border, borderWidth, strokeOpacity, cmds) {
 				return A4(
 					$terezka$charts$Internal$Svg$withAttrs,
-					config.d,
+					config.e,
 					$elm$svg$Svg$path,
 					_List_fromArray(
 						[
@@ -30119,31 +30320,31 @@ var $terezka$charts$Internal$Svg$bar = F3(
 						]),
 					_List_Nil);
 			});
-		var highlightColor = (config.gN === '') ? config.da : config.gN;
+		var highlightColor = (config.gU === '') ? config.db : config.gU;
 		var borderWidthCarY = A2($terezka$charts$Internal$Coordinates$scaleCartesianY, plane, config.C / 2);
-		var highlightWidthCarY = borderWidthCarY + A2($terezka$charts$Internal$Coordinates$scaleCartesianY, plane, config.gO / 2);
+		var highlightWidthCarY = borderWidthCarY + A2($terezka$charts$Internal$Coordinates$scaleCartesianY, plane, config.gV / 2);
 		var borderWidthCarX = A2($terezka$charts$Internal$Coordinates$scaleCartesianX, plane, config.C / 2);
-		var highlightWidthCarX = borderWidthCarX + A2($terezka$charts$Internal$Coordinates$scaleCartesianX, plane, config.gO / 2);
+		var highlightWidthCarX = borderWidthCarX + A2($terezka$charts$Internal$Coordinates$scaleCartesianX, plane, config.gV / 2);
 		var pos = {
-			aQ: A2($elm$core$Basics$min, point.aQ, point.a3) + borderWidthCarX,
-			a3: A2($elm$core$Basics$max, point.aQ, point.a3) - borderWidthCarX,
-			iL: A2($elm$core$Basics$min, point.iL, point.eH) + borderWidthCarY,
-			eH: A2($elm$core$Basics$max, point.iL, point.eH) - borderWidthCarY
+			aQ: A2($elm$core$Basics$min, point.aQ, point.a4) + borderWidthCarX,
+			a4: A2($elm$core$Basics$max, point.aQ, point.a4) - borderWidthCarX,
+			iQ: A2($elm$core$Basics$min, point.iQ, point.eL) + borderWidthCarY,
+			eL: A2($elm$core$Basics$max, point.iQ, point.eL) - borderWidthCarY
 		};
-		var height = $elm$core$Basics$abs(pos.eH - pos.iL);
-		var highlightPos = {aQ: pos.aQ - highlightWidthCarX, a3: pos.a3 + highlightWidthCarX, iL: pos.iL - highlightWidthCarY, eH: pos.eH + highlightWidthCarY};
-		var width = $elm$core$Basics$abs(pos.a3 - pos.aQ);
-		var roundingBottom = (A2($terezka$charts$Internal$Coordinates$scaleSVGX, plane, width) * 0.5) * A3($elm$core$Basics$clamp, 0, 1, config.cT);
+		var height = $elm$core$Basics$abs(pos.eL - pos.iQ);
+		var highlightPos = {aQ: pos.aQ - highlightWidthCarX, a4: pos.a4 + highlightWidthCarX, iQ: pos.iQ - highlightWidthCarY, eL: pos.eL + highlightWidthCarY};
+		var width = $elm$core$Basics$abs(pos.a4 - pos.aQ);
+		var roundingBottom = (A2($terezka$charts$Internal$Coordinates$scaleSVGX, plane, width) * 0.5) * A3($elm$core$Basics$clamp, 0, 1, config.cU);
 		var radiusBottomX = A2($terezka$charts$Internal$Coordinates$scaleCartesianX, plane, roundingBottom);
 		var radiusBottomY = A2($terezka$charts$Internal$Coordinates$scaleCartesianY, plane, roundingBottom);
-		var roundingTop = (A2($terezka$charts$Internal$Coordinates$scaleSVGX, plane, width) * 0.5) * A3($elm$core$Basics$clamp, 0, 1, config.cU);
+		var roundingTop = (A2($terezka$charts$Internal$Coordinates$scaleSVGX, plane, width) * 0.5) * A3($elm$core$Basics$clamp, 0, 1, config.cV);
 		var radiusTopX = A2($terezka$charts$Internal$Coordinates$scaleCartesianX, plane, roundingTop);
 		var radiusTopY = A2($terezka$charts$Internal$Coordinates$scaleCartesianY, plane, roundingTop);
-		var _v0 = ((((height - (radiusTopY * 0.8)) - (radiusBottomY * 0.8)) <= 0) || (((width - (radiusTopX * 0.8)) - (radiusBottomX * 0.8)) <= 0)) ? _Utils_Tuple2(0, 0) : _Utils_Tuple2(config.cU, config.cT);
+		var _v0 = ((((height - (radiusTopY * 0.8)) - (radiusBottomY * 0.8)) <= 0) || (((width - (radiusTopX * 0.8)) - (radiusBottomX * 0.8)) <= 0)) ? _Utils_Tuple2(0, 0) : _Utils_Tuple2(config.cV, config.cU);
 		var roundTop = _v0.a;
 		var roundBottom = _v0.b;
 		var _v1 = function () {
-			if (_Utils_eq(pos.iL, pos.eH)) {
+			if (_Utils_eq(pos.iQ, pos.eL)) {
 				return _Utils_Tuple2(_List_Nil, _List_Nil);
 			} else {
 				var _v2 = _Utils_Tuple2(roundTop > 0, roundBottom > 0);
@@ -30152,50 +30353,50 @@ var $terezka$charts$Internal$Svg$bar = F3(
 						return _Utils_Tuple2(
 							_List_fromArray(
 								[
-									A2($terezka$charts$Internal$Commands$Move, pos.aQ, pos.iL),
-									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.eH),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3, pos.eH),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3, pos.iL),
-									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.iL)
+									A2($terezka$charts$Internal$Commands$Move, pos.aQ, pos.iQ),
+									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.eL),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4, pos.eL),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4, pos.iQ),
+									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.iQ)
 								]),
 							_List_fromArray(
 								[
-									A2($terezka$charts$Internal$Commands$Move, highlightPos.aQ, pos.iL),
-									A2($terezka$charts$Internal$Commands$Line, highlightPos.aQ, highlightPos.eH),
-									A2($terezka$charts$Internal$Commands$Line, highlightPos.a3, highlightPos.eH),
-									A2($terezka$charts$Internal$Commands$Line, highlightPos.a3, pos.iL),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3, pos.iL),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3, pos.eH),
-									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.eH),
-									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.iL)
+									A2($terezka$charts$Internal$Commands$Move, highlightPos.aQ, pos.iQ),
+									A2($terezka$charts$Internal$Commands$Line, highlightPos.aQ, highlightPos.eL),
+									A2($terezka$charts$Internal$Commands$Line, highlightPos.a4, highlightPos.eL),
+									A2($terezka$charts$Internal$Commands$Line, highlightPos.a4, pos.iQ),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4, pos.iQ),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4, pos.eL),
+									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.eL),
+									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.iQ)
 								]));
 					} else {
 						return _Utils_Tuple2(
 							_List_fromArray(
 								[
-									A2($terezka$charts$Internal$Commands$Move, pos.aQ + radiusBottomX, pos.iL),
-									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, true, pos.aQ, pos.iL + radiusBottomY),
-									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.eH),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3, pos.eH),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3, pos.iL + radiusBottomY),
-									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, true, pos.a3 - radiusBottomX, pos.iL),
-									A2($terezka$charts$Internal$Commands$Line, pos.aQ + radiusBottomX, pos.iL)
+									A2($terezka$charts$Internal$Commands$Move, pos.aQ + radiusBottomX, pos.iQ),
+									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, true, pos.aQ, pos.iQ + radiusBottomY),
+									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.eL),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4, pos.eL),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4, pos.iQ + radiusBottomY),
+									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, true, pos.a4 - radiusBottomX, pos.iQ),
+									A2($terezka$charts$Internal$Commands$Line, pos.aQ + radiusBottomX, pos.iQ)
 								]),
 							_List_fromArray(
 								[
-									A2($terezka$charts$Internal$Commands$Move, highlightPos.aQ + radiusBottomX, highlightPos.iL),
-									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, true, highlightPos.aQ, highlightPos.iL + radiusBottomY),
-									A2($terezka$charts$Internal$Commands$Line, highlightPos.aQ, highlightPos.eH),
-									A2($terezka$charts$Internal$Commands$Line, highlightPos.a3, highlightPos.eH),
-									A2($terezka$charts$Internal$Commands$Line, highlightPos.a3, highlightPos.iL + radiusBottomY),
-									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, true, highlightPos.a3 - radiusBottomX, highlightPos.iL),
-									A2($terezka$charts$Internal$Commands$Line, highlightPos.aQ + radiusBottomX, highlightPos.iL),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3 - radiusBottomX, pos.iL),
-									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, false, pos.a3, pos.iL + radiusBottomY),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3, pos.eH),
-									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.eH),
-									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.iL + radiusBottomY),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3, pos.iL)
+									A2($terezka$charts$Internal$Commands$Move, highlightPos.aQ + radiusBottomX, highlightPos.iQ),
+									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, true, highlightPos.aQ, highlightPos.iQ + radiusBottomY),
+									A2($terezka$charts$Internal$Commands$Line, highlightPos.aQ, highlightPos.eL),
+									A2($terezka$charts$Internal$Commands$Line, highlightPos.a4, highlightPos.eL),
+									A2($terezka$charts$Internal$Commands$Line, highlightPos.a4, highlightPos.iQ + radiusBottomY),
+									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, true, highlightPos.a4 - radiusBottomX, highlightPos.iQ),
+									A2($terezka$charts$Internal$Commands$Line, highlightPos.aQ + radiusBottomX, highlightPos.iQ),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4 - radiusBottomX, pos.iQ),
+									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, false, pos.a4, pos.iQ + radiusBottomY),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4, pos.eL),
+									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.eL),
+									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.iQ + radiusBottomY),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4, pos.iQ)
 								]));
 					}
 				} else {
@@ -30203,62 +30404,62 @@ var $terezka$charts$Internal$Svg$bar = F3(
 						return _Utils_Tuple2(
 							_List_fromArray(
 								[
-									A2($terezka$charts$Internal$Commands$Move, pos.aQ, pos.iL),
-									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.eH - radiusTopY),
-									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, true, pos.aQ + radiusTopX, pos.eH),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3 - radiusTopX, pos.eH),
-									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, true, pos.a3, pos.eH - radiusTopY),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3, pos.iL),
-									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.iL)
+									A2($terezka$charts$Internal$Commands$Move, pos.aQ, pos.iQ),
+									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.eL - radiusTopY),
+									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, true, pos.aQ + radiusTopX, pos.eL),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4 - radiusTopX, pos.eL),
+									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, true, pos.a4, pos.eL - radiusTopY),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4, pos.iQ),
+									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.iQ)
 								]),
 							_List_fromArray(
 								[
-									A2($terezka$charts$Internal$Commands$Move, highlightPos.aQ, pos.iL),
-									A2($terezka$charts$Internal$Commands$Line, highlightPos.aQ, highlightPos.eH - radiusTopY),
-									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, true, highlightPos.aQ + radiusTopX, highlightPos.eH),
-									A2($terezka$charts$Internal$Commands$Line, highlightPos.a3 - radiusTopX, highlightPos.eH),
-									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, true, highlightPos.a3, highlightPos.eH - radiusTopY),
-									A2($terezka$charts$Internal$Commands$Line, highlightPos.a3, pos.iL),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3, pos.iL),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3, pos.eH - radiusTopY),
-									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, false, pos.a3 - radiusTopX, pos.eH),
-									A2($terezka$charts$Internal$Commands$Line, pos.aQ + radiusTopX, pos.eH),
-									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, false, pos.aQ, pos.eH - radiusTopY),
-									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.iL)
+									A2($terezka$charts$Internal$Commands$Move, highlightPos.aQ, pos.iQ),
+									A2($terezka$charts$Internal$Commands$Line, highlightPos.aQ, highlightPos.eL - radiusTopY),
+									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, true, highlightPos.aQ + radiusTopX, highlightPos.eL),
+									A2($terezka$charts$Internal$Commands$Line, highlightPos.a4 - radiusTopX, highlightPos.eL),
+									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, true, highlightPos.a4, highlightPos.eL - radiusTopY),
+									A2($terezka$charts$Internal$Commands$Line, highlightPos.a4, pos.iQ),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4, pos.iQ),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4, pos.eL - radiusTopY),
+									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, false, pos.a4 - radiusTopX, pos.eL),
+									A2($terezka$charts$Internal$Commands$Line, pos.aQ + radiusTopX, pos.eL),
+									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, false, pos.aQ, pos.eL - radiusTopY),
+									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.iQ)
 								]));
 					} else {
 						return _Utils_Tuple2(
 							_List_fromArray(
 								[
-									A2($terezka$charts$Internal$Commands$Move, pos.aQ + radiusBottomX, pos.iL),
-									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, true, pos.aQ, pos.iL + radiusBottomY),
-									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.eH - radiusTopY),
-									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, true, pos.aQ + radiusTopX, pos.eH),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3 - radiusTopX, pos.eH),
-									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, true, pos.a3, pos.eH - radiusTopY),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3, pos.iL + radiusBottomY),
-									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, true, pos.a3 - radiusBottomX, pos.iL),
-									A2($terezka$charts$Internal$Commands$Line, pos.aQ + radiusBottomX, pos.iL)
+									A2($terezka$charts$Internal$Commands$Move, pos.aQ + radiusBottomX, pos.iQ),
+									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, true, pos.aQ, pos.iQ + radiusBottomY),
+									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.eL - radiusTopY),
+									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, true, pos.aQ + radiusTopX, pos.eL),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4 - radiusTopX, pos.eL),
+									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, true, pos.a4, pos.eL - radiusTopY),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4, pos.iQ + radiusBottomY),
+									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, true, pos.a4 - radiusBottomX, pos.iQ),
+									A2($terezka$charts$Internal$Commands$Line, pos.aQ + radiusBottomX, pos.iQ)
 								]),
 							_List_fromArray(
 								[
-									A2($terezka$charts$Internal$Commands$Move, highlightPos.aQ + radiusBottomX, highlightPos.iL),
-									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, true, highlightPos.aQ, highlightPos.iL + radiusBottomY),
-									A2($terezka$charts$Internal$Commands$Line, highlightPos.aQ, highlightPos.eH - radiusTopY),
-									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, true, highlightPos.aQ + radiusTopX, highlightPos.eH),
-									A2($terezka$charts$Internal$Commands$Line, highlightPos.a3 - radiusTopX, highlightPos.eH),
-									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, true, highlightPos.a3, highlightPos.eH - radiusTopY),
-									A2($terezka$charts$Internal$Commands$Line, highlightPos.a3, highlightPos.iL + radiusBottomY),
-									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, true, highlightPos.a3 - radiusBottomX, highlightPos.iL),
-									A2($terezka$charts$Internal$Commands$Line, highlightPos.aQ + radiusBottomX, highlightPos.iL),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3 - radiusBottomX, pos.iL),
-									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, false, pos.a3, pos.iL + radiusBottomY),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3, pos.eH - radiusTopY),
-									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, false, pos.a3 - radiusTopX, pos.eH),
-									A2($terezka$charts$Internal$Commands$Line, pos.aQ + radiusTopX, pos.eH),
-									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, false, pos.aQ, pos.eH - radiusTopY),
-									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.iL + radiusBottomY),
-									A2($terezka$charts$Internal$Commands$Line, pos.a3, pos.iL)
+									A2($terezka$charts$Internal$Commands$Move, highlightPos.aQ + radiusBottomX, highlightPos.iQ),
+									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, true, highlightPos.aQ, highlightPos.iQ + radiusBottomY),
+									A2($terezka$charts$Internal$Commands$Line, highlightPos.aQ, highlightPos.eL - radiusTopY),
+									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, true, highlightPos.aQ + radiusTopX, highlightPos.eL),
+									A2($terezka$charts$Internal$Commands$Line, highlightPos.a4 - radiusTopX, highlightPos.eL),
+									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, true, highlightPos.a4, highlightPos.eL - radiusTopY),
+									A2($terezka$charts$Internal$Commands$Line, highlightPos.a4, highlightPos.iQ + radiusBottomY),
+									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, true, highlightPos.a4 - radiusBottomX, highlightPos.iQ),
+									A2($terezka$charts$Internal$Commands$Line, highlightPos.aQ + radiusBottomX, highlightPos.iQ),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4 - radiusBottomX, pos.iQ),
+									A7($terezka$charts$Internal$Commands$Arc, roundingBottom, roundingBottom, -45, false, false, pos.a4, pos.iQ + radiusBottomY),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4, pos.eL - radiusTopY),
+									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, false, pos.a4 - radiusTopX, pos.eL),
+									A2($terezka$charts$Internal$Commands$Line, pos.aQ + radiusTopX, pos.eL),
+									A7($terezka$charts$Internal$Commands$Arc, roundingTop, roundingTop, -45, false, false, pos.aQ, pos.eL - radiusTopY),
+									A2($terezka$charts$Internal$Commands$Line, pos.aQ, pos.iQ + radiusBottomY),
+									A2($terezka$charts$Internal$Commands$Line, pos.a4, pos.iQ)
 								]));
 					}
 				}
@@ -30267,7 +30468,7 @@ var $terezka$charts$Internal$Svg$bar = F3(
 		var commands = _v1.a;
 		var highlightCommands = _v1.b;
 		var viewAuraBar = function (fill) {
-			return (!config.gM) ? A6(viewBar, fill, config.aJ, config.v, config.C, 1, commands) : A2(
+			return (!config.gT) ? A6(viewBar, fill, config.aK, config.v, config.C, 1, commands) : A2(
 				$elm$svg$Svg$g,
 				_List_fromArray(
 					[
@@ -30275,16 +30476,16 @@ var $terezka$charts$Internal$Svg$bar = F3(
 					]),
 				_List_fromArray(
 					[
-						A6(viewBar, highlightColor, config.gM, 'transparent', 0, 0, highlightCommands),
-						A6(viewBar, fill, config.aJ, config.v, config.C, 1, commands)
+						A6(viewBar, highlightColor, config.gT, 'transparent', 0, 0, highlightCommands),
+						A6(viewBar, fill, config.aK, config.v, config.C, 1, commands)
 					]));
 		};
-		var _v3 = config.dW;
+		var _v3 = config.dZ;
 		if (_v3.$ === 1) {
-			return viewAuraBar(config.da);
+			return viewAuraBar(config.db);
 		} else {
 			var design = _v3.a;
-			var _v4 = A2($terezka$charts$Internal$Svg$toPattern, config.da, design);
+			var _v4 = A2($terezka$charts$Internal$Svg$toPattern, config.db, design);
 			var patternDefs = _v4.a;
 			var fill = _v4.b;
 			return A2(
@@ -30396,11 +30597,11 @@ var $terezka$charts$Internal$Produce$toBarSeries = F4(
 		var barsConfig = A2($terezka$charts$Internal$Helpers$apply, barsAttrs, $terezka$charts$Internal$Produce$defaultBars);
 		var toBarItem = F7(
 			function (sections, barIndex, sectionIndex, section, colorIndex, dataIndex, bin) {
-				var visual = section.c4(bin.gz);
-				var value = section.ap(bin.gz);
-				var start = bin.hX;
+				var visual = section.c5(bin.gG);
+				var value = section.aq(bin.gG);
+				var start = bin.h0;
 				var numOfSections = $elm$core$List$length(sections);
-				var numOfBars = barsConfig.cy ? $elm$core$List$length(properties) : 1;
+				var numOfBars = barsConfig.cz ? $elm$core$List$length(properties) : 1;
 				var minY = (numOfSections > 1) ? $elm$core$Basics$max(0) : $elm$core$Basics$identity;
 				var y1 = minY(
 					A2($elm$core$Maybe$withDefault, 0, visual) - A2($elm$core$Maybe$withDefault, 0, value));
@@ -30408,15 +30609,15 @@ var $terezka$charts$Internal$Produce$toBarSeries = F4(
 					A2($elm$core$Maybe$withDefault, 0, visual));
 				var isSingle = numOfSections === 1;
 				var isLast = _Utils_eq(sectionIndex, numOfSections - 1);
-				var roundTop = (isSingle || isLast) ? barsConfig.cU : 0;
+				var roundTop = (isSingle || isLast) ? barsConfig.cV : 0;
 				var isFirst = !sectionIndex;
-				var roundBottom = (isSingle || isFirst) ? barsConfig.cT : 0;
-				var end = bin.bq;
+				var roundBottom = (isSingle || isFirst) ? barsConfig.cU : 0;
+				var end = bin.bs;
 				var length = end - start;
-				var margin = length * barsConfig.aa;
-				var spacing = length * barsConfig.hV;
+				var margin = length * barsConfig.ac;
+				var spacing = length * barsConfig.h_;
 				var width = ((length - (margin * 2)) - ((numOfBars - 1) * spacing)) / numOfBars;
-				var offset = barsConfig.cy ? ((barIndex * width) + (barIndex * spacing)) : 0;
+				var offset = barsConfig.cz ? ((barIndex * width) + (barIndex * spacing)) : 0;
 				var x1 = (start + margin) + offset;
 				var x2 = ((start + margin) + offset) + width;
 				var defaultColor = $terezka$charts$Internal$Helpers$toDefaultColor(colorIndex);
@@ -30430,45 +30631,45 @@ var $terezka$charts$Internal$Produce$toBarSeries = F4(
 				var attrs = _Utils_ap(
 					defaultAttrs,
 					_Utils_ap(
-						section.d,
-						A5(section.gF, barIndex, sectionIndex, dataIndex, section.fi, bin.gz)));
+						section.e,
+						A5(section.gM, barIndex, sectionIndex, dataIndex, section.fn, bin.gG)));
 				var productOrg = toBarConfig(attrs);
 				var product = function (p) {
 					return _Utils_eq(p.v, defaultColor) ? _Utils_update(
 						p,
-						{v: p.da}) : p;
+						{v: p.db}) : p;
 				}(
 					function (p) {
-						var _v21 = p.dW;
+						var _v21 = p.dZ;
 						if (((!_v21.$) && (_v21.a.$ === 2)) && _v21.a.a.b) {
 							var _v22 = _v21.a.a;
 							var color = _v22.a;
-							return _Utils_eq(p.da, defaultColor) ? _Utils_update(
+							return _Utils_eq(p.db, defaultColor) ? _Utils_update(
 								p,
-								{da: color}) : p;
+								{db: color}) : p;
 						} else {
 							return p;
 						}
 					}(productOrg));
 				return {
-					gt: {
-						hA: product,
-						iq: $terezka$charts$Internal$Item$Bar,
-						dE: {
+					gA: {
+						hF: product,
+						iv: $terezka$charts$Internal$Item$Bar,
+						dG: {
 							v: product.v,
 							C: product.C,
-							da: product.da,
-							bN: dataIndex,
-							gB: elIndex,
-							e$: section.F(bin.gz),
-							d7: colorIndex,
-							fl: section.fi,
-							hB: barIndex,
+							db: product.db,
+							bQ: dataIndex,
+							gI: elIndex,
+							e5: section.F(bin.gG),
+							dq: colorIndex,
+							fr: section.fn,
+							hG: barIndex,
 							y: sectionIndex
 						},
-						iE: {
-							gz: bin.gz,
-							g3: function () {
+						iJ: {
+							gG: bin.gG,
+							ha: function () {
 								if (!value.$) {
 									return true;
 								} else {
@@ -30476,33 +30677,33 @@ var $terezka$charts$Internal$Produce$toBarSeries = F4(
 								}
 							}(),
 							aQ: start,
-							a3: end,
-							bk: A2($elm$core$Maybe$withDefault, 0, value)
+							a4: end,
+							bm: A2($elm$core$Maybe$withDefault, 0, value)
 						}
 					},
-					ir: function (c) {
+					iw: function (c) {
 						return _List_fromArray(
 							[
 								A3(
 								$terezka$charts$Internal$Produce$tooltipRow,
-								c.dE.da,
-								A2($terezka$charts$Internal$Produce$toDefaultName, colorIndex, c.dE.fl),
-								section.F(bin.gz))
+								c.dG.db,
+								A2($terezka$charts$Internal$Produce$toDefaultName, colorIndex, c.dG.fr),
+								section.F(bin.gG))
 							]);
 					},
-					is: function (config) {
+					ix: function (config) {
 						return {
 							aQ: x1,
-							a3: x2,
-							iL: A2($elm$core$Basics$min, y1, y2),
-							eH: A2($elm$core$Basics$max, y1, y2)
+							a4: x2,
+							iQ: A2($elm$core$Basics$min, y1, y2),
+							eL: A2($elm$core$Basics$max, y1, y2)
 						};
 					},
-					iv: F2(
+					iA: F2(
 						function (_v20, config) {
-							return {aQ: x1, a3: x2, iL: y1, eH: y2};
+							return {aQ: x1, a4: x2, iQ: y1, eL: y2};
 						}),
-					iw: F3(
+					iB: F3(
 						function (plane, config, position) {
 							return A3($terezka$charts$Internal$Svg$bar, plane, product, position);
 						})
@@ -30521,10 +30722,10 @@ var $terezka$charts$Internal$Produce$toBarSeries = F4(
 					var rest = _v13.b;
 					return $elm$core$Maybe$Just(
 						{
-							gt: {
-								Z: _Utils_Tuple2(first, rest)
+							gA: {
+								aa: _Utils_Tuple2(first, rest)
 							},
-							ir: function (c) {
+							iw: function (c) {
 								return _List_fromArray(
 									[
 										A2(
@@ -30540,10 +30741,10 @@ var $terezka$charts$Internal$Produce$toBarSeries = F4(
 												var x = _v14.a;
 												var xs = _v14.b;
 												return A2($elm$core$List$cons, x, xs);
-											}(c.Z)))
+											}(c.aa)))
 									]);
 							},
-							is: function (c) {
+							ix: function (c) {
 								return A2(
 									$terezka$charts$Internal$Coordinates$foldPosition,
 									$terezka$charts$Internal$Item$getLimits,
@@ -30551,9 +30752,9 @@ var $terezka$charts$Internal$Produce$toBarSeries = F4(
 										var x = _v15.a;
 										var xs = _v15.b;
 										return A2($elm$core$List$cons, x, xs);
-									}(c.Z));
+									}(c.aa));
 							},
-							iv: F2(
+							iA: F2(
 								function (plane, c) {
 									return A2(
 										$terezka$charts$Internal$Coordinates$foldPosition,
@@ -30562,9 +30763,9 @@ var $terezka$charts$Internal$Produce$toBarSeries = F4(
 											var x = _v16.a;
 											var xs = _v16.b;
 											return A2($elm$core$List$cons, x, xs);
-										}(c.Z));
+										}(c.aa));
 								}),
-							iw: F3(
+							iB: F3(
 								function (plane, c, _v17) {
 									return A2(
 										$elm$svg$Svg$g,
@@ -30579,19 +30780,19 @@ var $terezka$charts$Internal$Produce$toBarSeries = F4(
 												var x = _v18.a;
 												var xs = _v18.b;
 												return A2($elm$core$List$cons, x, xs);
-											}(c.Z)));
+											}(c.aa)));
 								})
 						});
 				}
 			});
 		var toBin = F4(
 			function (index, prevM, curr, nextM) {
-				var _v0 = _Utils_Tuple2(barsConfig.aQ, barsConfig.a3);
+				var _v0 = _Utils_Tuple2(barsConfig.aQ, barsConfig.a4);
 				if (_v0.a.$ === 1) {
 					if (_v0.b.$ === 1) {
 						var _v1 = _v0.a;
 						var _v2 = _v0.b;
-						return {gz: curr, bq: (index + 1) + 0.5, hX: (index + 1) - 0.5};
+						return {gG: curr, bs: (index + 1) + 0.5, h0: (index + 1) - 0.5};
 					} else {
 						var _v8 = _v0.a;
 						var toEnd = _v0.b.a;
@@ -30599,26 +30800,26 @@ var $terezka$charts$Internal$Produce$toBarSeries = F4(
 						if (!_v9.a.$) {
 							var prev = _v9.a.a;
 							return {
-								gz: curr,
-								bq: toEnd(curr),
-								hX: toEnd(prev)
+								gG: curr,
+								bs: toEnd(curr),
+								h0: toEnd(prev)
 							};
 						} else {
 							if (!_v9.b.$) {
 								var _v10 = _v9.a;
 								var next = _v9.b.a;
 								return {
-									gz: curr,
-									bq: toEnd(curr),
-									hX: toEnd(curr) - (toEnd(next) - toEnd(curr))
+									gG: curr,
+									bs: toEnd(curr),
+									h0: toEnd(curr) - (toEnd(next) - toEnd(curr))
 								};
 							} else {
 								var _v11 = _v9.a;
 								var _v12 = _v9.b;
 								return {
-									gz: curr,
-									bq: toEnd(curr),
-									hX: toEnd(curr) - 1
+									gG: curr,
+									bs: toEnd(curr),
+									h0: toEnd(curr) - 1
 								};
 							}
 						}
@@ -30631,26 +30832,26 @@ var $terezka$charts$Internal$Produce$toBarSeries = F4(
 						if (!_v4.b.$) {
 							var next = _v4.b.a;
 							return {
-								gz: curr,
-								bq: toStart(next),
-								hX: toStart(curr)
+								gG: curr,
+								bs: toStart(next),
+								h0: toStart(curr)
 							};
 						} else {
 							if (!_v4.a.$) {
 								var prev = _v4.a.a;
 								var _v5 = _v4.b;
 								return {
-									gz: curr,
-									bq: toStart(curr) + (toStart(curr) - toStart(prev)),
-									hX: toStart(curr)
+									gG: curr,
+									bs: toStart(curr) + (toStart(curr) - toStart(prev)),
+									h0: toStart(curr)
 								};
 							} else {
 								var _v6 = _v4.a;
 								var _v7 = _v4.b;
 								return {
-									gz: curr,
-									bq: toStart(curr) + 1,
-									hX: toStart(curr)
+									gG: curr,
+									bs: toStart(curr) + 1,
+									h0: toStart(curr)
 								};
 							}
 						}
@@ -30658,9 +30859,9 @@ var $terezka$charts$Internal$Produce$toBarSeries = F4(
 						var toStart = _v0.a.a;
 						var toEnd = _v0.b.a;
 						return {
-							gz: curr,
-							bq: toEnd(curr),
-							hX: toStart(curr)
+							gG: curr,
+							bs: toEnd(curr),
+							h0: toStart(curr)
 						};
 					}
 				}
@@ -30707,16 +30908,16 @@ var $terezka$charts$Chart$barsMap = F4(
 						return _Utils_update(
 							acc,
 							{
-								S: _Utils_ap(
-									acc.S,
-									barsConfig.gK ? A2(
+								U: _Utils_ap(
+									acc.U,
+									barsConfig.gR ? A2(
 										$elm$core$List$concatMap,
 										A2(
 											$elm$core$Basics$composeR,
 											$terezka$charts$Chart$Item$getLimits,
 											function (pos) {
 												return _List_fromArray(
-													[pos.aQ, pos.a3]);
+													[pos.aQ, pos.a4]);
 											}),
 										bins) : _List_Nil)
 							});
@@ -30753,7 +30954,7 @@ var $terezka$charts$Chart$bars = F3(
 	});
 var $terezka$charts$Internal$Svg$Event = F2(
 	function (name, handler) {
-		return {dn: handler, fl: name};
+		return {$7: handler, fr: name};
 	});
 var $elm$svg$Svg$clipPath = $elm$svg$Svg$trustedNode('clipPath');
 var $elm$json$Json$Decode$map3 = _Json_map3;
@@ -30808,7 +31009,7 @@ var $debois$elm_dom$DOM$boundingClientRect = A4(
 		function (_v0, width, height) {
 			var x = _v0.a;
 			var y = _v0.b;
-			return {e4: height, bf: x, bi: y, eC: width};
+			return {fa: height, bg: x, bk: y, eG: width};
 		}),
 	A2($debois$elm_dom$DOM$position, 0, 0),
 	$debois$elm_dom$DOM$offsetWidth,
@@ -30840,17 +31041,17 @@ $terezka$charts$Internal$Svg$cyclic$decodePosition = function () {
 };
 var $terezka$charts$Internal$Coordinates$toCartesianX = F2(
 	function (plane, value) {
-		return A2($terezka$charts$Internal$Coordinates$scaleCartesianX, plane, value - plane.bD.g9) + plane.bD.ed;
+		return A2($terezka$charts$Internal$Coordinates$scaleCartesianX, plane, value - plane.bF.hf) + plane.bF.eh;
 	});
 var $terezka$charts$Internal$Coordinates$toCartesianY = F2(
 	function (plane, value) {
-		return ($terezka$charts$Internal$Coordinates$range(plane.bk) - A2($terezka$charts$Internal$Coordinates$scaleCartesianY, plane, value - plane.bk.g9)) + plane.bk.ed;
+		return ($terezka$charts$Internal$Coordinates$range(plane.bm) - A2($terezka$charts$Internal$Coordinates$scaleCartesianY, plane, value - plane.bm.hf)) + plane.bm.eh;
 	});
 var $terezka$charts$Internal$Svg$fromSvg = F2(
 	function (plane, point) {
 		return {
-			bD: A2($terezka$charts$Internal$Coordinates$toCartesianX, plane, point.bD),
-			bk: A2($terezka$charts$Internal$Coordinates$toCartesianY, plane, point.bk)
+			bF: A2($terezka$charts$Internal$Coordinates$toCartesianX, plane, point.bF),
+			bm: A2($terezka$charts$Internal$Coordinates$toCartesianY, plane, point.bm)
 		};
 	});
 var $debois$elm_dom$DOM$target = function (decoder) {
@@ -30860,24 +31061,24 @@ var $terezka$charts$Internal$Svg$decoder = F2(
 	function (plane, toMsg) {
 		var handle = F3(
 			function (mouseX, mouseY, box) {
-				var yPrev = plane.bk;
-				var xPrev = plane.bD;
-				var widthPercent = box.eC / plane.bD.ai;
-				var heightPercent = box.e4 / plane.bk.ai;
+				var yPrev = plane.bm;
+				var xPrev = plane.bF;
+				var widthPercent = box.eG / plane.bF.aj;
+				var heightPercent = box.fa / plane.bm.aj;
 				var newPlane = _Utils_update(
 					plane,
 					{
-						bD: _Utils_update(
+						bF: _Utils_update(
 							xPrev,
-							{ai: box.eC, g8: plane.bD.g8 * widthPercent, g9: plane.bD.g9 * widthPercent}),
-						bk: _Utils_update(
+							{aj: box.eG, he: plane.bF.he * widthPercent, hf: plane.bF.hf * widthPercent}),
+						bm: _Utils_update(
 							yPrev,
-							{ai: box.e4, g8: plane.bk.g8 * heightPercent, g9: plane.bk.g9 * heightPercent})
+							{aj: box.fa, he: plane.bm.he * heightPercent, hf: plane.bm.hf * heightPercent})
 					});
 				var searched = A2(
 					$terezka$charts$Internal$Svg$fromSvg,
 					newPlane,
-					{bD: mouseX - box.bf, bk: mouseY - box.bi});
+					{bF: mouseX - box.bg, bm: mouseY - box.bk});
 				return A2(toMsg, newPlane, searched);
 			});
 		return A4(
@@ -30897,23 +31098,23 @@ var $terezka$charts$Internal$Svg$container = F5(
 		var toEvent = function (event) {
 			return A2(
 				$elm$svg$Svg$Events$on,
-				event.fl,
-				A2($terezka$charts$Internal$Svg$decoder, plane, event.dn));
+				event.fr,
+				A2($terezka$charts$Internal$Svg$decoder, plane, event.$7));
 		};
-		var svgAttrsSize = config.bg ? _List_fromArray(
+		var svgAttrsSize = config.bi ? _List_fromArray(
 			[
 				$elm$svg$Svg$Attributes$viewBox(
-				'0 0 ' + ($elm$core$String$fromFloat(plane.bD.ai) + (' ' + $elm$core$String$fromFloat(plane.bk.ai)))),
+				'0 0 ' + ($elm$core$String$fromFloat(plane.bF.aj) + (' ' + $elm$core$String$fromFloat(plane.bm.aj)))),
 				A2($elm$html$Html$Attributes$style, 'display', 'block')
 			]) : _List_fromArray(
 			[
 				$elm$svg$Svg$Attributes$width(
-				$elm$core$String$fromFloat(plane.bD.ai)),
+				$elm$core$String$fromFloat(plane.bF.aj)),
 				$elm$svg$Svg$Attributes$height(
-				$elm$core$String$fromFloat(plane.bk.ai)),
+				$elm$core$String$fromFloat(plane.bm.aj)),
 				A2($elm$html$Html$Attributes$style, 'display', 'block')
 			]);
-		var htmlAttrsSize = config.bg ? _List_fromArray(
+		var htmlAttrsSize = config.bi ? _List_fromArray(
 			[
 				A2($elm$html$Html$Attributes$style, 'width', '100%'),
 				A2($elm$html$Html$Attributes$style, 'height', '100%')
@@ -30922,11 +31123,11 @@ var $terezka$charts$Internal$Svg$container = F5(
 				A2(
 				$elm$html$Html$Attributes$style,
 				'width',
-				$elm$core$String$fromFloat(plane.bD.ai) + 'px'),
+				$elm$core$String$fromFloat(plane.bF.aj) + 'px'),
 				A2(
 				$elm$html$Html$Attributes$style,
 				'height',
-				$elm$core$String$fromFloat(plane.bk.ai) + 'px')
+				$elm$core$String$fromFloat(plane.bm.aj) + 'px')
 			]);
 		var htmlAttrsDef = _List_fromArray(
 			[
@@ -30938,9 +31139,9 @@ var $terezka$charts$Internal$Svg$container = F5(
 		var chartPosition = _List_fromArray(
 			[
 				$elm$svg$Svg$Attributes$x(
-				$elm$core$String$fromFloat(plane.bD.g9)),
+				$elm$core$String$fromFloat(plane.bF.hf)),
 				$elm$svg$Svg$Attributes$y(
-				$elm$core$String$fromFloat(plane.bk.g9)),
+				$elm$core$String$fromFloat(plane.bm.hf)),
 				$elm$svg$Svg$Attributes$width(
 				$elm$core$String$fromFloat(
 					$terezka$charts$Internal$Coordinates$innerWidth(plane))),
@@ -30970,11 +31171,11 @@ var $terezka$charts$Internal$Svg$container = F5(
 			$elm$svg$Svg$rect,
 			_Utils_ap(
 				chartPosition,
-				A2($elm$core$List$map, toEvent, config.gC)),
+				A2($elm$core$List$map, toEvent, config.gJ)),
 			_List_Nil);
 		var chart = A2(
 			$elm$svg$Svg$svg,
-			_Utils_ap(svgAttrsSize, config.d),
+			_Utils_ap(svgAttrsSize, config.e),
 			_Utils_ap(
 				_List_fromArray(
 					[clipPathDefs]),
@@ -31007,7 +31208,7 @@ var $terezka$charts$Chart$Attributes$lowest = F3(
 		return _Utils_update(
 			b,
 			{
-				ed: A3(edit, v, b.ed, b.gy)
+				eh: A3(edit, v, b.eh, b.gF)
 			});
 	});
 var $terezka$charts$Chart$Attributes$orLower = F3(
@@ -31016,16 +31217,16 @@ var $terezka$charts$Chart$Attributes$orLower = F3(
 	});
 var $terezka$charts$Chart$definePlane = F2(
 	function (config, elements) {
-		var width = A2($elm$core$Basics$max, 1, (config.eC - config.ak.bf) - config.ak.bh);
+		var width = A2($elm$core$Basics$max, 1, (config.eG - config.al.bg) - config.al.bj);
 		var toLimit = F5(
 			function (length, marginMin, marginMax, min, max) {
-				return {gx: max, gy: min, ai: length, g8: marginMax, g9: marginMin, fh: max, ed: min};
+				return {gE: max, gF: min, aj: length, he: marginMax, hf: marginMin, fm: max, eh: min};
 			});
-		var height = A2($elm$core$Basics$max, 1, (config.e4 - config.ak.a7) - config.ak.bi);
+		var height = A2($elm$core$Basics$max, 1, (config.fa - config.al.a7) - config.al.bk);
 		var fixSingles = function (bs) {
-			return _Utils_eq(bs.ed, bs.fh) ? _Utils_update(
+			return _Utils_eq(bs.eh, bs.fm) ? _Utils_update(
 				bs,
-				{fh: bs.ed + 10}) : bs;
+				{fm: bs.eh + 10}) : bs;
 		};
 		var collectLimits = F2(
 			function (el, acc) {
@@ -31065,16 +31266,16 @@ var $terezka$charts$Chart$definePlane = F2(
 			});
 		var limits_ = function (pos) {
 			return function (_v3) {
-				var y = _v3.bk;
-				var x = _v3.bD;
+				var y = _v3.bm;
+				var x = _v3.bF;
 				return {
-					bD: fixSingles(x),
-					bk: fixSingles(y)
+					bF: fixSingles(x),
+					bm: fixSingles(y)
 				};
 			}(
 				{
-					bD: A5(toLimit, width, config.aa.bf, config.aa.bh, pos.aQ, pos.a3),
-					bk: A5(toLimit, height, config.aa.bi, config.aa.a7, pos.iL, pos.eH)
+					bF: A5(toLimit, width, config.ac.bg, config.ac.bj, pos.aQ, pos.a4),
+					bm: A5(toLimit, height, config.ac.bk, config.ac.a7, pos.iQ, pos.eL)
 				});
 		}(
 			A2(
@@ -31082,9 +31283,9 @@ var $terezka$charts$Chart$definePlane = F2(
 				$elm$core$Basics$identity,
 				A3($elm$core$List$foldl, collectLimits, _List_Nil, elements)));
 		var calcRange = function () {
-			var _v2 = config.en;
+			var _v2 = config.er;
 			if (!_v2.b) {
-				return limits_.bD;
+				return limits_.bF;
 			} else {
 				var some = _v2;
 				return A3(
@@ -31093,14 +31294,14 @@ var $terezka$charts$Chart$definePlane = F2(
 						function (f, b) {
 							return f(b);
 						}),
-					limits_.bD,
+					limits_.bF,
 					some);
 			}
 		}();
 		var calcDomain = function () {
-			var _v1 = config.dX;
+			var _v1 = config.d_;
 			if (!_v1.b) {
-				return A3($terezka$charts$Chart$Attributes$lowest, 0, $terezka$charts$Chart$Attributes$orLower, limits_.bk);
+				return A3($terezka$charts$Chart$Attributes$lowest, 0, $terezka$charts$Chart$Attributes$orLower, limits_.bm);
 			} else {
 				var some = _v1;
 				return A3(
@@ -31109,31 +31310,31 @@ var $terezka$charts$Chart$definePlane = F2(
 						function (f, b) {
 							return f(b);
 						}),
-					limits_.bk,
+					limits_.bm,
 					some);
 			}
 		}();
-		var unpadded = {bD: calcRange, bk: calcDomain};
+		var unpadded = {bF: calcRange, bm: calcDomain};
 		var scalePadX = $terezka$charts$Internal$Coordinates$scaleCartesianX(unpadded);
-		var xMax = calcRange.fh + scalePadX(config.ak.bh);
-		var xMin = calcRange.ed - scalePadX(config.ak.bf);
+		var xMax = calcRange.fm + scalePadX(config.al.bj);
+		var xMin = calcRange.eh - scalePadX(config.al.bg);
 		var scalePadY = $terezka$charts$Internal$Coordinates$scaleCartesianY(unpadded);
-		var yMax = calcDomain.fh + scalePadY(config.ak.bi);
-		var yMin = calcDomain.ed - scalePadY(config.ak.a7);
+		var yMax = calcDomain.fm + scalePadY(config.al.bk);
+		var yMin = calcDomain.eh - scalePadY(config.al.a7);
 		return {
-			bD: _Utils_update(
+			bF: _Utils_update(
 				calcRange,
 				{
-					ai: config.eC,
-					fh: A2($elm$core$Basics$max, xMin, xMax),
-					ed: A2($elm$core$Basics$min, xMin, xMax)
+					aj: config.eG,
+					fm: A2($elm$core$Basics$max, xMin, xMax),
+					eh: A2($elm$core$Basics$min, xMin, xMax)
 				}),
-			bk: _Utils_update(
+			bm: _Utils_update(
 				calcDomain,
 				{
-					ai: config.e4,
-					fh: A2($elm$core$Basics$max, yMin, yMax),
-					ed: A2($elm$core$Basics$min, yMin, yMax)
+					aj: config.fa,
+					fm: A2($elm$core$Basics$max, yMin, yMax),
+					eh: A2($elm$core$Basics$min, yMin, yMax)
 				})
 		};
 	});
@@ -31223,7 +31424,7 @@ var $terezka$charts$Chart$getLegends = function (elements) {
 };
 var $terezka$charts$Chart$TickValues = F4(
 	function (xAxis, yAxis, xs, ys) {
-		return {a4: xAxis, S: xs, a5: yAxis, ad: ys};
+		return {a5: xAxis, U: xs, a6: yAxis, af: ys};
 	});
 var $terezka$charts$Chart$getTickValues = F3(
 	function (plane, items, elements) {
@@ -31302,7 +31503,7 @@ var $terezka$charts$Chart$Attributes$circle = function (config) {
 	return _Utils_update(
 		config,
 		{
-			ca: $elm$core$Maybe$Just(0)
+			cb: $elm$core$Maybe$Just(0)
 		});
 };
 var $terezka$charts$Internal$Helpers$darkGray = 'rgb(200 200 200)';
@@ -31312,13 +31513,13 @@ var $terezka$charts$Chart$Attributes$dashed = F2(
 			config,
 			{bb: value});
 	});
-var $terezka$charts$Internal$Svg$defaultDot = {v: '', C: 0, da: $terezka$charts$Internal$Helpers$pink, p: false, gM: 0, gN: '', gO: 5, aJ: 1, ca: $elm$core$Maybe$Nothing, fE: 6};
+var $terezka$charts$Internal$Svg$defaultDot = {v: '', C: 0, db: $terezka$charts$Internal$Helpers$pink, p: false, gT: 0, gU: '', gV: 5, aK: 1, cb: $elm$core$Maybe$Nothing, fM: 6};
 var $terezka$charts$Internal$Svg$isWithinPlane = F3(
 	function (plane, x, y) {
 		return _Utils_eq(
-			A3($elm$core$Basics$clamp, plane.bD.ed, plane.bD.fh, x),
+			A3($elm$core$Basics$clamp, plane.bF.eh, plane.bF.fm, x),
 			x) && _Utils_eq(
-			A3($elm$core$Basics$clamp, plane.bk.ed, plane.bk.fh, y),
+			A3($elm$core$Basics$clamp, plane.bm.eh, plane.bm.fm, y),
 			y);
 	});
 var $elm$core$Basics$pi = _Basics_pi;
@@ -31381,30 +31582,30 @@ var $terezka$charts$Internal$Svg$dot = F5(
 		var styleAttrs = _List_fromArray(
 			[
 				$elm$svg$Svg$Attributes$stroke(
-				(config.v === '') ? config.da : config.v),
+				(config.v === '') ? config.db : config.v),
 				$elm$svg$Svg$Attributes$strokeWidth(
 				$elm$core$String$fromFloat(config.C)),
 				$elm$svg$Svg$Attributes$fillOpacity(
-				$elm$core$String$fromFloat(config.aJ)),
-				$elm$svg$Svg$Attributes$fill(config.da),
+				$elm$core$String$fromFloat(config.aK)),
+				$elm$svg$Svg$Attributes$fill(config.db),
 				$elm$svg$Svg$Attributes$class('elm-charts__dot'),
 				config.p ? $terezka$charts$Internal$Svg$withinChartArea(plane) : $elm$svg$Svg$Attributes$class('')
 			]);
 		var showDot = A3($terezka$charts$Internal$Svg$isWithinPlane, plane, xOrg, yOrg) || config.p;
-		var highlightColor = (config.gN === '') ? config.da : config.gN;
+		var highlightColor = (config.gU === '') ? config.db : config.gU;
 		var highlightAttrs = _List_fromArray(
 			[
 				$elm$svg$Svg$Attributes$stroke(highlightColor),
 				$elm$svg$Svg$Attributes$strokeWidth(
-				$elm$core$String$fromFloat(config.gO)),
+				$elm$core$String$fromFloat(config.gV)),
 				$elm$svg$Svg$Attributes$strokeOpacity(
-				$elm$core$String$fromFloat(config.gM)),
+				$elm$core$String$fromFloat(config.gT)),
 				$elm$svg$Svg$Attributes$fill('transparent'),
 				$elm$svg$Svg$Attributes$class('elm-charts__dot-highlight')
 			]);
 		var view = F3(
 			function (toEl, highlightOff, toAttrs) {
-				return (config.gM > 0) ? A2(
+				return (config.gT > 0) ? A2(
 					$elm$svg$Svg$g,
 					_List_fromArray(
 						[
@@ -31431,11 +31632,11 @@ var $terezka$charts$Internal$Svg$dot = F5(
 						styleAttrs),
 					_List_Nil);
 			});
-		var area_ = (2 * $elm$core$Basics$pi) * config.fE;
+		var area_ = (2 * $elm$core$Basics$pi) * config.fM;
 		if (!showDot) {
 			return $elm$svg$Svg$text('');
 		} else {
-			var _v0 = config.ca;
+			var _v0 = config.cb;
 			if (_v0.$ === 1) {
 				return $elm$svg$Svg$text('');
 			} else {
@@ -31445,7 +31646,7 @@ var $terezka$charts$Internal$Svg$dot = F5(
 						return A3(
 							view,
 							$elm$svg$Svg$circle,
-							config.gO / 2,
+							config.gV / 2,
 							function (off) {
 								var radius = $elm$core$Basics$sqrt(area_ / $elm$core$Basics$pi);
 								return _List_fromArray(
@@ -31463,7 +31664,7 @@ var $terezka$charts$Internal$Svg$dot = F5(
 						return A3(
 							view,
 							$elm$svg$Svg$path,
-							config.gO,
+							config.gV,
 							function (off) {
 								return _List_fromArray(
 									[
@@ -31476,7 +31677,7 @@ var $terezka$charts$Internal$Svg$dot = F5(
 						return A3(
 							view,
 							$elm$svg$Svg$rect,
-							config.gO,
+							config.gV,
 							function (off) {
 								var side = $elm$core$Basics$sqrt(area_);
 								var sideOff = side + off;
@@ -31497,7 +31698,7 @@ var $terezka$charts$Internal$Svg$dot = F5(
 						return A3(
 							view,
 							$elm$svg$Svg$rect,
-							config.gO,
+							config.gV,
 							function (off) {
 								var side = $elm$core$Basics$sqrt(area_);
 								var sideOff = side + off;
@@ -31520,7 +31721,7 @@ var $terezka$charts$Internal$Svg$dot = F5(
 						return A3(
 							view,
 							$elm$svg$Svg$path,
-							config.gO,
+							config.gV,
 							function (off) {
 								return _List_fromArray(
 									[
@@ -31535,7 +31736,7 @@ var $terezka$charts$Internal$Svg$dot = F5(
 						return A3(
 							view,
 							$elm$svg$Svg$path,
-							config.gO,
+							config.gV,
 							function (off) {
 								return _List_fromArray(
 									[
@@ -31557,7 +31758,7 @@ var $terezka$charts$Chart$Svg$dot = F4(
 			A2($terezka$charts$Internal$Helpers$apply, edits, $terezka$charts$Internal$Svg$defaultDot));
 	});
 var $terezka$charts$Internal$Helpers$gray = '#EFF2FA';
-var $terezka$charts$Internal$Svg$defaultLine = {d: _List_Nil, gl: false, da: 'rgb(210, 210, 210)', bb: _List_Nil, e: false, p: false, aJ: 1, il: -90, im: 0, eC: 1, aQ: $elm$core$Maybe$Nothing, a3: $elm$core$Maybe$Nothing, iK: $elm$core$Maybe$Nothing, i: 0, iL: $elm$core$Maybe$Nothing, eH: $elm$core$Maybe$Nothing, iM: $elm$core$Maybe$Nothing, j: 0};
+var $terezka$charts$Internal$Svg$defaultLine = {e: _List_Nil, gt: false, db: 'rgb(210, 210, 210)', bb: _List_Nil, f: false, p: false, aK: 1, iq: -90, ir: 0, eG: 1, aQ: $elm$core$Maybe$Nothing, a4: $elm$core$Maybe$Nothing, iP: $elm$core$Maybe$Nothing, i: 0, iQ: $elm$core$Maybe$Nothing, eL: $elm$core$Maybe$Nothing, iR: $elm$core$Maybe$Nothing, j: 0};
 var $elm$core$Basics$cos = _Basics_cos;
 var $terezka$charts$Internal$Svg$lengthInCartesianX = $terezka$charts$Internal$Coordinates$scaleCartesianX;
 var $terezka$charts$Internal$Svg$lengthInCartesianY = $terezka$charts$Internal$Coordinates$scaleCartesianY;
@@ -31565,12 +31766,12 @@ var $elm$core$Basics$sin = _Basics_sin;
 var $elm$svg$Svg$Attributes$strokeDasharray = _VirtualDom_attribute('stroke-dasharray');
 var $terezka$charts$Internal$Svg$line = F2(
 	function (plane, config) {
-		var angle = $elm$core$Basics$degrees(config.il);
+		var angle = $elm$core$Basics$degrees(config.iq);
 		var _v0 = function () {
 			var _v3 = _Utils_Tuple3(
-				_Utils_Tuple2(config.aQ, config.a3),
-				_Utils_Tuple2(config.iL, config.eH),
-				_Utils_Tuple2(config.iK, config.iM));
+				_Utils_Tuple2(config.aQ, config.a4),
+				_Utils_Tuple2(config.iQ, config.eL),
+				_Utils_Tuple2(config.iP, config.iR));
 			if (!_v3.a.a.$) {
 				if (!_v3.a.b.$) {
 					if (_v3.b.a.$ === 1) {
@@ -31583,7 +31784,7 @@ var $terezka$charts$Internal$Svg$line = F2(
 							var _v7 = _v5.b;
 							return _Utils_Tuple2(
 								_Utils_Tuple2(a, b),
-								_Utils_Tuple2(plane.bk.ed, plane.bk.ed));
+								_Utils_Tuple2(plane.bm.eh, plane.bm.eh));
 						} else {
 							var _v38 = _v3.a;
 							var a = _v38.a.a;
@@ -31609,11 +31810,11 @@ var $terezka$charts$Internal$Svg$line = F2(
 						} else {
 							return _Utils_Tuple2(
 								_Utils_Tuple2(
-									A2($elm$core$Maybe$withDefault, plane.bD.ed, config.aQ),
-									A2($elm$core$Maybe$withDefault, plane.bD.fh, config.a3)),
+									A2($elm$core$Maybe$withDefault, plane.bF.eh, config.aQ),
+									A2($elm$core$Maybe$withDefault, plane.bF.fm, config.a4)),
 								_Utils_Tuple2(
-									A2($elm$core$Maybe$withDefault, plane.bk.ed, config.iL),
-									A2($elm$core$Maybe$withDefault, plane.bk.fh, config.eH)));
+									A2($elm$core$Maybe$withDefault, plane.bm.eh, config.iQ),
+									A2($elm$core$Maybe$withDefault, plane.bm.fm, config.eL)));
 						}
 					}
 				} else {
@@ -31627,7 +31828,7 @@ var $terezka$charts$Internal$Svg$line = F2(
 							var _v12 = _v10.b;
 							return _Utils_Tuple2(
 								_Utils_Tuple2(a, a),
-								_Utils_Tuple2(plane.bk.ed, plane.bk.fh));
+								_Utils_Tuple2(plane.bm.eh, plane.bm.fm));
 						} else {
 							if (!_v3.c.a.$) {
 								if (!_v3.c.b.$) {
@@ -31675,7 +31876,7 @@ var $terezka$charts$Internal$Svg$line = F2(
 									var _v49 = _v48.a;
 									var _v50 = _v48.b;
 									return _Utils_Tuple2(
-										_Utils_Tuple2(a, plane.bD.fh),
+										_Utils_Tuple2(a, plane.bF.fm),
 										_Utils_Tuple2(b, b));
 								} else {
 									var _v62 = _v3.a;
@@ -31753,7 +31954,7 @@ var $terezka$charts$Internal$Svg$line = F2(
 									var _v73 = _v72.a;
 									var _v74 = _v72.b;
 									return _Utils_Tuple2(
-										_Utils_Tuple2(a, plane.bD.fh),
+										_Utils_Tuple2(a, plane.bF.fm),
 										_Utils_Tuple2(b, b));
 								} else {
 									var _v86 = _v3.a;
@@ -31787,7 +31988,7 @@ var $terezka$charts$Internal$Svg$line = F2(
 							var _v17 = _v15.b;
 							return _Utils_Tuple2(
 								_Utils_Tuple2(b, b),
-								_Utils_Tuple2(plane.bk.ed, plane.bk.fh));
+								_Utils_Tuple2(plane.bm.eh, plane.bm.fm));
 						} else {
 							if (!_v3.c.a.$) {
 								if (!_v3.c.b.$) {
@@ -31835,7 +32036,7 @@ var $terezka$charts$Internal$Svg$line = F2(
 									var _v97 = _v96.a;
 									var _v98 = _v96.b;
 									return _Utils_Tuple2(
-										_Utils_Tuple2(a, plane.bD.fh),
+										_Utils_Tuple2(a, plane.bF.fm),
 										_Utils_Tuple2(b, b));
 								} else {
 									var _v110 = _v3.a;
@@ -31913,7 +32114,7 @@ var $terezka$charts$Internal$Svg$line = F2(
 									var _v121 = _v120.a;
 									var _v122 = _v120.b;
 									return _Utils_Tuple2(
-										_Utils_Tuple2(a, plane.bD.fh),
+										_Utils_Tuple2(a, plane.bF.fm),
 										_Utils_Tuple2(b, b));
 								} else {
 									var _v134 = _v3.a;
@@ -31944,7 +32145,7 @@ var $terezka$charts$Internal$Svg$line = F2(
 							var a = _v21.a.a;
 							var b = _v21.b.a;
 							return _Utils_Tuple2(
-								_Utils_Tuple2(plane.bD.ed, plane.bD.ed),
+								_Utils_Tuple2(plane.bF.eh, plane.bF.eh),
 								_Utils_Tuple2(a, b));
 						} else {
 							var _v22 = _v3.a;
@@ -31954,7 +32155,7 @@ var $terezka$charts$Internal$Svg$line = F2(
 							var a = _v25.a.a;
 							var _v26 = _v25.b;
 							return _Utils_Tuple2(
-								_Utils_Tuple2(plane.bD.ed, plane.bD.fh),
+								_Utils_Tuple2(plane.bF.eh, plane.bF.fm),
 								_Utils_Tuple2(a, a));
 						}
 					} else {
@@ -31966,7 +32167,7 @@ var $terezka$charts$Internal$Svg$line = F2(
 							var _v31 = _v30.a;
 							var b = _v30.b.a;
 							return _Utils_Tuple2(
-								_Utils_Tuple2(plane.bD.ed, plane.bD.fh),
+								_Utils_Tuple2(plane.bF.eh, plane.bF.fm),
 								_Utils_Tuple2(b, b));
 						} else {
 							var _v140 = _v3.a;
@@ -31976,8 +32177,8 @@ var $terezka$charts$Internal$Svg$line = F2(
 							var _v144 = _v143.a;
 							var _v145 = _v143.b;
 							return _Utils_Tuple2(
-								_Utils_Tuple2(plane.bD.ed, plane.bD.fh),
-								_Utils_Tuple2(plane.bk.ed, plane.bk.fh));
+								_Utils_Tuple2(plane.bF.eh, plane.bF.fm),
+								_Utils_Tuple2(plane.bm.eh, plane.bm.fm));
 						}
 					}
 				}
@@ -31993,19 +32194,19 @@ var $terezka$charts$Internal$Svg$line = F2(
 		var x2_ = x2 + A2($terezka$charts$Internal$Svg$lengthInCartesianX, plane, config.i);
 		var y1_ = y1 - A2($terezka$charts$Internal$Svg$lengthInCartesianY, plane, config.j);
 		var y2_ = y2 - A2($terezka$charts$Internal$Svg$lengthInCartesianY, plane, config.j);
-		var _v146 = (config.im > 0) ? _Utils_Tuple2(
+		var _v146 = (config.ir > 0) ? _Utils_Tuple2(
 			A2(
 				$terezka$charts$Internal$Svg$lengthInCartesianX,
 				plane,
-				$elm$core$Basics$cos(angle) * config.im),
+				$elm$core$Basics$cos(angle) * config.ir),
 			A2(
 				$terezka$charts$Internal$Svg$lengthInCartesianY,
 				plane,
-				$elm$core$Basics$sin(angle) * config.im)) : _Utils_Tuple2(0, 0);
+				$elm$core$Basics$sin(angle) * config.ir)) : _Utils_Tuple2(0, 0);
 		var tickOffsetX = _v146.a;
 		var tickOffsetY = _v146.b;
-		var cmds = config.e ? _Utils_ap(
-			(config.im > 0) ? _List_fromArray(
+		var cmds = config.f ? _Utils_ap(
+			(config.ir > 0) ? _List_fromArray(
 				[
 					A2($terezka$charts$Internal$Commands$Move, x2_ + tickOffsetX, y2_ + tickOffsetY),
 					A2($terezka$charts$Internal$Commands$Line, x2_, y2_)
@@ -32014,7 +32215,7 @@ var $terezka$charts$Internal$Svg$line = F2(
 					A2($terezka$charts$Internal$Commands$Move, x2_, y2_)
 				]),
 			_Utils_ap(
-				config.gl ? _List_fromArray(
+				config.gt ? _List_fromArray(
 					[
 						A2($terezka$charts$Internal$Commands$Line, x2_, y1_),
 						A2($terezka$charts$Internal$Commands$Line, x1_, y1_)
@@ -32022,11 +32223,11 @@ var $terezka$charts$Internal$Svg$line = F2(
 					[
 						A2($terezka$charts$Internal$Commands$Line, x1_, y1_)
 					]),
-				(config.im > 0) ? _List_fromArray(
+				(config.ir > 0) ? _List_fromArray(
 					[
 						A2($terezka$charts$Internal$Commands$Line, x1_ + tickOffsetX, y1_ + tickOffsetY)
 					]) : _List_Nil)) : _Utils_ap(
-			(config.im > 0) ? _List_fromArray(
+			(config.ir > 0) ? _List_fromArray(
 				[
 					A2($terezka$charts$Internal$Commands$Move, x1_ + tickOffsetX, y1_ + tickOffsetY),
 					A2($terezka$charts$Internal$Commands$Line, x1_, y1_)
@@ -32035,7 +32236,7 @@ var $terezka$charts$Internal$Svg$line = F2(
 					A2($terezka$charts$Internal$Commands$Move, x1_, y1_)
 				]),
 			_Utils_ap(
-				config.gl ? _List_fromArray(
+				config.gt ? _List_fromArray(
 					[
 						A2($terezka$charts$Internal$Commands$Line, x1_, y2_),
 						A2($terezka$charts$Internal$Commands$Line, x2_, y2_)
@@ -32043,23 +32244,23 @@ var $terezka$charts$Internal$Svg$line = F2(
 					[
 						A2($terezka$charts$Internal$Commands$Line, x2_, y2_)
 					]),
-				(config.im > 0) ? _List_fromArray(
+				(config.ir > 0) ? _List_fromArray(
 					[
 						A2($terezka$charts$Internal$Commands$Line, x2_ + tickOffsetX, y2_ + tickOffsetY)
 					]) : _List_Nil));
 		return A4(
 			$terezka$charts$Internal$Svg$withAttrs,
-			config.d,
+			config.e,
 			$elm$svg$Svg$path,
 			_List_fromArray(
 				[
 					$elm$svg$Svg$Attributes$class('elm-charts__line'),
 					$elm$svg$Svg$Attributes$fill('transparent'),
-					$elm$svg$Svg$Attributes$stroke(config.da),
+					$elm$svg$Svg$Attributes$stroke(config.db),
 					$elm$svg$Svg$Attributes$strokeWidth(
-					$elm$core$String$fromFloat(config.eC)),
+					$elm$core$String$fromFloat(config.eG)),
 					$elm$svg$Svg$Attributes$strokeOpacity(
-					$elm$core$String$fromFloat(config.aJ)),
+					$elm$core$String$fromFloat(config.aK)),
 					$elm$svg$Svg$Attributes$strokeDasharray(
 					A2(
 						$elm$core$String$join,
@@ -32082,13 +32283,13 @@ var $terezka$charts$Chart$Attributes$size = F2(
 	function (v, config) {
 		return _Utils_update(
 			config,
-			{fE: v});
+			{fM: v});
 	});
 var $terezka$charts$Chart$Attributes$width = F2(
 	function (v, config) {
 		return _Utils_update(
 			config,
-			{eC: v});
+			{eG: v});
 	});
 var $terezka$charts$Chart$Attributes$x1 = F2(
 	function (v, config) {
@@ -32103,27 +32304,27 @@ var $terezka$charts$Chart$Attributes$y1 = F2(
 		return _Utils_update(
 			config,
 			{
-				iL: $elm$core$Maybe$Just(v)
+				iQ: $elm$core$Maybe$Just(v)
 			});
 	});
 var $terezka$charts$Chart$grid = function (edits) {
 	var config = A2(
 		$terezka$charts$Internal$Helpers$apply,
 		edits,
-		{da: '', bb: _List_Nil, aW: false, eC: 0});
-	var width = (!config.eC) ? (config.aW ? 0.5 : 1) : config.eC;
-	var color = $elm$core$String$isEmpty(config.da) ? (config.aW ? $terezka$charts$Internal$Helpers$darkGray : $terezka$charts$Internal$Helpers$gray) : config.da;
+		{db: '', bb: _List_Nil, aX: false, eG: 0});
+	var width = (!config.eG) ? (config.aX ? 0.5 : 1) : config.eG;
+	var color = $elm$core$String$isEmpty(config.db) ? (config.aX ? $terezka$charts$Internal$Helpers$darkGray : $terezka$charts$Internal$Helpers$gray) : config.db;
 	var toDot = F4(
 		function (vs, p, x, y) {
-			return (A2($elm$core$List$member, x, vs.a4) || A2($elm$core$List$member, y, vs.a5)) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
+			return (A2($elm$core$List$member, x, vs.a5) || A2($elm$core$List$member, y, vs.a6)) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
 				A5(
 					$terezka$charts$Chart$Svg$dot,
 					p,
 					function ($) {
-						return $.bD;
+						return $.bF;
 					},
 					function ($) {
-						return $.bk;
+						return $.bm;
 					},
 					_List_fromArray(
 						[
@@ -32131,11 +32332,11 @@ var $terezka$charts$Chart$grid = function (edits) {
 							$terezka$charts$Chart$Attributes$size(width),
 							$terezka$charts$Chart$Attributes$circle
 						]),
-					{bD: x, bk: y}));
+					{bF: x, bm: y}));
 		});
 	var toXGrid = F3(
 		function (vs, p, v) {
-			return A2($elm$core$List$member, v, vs.a4) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
+			return A2($elm$core$List$member, v, vs.a5) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
 				A2(
 					$terezka$charts$Chart$Svg$line,
 					p,
@@ -32149,7 +32350,7 @@ var $terezka$charts$Chart$grid = function (edits) {
 		});
 	var toYGrid = F3(
 		function (vs, p, v) {
-			return A2($elm$core$List$member, v, vs.a5) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
+			return A2($elm$core$List$member, v, vs.a6) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
 				A2(
 					$terezka$charts$Chart$Svg$line,
 					p,
@@ -32170,15 +32371,15 @@ var $terezka$charts$Chart$grid = function (edits) {
 						[
 							$elm$svg$Svg$Attributes$class('elm-charts__grid')
 						]),
-					config.aW ? A2(
+					config.aX ? A2(
 						$elm$core$List$concatMap,
 						function (x) {
 							return A2(
 								$elm$core$List$filterMap,
 								A3(toDot, vs, p, x),
-								vs.ad);
+								vs.af);
 						},
-						vs.S) : _List_fromArray(
+						vs.U) : _List_fromArray(
 						[
 							A2(
 							$elm$svg$Svg$g,
@@ -32189,7 +32390,7 @@ var $terezka$charts$Chart$grid = function (edits) {
 							A2(
 								$elm$core$List$filterMap,
 								A2(toXGrid, vs, p),
-								vs.S)),
+								vs.U)),
 							A2(
 							$elm$svg$Svg$g,
 							_List_fromArray(
@@ -32199,7 +32400,7 @@ var $terezka$charts$Chart$grid = function (edits) {
 							A2(
 								$elm$core$List$filterMap,
 								A2(toYGrid, vs, p),
-								vs.ad))
+								vs.af))
 						]));
 			}));
 };
@@ -32409,29 +32610,29 @@ var $terezka$charts$Chart$chart = F2(
 			$terezka$charts$Internal$Helpers$apply,
 			edits,
 			{
-				d: _List_fromArray(
+				e: _List_fromArray(
 					[
 						$elm$svg$Svg$Attributes$style('overflow: visible;')
 					]),
-				dX: _List_Nil,
-				gC: _List_Nil,
-				e4: 300,
+				d_: _List_Nil,
+				gJ: _List_Nil,
+				fa: 300,
 				bc: _List_Nil,
-				aa: {a7: 0, bf: 0, bh: 0, bi: 0},
-				ak: {a7: 0, bf: 0, bh: 0, bi: 0},
-				en: _List_Nil,
-				bg: true,
-				eC: 300
+				ac: {a7: 0, bg: 0, bj: 0, bk: 0},
+				al: {a7: 0, bg: 0, bj: 0, bk: 0},
+				er: _List_Nil,
+				bi: true,
+				eG: 300
 			});
 		var plane = A2($terezka$charts$Chart$definePlane, config, elements);
 		var items = A2($terezka$charts$Chart$getItems, plane, elements);
 		var toEvent = function (_v2) {
 			var event_ = _v2;
-			var _v1 = event_.gA;
+			var _v1 = event_.gH;
 			var decoder = _v1;
 			return A2(
 				$terezka$charts$Internal$Svg$Event,
-				event_.fl,
+				event_.fr,
 				decoder(items));
 		};
 		var tickValues = A3($terezka$charts$Chart$getTickValues, plane, items, elements);
@@ -32443,10 +32644,10 @@ var $terezka$charts$Chart$chart = F2(
 			$terezka$charts$Internal$Svg$container,
 			plane,
 			{
-				d: config.d,
-				gC: A2($elm$core$List$map, toEvent, config.gC),
+				e: config.e,
+				gJ: A2($elm$core$List$map, toEvent, config.gJ),
 				bc: config.bc,
-				bg: config.bg
+				bi: config.bi
 			},
 			beforeEls,
 			chartEls,
@@ -32456,7 +32657,7 @@ var $terezka$charts$Chart$Attributes$domain = F2(
 	function (v, config) {
 		return _Utils_update(
 			config,
-			{dX: v});
+			{d_: v});
 	});
 var $terezka$charts$Chart$Attributes$exactly = F3(
 	function (exact, _v0, _v1) {
@@ -32467,7 +32668,7 @@ var $terezka$charts$Chart$Attributes$highest = F3(
 		return _Utils_update(
 			b,
 			{
-				fh: A3(edit, v, b.fh, b.gx)
+				fm: A3(edit, v, b.fm, b.gE)
 			});
 	});
 var $terezka$charts$Chart$Attributes$orHigher = F3(
@@ -32475,8 +32676,8 @@ var $terezka$charts$Chart$Attributes$orHigher = F3(
 		return (_Utils_cmp(real, most) < 0) ? most : real;
 	});
 var $author$project$Render$Data$expandRange = function (_v0) {
-	var lowest = _v0.bU;
-	var highest = _v0.d4;
+	var lowest = _v0.bW;
+	var highest = _v0.d7;
 	var low = function () {
 		if (lowest.$ === 1) {
 			return A2($terezka$charts$Chart$Attributes$lowest, 0, $terezka$charts$Chart$Attributes$orLower);
@@ -32508,14 +32709,14 @@ var $terezka$charts$Chart$Attributes$height = F2(
 	function (v, config) {
 		return _Utils_update(
 			config,
-			{e4: v});
+			{fa: v});
 	});
 var $terezka$charts$Internal$Svg$Linear = 0;
 var $terezka$charts$Chart$Attributes$linear = function (config) {
 	return _Utils_update(
 		config,
 		{
-			hb: $elm$core$Maybe$Just(0)
+			hh: $elm$core$Maybe$Just(0)
 		});
 };
 var $terezka$charts$Chart$interpolated = F2(
@@ -32532,7 +32733,7 @@ var $terezka$charts$Chart$Attributes$range = F2(
 	function (v, config) {
 		return _Utils_update(
 			config,
-			{en: v});
+			{er: v});
 	});
 var $terezka$charts$Chart$Attributes$red = $terezka$charts$Internal$Helpers$red;
 var $terezka$charts$Chart$scatter = function (y) {
@@ -32549,12 +32750,12 @@ var $terezka$charts$Internal$Legend$LineLegend = F3(
 	function (a, b, c) {
 		return {$: 1, a: a, b: b, c: c};
 	});
-var $terezka$charts$Internal$Svg$defaultInterpolation = {d: _List_Nil, da: $terezka$charts$Internal$Helpers$pink, bb: _List_Nil, dW: $elm$core$Maybe$Nothing, hb: $elm$core$Maybe$Nothing, aJ: 0, eC: 1};
+var $terezka$charts$Internal$Svg$defaultInterpolation = {e: _List_Nil, db: $terezka$charts$Internal$Helpers$pink, bb: _List_Nil, dZ: $elm$core$Maybe$Nothing, hh: $elm$core$Maybe$Nothing, aK: 0, eG: 1};
 var $terezka$charts$Chart$Attributes$opacity = F2(
 	function (v, config) {
 		return _Utils_update(
 			config,
-			{aJ: v});
+			{aK: v});
 	});
 var $terezka$charts$Internal$Legend$toDotLegends = F2(
 	function (elIndex, properties) {
@@ -32571,19 +32772,19 @@ var $terezka$charts$Internal$Legend$toDotLegends = F2(
 							$terezka$charts$Internal$Helpers$toDefaultColor(colorIndex)),
 							$terezka$charts$Chart$Attributes$opacity(defaultOpacity)
 						]),
-					prop.g1);
+					prop.g8);
 				var interConfig = toInterConfig(interAttr);
 				var defaultName = 'Property #' + $elm$core$String$fromInt(colorIndex + 1);
 				var defaultAttrs = _List_fromArray(
 					[
-						$terezka$charts$Chart$Attributes$color(interConfig.da),
-						$terezka$charts$Chart$Attributes$border(interConfig.da),
-						_Utils_eq(interConfig.hb, $elm$core$Maybe$Nothing) ? $terezka$charts$Chart$Attributes$circle : $elm$core$Basics$identity
+						$terezka$charts$Chart$Attributes$color(interConfig.db),
+						$terezka$charts$Chart$Attributes$border(interConfig.db),
+						_Utils_eq(interConfig.hh, $elm$core$Maybe$Nothing) ? $terezka$charts$Chart$Attributes$circle : $elm$core$Basics$identity
 					]);
-				var dotAttrs = _Utils_ap(defaultAttrs, prop.d);
+				var dotAttrs = _Utils_ap(defaultAttrs, prop.e);
 				return A3(
 					$terezka$charts$Internal$Legend$LineLegend,
-					A2($elm$core$Maybe$withDefault, defaultName, prop.fi),
+					A2($elm$core$Maybe$withDefault, defaultName, prop.fn),
 					interAttr,
 					dotAttrs);
 			});
@@ -32610,8 +32811,8 @@ var $elm$svg$Svg$Attributes$fillRule = _VirtualDom_attribute('fill-rule');
 var $terezka$charts$Internal$Interpolation$linear = $elm$core$List$map(
 	$elm$core$List$map(
 		function (_v0) {
-			var y = _v0.bk;
-			var x = _v0.bD;
+			var y = _v0.bm;
+			var x = _v0.bF;
 			return A2($terezka$charts$Internal$Commands$Line, x, y);
 		}));
 var $terezka$charts$Internal$Interpolation$First = {$: 0};
@@ -32620,13 +32821,13 @@ var $terezka$charts$Internal$Interpolation$Previous = function (a) {
 };
 var $terezka$charts$Internal$Interpolation$monotoneCurve = F4(
 	function (point0, point1, tangent0, tangent1) {
-		var dx = (point1.bD - point0.bD) / 3;
-		return A6($terezka$charts$Internal$Commands$CubicBeziers, point0.bD + dx, point0.bk + (dx * tangent0), point1.bD - dx, point1.bk - (dx * tangent1), point1.bD, point1.bk);
+		var dx = (point1.bF - point0.bF) / 3;
+		return A6($terezka$charts$Internal$Commands$CubicBeziers, point0.bF + dx, point0.bm + (dx * tangent0), point1.bF - dx, point1.bm - (dx * tangent1), point1.bF, point1.bm);
 	});
 var $terezka$charts$Internal$Interpolation$slope2 = F3(
 	function (point0, point1, t) {
-		var h = point1.bD - point0.bD;
-		return (!(!h)) ? ((((3 * (point1.bk - point0.bk)) / h) - t) / 2) : t;
+		var h = point1.bF - point0.bF;
+		return (!(!h)) ? ((((3 * (point1.bm - point0.bm)) / h) - t) / 2) : t;
 	});
 var $elm$core$Basics$isNaN = _Basics_isNaN;
 var $terezka$charts$Internal$Interpolation$sign = function (x) {
@@ -32638,12 +32839,12 @@ var $terezka$charts$Internal$Interpolation$toH = F2(
 	});
 var $terezka$charts$Internal$Interpolation$slope3 = F3(
 	function (point0, point1, point2) {
-		var h1 = point2.bD - point1.bD;
-		var h0 = point1.bD - point0.bD;
+		var h1 = point2.bF - point1.bF;
+		var h0 = point1.bF - point0.bF;
 		var s0h = A2($terezka$charts$Internal$Interpolation$toH, h0, h1);
-		var s0 = (point1.bk - point0.bk) / s0h;
+		var s0 = (point1.bm - point0.bm) / s0h;
 		var s1h = A2($terezka$charts$Internal$Interpolation$toH, h1, h0);
-		var s1 = (point2.bk - point1.bk) / s1h;
+		var s1 = (point2.bm - point1.bm) / s1h;
 		var p = ((s0 * h1) + (s1 * h0)) / (h0 + h1);
 		var slope = ($terezka$charts$Internal$Interpolation$sign(s0) + $terezka$charts$Internal$Interpolation$sign(s1)) * A2(
 			$elm$core$Basics$min,
@@ -32702,7 +32903,7 @@ var $terezka$charts$Internal$Interpolation$monotonePart = F2(
 								_List_fromArray(
 									[
 										A4($terezka$charts$Internal$Interpolation$monotoneCurve, p0, p1, t1, t1),
-										A2($terezka$charts$Internal$Commands$Line, p1.bD, p1.bk)
+										A2($terezka$charts$Internal$Commands$Line, p1.bF, p1.bm)
 									])));
 					}
 				} else {
@@ -32748,7 +32949,7 @@ var $terezka$charts$Internal$Interpolation$monotonePart = F2(
 								_List_fromArray(
 									[
 										A4($terezka$charts$Internal$Interpolation$monotoneCurve, p0, p1, t0, t1),
-										A2($terezka$charts$Internal$Commands$Line, p1.bD, p1.bk)
+										A2($terezka$charts$Internal$Commands$Line, p1.bF, p1.bm)
 									])));
 					}
 				} else {
@@ -32773,7 +32974,7 @@ var $terezka$charts$Internal$Interpolation$monotoneSection = F2(
 						tangent,
 						_List_fromArray(
 							[
-								A2($terezka$charts$Internal$Commands$Line, p0.bD, p0.bk)
+								A2($terezka$charts$Internal$Commands$Line, p0.bF, p0.bm)
 							])));
 			} else {
 				return _Utils_Tuple2(tangent, _List_Nil);
@@ -32794,14 +32995,14 @@ var $terezka$charts$Internal$Interpolation$monotone = function (sections) {
 };
 var $terezka$charts$Internal$Interpolation$Point = F2(
 	function (x, y) {
-		return {bD: x, bk: y};
+		return {bF: x, bm: y};
 	});
 var $terezka$charts$Internal$Interpolation$after = F2(
 	function (a, b) {
 		return _List_fromArray(
 			[
 				a,
-				A2($terezka$charts$Internal$Interpolation$Point, b.bD, a.bk),
+				A2($terezka$charts$Internal$Interpolation$Point, b.bF, a.bm),
 				b
 			]);
 	});
@@ -32839,8 +33040,8 @@ var $terezka$charts$Internal$Interpolation$stepped = function (sections) {
 			expand(_List_Nil),
 			$elm$core$List$map(
 				function (_v2) {
-					var y = _v2.bk;
-					var x = _v2.bD;
+					var y = _v2.bm;
+					var x = _v2.bF;
 					return A2($terezka$charts$Internal$Commands$Line, x, y);
 				})),
 		sections);
@@ -32896,8 +33097,8 @@ var $terezka$charts$Internal$Svg$toCommands = F4(
 								_List_fromArray(
 									[
 										{
-										bD: toX(datum_),
-										bk: y_
+										bF: toX(datum_),
+										bm: y_
 									}
 									])),
 							rest);
@@ -32907,8 +33108,8 @@ var $terezka$charts$Internal$Svg$toCommands = F4(
 							_List_fromArray(
 								[
 									{
-									bD: toX(datum_),
-									bk: y_
+									bF: toX(datum_),
+									bm: y_
 								}
 								]),
 							acc);
@@ -32937,14 +33138,14 @@ var $terezka$charts$Internal$Svg$toCommands = F4(
 var $terezka$charts$Internal$Svg$area = F6(
 	function (plane, toX, toY2M, toY, config, data) {
 		var _v0 = function () {
-			var _v1 = config.dW;
+			var _v1 = config.dZ;
 			if (_v1.$ === 1) {
 				return _Utils_Tuple2(
 					$elm$svg$Svg$text(''),
-					config.da);
+					config.db);
 			} else {
 				var design = _v1.a;
-				return A2($terezka$charts$Internal$Svg$toPattern, config.da, design);
+				return A2($terezka$charts$Internal$Svg$toPattern, config.db, design);
 			}
 		}();
 		var patternDefs = _v0.a;
@@ -32952,14 +33153,14 @@ var $terezka$charts$Internal$Svg$area = F6(
 		var view = function (cmds) {
 			return A4(
 				$terezka$charts$Internal$Svg$withAttrs,
-				config.d,
+				config.e,
 				$elm$svg$Svg$path,
 				_List_fromArray(
 					[
 						$elm$svg$Svg$Attributes$class('elm-charts__area-section'),
 						$elm$svg$Svg$Attributes$fill(fill),
 						$elm$svg$Svg$Attributes$fillOpacity(
-						$elm$core$String$fromFloat(config.aJ)),
+						$elm$core$String$fromFloat(config.aK)),
 						$elm$svg$Svg$Attributes$strokeWidth('0'),
 						$elm$svg$Svg$Attributes$fillRule('evenodd'),
 						$elm$svg$Svg$Attributes$d(
@@ -32980,21 +33181,21 @@ var $terezka$charts$Internal$Svg$area = F6(
 					_Utils_ap(
 						_List_fromArray(
 							[
-								A2($terezka$charts$Internal$Commands$Move, firstBottom.bD, firstBottom.bk),
-								A2($terezka$charts$Internal$Commands$Line, firstTop.bD, firstTop.bk)
+								A2($terezka$charts$Internal$Commands$Move, firstBottom.bF, firstBottom.bm),
+								A2($terezka$charts$Internal$Commands$Line, firstTop.bF, firstTop.bm)
 							]),
 						_Utils_ap(
 							cmdsTop,
 							_Utils_ap(
 								_List_fromArray(
 									[
-										A2($terezka$charts$Internal$Commands$Move, firstBottom.bD, firstBottom.bk)
+										A2($terezka$charts$Internal$Commands$Move, firstBottom.bF, firstBottom.bm)
 									]),
 								_Utils_ap(
 									cmdsBottom,
 									_List_fromArray(
 										[
-											A2($terezka$charts$Internal$Commands$Line, endTop.bD, endTop.bk)
+											A2($terezka$charts$Internal$Commands$Line, endTop.bF, endTop.bm)
 										]))))));
 			});
 		var withoutUnder = function (_v4) {
@@ -33005,20 +33206,20 @@ var $terezka$charts$Internal$Svg$area = F6(
 				_Utils_ap(
 					_List_fromArray(
 						[
-							A2($terezka$charts$Internal$Commands$Move, first.bD, 0),
-							A2($terezka$charts$Internal$Commands$Line, first.bD, first.bk)
+							A2($terezka$charts$Internal$Commands$Move, first.bF, 0),
+							A2($terezka$charts$Internal$Commands$Line, first.bF, first.bm)
 						]),
 					_Utils_ap(
 						cmds,
 						_List_fromArray(
 							[
-								A2($terezka$charts$Internal$Commands$Line, end.bD, 0)
+								A2($terezka$charts$Internal$Commands$Line, end.bF, 0)
 							]))));
 		};
-		if (config.aJ <= 0) {
+		if (config.aK <= 0) {
 			return $elm$svg$Svg$text('');
 		} else {
-			var _v2 = config.hb;
+			var _v2 = config.hh;
 			if (_v2.$ === 1) {
 				return $elm$svg$Svg$text('');
 			} else {
@@ -33060,33 +33261,33 @@ var $terezka$charts$Internal$Svg$interpolation = F5(
 			var cmds = _v1.b;
 			return A4(
 				$terezka$charts$Internal$Svg$withAttrs,
-				config.d,
+				config.e,
 				$elm$svg$Svg$path,
 				_List_fromArray(
 					[
 						$elm$svg$Svg$Attributes$class('elm-charts__interpolation-section'),
 						$elm$svg$Svg$Attributes$fill('transparent'),
-						$elm$svg$Svg$Attributes$stroke(config.da),
+						$elm$svg$Svg$Attributes$stroke(config.db),
 						$elm$svg$Svg$Attributes$strokeDasharray(
 						A2(
 							$elm$core$String$join,
 							' ',
 							A2($elm$core$List$map, $elm$core$String$fromFloat, config.bb))),
 						$elm$svg$Svg$Attributes$strokeWidth(
-						$elm$core$String$fromFloat(config.eC)),
+						$elm$core$String$fromFloat(config.eG)),
 						$elm$svg$Svg$Attributes$d(
 						A2(
 							$terezka$charts$Internal$Commands$description,
 							plane,
 							A2(
 								$elm$core$List$cons,
-								A2($terezka$charts$Internal$Commands$Move, first.bD, first.bk),
+								A2($terezka$charts$Internal$Commands$Move, first.bF, first.bm),
 								cmds))),
 						$terezka$charts$Internal$Svg$withinChartArea(plane)
 					]),
 				_List_Nil);
 		};
-		var _v0 = config.hb;
+		var _v0 = config.hh;
 		if (_v0.$ === 1) {
 			return $elm$svg$Svg$text('');
 		} else {
@@ -33151,47 +33352,47 @@ var $terezka$charts$Internal$Produce$toDotSeries = F4(
 				var y_ = A2(
 					$elm$core$Maybe$withDefault,
 					0,
-					prop.c4(datum_));
+					prop.c5(datum_));
 				var x_ = toX(datum_);
 				var defaultAttrs = _List_fromArray(
 					[
-						$terezka$charts$Chart$Attributes$color(interConfig.da),
-						$terezka$charts$Chart$Attributes$border(interConfig.da),
-						_Utils_eq(interConfig.hb, $elm$core$Maybe$Nothing) ? $terezka$charts$Chart$Attributes$circle : $elm$core$Basics$identity
+						$terezka$charts$Chart$Attributes$color(interConfig.db),
+						$terezka$charts$Chart$Attributes$border(interConfig.db),
+						_Utils_eq(interConfig.hh, $elm$core$Maybe$Nothing) ? $terezka$charts$Chart$Attributes$circle : $elm$core$Basics$identity
 					]);
 				var dotAttrs = _Utils_ap(
 					defaultAttrs,
 					_Utils_ap(
-						prop.d,
-						A5(prop.gF, lineIndex, stackIndex, dataIndex, prop.fi, datum_)));
+						prop.e,
+						A5(prop.gM, lineIndex, stackIndex, dataIndex, prop.fn, datum_)));
 				var config = toDotConfig(dotAttrs);
 				return {
-					gt: {
-						hA: config,
-						iq: $terezka$charts$Internal$Item$Dot,
-						dE: {
+					gA: {
+						hF: config,
+						iv: $terezka$charts$Internal$Item$Dot,
+						dG: {
 							v: config.v,
 							C: config.C,
-							da: function () {
-								var _v6 = config.da;
+							db: function () {
+								var _v6 = config.db;
 								if (_v6 === 'white') {
-									return interConfig.da;
+									return interConfig.db;
 								} else {
-									return config.da;
+									return config.db;
 								}
 							}(),
-							bN: dataIndex,
-							gB: elIndex,
-							e$: prop.F(datum_),
-							d7: colorIndex,
-							fl: prop.fi,
-							hB: lineIndex,
+							bQ: dataIndex,
+							gI: elIndex,
+							e5: prop.F(datum_),
+							dq: colorIndex,
+							fr: prop.fn,
+							hG: lineIndex,
 							y: stackIndex
 						},
-						iE: {
-							gz: datum_,
-							g3: function () {
-								var _v7 = prop.ap(datum_);
+						iJ: {
+							gG: datum_,
+							ha: function () {
+								var _v7 = prop.aq(datum_);
 								if (!_v7.$) {
 									return true;
 								} else {
@@ -33199,39 +33400,39 @@ var $terezka$charts$Internal$Produce$toDotSeries = F4(
 								}
 							}(),
 							aQ: x_,
-							a3: x_,
-							bk: y_
+							a4: x_,
+							bm: y_
 						}
 					},
-					ir: function (c) {
+					iw: function (c) {
 						return _List_fromArray(
 							[
 								A3(
 								$terezka$charts$Internal$Produce$tooltipRow,
-								c.dE.da,
-								A2($terezka$charts$Internal$Produce$toDefaultName, colorIndex, c.dE.fl),
+								c.dG.db,
+								A2($terezka$charts$Internal$Produce$toDefaultName, colorIndex, c.dG.fr),
 								prop.F(datum_))
 							]);
 					},
-					is: function (_v8) {
-						return {aQ: x_, a3: x_, iL: y_, eH: y_};
+					ix: function (_v8) {
+						return {aQ: x_, a4: x_, iQ: y_, eL: y_};
 					},
-					iv: F2(
+					iA: F2(
 						function (plane, _v9) {
 							var radius = A2(
 								$elm$core$Maybe$withDefault,
 								0,
 								A2(
 									$elm$core$Maybe$map,
-									$terezka$charts$Internal$Svg$toRadius(config.fE),
-									config.ca));
+									$terezka$charts$Internal$Svg$toRadius(config.fM),
+									config.cb));
 							var radiusX_ = A2($terezka$charts$Internal$Coordinates$scaleCartesianX, plane, radius);
 							var radiusY_ = A2($terezka$charts$Internal$Coordinates$scaleCartesianY, plane, radius);
-							return {aQ: x_ - radiusX_, a3: x_ + radiusX_, iL: y_ - radiusY_, eH: y_ + radiusY_};
+							return {aQ: x_ - radiusX_, a4: x_ + radiusX_, iQ: y_ - radiusY_, eL: y_ + radiusY_};
 						}),
-					iw: F3(
+					iB: F3(
 						function (plane, _v10, _v11) {
-							var _v12 = prop.ap(datum_);
+							var _v12 = prop.aq(datum_);
 							if (_v12.$ === 1) {
 								return $elm$svg$Svg$text('');
 							} else {
@@ -33239,13 +33440,13 @@ var $terezka$charts$Internal$Produce$toDotSeries = F4(
 									$terezka$charts$Internal$Svg$dot,
 									plane,
 									function ($) {
-										return $.bD;
+										return $.bF;
 									},
 									function ($) {
-										return $.bk;
+										return $.bm;
 									},
 									config,
-									{bD: x_, bk: y_});
+									{bF: x_, bm: y_});
 							}
 						})
 				};
@@ -33260,7 +33461,7 @@ var $terezka$charts$Internal$Produce$toDotSeries = F4(
 							$terezka$charts$Internal$Helpers$toDefaultColor(colorIndex)),
 							$terezka$charts$Chart$Attributes$opacity(defaultOpacity)
 						]),
-					prop.g1);
+					prop.g8);
 				var interConfig = toInterConfig(interAttr);
 				var dotItems = A2(
 					$elm$core$List$indexedMap,
@@ -33273,10 +33474,10 @@ var $terezka$charts$Internal$Produce$toDotSeries = F4(
 					var rest = dotItems.b;
 					return $elm$core$Maybe$Just(
 						{
-							gt: {
-								Z: _Utils_Tuple2(first, rest)
+							gA: {
+								aa: _Utils_Tuple2(first, rest)
 							},
-							ir: function (c) {
+							iw: function (c) {
 								return _List_fromArray(
 									[
 										A2(
@@ -33292,10 +33493,10 @@ var $terezka$charts$Internal$Produce$toDotSeries = F4(
 												var x = _v1.a;
 												var xs = _v1.b;
 												return A2($elm$core$List$cons, x, xs);
-											}(c.Z)))
+											}(c.aa)))
 									]);
 							},
-							is: function (c) {
+							ix: function (c) {
 								return A2(
 									$terezka$charts$Internal$Coordinates$foldPosition,
 									$terezka$charts$Internal$Item$getLimits,
@@ -33303,9 +33504,9 @@ var $terezka$charts$Internal$Produce$toDotSeries = F4(
 										var x = _v2.a;
 										var xs = _v2.b;
 										return A2($elm$core$List$cons, x, xs);
-									}(c.Z));
+									}(c.aa));
 							},
-							iv: F2(
+							iA: F2(
 								function (plane, c) {
 									return A2(
 										$terezka$charts$Internal$Coordinates$foldPosition,
@@ -33314,9 +33515,9 @@ var $terezka$charts$Internal$Produce$toDotSeries = F4(
 											var x = _v3.a;
 											var xs = _v3.b;
 											return A2($elm$core$List$cons, x, xs);
-										}(c.Z));
+										}(c.aa));
 								}),
-							iw: F3(
+							iB: F3(
 								function (plane, _v4, _v5) {
 									var toBottom = function (datum_) {
 										return A3(
@@ -33325,8 +33526,8 @@ var $terezka$charts$Internal$Produce$toDotSeries = F4(
 												function (real, visual) {
 													return visual - real;
 												}),
-											prop.ap(datum_),
-											prop.c4(datum_));
+											prop.aq(datum_),
+											prop.c5(datum_));
 									};
 									return A2(
 										$elm$svg$Svg$g,
@@ -33341,10 +33542,10 @@ var $terezka$charts$Internal$Produce$toDotSeries = F4(
 												plane,
 												toX,
 												$elm$core$Maybe$Just(toBottom),
-												prop.c4,
+												prop.c5,
 												interConfig,
 												data),
-												A5($terezka$charts$Internal$Svg$interpolation, plane, toX, prop.c4, interConfig, data),
+												A5($terezka$charts$Internal$Svg$interpolation, plane, toX, prop.c5, interConfig, data),
 												A2(
 												$elm$svg$Svg$g,
 												_List_fromArray(
@@ -33424,14 +33625,14 @@ var $terezka$charts$Chart$series = F3(
 var $terezka$charts$Chart$Attributes$withGrid = function (config) {
 	return _Utils_update(
 		config,
-		{gK: true});
+		{gR: true});
 };
 var $terezka$charts$Internal$Svg$Floats = {$: 0};
 var $terezka$charts$Chart$LabelsElement = F3(
 	function (a, b, c) {
 		return {$: 7, a: a, b: b, c: c};
 	});
-var $terezka$charts$Internal$Svg$defaultLabel = {m: $elm$core$Maybe$Nothing, d: _List_Nil, v: 'white', C: 0, da: '#808BAB', n: $elm$core$Maybe$Nothing, o: $elm$core$Maybe$Nothing, p: false, q: 0, r: false, i: 0, j: 0};
+var $terezka$charts$Internal$Svg$defaultLabel = {m: $elm$core$Maybe$Nothing, e: _List_Nil, v: 'white', C: 0, db: '#808BAB', n: $elm$core$Maybe$Nothing, o: $elm$core$Maybe$Nothing, p: false, q: 0, r: false, i: 0, j: 0};
 var $terezka$charts$Internal$Svg$Generator = $elm$core$Basics$identity;
 var $terezka$intervals$Intervals$Around = function (a) {
 	return {$: 1, a: a};
@@ -33783,7 +33984,7 @@ var $terezka$intervals$Intervals$positions = F5(
 				$terezka$intervals$Intervals$correctFloat,
 				$terezka$intervals$Intervals$getPrecision(interval),
 				beginning + (m * interval));
-			if (_Utils_cmp(nextPosition, range.fh) > 0) {
+			if (_Utils_cmp(nextPosition, range.fm) > 0) {
 				return acc;
 			} else {
 				var $temp$range = range,
@@ -33805,10 +34006,10 @@ var $terezka$intervals$Intervals$positions = F5(
 	});
 var $terezka$intervals$Intervals$values = F4(
 	function (allowDecimals, exact, amountRough, range) {
-		var intervalRough = (range.fh - range.ed) / amountRough;
+		var intervalRough = (range.fm - range.eh) / amountRough;
 		var interval = A3($terezka$intervals$Intervals$getInterval, intervalRough, allowDecimals, exact);
 		var intervalSafe = (!interval) ? 1 : interval;
-		var beginning = A2($terezka$intervals$Intervals$getBeginning, range.ed, intervalSafe);
+		var beginning = A2($terezka$intervals$Intervals$getBeginning, range.eh, intervalSafe);
 		var amountRoughSafe = (!amountRough) ? 1 : amountRough;
 		return A5($terezka$intervals$Intervals$positions, range, beginning, intervalSafe, 0, _List_Nil);
 	});
@@ -33826,12 +34027,12 @@ var $terezka$charts$Internal$Svg$floats = F2(
 		return A2(
 			$terezka$intervals$Intervals$floats,
 			$terezka$intervals$Intervals$around(i),
-			{fh: b.fh, ed: b.ed});
+			{fm: b.fm, eh: b.eh});
 	});
 var $terezka$charts$Chart$Svg$floats = $terezka$charts$Internal$Svg$floats;
 var $ryannhg$date_format$DateFormat$Language$Language = F6(
 	function (toMonthName, toMonthAbbreviation, toWeekdayName, toWeekdayAbbreviation, toAmPm, toOrdinalSuffix) {
-		return {ip: toAmPm, it: toMonthAbbreviation, iu: toMonthName, ce: toOrdinalSuffix, ix: toWeekdayAbbreviation, iy: toWeekdayName};
+		return {iu: toAmPm, iy: toMonthAbbreviation, iz: toMonthName, cf: toOrdinalSuffix, iC: toWeekdayAbbreviation, iD: toWeekdayName};
 	});
 var $ryannhg$date_format$DateFormat$Language$toEnglishAmPm = function (hour) {
 	return (hour > 11) ? 'pm' : 'am';
@@ -33936,7 +34137,7 @@ var $elm$time$Time$toAdjustedMinutesHelp = F3(
 			} else {
 				var era = eras.a;
 				var olderEras = eras.b;
-				if (_Utils_cmp(era.hX, posixMinutes) < 0) {
+				if (_Utils_cmp(era.h0, posixMinutes) < 0) {
 					return posixMinutes + era.b;
 				} else {
 					var $temp$defaultOffset = defaultOffset,
@@ -33975,7 +34176,7 @@ var $elm$time$Time$toHour = F2(
 	});
 var $ryannhg$date_format$DateFormat$amPm = F3(
 	function (language, zone, posix) {
-		return language.ip(
+		return language.iu(
 			A2($elm$time$Time$toHour, zone, posix));
 	});
 var $elm$time$Time$toCivil = function (minutes) {
@@ -33988,15 +34189,15 @@ var $elm$time$Time$toCivil = function (minutes) {
 	var month = mp + ((mp < 10) ? 3 : (-9));
 	var year = yearOfEra + (era * 400);
 	return {
-		eT: (dayOfYear - ((((153 * mp) + 2) / 5) | 0)) + 1,
-		fj: month,
-		fV: year + ((month <= 2) ? 1 : 0)
+		eY: (dayOfYear - ((((153 * mp) + 2) / 5) | 0)) + 1,
+		fp: month,
+		f1: year + ((month <= 2) ? 1 : 0)
 	};
 };
 var $elm$time$Time$toDay = F2(
 	function (zone, time) {
 		return $elm$time$Time$toCivil(
-			A2($elm$time$Time$toAdjustedMinutes, zone, time)).eT;
+			A2($elm$time$Time$toAdjustedMinutes, zone, time)).eY;
 	});
 var $ryannhg$date_format$DateFormat$dayOfMonth = $elm$time$Time$toDay;
 var $elm$time$Time$Sun = 6;
@@ -34109,7 +34310,7 @@ var $ryannhg$date_format$DateFormat$months = _List_fromArray(
 var $elm$time$Time$toMonth = F2(
 	function (zone, time) {
 		var _v0 = $elm$time$Time$toCivil(
-			A2($elm$time$Time$toAdjustedMinutes, zone, time)).fj;
+			A2($elm$time$Time$toAdjustedMinutes, zone, time)).fp;
 		switch (_v0) {
 			case 1:
 				return 0;
@@ -34172,7 +34373,7 @@ var $ryannhg$date_format$DateFormat$monthNumber_ = F2(
 var $elm$time$Time$toYear = F2(
 	function (zone, time) {
 		return $elm$time$Time$toCivil(
-			A2($elm$time$Time$toAdjustedMinutes, zone, time)).fV;
+			A2($elm$time$Time$toAdjustedMinutes, zone, time)).f1;
 	});
 var $ryannhg$date_format$DateFormat$dayOfYear = F2(
 	function (zone, posix) {
@@ -34265,7 +34466,7 @@ var $ryannhg$date_format$DateFormat$piece = F4(
 				return function (num) {
 					return _Utils_ap(
 						$elm$core$String$fromInt(num),
-						language.ce(num));
+						language.cf(num));
 				}(
 					A2($ryannhg$date_format$DateFormat$monthNumber_, zone, posix));
 			case 2:
@@ -34274,10 +34475,10 @@ var $ryannhg$date_format$DateFormat$piece = F4(
 					2,
 					A2($ryannhg$date_format$DateFormat$monthNumber_, zone, posix));
 			case 3:
-				return language.it(
+				return language.iy(
 					A2($elm$time$Time$toMonth, zone, posix));
 			case 4:
-				return language.iu(
+				return language.iz(
 					A2($elm$time$Time$toMonth, zone, posix));
 			case 17:
 				return $elm$core$String$fromInt(
@@ -34286,7 +34487,7 @@ var $ryannhg$date_format$DateFormat$piece = F4(
 				return function (num) {
 					return _Utils_ap(
 						$elm$core$String$fromInt(num),
-						language.ce(num));
+						language.cf(num));
 				}(
 					1 + A2($ryannhg$date_format$DateFormat$quarter, zone, posix));
 			case 5:
@@ -34296,7 +34497,7 @@ var $ryannhg$date_format$DateFormat$piece = F4(
 				return function (num) {
 					return _Utils_ap(
 						$elm$core$String$fromInt(num),
-						language.ce(num));
+						language.cf(num));
 				}(
 					A2($ryannhg$date_format$DateFormat$dayOfMonth, zone, posix));
 			case 7:
@@ -34311,7 +34512,7 @@ var $ryannhg$date_format$DateFormat$piece = F4(
 				return function (num) {
 					return _Utils_ap(
 						$elm$core$String$fromInt(num),
-						language.ce(num));
+						language.cf(num));
 				}(
 					A2($ryannhg$date_format$DateFormat$dayOfYear, zone, posix));
 			case 10:
@@ -34326,14 +34527,14 @@ var $ryannhg$date_format$DateFormat$piece = F4(
 				return function (num) {
 					return _Utils_ap(
 						$elm$core$String$fromInt(num),
-						language.ce(num));
+						language.cf(num));
 				}(
 					A2($ryannhg$date_format$DateFormat$dayOfWeek, zone, posix));
 			case 13:
-				return language.ix(
+				return language.iC(
 					A2($elm$time$Time$toWeekday, zone, posix));
 			case 14:
-				return language.iy(
+				return language.iD(
 					A2($elm$time$Time$toWeekday, zone, posix));
 			case 19:
 				return $elm$core$String$fromInt(
@@ -34342,7 +34543,7 @@ var $ryannhg$date_format$DateFormat$piece = F4(
 				return function (num) {
 					return _Utils_ap(
 						$elm$core$String$fromInt(num),
-						language.ce(num));
+						language.cf(num));
 				}(
 					A2($ryannhg$date_format$DateFormat$weekOfYear, zone, posix));
 			case 21:
@@ -34496,22 +34697,22 @@ var $terezka$charts$Internal$Svg$formatYear = $ryannhg$date_format$DateFormat$fo
 		[$ryannhg$date_format$DateFormat$yearNumber]));
 var $terezka$charts$Internal$Svg$formatTime = F2(
 	function (zone, time) {
-		var _v0 = A2($elm$core$Maybe$withDefault, time.iC, time.gn);
+		var _v0 = A2($elm$core$Maybe$withDefault, time.iH, time.gv);
 		switch (_v0) {
 			case 0:
-				return A2($terezka$charts$Internal$Svg$formatClockMillis, zone, time.io);
+				return A2($terezka$charts$Internal$Svg$formatClockMillis, zone, time.it);
 			case 1:
-				return A2($terezka$charts$Internal$Svg$formatClockSecond, zone, time.io);
+				return A2($terezka$charts$Internal$Svg$formatClockSecond, zone, time.it);
 			case 2:
-				return A2($terezka$charts$Internal$Svg$formatClock, zone, time.io);
+				return A2($terezka$charts$Internal$Svg$formatClock, zone, time.it);
 			case 3:
-				return A2($terezka$charts$Internal$Svg$formatClock, zone, time.io);
+				return A2($terezka$charts$Internal$Svg$formatClock, zone, time.it);
 			case 4:
-				return (time.hf === 7) ? A2($terezka$charts$Internal$Svg$formatWeekday, zone, time.io) : A2($terezka$charts$Internal$Svg$formatDate, zone, time.io);
+				return (time.hk === 7) ? A2($terezka$charts$Internal$Svg$formatWeekday, zone, time.it) : A2($terezka$charts$Internal$Svg$formatDate, zone, time.it);
 			case 5:
-				return A2($terezka$charts$Internal$Svg$formatMonth, zone, time.io);
+				return A2($terezka$charts$Internal$Svg$formatMonth, zone, time.it);
 			default:
-				return A2($terezka$charts$Internal$Svg$formatYear, zone, time.io);
+				return A2($terezka$charts$Internal$Svg$formatYear, zone, time.it);
 		}
 	});
 var $terezka$charts$Chart$Svg$formatTime = $terezka$charts$Internal$Svg$formatTime;
@@ -34541,7 +34742,7 @@ var $terezka$charts$Internal$Svg$ints = F2(
 		return A2(
 			$terezka$intervals$Intervals$ints,
 			$terezka$intervals$Intervals$around(i),
-			{fh: b.fh, ed: b.ed});
+			{fm: b.fm, eh: b.eh});
 	});
 var $terezka$charts$Chart$Svg$ints = $terezka$charts$Internal$Svg$ints;
 var $terezka$intervals$Intervals$Day = 4;
@@ -34700,7 +34901,7 @@ var $justinmimbs$date$Date$toCalendarDateHelp = F3(
 				d = $temp$d;
 				continue toCalendarDateHelp;
 			} else {
-				return {eT: d, fj: m, fV: y};
+				return {eY: d, fp: m, f1: y};
 			}
 		}
 	});
@@ -34731,14 +34932,14 @@ var $justinmimbs$date$Date$toOrdinalDate = function (_v0) {
 	var rd = _v0;
 	var y = $justinmimbs$date$Date$year(rd);
 	return {
-		ei: rd - $justinmimbs$date$Date$daysBeforeYear(y),
-		fV: y
+		em: rd - $justinmimbs$date$Date$daysBeforeYear(y),
+		f1: y
 	};
 };
 var $justinmimbs$date$Date$toCalendarDate = function (_v0) {
 	var rd = _v0;
 	var date = $justinmimbs$date$Date$toOrdinalDate(rd);
-	return A3($justinmimbs$date$Date$toCalendarDateHelp, date.fV, 0, date.ei);
+	return A3($justinmimbs$date$Date$toCalendarDateHelp, date.f1, 0, date.em);
 };
 var $justinmimbs$date$Date$add = F3(
 	function (unit, n, _v0) {
@@ -34748,13 +34949,13 @@ var $justinmimbs$date$Date$add = F3(
 				return A3($justinmimbs$date$Date$add, 1, 12 * n, rd);
 			case 1:
 				var date = $justinmimbs$date$Date$toCalendarDate(rd);
-				var wholeMonths = ((12 * (date.fV - 1)) + ($justinmimbs$date$Date$monthToNumber(date.fj) - 1)) + n;
+				var wholeMonths = ((12 * (date.f1 - 1)) + ($justinmimbs$date$Date$monthToNumber(date.fp) - 1)) + n;
 				var m = $justinmimbs$date$Date$numberToMonth(
 					A2($elm$core$Basics$modBy, 12, wholeMonths) + 1);
 				var y = A2($justinmimbs$date$Date$floorDiv, wholeMonths, 12) + 1;
 				return ($justinmimbs$date$Date$daysBeforeYear(y) + A2($justinmimbs$date$Date$daysBeforeMonth, y, m)) + A2(
 					$elm$core$Basics$min,
-					date.eT,
+					date.eY,
 					A2($justinmimbs$date$Date$daysInMonth, y, m));
 			case 2:
 				return rd + (7 * n);
@@ -34984,7 +35185,7 @@ var $justinmimbs$date$Date$month = A2(
 	$elm$core$Basics$composeR,
 	$justinmimbs$date$Date$toCalendarDate,
 	function ($) {
-		return $.fj;
+		return $.fp;
 	});
 var $justinmimbs$date$Date$monthToQuarter = function (m) {
 	return (($justinmimbs$date$Date$monthToNumber(m) + 2) / 3) | 0;
@@ -35118,13 +35319,13 @@ var $terezka$intervals$Intervals$Time$ceilingDay = F3(
 var $justinmimbs$time_extra$Time$Extra$Hour = 12;
 var $justinmimbs$time_extra$Time$Extra$partsToPosix = F2(
 	function (zone, _v0) {
-		var year = _v0.fV;
-		var month = _v0.fj;
-		var day = _v0.eT;
-		var hour = _v0.d5;
-		var minute = _v0.ee;
-		var second = _v0.fz;
-		var millisecond = _v0.ec;
+		var year = _v0.f1;
+		var month = _v0.fp;
+		var day = _v0.eY;
+		var hour = _v0.d8;
+		var minute = _v0.ei;
+		var second = _v0.fG;
+		var millisecond = _v0.eg;
 		return A3(
 			$justinmimbs$time_extra$Time$Extra$posixFromDateTime,
 			zone,
@@ -35139,13 +35340,13 @@ var $justinmimbs$time_extra$Time$Extra$partsToPosix = F2(
 var $justinmimbs$time_extra$Time$Extra$posixToParts = F2(
 	function (zone, posix) {
 		return {
-			eT: A2($elm$time$Time$toDay, zone, posix),
-			d5: A2($elm$time$Time$toHour, zone, posix),
-			ec: A2($elm$time$Time$toMillis, zone, posix),
-			ee: A2($elm$time$Time$toMinute, zone, posix),
-			fj: A2($elm$time$Time$toMonth, zone, posix),
-			fz: A2($elm$time$Time$toSecond, zone, posix),
-			fV: A2($elm$time$Time$toYear, zone, posix)
+			eY: A2($elm$time$Time$toDay, zone, posix),
+			d8: A2($elm$time$Time$toHour, zone, posix),
+			eg: A2($elm$time$Time$toMillis, zone, posix),
+			ei: A2($elm$time$Time$toMinute, zone, posix),
+			fp: A2($elm$time$Time$toMonth, zone, posix),
+			fG: A2($elm$time$Time$toSecond, zone, posix),
+			f1: A2($elm$time$Time$toYear, zone, posix)
 		};
 	});
 var $terezka$intervals$Intervals$Time$ceilingHour = F3(
@@ -35154,7 +35355,7 @@ var $terezka$intervals$Intervals$Time$ceilingHour = F3(
 			$justinmimbs$time_extra$Time$Extra$posixToParts,
 			zone,
 			A3($justinmimbs$time_extra$Time$Extra$ceiling, 12, zone, stamp));
-		var rem = parts.d5 % mult;
+		var rem = parts.d8 % mult;
 		var _new = A2($justinmimbs$time_extra$Time$Extra$partsToPosix, zone, parts);
 		return (!rem) ? _new : A4($justinmimbs$time_extra$Time$Extra$add, 12, mult - rem, zone, _new);
 	});
@@ -35165,7 +35366,7 @@ var $terezka$intervals$Intervals$Time$ceilingMinute = F3(
 			$justinmimbs$time_extra$Time$Extra$posixToParts,
 			zone,
 			A3($justinmimbs$time_extra$Time$Extra$ceiling, 13, zone, stamp));
-		var rem = parts.ee % mult;
+		var rem = parts.ei % mult;
 		var _new = A2($justinmimbs$time_extra$Time$Extra$partsToPosix, zone, parts);
 		return (!rem) ? _new : A4($justinmimbs$time_extra$Time$Extra$add, 13, mult - rem, zone, _new);
 	});
@@ -35233,7 +35434,7 @@ var $terezka$intervals$Intervals$Time$ceilingMonth = F3(
 			$justinmimbs$time_extra$Time$Extra$posixToParts,
 			zone,
 			A3($justinmimbs$time_extra$Time$Extra$ceiling, 2, zone, stamp));
-		var monthInt = $terezka$intervals$Intervals$Time$monthAsInt(parts.fj);
+		var monthInt = $terezka$intervals$Intervals$Time$monthAsInt(parts.fp);
 		var rem = (monthInt - 1) % mult;
 		var newMonth = (!rem) ? monthInt : ((monthInt - rem) + mult);
 		return A2(
@@ -35242,18 +35443,18 @@ var $terezka$intervals$Intervals$Time$ceilingMonth = F3(
 			(newMonth > 12) ? _Utils_update(
 				parts,
 				{
-					fj: $terezka$intervals$Intervals$Time$intAsMonth(newMonth - 12),
-					fV: parts.fV + 1
+					fp: $terezka$intervals$Intervals$Time$intAsMonth(newMonth - 12),
+					f1: parts.f1 + 1
 				}) : _Utils_update(
 				parts,
 				{
-					fj: $terezka$intervals$Intervals$Time$intAsMonth(newMonth)
+					fp: $terezka$intervals$Intervals$Time$intAsMonth(newMonth)
 				}));
 	});
 var $terezka$intervals$Intervals$Time$ceilingMs = F3(
 	function (zone, mult, stamp) {
 		var parts = A2($justinmimbs$time_extra$Time$Extra$posixToParts, zone, stamp);
-		var rem = parts.ec % mult;
+		var rem = parts.eg % mult;
 		return (!rem) ? A2($justinmimbs$time_extra$Time$Extra$partsToPosix, zone, parts) : A4($justinmimbs$time_extra$Time$Extra$add, 15, mult - rem, zone, stamp);
 	});
 var $justinmimbs$time_extra$Time$Extra$Second = 14;
@@ -35263,7 +35464,7 @@ var $terezka$intervals$Intervals$Time$ceilingSecond = F3(
 			$justinmimbs$time_extra$Time$Extra$posixToParts,
 			zone,
 			A3($justinmimbs$time_extra$Time$Extra$ceiling, 14, zone, stamp));
-		var rem = parts.fz % mult;
+		var rem = parts.fG % mult;
 		var _new = A2($justinmimbs$time_extra$Time$Extra$partsToPosix, zone, parts);
 		return (!rem) ? _new : A4($justinmimbs$time_extra$Time$Extra$add, 14, mult - rem, zone, _new);
 	});
@@ -35274,14 +35475,14 @@ var $terezka$intervals$Intervals$Time$ceilingYear = F3(
 			$justinmimbs$time_extra$Time$Extra$posixToParts,
 			zone,
 			A3($justinmimbs$time_extra$Time$Extra$ceiling, 0, zone, stamp));
-		var rem = parts.fV % mult;
-		var newYear = (!rem) ? parts.fV : ((parts.fV - rem) + mult);
+		var rem = parts.f1 % mult;
+		var newYear = (!rem) ? parts.f1 : ((parts.f1 - rem) + mult);
 		return A2(
 			$justinmimbs$time_extra$Time$Extra$partsToPosix,
 			zone,
 			_Utils_update(
 				parts,
-				{fV: newYear}));
+				{f1: newYear}));
 	});
 var $terezka$intervals$Intervals$Time$ceilingUnit = F3(
 	function (zone, unit, mult) {
@@ -35313,7 +35514,7 @@ var $terezka$intervals$Intervals$Time$getChange = F3(
 	function (zone, a, b) {
 		var bP = A2($justinmimbs$time_extra$Time$Extra$posixToParts, zone, b);
 		var aP = A2($justinmimbs$time_extra$Time$Extra$posixToParts, zone, a);
-		return (!_Utils_eq(aP.fV, bP.fV)) ? 6 : ((!_Utils_eq(aP.fj, bP.fj)) ? 5 : ((!_Utils_eq(aP.eT, bP.eT)) ? 4 : ((!_Utils_eq(aP.d5, bP.d5)) ? 3 : ((!_Utils_eq(aP.ee, bP.ee)) ? 2 : ((!_Utils_eq(aP.fz, bP.fz)) ? 1 : 0)))));
+		return (!_Utils_eq(aP.f1, bP.f1)) ? 6 : ((!_Utils_eq(aP.fp, bP.fp)) ? 5 : ((!_Utils_eq(aP.eY, bP.eY)) ? 4 : ((!_Utils_eq(aP.d8, bP.d8)) ? 3 : ((!_Utils_eq(aP.ei, bP.ei)) ? 2 : ((!_Utils_eq(aP.fG, bP.fG)) ? 1 : 0)))));
 	});
 var $danhandrea$elm_time_extra$Util$isLeapYear = function (year) {
 	return (!A2($elm$core$Basics$modBy, 400, year)) || ((!(!A2($elm$core$Basics$modBy, 100, year))) && (!A2($elm$core$Basics$modBy, 4, year)));
@@ -35360,21 +35561,21 @@ var $terezka$intervals$Intervals$Time$getDiff = F3(
 			A2($justinmimbs$time_extra$Time$Extra$posixToParts, zone, a));
 		var aP = _v0.a;
 		var bP = _v0.b;
-		var dMsX = bP.ec - aP.ec;
+		var dMsX = bP.eg - aP.eg;
 		var dMs = (dMsX < 0) ? (1000 + dMsX) : dMsX;
-		var dSecondX = (bP.fz - aP.fz) + ((dMsX < 0) ? (-1) : 0);
-		var dMinuteX = (bP.ee - aP.ee) + ((dSecondX < 0) ? (-1) : 0);
-		var dHourX = (bP.d5 - aP.d5) + ((dMinuteX < 0) ? (-1) : 0);
-		var dDayX = (bP.eT - aP.eT) + ((dHourX < 0) ? (-1) : 0);
-		var dDay = (dDayX < 0) ? (A2($danhandrea$elm_time_extra$TimeExtra$daysInMonth, bP.fV, bP.fj) + dDayX) : dDayX;
-		var dMonthX = ($terezka$intervals$Intervals$Time$monthAsInt(bP.fj) - $terezka$intervals$Intervals$Time$monthAsInt(aP.fj)) + ((dDayX < 0) ? (-1) : 0);
+		var dSecondX = (bP.fG - aP.fG) + ((dMsX < 0) ? (-1) : 0);
+		var dMinuteX = (bP.ei - aP.ei) + ((dSecondX < 0) ? (-1) : 0);
+		var dHourX = (bP.d8 - aP.d8) + ((dMinuteX < 0) ? (-1) : 0);
+		var dDayX = (bP.eY - aP.eY) + ((dHourX < 0) ? (-1) : 0);
+		var dDay = (dDayX < 0) ? (A2($danhandrea$elm_time_extra$TimeExtra$daysInMonth, bP.f1, bP.fp) + dDayX) : dDayX;
+		var dMonthX = ($terezka$intervals$Intervals$Time$monthAsInt(bP.fp) - $terezka$intervals$Intervals$Time$monthAsInt(aP.fp)) + ((dDayX < 0) ? (-1) : 0);
 		var dMonth = (dMonthX < 0) ? (12 + dMonthX) : dMonthX;
 		var dHour = (dHourX < 0) ? (24 + dHourX) : dHourX;
 		var dMinute = (dMinuteX < 0) ? (60 + dMinuteX) : dMinuteX;
 		var dSecond = (dSecondX < 0) ? (60 + dSecondX) : dSecondX;
-		var dYearX = (bP.fV - aP.fV) + ((dMonthX < 0) ? (-1) : 0);
-		var dYear = (dYearX < 0) ? ($terezka$intervals$Intervals$Time$monthAsInt(bP.fj) + dYearX) : dYearX;
-		return {eT: dDay, d5: dHour, ec: dMs, ee: dMinute, fj: dMonth, fz: dSecond, fV: dYear};
+		var dYearX = (bP.f1 - aP.f1) + ((dMonthX < 0) ? (-1) : 0);
+		var dYear = (dYearX < 0) ? ($terezka$intervals$Intervals$Time$monthAsInt(bP.fp) + dYearX) : dYearX;
+		return {eY: dDay, d8: dHour, eg: dMs, ei: dMinute, fp: dMonth, fG: dSecond, f1: dYear};
 	});
 var $terezka$intervals$Intervals$Time$oneSecond = 1000;
 var $terezka$intervals$Intervals$Time$oneMinute = $terezka$intervals$Intervals$Time$oneSecond * 60;
@@ -35423,12 +35624,12 @@ var $terezka$intervals$Intervals$Time$getNumOfTicks = F5(
 			case 5:
 				return diff(
 					function (d) {
-						return d.fj + (d.fV * 12);
+						return d.fp + (d.f1 * 12);
 					}) + 1;
 			default:
 				return diff(
 					function ($) {
-						return $.fV;
+						return $.f1;
 					}) + 1;
 		}
 	});
@@ -35559,14 +35760,14 @@ var $terezka$intervals$Intervals$Time$values = F4(
 		var toTick = F3(
 			function (x, timestamp, change) {
 				return {
-					gn: (_Utils_cmp(
+					gv: (_Utils_cmp(
 						$terezka$intervals$Intervals$Time$unitToInt(change),
 						$terezka$intervals$Intervals$Time$unitToInt(unit)) > 0) ? $elm$core$Maybe$Just(change) : $elm$core$Maybe$Nothing,
-					br: !x,
-					hf: mult,
-					io: timestamp,
-					iC: unit,
-					bE: zone
+					bt: !x,
+					hk: mult,
+					it: timestamp,
+					iH: unit,
+					bG: zone
 				};
 			});
 		var toTicks = F2(
@@ -35620,12 +35821,12 @@ var $terezka$intervals$Intervals$times = F3(
 		};
 		var translateUnit = function (time) {
 			return {
-				gn: A2($elm$core$Maybe$map, toUnit, time.gn),
-				br: time.br,
-				hf: time.hf,
-				io: time.io,
-				iC: toUnit(time.iC),
-				bE: time.bE
+				gv: A2($elm$core$Maybe$map, toUnit, time.gv),
+				bt: time.bt,
+				hk: time.hk,
+				it: time.it,
+				iH: toUnit(time.iH),
+				bG: time.bG
 			};
 		};
 		var fromMs = function (ts) {
@@ -35639,8 +35840,8 @@ var $terezka$intervals$Intervals$times = F3(
 				$terezka$intervals$Intervals$Time$values,
 				zone,
 				amount,
-				fromMs(range.ed),
-				fromMs(range.fh)));
+				fromMs(range.eh),
+				fromMs(range.fm)));
 	});
 var $terezka$charts$Internal$Svg$times = function (zone) {
 	return F2(
@@ -35649,7 +35850,7 @@ var $terezka$charts$Internal$Svg$times = function (zone) {
 				$terezka$intervals$Intervals$times,
 				zone,
 				i,
-				{fh: b.fh, ed: b.ed});
+				{fm: b.fm, eh: b.eh});
 		});
 };
 var $terezka$charts$Chart$Svg$times = $terezka$charts$Internal$Svg$times;
@@ -35660,7 +35861,7 @@ var $terezka$charts$Chart$generateValues = F4(
 				return $elm$core$List$map(
 					function (i) {
 						return {
-							g6: function () {
+							hd: function () {
 								if (!maybeFormat.$) {
 									var formatter = maybeFormat.a;
 									return formatter(
@@ -35669,7 +35870,7 @@ var $terezka$charts$Chart$generateValues = F4(
 									return toString(i);
 								}
 							}(),
-							ap: toValue(i)
+							aq: toValue(i)
 						};
 					});
 			});
@@ -35694,7 +35895,7 @@ var $terezka$charts$Chart$generateValues = F4(
 						$elm$core$Basics$composeL,
 						A2($elm$core$Basics$composeL, $elm$core$Basics$toFloat, $elm$time$Time$posixToMillis),
 						function ($) {
-							return $.io;
+							return $.it;
 						}),
 					$terezka$charts$Chart$Svg$formatTime(zone),
 					A3(
@@ -35759,7 +35960,7 @@ var $terezka$charts$Internal$Svg$label = F4(
 			return withOverflowWrap(
 				A4(
 					$terezka$charts$Internal$Svg$withAttrs,
-					config.d,
+					config.e,
 					$elm$svg$Svg$text_,
 					_List_fromArray(
 						[
@@ -35767,8 +35968,8 @@ var $terezka$charts$Internal$Svg$label = F4(
 							$elm$svg$Svg$Attributes$stroke(config.v),
 							$elm$svg$Svg$Attributes$strokeWidth(
 							$elm$core$String$fromFloat(config.C)),
-							$elm$svg$Svg$Attributes$fill(config.da),
-							A6($terezka$charts$Internal$Svg$position, plane, -config.q, point.bD, point.bk, config.i, config.j),
+							$elm$svg$Svg$Attributes$fill(config.db),
+							A6($terezka$charts$Internal$Svg$position, plane, -config.q, point.bF, point.bm, config.i, config.j),
 							$elm$svg$Svg$Attributes$style(
 							A2(
 								$elm$core$String$join,
@@ -35785,18 +35986,18 @@ var $terezka$charts$Internal$Svg$label = F4(
 			var xOffWithAnchor = function () {
 				var _v11 = config.m;
 				if (_v11.$ === 1) {
-					return config.i - (ellipsis.eC / 2);
+					return config.i - (ellipsis.eG / 2);
 				} else {
 					switch (_v11.a) {
 						case 0:
 							var _v12 = _v11.a;
-							return config.i - ellipsis.eC;
+							return config.i - ellipsis.eG;
 						case 1:
 							var _v13 = _v11.a;
 							return config.i;
 						default:
 							var _v14 = _v11.a;
-							return config.i - (ellipsis.eC / 2);
+							return config.i - (ellipsis.eG / 2);
 					}
 				}
 			}();
@@ -35844,17 +36045,17 @@ var $terezka$charts$Internal$Svg$label = F4(
 			return withOverflowWrap(
 				A4(
 					$terezka$charts$Internal$Svg$withAttrs,
-					config.d,
+					config.e,
 					$elm$svg$Svg$foreignObject,
 					_List_fromArray(
 						[
 							$elm$svg$Svg$Attributes$class('elm-charts__label'),
 							$elm$svg$Svg$Attributes$class('elm-charts__html-label'),
 							$elm$svg$Svg$Attributes$width(
-							$elm$core$String$fromFloat(ellipsis.eC)),
+							$elm$core$String$fromFloat(ellipsis.eG)),
 							$elm$svg$Svg$Attributes$height(
-							$elm$core$String$fromFloat(ellipsis.e4)),
-							A6($terezka$charts$Internal$Svg$position, plane, -config.q, point.bD, point.bk, xOffWithAnchor, config.j - 10)
+							$elm$core$String$fromFloat(ellipsis.fa)),
+							A6($terezka$charts$Internal$Svg$position, plane, -config.q, point.bF, point.bm, xOffWithAnchor, config.j - 10)
 						]),
 					_List_fromArray(
 						[
@@ -35868,7 +36069,7 @@ var $terezka$charts$Internal$Svg$label = F4(
 									A2($elm$html$Html$Attributes$style, 'text-overflow', 'ellipsis'),
 									A2($elm$html$Html$Attributes$style, 'height', '100%'),
 									A2($elm$html$Html$Attributes$style, 'pointer-events', 'none'),
-									A2($elm$html$Html$Attributes$style, 'color', config.da),
+									A2($elm$html$Html$Attributes$style, 'color', config.db),
 									fontStyle,
 									uppercaseStyle,
 									anchorStyle
@@ -35878,15 +36079,15 @@ var $terezka$charts$Internal$Svg$label = F4(
 		}
 	});
 var $terezka$charts$Chart$Attributes$zero = function (b) {
-	return A3($elm$core$Basics$clamp, b.ed, b.fh, 0);
+	return A3($elm$core$Basics$clamp, b.eh, b.fm, 0);
 };
 var $terezka$charts$Chart$xLabels = function (edits) {
 	var toTicks = F2(
 		function (p, config) {
 			return A4(
 				$terezka$charts$Chart$generateValues,
-				config.K,
 				config.L,
+				config.N,
 				config.F,
 				A3(
 					$elm$core$List$foldl,
@@ -35894,20 +36095,20 @@ var $terezka$charts$Chart$xLabels = function (edits) {
 						function (f, x) {
 							return f(x);
 						}),
-					p.bD,
+					p.bF,
 					config.u));
 		});
 	var toTickValues = F3(
 		function (p, config, ts) {
-			return (!config.gK) ? ts : _Utils_update(
+			return (!config.gR) ? ts : _Utils_update(
 				ts,
 				{
-					S: _Utils_ap(
-						ts.S,
+					U: _Utils_ap(
+						ts.U,
 						A2(
 							$elm$core$List$map,
 							function ($) {
-								return $.ap;
+								return $.aq;
 							},
 							A2(toTicks, p, config)))
 				});
@@ -35916,7 +36117,7 @@ var $terezka$charts$Chart$xLabels = function (edits) {
 		return A2(
 			$terezka$charts$Internal$Helpers$apply,
 			edits,
-			{K: 5, m: $elm$core$Maybe$Nothing, d: _List_Nil, da: '#808BAB', n: $elm$core$Maybe$Nothing, e: false, o: $elm$core$Maybe$Nothing, F: $elm$core$Maybe$Nothing, L: $terezka$charts$Internal$Svg$Floats, gK: false, p: false, u: _List_Nil, x: $terezka$charts$Chart$Attributes$zero, q: 0, r: false, i: 0, j: 18});
+			{L: 5, m: $elm$core$Maybe$Nothing, e: _List_Nil, db: '#808BAB', n: $elm$core$Maybe$Nothing, f: false, o: $elm$core$Maybe$Nothing, F: $elm$core$Maybe$Nothing, N: $terezka$charts$Internal$Svg$Floats, gR: false, p: false, u: _List_Nil, x: $terezka$charts$Chart$Attributes$zero, q: 0, r: false, i: 0, j: 18});
 	};
 	return A3(
 		$terezka$charts$Chart$LabelsElement,
@@ -35933,23 +36134,23 @@ var $terezka$charts$Chart$xLabels = function (edits) {
 							_default,
 							{
 								m: config.m,
-								d: config.d,
-								da: config.da,
+								e: config.e,
+								db: config.db,
 								n: config.n,
 								o: config.o,
 								p: config.p,
 								q: config.q,
 								r: config.r,
 								i: config.i,
-								j: config.e ? ((-config.j) + 10) : config.j
+								j: config.f ? ((-config.j) + 10) : config.j
 							}),
 						_List_fromArray(
 							[
-								$elm$svg$Svg$text(item.g6)
+								$elm$svg$Svg$text(item.hd)
 							]),
 						{
-							bD: item.ap,
-							bk: config.x(p.bk)
+							bF: item.aq,
+							bm: config.x(p.bm)
 						});
 				};
 				return A2(
@@ -35971,8 +36172,8 @@ var $terezka$charts$Chart$yLabels = function (edits) {
 		function (p, config) {
 			return A4(
 				$terezka$charts$Chart$generateValues,
-				config.K,
 				config.L,
+				config.N,
 				config.F,
 				A3(
 					$elm$core$List$foldl,
@@ -35980,20 +36181,20 @@ var $terezka$charts$Chart$yLabels = function (edits) {
 						function (f, y) {
 							return f(y);
 						}),
-					p.bk,
+					p.bm,
 					config.u));
 		});
 	var toTickValues = F3(
 		function (p, config, ts) {
-			return (!config.gK) ? ts : _Utils_update(
+			return (!config.gR) ? ts : _Utils_update(
 				ts,
 				{
-					ad: _Utils_ap(
-						ts.ad,
+					af: _Utils_ap(
+						ts.af,
 						A2(
 							$elm$core$List$map,
 							function ($) {
-								return $.ap;
+								return $.aq;
 							},
 							A2(toTicks, p, config)))
 				});
@@ -36002,7 +36203,7 @@ var $terezka$charts$Chart$yLabels = function (edits) {
 		return A2(
 			$terezka$charts$Internal$Helpers$apply,
 			edits,
-			{K: 5, m: $elm$core$Maybe$Nothing, d: _List_Nil, da: '#808BAB', n: $elm$core$Maybe$Nothing, e: false, o: $elm$core$Maybe$Nothing, F: $elm$core$Maybe$Nothing, L: $terezka$charts$Internal$Svg$Floats, gK: false, p: false, u: _List_Nil, x: $terezka$charts$Chart$Attributes$zero, q: 0, r: false, i: -10, j: 3});
+			{L: 5, m: $elm$core$Maybe$Nothing, e: _List_Nil, db: '#808BAB', n: $elm$core$Maybe$Nothing, f: false, o: $elm$core$Maybe$Nothing, F: $elm$core$Maybe$Nothing, N: $terezka$charts$Internal$Svg$Floats, gR: false, p: false, u: _List_Nil, x: $terezka$charts$Chart$Attributes$zero, q: 0, r: false, i: -10, j: 3});
 	};
 	return A3(
 		$terezka$charts$Chart$LabelsElement,
@@ -36022,29 +36223,29 @@ var $terezka$charts$Chart$yLabels = function (edits) {
 									var _v0 = config.m;
 									if (_v0.$ === 1) {
 										return $elm$core$Maybe$Just(
-											config.e ? 1 : 0);
+											config.f ? 1 : 0);
 									} else {
 										var anchor = _v0.a;
 										return $elm$core$Maybe$Just(anchor);
 									}
 								}(),
-								d: config.d,
-								da: config.da,
+								e: config.e,
+								db: config.db,
 								n: config.n,
 								o: config.o,
 								p: config.p,
 								q: config.q,
 								r: config.r,
-								i: config.e ? (-config.i) : config.i,
+								i: config.f ? (-config.i) : config.i,
 								j: config.j
 							}),
 						_List_fromArray(
 							[
-								$elm$svg$Svg$text(item.g6)
+								$elm$svg$Svg$text(item.hd)
 							]),
 						{
-							bD: config.x(p.bD),
-							bk: item.ap
+							bF: config.x(p.bF),
+							bm: item.aq
 						});
 				};
 				return A2(
@@ -36062,7 +36263,7 @@ var $terezka$charts$Chart$yLabels = function (edits) {
 var $author$project$Render$Data$rawLineChart2D = F2(
 	function (options, data) {
 		var range = function () {
-			var _v3 = options.en;
+			var _v3 = options.er;
 			if (_v3.$ === 1) {
 				return $terezka$charts$Chart$Attributes$range(_List_Nil);
 			} else {
@@ -36072,7 +36273,7 @@ var $author$project$Render$Data$rawLineChart2D = F2(
 			}
 		}();
 		var domain = function () {
-			var _v2 = options.dX;
+			var _v2 = options.d_;
 			if (_v2.$ === 1) {
 				return $terezka$charts$Chart$Attributes$domain(_List_Nil);
 			} else {
@@ -36089,7 +36290,7 @@ var $author$project$Render$Data$rawLineChart2D = F2(
 						$terezka$charts$Chart$Attributes$height(200),
 						$terezka$charts$Chart$Attributes$width(400),
 						function () {
-						var _v0 = options.bU;
+						var _v0 = options.bW;
 						if (_v0.$ === 1) {
 							return $terezka$charts$Chart$Attributes$domain(_List_Nil);
 						} else {
@@ -36116,7 +36317,7 @@ var $author$project$Render$Data$rawLineChart2D = F2(
 								$terezka$charts$Chart$Attributes$fontSize(10)
 							])),
 						function () {
-						var _v1 = options.d9;
+						var _v1 = options.eb;
 						_v1$3:
 						while (true) {
 							if (!_v1.$) {
@@ -36125,14 +36326,14 @@ var $author$project$Render$Data$rawLineChart2D = F2(
 										return A3(
 											$terezka$charts$Chart$series,
 											function ($) {
-												return $.bD;
+												return $.bF;
 											},
 											_List_fromArray(
 												[
 													A3(
 													$terezka$charts$Chart$interpolated,
 													function ($) {
-														return $.bk;
+														return $.bm;
 													},
 													_List_fromArray(
 														[
@@ -36145,14 +36346,14 @@ var $author$project$Render$Data$rawLineChart2D = F2(
 										return A3(
 											$terezka$charts$Chart$series,
 											function ($) {
-												return $.bD;
+												return $.bF;
 											},
 											_List_fromArray(
 												[
 													A2(
 													$terezka$charts$Chart$scatter,
 													function ($) {
-														return $.bk;
+														return $.bm;
 													},
 													_List_Nil)
 												]),
@@ -36166,7 +36367,7 @@ var $author$project$Render$Data$rawLineChart2D = F2(
 													A2(
 													$terezka$charts$Chart$bar,
 													function ($) {
-														return $.bk;
+														return $.bm;
 													},
 													_List_Nil)
 												]),
@@ -36181,14 +36382,14 @@ var $author$project$Render$Data$rawLineChart2D = F2(
 						return A3(
 							$terezka$charts$Chart$series,
 							function ($) {
-								return $.bD;
+								return $.bF;
 							},
 							_List_fromArray(
 								[
 									A3(
 									$terezka$charts$Chart$interpolated,
 									function ($) {
-										return $.bk;
+										return $.bm;
 									},
 									_List_fromArray(
 										[
@@ -36227,14 +36428,14 @@ var $author$project$Render$Data$rawLineChart3D = function (data) {
 					A3(
 					$terezka$charts$Chart$series,
 					function ($) {
-						return $.bD;
+						return $.bF;
 					},
 					_List_fromArray(
 						[
 							A3(
 							$terezka$charts$Chart$interpolated,
 							function ($) {
-								return $.bk;
+								return $.bm;
 							},
 							_List_fromArray(
 								[
@@ -36244,7 +36445,7 @@ var $author$project$Render$Data$rawLineChart3D = function (data) {
 							A3(
 							$terezka$charts$Chart$interpolated,
 							function ($) {
-								return $.fW;
+								return $.f2;
 							},
 							_List_fromArray(
 								[
@@ -36289,12 +36490,12 @@ var $author$project$Render$Data$rawLineChart = F2(
 	});
 var $author$project$Render$Data$chart = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var id = block.gY;
+		var args = block.gh;
 		var properties = block.H;
 		var options = {
-			dO: A2($elm$core$Dict$get, 'caption', properties),
-			db: A2(
+			dQ: A2($elm$core$Dict$get, 'caption', properties),
+			dc: A2(
 				$elm$core$Maybe$map,
 				A2(
 					$elm$core$Basics$composeR,
@@ -36307,22 +36508,22 @@ var $author$project$Render$Data$chart = F4(
 							$elm$core$List$map($elm$core$String$toInt),
 							$elm_community$maybe_extra$Maybe$Extra$values))),
 				A2($elm$core$Dict$get, 'columns', properties)),
-			dX: A2(
+			d_: A2(
 				$elm$core$Maybe$andThen,
 				$author$project$Render$Data$getRange,
 				A2($elm$core$Dict$get, 'domain', properties)),
-			d9: A2($elm$core$Dict$get, 'kind', properties),
-			g6: A2($elm$core$Dict$get, 'figure', properties),
-			bU: A2(
+			eb: A2($elm$core$Dict$get, 'kind', properties),
+			hd: A2($elm$core$Dict$get, 'figure', properties),
+			bW: A2(
 				$elm$core$Maybe$andThen,
 				$elm$core$String$toFloat,
 				A2($elm$core$Dict$get, 'lowest', properties)),
-			en: A2(
+			er: A2(
 				$elm$core$Maybe$andThen,
 				$author$project$Render$Data$getRange,
 				A2($elm$core$Dict$get, 'range', properties)),
-			ep: A2($author$project$Render$Data$getArg, 'reverse', args),
-			ex: A2($author$project$Render$Data$getArg, 'timeseries', args)
+			et: A2($author$project$Render$Data$getArg, 'reverse', args),
+			eB: A2($author$project$Render$Data$getArg, 'timeseries', args)
 		};
 		var data = A2(
 			$author$project$Render$Data$csvToChartData,
@@ -36333,9 +36534,9 @@ var $author$project$Render$Data$chart = F4(
 			_List_fromArray(
 				[
 					$mdgriffith$elm_ui$Element$width(
-					$mdgriffith$elm_ui$Element$px(settings.eC)),
+					$mdgriffith$elm_ui$Element$px(settings.eG)),
 					$mdgriffith$elm_ui$Element$paddingEach(
-					{a7: 72, bf: 48, bh: 0, bi: 36}),
+					{a7: 72, bg: 48, bj: 0, bk: 36}),
 					$mdgriffith$elm_ui$Element$spacing(24)
 				]),
 			_List_fromArray(
@@ -36345,11 +36546,11 @@ var $author$project$Render$Data$chart = F4(
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$width(
-							$mdgriffith$elm_ui$Element$px(settings.eC))
+							$mdgriffith$elm_ui$Element$px(settings.eG))
 						]),
 					A2($author$project$Render$Data$rawLineChart, options, data)),
 					function () {
-					var _v0 = _Utils_Tuple2(options.g6, options.dO);
+					var _v0 = _Utils_Tuple2(options.hd, options.dQ);
 					if (_v0.a.$ === 1) {
 						if (_v0.b.$ === 1) {
 							var _v1 = _v0.a;
@@ -36367,7 +36568,7 @@ var $author$project$Render$Data$chart = F4(
 										$mdgriffith$elm_ui$Element$Font$color(
 										A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.5, 0.7)),
 										$mdgriffith$elm_ui$Element$paddingEach(
-										{a7: 0, bf: 0, bh: 0, bi: 24})
+										{a7: 0, bg: 0, bj: 0, bk: 24})
 									]),
 								$mdgriffith$elm_ui$Element$text(captionText));
 						}
@@ -36384,7 +36585,7 @@ var $author$project$Render$Data$chart = F4(
 										$mdgriffith$elm_ui$Element$Font$color(
 										A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.5, 0.7)),
 										$mdgriffith$elm_ui$Element$paddingEach(
-										{a7: 0, bf: 0, bh: 0, bi: 24})
+										{a7: 0, bg: 0, bj: 0, bk: 24})
 									]),
 								$mdgriffith$elm_ui$Element$text('Figure ' + labelText));
 						} else {
@@ -36399,7 +36600,7 @@ var $author$project$Render$Data$chart = F4(
 										$mdgriffith$elm_ui$Element$Font$color(
 										A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.5, 0.7)),
 										$mdgriffith$elm_ui$Element$paddingEach(
-										{a7: 0, bf: 0, bh: 0, bi: 24})
+										{a7: 0, bg: 0, bj: 0, bk: 24})
 									]),
 								$mdgriffith$elm_ui$Element$text('Figure ' + (labelText + ('. ' + captionText))));
 						}
@@ -36409,14 +36610,14 @@ var $author$project$Render$Data$chart = F4(
 	});
 var $author$project$Render$Math$displayedMath = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var error = block.eW;
-		var w = $elm$core$String$fromInt(settings.eC) + 'px';
+		var id = block.gY;
+		var error = block.e0;
+		var w = $elm$core$String$fromInt(settings.eG) + 'px';
 		var leftPadding = $mdgriffith$elm_ui$Element$paddingEach(
-			{a7: 0, bf: 45, bh: 0, bi: 0});
+			{a7: 0, bg: 45, bj: 0, bk: 0});
 		var filteredLines = A2(
 			$elm$core$List$map,
-			$author$project$Parser$MathMacro$evalStr(acc.ea),
+			$author$project$Parser$MathMacro$evalStr(acc.ee),
 			A2(
 				$elm$core$List$filter,
 				function (line) {
@@ -36454,16 +36655,16 @@ var $author$project$Render$Math$displayedMath = F4(
 	});
 var $author$project$Render$Math$equation = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
-		var error = block.eW;
+		var id = block.gY;
+		var args = block.gh;
+		var error = block.e0;
 		var properties = block.H;
-		var w = $elm$core$String$fromInt(settings.eC) + 'px';
+		var w = $elm$core$String$fromInt(settings.eG) + 'px';
 		var leftPadding = $mdgriffith$elm_ui$Element$paddingEach(
-			{a7: 0, bf: 45, bh: 0, bi: 0});
+			{a7: 0, bg: 45, bj: 0, bk: 0});
 		var filteredLines = A2(
 			$elm$core$List$map,
-			$author$project$Parser$MathMacro$evalStr(acc.ea),
+			$author$project$Parser$MathMacro$evalStr(acc.ee),
 			A2(
 				$elm$core$List$filter,
 				function (line) {
@@ -36479,17 +36680,17 @@ var $author$project$Render$Math$equation = F4(
 			_List_fromArray(
 				[$mdgriffith$elm_ui$Element$centerX])) : _List_fromArray(
 			[$mdgriffith$elm_ui$Element$centerX]);
-		var attrs = _Utils_eq(id, settings.hO) ? _List_fromArray(
+		var attrs = _Utils_eq(id, settings.hT) ? _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$Events$onClick(
-				$author$project$Render$Msg$SendId(id)),
+				$author$project$Render$Msg$SendLineNumber(id)),
 				leftPadding,
 				$mdgriffith$elm_ui$Element$Background$color(
 				A3($mdgriffith$elm_ui$Element$rgb, 0.8, 0.8, 1.0))
 			]) : _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$Events$onClick(
-				$author$project$Render$Msg$SendId(id)),
+				$author$project$Render$Msg$SendLineNumber(id)),
 				leftPadding
 			]);
 		var adjustedLines = A2(
@@ -36504,7 +36705,7 @@ var $author$project$Render$Math$equation = F4(
 				},
 				A2(
 					$elm$core$List$map,
-					$author$project$Parser$MathMacro$evalStr(acc.ea),
+					$author$project$Parser$MathMacro$evalStr(acc.ee),
 					filteredLines)));
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
@@ -36517,7 +36718,7 @@ var $author$project$Render$Math$equation = F4(
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$width(
-								$mdgriffith$elm_ui$Element$px(settings.eC)),
+								$mdgriffith$elm_ui$Element$px(settings.eG)),
 								A2($author$project$Render$Utility$elementAttribute, 'id', id)
 							]),
 						attrs),
@@ -36563,13 +36764,13 @@ var $author$project$Render$Utility$highlightElement = F2(
 		return _Utils_eq(id, selectedId) ? _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$Events$onClick(
-				$author$project$Render$Msg$SendId(id)),
+				$author$project$Render$Msg$SendLineNumber(id)),
 				$mdgriffith$elm_ui$Element$Background$color(
 				A3($mdgriffith$elm_ui$Element$rgb, 0.8, 0.8, 1.0))
 			]) : _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$Events$onClick(
-				$author$project$Render$Msg$SendId(id))
+				$author$project$Render$Msg$SendLineNumber(id))
 			]);
 	});
 var $author$project$Render$Graphics$parameters = F2(
@@ -36591,7 +36792,7 @@ var $author$project$Render$Graphics$parameters = F2(
 				}
 			}
 		}();
-		var displayWidth = settings.eC;
+		var displayWidth = settings.eG;
 		var width = function () {
 			var _v0 = A2($elm$core$Dict$get, 'width', properties);
 			if (_v0.$ === 1) {
@@ -36613,14 +36814,14 @@ var $author$project$Render$Graphics$parameters = F2(
 		}();
 		var description = $author$project$Render$Graphics$getDescription(properties);
 		var captionPhrase = $author$project$Render$Graphics$getCaption(properties);
-		return {dO: captionPhrase, dV: description, cQ: placement, eC: width};
+		return {dQ: captionPhrase, dY: description, cR: placement, eG: width};
 	});
 var $author$project$Render$Graphics$image2 = F4(
 	function (_v0, _v1, settings, _v2) {
-		var id = _v2.gR;
-		var args = _v2.f9;
+		var id = _v2.gY;
+		var args = _v2.gh;
 		var properties = _v2.H;
-		var content = _v2.bJ;
+		var content = _v2.bM;
 		var url = function () {
 			if (!content.$) {
 				var str = content.a;
@@ -36632,10 +36833,13 @@ var $author$project$Render$Graphics$image2 = F4(
 		var params = A2($author$project$Render$Graphics$parameters, settings, properties);
 		var caption = $author$project$Render$Graphics$getCaption(properties);
 		var label = function () {
-			if (caption === '') {
-				return 'Figure ' + $author$project$Render$Graphics$getFigureLabel(properties);
-			} else {
-				return 'Figure ' + ($author$project$Render$Graphics$getFigureLabel(properties) + ('. ' + caption));
+			switch (caption) {
+				case '*':
+					return 'Figure ' + $author$project$Render$Graphics$getFigureLabel(properties);
+				case 'none':
+					return '';
+				default:
+					return 'Figure ' + ($author$project$Render$Graphics$getFigureLabel(properties) + ('. ' + caption));
 			}
 		}();
 		var inner = A2(
@@ -36644,8 +36848,8 @@ var $author$project$Render$Graphics$image2 = F4(
 				[
 					$mdgriffith$elm_ui$Element$spacing(8),
 					$mdgriffith$elm_ui$Element$width(
-					$mdgriffith$elm_ui$Element$px(settings.eC)),
-					params.cQ,
+					$mdgriffith$elm_ui$Element$px(settings.eG)),
+					params.cR,
 					A2($mdgriffith$elm_ui$Element$paddingXY, 0, 18)
 				]),
 			_List_fromArray(
@@ -36654,32 +36858,32 @@ var $author$project$Render$Graphics$image2 = F4(
 					$mdgriffith$elm_ui$Element$image,
 					_List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$width(params.eC),
-							params.cQ
+							$mdgriffith$elm_ui$Element$width(params.eG),
+							params.cR
 						]),
 					{
-						dV: $author$project$Render$Graphics$getDescription(properties),
-						fH: url
+						dY: $author$project$Render$Graphics$getDescription(properties),
+						fP: url
 					}),
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_Utils_ap(
 						_List_fromArray(
 							[
-								params.cQ,
+								params.cR,
 								A2($author$project$Render$Utility$elementAttribute, 'id', id),
 								A2($mdgriffith$elm_ui$Element$paddingXY, 12, 4)
 							]),
-						A2($author$project$Render$Utility$highlightElement, id, settings.hO)),
+						A2($author$project$Render$Utility$highlightElement, id, settings.hT)),
 					$mdgriffith$elm_ui$Element$text(label))
 				]));
 		return A2(
 			$mdgriffith$elm_ui$Element$newTabLink,
 			_List_Nil,
-			{g6: inner, eA: url});
+			{hd: inner, eE: url});
 	});
 var $author$project$Render$Graphics$getVerbatimContent = function (_v0) {
-	var content = _v0.bJ;
+	var content = _v0.bM;
 	if (!content.$) {
 		var str = content.a;
 		return str;
@@ -36690,8 +36894,8 @@ var $author$project$Render$Graphics$getVerbatimContent = function (_v0) {
 var $author$project$Render$Graphics$red = A3($mdgriffith$elm_ui$Element$rgb255, 255, 0, 0);
 var $author$project$Render$Graphics$quiver = F4(
 	function (_v0, _v1, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var id = block.gY;
+		var args = block.gh;
 		var properties = block.H;
 		var qArgs = A2($author$project$Render$Graphics$parameters, settings, properties);
 		var maybePair = function () {
@@ -36726,11 +36930,11 @@ var $author$project$Render$Graphics$quiver = F4(
 				settings,
 				$elm$core$String$words(imageData));
 			var desc = function () {
-				var _v4 = qArgs.dO;
-				if (_v4 === '') {
+				var _v4 = qArgs.dQ;
+				if (_v4 === '*') {
 					return 'Figure ' + $author$project$Render$Graphics$getFigureLabel(properties);
 				} else {
-					return 'Figure ' + ($author$project$Render$Graphics$getFigureLabel(properties) + ('. ' + qArgs.dO));
+					return 'Figure ' + ($author$project$Render$Graphics$getFigureLabel(properties) + ('. ' + qArgs.dQ));
 				}
 			}();
 			return A2(
@@ -36739,7 +36943,7 @@ var $author$project$Render$Graphics$quiver = F4(
 					[
 						$mdgriffith$elm_ui$Element$spacing(8),
 						$mdgriffith$elm_ui$Element$width(
-						$mdgriffith$elm_ui$Element$px(settings.eC))
+						$mdgriffith$elm_ui$Element$px(settings.eG))
 					]),
 				_List_fromArray(
 					[
@@ -36747,27 +36951,34 @@ var $author$project$Render$Graphics$quiver = F4(
 						$mdgriffith$elm_ui$Element$image,
 						_List_fromArray(
 							[
-								$mdgriffith$elm_ui$Element$width(qArgs.eC),
-								params.cQ
+								$mdgriffith$elm_ui$Element$width(qArgs.eG),
+								params.cR
 							]),
-						{dV: desc, fH: params.eA}),
+						{dY: desc, fP: params.eE}),
 						A2(
 						$mdgriffith$elm_ui$Element$el,
 						_Utils_ap(
 							_List_fromArray(
 								[
-									params.cQ,
-									params.cQ,
+									params.cR,
+									params.cR,
 									A2($mdgriffith$elm_ui$Element$paddingXY, 12, 4),
 									A2($author$project$Render$Utility$elementAttribute, 'id', id)
 								]),
-							A2($author$project$Render$Utility$highlightElement, id, settings.hO)),
+							A2($author$project$Render$Utility$highlightElement, id, settings.hT)),
 						$mdgriffith$elm_ui$Element$text(desc))
 					]));
 		}
 	});
-var $author$project$Render$Block$getVerbatimContent = function (_v0) {
-	var content = _v0.bJ;
+var $author$project$Render$Tabular$formatDict = $elm$core$Dict$fromList(
+	_List_fromArray(
+		[
+			_Utils_Tuple2('l', $mdgriffith$elm_ui$Element$alignLeft),
+			_Utils_Tuple2('r', $mdgriffith$elm_ui$Element$alignRight),
+			_Utils_Tuple2('c', $mdgriffith$elm_ui$Element$centerX)
+		]));
+var $author$project$Render$Utility$getVerbatimContent = function (_v0) {
+	var content = _v0.bM;
 	if (!content.$) {
 		var str = content.a;
 		return str;
@@ -36775,6 +36986,246 @@ var $author$project$Render$Block$getVerbatimContent = function (_v0) {
 		return '';
 	}
 };
+var $author$project$Render$Tabular$charDict = $elm$core$Dict$fromList(
+	_List_fromArray(
+		[
+			_Utils_Tuple2('a', 1.0),
+			_Utils_Tuple2('b', 1.0),
+			_Utils_Tuple2('c', 1.0),
+			_Utils_Tuple2('d', 1.0),
+			_Utils_Tuple2('e', 1.0),
+			_Utils_Tuple2('f', 1.0),
+			_Utils_Tuple2('g', 1.0),
+			_Utils_Tuple2('h', 1.0),
+			_Utils_Tuple2('i', 1.0),
+			_Utils_Tuple2('j', 1.0),
+			_Utils_Tuple2('k', 1.0),
+			_Utils_Tuple2('l', 1.0),
+			_Utils_Tuple2('m', 1.0),
+			_Utils_Tuple2('n', 1.0),
+			_Utils_Tuple2('o', 1.0),
+			_Utils_Tuple2('p', 1.0),
+			_Utils_Tuple2('q', 1.0),
+			_Utils_Tuple2('r', 1.0),
+			_Utils_Tuple2('s', 1.0),
+			_Utils_Tuple2('t', 1.0),
+			_Utils_Tuple2('u', 1.0),
+			_Utils_Tuple2('v', 1.0),
+			_Utils_Tuple2('w', 1.0),
+			_Utils_Tuple2('x', 1.0),
+			_Utils_Tuple2('y', 1.0),
+			_Utils_Tuple2('z', 1.0),
+			_Utils_Tuple2('A', 2.0),
+			_Utils_Tuple2('B', 2.0),
+			_Utils_Tuple2('C', 2.0),
+			_Utils_Tuple2('D', 2.0),
+			_Utils_Tuple2('E', 2.0),
+			_Utils_Tuple2('F', 2.0),
+			_Utils_Tuple2('G', 2.0),
+			_Utils_Tuple2('H', 2.0),
+			_Utils_Tuple2('I', 2.0),
+			_Utils_Tuple2('J', 2.0),
+			_Utils_Tuple2('K', 2.0),
+			_Utils_Tuple2('L', 2.0),
+			_Utils_Tuple2('M', 2.0),
+			_Utils_Tuple2('N', 2.0),
+			_Utils_Tuple2('O', 2.0),
+			_Utils_Tuple2('P', 2.0),
+			_Utils_Tuple2('Q', 2.0),
+			_Utils_Tuple2('R', 2.0),
+			_Utils_Tuple2('S', 2.0),
+			_Utils_Tuple2('T', 2.0),
+			_Utils_Tuple2('U', 2.0),
+			_Utils_Tuple2('V', 2.0),
+			_Utils_Tuple2('W', 2.0),
+			_Utils_Tuple2('X', 2.0),
+			_Utils_Tuple2('Y', 2.0),
+			_Utils_Tuple2('Z', 2.0),
+			_Utils_Tuple2('$', 1.0)
+		]));
+var $author$project$Render$Tabular$charWidth = function (c) {
+	return A2(
+		$elm$core$Maybe$withDefault,
+		1.0,
+		A2($elm$core$Dict$get, c, $author$project$Render$Tabular$charDict));
+};
+var $author$project$Render$Tabular$compress = function (string) {
+	return $elm$core$String$trim(
+		A3(
+			$author$project$Utility$userReplace,
+			'\\[A-Z].*[^a-zA-Z0-9]',
+			function (_v1) {
+				return 'A';
+			},
+			A3(
+				$author$project$Utility$userReplace,
+				'\\\\[a-z].*[^a-zA-Z0-9]',
+				function (_v0) {
+					return 'a';
+				},
+				string + ' ')));
+};
+var $author$project$Render$Tabular$textWidth = function (str_) {
+	var str = A2(
+		$elm$core$String$join,
+		' ',
+		A2(
+			$elm$core$List$map,
+			$author$project$Render$Tabular$compress,
+			$elm$core$String$words(str_)));
+	var letters = A2($elm$core$String$split, '', str);
+	return $elm$core$List$sum(
+		A2($elm$core$List$map, $author$project$Render$Tabular$charWidth, letters));
+};
+var $author$project$Render$Tabular$render = F4(
+	function (count, acc, settings, block) {
+		var lineNumber = block.ed;
+		var args = block.gh;
+		var tableCell = F2(
+			function (_v2, list) {
+				var colWidth = _v2.a;
+				var fmt = _v2.b;
+				return A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width(
+							$mdgriffith$elm_ui$Element$px(colWidth + 18))
+						]),
+					A2(
+						$mdgriffith$elm_ui$Element$row,
+						_List_fromArray(
+							[
+								A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
+								fmt
+							]),
+						list));
+			});
+		var renderer = A3($author$project$Render$Elm$render, count, acc, settings);
+		var renderCell = function (_v1) {
+			var colWidth = _v1.a;
+			var fmt = _v1.b;
+			return A2(
+				$elm$core$Basics$composeR,
+				$elm$core$List$map(renderer),
+				tableCell(
+					_Utils_Tuple2(colWidth, fmt)));
+		};
+		var renderRow = F2(
+			function (formats, cells) {
+				return A2(
+					$mdgriffith$elm_ui$Element$row,
+					_List_Nil,
+					A3($elm$core$List$map2, renderCell, formats, cells));
+			});
+		var renderTable = F2(
+			function (formats, cells) {
+				var f = renderRow(formats);
+				return A2(
+					$elm$core$List$map,
+					renderRow(formats),
+					cells);
+			});
+		var lines = A2(
+			$elm$core$String$split,
+			'\\\\',
+			$author$project$Render$Utility$getVerbatimContent(block));
+		var formatString = $elm$core$String$words(
+			A2(
+				$elm$core$Maybe$withDefault,
+				'',
+				$elm$core$List$head(args)));
+		var formatList = A2(
+			$elm$core$List$map,
+			function (c) {
+				return A2(
+					$elm$core$Maybe$withDefault,
+					$mdgriffith$elm_ui$Element$centerX,
+					A2($elm$core$Dict$get, c, $author$project$Render$Tabular$formatDict));
+			},
+			formatString);
+		var fix = F2(
+			function (colWidths, fmtList) {
+				var n = $elm$core$List$length(fmtList);
+				var m = $elm$core$List$length(colWidths);
+				var _v0 = A2($elm$core$Basics$compare, m, n);
+				switch (_v0) {
+					case 0:
+						return A2($elm$core$List$repeat, m, $mdgriffith$elm_ui$Element$centerX);
+					case 1:
+						return fmtList;
+					default:
+						return A2($elm$core$List$repeat, m, $mdgriffith$elm_ui$Element$centerX);
+				}
+			});
+		var effectiveFontWidth_ = 9.0;
+		var cellsAsStrings_ = A2(
+			$elm$core$List$map,
+			$elm$core$List$map($elm$core$String$trim),
+			A2(
+				$elm$core$List$map,
+				$elm$core$String$split('&'),
+				lines));
+		var maxRowSize = $elm$core$List$maximum(
+			A2($elm$core$List$map, $elm$core$List$length, cellsAsStrings_));
+		var cellsAsStrings = A2(
+			$elm$core$List$filter,
+			function (row_) {
+				return _Utils_eq(
+					$elm$core$Maybe$Just(
+						$elm$core$List$length(row_)),
+					maxRowSize);
+			},
+			cellsAsStrings_);
+		var columnWidths = A2(
+			$elm$core$List$map,
+			A2(
+				$elm$core$Basics$composeR,
+				function (w) {
+					return effectiveFontWidth_ * w;
+				},
+				$elm$core$Basics$round),
+			A2(
+				$elm$core$List$map,
+				function (column) {
+					return A2(
+						$elm$core$Maybe$withDefault,
+						1,
+						$elm$core$List$maximum(column));
+				},
+				$elm_community$list_extra$List$Extra$transpose(
+					A2(
+						$elm$core$List$map,
+						$elm$core$List$map($author$project$Render$Tabular$textWidth),
+						cellsAsStrings))));
+		var extendedFormatList = A3(
+			$elm$core$List$map2,
+			F2(
+				function (x, y) {
+					return _Utils_Tuple2(x, y);
+				}),
+			columnWidths,
+			A2(fix, columnWidths, formatList));
+		var totalWidth = $elm$core$List$sum(columnWidths);
+		var parsedCells = A2(
+			$elm$core$List$map,
+			$elm$core$List$map(
+				A2(
+					$elm$core$Basics$composeR,
+					$author$project$MicroLaTeX$Parser$Expression$parse(0),
+					$elm$core$Tuple$first)),
+			cellsAsStrings);
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$paddingEach(
+					{a7: 0, bg: 24, bj: 0, bk: 0}),
+					$author$project$Render$Utility$sendLineNumberOnClick(lineNumber),
+					$author$project$Render$Utility$idAttribute(lineNumber)
+				]),
+			A2(renderTable, extendedFormatList, parsedCells));
+	});
 var $author$project$Render$Block$cyan = $mdgriffith$elm_ui$Element$Font$color(
 	A3($mdgriffith$elm_ui$Element$rgb255, 11, 143, 158));
 var $author$project$Render$Block$green = $mdgriffith$elm_ui$Element$Font$color(
@@ -36849,8 +37300,8 @@ var $author$project$Render$Block$renderVerbatimLine = F2(
 	});
 var $author$project$Render$Block$renderCode = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var lineNumber = block.ed;
+		var args = block.gh;
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -36863,10 +37314,9 @@ var $author$project$Render$Block$renderCode = F4(
 							$mdgriffith$elm_ui$Element$Font$monospace
 						])),
 					$mdgriffith$elm_ui$Element$paddingEach(
-					{a7: 0, bf: 24, bh: 0, bi: 0}),
-					$mdgriffith$elm_ui$Element$Events$onClick(
-					$author$project$Render$Msg$SendId(id)),
-					A2($author$project$Render$Utility$elementAttribute, 'id', id)
+					{a7: 0, bg: 24, bj: 0, bk: 0}),
+					$author$project$Render$Utility$sendLineNumberOnClick(lineNumber),
+					$author$project$Render$Utility$idAttribute(lineNumber)
 				]),
 			function () {
 				var _v0 = $elm$core$List$head(args);
@@ -36877,14 +37327,14 @@ var $author$project$Render$Block$renderCode = F4(
 						$author$project$Render$Block$renderVerbatimLine(arg),
 						$elm$core$String$lines(
 							$elm$core$String$trim(
-								$author$project$Render$Block$getVerbatimContent(block))));
+								$author$project$Render$Utility$getVerbatimContent(block))));
 				} else {
 					return A2(
 						$elm$core$List$map,
 						$author$project$Render$Block$renderVerbatimLine('plain'),
 						$elm$core$String$lines(
 							$elm$core$String$trim(
-								$author$project$Render$Block$getVerbatimContent(block))));
+								$author$project$Render$Utility$getVerbatimContent(block))));
 				}
 			}());
 	});
@@ -36949,17 +37399,17 @@ var $author$project$Render$Block$parseIFrame = function (str) {
 		var width = _v0.b.a;
 		var height = _v0.c.a;
 		return $author$project$Render$Block$validSrc(src) ? $elm$core$Maybe$Just(
-			{e4: height, fH: src, eC: width}) : $elm$core$Maybe$Nothing;
+			{fa: height, fP: src, eG: width}) : $elm$core$Maybe$Nothing;
 	} else {
 		return $elm$core$Maybe$Nothing;
 	}
 };
 var $author$project$Render$Block$renderIFrame = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
+		var lineNumber = block.ed;
 		var properties = block.H;
 		var _v0 = $author$project$Render$Block$parseIFrame(
-			$author$project$Render$Block$getVerbatimContent(block));
+			$author$project$Render$Utility$getVerbatimContent(block));
 		if (_v0.$ === 1) {
 			return A2(
 				$mdgriffith$elm_ui$Element$el,
@@ -36970,7 +37420,7 @@ var $author$project$Render$Block$renderIFrame = F4(
 			var w = A2(
 				$elm$core$Maybe$withDefault,
 				400,
-				$elm$core$String$toInt(iframeProperties.eC));
+				$elm$core$String$toInt(iframeProperties.eG));
 			var label_ = A2($elm$core$Dict$get, 'figure', properties);
 			var caption_ = A2($elm$core$Dict$get, 'caption', properties);
 			var figureLabel = function () {
@@ -37001,9 +37451,8 @@ var $author$project$Render$Block$renderIFrame = F4(
 				$mdgriffith$elm_ui$Element$column,
 				_List_fromArray(
 					[
-						$mdgriffith$elm_ui$Element$Events$onClick(
-						$author$project$Render$Msg$SendId(id)),
-						A2($author$project$Render$Utility$elementAttribute, 'id', id),
+						$author$project$Render$Utility$sendLineNumberOnClick(lineNumber),
+						$author$project$Render$Utility$idAttribute(lineNumber),
 						$mdgriffith$elm_ui$Element$width(
 						$mdgriffith$elm_ui$Element$px(w))
 					]),
@@ -37014,10 +37463,10 @@ var $author$project$Render$Block$renderIFrame = F4(
 							$elm$html$Html$iframe,
 							_List_fromArray(
 								[
-									$elm$html$Html$Attributes$src(iframeProperties.fH),
+									$elm$html$Html$Attributes$src(iframeProperties.fP),
 									A2($elm$html$Html$Attributes$style, 'border', 'none'),
-									A2($elm$html$Html$Attributes$style, 'width', iframeProperties.eC + 'px'),
-									A2($elm$html$Html$Attributes$style, 'height', iframeProperties.e4 + 'px')
+									A2($elm$html$Html$Attributes$style, 'width', iframeProperties.eG + 'px'),
+									A2($elm$html$Html$Attributes$style, 'height', iframeProperties.fa + 'px')
 								]),
 							_List_Nil)),
 						A2(
@@ -37040,8 +37489,8 @@ var $author$project$Render$Block$renderNothing = F4(
 	});
 var $author$project$Render$Block$renderVerbatim = F4(
 	function (_v0, _v1, _v2, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var lineNumber = block.ed;
+		var args = block.gh;
 		var _v3 = $elm$core$List$head(args);
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
@@ -37055,10 +37504,9 @@ var $author$project$Render$Block$renderVerbatim = F4(
 						])),
 					$mdgriffith$elm_ui$Element$spacing(8),
 					$mdgriffith$elm_ui$Element$paddingEach(
-					{a7: 0, bf: 24, bh: 0, bi: 0}),
-					$mdgriffith$elm_ui$Element$Events$onClick(
-					$author$project$Render$Msg$SendId(id)),
-					A2($author$project$Render$Utility$elementAttribute, 'id', id)
+					{a7: 0, bg: 24, bj: 0, bk: 0}),
+					$author$project$Render$Utility$sendLineNumberOnClick(lineNumber),
+					$author$project$Render$Utility$idAttribute(lineNumber)
 				]),
 			function () {
 				var _v4 = $elm$core$List$head(args);
@@ -37069,34 +37517,33 @@ var $author$project$Render$Block$renderVerbatim = F4(
 						$author$project$Render$Block$renderVerbatimLine(lang),
 						$elm$core$String$lines(
 							$elm$core$String$trim(
-								$author$project$Render$Block$getVerbatimContent(block))));
+								$author$project$Render$Utility$getVerbatimContent(block))));
 				} else {
 					return A2(
 						$elm$core$List$map,
 						$author$project$Render$Block$renderVerbatimLine('none'),
 						$elm$core$String$lines(
 							$elm$core$String$trim(
-								$author$project$Render$Block$getVerbatimContent(block))));
+								$author$project$Render$Utility$getVerbatimContent(block))));
 				}
 			}());
 	});
 var $author$project$Render$Block$renderVerse = F4(
 	function (_v0, _v1, _v2, block) {
-		var id = block.gR;
+		var lineNumber = block.ed;
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
 				[
-					$mdgriffith$elm_ui$Element$Events$onClick(
-					$author$project$Render$Msg$SendId(id)),
-					A2($author$project$Render$Utility$elementAttribute, 'id', id)
+					$author$project$Render$Utility$sendLineNumberOnClick(lineNumber),
+					$author$project$Render$Utility$idAttribute(lineNumber)
 				]),
 			A2(
 				$elm$core$List$map,
 				$author$project$Render$Block$renderVerbatimLine('plain'),
 				$elm$core$String$lines(
 					$elm$core$String$trim(
-						$author$project$Render$Block$getVerbatimContent(block)))));
+						$author$project$Render$Utility$getVerbatimContent(block)))));
 	});
 var $elm$core$Result$andThen = F2(
 	function (callback, result) {
@@ -37124,8 +37571,8 @@ var $Garados007$elm_svg_parser$SvgParser$toAttribute = function (_v0) {
 var $Garados007$elm_svg_parser$SvgParser$elementToSvg = function (element) {
 	return A3(
 		$elm$svg$Svg$node,
-		element.fl,
-		A2($elm$core$List$map, $Garados007$elm_svg_parser$SvgParser$toAttribute, element.bm),
+		element.fr,
+		A2($elm$core$List$map, $Garados007$elm_svg_parser$SvgParser$toAttribute, element.bo),
 		A2($elm$core$List$map, $Garados007$elm_svg_parser$SvgParser$nodeToSvg, element.a8));
 };
 var $Garados007$elm_svg_parser$SvgParser$nodeToSvg = function (svgNode) {
@@ -37290,7 +37737,7 @@ var $andre_dietrich$parser_combinators$Combine$Char$satisfy = function (pred) {
 		F2(
 			function (state, stream) {
 				var message = 'could not satisfy predicate';
-				var _v0 = $elm$core$String$uncons(stream.aY);
+				var _v0 = $elm$core$String$uncons(stream.aZ);
 				if (!_v0.$) {
 					var _v1 = _v0.a;
 					var h = _v1.a;
@@ -37299,7 +37746,7 @@ var $andre_dietrich$parser_combinators$Combine$Char$satisfy = function (pred) {
 						state,
 						_Utils_update(
 							stream,
-							{aY: rest, ej: stream.ej + 1}),
+							{aZ: rest, en: stream.en + 1}),
 						$elm$core$Result$Ok(h)) : _Utils_Tuple3(
 						state,
 						stream,
@@ -37382,15 +37829,15 @@ var $andre_dietrich$parser_combinators$Combine$manyTill = F2(
 var $andre_dietrich$parser_combinators$Combine$string = function (s) {
 	return F2(
 		function (state, stream) {
-			if (A2($elm$core$String$startsWith, s, stream.aY)) {
+			if (A2($elm$core$String$startsWith, s, stream.aZ)) {
 				var len = $elm$core$String$length(s);
-				var pos = stream.ej + len;
-				var rem = A2($elm$core$String$dropLeft, len, stream.aY);
+				var pos = stream.en + len;
+				var rem = A2($elm$core$String$dropLeft, len, stream.aZ);
 				return _Utils_Tuple3(
 					state,
 					_Utils_update(
 						stream,
-						{aY: rem, ej: pos}),
+						{aZ: rem, en: pos}),
 					$elm$core$Result$Ok(s));
 			} else {
 				return _Utils_Tuple3(
@@ -37413,17 +37860,17 @@ var $andre_dietrich$parser_combinators$Combine$regexer = F5(
 				$elm$core$Maybe$withDefault,
 				$elm$regex$Regex$never,
 				input(pattern)),
-			stream.aY);
+			stream.aZ);
 		if (_v0.b && (!_v0.b.b)) {
 			var match = _v0.a;
-			var len = $elm$core$String$length(match.cJ);
-			var pos = stream.ej + len;
-			var rem = A2($elm$core$String$dropLeft, len, stream.aY);
+			var len = $elm$core$String$length(match.cK);
+			var pos = stream.en + len;
+			var rem = A2($elm$core$String$dropLeft, len, stream.aZ);
 			return _Utils_Tuple3(
 				state,
 				_Utils_update(
 					stream,
-					{aY: rem, ej: pos}),
+					{aZ: rem, en: pos}),
 				$elm$core$Result$Ok(
 					output(match)));
 		} else {
@@ -37441,7 +37888,7 @@ var $andre_dietrich$parser_combinators$Combine$regex = A2(
 		$andre_dietrich$parser_combinators$Combine$regexer,
 		$elm$regex$Regex$fromString,
 		function ($) {
-			return $.cJ;
+			return $.cK;
 		}),
 	$elm$core$Basics$identity);
 var $andre_dietrich$parser_combinators$Combine$whitespace = A2(
@@ -37510,7 +37957,7 @@ var $andre_dietrich$parser_combinators$Combine$many = function (p) {
 };
 var $Garados007$elm_svg_parser$SvgParser$Element = F3(
 	function (name, attributes, children) {
-		return {bm: attributes, a8: children, fl: name};
+		return {bo: attributes, a8: children, fr: name};
 	});
 var $andre_dietrich$parser_combinators$Combine$optional = F2(
 	function (res, p) {
@@ -37614,7 +38061,7 @@ var $Garados007$elm_svg_parser$SvgParser$closingOrChildrenParser = function (ele
 					$andre_dietrich$parser_combinators$Combine$many(
 						$Garados007$elm_svg_parser$SvgParser$cyclic$nodeParser())),
 				$andre_dietrich$parser_combinators$Combine$whitespace),
-			$andre_dietrich$parser_combinators$Combine$string('</' + (element.fl + '>'))));
+			$andre_dietrich$parser_combinators$Combine$string('</' + (element.fr + '>'))));
 	return $andre_dietrich$parser_combinators$Combine$lazy(
 		function (_v2) {
 			return $andre_dietrich$parser_combinators$Combine$choice(
@@ -37671,7 +38118,7 @@ $Garados007$elm_svg_parser$SvgParser$cyclic$nodeParser = function () {
 };
 var $andre_dietrich$parser_combinators$Combine$InputStream = F3(
 	function (data, input, position) {
-		return {bN: data, aY: input, ej: position};
+		return {bQ: data, aZ: input, en: position};
 	});
 var $andre_dietrich$parser_combinators$Combine$initStream = function (s) {
 	return A3($andre_dietrich$parser_combinators$Combine$InputStream, s, s, 0);
@@ -37735,10 +38182,10 @@ var $Garados007$elm_svg_parser$SvgParser$parse = function (input) {
 	var toHtml = function (svgNode) {
 		if (!svgNode.$) {
 			var element = svgNode.a;
-			return (element.fl === 'svg') ? $elm$core$Result$Ok(
+			return (element.fr === 'svg') ? $elm$core$Result$Ok(
 				A2(
 					$elm$svg$Svg$svg,
-					A2($elm$core$List$map, $Garados007$elm_svg_parser$SvgParser$toAttribute, element.bm),
+					A2($elm$core$List$map, $Garados007$elm_svg_parser$SvgParser$toAttribute, element.bo),
 					A2($elm$core$List$map, $Garados007$elm_svg_parser$SvgParser$nodeToSvg, element.a8))) : $elm$core$Result$Err('Top element is not svg');
 		} else {
 			return $elm$core$Result$Err('Top element is not svg');
@@ -37751,8 +38198,8 @@ var $Garados007$elm_svg_parser$SvgParser$parse = function (input) {
 };
 var $author$project$Render$Graphics$svg = F4(
 	function (ount, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var id = block.gY;
+		var args = block.gh;
 		var _v0 = $Garados007$elm_svg_parser$SvgParser$parse(
 			$author$project$Render$Graphics$getVerbatimContent(block));
 		if (!_v0.$) {
@@ -37762,9 +38209,9 @@ var $author$project$Render$Graphics$svg = F4(
 				_List_fromArray(
 					[
 						$mdgriffith$elm_ui$Element$paddingEach(
-						{a7: 0, bf: 0, bh: 0, bi: 24}),
+						{a7: 0, bg: 0, bj: 0, bk: 24}),
 						$mdgriffith$elm_ui$Element$width(
-						$mdgriffith$elm_ui$Element$px(settings.eC))
+						$mdgriffith$elm_ui$Element$px(settings.eG))
 					]),
 				_List_fromArray(
 					[
@@ -37787,8 +38234,8 @@ var $author$project$Render$Graphics$svg = F4(
 var $author$project$Render$Data$fontWidth = 10;
 var $author$project$Render$Data$prepareTable = F2(
 	function (fontWidth_, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var id = block.gY;
+		var args = block.gh;
 		var properties = block.H;
 		var title = A2($elm$core$Dict$get, 'title', properties);
 		var lines = A2(
@@ -37859,12 +38306,12 @@ var $author$project$Render$Data$prepareTable = F2(
 						$elm$core$List$map($elm$core$String$length),
 						selectedCells))));
 		var totalWidth = $elm$core$List$sum(columnWidths);
-		return {dR: columnWidths, er: selectedCells, ey: title, fM: totalWidth};
+		return {dT: columnWidths, ev: selectedCells, eC: title, fU: totalWidth};
 	});
 var $author$project$Render$Data$table = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var id = block.gY;
+		var args = block.gh;
 		var properties = block.H;
 		var renderRow = F3(
 			function (rowNumber, widths_, cells_) {
@@ -37917,7 +38364,7 @@ var $author$project$Render$Data$table = F4(
 			});
 		var data = A2($author$project$Render$Data$prepareTable, $author$project$Render$Data$fontWidth, block);
 		var title = function () {
-			var _v0 = data.ey;
+			var _v0 = data.eC;
 			if (_v0.$ === 1) {
 				return $mdgriffith$elm_ui$Element$none;
 			} else {
@@ -37935,7 +38382,7 @@ var $author$project$Render$Data$table = F4(
 				[
 					$mdgriffith$elm_ui$Element$spacing(12),
 					$mdgriffith$elm_ui$Element$paddingEach(
-					{a7: 18, bf: 36, bh: 0, bi: 18})
+					{a7: 18, bg: 36, bj: 0, bk: 18})
 				]),
 			A2(
 				$elm$core$List$cons,
@@ -37944,14 +38391,14 @@ var $author$project$Render$Data$table = F4(
 					$elm$core$List$indexedMap,
 					F2(
 						function (k, row) {
-							return A3(renderRow, k, data.dR, row);
+							return A3(renderRow, k, data.dT, row);
 						}),
-					data.er)));
+					data.ev)));
 	});
 var $author$project$Render$Graphics$tikz = F4(
 	function (count, acc, settings, block) {
-		var id = block.gR;
-		var args = block.f9;
+		var id = block.gY;
+		var args = block.gh;
 		var maybePair = function () {
 			var _v2 = A2(
 				$elm$core$String$split,
@@ -37989,8 +38436,8 @@ var $author$project$Render$Graphics$tikz = F4(
 					[
 						$mdgriffith$elm_ui$Element$spacing(8),
 						$mdgriffith$elm_ui$Element$width(
-						$mdgriffith$elm_ui$Element$px(settings.eC)),
-						params.cQ,
+						$mdgriffith$elm_ui$Element$px(settings.eG)),
+						params.cR,
 						A2($mdgriffith$elm_ui$Element$paddingXY, 0, 18)
 					]),
 				_List_fromArray(
@@ -37999,15 +38446,15 @@ var $author$project$Render$Graphics$tikz = F4(
 						$mdgriffith$elm_ui$Element$image,
 						_List_fromArray(
 							[
-								$mdgriffith$elm_ui$Element$width(params.eC),
-								params.cQ
+								$mdgriffith$elm_ui$Element$width(params.eG),
+								params.cR
 							]),
-						{dV: params.dV, fH: params.eA}),
+						{dY: params.dY, fP: params.eE}),
 						A2(
 						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
-							[params.cQ]),
-						params.dO)
+							[params.cR]),
+						params.dQ)
 					]));
 		}
 	});
@@ -38020,6 +38467,7 @@ var $author$project$Render$Block$verbatimDict = $elm$core$Dict$fromList(
 			_Utils_Tuple2('code', $author$project$Render$Block$renderCode),
 			_Utils_Tuple2('verse', $author$project$Render$Block$renderVerse),
 			_Utils_Tuple2('verbatim', $author$project$Render$Block$renderVerbatim),
+			_Utils_Tuple2('tabular', $author$project$Render$Tabular$render),
 			_Utils_Tuple2('hide', $author$project$Render$Block$renderNothing),
 			_Utils_Tuple2('texComment', $author$project$Render$Block$renderNothing),
 			_Utils_Tuple2('docinfo', $author$project$Render$Block$renderNothing),
@@ -38037,13 +38485,13 @@ var $author$project$Render$Block$verbatimDict = $elm$core$Dict$fromList(
 		]));
 var $author$project$Render$Block$renderVerbatimBlock = F4(
 	function (count, acc, settings, block) {
-		var name = block.fl;
-		var error = block.eW;
-		var indent = block.gV;
-		var args = block.f9;
-		var blockType = block.dM;
-		var content = block.bJ;
-		var id = block.gR;
+		var name = block.fr;
+		var error = block.e0;
+		var indent = block.g0;
+		var args = block.gh;
+		var blockType = block.dO;
+		var content = block.bM;
+		var id = block.gY;
 		if (content.$ === 1) {
 			return $mdgriffith$elm_ui$Element$none;
 		} else {
@@ -38087,19 +38535,19 @@ var $author$project$Render$Block$showError = F2(
 								$mdgriffith$elm_ui$Element$Font$color(
 								A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0, 0))
 							]),
-						$mdgriffith$elm_ui$Element$text(error.eW))
+						$mdgriffith$elm_ui$Element$text(error.e0))
 					]));
 		}
 	});
 var $author$project$Render$Block$render = F4(
 	function (count, acc, settings, block) {
-		var name = block.fl;
-		var indent = block.gV;
-		var args = block.f9;
-		var error = block.eW;
-		var blockType = block.dM;
-		var content = block.bJ;
-		var id = block.gR;
+		var name = block.fr;
+		var indent = block.g0;
+		var args = block.gh;
+		var error = block.e0;
+		var blockType = block.dO;
+		var content = block.bM;
+		var id = block.gY;
 		switch (blockType.$) {
 			case 0:
 				return A4($author$project$Render$Block$renderParagraph, count, acc, settings, block);
@@ -38118,20 +38566,20 @@ var $author$project$Render$Block$render = F4(
 var $author$project$Render$Settings$makeSettings = F4(
 	function (id, selectedSlug, scale, width) {
 		return {
-			gb: A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1),
-			g4: false,
-			fs: 28,
-			hO: id,
-			hP: selectedSlug,
-			fC: false,
-			fD: true,
-			fK: '',
-			fL: 30,
-			eC: $elm$core$Basics$round(scale * width)
+			gj: A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1),
+			hb: false,
+			fz: 28,
+			hT: id,
+			hU: selectedSlug,
+			fK: false,
+			fL: true,
+			fS: '',
+			fT: 30,
+			eG: $elm$core$Basics$round(scale * width)
 		};
 	});
 var $author$project$Scripta$API$renderSettings = function (ds) {
-	return A4($author$project$Render$Settings$makeSettings, ds.hO, ds.hP, ds.hJ, ds.iI);
+	return A4($author$project$Render$Settings$makeSettings, ds.hT, ds.hU, ds.hO, ds.iN);
 };
 var $author$project$Parser$Block$setName = F2(
 	function (name, _v0) {
@@ -38139,7 +38587,7 @@ var $author$project$Parser$Block$setName = F2(
 		return _Utils_update(
 			data,
 			{
-				fl: $elm$core$Maybe$Just(name)
+				fr: $elm$core$Maybe$Just(name)
 			});
 	});
 var $author$project$Scripta$API$banner = F2(
@@ -38151,19 +38599,19 @@ var $author$project$Scripta$API$banner = F2(
 				$elm$core$Maybe$map,
 				A3(
 					$author$project$Render$Block$render,
-					displaySettings.P,
-					editRecord.dH,
+					displaySettings.M,
+					editRecord.dJ,
 					$author$project$Scripta$API$renderSettings(displaySettings)),
 				A2(
 					$elm$core$Maybe$map,
 					$author$project$Parser$Block$setName('banner_'),
-					$author$project$Compiler$ASTTools$banner(editRecord.ez))));
+					$author$project$Compiler$ASTTools$banner(editRecord.eD))));
 	});
 var $author$project$Scripta$API$body = function (editRecord) {
-	return editRecord.ez;
+	return editRecord.eD;
 };
 var $author$project$Parser$Block$getName = function (_v0) {
-	var name = _v0.fl;
+	var name = _v0.fr;
 	return name;
 };
 var $zwilias$elm_rosetree$Tree$map = F2(
@@ -38183,33 +38631,37 @@ var $author$project$Render$Settings$leftIndent = 18;
 var $author$project$Render$Markup$unravel = F2(
 	function (lang, tree) {
 		var children = $zwilias$elm_rosetree$Tree$children(tree);
-		return $elm$core$List$isEmpty(children) ? $zwilias$elm_rosetree$Tree$label(tree) : A2(
-			$mdgriffith$elm_ui$Element$column,
-			_List_Nil,
-			_List_fromArray(
-				[
-					$zwilias$elm_rosetree$Tree$label(tree),
-					A2(
-					$mdgriffith$elm_ui$Element$column,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$paddingEach(
-							{
-								a7: 0,
-								bf: (lang === 1) ? 0 : $author$project$Render$Settings$leftIndent,
-								bh: 0,
-								bi: $author$project$Render$Settings$topMarginForChildren
-							})
-						]),
-					A2(
-						$elm$core$List$map,
-						$author$project$Render$Markup$unravel(lang),
-						children))
-				]));
+		if ($elm$core$List$isEmpty(children)) {
+			return $zwilias$elm_rosetree$Tree$label(tree);
+		} else {
+			var root = $zwilias$elm_rosetree$Tree$label(tree);
+			return A2(
+				$mdgriffith$elm_ui$Element$column,
+				_List_Nil,
+				_List_fromArray(
+					[
+						root,
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$paddingEach(
+								{
+									a7: 0,
+									bg: (lang === 1) ? 0 : $author$project$Render$Settings$leftIndent,
+									bj: 0,
+									bk: $author$project$Render$Settings$topMarginForChildren
+								})
+							]),
+						A2(
+							$elm$core$List$map,
+							$author$project$Render$Markup$unravel(lang),
+							children))
+					]));
+		}
 	});
 var $author$project$Render$Markup$renderTree = F4(
 	function (count, accumulator, settings, tree) {
-		var root = $zwilias$elm_rosetree$Tree$label(tree);
 		var blockName = A2(
 			$elm$core$Maybe$withDefault,
 			'---',
@@ -38223,11 +38675,11 @@ var $author$project$Render$Markup$renderTree = F4(
 				$elm$core$Basics$composeR,
 				$zwilias$elm_rosetree$Tree$map(
 					A3($author$project$Render$Block$render, count, accumulator, settings)),
-				$author$project$Render$Markup$unravel(accumulator.fe))(tree)) : A2(
+				$author$project$Render$Markup$unravel(accumulator.fk))(tree)) : A2(
 			$elm$core$Basics$composeR,
 			$zwilias$elm_rosetree$Tree$map(
 				A3($author$project$Render$Block$render, count, accumulator, settings)),
-			$author$project$Render$Markup$unravel(accumulator.fe))(tree);
+			$author$project$Render$Markup$unravel(accumulator.fk))(tree);
 	});
 var $author$project$Render$Markup$renderFromAST = F4(
 	function (count, accumulator, settings, ast) {
@@ -38241,13 +38693,13 @@ var $author$project$Scripta$API$renderBody = F3(
 		return A4(
 			$author$project$Render$Markup$renderFromAST,
 			count,
-			editRecord.dH,
+			editRecord.dJ,
 			settings,
 			$author$project$Scripta$API$body(editRecord));
 	});
 var $author$project$Render$Settings$defaultSettings = A4($author$project$Render$Settings$makeSettings, '', $elm$core$Maybe$Nothing, 1, 600);
 var $author$project$Parser$Block$getContent = function (_v0) {
-	var content = _v0.bJ;
+	var content = _v0.bM;
 	if (!content.$) {
 		return _List_Nil;
 	} else {
@@ -38268,7 +38720,7 @@ var $author$project$Scripta$TOC$getHeadings = function (ast) {
 			$elm$core$List$map,
 			$author$project$Parser$Block$getContent,
 			A2($author$project$Compiler$ASTTools$filterBlocksOnName, 'title', flattened)));
-	return {ew: subtitle, ey: title};
+	return {eA: subtitle, eC: title};
 };
 var $author$project$Scripta$TOC$prepareFrontMatter = F4(
 	function (count, acc, settings, ast) {
@@ -38289,7 +38741,7 @@ var $author$project$Scripta$TOC$prepareFrontMatter = F4(
 						$mdgriffith$elm_ui$Element$Font$color(
 						A3($mdgriffith$elm_ui$Element$rgb, 0.4, 0.4, 0.4))
 					])),
-			headings.ew);
+			headings.eA);
 		var title = A3(
 			$elm$core$Basics$composeR,
 			$elm$core$List$map(
@@ -38297,7 +38749,7 @@ var $author$project$Scripta$TOC$prepareFrontMatter = F4(
 			$mdgriffith$elm_ui$Element$paragraph(
 				_List_fromArray(
 					[titleSize, idAttr])),
-			headings.ey);
+			headings.eC);
 		return A2(
 			$elm$core$List$cons,
 			title,
@@ -38313,7 +38765,7 @@ var $author$project$Compiler$ASTTools$tableOfContents = F2(
 	});
 var $author$project$Scripta$TOC$tocLevel = F2(
 	function (k, _v0) {
-		var args = _v0.f9;
+		var args = _v0.gh;
 		var _v1 = A2($elm_community$list_extra$List$Extra$getAt, 0, args);
 		if (_v1.$ === 1) {
 			return true;
@@ -38352,16 +38804,16 @@ var $author$project$Scripta$TOC$tocIndent = function (args) {
 	return $mdgriffith$elm_ui$Element$paddingEach(
 		{
 			a7: 0,
-			bf: $author$project$Scripta$TOC$tocIndentAux(args),
-			bh: 0,
-			bi: 0
+			bg: $author$project$Scripta$TOC$tocIndentAux(args),
+			bj: 0,
+			bk: 0
 		});
 };
 var $author$project$Scripta$TOC$viewTocItem = F4(
 	function (count, acc, settings, _v0) {
-		var args = _v0.f9;
-		var content = _v0.bJ;
-		var lineNumber = _v0.g7;
+		var args = _v0.gh;
+		var content = _v0.bM;
+		var lineNumber = _v0.ed;
 		var properties = _v0.H;
 		if (!content.$) {
 			return $mdgriffith$elm_ui$Element$none;
@@ -38408,8 +38860,8 @@ var $author$project$Scripta$TOC$viewTocItem = F4(
 							A3($mdgriffith$elm_ui$Element$rgb, 0, 0, 0.8))
 						]),
 					{
-						g6: label,
-						eA: $author$project$Render$Utility$internalLink(id)
+						hd: label,
+						eE: $author$project$Render$Utility$internalLink(id)
 					}));
 		}
 	});
@@ -38425,7 +38877,7 @@ var $author$project$Scripta$TOC$prepareTOC = F5(
 				_List_fromArray(
 					[
 						$mdgriffith$elm_ui$Element$paddingEach(
-						{a7: k, bf: 0, bh: 0, bi: 0})
+						{a7: k, bg: 0, bj: 0, bk: 0})
 					]),
 				$mdgriffith$elm_ui$Element$text(' '));
 		};
@@ -38460,7 +38912,7 @@ var $author$project$Scripta$TOC$prepareTOC = F5(
 						$mdgriffith$elm_ui$Element$Font$color(
 						A3($mdgriffith$elm_ui$Element$rgb, 0.4, 0.4, 0.4))
 					])),
-			headings.ew);
+			headings.eA);
 		var title = A3(
 			$elm$core$Basics$composeR,
 			$elm$core$List$map(
@@ -38468,7 +38920,7 @@ var $author$project$Scripta$TOC$prepareTOC = F5(
 			$mdgriffith$elm_ui$Element$paragraph(
 				_List_fromArray(
 					[titleSize, idAttr])),
-			headings.ey);
+			headings.eC);
 		return ($elm$core$List$length(rawToc) < 2) ? A2(
 			$elm$core$List$cons,
 			title,
@@ -38497,12 +38949,12 @@ var $author$project$Scripta$TOC$view = F4(
 					[
 						$mdgriffith$elm_ui$Element$spacing(8),
 						$mdgriffith$elm_ui$Element$paddingEach(
-						{a7: 0, bf: 0, bh: 0, bi: 0})
+						{a7: 0, bg: 0, bj: 0, bk: 0})
 					]),
 				A4($author$project$Scripta$TOC$prepareFrontMatter, counter, acc, $author$project$Render$Settings$defaultSettings, ast));
 		} else {
 			var maximumLevel = function () {
-				var _v2 = A2($elm$core$Dict$get, 'contentsdepth', acc.dq);
+				var _v2 = A2($elm$core$Dict$get, 'contentsdepth', acc.ds);
 				if (!_v2.$) {
 					var level = _v2.a;
 					return A2(
@@ -38519,7 +38971,7 @@ var $author$project$Scripta$TOC$view = F4(
 					[
 						$mdgriffith$elm_ui$Element$spacing(8),
 						$mdgriffith$elm_ui$Element$paddingEach(
-						{a7: 0, bf: 0, bh: 0, bi: 0})
+						{a7: 0, bg: 0, bj: 0, bk: 0})
 					]),
 				A5($author$project$Scripta$TOC$prepareTOC, maximumLevel, counter, acc, $author$project$Render$Settings$defaultSettings, ast));
 		}
@@ -38534,11 +38986,11 @@ var $author$project$Scripta$API$render = F2(
 				$elm$core$List$cons,
 				A4(
 					$author$project$Scripta$TOC$view,
-					displaySettings.P,
-					editRecord.dH,
+					displaySettings.M,
+					editRecord.dJ,
 					$author$project$Scripta$API$renderSettings(displaySettings),
-					editRecord.ez),
-				A3($author$project$Scripta$API$renderBody, displaySettings.P, settings, editRecord)));
+					editRecord.eD),
+				A3($author$project$Scripta$API$renderBody, displaySettings.M, settings, editRecord)));
 	});
 var $author$project$Scripta$API$compile = F3(
 	function (displaySettings, language, sourceText) {
@@ -38548,7 +39000,7 @@ var $author$project$Scripta$API$compile = F3(
 			A3($author$project$Scripta$API$init, $elm$core$Dict$empty, language, sourceText));
 	});
 var $author$project$Main$displaySettings = function (counter) {
-	return {P: counter, hJ: 0.8, hO: '--', hP: $elm$core$Maybe$Nothing, iI: 500};
+	return {M: counter, hO: 0.8, hT: '--', hU: $elm$core$Maybe$Nothing, iN: 500};
 };
 var $author$project$Main$fontGray = function (g) {
 	return $mdgriffith$elm_ui$Element$Font$color(
@@ -38561,14 +39013,14 @@ var $mdgriffith$elm_ui$Internal$Model$map = F2(
 				var styled = el.a;
 				return $mdgriffith$elm_ui$Internal$Model$Styled(
 					{
-						gQ: F2(
+						gX: F2(
 							function (add, context) {
 								return A2(
 									$elm$virtual_dom$VirtualDom$map,
 									fn,
-									A2(styled.gQ, add, context));
+									A2(styled.gX, add, context));
 							}),
-						fJ: styled.fJ
+						fR: styled.fR
 					});
 			case 0:
 				var html = el.a;
@@ -38586,7 +39038,7 @@ var $mdgriffith$elm_ui$Internal$Model$map = F2(
 	});
 var $mdgriffith$elm_ui$Element$map = $mdgriffith$elm_ui$Internal$Model$map;
 var $mdgriffith$elm_ui$Internal$Flag$overflow = $mdgriffith$elm_ui$Internal$Flag$flag(20);
-var $mdgriffith$elm_ui$Element$scrollbarY = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.hM);
+var $mdgriffith$elm_ui$Element$scrollbarY = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.hR);
 var $author$project$Main$displayRenderedText = function (model) {
 	return A2(
 		$mdgriffith$elm_ui$Element$column,
@@ -38623,9 +39075,9 @@ var $author$project$Main$displayRenderedText = function (model) {
 					$mdgriffith$elm_ui$Element$map($author$project$Main$Render),
 					A3(
 						$author$project$Scripta$API$compile,
-						$author$project$Main$displaySettings(model.cp),
+						$author$project$Main$displaySettings(model.cq),
 						1,
-						model.hT)))
+						model.hY)))
 			]));
 };
 var $author$project$Main$InputText = function (a) {
@@ -38672,7 +39124,7 @@ var $mdgriffith$elm_ui$Element$Input$applyLabel = F3(
 						$mdgriffith$elm_ui$Internal$Model$NodeName('label'),
 						A2(
 							$elm$core$List$cons,
-							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.dp),
+							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.dr),
 							attrs),
 						$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 							_List_fromArray(
@@ -38684,7 +39136,7 @@ var $mdgriffith$elm_ui$Element$Input$applyLabel = F3(
 						$mdgriffith$elm_ui$Internal$Model$NodeName('label'),
 						A2(
 							$elm$core$List$cons,
-							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.dp),
+							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.dr),
 							attrs),
 						$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 							_List_fromArray(
@@ -38696,7 +39148,7 @@ var $mdgriffith$elm_ui$Element$Input$applyLabel = F3(
 						$mdgriffith$elm_ui$Internal$Model$NodeName('label'),
 						A2(
 							$elm$core$List$cons,
-							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.dp),
+							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.dr),
 							attrs),
 						$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 							_List_fromArray(
@@ -38708,7 +39160,7 @@ var $mdgriffith$elm_ui$Element$Input$applyLabel = F3(
 						$mdgriffith$elm_ui$Internal$Model$NodeName('label'),
 						A2(
 							$elm$core$List$cons,
-							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.dp),
+							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.dr),
 							attrs),
 						$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 							_List_fromArray(
@@ -38771,7 +39223,7 @@ var $mdgriffith$elm_ui$Element$Input$calcMoveToCompensateForPadding = function (
 			$elm$core$Basics$floor(vSpace / 2));
 	}
 };
-var $mdgriffith$elm_ui$Element$clip = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.go);
+var $mdgriffith$elm_ui$Element$clip = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.gw);
 var $mdgriffith$elm_ui$Internal$Flag$borderColor = $mdgriffith$elm_ui$Internal$Flag$flag(28);
 var $mdgriffith$elm_ui$Element$Border$color = function (clr) {
 	return A2(
@@ -38894,7 +39346,7 @@ var $mdgriffith$elm_ui$Element$Input$isStacked = function (label) {
 	}
 };
 var $mdgriffith$elm_ui$Element$Input$negateBox = function (box) {
-	return {a7: -box.a7, bf: -box.bf, bh: -box.bh, bi: -box.bi};
+	return {a7: -box.a7, bg: -box.bg, bj: -box.bj, bk: -box.bk};
 };
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
@@ -38992,7 +39444,7 @@ var $mdgriffith$elm_ui$Element$Input$redistributeOver = F4(
 					els,
 					{
 						B: A2($elm$core$List$cons, attr, els.B),
-						aY: A2($elm$core$List$cons, attr, els.aY),
+						aZ: A2($elm$core$List$cons, attr, els.aZ),
 						h: A2($elm$core$List$cons, attr, els.h)
 					}) : (stacked ? _Utils_update(
 					els,
@@ -39044,9 +39496,9 @@ var $mdgriffith$elm_ui$Element$Input$redistributeOver = F4(
 							els,
 							{
 								B: A2($elm$core$List$cons, attr, els.B),
-								aY: A2($elm$core$List$cons, attr, els.aY),
+								aZ: A2($elm$core$List$cons, attr, els.aZ),
 								h: A2($elm$core$List$cons, attr, els.h),
-								ch: A2($elm$core$List$cons, attr, els.ch)
+								ci: A2($elm$core$List$cons, attr, els.ci)
 							});
 					case 7:
 						var cls = attr.a;
@@ -39060,7 +39512,7 @@ var $mdgriffith$elm_ui$Element$Input$redistributeOver = F4(
 							return _Utils_update(
 								els,
 								{
-									ar: A2($elm$core$List$cons, attr, els.ar),
+									as: A2($elm$core$List$cons, attr, els.as),
 									h: A2($elm$core$List$cons, attr, els.h)
 								});
 						} else {
@@ -39091,11 +39543,11 @@ var $mdgriffith$elm_ui$Element$Input$redistributeOver = F4(
 							return _Utils_update(
 								els,
 								{
-									ar: A2($elm$core$List$cons, attr, els.ar),
-									aY: A2(
+									as: A2($elm$core$List$cons, attr, els.as),
+									aZ: A2(
 										$elm$core$List$cons,
 										newHeight,
-										A2($elm$core$List$cons, newLineHeight, els.aY)),
+										A2($elm$core$List$cons, newLineHeight, els.aZ)),
 									h: A2($elm$core$List$cons, reducedVerticalPadding, els.h)
 								});
 						}
@@ -39104,14 +39556,14 @@ var $mdgriffith$elm_ui$Element$Input$redistributeOver = F4(
 						return _Utils_update(
 							els,
 							{
-								ar: A2($elm$core$List$cons, attr, els.ar),
+								as: A2($elm$core$List$cons, attr, els.as),
 								h: A2($elm$core$List$cons, attr, els.h)
 							});
 					case 10:
 						return _Utils_update(
 							els,
 							{
-								ar: A2($elm$core$List$cons, attr, els.ar),
+								as: A2($elm$core$List$cons, attr, els.as),
 								h: A2($elm$core$List$cons, attr, els.h)
 							});
 					case 2:
@@ -39143,13 +39595,13 @@ var $mdgriffith$elm_ui$Element$Input$redistributeOver = F4(
 				return _Utils_update(
 					els,
 					{
-						aY: A2($elm$core$List$cons, attr, els.aY)
+						aZ: A2($elm$core$List$cons, attr, els.aZ)
 					});
 			case 2:
 				return _Utils_update(
 					els,
 					{
-						aY: A2($elm$core$List$cons, attr, els.aY)
+						aZ: A2($elm$core$List$cons, attr, els.aZ)
 					});
 			case 3:
 				return _Utils_update(
@@ -39161,7 +39613,7 @@ var $mdgriffith$elm_ui$Element$Input$redistributeOver = F4(
 				return _Utils_update(
 					els,
 					{
-						aY: A2($elm$core$List$cons, attr, els.aY)
+						aZ: A2($elm$core$List$cons, attr, els.aZ)
 					});
 		}
 	});
@@ -39169,24 +39621,24 @@ var $mdgriffith$elm_ui$Element$Input$redistribute = F3(
 	function (isMultiline, stacked, attrs) {
 		return function (redist) {
 			return {
-				ar: $elm$core$List$reverse(redist.ar),
+				as: $elm$core$List$reverse(redist.as),
 				B: $elm$core$List$reverse(redist.B),
-				aY: $elm$core$List$reverse(redist.aY),
+				aZ: $elm$core$List$reverse(redist.aZ),
 				h: $elm$core$List$reverse(redist.h),
-				ch: $elm$core$List$reverse(redist.ch)
+				ci: $elm$core$List$reverse(redist.ci)
 			};
 		}(
 			A3(
 				$elm$core$List$foldl,
 				A2($mdgriffith$elm_ui$Element$Input$redistributeOver, isMultiline, stacked),
-				{ar: _List_Nil, B: _List_Nil, aY: _List_Nil, h: _List_Nil, ch: _List_Nil},
+				{as: _List_Nil, B: _List_Nil, aZ: _List_Nil, h: _List_Nil, ci: _List_Nil},
 				attrs));
 	});
 var $mdgriffith$elm_ui$Element$Input$renderBox = function (_v0) {
-	var left = _v0.bf;
+	var left = _v0.bg;
 	var bottom = _v0.a7;
-	var right = _v0.bh;
-	var top = _v0.bi;
+	var right = _v0.bj;
+	var top = _v0.bk;
 	return $elm$core$String$fromInt(top) + ('px ' + ($elm$core$String$fromInt(right) + ('px ' + ($elm$core$String$fromInt(bottom) + ('px ' + ($elm$core$String$fromInt(left) + 'px'))))));
 };
 var $mdgriffith$elm_ui$Internal$Model$Transparency = F2(
@@ -39224,7 +39676,7 @@ var $mdgriffith$elm_ui$Element$Input$renderPlaceholder = F3(
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$Font$color($mdgriffith$elm_ui$Element$Input$charcoal),
-							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.fm + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.hy)),
+							$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.fs + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.hD)),
 							$mdgriffith$elm_ui$Element$clip,
 							$mdgriffith$elm_ui$Element$Border$color(
 							A4($mdgriffith$elm_ui$Element$rgba, 0, 0, 0, 0)),
@@ -39249,8 +39701,8 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 		var withDefaults = _Utils_ap($mdgriffith$elm_ui$Element$Input$defaultTextBoxStyle, attrs);
 		var redistributed = A3(
 			$mdgriffith$elm_ui$Element$Input$redistribute,
-			_Utils_eq(textInput.O, $mdgriffith$elm_ui$Element$Input$TextArea),
-			$mdgriffith$elm_ui$Element$Input$isStacked(textOptions.g6),
+			_Utils_eq(textInput.R, $mdgriffith$elm_ui$Element$Input$TextArea),
+			$mdgriffith$elm_ui$Element$Input$isStacked(textOptions.hd),
 			withDefaults);
 		var onlySpacing = function (attr) {
 			if ((attr.$ === 4) && (attr.b.$ === 5)) {
@@ -39261,7 +39713,7 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 			}
 		};
 		var heightConstrained = function () {
-			var _v7 = textInput.O;
+			var _v7 = textInput.R;
 			if (!_v7.$) {
 				var inputType = _v7.a;
 				return false;
@@ -39292,15 +39744,15 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 							$elm$core$Basics$max,
 							0,
 							$elm$core$Basics$floor(b - 3)),
-						bf: A2(
+						bg: A2(
 							$elm$core$Basics$max,
 							0,
 							$elm$core$Basics$floor(l - 3)),
-						bh: A2(
+						bj: A2(
 							$elm$core$Basics$max,
 							0,
 							$elm$core$Basics$floor(r - 3)),
-						bi: A2(
+						bk: A2(
 							$elm$core$Basics$max,
 							0,
 							$elm$core$Basics$floor(t - 3))
@@ -39311,7 +39763,7 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 		};
 		var parentPadding = A2(
 			$elm$core$Maybe$withDefault,
-			{a7: 0, bf: 0, bh: 0, bi: 0},
+			{a7: 0, bg: 0, bj: 0, bk: 0},
 			$elm$core$List$head(
 				$elm$core$List$reverse(
 					A2($elm$core$List$filterMap, getPadding, withDefaults))));
@@ -39319,7 +39771,7 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 			$mdgriffith$elm_ui$Internal$Model$element,
 			$mdgriffith$elm_ui$Internal$Model$asEl,
 			function () {
-				var _v3 = textInput.O;
+				var _v3 = textInput.R;
 				if (!_v3.$) {
 					var inputType = _v3.a;
 					return $mdgriffith$elm_ui$Internal$Model$NodeName('input');
@@ -39329,21 +39781,21 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 			}(),
 			_Utils_ap(
 				function () {
-					var _v4 = textInput.O;
+					var _v4 = textInput.R;
 					if (!_v4.$) {
 						var inputType = _v4.a;
 						return _List_fromArray(
 							[
 								$mdgriffith$elm_ui$Internal$Model$Attr(
 								$elm$html$Html$Attributes$type_(inputType)),
-								$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.g0)
+								$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.g7)
 							]);
 					} else {
 						return _List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$clip,
 								$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-								$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.gY),
+								$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.g3),
 								$mdgriffith$elm_ui$Element$Input$calcMoveToCompensateForPadding(withDefaults),
 								$mdgriffith$elm_ui$Element$paddingEach(parentPadding),
 								$mdgriffith$elm_ui$Internal$Model$Attr(
@@ -39360,20 +39812,20 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 				_Utils_ap(
 					_List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$Input$value(textOptions.h5),
+							$mdgriffith$elm_ui$Element$Input$value(textOptions.ia),
 							$mdgriffith$elm_ui$Internal$Model$Attr(
-							$elm$html$Html$Events$onInput(textOptions.hp)),
-							$mdgriffith$elm_ui$Element$Input$hiddenLabelAttribute(textOptions.g6),
-							$mdgriffith$elm_ui$Element$Input$spellcheck(textInput.am),
+							$elm$html$Html$Events$onInput(textOptions.hu)),
+							$mdgriffith$elm_ui$Element$Input$hiddenLabelAttribute(textOptions.hd),
+							$mdgriffith$elm_ui$Element$Input$spellcheck(textInput.an),
 							A2(
 							$elm$core$Maybe$withDefault,
 							$mdgriffith$elm_ui$Internal$Model$NoAttribute,
-							A2($elm$core$Maybe$map, $mdgriffith$elm_ui$Element$Input$autofill, textInput.af))
+							A2($elm$core$Maybe$map, $mdgriffith$elm_ui$Element$Input$autofill, textInput.ah))
 						]),
-					redistributed.aY)),
+					redistributed.aZ)),
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(_List_Nil));
 		var wrappedInput = function () {
-			var _v0 = textInput.O;
+			var _v0 = textInput.R;
 			if (_v0.$ === 1) {
 				return A4(
 					$mdgriffith$elm_ui$Internal$Model$element,
@@ -39384,8 +39836,8 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 							_List_fromArray(
 								[
 									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-									A2($elm$core$List$any, $mdgriffith$elm_ui$Element$Input$hasFocusStyle, withDefaults) ? $mdgriffith$elm_ui$Internal$Model$NoAttribute : $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.e_),
-									$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.g$)
+									A2($elm$core$List$any, $mdgriffith$elm_ui$Element$Input$hasFocusStyle, withDefaults) ? $mdgriffith$elm_ui$Internal$Model$NoAttribute : $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.e4),
+									$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.g6)
 								])),
 						redistributed.h),
 					$mdgriffith$elm_ui$Internal$Model$Unkeyed(
@@ -39406,12 +39858,12 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 											$mdgriffith$elm_ui$Element$inFront(inputElement),
 											A2(
 												$elm$core$List$cons,
-												$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.g_),
-												redistributed.ch)))),
+												$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.g5),
+												redistributed.ci)))),
 								$mdgriffith$elm_ui$Internal$Model$Unkeyed(
 									function () {
-										if (textOptions.h5 === '') {
-											var _v1 = textOptions.hz;
+										if (textOptions.ia === '') {
+											var _v1 = textOptions.hE;
 											if (_v1.$ === 1) {
 												return _List_fromArray(
 													[
@@ -39421,7 +39873,7 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 												var place = _v1.a;
 												return _List_fromArray(
 													[
-														A3($mdgriffith$elm_ui$Element$Input$renderPlaceholder, place, _List_Nil, textOptions.h5 === '')
+														A3($mdgriffith$elm_ui$Element$Input$renderPlaceholder, place, _List_Nil, textOptions.ia === '')
 													]);
 											}
 										} else {
@@ -39432,11 +39884,11 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 														$elm$html$Html$span,
 														_List_fromArray(
 															[
-																$elm$html$Html$Attributes$class($mdgriffith$elm_ui$Internal$Style$classes.gZ)
+																$elm$html$Html$Attributes$class($mdgriffith$elm_ui$Internal$Style$classes.g4)
 															]),
 														_List_fromArray(
 															[
-																$elm$html$Html$text(textOptions.h5 + '\u00A0')
+																$elm$html$Html$text(textOptions.ia + '\u00A0')
 															])))
 												]);
 										}
@@ -39453,13 +39905,13 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 						A2(
 							$elm$core$List$cons,
-							A2($elm$core$List$any, $mdgriffith$elm_ui$Element$Input$hasFocusStyle, withDefaults) ? $mdgriffith$elm_ui$Internal$Model$NoAttribute : $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.e_),
+							A2($elm$core$List$any, $mdgriffith$elm_ui$Element$Input$hasFocusStyle, withDefaults) ? $mdgriffith$elm_ui$Internal$Model$NoAttribute : $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.e4),
 							$elm$core$List$concat(
 								_List_fromArray(
 									[
 										redistributed.h,
 										function () {
-										var _v2 = textOptions.hz;
+										var _v2 = textOptions.hE;
 										if (_v2.$ === 1) {
 											return _List_Nil;
 										} else {
@@ -39467,7 +39919,7 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 											return _List_fromArray(
 												[
 													$mdgriffith$elm_ui$Element$behindContent(
-													A3($mdgriffith$elm_ui$Element$Input$renderPlaceholder, place, redistributed.ar, textOptions.h5 === ''))
+													A3($mdgriffith$elm_ui$Element$Input$renderPlaceholder, place, redistributed.as, textOptions.ia === ''))
 												]);
 										}
 									}()
@@ -39481,21 +39933,21 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 			$mdgriffith$elm_ui$Element$Input$applyLabel,
 			A2(
 				$elm$core$List$cons,
-				A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$cursor, $mdgriffith$elm_ui$Internal$Style$classes.gw),
+				A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$cursor, $mdgriffith$elm_ui$Internal$Style$classes.gD),
 				A2(
 					$elm$core$List$cons,
-					$mdgriffith$elm_ui$Element$Input$isHiddenLabel(textOptions.g6) ? $mdgriffith$elm_ui$Internal$Model$NoAttribute : $mdgriffith$elm_ui$Element$spacing(5),
+					$mdgriffith$elm_ui$Element$Input$isHiddenLabel(textOptions.hd) ? $mdgriffith$elm_ui$Internal$Model$NoAttribute : $mdgriffith$elm_ui$Element$spacing(5),
 					A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Region$announce, redistributed.B))),
-			textOptions.g6,
+			textOptions.hd,
 			wrappedInput);
 	});
 var $mdgriffith$elm_ui$Element$Input$multiline = F2(
 	function (attrs, multi) {
 		return A3(
 			$mdgriffith$elm_ui$Element$Input$textHelper,
-			{af: $elm$core$Maybe$Nothing, am: multi.hW, O: $mdgriffith$elm_ui$Element$Input$TextArea},
+			{ah: $elm$core$Maybe$Nothing, an: multi.h$, R: $mdgriffith$elm_ui$Element$Input$TextArea},
 			attrs,
-			{g6: multi.g6, hp: multi.hp, hz: multi.hz, h5: multi.h5});
+			{hd: multi.hd, hu: multi.hu, hE: multi.hE, ia: multi.ia});
 	});
 var $author$project$Main$inputText = function (model) {
 	return A2(
@@ -39509,7 +39961,7 @@ var $author$project$Main$inputText = function (model) {
 				$mdgriffith$elm_ui$Element$Font$size(14)
 			]),
 		{
-			g6: A2(
+			hd: A2(
 				$mdgriffith$elm_ui$Element$Input$labelAbove,
 				_List_fromArray(
 					[
@@ -39519,10 +39971,10 @@ var $author$project$Main$inputText = function (model) {
 					$mdgriffith$elm_ui$Element$el,
 					_List_Nil,
 					$mdgriffith$elm_ui$Element$text('Source text'))),
-			hp: $author$project$Main$InputText,
-			hz: $elm$core$Maybe$Nothing,
-			hW: false,
-			h5: model.hT
+			hu: $author$project$Main$InputText,
+			hE: $elm$core$Maybe$Nothing,
+			h$: false,
+			ia: model.hY
 		});
 };
 var $author$project$Main$mainColumnStyle = _List_fromArray(
@@ -39567,7 +40019,7 @@ var $author$project$Main$mainColumn = function (model) {
 var $author$project$Main$view = function (model) {
 	return A3(
 		$mdgriffith$elm_ui$Element$layoutWith,
-		{hw: _List_Nil},
+		{hB: _List_Nil},
 		_List_fromArray(
 			[
 				$author$project$Main$bgGray(0.2)
@@ -39575,7 +40027,7 @@ var $author$project$Main$view = function (model) {
 		$author$project$Main$mainColumn(model));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{gW: $author$project$Main$init, h1: $author$project$Main$subscriptions, iD: $author$project$Main$update, iG: $author$project$Main$view});
+	{g1: $author$project$Main$init, h6: $author$project$Main$subscriptions, iI: $author$project$Main$update, iL: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(
 		{}))(0)}});}(this));
