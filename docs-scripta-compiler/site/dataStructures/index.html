@@ -76,6 +76,12 @@
     <li class="toctree-l2"><a class="reference internal" href="#diffing-a-forest">Diffing a Forest</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#accumulator">Accumulator</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#traversal-function">Traversal function</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#block-updater">Block updater</a>
+    </li>
+        </ul>
     </li>
     </ul>
                 </li>
@@ -411,28 +417,20 @@ changed to <code>JKL</code>.</p>
 </code></pre>
 <h2 id="accumulator">Accumulator</h2>
 <p><strong>Module:</strong> <code>Compiler.Acc</code></p>
-<p>The <code>Accumulator</code> type
-is used to collect, build up, 
-and apply auxiliary information about the text.
-For example, the <code>headingIndex</code> stores the current
-section number, where "current" refers to the 
-the current section of the document as the 
-accumulator-building function walks through
-the current parse forest.  As it does, it simultaneously
-(1) updates the accumulator and (2) applies new "patches" 
-of the accumulator to the parse forest.  </p>
-<p>This process is managed by
-function <code>transformAccumulateTree</code> which is called every time 
-the parser pipeline runs.  For this reason one does not have
-to recompile to have up-to-date cross-references, etc., as
-in standard LaTeX.</p>
-<pre><code class="language-text">transformAccumulate : 
-        InitialAccumulatorData 
-        -&gt; Forest ExpressionBlock 
-        -&gt; ( Accumulator, Forest ExpressionBlock )
-</code></pre>
-<p>Type definition:</p>
-<pre><code class="language-text">-- Compiler.Acc
+<p>The <code>Accumulator</code> is a data structure that holds information
+such as <code>counter : Dict String Int</code> that holds counter
+of various kinds, e.g., there is a key for "figure" with
+value whatever the current figure number is.  The function
+<code>transformAccumulate</code> walks through the syntax forest simultaneously
+building up the <code>Accumulator</code> data structure and
+transforming the current block.  For example, when it
+encounters an image, iframe, quiver, or chart block, it advances
+the figure counter and inserts an entry in the property dictionary
+of the block with key "figure" and value the current counter.
+In this way, the rendering function has at hand all
+the information needed to render the block with a label
+like "Figure 23."</p>
+<pre><code class="language-text">-- module Compiler.Acc
 type alias Accumulator =
     { language : Language
     , headingIndex : Vector
@@ -453,6 +451,15 @@ type alias Accumulator =
     , qAndAList : List ( String, String )
     , qAndADict : Dict String String
     }
+</code></pre>
+<h3 id="traversal-function">Traversal function</h3>
+<pre><code class="language-text">-- module Compiler.Acc
+transformAccumulate : InitialAccumulatorData -&gt; Forest ExpressionBlock -&gt; ( Accumulator, Forest ExpressionBlock )
+transformAccumulate data forest =
+</code></pre>
+<h3 id="block-updater">Block updater</h3>
+<pre><code class="language-text">-- module Compiler.Acc
+transformBlock : Accumulator -&gt; ExpressionBlock -&gt; ExpressionBlock
 </code></pre>
               
             </div>
