@@ -1,29 +1,40 @@
-# The Scripta Project
+# Scripta Developer Docs
 
-
-*This document is intended for Scripta developers.*
+## The Scripta Project
 
 Scripta is an editing and publishing system for technical
 documents (mathematics, physics, etc.). It consists
-of three components
+of four components
 
-- [Scripta.io](https://scripta.io), a web app
+- [Demo app](https://jxxcarlson.github.io/scripta-compiler-example1/) .
+No login required.
+You can edit the text you see there or create something entirely new.
+Your edits will not be saved.
+- [Scripta.io](https://scripta.io), a web app with a 
+searchable store of documents.  No login required to
+search for and read public documents.
 - [Scripta Desktop](https://github.com/jxxcarlson/scripta-tauri/releases), for 
   Mac OS (fat binary), soon to be cross-compiled for Linux and Windows. 
-- [The Scripta compiler](https://jxxcarlson.github.io/docs-scripta-compiler/)  
-
-There is also a [very simple live demo app](https://jxxcarlson.github.io/scripta-compiler-example1/).
-You can edit the text at will. Note, however, that this app 
-does not have the advanced editing features offered by Scripta.io
-and Scripta Desktop. 
+  A desktop version of Scripta.io.
+- [The Scripta compiler](https://jxxcarlson.github.io/docs-scripta-compiler/).  This
+is the engine which makes all of the above work.
 
 
-All of the above are written in [Elm](https://elm-lang.org), a
+The compiler and the applications are written in 
+[Elm](https://elm-lang.org), a
 pure functional language that compiles to Javascript.  See the 
-Tech Stack  section below for more information and links to source code.
+Tech Stack  section below for more information.
 
-(( This document is a work-in-progress and
-will remain so for a good while. ))
+
+Source code:
+
+
+- [Scripta Compiler and Demo App](https://github.com/jxxcarlson/scripta-compiler)
+
+- [Scripta Desktop](https://github.com/jxxcarlson/scripta-tauri)
+
+- Scripta.io: not currently open source
+
 
 ## Screenshots
 
@@ -91,16 +102,6 @@ for some notes on how it was assembled.  Briefly, Tauri is a way
 of converting a web app built with most any language/framework
 including Elm into a desktop app.  It has both good security
 and small asset size.
-
-Source code:
-
-
-- [Scripta Compiler](https://github.com/jxxcarlson/scripta-compiler)
-
-- [Scripta Desktop](https://github.com/jxxcarlson/scripta-tauri)
-
-- Scripta.io: not currently open source
-
 
 
 ## Note

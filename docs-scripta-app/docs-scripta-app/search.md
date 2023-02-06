@@ -5,8 +5,7 @@
 The abstract of a document summarizes information
 about a document, e.g, its title, author and tags.
 Thus a search by abstract with query "einstein" might match
-"einstein" in the title, author field, or it might
-match a document tag.
+"einstein" in the title, in the author field, or in a document tag.
 
 Queries for documents using [jxxcarlson/elm-text-search](https://package.elm-lang.org/packages/jxxcarlson/elm-text-search/latest/)
 look like the following:
@@ -26,12 +25,21 @@ and "bar"
     or "bar"
 
 
-- "'foo bar'": retrieve documents whose abstract digest contains the
+- "'foo bar'": *Note the single quotes!* — retrieve documents whose abstract digest contains the
 phrase "foo bar".  This search excludes documents containing
 "bar foo", "foo baz bar", etc.
 
 To be technical, any query in disjunctive normal form is
 is accepted.
+
+In addition, a query can contain the fragment ":r", 
+which signifies a random sample (max 20) of the documents
+which match the search query.  Thus the query "atom:r" returns
+a random sample of documents which match "atom", while
+the query ":r" returns a random sample of documents
+matching the ambient conditions, e.g., begin public or
+belong to the current user.  For more complex queries,
+the fragment ":r" can appear by itself.
 
 
 ## Document Abstracts
@@ -72,32 +80,45 @@ Tick newTime ->
     )
 ```
 
-## Initiating a Search by Astract
+## Initiating a Search by Abstract
 
 
 
 User document searches are initiated by the `Search` clause of
 `Frontend.update`.  This clause invokes `Frontend.Search.search`
-which send the message
+which send a message of type
 
-```
-SearchForDocuments StandardHandling model.currentUser model.inputSearchKey
-```
-
-to the backend, where the code for `idsFromAbstractDict`
-is eventually invoked:
-
-```
-idsFromAbstractDict : Dict String Abstract -> String -> List DocId
-idsFromAbstractDict abstractDict query =
-    Dict.toList abstractDict
-        |> Text.Search.withQueryString digest Text.Search.NotCaseSensitive query
-        |> List.map (\( id, _ ) -> id)
+```text
+SearchForDocuments DocumentHandling SearchMode QueryString
 ```
 
-The result is a list of id's of documents which match
-the search query.  This is turned into a list of
-documents which is then forwarded to the front end.
+to the back end, where `QueryString` is an alias for `String`
+and where
+
+```text
+type SearchMode
+    = UserSearch Username
+    | PublicSearch
+```
+
+This message is handled by
+
+
+
+```text
+-- module Backend.Search
+forDocuments : 
+  BackendModel 
+  -> ClientId 
+  -> DocumentHandling 
+  -> SearchMode
+  -> Types.QueryString 
+  -> ( BackendModel, Command BackendOnly ToFrontend backendMsg )
+
+```
+
+All searches that can be routed through this function
+should be. 
 
 
 ## Search by Tag

@@ -43,6 +43,8 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#the-scripta-project">The Scripta Project</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#screenshots">Screenshots</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#scriptaio-a-notebbook-document">Scripta.io, a notebbook document</a>
@@ -98,6 +100,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="search/">Search</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="stats/">Stats & stuff</a>
+                </li>
+              </ul>
       </div>
     </div>
     </nav>
@@ -121,26 +127,41 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="the-scripta-project">The Scripta Project</h1>
-<p><em>This document is intended for Scripta developers.</em></p>
+                <h1 id="scripta-developer-docs">Scripta Developer Docs</h1>
+<h2 id="the-scripta-project">The Scripta Project</h2>
 <p>Scripta is an editing and publishing system for technical
 documents (mathematics, physics, etc.). It consists
-of three components</p>
+of four components</p>
 <ul>
-<li><a href="https://scripta.io">Scripta.io</a>, a web app</li>
+<li><a href="https://jxxcarlson.github.io/scripta-compiler-example1/">Demo app</a> .
+No login required.
+You can edit the text you see there or create something entirely new.
+Your edits will not be saved.</li>
+<li><a href="https://scripta.io">Scripta.io</a>, a web app with a 
+searchable store of documents.  No login required to
+search for and read public documents.</li>
 <li><a href="https://github.com/jxxcarlson/scripta-tauri/releases">Scripta Desktop</a>, for 
-  Mac OS (fat binary), soon to be cross-compiled for Linux and Windows. </li>
-<li><a href="https://jxxcarlson.github.io/docs-scripta-compiler/">The Scripta compiler</a>  </li>
+  Mac OS (fat binary), soon to be cross-compiled for Linux and Windows. 
+  A desktop version of Scripta.io.</li>
+<li><a href="https://jxxcarlson.github.io/docs-scripta-compiler/">The Scripta compiler</a>.  This
+is the engine which makes all of the above work.</li>
 </ul>
-<p>There is also a <a href="https://jxxcarlson.github.io/scripta-compiler-example1/">very simple live demo app</a>.
-You can edit the text at will. Note, however, that this app 
-does not have the advanced editing features offered by Scripta.io
-and Scripta Desktop. </p>
-<p>All of the above are written in <a href="https://elm-lang.org">Elm</a>, a
+<p>The compiler and the applications are written in 
+<a href="https://elm-lang.org">Elm</a>, a
 pure functional language that compiles to Javascript.  See the 
-Tech Stack  section below for more information and links to source code.</p>
-<p>(( This document is a work-in-progress and
-will remain so for a good while. ))</p>
+Tech Stack  section below for more information.</p>
+<p>Source code:</p>
+<ul>
+<li>
+<p><a href="https://github.com/jxxcarlson/scripta-compiler">Scripta Compiler and Demo App</a></p>
+</li>
+<li>
+<p><a href="https://github.com/jxxcarlson/scripta-tauri">Scripta Desktop</a></p>
+</li>
+<li>
+<p>Scripta.io: not currently open source</p>
+</li>
+</ul>
 <h2 id="screenshots">Screenshots</h2>
 <h3 id="scriptaio-a-notebbook-document">Scripta.io, a notebbook document</h3>
 <p><img alt="screenshot-editor-closed" src="image/scripta-qm-wave-packet.png" /></p>
@@ -190,18 +211,6 @@ for some notes on how it was assembled.  Briefly, Tauri is a way
 of converting a web app built with most any language/framework
 including Elm into a desktop app.  It has both good security
 and small asset size.</p>
-<p>Source code:</p>
-<ul>
-<li>
-<p><a href="https://github.com/jxxcarlson/scripta-compiler">Scripta Compiler</a></p>
-</li>
-<li>
-<p><a href="https://github.com/jxxcarlson/scripta-tauri">Scripta Desktop</a></p>
-</li>
-<li>
-<p>Scripta.io: not currently open source</p>
-</li>
-</ul>
 <h2 id="note">Note</h2>
 <p>Most of the rest of this document concerns the web app and is 
 intended to help the app developers.</p>
@@ -252,5 +261,5 @@ intended to help the app developers.</p>
 
 <!--
 MkDocs version : 1.4.2
-Build Date UTC : 2023-01-21 23:54:23.332465+00:00
+Build Date UTC : 2023-02-06 18:26:53.983224+00:00
 -->
