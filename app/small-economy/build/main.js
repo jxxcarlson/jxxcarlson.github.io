@@ -604,7 +604,7 @@ ${variant}`;
   var VERSION = "1.1.2";
   var TARGET_NAME = "My target name";
   var INITIAL_ELM_COMPILED_TIMESTAMP = Number(
-    "1695555679265"
+    "1695555912399"
   );
   var ORIGINAL_COMPILATION_MODE = "optimize";
   var ORIGINAL_BROWSER_UI_POSITION = "BottomLeft";
@@ -7518,7 +7518,7 @@ var _Bitwise_shiftRightZfBy = F2(function(offset, a)
 {
 	return a >>> offset;
 });
-var $author$project$Main$config1 = {w: 500, T: 20, U: 200, aK: 1.0, af: 12345};
+var $author$project$Main$config1 = {t: 500, T: 20, U: 200, aK: 1.0, af: 12345};
 var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var $elm$core$Array$foldr = F3(
@@ -9981,7 +9981,7 @@ var $author$project$Main$initialState = function (config) {
 		$author$project$Model$initialState,
 		$elm$random$Random$initialSeed(config.af),
 		config.U,
-		config.w,
+		config.t,
 		config.T);
 };
 var $elm$core$Basics$ge = _Utils_ge;
@@ -10604,13 +10604,17 @@ var $author$project$Main$visualize = F2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
 					'Populaton = ' + A2($author$project$Model$roundAt2, 1, $author$project$Main$config1.U))));
+		var message12 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((-$author$project$Main$config1.t) / 2) - 90,
+			A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'https://github.com/jxxcarlson/small-economy'));
 		var message11 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((-$author$project$Main$config1.w) / 2) - 55,
+			((-$author$project$Main$config1.t) / 2) - 70,
 			A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'https://scripta.io/s/jxxcarlson:wealth-and-the-random-exchange-model'));
 		var message10 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((-$author$project$Main$config1.w) / 2) - 30,
+			((-$author$project$Main$config1.t) / 2) - 40,
 			A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'Random Exchange Model'));
 		var message1 = A2(
 			$evancz$elm_playground$Playground$moveY,
@@ -10625,8 +10629,8 @@ var $author$project$Main$visualize = F2(
 		var boundingBox = A3(
 			$evancz$elm_playground$Playground$rectangle,
 			A3($evancz$elm_playground$Playground$rgb, 30, 30, 60),
-			$author$project$Main$config1.w + 20,
-			$author$project$Main$config1.w + 20);
+			$author$project$Main$config1.t + 20,
+			$author$project$Main$config1.t + 20);
 		var blackScreen = A3($evancz$elm_playground$Playground$rectangle, $evancz$elm_playground$Playground$black, computer.a.p, computer.a.o);
 		return A2(
 			$elm$core$List$cons,
@@ -10674,9 +10678,12 @@ var $author$project$Main$visualize = F2(
 																	$elm$core$List$cons,
 																	message11,
 																	A2(
-																		$elm$core$List$indexedMap,
-																		$author$project$Main$personToShape($author$project$Main$config1.w),
-																		state.aC))))))))))))))));
+																		$elm$core$List$cons,
+																		message12,
+																		A2(
+																			$elm$core$List$indexedMap,
+																			$author$project$Main$personToShape($author$project$Main$config1.t),
+																			state.aC)))))))))))))))));
 	});
 var $author$project$Main$view = F2(
 	function (computer, state) {
