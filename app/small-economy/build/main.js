@@ -604,7 +604,7 @@ ${variant}`;
   var VERSION = "1.1.2";
   var TARGET_NAME = "My target name";
   var INITIAL_ELM_COMPILED_TIMESTAMP = Number(
-    "1695555912399"
+    "1695559279661"
   );
   var ORIGINAL_COMPILATION_MODE = "optimize";
   var ORIGINAL_BROWSER_UI_POSITION = "BottomLeft";
@@ -3391,11 +3391,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.aj.M === region.ar.M)
+	if (region.be.ao === region.bt.ao)
 	{
-		return 'on line ' + region.aj.M;
+		return 'on line ' + region.be.ao;
 	}
-	return 'on lines ' + region.aj.M + ' through ' + region.ar.M;
+	return 'on lines ' + region.be.ao + ' through ' + region.bt.ao;
 }
 
 
@@ -4736,7 +4736,7 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 		debugMetadata, // added by elm-watch
 		flagDecoder,
 		args,
-		impl.av,
+		impl.bC,
 		// impl.update, // commented out by elm-watch
 		// impl.subscriptions, // commented out by elm-watch
 		impl, // added by elm-watch
@@ -4770,8 +4770,8 @@ function _Platform_initialize(programType, isDebug, debugMetadata, flagDecoder, 
 	var subscriptions;
 
 	function setUpdateAndSubscriptions() {
-		update = impl.aQ || impl._impl.aQ;
-		subscriptions = impl.ba || impl._impl.ba;
+		update = impl.b5 || impl._impl.b5;
+		subscriptions = impl.dB || impl._impl.dB;
 		if (isDebug) {
 			update = $elm$browser$Debugger$Main$wrapUpdate(update);
 			subscriptions = $elm$browser$Debugger$Main$wrapSubs(subscriptions);
@@ -4822,7 +4822,7 @@ function _Platform_initialize(programType, isDebug, debugMetadata, flagDecoder, 
 		if (!_Utils_eq_elmWatchInternal(debugMetadata, newData.debugMetadata)) {
 			return reloadReasons.concat("the message type in `" + moduleName + '` changed in debug mode ("debug metadata" changed).');
 		}
-		init = impl.av || impl._impl.av;
+		init = impl.bC || impl._impl.bC;
 		if (isDebug) {
 			init = A3($elm$browser$Debugger$Main$wrapInit, _Json_wrap(newData.debugMetadata), initPair.a.popout, init);
 		}
@@ -5813,9 +5813,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		y: func(record.y),
-		ak: record.ak,
-		ae: record.ae
+		O: func(record.O),
+		bf: record.bf,
+		a8: record.a8
 	}
 });
 
@@ -6083,11 +6083,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.y;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.ak;
+		var message = !tag ? value : tag < 3 ? value.a : value.O;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.bf;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.ae) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.a8) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -7041,7 +7041,7 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 		debugMetadata, // added by elm-watch
 		flagDecoder,
 		args,
-		impl.av,
+		impl.bC,
 		// impl.update, // commented out by elm-watch
 		// impl.subscriptions, // commented out by elm-watch
 		impl, // added by elm-watch
@@ -7058,7 +7058,7 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 			return _Browser_makeAnimator(initialModel, function(model)
 			{
 				// var nextNode = view(model); // commented out by elm-watch
-				var nextNode = impl.aR(model); // added by elm-watch
+				var nextNode = impl.b8(model); // added by elm-watch
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				domNode = _VirtualDom_applyPatches(domNode, currNode, patches, sendToApp);
 				currNode = nextNode;
@@ -7083,12 +7083,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		debugMetadata, // added by elm-watch
 		flagDecoder,
 		args,
-		impl.av,
+		impl.bC,
 		// impl.update, // commented out by elm-watch
 		// impl.subscriptions, // commented out by elm-watch
 		impl, // added by elm-watch
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.ag && impl.ag(sendToApp)
+			var divertHrefToApp = impl.bb && impl.bb(sendToApp)
 			// var view = impl.view; // commented out by elm-watch
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -7097,13 +7097,13 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				// var doc = view(model); // commented out by elm-watch
-				var doc = impl.aR(model); // added by elm-watch
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aV);
+				var doc = impl.b8(model); // added by elm-watch
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.cu);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.bc) && (_VirtualDom_doc.title = title = doc.bc);
+				(title !== doc.dR) && (_VirtualDom_doc.title = title = doc.dR);
 			});
 		}
 	);
@@ -7163,10 +7163,10 @@ function _Browser_application(impl)
 	// var onUrlChange = impl.onUrlChange; // commented out by elm-watch
 	// var onUrlRequest = impl.onUrlRequest; // commented out by elm-watch
 	// var key = function() { key.a(onUrlChange(_Browser_getUrl())); }; // commented out by elm-watch
-	var key = function() { key.a(impl.a1(_Browser_getUrl())); }; // added by elm-watch
+	var key = function() { key.a(impl.c9(_Browser_getUrl())); }; // added by elm-watch
 
 	return _Browser_document({
-		ag: function(sendToApp)
+		bb: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -7180,11 +7180,11 @@ function _Browser_application(impl)
 					var href = domNode.href;
 					var curr = _Browser_getUrl();
 					var next = $elm$url$Url$fromString(href).a;
-					sendToApp(impl.a2(
+					sendToApp(impl.da(
 						(next
-							&& curr.aH === next.aH
-							&& curr.au === next.au
-							&& curr.aE.a === next.aE.a
+							&& curr.bW === next.bW
+							&& curr.bA === next.bA
+							&& curr.bT.a === next.bT.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -7192,15 +7192,15 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		av: function(flags)
+		bC: function(flags)
 		{
 			// return A3(impl.init, flags, _Browser_getUrl(), key); // commented out by elm-watch
-			return A3(impl.av, flags, globalThis.__ELM_WATCH.INIT_URL, key); // added by elm-watch
+			return A3(impl.bC, flags, globalThis.__ELM_WATCH.INIT_URL, key); // added by elm-watch
 		},
 		// view: impl.view, // commented out by elm-watch
 		// update: impl.update, // commented out by elm-watch
 		// subscriptions: impl.subscriptions // commented out by elm-watch
-		aR: function(model) { return impl.aR(model); }, // added by elm-watch
+		b8: function(model) { return impl.b8(model); }, // added by elm-watch
 		_impl: impl // added by elm-watch
 	});
 }
@@ -7267,17 +7267,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { a_: 'hidden', aW: 'visibilitychange' }
+		? { cT: 'hidden', cC: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { a_: 'mozHidden', aW: 'mozvisibilitychange' }
+		? { cT: 'mozHidden', cC: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { a_: 'msHidden', aW: 'msvisibilitychange' }
+		? { cT: 'msHidden', cC: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { a_: 'webkitHidden', aW: 'webkitvisibilitychange' }
-		: { a_: 'hidden', aW: 'visibilitychange' };
+		? { cT: 'webkitHidden', cC: 'webkitvisibilitychange' }
+		: { cT: 'hidden', cC: 'visibilitychange' };
 }
 
 
@@ -7358,12 +7358,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		aN: _Browser_getScene(),
-		aS: {
-			be: _Browser_window.pageXOffset,
-			bf: _Browser_window.pageYOffset,
-			p: _Browser_doc.documentElement.clientWidth,
-			o: _Browser_doc.documentElement.clientHeight
+		b0: _Browser_getScene(),
+		b9: {
+			dW: _Browser_window.pageXOffset,
+			dX: _Browser_window.pageYOffset,
+			j: _Browser_doc.documentElement.clientWidth,
+			h: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -7373,8 +7373,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		p: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		o: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		j: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		h: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -7397,15 +7397,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			aN: {
-				p: node.scrollWidth,
-				o: node.scrollHeight
+			b0: {
+				j: node.scrollWidth,
+				h: node.scrollHeight
 			},
-			aS: {
-				be: node.scrollLeft,
-				bf: node.scrollTop,
-				p: node.clientWidth,
-				o: node.clientHeight
+			b9: {
+				dW: node.scrollLeft,
+				dX: node.scrollTop,
+				j: node.clientWidth,
+				h: node.clientHeight
 			}
 		};
 	});
@@ -7435,18 +7435,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			aN: _Browser_getScene(),
-			aS: {
-				be: x,
-				bf: y,
-				p: _Browser_doc.documentElement.clientWidth,
-				o: _Browser_doc.documentElement.clientHeight
+			b0: _Browser_getScene(),
+			b9: {
+				dW: x,
+				dX: y,
+				j: _Browser_doc.documentElement.clientWidth,
+				h: _Browser_doc.documentElement.clientHeight
 			},
-			aY: {
-				be: x + rect.left,
-				bf: y + rect.top,
-				p: rect.width,
-				o: rect.height
+			cN: {
+				dW: x + rect.left,
+				dX: y + rect.top,
+				j: rect.width,
+				h: rect.height
 			}
 		};
 	});
@@ -7518,7 +7518,7 @@ var _Bitwise_shiftRightZfBy = F2(function(offset, a)
 {
 	return a >>> offset;
 });
-var $author$project$Main$config1 = {t: 500, T: 20, U: 200, aK: 1.0, af: 12345};
+var $author$project$Main$config1 = {G: 500, aH: 20, aM: 200, bZ: 1.0, as: 12345};
 var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var $elm$core$Array$foldr = F3(
@@ -7936,25 +7936,25 @@ var $elm$core$Array$treeFromBuilder = F2(
 	});
 var $elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
-		if (!builder.b) {
+		if (!builder.d) {
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.d),
+				$elm$core$Elm$JsArray$length(builder.g),
 				$elm$core$Array$shiftStep,
 				$elm$core$Elm$JsArray$empty,
-				builder.d);
+				builder.g);
 		} else {
-			var treeLen = builder.b * $elm$core$Array$branchFactor;
+			var treeLen = builder.d * $elm$core$Array$branchFactor;
 			var depth = $elm$core$Basics$floor(
 				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.e) : builder.e;
-			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.b);
+			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.i) : builder.i;
+			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.d);
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.d) + treeLen,
+				$elm$core$Elm$JsArray$length(builder.g) + treeLen,
 				A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep),
 				tree,
-				builder.d);
+				builder.g);
 		}
 	});
 var $elm$core$Basics$idiv = _Basics_idiv;
@@ -7967,7 +7967,7 @@ var $elm$core$Array$initializeHelp = F5(
 				return A2(
 					$elm$core$Array$builderToArray,
 					false,
-					{e: nodeList, b: (len / $elm$core$Array$branchFactor) | 0, d: tail});
+					{i: nodeList, d: (len / $elm$core$Array$branchFactor) | 0, g: tail});
 			} else {
 				var leaf = $elm$core$Array$Leaf(
 					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
@@ -8034,7 +8034,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {at: fragment, au: host, aB: path, aE: port_, aH: protocol, aI: query};
+		return {bw: fragment, bA: host, bQ: path, bT: port_, bW: protocol, bX: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -8340,7 +8340,7 @@ var $elm$browser$Browser$AnimationManager$Time = function (a) {
 };
 var $elm$browser$Browser$AnimationManager$State = F3(
 	function (subs, request, oldTime) {
-		return {ad: oldTime, aM: request, aO: subs};
+		return {a7: oldTime, b$: request, b2: subs};
 	});
 var $elm$browser$Browser$AnimationManager$init = $elm$core$Task$succeed(
 	A3($elm$browser$Browser$AnimationManager$State, _List_Nil, $elm$core$Maybe$Nothing, 0));
@@ -8351,8 +8351,8 @@ var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
 var $elm$core$Process$spawn = _Scheduler_spawn;
 var $elm$browser$Browser$AnimationManager$onEffects = F3(
 	function (router, subs, _v0) {
-		var request = _v0.aM;
-		var oldTime = _v0.ad;
+		var request = _v0.b$;
+		var oldTime = _v0.a7;
 		var _v1 = _Utils_Tuple2(request, subs);
 		if (_v1.a.$ === 1) {
 			if (!_v1.b.b) {
@@ -8400,8 +8400,8 @@ var $elm$time$Time$Posix = $elm$core$Basics$identity;
 var $elm$time$Time$millisToPosix = $elm$core$Basics$identity;
 var $elm$browser$Browser$AnimationManager$onSelfMsg = F3(
 	function (router, newTime, _v0) {
-		var subs = _v0.aO;
-		var oldTime = _v0.ad;
+		var subs = _v0.b2;
+		var oldTime = _v0.a7;
 		var send = function (sub) {
 			if (!sub.$) {
 				var tagger = sub.a;
@@ -8474,7 +8474,7 @@ var $elm$browser$Browser$Events$MySub = F3(
 	});
 var $elm$browser$Browser$Events$State = F2(
 	function (subs, pids) {
-		return {aD: pids, aO: subs};
+		return {bS: pids, b2: subs};
 	});
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: -2};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
@@ -8705,7 +8705,7 @@ var $elm$core$Dict$merge = F6(
 	});
 var $elm$browser$Browser$Events$Event = F2(
 	function (key, event) {
-		return {as: event, ay: key};
+		return {bu: event, bG: key};
 	});
 var $elm$browser$Browser$Events$spawn = F3(
 	function (router, key, _v0) {
@@ -8779,7 +8779,7 @@ var $elm$browser$Browser$Events$onEffects = F3(
 			stepLeft,
 			stepBoth,
 			stepRight,
-			state.aD,
+			state.bS,
 			$elm$core$Dict$fromList(newSubs),
 			_Utils_Tuple3(_List_Nil, $elm$core$Dict$empty, _List_Nil));
 		var deadPids = _v0.a;
@@ -8825,8 +8825,8 @@ var $elm$core$List$filterMap = F2(
 	});
 var $elm$browser$Browser$Events$onSelfMsg = F3(
 	function (router, _v0, state) {
-		var key = _v0.ay;
-		var event = _v0.as;
+		var key = _v0.bG;
+		var event = _v0.bu;
 		var toMessage = function (_v2) {
 			var subKey = _v2.a;
 			var _v3 = _v2.b;
@@ -8835,7 +8835,7 @@ var $elm$browser$Browser$Events$onSelfMsg = F3(
 			var decoder = _v3.c;
 			return _Utils_eq(subKey, key) ? A2(_Browser_decodeEvent, decoder, event) : $elm$core$Maybe$Nothing;
 		};
-		var messages = A2($elm$core$List$filterMap, toMessage, state.aO);
+		var messages = A2($elm$core$List$filterMap, toMessage, state.b2);
 		return A2(
 			$elm$core$Task$andThen,
 			function (_v1) {
@@ -8899,14 +8899,14 @@ var $elm$browser$Browser$Events$onVisibilityChange = function (func) {
 	return A3(
 		$elm$browser$Browser$Events$on,
 		0,
-		info.aW,
+		info.cC,
 		A2(
 			$elm$json$Json$Decode$map,
 			$elm$browser$Browser$Events$withHidden(func),
 			A2(
 				$elm$json$Json$Decode$field,
 				'target',
-				A2($elm$json$Json$Decode$field, info.a_, $elm$json$Json$Decode$bool))));
+				A2($elm$json$Json$Decode$field, info.cT, $elm$json$Json$Decode$bool))));
 };
 var $elm$json$Json$Decode$string = _Json_decodeString;
 var $evancz$elm_playground$Playground$gameSubscriptions = $elm$core$Platform$Sub$batch(
@@ -8942,36 +8942,36 @@ var $evancz$elm_playground$Playground$gameSubscriptions = $elm$core$Platform$Sub
 		]));
 var $evancz$elm_playground$Playground$Mouse = F4(
 	function (x, y, down, click) {
-		return {Z: click, aX: down, be: x, bf: y};
+		return {aZ: click, cM: down, dW: x, dX: y};
 	});
 var $evancz$elm_playground$Playground$Time = $elm$core$Basics$identity;
 var $elm$core$Set$Set_elm_builtin = $elm$core$Basics$identity;
 var $elm$core$Set$empty = $elm$core$Dict$empty;
-var $evancz$elm_playground$Playground$emptyKeyboard = {X: false, aX: false, _: false, k: $elm$core$Set$empty, x: false, G: false, ah: false, ai: false, W: false};
+var $evancz$elm_playground$Playground$emptyKeyboard = {aW: false, cM: false, a_: false, aK: $elm$core$Set$empty, N: false, ag: false, bc: false, bd: false, aQ: false};
 var $evancz$elm_playground$Playground$mouseClick = F2(
 	function (bool, mouse) {
 		return _Utils_update(
 			mouse,
-			{Z: bool});
+			{aZ: bool});
 	});
 var $evancz$elm_playground$Playground$mouseDown = F2(
 	function (bool, mouse) {
 		return _Utils_update(
 			mouse,
-			{aX: bool});
+			{cM: bool});
 	});
 var $evancz$elm_playground$Playground$mouseMove = F3(
 	function (x, y, mouse) {
 		return _Utils_update(
 			mouse,
-			{be: x, bf: y});
+			{dW: x, dX: y});
 	});
 var $elm$core$Basics$negate = function (n) {
 	return -n;
 };
 var $evancz$elm_playground$Playground$toScreen = F2(
 	function (width, height) {
-		return {Y: (-height) / 2, o: height, x: (-width) / 2, G: width / 2, al: height / 2, p: width};
+		return {aY: (-height) / 2, h: height, N: (-width) / 2, ag: width / 2, bg: height / 2, j: width};
 	});
 var $elm$core$Set$insert = F2(
 	function (key, _v0) {
@@ -9347,44 +9347,44 @@ var $elm$core$Set$remove = F2(
 	});
 var $evancz$elm_playground$Playground$updateKeyboard = F3(
 	function (isDown, key, keyboard) {
-		var keys = isDown ? A2($elm$core$Set$insert, key, keyboard.k) : A2($elm$core$Set$remove, key, keyboard.k);
+		var keys = isDown ? A2($elm$core$Set$insert, key, keyboard.aK) : A2($elm$core$Set$remove, key, keyboard.aK);
 		switch (key) {
 			case ' ':
 				return _Utils_update(
 					keyboard,
-					{k: keys, ai: isDown});
+					{aK: keys, bd: isDown});
 			case 'Enter':
 				return _Utils_update(
 					keyboard,
-					{_: isDown, k: keys});
+					{a_: isDown, aK: keys});
 			case 'Shift':
 				return _Utils_update(
 					keyboard,
-					{k: keys, ah: isDown});
+					{aK: keys, bc: isDown});
 			case 'Backspace':
 				return _Utils_update(
 					keyboard,
-					{X: isDown, k: keys});
+					{aW: isDown, aK: keys});
 			case 'ArrowUp':
 				return _Utils_update(
 					keyboard,
-					{k: keys, W: isDown});
+					{aK: keys, aQ: isDown});
 			case 'ArrowDown':
 				return _Utils_update(
 					keyboard,
-					{aX: isDown, k: keys});
+					{cM: isDown, aK: keys});
 			case 'ArrowLeft':
 				return _Utils_update(
 					keyboard,
-					{k: keys, x: isDown});
+					{aK: keys, N: isDown});
 			case 'ArrowRight':
 				return _Utils_update(
 					keyboard,
-					{k: keys, G: isDown});
+					{aK: keys, ag: isDown});
 			default:
 				return _Utils_update(
 					keyboard,
-					{k: keys});
+					{aK: keys});
 		}
 	});
 var $evancz$elm_playground$Playground$gameUpdate = F3(
@@ -9399,16 +9399,16 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					$evancz$elm_playground$Playground$Game,
 					vis,
 					A2(updateMemory, computer, memory),
-					computer.j.Z ? _Utils_update(
+					computer.q.aZ ? _Utils_update(
 						computer,
 						{
-							j: A2($evancz$elm_playground$Playground$mouseClick, false, computer.j),
-							V: time
+							q: A2($evancz$elm_playground$Playground$mouseClick, false, computer.q),
+							aP: time
 						}) : _Utils_update(
 						computer,
-						{V: time}));
+						{aP: time}));
 			case 2:
-				var viewport = msg.a.aS;
+				var viewport = msg.a.b9;
 				return A3(
 					$evancz$elm_playground$Playground$Game,
 					vis,
@@ -9416,7 +9416,7 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							a: A2($evancz$elm_playground$Playground$toScreen, viewport.p, viewport.o)
+							a: A2($evancz$elm_playground$Playground$toScreen, viewport.j, viewport.h)
 						}));
 			case 3:
 				var w = msg.a;
@@ -9440,13 +9440,13 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							L: A3($evancz$elm_playground$Playground$updateKeyboard, isDown, key, computer.L)
+							aJ: A3($evancz$elm_playground$Playground$updateKeyboard, isDown, key, computer.aJ)
 						}));
 			case 5:
 				var pageX = msg.a;
 				var pageY = msg.b;
-				var y = computer.a.al - pageY;
-				var x = computer.a.x + pageX;
+				var y = computer.a.bg - pageY;
+				var x = computer.a.N + pageX;
 				return A3(
 					$evancz$elm_playground$Playground$Game,
 					vis,
@@ -9454,7 +9454,7 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							j: A3($evancz$elm_playground$Playground$mouseMove, x, y, computer.j)
+							q: A3($evancz$elm_playground$Playground$mouseMove, x, y, computer.q)
 						}));
 			case 6:
 				return A3(
@@ -9464,7 +9464,7 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							j: A2($evancz$elm_playground$Playground$mouseClick, true, computer.j)
+							q: A2($evancz$elm_playground$Playground$mouseClick, true, computer.q)
 						}));
 			case 7:
 				var isDown = msg.a;
@@ -9475,7 +9475,7 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							j: A2($evancz$elm_playground$Playground$mouseDown, isDown, computer.j)
+							q: A2($evancz$elm_playground$Playground$mouseDown, isDown, computer.q)
 						}));
 			default:
 				var visibility = msg.a;
@@ -9486,17 +9486,17 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							L: $evancz$elm_playground$Playground$emptyKeyboard,
-							j: A4($evancz$elm_playground$Playground$Mouse, computer.j.be, computer.j.bf, false, false)
+							aJ: $evancz$elm_playground$Playground$emptyKeyboard,
+							q: A4($evancz$elm_playground$Playground$Mouse, computer.q.dW, computer.q.dX, false, false)
 						}));
 		}
 	});
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $evancz$elm_playground$Playground$initialComputer = {
-	L: $evancz$elm_playground$Playground$emptyKeyboard,
-	j: A4($evancz$elm_playground$Playground$Mouse, 0, 0, false, false),
+	aJ: $evancz$elm_playground$Playground$emptyKeyboard,
+	q: A4($evancz$elm_playground$Playground$Mouse, 0, 0, false, false),
 	a: A2($evancz$elm_playground$Playground$toScreen, 600, 600),
-	V: $elm$time$Time$millisToPosix(0)
+	aP: $elm$time$Time$millisToPosix(0)
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
@@ -9801,10 +9801,10 @@ var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
 var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var $evancz$elm_playground$Playground$render = F2(
 	function (screen, shapes) {
-		var y = $elm$core$String$fromFloat(screen.Y);
-		var x = $elm$core$String$fromFloat(screen.x);
-		var w = $elm$core$String$fromFloat(screen.p);
-		var h = $elm$core$String$fromFloat(screen.o);
+		var y = $elm$core$String$fromFloat(screen.aY);
+		var x = $elm$core$String$fromFloat(screen.N);
+		var w = $elm$core$String$fromFloat(screen.j);
+		var h = $elm$core$String$fromFloat(screen.h);
 		return A2(
 			$elm$svg$Svg$svg,
 			_List_fromArray(
@@ -9824,14 +9824,14 @@ var $evancz$elm_playground$Playground$game = F3(
 			var memory = _v3.b;
 			var computer = _v3.c;
 			return {
-				aV: _List_fromArray(
+				cu: _List_fromArray(
 					[
 						A2(
 						$evancz$elm_playground$Playground$render,
 						computer.a,
 						A2(viewMemory, computer, memory))
 					]),
-				bc: 'Playground'
+				dR: 'Playground'
 			};
 		};
 		var update = F2(
@@ -9854,8 +9854,13 @@ var $evancz$elm_playground$Playground$game = F3(
 				A2($elm$core$Task$perform, $evancz$elm_playground$Playground$GotViewport, $elm$browser$Browser$Dom$getViewport));
 		};
 		return $elm$browser$Browser$document(
-			{av: init, ba: subscriptions, aQ: update, aR: view});
+			{bC: init, dB: subscriptions, b5: update, b8: view});
 	});
+var $elm$random$Random$Generator = $elm$core$Basics$identity;
+var $elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
+};
+var $elm$core$Bitwise$and = _Bitwise_and;
 var $elm$random$Random$Seed = F2(
 	function (a, b) {
 		return {$: 0, a: a, b: b};
@@ -9866,20 +9871,6 @@ var $elm$random$Random$next = function (_v0) {
 	var incr = _v0.b;
 	return A2($elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
 };
-var $elm$random$Random$initialSeed = function (x) {
-	var _v0 = $elm$random$Random$next(
-		A2($elm$random$Random$Seed, 0, 1013904223));
-	var state1 = _v0.a;
-	var incr = _v0.b;
-	var state2 = (state1 + x) >>> 0;
-	return $elm$random$Random$next(
-		A2($elm$random$Random$Seed, state2, incr));
-};
-var $elm$random$Random$Generator = $elm$core$Basics$identity;
-var $elm$core$Basics$abs = function (n) {
-	return (n < 0) ? (-n) : n;
-};
-var $elm$core$Bitwise$and = _Bitwise_and;
 var $elm$core$Bitwise$xor = _Bitwise_xor;
 var $elm$random$Random$peel = function (_v0) {
 	var state = _v0.a;
@@ -9910,30 +9901,30 @@ var $elm$random$Random$step = F2(
 var $author$project$Random$Seeded$randomFloatPairsHelp = function (data) {
 	randomFloatPairsHelp:
 	while (true) {
-		if (data.f <= 0) {
+		if (data.l <= 0) {
 			return data;
 		} else {
 			var _v0 = A2(
 				$elm$random$Random$step,
-				A2($elm$random$Random$float, data.i, data.h),
-				data.af);
+				A2($elm$random$Random$float, data.p, data.o),
+				data.ar);
 			var k1 = _v0.a;
 			var seed1 = _v0.b;
 			var _v1 = A2(
 				$elm$random$Random$step,
-				A2($elm$random$Random$float, data.i, data.h),
+				A2($elm$random$Random$float, data.p, data.o),
 				seed1);
 			var k2 = _v1.a;
 			var seed2 = _v1.b;
 			var $temp$data = {
-				h: data.h,
-				i: data.i,
-				f: data.f - 1,
-				a4: A2(
+				o: data.o,
+				p: data.p,
+				l: data.l - 1,
+				dd: A2(
 					$elm$core$List$cons,
 					_Utils_Tuple2(k1, k2),
-					data.a4),
-				af: seed2
+					data.dd),
+				ar: seed2
 			};
 			data = $temp$data;
 			continue randomFloatPairsHelp;
@@ -9943,14 +9934,14 @@ var $author$project$Random$Seeded$randomFloatPairsHelp = function (data) {
 var $author$project$Random$Seeded$floatPairs = F4(
 	function (seed, low, high, n) {
 		var result = $author$project$Random$Seeded$randomFloatPairsHelp(
-			{h: high, i: low, f: n, a4: _List_Nil, af: seed});
-		return {a4: result.a4, af: result.af};
+			{o: high, p: low, l: n, dd: _List_Nil, ar: seed});
+		return {dd: result.dd, ar: result.ar};
 	});
 var $author$project$Model$initPerson = F3(
 	function (id, _v0, capital) {
 		var x = _v0.a;
 		var y = _v0.b;
-		return {ao: capital, ab: id, be: x, bf: y};
+		return {bo: capital, a4: id, dW: x, dX: y};
 	});
 var $author$project$Model$initPeople_ = F2(
 	function (capital, positions) {
@@ -9966,23 +9957,32 @@ var $author$project$Model$initPeople = F4(
 	function (seed, populationSize, gridSize, capital) {
 		var result = A4($author$project$Random$Seeded$floatPairs, seed, 0, gridSize, populationSize);
 		return _Utils_Tuple2(
-			result.af,
-			A2($author$project$Model$initPeople_, capital, result.a4));
+			result.ar,
+			A2($author$project$Model$initPeople_, capital, result.dd));
 	});
-var $author$project$Model$initialState = F4(
-	function (seed, populationSize, gridSize, initialCapital) {
-		var _v0 = A4($author$project$Model$initPeople, seed, populationSize, gridSize, initialCapital);
+var $elm$random$Random$initialSeed = function (x) {
+	var _v0 = $elm$random$Random$next(
+		A2($elm$random$Random$Seed, 0, 1013904223));
+	var state1 = _v0.a;
+	var incr = _v0.b;
+	var state2 = (state1 + x) >>> 0;
+	return $elm$random$Random$next(
+		A2($elm$random$Random$Seed, state2, incr));
+};
+var $author$project$Model$initialState = F5(
+	function (seedInteger, populationSize, gridSize, initialCapital, transactionAmount) {
+		var _v0 = A4(
+			$author$project$Model$initPeople,
+			$elm$random$Random$initialSeed(seedInteger),
+			populationSize,
+			gridSize,
+			initialCapital);
 		var newSeed = _v0.a;
 		var people = _v0.b;
-		return {aC: people, af: newSeed, bb: 0, Q: 0.5};
+		return {ap: false, bR: people, ar: newSeed, as: seedInteger, dC: 0, aw: transactionAmount};
 	});
 var $author$project$Main$initialState = function (config) {
-	return A4(
-		$author$project$Model$initialState,
-		$elm$random$Random$initialSeed(config.af),
-		config.U,
-		config.t,
-		config.T);
+	return A5($author$project$Model$initialState, config.as, config.aM, config.G, config.aH, 0.5);
 };
 var $elm$core$Basics$ge = _Utils_ge;
 var $elm$core$List$drop = F2(
@@ -10236,13 +10236,13 @@ var $author$project$Model$nextState = function (state) {
 			if ((!_v2.a.$) && (!_v2.b.$)) {
 				var personI = _v2.a.a;
 				var personJ = _v2.b.a;
-				if ((!_Utils_eq(ii, jj)) && ((personI.ao - state.Q) >= 0)) {
+				if ((!_Utils_eq(ii, jj)) && ((personI.bo - state.aw) >= 0)) {
 					var newPersonJ = _Utils_update(
 						personJ,
-						{ao: personJ.ao + state.Q});
+						{bo: personJ.bo + state.aw});
 					var newPersonI = _Utils_update(
 						personI,
-						{ao: personI.ao - state.Q});
+						{bo: personI.bo - state.aw});
 					return A3(
 						$elm_community$list_extra$List$Extra$setAt,
 						jj,
@@ -10255,8 +10255,8 @@ var $author$project$Model$nextState = function (state) {
 				return people;
 			}
 		});
-	var n = $elm$core$List$length(state.aC);
-	var _v0 = A3($author$project$Random$Seeded$intPair, state.af, 0, n - 1);
+	var n = $elm$core$List$length(state.bR);
+	var _v0 = A3($author$project$Random$Seeded$intPair, state.ar, 0, n - 1);
 	var seed = _v0.a;
 	var _v1 = _v0.b;
 	var i = _v1.a;
@@ -10264,14 +10264,62 @@ var $author$project$Model$nextState = function (state) {
 	return _Utils_update(
 		state,
 		{
-			aC: A3(updatePeople, state.aC, i, j),
-			af: seed,
-			bb: state.bb + 1
+			bR: A3(updatePeople, state.bR, i, j),
+			ar: seed,
+			dC: state.dC + 1
 		});
+};
+var $elm$core$Dict$singleton = F2(
+	function (key, value) {
+		return A5($elm$core$Dict$RBNode_elm_builtin, 1, key, value, $elm$core$Dict$RBEmpty_elm_builtin, $elm$core$Dict$RBEmpty_elm_builtin);
+	});
+var $elm$core$Set$singleton = function (key) {
+	return A2($elm$core$Dict$singleton, key, 0);
 };
 var $author$project$Main$update = F2(
 	function (computer, state) {
-		return $author$project$Model$nextState(state);
+		var newState = function () {
+			if (_Utils_eq(
+				computer.aJ.aK,
+				$elm$core$Set$singleton('p'))) {
+				return _Utils_update(
+					state,
+					{ap: true});
+			} else {
+				if (_Utils_eq(
+					computer.aJ.aK,
+					$elm$core$Set$singleton('r'))) {
+					return _Utils_update(
+						state,
+						{ap: false});
+				} else {
+					if (_Utils_eq(
+						computer.aJ.aK,
+						$elm$core$Set$singleton('x'))) {
+						var state1 = $author$project$Main$initialState($author$project$Main$config1);
+						return _Utils_update(
+							state1,
+							{ap: true});
+					} else {
+						if (_Utils_eq(
+							computer.aJ.aK,
+							$elm$core$Set$singleton('s'))) {
+							var newSeedInteger = state.as + 1;
+							var state1 = $author$project$Main$initialState(
+								_Utils_update(
+									$author$project$Main$config1,
+									{as: newSeedInteger}));
+							return _Utils_update(
+								state1,
+								{ap: true});
+						} else {
+							return state;
+						}
+					}
+				}
+			}
+		}();
+		return newState.ap ? newState : $author$project$Model$nextState(newState);
 	});
 var $evancz$elm_playground$Playground$Hex = function (a) {
 	return {$: 0, a: a};
@@ -10287,7 +10335,7 @@ var $author$project$Model$listCapital = function (people) {
 	return A2(
 		$elm$core$List$map,
 		function (p) {
-			return _Utils_Tuple2(p.ab, p.ao);
+			return _Utils_Tuple2(p.a4, p.bo);
 		},
 		people);
 };
@@ -10318,7 +10366,7 @@ var $author$project$Model$maxCapital = function (state) {
 	var capitalList = A3(
 		$elm$core$Basics$composeR,
 		function ($) {
-			return $.aC;
+			return $.bR;
 		},
 		$author$project$Model$listCapital,
 		state);
@@ -10371,9 +10419,9 @@ var $elm$core$Basics$pow = _Basics_pow;
 var $author$project$Main$personToShape = F3(
 	function (gridSize, index, person) {
 		var scaleObject = 1;
-		var radius = A2($elm$core$Basics$pow, person.ao, 2.5) / 1000;
-		var dy = (scaleObject * person.bf) - (gridSize / 2);
-		var dx = (scaleObject * person.be) - (gridSize / 2);
+		var radius = A2($elm$core$Basics$pow, person.bo, 2.5) / 1000;
+		var dy = (scaleObject * person.dX) - (gridSize / 2);
+		var dx = (scaleObject * person.dW) - (gridSize / 2);
 		var c2 = $evancz$elm_playground$Playground$blue;
 		return A2(
 			$evancz$elm_playground$Playground$moveY,
@@ -10403,24 +10451,24 @@ var $author$project$Model$quintiles = function (xs) {
 	var m2 = $elm$core$Basics$round(0.4 * n);
 	var m1 = (0.2 * n) | 0;
 	return {
-		aJ: $author$project$Model$average(
+		bY: $author$project$Model$average(
 			A2($elm$core$List$take, m1, sorted)),
-		a5: $author$project$Model$average(
+		df: $author$project$Model$average(
 			A2(
 				$elm$core$List$take,
 				m2 - m1,
 				A2($elm$core$List$drop, m1, sorted))),
-		a6: $author$project$Model$average(
+		dg: $author$project$Model$average(
 			A2(
 				$elm$core$List$take,
 				m3 - m2,
 				A2($elm$core$List$drop, m2, sorted))),
-		a7: $author$project$Model$average(
+		dh: $author$project$Model$average(
 			A2(
 				$elm$core$List$take,
 				m4 - m3,
 				A2($elm$core$List$drop, m3, sorted))),
-		a8: $author$project$Model$average(
+		di: $author$project$Model$average(
 			A2(
 				$elm$core$List$take,
 				n - m4,
@@ -10495,78 +10543,113 @@ var $author$project$Main$visualize = F2(
 			A2(
 				$elm$core$List$map,
 				function ($) {
-					return $.ao;
+					return $.bo;
 				},
-				state.aC));
-		var message9 = A2(
+				state.bR));
+		var messageC5 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			(computer.a.o / 2) - 260,
+			(computer.a.h / 2) - 380,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(computer.a.p / 2) - 85,
+				(computer.a.j / 2) - 122,
+				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 's: new seed')));
+		var messageC4 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			(computer.a.h / 2) - 360,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(computer.a.j / 2) - 136,
+				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'x: reset')));
+		var messageC3 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			(computer.a.h / 2) - 340,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(computer.a.j / 2) - 140,
+				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'r: run')));
+		var messageC2 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			(computer.a.h / 2) - 320,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(computer.a.j / 2) - 131,
+				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'p: pause')));
+		var messageC1 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			(computer.a.h / 2) - 300,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(computer.a.j / 2) - 121,
+				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'Commands')));
+		var message9 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			(computer.a.h / 2) - 260,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(computer.a.j / 2) - 85,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
 					'max / quintile 1 = ' + A2(
 						$author$project$Model$roundAt2,
 						1,
-						$author$project$Model$maxCapital(state) / quintiles.aJ))));
+						$author$project$Model$maxCapital(state) / quintiles.bY))));
 		var message8 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			(computer.a.o / 2) - 230,
+			(computer.a.h / 2) - 230,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(computer.a.p / 2) - 71,
+				(computer.a.j / 2) - 71,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'quintile 1 = ' + A2($author$project$Model$roundAt2, 1, quintiles.aJ))));
+					'quintile 1 = ' + A2($author$project$Model$roundAt2, 1, quintiles.bY))));
 		var message7 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			(computer.a.o / 2) - 210,
+			(computer.a.h / 2) - 210,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(computer.a.p / 2) - 71,
+				(computer.a.j / 2) - 71,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'quintile 2 = ' + A2($author$project$Model$roundAt2, 1, quintiles.a5))));
+					'quintile 2 = ' + A2($author$project$Model$roundAt2, 1, quintiles.df))));
 		var message6 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			(computer.a.o / 2) - 190,
+			(computer.a.h / 2) - 190,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(computer.a.p / 2) - 71,
+				(computer.a.j / 2) - 71,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'quintile 3 = ' + A2($author$project$Model$roundAt2, 1, quintiles.a6))));
+					'quintile 3 = ' + A2($author$project$Model$roundAt2, 1, quintiles.dg))));
 		var message5 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			(computer.a.o / 2) - 170,
+			(computer.a.h / 2) - 170,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(computer.a.p / 2) - 71,
+				(computer.a.j / 2) - 71,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'quintile 4 = ' + A2($author$project$Model$roundAt2, 1, quintiles.a7))));
+					'quintile 4 = ' + A2($author$project$Model$roundAt2, 1, quintiles.dh))));
 		var message4 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			(computer.a.o / 2) - 150,
+			(computer.a.h / 2) - 150,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(computer.a.p / 2) - 71,
+				(computer.a.j / 2) - 71,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'quintile 5 = ' + A2($author$project$Model$roundAt2, 1, quintiles.a8))));
+					'quintile 5 = ' + A2($author$project$Model$roundAt2, 1, quintiles.di))));
 		var message3 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			(computer.a.o / 2) - 120,
+			(computer.a.h / 2) - 120,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(computer.a.p / 2) - 84,
+				(computer.a.j / 2) - 84,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
@@ -10576,62 +10659,62 @@ var $author$project$Main$visualize = F2(
 						$author$project$Model$maxCapital(state)))));
 		var message2b = A2(
 			$evancz$elm_playground$Playground$moveY,
-			(computer.a.o / 2) - 100,
+			(computer.a.h / 2) - 100,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(computer.a.p / 2) - 89,
+				(computer.a.j / 2) - 89,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'initial Capital = $' + A2($author$project$Model$roundAt2, 1, $author$project$Main$config1.T))));
+					'initial Capital = $' + A2($author$project$Model$roundAt2, 1, $author$project$Main$config1.aH))));
 		var message2a = A2(
 			$evancz$elm_playground$Playground$moveY,
-			(computer.a.o / 2) - 80,
+			(computer.a.h / 2) - 80,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(computer.a.p / 2) - 78,
+				(computer.a.j / 2) - 80,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'transaction = $' + A2($author$project$Model$roundAt2, 1, 1))));
+					'transaction = $' + A2($author$project$Model$roundAt2, 2, 0.5))));
 		var message2 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			(computer.a.o / 2) - 50,
+			(computer.a.h / 2) - 50,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(computer.a.p / 2) - 80,
+				(computer.a.j / 2) - 80,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'Populaton = ' + A2($author$project$Model$roundAt2, 1, $author$project$Main$config1.U))));
+					'Populaton = ' + A2($author$project$Model$roundAt2, 1, $author$project$Main$config1.aM))));
 		var message12 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((-$author$project$Main$config1.t) / 2) - 90,
+			((-$author$project$Main$config1.G) / 2) - 90,
 			A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'https://github.com/jxxcarlson/small-economy'));
 		var message11 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((-$author$project$Main$config1.t) / 2) - 70,
+			((-$author$project$Main$config1.G) / 2) - 70,
 			A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'https://scripta.io/s/jxxcarlson:wealth-and-the-random-exchange-model'));
 		var message10 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((-$author$project$Main$config1.t) / 2) - 40,
+			((-$author$project$Main$config1.G) / 2) - 40,
 			A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'Random Exchange Model'));
 		var message1 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			(computer.a.o / 2) - 20,
+			(computer.a.h / 2) - 20,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(computer.a.p / 2) - 86,
+				(computer.a.j / 2) - 86,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'transactions = ' + $elm$core$String$fromInt(state.bb))));
+					'transactions = ' + $elm$core$String$fromInt(state.dC))));
 		var boundingBox = A3(
 			$evancz$elm_playground$Playground$rectangle,
 			A3($evancz$elm_playground$Playground$rgb, 30, 30, 60),
-			$author$project$Main$config1.t + 20,
-			$author$project$Main$config1.t + 20);
-		var blackScreen = A3($evancz$elm_playground$Playground$rectangle, $evancz$elm_playground$Playground$black, computer.a.p, computer.a.o);
+			$author$project$Main$config1.G + 20,
+			$author$project$Main$config1.G + 20);
+		var blackScreen = A3($evancz$elm_playground$Playground$rectangle, $evancz$elm_playground$Playground$black, computer.a.j, computer.a.h);
 		return A2(
 			$elm$core$List$cons,
 			blackScreen,
@@ -10681,9 +10764,24 @@ var $author$project$Main$visualize = F2(
 																		$elm$core$List$cons,
 																		message12,
 																		A2(
-																			$elm$core$List$indexedMap,
-																			$author$project$Main$personToShape($author$project$Main$config1.t),
-																			state.aC)))))))))))))))));
+																			$elm$core$List$cons,
+																			messageC1,
+																			A2(
+																				$elm$core$List$cons,
+																				messageC2,
+																				A2(
+																					$elm$core$List$cons,
+																					messageC3,
+																					A2(
+																						$elm$core$List$cons,
+																						messageC4,
+																						A2(
+																							$elm$core$List$cons,
+																							messageC5,
+																							A2(
+																								$elm$core$List$indexedMap,
+																								$author$project$Main$personToShape($author$project$Main$config1.G),
+																								state.bR))))))))))))))))))))));
 	});
 var $author$project$Main$view = F2(
 	function (computer, state) {
