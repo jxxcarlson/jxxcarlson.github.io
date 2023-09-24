@@ -604,7 +604,7 @@ ${variant}`;
   var VERSION = "1.1.2";
   var TARGET_NAME = "My target name";
   var INITIAL_ELM_COMPILED_TIMESTAMP = Number(
-    "1695570424447"
+    "1695583911949"
   );
   var ORIGINAL_COMPILATION_MODE = "optimize";
   var ORIGINAL_BROWSER_UI_POSITION = "BottomLeft";
@@ -2952,6 +2952,271 @@ function A9(fun, a, b, c, d, e, f, g, h, i) {
 
 
 
+// EQUALITY
+
+function _Utils_eq(x, y)
+{
+	for (
+		var pair, stack = [], isEqual = _Utils_eqHelp(x, y, 0, stack);
+		isEqual && (pair = stack.pop());
+		isEqual = _Utils_eqHelp(pair.a, pair.b, 0, stack)
+		)
+	{}
+
+	return isEqual;
+}
+
+function _Utils_eqHelp(x, y, depth, stack)
+{
+	if (x === y)
+	{
+		return true;
+	}
+
+	if (typeof x !== 'object' || x === null || y === null)
+	{
+		typeof x === 'function' && _Debug_crash(5);
+		return false;
+	}
+
+	if (depth > 100)
+	{
+		stack.push(_Utils_Tuple2(x,y));
+		return true;
+	}
+
+	/**_UNUSED/
+	if (x.$ === 'Set_elm_builtin')
+	{
+		x = $elm$core$Set$toList(x);
+		y = $elm$core$Set$toList(y);
+	}
+	if (x.$ === 'RBNode_elm_builtin' || x.$ === 'RBEmpty_elm_builtin')
+	{
+		x = $elm$core$Dict$toList(x);
+		y = $elm$core$Dict$toList(y);
+	}
+	//*/
+
+	/**/
+	if (x.$ < 0)
+	{
+		x = $elm$core$Dict$toList(x);
+		y = $elm$core$Dict$toList(y);
+	}
+	//*/
+
+	for (var key in x)
+	{
+		if (!_Utils_eqHelp(x[key], y[key], depth + 1, stack))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+var _Utils_equal = F2(_Utils_eq);
+var _Utils_notEqual = F2(function(a, b) { return !_Utils_eq(a,b); });
+
+
+
+// COMPARISONS
+
+// Code in Generate/JavaScript.hs, Basics.js, and List.js depends on
+// the particular integer values assigned to LT, EQ, and GT.
+
+function _Utils_cmp(x, y, ord)
+{
+	if (typeof x !== 'object')
+	{
+		return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;
+	}
+
+	/**_UNUSED/
+	if (x instanceof String)
+	{
+		var a = x.valueOf();
+		var b = y.valueOf();
+		return a === b ? 0 : a < b ? -1 : 1;
+	}
+	//*/
+
+	/**/
+	if (typeof x.$ === 'undefined')
+	//*/
+	/**_UNUSED/
+	if (x.$[0] === '#')
+	//*/
+	{
+		return (ord = _Utils_cmp(x.a, y.a))
+			? ord
+			: (ord = _Utils_cmp(x.b, y.b))
+				? ord
+				: _Utils_cmp(x.c, y.c);
+	}
+
+	// traverse conses until end of a list or a mismatch
+	for (; x.b && y.b && !(ord = _Utils_cmp(x.a, y.a)); x = x.b, y = y.b) {} // WHILE_CONSES
+	return ord || (x.b ? /*GT*/ 1 : y.b ? /*LT*/ -1 : /*EQ*/ 0);
+}
+
+var _Utils_lt = F2(function(a, b) { return _Utils_cmp(a, b) < 0; });
+var _Utils_le = F2(function(a, b) { return _Utils_cmp(a, b) < 1; });
+var _Utils_gt = F2(function(a, b) { return _Utils_cmp(a, b) > 0; });
+var _Utils_ge = F2(function(a, b) { return _Utils_cmp(a, b) >= 0; });
+
+var _Utils_compare = F2(function(x, y)
+{
+	var n = _Utils_cmp(x, y);
+	return n < 0 ? $elm$core$Basics$LT : n ? $elm$core$Basics$GT : $elm$core$Basics$EQ;
+});
+
+
+// COMMON VALUES
+
+var _Utils_Tuple0 = 0;
+var _Utils_Tuple0_UNUSED = { $: '#0' };
+
+function _Utils_Tuple2(a, b) { return { a: a, b: b }; }
+function _Utils_Tuple2_UNUSED(a, b) { return { $: '#2', a: a, b: b }; }
+
+function _Utils_Tuple3(a, b, c) { return { a: a, b: b, c: c }; }
+function _Utils_Tuple3_UNUSED(a, b, c) { return { $: '#3', a: a, b: b, c: c }; }
+
+function _Utils_chr(c) { return c; }
+function _Utils_chr_UNUSED(c) { return new String(c); }
+
+
+// RECORDS
+
+function _Utils_update(oldRecord, updatedFields)
+{
+	var newRecord = {};
+
+	for (var key in oldRecord)
+	{
+		newRecord[key] = oldRecord[key];
+	}
+
+	for (var key in updatedFields)
+	{
+		newRecord[key] = updatedFields[key];
+	}
+
+	return newRecord;
+}
+
+
+// APPEND
+
+var _Utils_append = F2(_Utils_ap);
+
+function _Utils_ap(xs, ys)
+{
+	// append Strings
+	if (typeof xs === 'string')
+	{
+		return xs + ys;
+	}
+
+	// append Lists
+	if (!xs.b)
+	{
+		return ys;
+	}
+	var root = _List_Cons(xs.a, ys);
+	xs = xs.b
+	for (var curr = root; xs.b; xs = xs.b) // WHILE_CONS
+	{
+		curr = curr.b = _List_Cons(xs.a, ys);
+	}
+	return root;
+}
+
+
+
+var _List_Nil = { $: 0 };
+var _List_Nil_UNUSED = { $: '[]' };
+
+function _List_Cons(hd, tl) { return { $: 1, a: hd, b: tl }; }
+function _List_Cons_UNUSED(hd, tl) { return { $: '::', a: hd, b: tl }; }
+
+
+var _List_cons = F2(_List_Cons);
+
+function _List_fromArray(arr)
+{
+	var out = _List_Nil;
+	for (var i = arr.length; i--; )
+	{
+		out = _List_Cons(arr[i], out);
+	}
+	return out;
+}
+
+function _List_toArray(xs)
+{
+	for (var out = []; xs.b; xs = xs.b) // WHILE_CONS
+	{
+		out.push(xs.a);
+	}
+	return out;
+}
+
+var _List_map2 = F3(function(f, xs, ys)
+{
+	for (var arr = []; xs.b && ys.b; xs = xs.b, ys = ys.b) // WHILE_CONSES
+	{
+		arr.push(A2(f, xs.a, ys.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map3 = F4(function(f, xs, ys, zs)
+{
+	for (var arr = []; xs.b && ys.b && zs.b; xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A3(f, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map4 = F5(function(f, ws, xs, ys, zs)
+{
+	for (var arr = []; ws.b && xs.b && ys.b && zs.b; ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A4(f, ws.a, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map5 = F6(function(f, vs, ws, xs, ys, zs)
+{
+	for (var arr = []; vs.b && ws.b && xs.b && ys.b && zs.b; vs = vs.b, ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A5(f, vs.a, ws.a, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_sortBy = F2(function(f, xs)
+{
+	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
+		return _Utils_cmp(f(a), f(b));
+	}));
+});
+
+var _List_sortWith = F2(function(f, xs)
+{
+	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
+		var ord = A2(f, a, b);
+		return ord === $elm$core$Basics$EQ ? 0 : ord === $elm$core$Basics$LT ? -1 : 1;
+	}));
+});
+
+
+
 var _JsArray_empty = [];
 
 function _JsArray_singleton(value)
@@ -3391,277 +3656,12 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.be.as === region.bt.as)
+	if (region.be.at === region.bt.at)
 	{
-		return 'on line ' + region.be.as;
+		return 'on line ' + region.be.at;
 	}
-	return 'on lines ' + region.be.as + ' through ' + region.bt.as;
+	return 'on lines ' + region.be.at + ' through ' + region.bt.at;
 }
-
-
-
-// EQUALITY
-
-function _Utils_eq(x, y)
-{
-	for (
-		var pair, stack = [], isEqual = _Utils_eqHelp(x, y, 0, stack);
-		isEqual && (pair = stack.pop());
-		isEqual = _Utils_eqHelp(pair.a, pair.b, 0, stack)
-		)
-	{}
-
-	return isEqual;
-}
-
-function _Utils_eqHelp(x, y, depth, stack)
-{
-	if (x === y)
-	{
-		return true;
-	}
-
-	if (typeof x !== 'object' || x === null || y === null)
-	{
-		typeof x === 'function' && _Debug_crash(5);
-		return false;
-	}
-
-	if (depth > 100)
-	{
-		stack.push(_Utils_Tuple2(x,y));
-		return true;
-	}
-
-	/**_UNUSED/
-	if (x.$ === 'Set_elm_builtin')
-	{
-		x = $elm$core$Set$toList(x);
-		y = $elm$core$Set$toList(y);
-	}
-	if (x.$ === 'RBNode_elm_builtin' || x.$ === 'RBEmpty_elm_builtin')
-	{
-		x = $elm$core$Dict$toList(x);
-		y = $elm$core$Dict$toList(y);
-	}
-	//*/
-
-	/**/
-	if (x.$ < 0)
-	{
-		x = $elm$core$Dict$toList(x);
-		y = $elm$core$Dict$toList(y);
-	}
-	//*/
-
-	for (var key in x)
-	{
-		if (!_Utils_eqHelp(x[key], y[key], depth + 1, stack))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-var _Utils_equal = F2(_Utils_eq);
-var _Utils_notEqual = F2(function(a, b) { return !_Utils_eq(a,b); });
-
-
-
-// COMPARISONS
-
-// Code in Generate/JavaScript.hs, Basics.js, and List.js depends on
-// the particular integer values assigned to LT, EQ, and GT.
-
-function _Utils_cmp(x, y, ord)
-{
-	if (typeof x !== 'object')
-	{
-		return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;
-	}
-
-	/**_UNUSED/
-	if (x instanceof String)
-	{
-		var a = x.valueOf();
-		var b = y.valueOf();
-		return a === b ? 0 : a < b ? -1 : 1;
-	}
-	//*/
-
-	/**/
-	if (typeof x.$ === 'undefined')
-	//*/
-	/**_UNUSED/
-	if (x.$[0] === '#')
-	//*/
-	{
-		return (ord = _Utils_cmp(x.a, y.a))
-			? ord
-			: (ord = _Utils_cmp(x.b, y.b))
-				? ord
-				: _Utils_cmp(x.c, y.c);
-	}
-
-	// traverse conses until end of a list or a mismatch
-	for (; x.b && y.b && !(ord = _Utils_cmp(x.a, y.a)); x = x.b, y = y.b) {} // WHILE_CONSES
-	return ord || (x.b ? /*GT*/ 1 : y.b ? /*LT*/ -1 : /*EQ*/ 0);
-}
-
-var _Utils_lt = F2(function(a, b) { return _Utils_cmp(a, b) < 0; });
-var _Utils_le = F2(function(a, b) { return _Utils_cmp(a, b) < 1; });
-var _Utils_gt = F2(function(a, b) { return _Utils_cmp(a, b) > 0; });
-var _Utils_ge = F2(function(a, b) { return _Utils_cmp(a, b) >= 0; });
-
-var _Utils_compare = F2(function(x, y)
-{
-	var n = _Utils_cmp(x, y);
-	return n < 0 ? $elm$core$Basics$LT : n ? $elm$core$Basics$GT : $elm$core$Basics$EQ;
-});
-
-
-// COMMON VALUES
-
-var _Utils_Tuple0 = 0;
-var _Utils_Tuple0_UNUSED = { $: '#0' };
-
-function _Utils_Tuple2(a, b) { return { a: a, b: b }; }
-function _Utils_Tuple2_UNUSED(a, b) { return { $: '#2', a: a, b: b }; }
-
-function _Utils_Tuple3(a, b, c) { return { a: a, b: b, c: c }; }
-function _Utils_Tuple3_UNUSED(a, b, c) { return { $: '#3', a: a, b: b, c: c }; }
-
-function _Utils_chr(c) { return c; }
-function _Utils_chr_UNUSED(c) { return new String(c); }
-
-
-// RECORDS
-
-function _Utils_update(oldRecord, updatedFields)
-{
-	var newRecord = {};
-
-	for (var key in oldRecord)
-	{
-		newRecord[key] = oldRecord[key];
-	}
-
-	for (var key in updatedFields)
-	{
-		newRecord[key] = updatedFields[key];
-	}
-
-	return newRecord;
-}
-
-
-// APPEND
-
-var _Utils_append = F2(_Utils_ap);
-
-function _Utils_ap(xs, ys)
-{
-	// append Strings
-	if (typeof xs === 'string')
-	{
-		return xs + ys;
-	}
-
-	// append Lists
-	if (!xs.b)
-	{
-		return ys;
-	}
-	var root = _List_Cons(xs.a, ys);
-	xs = xs.b
-	for (var curr = root; xs.b; xs = xs.b) // WHILE_CONS
-	{
-		curr = curr.b = _List_Cons(xs.a, ys);
-	}
-	return root;
-}
-
-
-
-var _List_Nil = { $: 0 };
-var _List_Nil_UNUSED = { $: '[]' };
-
-function _List_Cons(hd, tl) { return { $: 1, a: hd, b: tl }; }
-function _List_Cons_UNUSED(hd, tl) { return { $: '::', a: hd, b: tl }; }
-
-
-var _List_cons = F2(_List_Cons);
-
-function _List_fromArray(arr)
-{
-	var out = _List_Nil;
-	for (var i = arr.length; i--; )
-	{
-		out = _List_Cons(arr[i], out);
-	}
-	return out;
-}
-
-function _List_toArray(xs)
-{
-	for (var out = []; xs.b; xs = xs.b) // WHILE_CONS
-	{
-		out.push(xs.a);
-	}
-	return out;
-}
-
-var _List_map2 = F3(function(f, xs, ys)
-{
-	for (var arr = []; xs.b && ys.b; xs = xs.b, ys = ys.b) // WHILE_CONSES
-	{
-		arr.push(A2(f, xs.a, ys.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map3 = F4(function(f, xs, ys, zs)
-{
-	for (var arr = []; xs.b && ys.b && zs.b; xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A3(f, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map4 = F5(function(f, ws, xs, ys, zs)
-{
-	for (var arr = []; ws.b && xs.b && ys.b && zs.b; ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A4(f, ws.a, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map5 = F6(function(f, vs, ws, xs, ys, zs)
-{
-	for (var arr = []; vs.b && ws.b && xs.b && ys.b && zs.b; vs = vs.b, ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A5(f, vs.a, ws.a, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_sortBy = F2(function(f, xs)
-{
-	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
-		return _Utils_cmp(f(a), f(b));
-	}));
-});
-
-var _List_sortWith = F2(function(f, xs)
-{
-	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
-		var ord = A2(f, a, b);
-		return ord === $elm$core$Basics$EQ ? 0 : ord === $elm$core$Basics$LT ? -1 : 1;
-	}));
-});
 
 
 
@@ -3722,6 +3722,43 @@ function _Basics_not(bool) { return !bool; }
 var _Basics_and = F2(function(a, b) { return a && b; });
 var _Basics_or  = F2(function(a, b) { return a || b; });
 var _Basics_xor = F2(function(a, b) { return a !== b; });
+
+
+
+var _Bitwise_and = F2(function(a, b)
+{
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
+{
+	return a | b;
+});
+
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
+
+function _Bitwise_complement(a)
+{
+	return ~a;
+};
+
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
+
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
+
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
+});
 
 
 
@@ -4771,7 +4808,7 @@ function _Platform_initialize(programType, isDebug, debugMetadata, flagDecoder, 
 
 	function setUpdateAndSubscriptions() {
 		update = impl.b5 || impl._impl.b5;
-		subscriptions = impl.dB || impl._impl.dB;
+		subscriptions = impl.dD || impl._impl.dD;
 		if (isDebug) {
 			update = $elm$browser$Debugger$Main$wrapUpdate(update);
 			subscriptions = $elm$browser$Debugger$Main$wrapSubs(subscriptions);
@@ -5813,7 +5850,7 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		Q: func(record.Q),
+		P: func(record.P),
 		bf: record.bf,
 		a8: record.a8
 	}
@@ -6083,7 +6120,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.Q;
+		var message = !tag ? value : tag < 3 ? value.a : value.P;
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.bf;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
@@ -7103,7 +7140,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.dR) && (_VirtualDom_doc.title = title = doc.dR);
+				(title !== doc.dT) && (_VirtualDom_doc.title = title = doc.dT);
 			});
 		}
 	);
@@ -7163,7 +7200,7 @@ function _Browser_application(impl)
 	// var onUrlChange = impl.onUrlChange; // commented out by elm-watch
 	// var onUrlRequest = impl.onUrlRequest; // commented out by elm-watch
 	// var key = function() { key.a(onUrlChange(_Browser_getUrl())); }; // commented out by elm-watch
-	var key = function() { key.a(impl.c9(_Browser_getUrl())); }; // added by elm-watch
+	var key = function() { key.a(impl.da(_Browser_getUrl())); }; // added by elm-watch
 
 	return _Browser_document({
 		bb: function(sendToApp)
@@ -7180,11 +7217,11 @@ function _Browser_application(impl)
 					var href = domNode.href;
 					var curr = _Browser_getUrl();
 					var next = $elm$url$Url$fromString(href).a;
-					sendToApp(impl.da(
+					sendToApp(impl.db(
 						(next
-							&& curr.bW === next.bW
+							&& curr.bV === next.bV
 							&& curr.bA === next.bA
-							&& curr.bT.a === next.bT.a
+							&& curr.bS.a === next.bS.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -7358,12 +7395,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		b0: _Browser_getScene(),
+		b_: _Browser_getScene(),
 		b9: {
-			dW: _Browser_window.pageXOffset,
-			dX: _Browser_window.pageYOffset,
-			e: _Browser_doc.documentElement.clientWidth,
-			d: _Browser_doc.documentElement.clientHeight
+			dY: _Browser_window.pageXOffset,
+			dZ: _Browser_window.pageYOffset,
+			d: _Browser_doc.documentElement.clientWidth,
+			c: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -7373,8 +7410,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		e: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		d: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		d: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		c: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -7397,15 +7434,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			b0: {
-				e: node.scrollWidth,
-				d: node.scrollHeight
+			b_: {
+				d: node.scrollWidth,
+				c: node.scrollHeight
 			},
 			b9: {
-				dW: node.scrollLeft,
-				dX: node.scrollTop,
-				e: node.clientWidth,
-				d: node.clientHeight
+				dY: node.scrollLeft,
+				dZ: node.scrollTop,
+				d: node.clientWidth,
+				c: node.clientHeight
 			}
 		};
 	});
@@ -7435,18 +7472,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			b0: _Browser_getScene(),
+			b_: _Browser_getScene(),
 			b9: {
-				dW: x,
-				dX: y,
-				e: _Browser_doc.documentElement.clientWidth,
-				d: _Browser_doc.documentElement.clientHeight
+				dY: x,
+				dZ: y,
+				d: _Browser_doc.documentElement.clientWidth,
+				c: _Browser_doc.documentElement.clientHeight
 			},
 			cN: {
-				dW: x + rect.left,
-				dX: y + rect.top,
-				e: rect.width,
-				d: rect.height
+				dY: x + rect.left,
+				dZ: y + rect.top,
+				d: rect.width,
+				c: rect.height
 			}
 		};
 	});
@@ -7481,69 +7518,15 @@ function _Browser_load(url)
 		}
 	}));
 }
-
-
-
-var _Bitwise_and = F2(function(a, b)
-{
-	return a & b;
-});
-
-var _Bitwise_or = F2(function(a, b)
-{
-	return a | b;
-});
-
-var _Bitwise_xor = F2(function(a, b)
-{
-	return a ^ b;
-});
-
-function _Bitwise_complement(a)
-{
-	return ~a;
-};
-
-var _Bitwise_shiftLeftBy = F2(function(offset, a)
-{
-	return a << offset;
-});
-
-var _Bitwise_shiftRightBy = F2(function(offset, a)
-{
-	return a >> offset;
-});
-
-var _Bitwise_shiftRightZfBy = F2(function(offset, a)
-{
-	return a >>> offset;
-});
-var $author$project$Main$config1 = {Z: 500, aJ: 20, aM: 200, bZ: 1.0, av: 12345, T: 1.0};
-var $elm$core$List$cons = _List_cons;
-var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
-var $elm$core$Array$foldr = F3(
-	function (func, baseCase, _v0) {
-		var tree = _v0.c;
-		var tail = _v0.d;
-		var helper = F2(
-			function (node, acc) {
-				if (!node.$) {
-					var subTree = node.a;
-					return A3($elm$core$Elm$JsArray$foldr, helper, acc, subTree);
-				} else {
-					var values = node.a;
-					return A3($elm$core$Elm$JsArray$foldr, func, acc, values);
-				}
-			});
-		return A3(
-			$elm$core$Elm$JsArray$foldr,
-			helper,
-			A3($elm$core$Elm$JsArray$foldr, func, baseCase, tail),
-			tree);
+var $elm$core$Basics$True = 0;
+var $elm$random$Random$Seed = F2(
+	function (a, b) {
+		return {$: 0, a: a, b: b};
 	});
-var $elm$core$Array$toList = function (array) {
-	return A3($elm$core$Array$foldr, $elm$core$List$cons, _List_Nil, array);
-};
+var $elm$core$Basics$EQ = 1;
+var $elm$core$Basics$GT = 2;
+var $elm$core$Basics$LT = 0;
+var $elm$core$List$cons = _List_cons;
 var $elm$core$Dict$foldr = F3(
 	function (func, acc, t) {
 		foldr:
@@ -7596,9 +7579,59 @@ var $elm$core$Set$toList = function (_v0) {
 	var dict = _v0;
 	return $elm$core$Dict$keys(dict);
 };
-var $elm$core$Basics$EQ = 1;
-var $elm$core$Basics$GT = 2;
-var $elm$core$Basics$LT = 0;
+var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
+var $elm$core$Array$foldr = F3(
+	function (func, baseCase, _v0) {
+		var tree = _v0.c;
+		var tail = _v0.d;
+		var helper = F2(
+			function (node, acc) {
+				if (!node.$) {
+					var subTree = node.a;
+					return A3($elm$core$Elm$JsArray$foldr, helper, acc, subTree);
+				} else {
+					var values = node.a;
+					return A3($elm$core$Elm$JsArray$foldr, func, acc, values);
+				}
+			});
+		return A3(
+			$elm$core$Elm$JsArray$foldr,
+			helper,
+			A3($elm$core$Elm$JsArray$foldr, func, baseCase, tail),
+			tree);
+	});
+var $elm$core$Array$toList = function (array) {
+	return A3($elm$core$Array$foldr, $elm$core$List$cons, _List_Nil, array);
+};
+var $elm$core$Basics$add = _Basics_add;
+var $elm$core$Basics$mul = _Basics_mul;
+var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
+var $elm$random$Random$next = function (_v0) {
+	var state0 = _v0.a;
+	var incr = _v0.b;
+	return A2($elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
+};
+var $elm$random$Random$initialSeed = function (x) {
+	var _v0 = $elm$random$Random$next(
+		A2($elm$random$Random$Seed, 0, 1013904223));
+	var state1 = _v0.a;
+	var incr = _v0.b;
+	var state2 = (state1 + x) >>> 0;
+	return $elm$random$Random$next(
+		A2($elm$random$Random$Seed, state2, incr));
+};
+var $author$project$Model$config = {
+	aJ: 500.0,
+	cZ: 10.0,
+	bD: $elm$random$Random$initialSeed(1234),
+	dg: 200,
+	b$: 1234,
+	aw: 1.0,
+	al: 0.08,
+	am: 1000,
+	an: 2.0,
+	b4: true
+};
 var $evancz$elm_playground$Playground$Game = F3(
 	function (a, b, c) {
 		return {$: 0, a: a, b: b, c: c};
@@ -7632,7 +7665,6 @@ var $elm$json$Json$Decode$OneOf = function (a) {
 	return {$: 2, a: a};
 };
 var $elm$core$Basics$False = 1;
-var $elm$core$Basics$add = _Basics_add;
 var $elm$core$Maybe$Just = function (a) {
 	return {$: 0, a: a};
 };
@@ -7887,7 +7919,6 @@ var $elm$core$Basics$max = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) > 0) ? x : y;
 	});
-var $elm$core$Basics$mul = _Basics_mul;
 var $elm$core$Array$SubTree = function (a) {
 	return {$: 0, a: a};
 };
@@ -7997,7 +8028,6 @@ var $elm$core$Array$initialize = F2(
 			return A5($elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
 		}
 	});
-var $elm$core$Basics$True = 0;
 var $elm$core$Result$isOk = function (result) {
 	if (!result.$) {
 		return true;
@@ -8034,7 +8064,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {bw: fragment, bA: host, bQ: path, bT: port_, bW: protocol, bX: query};
+		return {bw: fragment, bA: host, bP: path, bS: port_, bV: protocol, bW: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -8340,7 +8370,7 @@ var $elm$browser$Browser$AnimationManager$Time = function (a) {
 };
 var $elm$browser$Browser$AnimationManager$State = F3(
 	function (subs, request, oldTime) {
-		return {a7: oldTime, b$: request, b2: subs};
+		return {a7: oldTime, bZ: request, b1: subs};
 	});
 var $elm$browser$Browser$AnimationManager$init = $elm$core$Task$succeed(
 	A3($elm$browser$Browser$AnimationManager$State, _List_Nil, $elm$core$Maybe$Nothing, 0));
@@ -8351,7 +8381,7 @@ var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
 var $elm$core$Process$spawn = _Scheduler_spawn;
 var $elm$browser$Browser$AnimationManager$onEffects = F3(
 	function (router, subs, _v0) {
-		var request = _v0.b$;
+		var request = _v0.bZ;
 		var oldTime = _v0.a7;
 		var _v1 = _Utils_Tuple2(request, subs);
 		if (_v1.a.$ === 1) {
@@ -8400,7 +8430,7 @@ var $elm$time$Time$Posix = $elm$core$Basics$identity;
 var $elm$time$Time$millisToPosix = $elm$core$Basics$identity;
 var $elm$browser$Browser$AnimationManager$onSelfMsg = F3(
 	function (router, newTime, _v0) {
-		var subs = _v0.b2;
+		var subs = _v0.b1;
 		var oldTime = _v0.a7;
 		var send = function (sub) {
 			if (!sub.$) {
@@ -8474,7 +8504,7 @@ var $elm$browser$Browser$Events$MySub = F3(
 	});
 var $elm$browser$Browser$Events$State = F2(
 	function (subs, pids) {
-		return {bS: pids, b2: subs};
+		return {bR: pids, b1: subs};
 	});
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: -2};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
@@ -8705,7 +8735,7 @@ var $elm$core$Dict$merge = F6(
 	});
 var $elm$browser$Browser$Events$Event = F2(
 	function (key, event) {
-		return {bu: event, bG: key};
+		return {bu: event, bF: key};
 	});
 var $elm$browser$Browser$Events$spawn = F3(
 	function (router, key, _v0) {
@@ -8779,7 +8809,7 @@ var $elm$browser$Browser$Events$onEffects = F3(
 			stepLeft,
 			stepBoth,
 			stepRight,
-			state.bS,
+			state.bR,
 			$elm$core$Dict$fromList(newSubs),
 			_Utils_Tuple3(_List_Nil, $elm$core$Dict$empty, _List_Nil));
 		var deadPids = _v0.a;
@@ -8825,7 +8855,7 @@ var $elm$core$List$filterMap = F2(
 	});
 var $elm$browser$Browser$Events$onSelfMsg = F3(
 	function (router, _v0, state) {
-		var key = _v0.bG;
+		var key = _v0.bF;
 		var event = _v0.bu;
 		var toMessage = function (_v2) {
 			var subKey = _v2.a;
@@ -8835,7 +8865,7 @@ var $elm$browser$Browser$Events$onSelfMsg = F3(
 			var decoder = _v3.c;
 			return _Utils_eq(subKey, key) ? A2(_Browser_decodeEvent, decoder, event) : $elm$core$Maybe$Nothing;
 		};
-		var messages = A2($elm$core$List$filterMap, toMessage, state.b2);
+		var messages = A2($elm$core$List$filterMap, toMessage, state.b1);
 		return A2(
 			$elm$core$Task$andThen,
 			function (_v1) {
@@ -8942,12 +8972,12 @@ var $evancz$elm_playground$Playground$gameSubscriptions = $elm$core$Platform$Sub
 		]));
 var $evancz$elm_playground$Playground$Mouse = F4(
 	function (x, y, down, click) {
-		return {aZ: click, cM: down, dW: x, dX: y};
+		return {aZ: click, cM: down, dY: x, dZ: y};
 	});
 var $evancz$elm_playground$Playground$Time = $elm$core$Basics$identity;
 var $elm$core$Set$Set_elm_builtin = $elm$core$Basics$identity;
 var $elm$core$Set$empty = $elm$core$Dict$empty;
-var $evancz$elm_playground$Playground$emptyKeyboard = {aW: false, cM: false, a_: false, O: $elm$core$Set$empty, P: false, ak: false, bc: false, bd: false, aQ: false};
+var $evancz$elm_playground$Playground$emptyKeyboard = {aW: false, cM: false, a_: false, x: $elm$core$Set$empty, O: false, ai: false, bc: false, bd: false, aQ: false};
 var $evancz$elm_playground$Playground$mouseClick = F2(
 	function (bool, mouse) {
 		return _Utils_update(
@@ -8964,14 +8994,14 @@ var $evancz$elm_playground$Playground$mouseMove = F3(
 	function (x, y, mouse) {
 		return _Utils_update(
 			mouse,
-			{dW: x, dX: y});
+			{dY: x, dZ: y});
 	});
 var $elm$core$Basics$negate = function (n) {
 	return -n;
 };
 var $evancz$elm_playground$Playground$toScreen = F2(
 	function (width, height) {
-		return {aY: (-height) / 2, d: height, P: (-width) / 2, ak: width / 2, bg: height / 2, e: width};
+		return {aY: (-height) / 2, c: height, O: (-width) / 2, ai: width / 2, bg: height / 2, d: width};
 	});
 var $elm$core$Set$insert = F2(
 	function (key, _v0) {
@@ -9347,44 +9377,44 @@ var $elm$core$Set$remove = F2(
 	});
 var $evancz$elm_playground$Playground$updateKeyboard = F3(
 	function (isDown, key, keyboard) {
-		var keys = isDown ? A2($elm$core$Set$insert, key, keyboard.O) : A2($elm$core$Set$remove, key, keyboard.O);
+		var keys = isDown ? A2($elm$core$Set$insert, key, keyboard.x) : A2($elm$core$Set$remove, key, keyboard.x);
 		switch (key) {
 			case ' ':
 				return _Utils_update(
 					keyboard,
-					{O: keys, bd: isDown});
+					{x: keys, bd: isDown});
 			case 'Enter':
 				return _Utils_update(
 					keyboard,
-					{a_: isDown, O: keys});
+					{a_: isDown, x: keys});
 			case 'Shift':
 				return _Utils_update(
 					keyboard,
-					{O: keys, bc: isDown});
+					{x: keys, bc: isDown});
 			case 'Backspace':
 				return _Utils_update(
 					keyboard,
-					{aW: isDown, O: keys});
+					{aW: isDown, x: keys});
 			case 'ArrowUp':
 				return _Utils_update(
 					keyboard,
-					{O: keys, aQ: isDown});
+					{x: keys, aQ: isDown});
 			case 'ArrowDown':
 				return _Utils_update(
 					keyboard,
-					{cM: isDown, O: keys});
+					{cM: isDown, x: keys});
 			case 'ArrowLeft':
 				return _Utils_update(
 					keyboard,
-					{O: keys, P: isDown});
+					{x: keys, O: isDown});
 			case 'ArrowRight':
 				return _Utils_update(
 					keyboard,
-					{O: keys, ak: isDown});
+					{x: keys, ai: isDown});
 			default:
 				return _Utils_update(
 					keyboard,
-					{O: keys});
+					{x: keys});
 		}
 	});
 var $evancz$elm_playground$Playground$gameUpdate = F3(
@@ -9416,7 +9446,7 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							a: A2($evancz$elm_playground$Playground$toScreen, viewport.e, viewport.d)
+							a: A2($evancz$elm_playground$Playground$toScreen, viewport.d, viewport.c)
 						}));
 			case 3:
 				var w = msg.a;
@@ -9440,13 +9470,13 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							N: A3($evancz$elm_playground$Playground$updateKeyboard, isDown, key, computer.N)
+							w: A3($evancz$elm_playground$Playground$updateKeyboard, isDown, key, computer.w)
 						}));
 			case 5:
 				var pageX = msg.a;
 				var pageY = msg.b;
 				var y = computer.a.bg - pageY;
-				var x = computer.a.P + pageX;
+				var x = computer.a.O + pageX;
 				return A3(
 					$evancz$elm_playground$Playground$Game,
 					vis,
@@ -9486,14 +9516,14 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							N: $evancz$elm_playground$Playground$emptyKeyboard,
-							q: A4($evancz$elm_playground$Playground$Mouse, computer.q.dW, computer.q.dX, false, false)
+							w: $evancz$elm_playground$Playground$emptyKeyboard,
+							q: A4($evancz$elm_playground$Playground$Mouse, computer.q.dY, computer.q.dZ, false, false)
 						}));
 		}
 	});
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $evancz$elm_playground$Playground$initialComputer = {
-	N: $evancz$elm_playground$Playground$emptyKeyboard,
+	w: $evancz$elm_playground$Playground$emptyKeyboard,
 	q: A4($evancz$elm_playground$Playground$Mouse, 0, 0, false, false),
 	a: A2($evancz$elm_playground$Playground$toScreen, 600, 600),
 	aP: $elm$time$Time$millisToPosix(0)
@@ -9802,9 +9832,9 @@ var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var $evancz$elm_playground$Playground$render = F2(
 	function (screen, shapes) {
 		var y = $elm$core$String$fromFloat(screen.aY);
-		var x = $elm$core$String$fromFloat(screen.P);
-		var w = $elm$core$String$fromFloat(screen.e);
-		var h = $elm$core$String$fromFloat(screen.d);
+		var x = $elm$core$String$fromFloat(screen.O);
+		var w = $elm$core$String$fromFloat(screen.d);
+		var h = $elm$core$String$fromFloat(screen.c);
 		return A2(
 			$elm$svg$Svg$svg,
 			_List_fromArray(
@@ -9831,7 +9861,7 @@ var $evancz$elm_playground$Playground$game = F3(
 						computer.a,
 						A2(viewMemory, computer, memory))
 					]),
-				dR: 'Playground'
+				dT: 'Playground'
 			};
 		};
 		var update = F2(
@@ -9854,23 +9884,13 @@ var $evancz$elm_playground$Playground$game = F3(
 				A2($elm$core$Task$perform, $evancz$elm_playground$Playground$GotViewport, $elm$browser$Browser$Dom$getViewport));
 		};
 		return $elm$browser$Browser$document(
-			{bC: init, dB: subscriptions, b5: update, b8: view});
+			{bC: init, dD: subscriptions, b5: update, b8: view});
 	});
 var $elm$random$Random$Generator = $elm$core$Basics$identity;
 var $elm$core$Basics$abs = function (n) {
 	return (n < 0) ? (-n) : n;
 };
 var $elm$core$Bitwise$and = _Bitwise_and;
-var $elm$random$Random$Seed = F2(
-	function (a, b) {
-		return {$: 0, a: a, b: b};
-	});
-var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
-var $elm$random$Random$next = function (_v0) {
-	var state0 = _v0.a;
-	var incr = _v0.b;
-	return A2($elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
-};
 var $elm$core$Bitwise$xor = _Bitwise_xor;
 var $elm$random$Random$peel = function (_v0) {
 	var state = _v0.a;
@@ -9907,7 +9927,7 @@ var $author$project$Random$Seeded$randomFloatPairsHelp = function (data) {
 			var _v0 = A2(
 				$elm$random$Random$step,
 				A2($elm$random$Random$float, data.p, data.o),
-				data.au);
+				data.av);
 			var k1 = _v0.a;
 			var seed1 = _v0.b;
 			var _v1 = A2(
@@ -9920,11 +9940,11 @@ var $author$project$Random$Seeded$randomFloatPairsHelp = function (data) {
 				o: data.o,
 				p: data.p,
 				l: data.l - 1,
-				dd: A2(
+				de: A2(
 					$elm$core$List$cons,
 					_Utils_Tuple2(k1, k2),
-					data.dd),
-				au: seed2
+					data.de),
+				av: seed2
 			};
 			data = $temp$data;
 			continue randomFloatPairsHelp;
@@ -9934,14 +9954,14 @@ var $author$project$Random$Seeded$randomFloatPairsHelp = function (data) {
 var $author$project$Random$Seeded$floatPairs = F4(
 	function (seed, low, high, n) {
 		var result = $author$project$Random$Seeded$randomFloatPairsHelp(
-			{o: high, p: low, l: n, dd: _List_Nil, au: seed});
-		return {dd: result.dd, au: result.au};
+			{o: high, p: low, l: n, de: _List_Nil, av: seed});
+		return {de: result.de, av: result.av};
 	});
 var $author$project$Model$initPerson = F3(
 	function (id, _v0, capital) {
 		var x = _v0.a;
 		var y = _v0.b;
-		return {bo: capital, a4: id, dW: x, dX: y};
+		return {bo: capital, a4: id, dY: x, dZ: y};
 	});
 var $author$project$Model$initPeople_ = F2(
 	function (capital, positions) {
@@ -9957,32 +9977,22 @@ var $author$project$Model$initPeople = F4(
 	function (seed, populationSize, gridSize, capital) {
 		var result = A4($author$project$Random$Seeded$floatPairs, seed, 0, gridSize, populationSize);
 		return _Utils_Tuple2(
-			result.au,
-			A2($author$project$Model$initPeople_, capital, result.dd));
+			result.av,
+			A2($author$project$Model$initPeople_, capital, result.de));
 	});
-var $elm$random$Random$initialSeed = function (x) {
-	var _v0 = $elm$random$Random$next(
-		A2($elm$random$Random$Seed, 0, 1013904223));
-	var state1 = _v0.a;
-	var incr = _v0.b;
-	var state2 = (state1 + x) >>> 0;
-	return $elm$random$Random$next(
-		A2($elm$random$Random$Seed, state2, incr));
+var $author$project$Model$initialState = function (config_) {
+	var _v0 = A4(
+		$author$project$Model$initPeople,
+		$elm$random$Random$initialSeed(config_.b$),
+		config_.dg,
+		config_.aJ,
+		config_.cZ);
+	var newSeed = _v0.a;
+	var people = _v0.b;
+	return {aJ: config_.aJ, cZ: config_.cZ, Q: false, bQ: people, dg: config_.dg, av: newSeed, b$: config_.b$, aw: config_.aw, dE: 0, al: config_.al, am: config_.am, an: config_.an, b4: config_.b4};
 };
-var $author$project$Model$initialState = F5(
-	function (seedInteger, populationSize, gridSize, initialCapital, transactionAmount) {
-		var _v0 = A4(
-			$author$project$Model$initPeople,
-			$elm$random$Random$initialSeed(seedInteger),
-			populationSize,
-			gridSize,
-			initialCapital);
-		var newSeed = _v0.a;
-		var people = _v0.b;
-		return {H: false, bR: people, au: newSeed, av: seedInteger, dC: 0, T: transactionAmount};
-	});
 var $author$project$Main$initialState = function (config) {
-	return A5($author$project$Model$initialState, config.av, config.aM, config.Z, config.aJ, config.T);
+	return $author$project$Model$initialState($author$project$Model$config);
 };
 var $elm$core$Basics$ge = _Utils_ge;
 var $elm$core$List$drop = F2(
@@ -10069,7 +10079,42 @@ var $author$project$Random$Seeded$intPair = F3(
 			seed2,
 			_Utils_Tuple2(k1, k2));
 	});
+var $elm$core$Basics$modBy = _Basics_modBy;
 var $elm$core$Basics$neq = _Utils_notEqual;
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
+};
+var $elm$core$List$sum = function (numbers) {
+	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
+};
+var $author$project$Model$taxPerson = F2(
+	function (taxRate, person) {
+		var taxAmount = person.bo * taxRate;
+		var newPerson = _Utils_update(
+			person,
+			{bo: person.bo - taxAmount});
+		return _Utils_Tuple2(newPerson, taxAmount);
+	});
+var $author$project$Model$runUBI = function (state) {
+	var peopleAndTaxes = A2(
+		$elm$core$List$map,
+		$author$project$Model$taxPerson(state.al),
+		state.bQ);
+	var taxRevenue = $elm$core$List$sum(
+		A2($elm$core$List$map, $elm$core$Tuple$second, peopleAndTaxes));
+	var ubiPayment = taxRevenue / $elm$core$List$length(state.bQ);
+	var peopleAfterTaxes = A2($elm$core$List$map, $elm$core$Tuple$first, peopleAndTaxes);
+	var peopleAfterUBIPaid = A2(
+		$elm$core$List$map,
+		function (p) {
+			return _Utils_update(
+				p,
+				{bo: p.bo + ubiPayment});
+		},
+		peopleAfterTaxes);
+	return peopleAfterUBIPaid;
+};
 var $elm$core$Basics$always = F2(
 	function (a, _v0) {
 		return a;
@@ -10236,13 +10281,13 @@ var $author$project$Model$nextState = function (state) {
 			if ((!_v2.a.$) && (!_v2.b.$)) {
 				var personI = _v2.a.a;
 				var personJ = _v2.b.a;
-				if ((!_Utils_eq(ii, jj)) && ((personI.bo - state.T) >= 0)) {
+				if ((!_Utils_eq(ii, jj)) && ((personI.bo - state.an) >= 0)) {
 					var newPersonJ = _Utils_update(
 						personJ,
-						{bo: personJ.bo + state.T});
+						{bo: personJ.bo + state.an});
 					var newPersonI = _Utils_update(
 						personI,
-						{bo: personI.bo - state.T});
+						{bo: personI.bo - state.an});
 					return A3(
 						$elm_community$list_extra$List$Extra$setAt,
 						jj,
@@ -10255,8 +10300,8 @@ var $author$project$Model$nextState = function (state) {
 				return people;
 			}
 		});
-	var n = $elm$core$List$length(state.bR);
-	var _v0 = A3($author$project$Random$Seeded$intPair, state.au, 0, n - 1);
+	var n = $elm$core$List$length(state.bQ);
+	var _v0 = A3($author$project$Random$Seeded$intPair, state.av, 0, n - 1);
 	var seed = _v0.a;
 	var _v1 = _v0.b;
 	var i = _v1.a;
@@ -10264,11 +10309,29 @@ var $author$project$Model$nextState = function (state) {
 	return _Utils_update(
 		state,
 		{
-			bR: A3(updatePeople, state.bR, i, j),
-			au: seed,
-			dC: state.dC + 1
+			bQ: ((state.dE > 1) && (state.b4 && (!A2($elm$core$Basics$modBy, state.am, state.dE)))) ? $author$project$Model$runUBI(state) : A3(updatePeople, state.bQ, i, j),
+			av: seed,
+			dE: state.dE + 1
 		});
 };
+var $author$project$Main$setTaxRate = F2(
+	function (state, rate) {
+		var state1 = _Utils_update(
+			state,
+			{al: rate});
+		return _Utils_update(
+			state1,
+			{Q: true, b4: true});
+	});
+var $author$project$Main$setTransactionAmount = F2(
+	function (state, newTransactionAmount) {
+		var state1 = _Utils_update(
+			state,
+			{an: newTransactionAmount});
+		return _Utils_update(
+			state1,
+			{Q: true});
+	});
 var $elm$core$Dict$singleton = F2(
 	function (key, value) {
 		return A5($elm$core$Dict$RBNode_elm_builtin, 1, key, value, $elm$core$Dict$RBEmpty_elm_builtin, $elm$core$Dict$RBEmpty_elm_builtin);
@@ -10276,88 +10339,99 @@ var $elm$core$Dict$singleton = F2(
 var $elm$core$Set$singleton = function (key) {
 	return A2($elm$core$Dict$singleton, key, 0);
 };
+var $author$project$Main$unSetTaxRate = function (state) {
+	var state1 = _Utils_update(
+		state,
+		{al: 0});
+	return _Utils_update(
+		state1,
+		{Q: true, b4: false});
+};
 var $author$project$Main$update = F2(
 	function (computer, state) {
 		var newState = function () {
 			if (_Utils_eq(
-				computer.N.O,
+				computer.w.x,
 				$elm$core$Set$singleton('p'))) {
 				return _Utils_update(
 					state,
-					{H: true});
+					{Q: true});
 			} else {
 				if (_Utils_eq(
-					computer.N.O,
+					computer.w.x,
 					$elm$core$Set$singleton('r'))) {
 					return _Utils_update(
 						state,
-						{H: false});
+						{Q: false});
 				} else {
 					if (_Utils_eq(
-						computer.N.O,
+						computer.w.x,
 						$elm$core$Set$singleton('x'))) {
-						var state1 = $author$project$Main$initialState($author$project$Main$config1);
+						var state1 = $author$project$Main$initialState($author$project$Model$config);
 						return _Utils_update(
 							state1,
-							{H: true});
+							{Q: true});
 					} else {
 						if (_Utils_eq(
-							computer.N.O,
+							computer.w.x,
 							$elm$core$Set$singleton('s'))) {
-							var newSeedInteger = state.av + 1;
-							var state1 = $author$project$Main$initialState(
-								_Utils_update(
-									$author$project$Main$config1,
-									{av: newSeedInteger}));
+							var newSeedInteger = state.b$ + 1;
+							var state1 = function () {
+								var originalConfig = $author$project$Model$config;
+								return $author$project$Main$initialState(
+									_Utils_update(
+										originalConfig,
+										{b$: newSeedInteger}));
+							}();
 							return _Utils_update(
 								state1,
-								{H: true});
+								{Q: true});
 						} else {
 							if (_Utils_eq(
-								computer.N.O,
+								computer.w.x,
 								$elm$core$Set$singleton('a'))) {
-								var newTransactionAmount = 0.5;
-								var state1 = _Utils_update(
-									state,
-									{T: newTransactionAmount});
-								return _Utils_update(
-									state1,
-									{H: true});
+								return A2($author$project$Main$setTransactionAmount, state, 0.5);
 							} else {
 								if (_Utils_eq(
-									computer.N.O,
+									computer.w.x,
 									$elm$core$Set$singleton('b'))) {
-									var newTransactionAmount = 1.0;
-									var state1 = _Utils_update(
-										state,
-										{T: newTransactionAmount});
-									return _Utils_update(
-										state1,
-										{H: true});
+									return A2($author$project$Main$setTransactionAmount, state, 1.0);
 								} else {
 									if (_Utils_eq(
-										computer.N.O,
+										computer.w.x,
 										$elm$core$Set$singleton('c'))) {
-										var newTransactionAmount = 1.5;
-										var state1 = _Utils_update(
-											state,
-											{T: newTransactionAmount});
-										return _Utils_update(
-											state1,
-											{H: true});
+										return A2($author$project$Main$setTransactionAmount, state, 1.5);
 									} else {
 										if (_Utils_eq(
-											computer.N.O,
+											computer.w.x,
 											$elm$core$Set$singleton('d'))) {
-											var newTransactionAmount = 2.0;
-											var state1 = _Utils_update(
-												state,
-												{T: newTransactionAmount});
-											return _Utils_update(
-												state1,
-												{H: true});
+											return A2($author$project$Main$setTransactionAmount, state, 2.0);
 										} else {
-											return state;
+											if (_Utils_eq(
+												computer.w.x,
+												$elm$core$Set$singleton('f'))) {
+												return A2($author$project$Main$setTaxRate, state, 0.04);
+											} else {
+												if (_Utils_eq(
+													computer.w.x,
+													$elm$core$Set$singleton('f'))) {
+													return A2($author$project$Main$setTaxRate, state, 0.08);
+												} else {
+													if (_Utils_eq(
+														computer.w.x,
+														$elm$core$Set$singleton('g'))) {
+														return A2($author$project$Main$setTaxRate, state, 0.12);
+													} else {
+														if (_Utils_eq(
+															computer.w.x,
+															$elm$core$Set$singleton('n'))) {
+															return $author$project$Main$unSetTaxRate(state);
+														} else {
+															return state;
+														}
+													}
+												}
+											}
 										}
 									}
 								}
@@ -10367,7 +10441,7 @@ var $author$project$Main$update = F2(
 				}
 			}
 		}();
-		return newState.H ? newState : $author$project$Model$nextState(newState);
+		return newState.Q ? newState : $author$project$Model$nextState(newState);
 	});
 var $evancz$elm_playground$Playground$Hex = function (a) {
 	return {$: 0, a: a};
@@ -10393,7 +10467,7 @@ var $evancz$elm_playground$Playground$rectangle = F3(
 			A3($evancz$elm_playground$Playground$Rectangle, color, width, height));
 	});
 var $author$project$Main$blackScreen = function (computer) {
-	return A3($evancz$elm_playground$Playground$rectangle, $evancz$elm_playground$Playground$black, computer.a.e, computer.a.d);
+	return A3($evancz$elm_playground$Playground$rectangle, $evancz$elm_playground$Playground$black, computer.a.d, computer.a.c);
 };
 var $evancz$elm_playground$Playground$blue = $evancz$elm_playground$Playground$Hex('#3465a4');
 var $evancz$elm_playground$Playground$Group = function (a) {
@@ -10432,10 +10506,6 @@ var $elm$core$List$maximum = function (list) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
-var $elm$core$Tuple$second = function (_v0) {
-	var y = _v0.b;
-	return y;
-};
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (!maybe.$) {
@@ -10449,7 +10519,7 @@ var $author$project$Model$maxCapital = function (state) {
 	var capitalList = A3(
 		$elm$core$Basics$composeR,
 		function ($) {
-			return $.bR;
+			return $.bQ;
 		},
 		$author$project$Model$listCapital,
 		state);
@@ -10501,9 +10571,9 @@ var $author$project$Main$personToShape = F3(
 		var radius = A2(
 			$elm$core$Basics$max,
 			1,
-			A2($elm$core$Basics$pow, person.bo, 2.5) / 1000);
-		var dy = (scaleObject * person.dX) - (gridSize / 2);
-		var dx = (scaleObject * person.dW) - (gridSize / 2);
+			A2($elm$core$Basics$pow, person.bo, 2.5) / 500);
+		var dy = (scaleObject * person.dZ) - (gridSize / 2);
+		var dx = (scaleObject * person.dY) - (gridSize / 2);
 		var c2 = $evancz$elm_playground$Playground$blue;
 		return A2(
 			$evancz$elm_playground$Playground$moveY,
@@ -10513,9 +10583,6 @@ var $author$project$Main$personToShape = F3(
 				dx,
 				A2($evancz$elm_playground$Playground$circle, c2, radius)));
 	});
-var $elm$core$List$sum = function (numbers) {
-	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
-};
 var $author$project$Model$average = function (xs) {
 	return $elm$core$List$sum(xs) / $elm$core$List$length(xs);
 };
@@ -10533,24 +10600,24 @@ var $author$project$Model$quintiles = function (xs) {
 	var m2 = $elm$core$Basics$round(0.4 * n);
 	var m1 = (0.2 * n) | 0;
 	return {
-		bY: $author$project$Model$average(
+		bX: $author$project$Model$average(
 			A2($elm$core$List$take, m1, sorted)),
-		df: $author$project$Model$average(
+		dh: $author$project$Model$average(
 			A2(
 				$elm$core$List$take,
 				m2 - m1,
 				A2($elm$core$List$drop, m1, sorted))),
-		dg: $author$project$Model$average(
+		di: $author$project$Model$average(
 			A2(
 				$elm$core$List$take,
 				m3 - m2,
 				A2($elm$core$List$drop, m2, sorted))),
-		dh: $author$project$Model$average(
+		dj: $author$project$Model$average(
 			A2(
 				$elm$core$List$take,
 				m4 - m3,
 				A2($elm$core$List$drop, m3, sorted))),
-		di: $author$project$Model$average(
+		dk: $author$project$Model$average(
 			A2(
 				$elm$core$List$take,
 				n - m4,
@@ -10612,59 +10679,59 @@ var $author$project$Main$visualize = F2(
 				function ($) {
 					return $.bo;
 				},
-				state.bR));
+				state.bQ));
 		var message10 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((-$author$project$Main$config1.Z) / 2) - 40,
+			((-state.aJ) / 2) - 40,
 			A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'Random Exchange Model'));
 		var dy = 120;
 		var dx = 40;
 		var message1 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 20) - dy,
+			((computer.a.c / 2) - 20) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.e / 2) - 86) - 73) - dx,
+				(((computer.a.d / 2) - 86) - 73) - dx,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'transactions = ' + $elm$core$String$fromInt(state.dC))));
+					'transactions = ' + $elm$core$String$fromInt(state.dE))));
 		var message2 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 50) - dy,
+			((computer.a.c / 2) - 50) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.e / 2) - 80) - 85) - dx,
+				(((computer.a.d / 2) - 80) - 85) - dx,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'populaton = ' + A2($author$project$Model$roundAt2, 1, $author$project$Main$config1.aM))));
+					'populaton = ' + A2($author$project$Model$roundAt2, 1, state.dg))));
 		var message2a = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 80) - dy,
+			((computer.a.c / 2) - 80) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.e / 2) - 80) - 85) - dx,
+				(((computer.a.d / 2) - 80) - 85) - dx,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'transaction = $' + A2($author$project$Model$roundAt2, 2, state.T))));
+					'transaction = $' + A2($author$project$Model$roundAt2, 2, state.an))));
 		var message2b = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 100) - dy,
+			((computer.a.c / 2) - 100) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.e / 2) - 89) - 64) - dx,
+				(((computer.a.d / 2) - 89) - 64) - dx,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'initial Capital = $' + A2($author$project$Model$roundAt2, 1, $author$project$Main$config1.aJ))));
+					'initial Capital = $' + A2($author$project$Model$roundAt2, 1, state.cZ))));
 		var message3 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 120) - dy,
+			((computer.a.c / 2) - 120) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.e / 2) - 84) - 75) - dx,
+				(((computer.a.d / 2) - 84) - 75) - dx,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
@@ -10674,135 +10741,187 @@ var $author$project$Main$visualize = F2(
 						$author$project$Model$maxCapital(state)))));
 		var message4 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 150) - dy,
+			((computer.a.c / 2) - 150) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.e / 2) - 71) - 98) - dx,
+				(((computer.a.d / 2) - 71) - 98) - dx,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'quintile 5 = ' + A2($author$project$Model$roundAt2, 1, quintiles.di))));
+					'quintile 5 = ' + A2($author$project$Model$roundAt2, 1, quintiles.dk))));
 		var message5 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 170) - dy,
+			((computer.a.c / 2) - 170) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.e / 2) - 71) - 98) - dx,
+				(((computer.a.d / 2) - 71) - 98) - dx,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'quintile 4 = ' + A2($author$project$Model$roundAt2, 1, quintiles.dh))));
+					'quintile 4 = ' + A2($author$project$Model$roundAt2, 1, quintiles.dj))));
 		var message6 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 190) - dy,
+			((computer.a.c / 2) - 190) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.e / 2) - 71) - 98) - dx,
+				(((computer.a.d / 2) - 71) - 98) - dx,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'quintile 3 = ' + A2($author$project$Model$roundAt2, 1, quintiles.dg))));
+					'quintile 3 = ' + A2($author$project$Model$roundAt2, 1, quintiles.di))));
 		var message7 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 210) - dy,
+			((computer.a.c / 2) - 210) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.e / 2) - 71) - 98) - dx,
+				(((computer.a.d / 2) - 71) - 98) - dx,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'quintile 2 = ' + A2($author$project$Model$roundAt2, 1, quintiles.df))));
+					'quintile 2 = ' + A2($author$project$Model$roundAt2, 1, quintiles.dh))));
 		var message8 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 230) - dy,
+			((computer.a.c / 2) - 230) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.e / 2) - 71) - 98) - dx,
+				(((computer.a.d / 2) - 71) - 98) - dx,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'quintile 1 = ' + A2($author$project$Model$roundAt2, 1, quintiles.bY))));
+					'quintile 1 = ' + A2($author$project$Model$roundAt2, 1, quintiles.bX))));
 		var message9 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 260) - dy,
+			((computer.a.c / 2) - 260) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.e / 2) - 85) - 64) - dx,
+				(((computer.a.d / 2) - 85) - 64) - dx,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
 					'max / quintile 1 = ' + A2(
 						$author$project$Model$roundAt2,
 						1,
-						$author$project$Model$maxCapital(state) / quintiles.bY))));
+						$author$project$Model$maxCapital(state) / quintiles.bX))));
 		var messageC1 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 320) - dy,
+			((computer.a.c / 2) - 320) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.e / 2) - 121) - 62) - dx,
+				(((computer.a.d / 2) - 121) - 62) - dx,
 				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'Commands')));
+		var messageC10 = function () {
+			var c = (!state.al) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			return A2(
+				$evancz$elm_playground$Playground$moveY,
+				((computer.a.c / 2) - 530) - dy,
+				A2(
+					$evancz$elm_playground$Playground$moveX,
+					((computer.a.d / 2) - 188) - dx,
+					A2($evancz$elm_playground$Playground$words, c, 'n: no taxes')));
+		}();
+		var messageC11 = function () {
+			var c = (state.al === 0.04) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			return A2(
+				$evancz$elm_playground$Playground$moveY,
+				((computer.a.c / 2) - 550) - dy,
+				A2(
+					$evancz$elm_playground$Playground$moveX,
+					((computer.a.d / 2) - 172) - dx,
+					A2($evancz$elm_playground$Playground$words, c, 'e: tax rate = 4%')));
+		}();
+		var messageC12 = function () {
+			var c = (state.al === 0.08) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			return A2(
+				$evancz$elm_playground$Playground$moveY,
+				((computer.a.c / 2) - 570) - dy,
+				A2(
+					$evancz$elm_playground$Playground$moveX,
+					((computer.a.d / 2) - 172) - dx,
+					A2($evancz$elm_playground$Playground$words, c, 'f: tax rate = 8%')));
+		}();
+		var messageC13 = function () {
+			var c = (state.al === 0.12) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			return A2(
+				$evancz$elm_playground$Playground$moveY,
+				((computer.a.c / 2) - 590) - dy,
+				A2(
+					$evancz$elm_playground$Playground$moveX,
+					((computer.a.d / 2) - 172) - dx,
+					A2($evancz$elm_playground$Playground$words, c, 'g: tax rate 12%')));
+		}();
 		var messageC2 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 350) - dy,
+			((computer.a.c / 2) - 350) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.e / 2) - 131) - 62) - dx,
+				(((computer.a.d / 2) - 131) - 62) - dx,
 				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'p: pause')));
 		var messageC3 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 370) - dy,
+			((computer.a.c / 2) - 370) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.e / 2) - 140) - 62) - dx,
+				(((computer.a.d / 2) - 140) - 62) - dx,
 				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'r: run')));
 		var messageC4 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 390) - dy,
+			((computer.a.c / 2) - 390) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.e / 2) - 136) - 62) - dx,
+				(((computer.a.d / 2) - 136) - 62) - dx,
 				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'x: reset')));
 		var messageC5 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 410) - dy,
+			((computer.a.c / 2) - 410) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.e / 2) - 122) - 62) - dx,
+				(((computer.a.d / 2) - 122) - 62) - dx,
 				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 's: new seed')));
-		var messageC6 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 440) - dy,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 122) - dx,
-				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'a: set transaction amount to 0.5')));
-		var messageC7 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 460) - dy,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 122) - dx,
-				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'b: set transaction amount to 1.0')));
-		var messageC8 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 480) - dy,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 122) - dx,
-				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'c: set transaction amount to 1.5')));
-		var messageC9 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			((computer.a.d / 2) - 500) - dy,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 122) - dx,
-				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'd: set transaction amount to 2.0')));
+		var messageC6 = function () {
+			var c = (state.an === 0.5) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			return A2(
+				$evancz$elm_playground$Playground$moveY,
+				((computer.a.c / 2) - 440) - dy,
+				A2(
+					$evancz$elm_playground$Playground$moveX,
+					((computer.a.d / 2) - 122) - dx,
+					A2($evancz$elm_playground$Playground$words, c, 'a: set transaction amount to 0.5')));
+		}();
+		var messageC7 = function () {
+			var c = (state.an === 1.0) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			return A2(
+				$evancz$elm_playground$Playground$moveY,
+				((computer.a.c / 2) - 460) - dy,
+				A2(
+					$evancz$elm_playground$Playground$moveX,
+					((computer.a.d / 2) - 122) - dx,
+					A2($evancz$elm_playground$Playground$words, c, 'b: set transaction amount to 1.0')));
+		}();
+		var messageC8 = function () {
+			var c = (state.an === 1.5) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			return A2(
+				$evancz$elm_playground$Playground$moveY,
+				((computer.a.c / 2) - 480) - dy,
+				A2(
+					$evancz$elm_playground$Playground$moveX,
+					((computer.a.d / 2) - 122) - dx,
+					A2($evancz$elm_playground$Playground$words, c, 'c: set transaction amount to 1.5')));
+		}();
+		var messageC9 = function () {
+			var c = (state.an === 2.0) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			return A2(
+				$evancz$elm_playground$Playground$moveY,
+				((computer.a.c / 2) - 500) - dy,
+				A2(
+					$evancz$elm_playground$Playground$moveX,
+					((computer.a.d / 2) - 122) - dx,
+					A2($evancz$elm_playground$Playground$words, c, 'd: set transaction amount to 2.0')));
+		}();
 		var boundingBox = A3(
 			$evancz$elm_playground$Playground$rectangle,
 			A3($evancz$elm_playground$Playground$rgb, 30, 30, 60),
-			$author$project$Main$config1.Z + 20,
-			$author$project$Main$config1.Z + 20);
+			state.aJ + 20,
+			state.aJ + 20);
 		return A2(
 			$evancz$elm_playground$Playground$moveY,
 			10,
@@ -10874,9 +10993,21 @@ var $author$project$Main$visualize = F2(
 																										$elm$core$List$cons,
 																										messageC9,
 																										A2(
-																											$elm$core$List$indexedMap,
-																											$author$project$Main$personToShape($author$project$Main$config1.Z),
-																											state.bR)))))))))))))))))))))))));
+																											$elm$core$List$cons,
+																											messageC10,
+																											A2(
+																												$elm$core$List$cons,
+																												messageC11,
+																												A2(
+																													$elm$core$List$cons,
+																													messageC12,
+																													A2(
+																														$elm$core$List$cons,
+																														messageC13,
+																														A2(
+																															$elm$core$List$indexedMap,
+																															$author$project$Main$personToShape(state.aJ),
+																															state.bQ)))))))))))))))))))))))))))));
 	});
 var $author$project$Main$view = F2(
 	function (computer, state) {
@@ -10892,6 +11023,6 @@ var $author$project$Main$main = A3(
 	$evancz$elm_playground$Playground$game,
 	$author$project$Main$view,
 	$author$project$Main$update,
-	$author$project$Main$initialState($author$project$Main$config1));
+	$author$project$Main$initialState($author$project$Model$config));
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
