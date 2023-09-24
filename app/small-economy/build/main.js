@@ -604,7 +604,7 @@ ${variant}`;
   var VERSION = "1.1.2";
   var TARGET_NAME = "My target name";
   var INITIAL_ELM_COMPILED_TIMESTAMP = Number(
-    "1695559279661"
+    "1695561081015"
   );
   var ORIGINAL_COMPILATION_MODE = "optimize";
   var ORIGINAL_BROWSER_UI_POSITION = "BottomLeft";
@@ -7518,7 +7518,7 @@ var _Bitwise_shiftRightZfBy = F2(function(offset, a)
 {
 	return a >>> offset;
 });
-var $author$project$Main$config1 = {G: 500, aH: 20, aM: 200, bZ: 1.0, as: 12345};
+var $author$project$Main$config1 = {G: 500, aG: 20, aL: 200, bZ: 1.0, as: 12345, aP: 1.0};
 var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var $elm$core$Array$foldr = F3(
@@ -8947,7 +8947,7 @@ var $evancz$elm_playground$Playground$Mouse = F4(
 var $evancz$elm_playground$Playground$Time = $elm$core$Basics$identity;
 var $elm$core$Set$Set_elm_builtin = $elm$core$Basics$identity;
 var $elm$core$Set$empty = $elm$core$Dict$empty;
-var $evancz$elm_playground$Playground$emptyKeyboard = {aW: false, cM: false, a_: false, aK: $elm$core$Set$empty, N: false, ag: false, bc: false, bd: false, aQ: false};
+var $evancz$elm_playground$Playground$emptyKeyboard = {aW: false, cM: false, a_: false, aJ: $elm$core$Set$empty, N: false, ag: false, bc: false, bd: false, aQ: false};
 var $evancz$elm_playground$Playground$mouseClick = F2(
 	function (bool, mouse) {
 		return _Utils_update(
@@ -9347,44 +9347,44 @@ var $elm$core$Set$remove = F2(
 	});
 var $evancz$elm_playground$Playground$updateKeyboard = F3(
 	function (isDown, key, keyboard) {
-		var keys = isDown ? A2($elm$core$Set$insert, key, keyboard.aK) : A2($elm$core$Set$remove, key, keyboard.aK);
+		var keys = isDown ? A2($elm$core$Set$insert, key, keyboard.aJ) : A2($elm$core$Set$remove, key, keyboard.aJ);
 		switch (key) {
 			case ' ':
 				return _Utils_update(
 					keyboard,
-					{aK: keys, bd: isDown});
+					{aJ: keys, bd: isDown});
 			case 'Enter':
 				return _Utils_update(
 					keyboard,
-					{a_: isDown, aK: keys});
+					{a_: isDown, aJ: keys});
 			case 'Shift':
 				return _Utils_update(
 					keyboard,
-					{aK: keys, bc: isDown});
+					{aJ: keys, bc: isDown});
 			case 'Backspace':
 				return _Utils_update(
 					keyboard,
-					{aW: isDown, aK: keys});
+					{aW: isDown, aJ: keys});
 			case 'ArrowUp':
 				return _Utils_update(
 					keyboard,
-					{aK: keys, aQ: isDown});
+					{aJ: keys, aQ: isDown});
 			case 'ArrowDown':
 				return _Utils_update(
 					keyboard,
-					{cM: isDown, aK: keys});
+					{cM: isDown, aJ: keys});
 			case 'ArrowLeft':
 				return _Utils_update(
 					keyboard,
-					{aK: keys, N: isDown});
+					{aJ: keys, N: isDown});
 			case 'ArrowRight':
 				return _Utils_update(
 					keyboard,
-					{aK: keys, ag: isDown});
+					{aJ: keys, ag: isDown});
 			default:
 				return _Utils_update(
 					keyboard,
-					{aK: keys});
+					{aJ: keys});
 		}
 	});
 var $evancz$elm_playground$Playground$gameUpdate = F3(
@@ -9403,10 +9403,10 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 						computer,
 						{
 							q: A2($evancz$elm_playground$Playground$mouseClick, false, computer.q),
-							aP: time
+							aO: time
 						}) : _Utils_update(
 						computer,
-						{aP: time}));
+						{aO: time}));
 			case 2:
 				var viewport = msg.a.b9;
 				return A3(
@@ -9440,7 +9440,7 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							aJ: A3($evancz$elm_playground$Playground$updateKeyboard, isDown, key, computer.aJ)
+							aI: A3($evancz$elm_playground$Playground$updateKeyboard, isDown, key, computer.aI)
 						}));
 			case 5:
 				var pageX = msg.a;
@@ -9486,17 +9486,17 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							aJ: $evancz$elm_playground$Playground$emptyKeyboard,
+							aI: $evancz$elm_playground$Playground$emptyKeyboard,
 							q: A4($evancz$elm_playground$Playground$Mouse, computer.q.dW, computer.q.dX, false, false)
 						}));
 		}
 	});
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $evancz$elm_playground$Playground$initialComputer = {
-	aJ: $evancz$elm_playground$Playground$emptyKeyboard,
+	aI: $evancz$elm_playground$Playground$emptyKeyboard,
 	q: A4($evancz$elm_playground$Playground$Mouse, 0, 0, false, false),
 	a: A2($evancz$elm_playground$Playground$toScreen, 600, 600),
-	aP: $elm$time$Time$millisToPosix(0)
+	aO: $elm$time$Time$millisToPosix(0)
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
@@ -9979,10 +9979,10 @@ var $author$project$Model$initialState = F5(
 			initialCapital);
 		var newSeed = _v0.a;
 		var people = _v0.b;
-		return {ap: false, bR: people, ar: newSeed, as: seedInteger, dC: 0, aw: transactionAmount};
+		return {ap: false, bR: people, ar: newSeed, as: seedInteger, dC: 0, aP: transactionAmount};
 	});
 var $author$project$Main$initialState = function (config) {
-	return A5($author$project$Model$initialState, config.as, config.aM, config.G, config.aH, 0.5);
+	return A5($author$project$Model$initialState, config.as, config.aL, config.G, config.aG, config.aP);
 };
 var $elm$core$Basics$ge = _Utils_ge;
 var $elm$core$List$drop = F2(
@@ -10236,13 +10236,13 @@ var $author$project$Model$nextState = function (state) {
 			if ((!_v2.a.$) && (!_v2.b.$)) {
 				var personI = _v2.a.a;
 				var personJ = _v2.b.a;
-				if ((!_Utils_eq(ii, jj)) && ((personI.bo - state.aw) >= 0)) {
+				if ((!_Utils_eq(ii, jj)) && ((personI.bo - state.aP) >= 0)) {
 					var newPersonJ = _Utils_update(
 						personJ,
-						{bo: personJ.bo + state.aw});
+						{bo: personJ.bo + state.aP});
 					var newPersonI = _Utils_update(
 						personI,
-						{bo: personI.bo - state.aw});
+						{bo: personI.bo - state.aP});
 					return A3(
 						$elm_community$list_extra$List$Extra$setAt,
 						jj,
@@ -10280,21 +10280,21 @@ var $author$project$Main$update = F2(
 	function (computer, state) {
 		var newState = function () {
 			if (_Utils_eq(
-				computer.aJ.aK,
+				computer.aI.aJ,
 				$elm$core$Set$singleton('p'))) {
 				return _Utils_update(
 					state,
 					{ap: true});
 			} else {
 				if (_Utils_eq(
-					computer.aJ.aK,
+					computer.aI.aJ,
 					$elm$core$Set$singleton('r'))) {
 					return _Utils_update(
 						state,
 						{ap: false});
 				} else {
 					if (_Utils_eq(
-						computer.aJ.aK,
+						computer.aI.aJ,
 						$elm$core$Set$singleton('x'))) {
 						var state1 = $author$project$Main$initialState($author$project$Main$config1);
 						return _Utils_update(
@@ -10302,7 +10302,7 @@ var $author$project$Main$update = F2(
 							{ap: true});
 					} else {
 						if (_Utils_eq(
-							computer.aJ.aK,
+							computer.aI.aJ,
 							$elm$core$Set$singleton('s'))) {
 							var newSeedInteger = state.as + 1;
 							var state1 = $author$project$Main$initialState(
@@ -10666,7 +10666,7 @@ var $author$project$Main$visualize = F2(
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'initial Capital = $' + A2($author$project$Model$roundAt2, 1, $author$project$Main$config1.aH))));
+					'initial Capital = $' + A2($author$project$Model$roundAt2, 1, $author$project$Main$config1.aG))));
 		var message2a = A2(
 			$evancz$elm_playground$Playground$moveY,
 			(computer.a.h / 2) - 80,
@@ -10676,7 +10676,7 @@ var $author$project$Main$visualize = F2(
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'transaction = $' + A2($author$project$Model$roundAt2, 2, 0.5))));
+					'transaction = $' + A2($author$project$Model$roundAt2, 2, state.aP))));
 		var message2 = A2(
 			$evancz$elm_playground$Playground$moveY,
 			(computer.a.h / 2) - 50,
@@ -10686,7 +10686,7 @@ var $author$project$Main$visualize = F2(
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
-					'Populaton = ' + A2($author$project$Model$roundAt2, 1, $author$project$Main$config1.aM))));
+					'Populaton = ' + A2($author$project$Model$roundAt2, 1, $author$project$Main$config1.aL))));
 		var message12 = A2(
 			$evancz$elm_playground$Playground$moveY,
 			((-$author$project$Main$config1.G) / 2) - 90,
