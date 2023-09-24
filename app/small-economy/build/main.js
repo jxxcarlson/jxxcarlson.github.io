@@ -604,7 +604,7 @@ ${variant}`;
   var VERSION = "1.1.2";
   var TARGET_NAME = "My target name";
   var INITIAL_ELM_COMPILED_TIMESTAMP = Number(
-    "1695565326229"
+    "1695566035153"
   );
   var ORIGINAL_COMPILATION_MODE = "optimize";
   var ORIGINAL_BROWSER_UI_POSITION = "BottomLeft";
@@ -10373,7 +10373,42 @@ var $evancz$elm_playground$Playground$Hex = function (a) {
 	return {$: 0, a: a};
 };
 var $evancz$elm_playground$Playground$black = $evancz$elm_playground$Playground$Hex('#000000');
+var $evancz$elm_playground$Playground$Rectangle = F3(
+	function (a, b, c) {
+		return {$: 2, a: a, b: b, c: c};
+	});
+var $evancz$elm_playground$Playground$Shape = F6(
+	function (a, b, c, d, e, f) {
+		return {$: 0, a: a, b: b, c: c, d: d, e: e, f: f};
+	});
+var $evancz$elm_playground$Playground$rectangle = F3(
+	function (color, width, height) {
+		return A6(
+			$evancz$elm_playground$Playground$Shape,
+			0,
+			0,
+			0,
+			1,
+			1,
+			A3($evancz$elm_playground$Playground$Rectangle, color, width, height));
+	});
+var $author$project$Main$blackScreen = function (computer) {
+	return A3($evancz$elm_playground$Playground$rectangle, $evancz$elm_playground$Playground$black, computer.a.e, computer.a.d);
+};
 var $evancz$elm_playground$Playground$blue = $evancz$elm_playground$Playground$Hex('#3465a4');
+var $evancz$elm_playground$Playground$Group = function (a) {
+	return {$: 7, a: a};
+};
+var $evancz$elm_playground$Playground$group = function (shapes) {
+	return A6(
+		$evancz$elm_playground$Playground$Shape,
+		0,
+		0,
+		0,
+		1,
+		1,
+		$evancz$elm_playground$Playground$Group(shapes));
+};
 var $elm$core$Basics$composeR = F3(
 	function (f, g, x) {
 		return g(
@@ -10424,10 +10459,6 @@ var $author$project$Model$maxCapital = function (state) {
 		$elm$core$List$maximum(
 			A2($elm$core$List$map, $elm$core$Tuple$second, capitalList)));
 };
-var $evancz$elm_playground$Playground$Shape = F6(
-	function (a, b, c, d, e, f) {
-		return {$: 0, a: a, b: b, c: c, d: d, e: e, f: f};
-	});
 var $evancz$elm_playground$Playground$moveX = F2(
 	function (dx, _v0) {
 		var x = _v0.a;
@@ -10526,21 +10557,6 @@ var $author$project$Model$quintiles = function (xs) {
 				A2($elm$core$List$drop, m4, sorted)))
 	};
 };
-var $evancz$elm_playground$Playground$Rectangle = F3(
-	function (a, b, c) {
-		return {$: 2, a: a, b: b, c: c};
-	});
-var $evancz$elm_playground$Playground$rectangle = F3(
-	function (color, width, height) {
-		return A6(
-			$evancz$elm_playground$Playground$Shape,
-			0,
-			0,
-			0,
-			1,
-			1,
-			A3($evancz$elm_playground$Playground$Rectangle, color, width, height));
-	});
 var $evancz$elm_playground$Playground$red = $evancz$elm_playground$Playground$Hex('#cc0000');
 var $evancz$elm_playground$Playground$Rgb = F3(
 	function (a, b, c) {
@@ -10795,90 +10811,96 @@ var $author$project$Main$visualize = F2(
 			A3($evancz$elm_playground$Playground$rgb, 30, 30, 60),
 			$author$project$Main$config1.G + 20,
 			$author$project$Main$config1.G + 20);
-		var blackScreen = A3($evancz$elm_playground$Playground$rectangle, $evancz$elm_playground$Playground$black, computer.a.e, computer.a.d);
 		return A2(
-			$elm$core$List$cons,
-			blackScreen,
-			A2(
-				$elm$core$List$cons,
-				boundingBox,
+			$evancz$elm_playground$Playground$moveY,
+			40,
+			$evancz$elm_playground$Playground$group(
 				A2(
 					$elm$core$List$cons,
-					message1,
+					boundingBox,
 					A2(
 						$elm$core$List$cons,
-						message2,
+						message1,
 						A2(
 							$elm$core$List$cons,
-							message2a,
+							message2,
 							A2(
 								$elm$core$List$cons,
-								message2b,
+								message2a,
 								A2(
 									$elm$core$List$cons,
-									message3,
+									message2b,
 									A2(
 										$elm$core$List$cons,
-										message4,
+										message3,
 										A2(
 											$elm$core$List$cons,
-											message5,
+											message4,
 											A2(
 												$elm$core$List$cons,
-												message6,
+												message5,
 												A2(
 													$elm$core$List$cons,
-													message7,
+													message6,
 													A2(
 														$elm$core$List$cons,
-														message8,
+														message7,
 														A2(
 															$elm$core$List$cons,
-															message9,
+															message8,
 															A2(
 																$elm$core$List$cons,
-																message10,
+																message9,
 																A2(
 																	$elm$core$List$cons,
-																	message11,
+																	message10,
 																	A2(
 																		$elm$core$List$cons,
-																		message12,
+																		message11,
 																		A2(
 																			$elm$core$List$cons,
-																			messageC1,
+																			message12,
 																			A2(
 																				$elm$core$List$cons,
-																				messageC2,
+																				messageC1,
 																				A2(
 																					$elm$core$List$cons,
-																					messageC3,
+																					messageC2,
 																					A2(
 																						$elm$core$List$cons,
-																						messageC4,
+																						messageC3,
 																						A2(
 																							$elm$core$List$cons,
-																							messageC5,
+																							messageC4,
 																							A2(
 																								$elm$core$List$cons,
-																								messageC6,
+																								messageC5,
 																								A2(
 																									$elm$core$List$cons,
-																									messageC7,
+																									messageC6,
 																									A2(
 																										$elm$core$List$cons,
-																										messageC8,
+																										messageC7,
 																										A2(
 																											$elm$core$List$cons,
-																											messageC9,
+																											messageC8,
 																											A2(
-																												$elm$core$List$indexedMap,
-																												$author$project$Main$personToShape($author$project$Main$config1.G),
-																												state.bR))))))))))))))))))))))))));
+																												$elm$core$List$cons,
+																												messageC9,
+																												A2(
+																													$elm$core$List$indexedMap,
+																													$author$project$Main$personToShape($author$project$Main$config1.G),
+																													state.bR)))))))))))))))))))))))))));
 	});
 var $author$project$Main$view = F2(
 	function (computer, state) {
-		return A2($author$project$Main$visualize, computer, state);
+		return A2(
+			$elm$core$List$cons,
+			$author$project$Main$blackScreen(computer),
+			_List_fromArray(
+				[
+					A2($author$project$Main$visualize, computer, state)
+				]));
 	});
 var $author$project$Main$main = A3(
 	$evancz$elm_playground$Playground$game,
