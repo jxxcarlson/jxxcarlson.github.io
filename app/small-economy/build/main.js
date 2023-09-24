@@ -604,7 +604,7 @@ ${variant}`;
   var VERSION = "1.1.2";
   var TARGET_NAME = "My target name";
   var INITIAL_ELM_COMPILED_TIMESTAMP = Number(
-    "1695583911949"
+    "1695590676744"
   );
   var ORIGINAL_COMPILATION_MODE = "optimize";
   var ORIGINAL_BROWSER_UI_POSITION = "BottomLeft";
@@ -7399,8 +7399,8 @@ function _Browser_getViewport()
 		b9: {
 			dY: _Browser_window.pageXOffset,
 			dZ: _Browser_window.pageYOffset,
-			d: _Browser_doc.documentElement.clientWidth,
-			c: _Browser_doc.documentElement.clientHeight
+			m: _Browser_doc.documentElement.clientWidth,
+			i: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -7410,8 +7410,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		d: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		c: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		m: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		i: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -7435,14 +7435,14 @@ function _Browser_getViewportOf(id)
 	{
 		return {
 			b_: {
-				d: node.scrollWidth,
-				c: node.scrollHeight
+				m: node.scrollWidth,
+				i: node.scrollHeight
 			},
 			b9: {
 				dY: node.scrollLeft,
 				dZ: node.scrollTop,
-				d: node.clientWidth,
-				c: node.clientHeight
+				m: node.clientWidth,
+				i: node.clientHeight
 			}
 		};
 	});
@@ -7476,14 +7476,14 @@ function _Browser_getElement(id)
 			b9: {
 				dY: x,
 				dZ: y,
-				d: _Browser_doc.documentElement.clientWidth,
-				c: _Browser_doc.documentElement.clientHeight
+				m: _Browser_doc.documentElement.clientWidth,
+				i: _Browser_doc.documentElement.clientHeight
 			},
 			cN: {
 				dY: x + rect.left,
 				dZ: y + rect.top,
-				d: rect.width,
-				c: rect.height
+				m: rect.width,
+				i: rect.height
 			}
 		};
 	});
@@ -7518,7 +7518,7 @@ function _Browser_load(url)
 		}
 	}));
 }
-var $elm$core$Basics$True = 0;
+var $elm$core$Basics$False = 1;
 var $elm$random$Random$Seed = F2(
 	function (a, b) {
 		return {$: 0, a: a, b: b};
@@ -7627,10 +7627,10 @@ var $author$project$Model$config = {
 	dg: 200,
 	b$: 1234,
 	aw: 1.0,
-	al: 0.08,
+	al: 0.0,
 	am: 1000,
 	an: 2.0,
-	b4: true
+	b4: false
 };
 var $evancz$elm_playground$Playground$Game = F3(
 	function (a, b, c) {
@@ -7664,7 +7664,6 @@ var $elm$core$Result$Ok = function (a) {
 var $elm$json$Json$Decode$OneOf = function (a) {
 	return {$: 2, a: a};
 };
-var $elm$core$Basics$False = 1;
 var $elm$core$Maybe$Just = function (a) {
 	return {$: 0, a: a};
 };
@@ -7967,25 +7966,25 @@ var $elm$core$Array$treeFromBuilder = F2(
 	});
 var $elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
-		if (!builder.f) {
+		if (!builder.d) {
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.i),
+				$elm$core$Elm$JsArray$length(builder.g),
 				$elm$core$Array$shiftStep,
 				$elm$core$Elm$JsArray$empty,
-				builder.i);
+				builder.g);
 		} else {
-			var treeLen = builder.f * $elm$core$Array$branchFactor;
+			var treeLen = builder.d * $elm$core$Array$branchFactor;
 			var depth = $elm$core$Basics$floor(
 				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.j) : builder.j;
-			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.f);
+			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.h) : builder.h;
+			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.d);
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.i) + treeLen,
+				$elm$core$Elm$JsArray$length(builder.g) + treeLen,
 				A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep),
 				tree,
-				builder.i);
+				builder.g);
 		}
 	});
 var $elm$core$Basics$idiv = _Basics_idiv;
@@ -7998,7 +7997,7 @@ var $elm$core$Array$initializeHelp = F5(
 				return A2(
 					$elm$core$Array$builderToArray,
 					false,
-					{j: nodeList, f: (len / $elm$core$Array$branchFactor) | 0, i: tail});
+					{h: nodeList, d: (len / $elm$core$Array$branchFactor) | 0, g: tail});
 			} else {
 				var leaf = $elm$core$Array$Leaf(
 					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
@@ -8028,6 +8027,7 @@ var $elm$core$Array$initialize = F2(
 			return A5($elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
 		}
 	});
+var $elm$core$Basics$True = 0;
 var $elm$core$Result$isOk = function (result) {
 	if (!result.$) {
 		return true;
@@ -9001,7 +9001,7 @@ var $elm$core$Basics$negate = function (n) {
 };
 var $evancz$elm_playground$Playground$toScreen = F2(
 	function (width, height) {
-		return {aY: (-height) / 2, c: height, O: (-width) / 2, ai: width / 2, bg: height / 2, d: width};
+		return {aY: (-height) / 2, i: height, O: (-width) / 2, ai: width / 2, bg: height / 2, m: width};
 	});
 var $elm$core$Set$insert = F2(
 	function (key, _v0) {
@@ -9446,7 +9446,7 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							a: A2($evancz$elm_playground$Playground$toScreen, viewport.d, viewport.c)
+							b: A2($evancz$elm_playground$Playground$toScreen, viewport.m, viewport.i)
 						}));
 			case 3:
 				var w = msg.a;
@@ -9458,7 +9458,7 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							a: A2($evancz$elm_playground$Playground$toScreen, w, h)
+							b: A2($evancz$elm_playground$Playground$toScreen, w, h)
 						}));
 			case 0:
 				var isDown = msg.a;
@@ -9475,8 +9475,8 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 			case 5:
 				var pageX = msg.a;
 				var pageY = msg.b;
-				var y = computer.a.bg - pageY;
-				var x = computer.a.O + pageX;
+				var y = computer.b.bg - pageY;
+				var x = computer.b.O + pageX;
 				return A3(
 					$evancz$elm_playground$Playground$Game,
 					vis,
@@ -9525,7 +9525,7 @@ var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewp
 var $evancz$elm_playground$Playground$initialComputer = {
 	w: $evancz$elm_playground$Playground$emptyKeyboard,
 	q: A4($evancz$elm_playground$Playground$Mouse, 0, 0, false, false),
-	a: A2($evancz$elm_playground$Playground$toScreen, 600, 600),
+	b: A2($evancz$elm_playground$Playground$toScreen, 600, 600),
 	aP: $elm$time$Time$millisToPosix(0)
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
@@ -9833,8 +9833,8 @@ var $evancz$elm_playground$Playground$render = F2(
 	function (screen, shapes) {
 		var y = $elm$core$String$fromFloat(screen.aY);
 		var x = $elm$core$String$fromFloat(screen.O);
-		var w = $elm$core$String$fromFloat(screen.d);
-		var h = $elm$core$String$fromFloat(screen.c);
+		var w = $elm$core$String$fromFloat(screen.m);
+		var h = $elm$core$String$fromFloat(screen.i);
 		return A2(
 			$elm$svg$Svg$svg,
 			_List_fromArray(
@@ -9858,7 +9858,7 @@ var $evancz$elm_playground$Playground$game = F3(
 					[
 						A2(
 						$evancz$elm_playground$Playground$render,
-						computer.a,
+						computer.b,
 						A2(viewMemory, computer, memory))
 					]),
 				dT: 'Playground'
@@ -9921,7 +9921,7 @@ var $elm$random$Random$step = F2(
 var $author$project$Random$Seeded$randomFloatPairsHelp = function (data) {
 	randomFloatPairsHelp:
 	while (true) {
-		if (data.l <= 0) {
+		if (data.k <= 0) {
 			return data;
 		} else {
 			var _v0 = A2(
@@ -9939,7 +9939,7 @@ var $author$project$Random$Seeded$randomFloatPairsHelp = function (data) {
 			var $temp$data = {
 				o: data.o,
 				p: data.p,
-				l: data.l - 1,
+				k: data.k - 1,
 				de: A2(
 					$elm$core$List$cons,
 					_Utils_Tuple2(k1, k2),
@@ -9954,7 +9954,7 @@ var $author$project$Random$Seeded$randomFloatPairsHelp = function (data) {
 var $author$project$Random$Seeded$floatPairs = F4(
 	function (seed, low, high, n) {
 		var result = $author$project$Random$Seeded$randomFloatPairsHelp(
-			{o: high, p: low, l: n, de: _List_Nil, av: seed});
+			{o: high, p: low, k: n, de: _List_Nil, av: seed});
 		return {de: result.de, av: result.av};
 	});
 var $author$project$Model$initPerson = F3(
@@ -10409,7 +10409,7 @@ var $author$project$Main$update = F2(
 										} else {
 											if (_Utils_eq(
 												computer.w.x,
-												$elm$core$Set$singleton('f'))) {
+												$elm$core$Set$singleton('e'))) {
 												return A2($author$project$Main$setTaxRate, state, 0.04);
 											} else {
 												if (_Utils_eq(
@@ -10467,7 +10467,7 @@ var $evancz$elm_playground$Playground$rectangle = F3(
 			A3($evancz$elm_playground$Playground$Rectangle, color, width, height));
 	});
 var $author$project$Main$blackScreen = function (computer) {
-	return A3($evancz$elm_playground$Playground$rectangle, $evancz$elm_playground$Playground$black, computer.a.d, computer.a.c);
+	return A3($evancz$elm_playground$Playground$rectangle, $evancz$elm_playground$Playground$black, computer.b.m, computer.b.i);
 };
 var $evancz$elm_playground$Playground$blue = $evancz$elm_playground$Playground$Hex('#3465a4');
 var $evancz$elm_playground$Playground$Group = function (a) {
@@ -10483,6 +10483,63 @@ var $evancz$elm_playground$Playground$group = function (shapes) {
 		1,
 		$evancz$elm_playground$Playground$Group(shapes));
 };
+var $evancz$elm_playground$Playground$moveX = F2(
+	function (dx, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		var a = _v0.c;
+		var s = _v0.d;
+		var o = _v0.e;
+		var f = _v0.f;
+		return A6($evancz$elm_playground$Playground$Shape, x + dx, y, a, s, o, f);
+	});
+var $evancz$elm_playground$Playground$moveY = F2(
+	function (dy, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		var a = _v0.c;
+		var s = _v0.d;
+		var o = _v0.e;
+		var f = _v0.f;
+		return A6($evancz$elm_playground$Playground$Shape, x, y + dy, a, s, o, f);
+	});
+var $evancz$elm_playground$Playground$red = $evancz$elm_playground$Playground$Hex('#cc0000');
+var $evancz$elm_playground$Playground$Words = F2(
+	function (a, b) {
+		return {$: 6, a: a, b: b};
+	});
+var $evancz$elm_playground$Playground$words = F2(
+	function (color, string) {
+		return A6(
+			$evancz$elm_playground$Playground$Shape,
+			0,
+			0,
+			0,
+			1,
+			1,
+			A2($evancz$elm_playground$Playground$Words, color, string));
+	});
+var $author$project$Main$display = F6(
+	function (computer, str1, str2, dx, dy, deltaX) {
+		return $evancz$elm_playground$Playground$group(
+			_List_fromArray(
+				[
+					A2(
+					$evancz$elm_playground$Playground$moveY,
+					(computer.b.i / 2) - dy,
+					A2(
+						$evancz$elm_playground$Playground$moveX,
+						(computer.b.m / 2) - dx,
+						A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$red, str1))),
+					A2(
+					$evancz$elm_playground$Playground$moveY,
+					(computer.b.i / 2) - dy,
+					A2(
+						$evancz$elm_playground$Playground$moveX,
+						((computer.b.m / 2) - dx) + deltaX,
+						A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$red, str2)))
+				]));
+	});
 var $elm$core$Basics$composeR = F3(
 	function (f, g, x) {
 		return g(
@@ -10529,25 +10586,31 @@ var $author$project$Model$maxCapital = function (state) {
 		$elm$core$List$maximum(
 			A2($elm$core$List$map, $elm$core$Tuple$second, capitalList)));
 };
-var $evancz$elm_playground$Playground$moveX = F2(
-	function (dx, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		var a = _v0.c;
-		var s = _v0.d;
-		var o = _v0.e;
-		var f = _v0.f;
-		return A6($evancz$elm_playground$Playground$Shape, x + dx, y, a, s, o, f);
+var $elm$core$String$cons = _String_cons;
+var $elm$core$String$fromChar = function (_char) {
+	return A2($elm$core$String$cons, _char, '');
+};
+var $elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
+var $elm$core$String$repeatHelp = F3(
+	function (n, chunk, result) {
+		return (n <= 0) ? result : A3(
+			$elm$core$String$repeatHelp,
+			n >> 1,
+			_Utils_ap(chunk, chunk),
+			(!(n & 1)) ? result : _Utils_ap(result, chunk));
 	});
-var $evancz$elm_playground$Playground$moveY = F2(
-	function (dy, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		var a = _v0.c;
-		var s = _v0.d;
-		var o = _v0.e;
-		var f = _v0.f;
-		return A6($evancz$elm_playground$Playground$Shape, x, y + dy, a, s, o, f);
+var $elm$core$String$repeat = F2(
+	function (n, chunk) {
+		return A3($elm$core$String$repeatHelp, n, chunk, '');
+	});
+var $elm$core$String$padRight = F3(
+	function (n, _char, string) {
+		return _Utils_ap(
+			string,
+			A2(
+				$elm$core$String$repeat,
+				n - $elm$core$String$length(string),
+				$elm$core$String$fromChar(_char)));
 	});
 var $evancz$elm_playground$Playground$Circle = F2(
 	function (a, b) {
@@ -10624,7 +10687,6 @@ var $author$project$Model$quintiles = function (xs) {
 				A2($elm$core$List$drop, m4, sorted)))
 	};
 };
-var $evancz$elm_playground$Playground$red = $evancz$elm_playground$Playground$Hex('#cc0000');
 var $evancz$elm_playground$Playground$Rgb = F3(
 	function (a, b, c) {
 		return {$: 1, a: a, b: b, c: c};
@@ -10656,21 +10718,6 @@ var $author$project$Model$roundAt2 = F2(
 		var fracPart = A2($author$project$Model$roundAt, n, (f - intPart) * factor) | 0;
 		return $elm$core$String$fromFloat(intPart) + ('.' + $elm$core$String$fromInt(fracPart));
 	});
-var $evancz$elm_playground$Playground$Words = F2(
-	function (a, b) {
-		return {$: 6, a: a, b: b};
-	});
-var $evancz$elm_playground$Playground$words = F2(
-	function (color, string) {
-		return A6(
-			$evancz$elm_playground$Playground$Shape,
-			0,
-			0,
-			0,
-			1,
-			1,
-			A2($evancz$elm_playground$Playground$Words, color, string));
-	});
 var $author$project$Main$visualize = F2(
 	function (computer, state) {
 		var quintiles = $author$project$Model$quintiles(
@@ -10686,235 +10733,221 @@ var $author$project$Main$visualize = F2(
 			A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'Random Exchange Model'));
 		var dy = 120;
 		var dx = 40;
-		var message1 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			((computer.a.c / 2) - 20) - dy,
+		var message1 = A6(
+			$author$project$Main$display,
+			computer,
+			'transactions = ',
+			$elm$core$String$fromInt(state.dE),
+			258 - dx,
+			270 - dy,
+			70);
+		var message2 = A6(
+			$author$project$Main$display,
+			computer,
+			'populaton = ',
+			A3(
+				$elm$core$String$padRight,
+				4,
+				' ',
+				A2($author$project$Model$roundAt2, 1, state.dg)),
+			265 - dx,
+			300 - dy,
+			70);
+		var message2a = A6(
+			$author$project$Main$display,
+			computer,
+			'transaction = ',
+			A2($author$project$Model$roundAt2, 2, state.an),
+			263 - dx,
+			320 - dy,
+			70);
+		var message2b = A6(
+			$author$project$Main$display,
+			computer,
+			'initial Capital = ',
+			A2($author$project$Model$roundAt2, 1, state.cZ),
+			253 - dx,
+			340 - dy,
+			70);
+		var message3 = A6(
+			$author$project$Main$display,
+			computer,
+			'max Capital = ',
 			A2(
-				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.d / 2) - 86) - 73) - dx,
+				$author$project$Model$roundAt2,
+				1,
+				$author$project$Model$maxCapital(state)),
+			258 - dx,
+			360 - dy,
+			70);
+		var message4 = A6(
+			$author$project$Main$display,
+			computer,
+			'quintile 5 = ',
+			A2($author$project$Model$roundAt2, 1, quintiles.dk),
+			270 - dx,
+			390 - dy,
+			60);
+		var message5 = A6(
+			$author$project$Main$display,
+			computer,
+			'quintile 4 = ',
+			A2($author$project$Model$roundAt2, 1, quintiles.dj),
+			270 - dx,
+			410 - dy,
+			60);
+		var message6 = A6(
+			$author$project$Main$display,
+			computer,
+			'quintile 3 = ',
+			A2($author$project$Model$roundAt2, 1, quintiles.di),
+			270 - dx,
+			430 - dy,
+			60);
+		var message7 = A6(
+			$author$project$Main$display,
+			computer,
+			'quintile 2 = ',
+			A2($author$project$Model$roundAt2, 1, quintiles.dh),
+			270 - dx,
+			450 - dy,
+			60);
+		var message8 = A6(
+			$author$project$Main$display,
+			computer,
+			'quintile 1 = ',
+			A2($author$project$Model$roundAt2, 1, quintiles.bX),
+			270 - dx,
+			470 - dy,
+			60);
+		var message9 = A6(
+			$author$project$Main$display,
+			computer,
+			'max / quintile 1 = ',
+			A3(
+				$elm$core$String$padRight,
+				16,
+				' ',
 				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'transactions = ' + $elm$core$String$fromInt(state.dE))));
-		var message2 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			((computer.a.c / 2) - 50) - dy,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.d / 2) - 80) - 85) - dx,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'populaton = ' + A2($author$project$Model$roundAt2, 1, state.dg))));
-		var message2a = A2(
-			$evancz$elm_playground$Playground$moveY,
-			((computer.a.c / 2) - 80) - dy,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.d / 2) - 80) - 85) - dx,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'transaction = $' + A2($author$project$Model$roundAt2, 2, state.an))));
-		var message2b = A2(
-			$evancz$elm_playground$Playground$moveY,
-			((computer.a.c / 2) - 100) - dy,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.d / 2) - 89) - 64) - dx,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'initial Capital = $' + A2($author$project$Model$roundAt2, 1, state.cZ))));
-		var message3 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			((computer.a.c / 2) - 120) - dy,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.d / 2) - 84) - 75) - dx,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'max Capital = $' + A2(
-						$author$project$Model$roundAt2,
-						1,
-						$author$project$Model$maxCapital(state)))));
-		var message4 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			((computer.a.c / 2) - 150) - dy,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.d / 2) - 71) - 98) - dx,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'quintile 5 = ' + A2($author$project$Model$roundAt2, 1, quintiles.dk))));
-		var message5 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			((computer.a.c / 2) - 170) - dy,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.d / 2) - 71) - 98) - dx,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'quintile 4 = ' + A2($author$project$Model$roundAt2, 1, quintiles.dj))));
-		var message6 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			((computer.a.c / 2) - 190) - dy,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.d / 2) - 71) - 98) - dx,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'quintile 3 = ' + A2($author$project$Model$roundAt2, 1, quintiles.di))));
-		var message7 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			((computer.a.c / 2) - 210) - dy,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.d / 2) - 71) - 98) - dx,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'quintile 2 = ' + A2($author$project$Model$roundAt2, 1, quintiles.dh))));
-		var message8 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			((computer.a.c / 2) - 230) - dy,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.d / 2) - 71) - 98) - dx,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'quintile 1 = ' + A2($author$project$Model$roundAt2, 1, quintiles.bX))));
-		var message9 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			((computer.a.c / 2) - 260) - dy,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.d / 2) - 85) - 64) - dx,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'max / quintile 1 = ' + A2(
-						$author$project$Model$roundAt2,
-						1,
-						$author$project$Model$maxCapital(state) / quintiles.bX))));
+					$author$project$Model$roundAt2,
+					1,
+					$author$project$Model$maxCapital(state) / quintiles.bX)),
+			250 - dx,
+			500 - dy,
+			80);
 		var messageC1 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.c / 2) - 320) - dy,
+			((computer.b.i / 2) - 320) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.d / 2) - 121) - 62) - dx,
+				(((computer.b.m / 2) - 121) - 62) - dx,
 				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'Commands')));
 		var messageC10 = function () {
 			var c = (!state.al) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.c / 2) - 530) - dy,
+				((computer.b.i / 2) - 530) - dy,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.d / 2) - 188) - dx,
+					((computer.b.m / 2) - 188) - dx,
 					A2($evancz$elm_playground$Playground$words, c, 'n: no taxes')));
 		}();
 		var messageC11 = function () {
 			var c = (state.al === 0.04) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.c / 2) - 550) - dy,
+				((computer.b.i / 2) - 550) - dy,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.d / 2) - 172) - dx,
+					((computer.b.m / 2) - 172) - dx,
 					A2($evancz$elm_playground$Playground$words, c, 'e: tax rate = 4%')));
 		}();
 		var messageC12 = function () {
 			var c = (state.al === 0.08) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.c / 2) - 570) - dy,
+				((computer.b.i / 2) - 570) - dy,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.d / 2) - 172) - dx,
+					((computer.b.m / 2) - 172) - dx,
 					A2($evancz$elm_playground$Playground$words, c, 'f: tax rate = 8%')));
 		}();
 		var messageC13 = function () {
 			var c = (state.al === 0.12) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.c / 2) - 590) - dy,
+				((computer.b.i / 2) - 590) - dy,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.d / 2) - 172) - dx,
+					((computer.b.m / 2) - 172) - dx,
 					A2($evancz$elm_playground$Playground$words, c, 'g: tax rate 12%')));
 		}();
 		var messageC2 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.c / 2) - 350) - dy,
+			((computer.b.i / 2) - 350) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.d / 2) - 131) - 62) - dx,
+				(((computer.b.m / 2) - 131) - 62) - dx,
 				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'p: pause')));
 		var messageC3 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.c / 2) - 370) - dy,
+			((computer.b.i / 2) - 370) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.d / 2) - 140) - 62) - dx,
+				(((computer.b.m / 2) - 140) - 62) - dx,
 				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'r: run')));
 		var messageC4 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.c / 2) - 390) - dy,
+			((computer.b.i / 2) - 390) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.d / 2) - 136) - 62) - dx,
+				(((computer.b.m / 2) - 136) - 62) - dx,
 				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'x: reset')));
 		var messageC5 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.c / 2) - 410) - dy,
+			((computer.b.i / 2) - 410) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.d / 2) - 122) - 62) - dx,
+				(((computer.b.m / 2) - 122) - 62) - dx,
 				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 's: new seed')));
 		var messageC6 = function () {
 			var c = (state.an === 0.5) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.c / 2) - 440) - dy,
+				((computer.b.i / 2) - 440) - dy,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.d / 2) - 122) - dx,
+					((computer.b.m / 2) - 122) - dx,
 					A2($evancz$elm_playground$Playground$words, c, 'a: set transaction amount to 0.5')));
 		}();
 		var messageC7 = function () {
 			var c = (state.an === 1.0) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.c / 2) - 460) - dy,
+				((computer.b.i / 2) - 460) - dy,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.d / 2) - 122) - dx,
+					((computer.b.m / 2) - 122) - dx,
 					A2($evancz$elm_playground$Playground$words, c, 'b: set transaction amount to 1.0')));
 		}();
 		var messageC8 = function () {
 			var c = (state.an === 1.5) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.c / 2) - 480) - dy,
+				((computer.b.i / 2) - 480) - dy,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.d / 2) - 122) - dx,
+					((computer.b.m / 2) - 122) - dx,
 					A2($evancz$elm_playground$Playground$words, c, 'c: set transaction amount to 1.5')));
 		}();
 		var messageC9 = function () {
 			var c = (state.an === 2.0) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.c / 2) - 500) - dy,
+				((computer.b.i / 2) - 500) - dy,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.d / 2) - 122) - dx,
+					((computer.b.m / 2) - 122) - dx,
 					A2($evancz$elm_playground$Playground$words, c, 'd: set transaction amount to 2.0')));
 		}();
 		var boundingBox = A3(
