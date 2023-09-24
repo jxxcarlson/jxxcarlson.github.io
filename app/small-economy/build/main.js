@@ -604,7 +604,7 @@ ${variant}`;
   var VERSION = "1.1.2";
   var TARGET_NAME = "My target name";
   var INITIAL_ELM_COMPILED_TIMESTAMP = Number(
-    "1695564862914"
+    "1695565326229"
   );
   var ORIGINAL_COMPILATION_MODE = "optimize";
   var ORIGINAL_BROWSER_UI_POSITION = "BottomLeft";
@@ -10597,175 +10597,6 @@ var $author$project$Main$visualize = F2(
 					return $.bo;
 				},
 				state.bR));
-		var messageC9 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 500,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				(computer.a.e / 2) - 122,
-				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'd: set transaction amount to 2.0')));
-		var messageC8 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 480,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				(computer.a.e / 2) - 122,
-				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'c: set transaction amount to 1.5')));
-		var messageC7 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 460,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				(computer.a.e / 2) - 122,
-				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'b: set transaction amount to 1.0')));
-		var messageC6 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 440,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				(computer.a.e / 2) - 122,
-				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'a: set transaction amount to 0.5')));
-		var messageC5 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 410,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 122) - 62,
-				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 's: new seed')));
-		var messageC4 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 390,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 136) - 62,
-				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'x: reset')));
-		var messageC3 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 370,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 140) - 62,
-				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'r: run')));
-		var messageC2 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 350,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 131) - 62,
-				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'p: pause')));
-		var messageC1 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 320,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 121) - 62,
-				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'Commands')));
-		var message9 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 260,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 85) - 64,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'max / quintile 1 = ' + A2(
-						$author$project$Model$roundAt2,
-						1,
-						$author$project$Model$maxCapital(state) / quintiles.bY))));
-		var message8 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 230,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 71) - 100,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'quintile 1 = ' + A2($author$project$Model$roundAt2, 1, quintiles.bY))));
-		var message7 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 210,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 71) - 100,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'quintile 2 = ' + A2($author$project$Model$roundAt2, 1, quintiles.df))));
-		var message6 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 190,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 71) - 98,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'quintile 3 = ' + A2($author$project$Model$roundAt2, 1, quintiles.dg))));
-		var message5 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 170,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 71) - 98,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'quintile 4 = ' + A2($author$project$Model$roundAt2, 1, quintiles.dh))));
-		var message4 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 150,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 71) - 98,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'quintile 5 = ' + A2($author$project$Model$roundAt2, 1, quintiles.di))));
-		var message3 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 120,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 84) - 75,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'max Capital = $' + A2(
-						$author$project$Model$roundAt2,
-						1,
-						$author$project$Model$maxCapital(state)))));
-		var message2b = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 100,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 89) - 64,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'initial Capital = $' + A2($author$project$Model$roundAt2, 1, $author$project$Main$config1.aJ))));
-		var message2a = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 80,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 80) - 85,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'transaction = $' + A2($author$project$Model$roundAt2, 2, state.U))));
-		var message2 = A2(
-			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 50,
-			A2(
-				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 80) - 85,
-				A2(
-					$evancz$elm_playground$Playground$words,
-					$evancz$elm_playground$Playground$red,
-					'populaton = ' + A2($author$project$Model$roundAt2, 1, $author$project$Main$config1.aM))));
 		var message12 = A2(
 			$evancz$elm_playground$Playground$moveY,
 			((-$author$project$Main$config1.G) / 2) - 90,
@@ -10778,16 +10609,187 @@ var $author$project$Main$visualize = F2(
 			$evancz$elm_playground$Playground$moveY,
 			((-$author$project$Main$config1.G) / 2) - 40,
 			A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'Random Exchange Model'));
+		var dy = 120;
+		var dx = 40;
 		var message1 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			(computer.a.d / 2) - 20,
+			((computer.a.d / 2) - 20) - dy,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				((computer.a.e / 2) - 86) - 73,
+				(((computer.a.e / 2) - 86) - 73) - dx,
 				A2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
 					'transactions = ' + $elm$core$String$fromInt(state.dC))));
+		var message2 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 50) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(((computer.a.e / 2) - 80) - 85) - dx,
+				A2(
+					$evancz$elm_playground$Playground$words,
+					$evancz$elm_playground$Playground$red,
+					'populaton = ' + A2($author$project$Model$roundAt2, 1, $author$project$Main$config1.aM))));
+		var message2a = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 80) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(((computer.a.e / 2) - 80) - 85) - dx,
+				A2(
+					$evancz$elm_playground$Playground$words,
+					$evancz$elm_playground$Playground$red,
+					'transaction = $' + A2($author$project$Model$roundAt2, 2, state.U))));
+		var message2b = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 100) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(((computer.a.e / 2) - 89) - 64) - dx,
+				A2(
+					$evancz$elm_playground$Playground$words,
+					$evancz$elm_playground$Playground$red,
+					'initial Capital = $' + A2($author$project$Model$roundAt2, 1, $author$project$Main$config1.aJ))));
+		var message3 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 120) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(((computer.a.e / 2) - 84) - 75) - dx,
+				A2(
+					$evancz$elm_playground$Playground$words,
+					$evancz$elm_playground$Playground$red,
+					'max Capital = $' + A2(
+						$author$project$Model$roundAt2,
+						1,
+						$author$project$Model$maxCapital(state)))));
+		var message4 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 150) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(((computer.a.e / 2) - 71) - 98) - dx,
+				A2(
+					$evancz$elm_playground$Playground$words,
+					$evancz$elm_playground$Playground$red,
+					'quintile 5 = ' + A2($author$project$Model$roundAt2, 1, quintiles.di))));
+		var message5 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 170) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(((computer.a.e / 2) - 71) - 98) - dx,
+				A2(
+					$evancz$elm_playground$Playground$words,
+					$evancz$elm_playground$Playground$red,
+					'quintile 4 = ' + A2($author$project$Model$roundAt2, 1, quintiles.dh))));
+		var message6 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 190) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(((computer.a.e / 2) - 71) - 98) - dx,
+				A2(
+					$evancz$elm_playground$Playground$words,
+					$evancz$elm_playground$Playground$red,
+					'quintile 3 = ' + A2($author$project$Model$roundAt2, 1, quintiles.dg))));
+		var message7 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 210) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(((computer.a.e / 2) - 71) - 100) - dx,
+				A2(
+					$evancz$elm_playground$Playground$words,
+					$evancz$elm_playground$Playground$red,
+					'quintile 2 = ' + A2($author$project$Model$roundAt2, 1, quintiles.df))));
+		var message8 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 230) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(((computer.a.e / 2) - 71) - 100) - dx,
+				A2(
+					$evancz$elm_playground$Playground$words,
+					$evancz$elm_playground$Playground$red,
+					'quintile 1 = ' + A2($author$project$Model$roundAt2, 1, quintiles.bY))));
+		var message9 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 260) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(((computer.a.e / 2) - 85) - 64) - dx,
+				A2(
+					$evancz$elm_playground$Playground$words,
+					$evancz$elm_playground$Playground$red,
+					'max / quintile 1 = ' + A2(
+						$author$project$Model$roundAt2,
+						1,
+						$author$project$Model$maxCapital(state) / quintiles.bY))));
+		var messageC1 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 320) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(((computer.a.e / 2) - 121) - 62) - dx,
+				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'Commands')));
+		var messageC2 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 350) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(((computer.a.e / 2) - 131) - 62) - dx,
+				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'p: pause')));
+		var messageC3 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 370) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(((computer.a.e / 2) - 140) - 62) - dx,
+				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'r: run')));
+		var messageC4 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 390) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(((computer.a.e / 2) - 136) - 62) - dx,
+				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'x: reset')));
+		var messageC5 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 410) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				(((computer.a.e / 2) - 122) - 62) - dx,
+				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 's: new seed')));
+		var messageC6 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 440) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				((computer.a.e / 2) - 122) - dx,
+				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'a: set transaction amount to 0.5')));
+		var messageC7 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 460) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				((computer.a.e / 2) - 122) - dx,
+				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'b: set transaction amount to 1.0')));
+		var messageC8 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 480) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				((computer.a.e / 2) - 122) - dx,
+				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'c: set transaction amount to 1.5')));
+		var messageC9 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((computer.a.d / 2) - 500) - dy,
+			A2(
+				$evancz$elm_playground$Playground$moveX,
+				((computer.a.e / 2) - 122) - dx,
+				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'd: set transaction amount to 2.0')));
 		var boundingBox = A3(
 			$evancz$elm_playground$Playground$rectangle,
 			A3($evancz$elm_playground$Playground$rgb, 30, 30, 60),
