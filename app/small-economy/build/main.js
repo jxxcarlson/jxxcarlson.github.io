@@ -604,7 +604,7 @@ ${variant}`;
   var VERSION = "1.1.2";
   var TARGET_NAME = "My target name";
   var INITIAL_ELM_COMPILED_TIMESTAMP = Number(
-    "1695554822204"
+    "1695555679265"
   );
   var ORIGINAL_COMPILATION_MODE = "optimize";
   var ORIGINAL_BROWSER_UI_POSITION = "BottomLeft";
@@ -5813,7 +5813,7 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		x: func(record.x),
+		y: func(record.y),
 		ak: record.ak,
 		ae: record.ae
 	}
@@ -6083,7 +6083,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.x;
+		var message = !tag ? value : tag < 3 ? value.a : value.y;
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.ak;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
@@ -7518,7 +7518,7 @@ var _Bitwise_shiftRightZfBy = F2(function(offset, a)
 {
 	return a >>> offset;
 });
-var $author$project$Main$config1 = {B: 500, T: 20, U: 200, aK: 1.0, af: 12345};
+var $author$project$Main$config1 = {w: 500, T: 20, U: 200, aK: 1.0, af: 12345};
 var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var $elm$core$Array$foldr = F3(
@@ -8947,7 +8947,7 @@ var $evancz$elm_playground$Playground$Mouse = F4(
 var $evancz$elm_playground$Playground$Time = $elm$core$Basics$identity;
 var $elm$core$Set$Set_elm_builtin = $elm$core$Basics$identity;
 var $elm$core$Set$empty = $elm$core$Dict$empty;
-var $evancz$elm_playground$Playground$emptyKeyboard = {X: false, aX: false, _: false, k: $elm$core$Set$empty, w: false, G: false, ah: false, ai: false, W: false};
+var $evancz$elm_playground$Playground$emptyKeyboard = {X: false, aX: false, _: false, k: $elm$core$Set$empty, x: false, G: false, ah: false, ai: false, W: false};
 var $evancz$elm_playground$Playground$mouseClick = F2(
 	function (bool, mouse) {
 		return _Utils_update(
@@ -8971,7 +8971,7 @@ var $elm$core$Basics$negate = function (n) {
 };
 var $evancz$elm_playground$Playground$toScreen = F2(
 	function (width, height) {
-		return {Y: (-height) / 2, o: height, w: (-width) / 2, G: width / 2, al: height / 2, p: width};
+		return {Y: (-height) / 2, o: height, x: (-width) / 2, G: width / 2, al: height / 2, p: width};
 	});
 var $elm$core$Set$insert = F2(
 	function (key, _v0) {
@@ -9376,7 +9376,7 @@ var $evancz$elm_playground$Playground$updateKeyboard = F3(
 			case 'ArrowLeft':
 				return _Utils_update(
 					keyboard,
-					{k: keys, w: isDown});
+					{k: keys, x: isDown});
 			case 'ArrowRight':
 				return _Utils_update(
 					keyboard,
@@ -9446,7 +9446,7 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 				var pageX = msg.a;
 				var pageY = msg.b;
 				var y = computer.a.al - pageY;
-				var x = computer.a.w + pageX;
+				var x = computer.a.x + pageX;
 				return A3(
 					$evancz$elm_playground$Playground$Game,
 					vis,
@@ -9802,7 +9802,7 @@ var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var $evancz$elm_playground$Playground$render = F2(
 	function (screen, shapes) {
 		var y = $elm$core$String$fromFloat(screen.Y);
-		var x = $elm$core$String$fromFloat(screen.w);
+		var x = $elm$core$String$fromFloat(screen.x);
 		var w = $elm$core$String$fromFloat(screen.p);
 		var h = $elm$core$String$fromFloat(screen.o);
 		return A2(
@@ -9981,7 +9981,7 @@ var $author$project$Main$initialState = function (config) {
 		$author$project$Model$initialState,
 		$elm$random$Random$initialSeed(config.af),
 		config.U,
-		config.B,
+		config.w,
 		config.T);
 };
 var $elm$core$Basics$ge = _Utils_ge;
@@ -10604,9 +10604,13 @@ var $author$project$Main$visualize = F2(
 					$evancz$elm_playground$Playground$words,
 					$evancz$elm_playground$Playground$red,
 					'Populaton = ' + A2($author$project$Model$roundAt2, 1, $author$project$Main$config1.U))));
+		var message11 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((-$author$project$Main$config1.w) / 2) - 55,
+			A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'https://scripta.io/s/jxxcarlson:wealth-and-the-random-exchange-model'));
 		var message10 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((-$author$project$Main$config1.B) / 2) - 30,
+			((-$author$project$Main$config1.w) / 2) - 30,
 			A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'Random Exchange Model'));
 		var message1 = A2(
 			$evancz$elm_playground$Playground$moveY,
@@ -10621,8 +10625,8 @@ var $author$project$Main$visualize = F2(
 		var boundingBox = A3(
 			$evancz$elm_playground$Playground$rectangle,
 			A3($evancz$elm_playground$Playground$rgb, 30, 30, 60),
-			$author$project$Main$config1.B + 20,
-			$author$project$Main$config1.B + 20);
+			$author$project$Main$config1.w + 20,
+			$author$project$Main$config1.w + 20);
 		var blackScreen = A3($evancz$elm_playground$Playground$rectangle, $evancz$elm_playground$Playground$black, computer.a.p, computer.a.o);
 		return A2(
 			$elm$core$List$cons,
@@ -10667,9 +10671,12 @@ var $author$project$Main$visualize = F2(
 																$elm$core$List$cons,
 																message10,
 																A2(
-																	$elm$core$List$indexedMap,
-																	$author$project$Main$personToShape($author$project$Main$config1.B),
-																	state.aC)))))))))))))));
+																	$elm$core$List$cons,
+																	message11,
+																	A2(
+																		$elm$core$List$indexedMap,
+																		$author$project$Main$personToShape($author$project$Main$config1.w),
+																		state.aC))))))))))))))));
 	});
 var $author$project$Main$view = F2(
 	function (computer, state) {
