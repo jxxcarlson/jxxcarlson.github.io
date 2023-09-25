@@ -604,7 +604,7 @@ ${variant}`;
   var VERSION = "1.1.2";
   var TARGET_NAME = "My target name";
   var INITIAL_ELM_COMPILED_TIMESTAMP = Number(
-    "1695650133685"
+    "1695660546156"
   );
   var ORIGINAL_COMPILATION_MODE = "optimize";
   var ORIGINAL_BROWSER_UI_POSITION = "BottomLeft";
@@ -7399,8 +7399,8 @@ function _Browser_getViewport()
 		b8: {
 			dY: _Browser_window.pageXOffset,
 			dZ: _Browser_window.pageYOffset,
-			j: _Browser_doc.documentElement.clientWidth,
-			h: _Browser_doc.documentElement.clientHeight
+			i: _Browser_doc.documentElement.clientWidth,
+			f: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -7410,8 +7410,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		j: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		h: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		i: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		f: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -7435,14 +7435,14 @@ function _Browser_getViewportOf(id)
 	{
 		return {
 			bZ: {
-				j: node.scrollWidth,
-				h: node.scrollHeight
+				i: node.scrollWidth,
+				f: node.scrollHeight
 			},
 			b8: {
 				dY: node.scrollLeft,
 				dZ: node.scrollTop,
-				j: node.clientWidth,
-				h: node.clientHeight
+				i: node.clientWidth,
+				f: node.clientHeight
 			}
 		};
 	});
@@ -7476,14 +7476,14 @@ function _Browser_getElement(id)
 			b8: {
 				dY: x,
 				dZ: y,
-				j: _Browser_doc.documentElement.clientWidth,
-				h: _Browser_doc.documentElement.clientHeight
+				i: _Browser_doc.documentElement.clientWidth,
+				f: _Browser_doc.documentElement.clientHeight
 			},
 			cM: {
 				dY: x + rect.left,
 				dZ: y + rect.top,
-				j: rect.width,
-				h: rect.height
+				i: rect.width,
+				f: rect.height
 			}
 		};
 	});
@@ -7627,7 +7627,7 @@ var $author$project$Model$config = {
 	df: 200,
 	b_: 1234,
 	ax: 1.0,
-	ab: 0.0,
+	S: 0.0,
 	al: 1000,
 	am: 2.0,
 	b3: false
@@ -7969,22 +7969,22 @@ var $elm$core$Array$builderToArray = F2(
 		if (!builder.d) {
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.g),
+				$elm$core$Elm$JsArray$length(builder.h),
 				$elm$core$Array$shiftStep,
 				$elm$core$Elm$JsArray$empty,
-				builder.g);
+				builder.h);
 		} else {
 			var treeLen = builder.d * $elm$core$Array$branchFactor;
 			var depth = $elm$core$Basics$floor(
 				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.i) : builder.i;
+			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.j) : builder.j;
 			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.d);
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.g) + treeLen,
+				$elm$core$Elm$JsArray$length(builder.h) + treeLen,
 				A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep),
 				tree,
-				builder.g);
+				builder.h);
 		}
 	});
 var $elm$core$Basics$idiv = _Basics_idiv;
@@ -7997,7 +7997,7 @@ var $elm$core$Array$initializeHelp = F5(
 				return A2(
 					$elm$core$Array$builderToArray,
 					false,
-					{i: nodeList, d: (len / $elm$core$Array$branchFactor) | 0, g: tail});
+					{j: nodeList, d: (len / $elm$core$Array$branchFactor) | 0, h: tail});
 			} else {
 				var leaf = $elm$core$Array$Leaf(
 					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
@@ -8977,7 +8977,7 @@ var $evancz$elm_playground$Playground$Mouse = F4(
 var $evancz$elm_playground$Playground$Time = $elm$core$Basics$identity;
 var $elm$core$Set$Set_elm_builtin = $elm$core$Basics$identity;
 var $elm$core$Set$empty = $elm$core$Dict$empty;
-var $evancz$elm_playground$Playground$emptyKeyboard = {aW: false, cL: false, a$: false, t: $elm$core$Set$empty, O: false, ai: false, be: false, bf: false, aQ: false};
+var $evancz$elm_playground$Playground$emptyKeyboard = {aW: false, cL: false, a$: false, q: $elm$core$Set$empty, O: false, ai: false, be: false, bf: false, aQ: false};
 var $evancz$elm_playground$Playground$mouseClick = F2(
 	function (bool, mouse) {
 		return _Utils_update(
@@ -9001,7 +9001,7 @@ var $elm$core$Basics$negate = function (n) {
 };
 var $evancz$elm_playground$Playground$toScreen = F2(
 	function (width, height) {
-		return {aY: (-height) / 2, h: height, O: (-width) / 2, ai: width / 2, bi: height / 2, j: width};
+		return {aY: (-height) / 2, f: height, O: (-width) / 2, ai: width / 2, bi: height / 2, i: width};
 	});
 var $elm$core$Set$insert = F2(
 	function (key, _v0) {
@@ -9377,44 +9377,44 @@ var $elm$core$Set$remove = F2(
 	});
 var $evancz$elm_playground$Playground$updateKeyboard = F3(
 	function (isDown, key, keyboard) {
-		var keys = isDown ? A2($elm$core$Set$insert, key, keyboard.t) : A2($elm$core$Set$remove, key, keyboard.t);
+		var keys = isDown ? A2($elm$core$Set$insert, key, keyboard.q) : A2($elm$core$Set$remove, key, keyboard.q);
 		switch (key) {
 			case ' ':
 				return _Utils_update(
 					keyboard,
-					{t: keys, bf: isDown});
+					{q: keys, bf: isDown});
 			case 'Enter':
 				return _Utils_update(
 					keyboard,
-					{a$: isDown, t: keys});
+					{a$: isDown, q: keys});
 			case 'Shift':
 				return _Utils_update(
 					keyboard,
-					{t: keys, be: isDown});
+					{q: keys, be: isDown});
 			case 'Backspace':
 				return _Utils_update(
 					keyboard,
-					{aW: isDown, t: keys});
+					{aW: isDown, q: keys});
 			case 'ArrowUp':
 				return _Utils_update(
 					keyboard,
-					{t: keys, aQ: isDown});
+					{q: keys, aQ: isDown});
 			case 'ArrowDown':
 				return _Utils_update(
 					keyboard,
-					{cL: isDown, t: keys});
+					{cL: isDown, q: keys});
 			case 'ArrowLeft':
 				return _Utils_update(
 					keyboard,
-					{t: keys, O: isDown});
+					{q: keys, O: isDown});
 			case 'ArrowRight':
 				return _Utils_update(
 					keyboard,
-					{t: keys, ai: isDown});
+					{q: keys, ai: isDown});
 			default:
 				return _Utils_update(
 					keyboard,
-					{t: keys});
+					{q: keys});
 		}
 	});
 var $evancz$elm_playground$Playground$gameUpdate = F3(
@@ -9429,10 +9429,10 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					$evancz$elm_playground$Playground$Game,
 					vis,
 					A2(updateMemory, computer, memory),
-					computer.q.a_ ? _Utils_update(
+					computer.s.a_ ? _Utils_update(
 						computer,
 						{
-							q: A2($evancz$elm_playground$Playground$mouseClick, false, computer.q),
+							s: A2($evancz$elm_playground$Playground$mouseClick, false, computer.s),
 							aP: time
 						}) : _Utils_update(
 						computer,
@@ -9446,7 +9446,7 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							a: A2($evancz$elm_playground$Playground$toScreen, viewport.j, viewport.h)
+							a: A2($evancz$elm_playground$Playground$toScreen, viewport.i, viewport.f)
 						}));
 			case 3:
 				var w = msg.a;
@@ -9470,7 +9470,7 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							s: A3($evancz$elm_playground$Playground$updateKeyboard, isDown, key, computer.s)
+							p: A3($evancz$elm_playground$Playground$updateKeyboard, isDown, key, computer.p)
 						}));
 			case 5:
 				var pageX = msg.a;
@@ -9484,7 +9484,7 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							q: A3($evancz$elm_playground$Playground$mouseMove, x, y, computer.q)
+							s: A3($evancz$elm_playground$Playground$mouseMove, x, y, computer.s)
 						}));
 			case 6:
 				return A3(
@@ -9494,7 +9494,7 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							q: A2($evancz$elm_playground$Playground$mouseClick, true, computer.q)
+							s: A2($evancz$elm_playground$Playground$mouseClick, true, computer.s)
 						}));
 			case 7:
 				var isDown = msg.a;
@@ -9505,7 +9505,7 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							q: A2($evancz$elm_playground$Playground$mouseDown, isDown, computer.q)
+							s: A2($evancz$elm_playground$Playground$mouseDown, isDown, computer.s)
 						}));
 			default:
 				var visibility = msg.a;
@@ -9516,15 +9516,15 @@ var $evancz$elm_playground$Playground$gameUpdate = F3(
 					_Utils_update(
 						computer,
 						{
-							s: $evancz$elm_playground$Playground$emptyKeyboard,
-							q: A4($evancz$elm_playground$Playground$Mouse, computer.q.dY, computer.q.dZ, false, false)
+							p: $evancz$elm_playground$Playground$emptyKeyboard,
+							s: A4($evancz$elm_playground$Playground$Mouse, computer.s.dY, computer.s.dZ, false, false)
 						}));
 		}
 	});
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $evancz$elm_playground$Playground$initialComputer = {
-	s: $evancz$elm_playground$Playground$emptyKeyboard,
-	q: A4($evancz$elm_playground$Playground$Mouse, 0, 0, false, false),
+	p: $evancz$elm_playground$Playground$emptyKeyboard,
+	s: A4($evancz$elm_playground$Playground$Mouse, 0, 0, false, false),
 	a: A2($evancz$elm_playground$Playground$toScreen, 600, 600),
 	aP: $elm$time$Time$millisToPosix(0)
 };
@@ -9833,8 +9833,8 @@ var $evancz$elm_playground$Playground$render = F2(
 	function (screen, shapes) {
 		var y = $elm$core$String$fromFloat(screen.aY);
 		var x = $elm$core$String$fromFloat(screen.O);
-		var w = $elm$core$String$fromFloat(screen.j);
-		var h = $elm$core$String$fromFloat(screen.h);
+		var w = $elm$core$String$fromFloat(screen.i);
+		var h = $elm$core$String$fromFloat(screen.f);
 		return A2(
 			$elm$svg$Svg$svg,
 			_List_fromArray(
@@ -9926,19 +9926,19 @@ var $author$project$Random$Seeded$randomFloatPairsHelp = function (data) {
 		} else {
 			var _v0 = A2(
 				$elm$random$Random$step,
-				A2($elm$random$Random$float, data.p, data.o),
+				A2($elm$random$Random$float, data.r, data.o),
 				data.aw);
 			var k1 = _v0.a;
 			var seed1 = _v0.b;
 			var _v1 = A2(
 				$elm$random$Random$step,
-				A2($elm$random$Random$float, data.p, data.o),
+				A2($elm$random$Random$float, data.r, data.o),
 				seed1);
 			var k2 = _v1.a;
 			var seed2 = _v1.b;
 			var $temp$data = {
 				o: data.o,
-				p: data.p,
+				r: data.r,
 				l: data.l - 1,
 				dd: A2(
 					$elm$core$List$cons,
@@ -9954,7 +9954,7 @@ var $author$project$Random$Seeded$randomFloatPairsHelp = function (data) {
 var $author$project$Random$Seeded$floatPairs = F4(
 	function (seed, low, high, n) {
 		var result = $author$project$Random$Seeded$randomFloatPairsHelp(
-			{o: high, p: low, l: n, dd: _List_Nil, aw: seed});
+			{o: high, r: low, l: n, dd: _List_Nil, aw: seed});
 		return {dd: result.dd, aw: result.aw};
 	});
 var $author$project$Model$initPerson = F3(
@@ -9989,7 +9989,7 @@ var $author$project$Model$initialState = function (config_) {
 		config_.cY);
 	var newSeed = _v0.a;
 	var people = _v0.b;
-	return {ar: config_.ar, cY: config_.cY, au: false, a9: people, df: config_.df, aw: newSeed, b_: config_.b_, ax: config_.ax, dE: 0, ab: config_.ab, al: config_.al, am: config_.am, b3: config_.b3};
+	return {ar: config_.ar, cY: config_.cY, au: false, a9: people, df: config_.df, aw: newSeed, b_: config_.b_, ax: config_.ax, dE: 0, S: config_.S, al: config_.al, am: config_.am, b3: config_.b3};
 };
 var $author$project$Main$initialState = function (config) {
 	return $author$project$Model$initialState(config);
@@ -10099,7 +10099,7 @@ var $author$project$Model$taxPerson = F2(
 var $author$project$Model$runUBI = function (state) {
 	var peopleAndTaxes = A2(
 		$elm$core$List$map,
-		$author$project$Model$taxPerson(state.ab),
+		$author$project$Model$taxPerson(state.S),
 		state.a9);
 	var taxRevenue = $elm$core$List$sum(
 		A2($elm$core$List$map, $elm$core$Tuple$second, peopleAndTaxes));
@@ -10318,7 +10318,7 @@ var $author$project$Main$setTaxRate = F2(
 	function (state, rate) {
 		return _Utils_update(
 			state,
-			{ab: rate, b3: true});
+			{S: rate, b3: true});
 	});
 var $author$project$Main$setTransactionAmount = F2(
 	function (state, newTransactionAmount) {
@@ -10336,7 +10336,7 @@ var $elm$core$Set$singleton = function (key) {
 var $author$project$Main$unSetTaxRate = function (state) {
 	var state1 = _Utils_update(
 		state,
-		{ab: 0});
+		{S: 0});
 	return _Utils_update(
 		state1,
 		{b3: false});
@@ -10345,21 +10345,21 @@ var $author$project$Main$update = F2(
 	function (computer, state) {
 		var newState = function () {
 			if (_Utils_eq(
-				computer.s.t,
+				computer.p.q,
 				$elm$core$Set$singleton('p'))) {
 				return _Utils_update(
 					state,
 					{au: true});
 			} else {
 				if (_Utils_eq(
-					computer.s.t,
+					computer.p.q,
 					$elm$core$Set$singleton('r'))) {
 					return _Utils_update(
 						state,
 						{au: false});
 				} else {
 					if (_Utils_eq(
-						computer.s.t,
+						computer.p.q,
 						$elm$core$Set$singleton('x'))) {
 						var state1 = $author$project$Main$initialState($author$project$Model$config);
 						return _Utils_update(
@@ -10367,7 +10367,7 @@ var $author$project$Main$update = F2(
 							{au: true});
 					} else {
 						if (_Utils_eq(
-							computer.s.t,
+							computer.p.q,
 							$elm$core$Set$singleton('s'))) {
 							var originalConfig = $author$project$Model$config;
 							var newSeedInteger = state.b_ + 1;
@@ -10380,51 +10380,57 @@ var $author$project$Main$update = F2(
 								{au: true});
 						} else {
 							if (_Utils_eq(
-								computer.s.t,
+								computer.p.q,
 								$elm$core$Set$singleton('a'))) {
 								return A2($author$project$Main$setTransactionAmount, state, 0.5);
 							} else {
 								if (_Utils_eq(
-									computer.s.t,
+									computer.p.q,
 									$elm$core$Set$singleton('b'))) {
 									return A2($author$project$Main$setTransactionAmount, state, 1.0);
 								} else {
 									if (_Utils_eq(
-										computer.s.t,
+										computer.p.q,
 										$elm$core$Set$singleton('c'))) {
 										return A2($author$project$Main$setTransactionAmount, state, 1.5);
 									} else {
 										if (_Utils_eq(
-											computer.s.t,
+											computer.p.q,
 											$elm$core$Set$singleton('d'))) {
 											return A2($author$project$Main$setTransactionAmount, state, 2.0);
 										} else {
 											if (_Utils_eq(
-												computer.s.t,
+												computer.p.q,
 												$elm$core$Set$singleton('e'))) {
 												return A2($author$project$Main$setTaxRate, state, 0.04);
 											} else {
 												if (_Utils_eq(
-													computer.s.t,
+													computer.p.q,
 													$elm$core$Set$singleton('f'))) {
 													return A2($author$project$Main$setTaxRate, state, 0.08);
 												} else {
 													if (_Utils_eq(
-														computer.s.t,
+														computer.p.q,
 														$elm$core$Set$singleton('g'))) {
 														return A2($author$project$Main$setTaxRate, state, 0.12);
 													} else {
 														if (_Utils_eq(
-															computer.s.t,
+															computer.p.q,
 															$elm$core$Set$singleton('h'))) {
 															return A2($author$project$Main$setTaxRate, state, 0.16);
 														} else {
 															if (_Utils_eq(
-																computer.s.t,
-																$elm$core$Set$singleton('n'))) {
-																return $author$project$Main$unSetTaxRate(state);
+																computer.p.q,
+																$elm$core$Set$singleton('i'))) {
+																return A2($author$project$Main$setTaxRate, state, 0.2);
 															} else {
-																return state;
+																if (_Utils_eq(
+																	computer.p.q,
+																	$elm$core$Set$singleton('n'))) {
+																	return $author$project$Main$unSetTaxRate(state);
+																} else {
+																	return state;
+																}
 															}
 														}
 													}
@@ -10465,7 +10471,7 @@ var $evancz$elm_playground$Playground$rectangle = F3(
 			A3($evancz$elm_playground$Playground$Rectangle, color, width, height));
 	});
 var $author$project$Main$blackScreen = function (computer) {
-	return A3($evancz$elm_playground$Playground$rectangle, $evancz$elm_playground$Playground$black, computer.a.j, computer.a.h);
+	return A3($evancz$elm_playground$Playground$rectangle, $evancz$elm_playground$Playground$black, computer.a.i, computer.a.f);
 };
 var $evancz$elm_playground$Playground$blue = $evancz$elm_playground$Playground$Hex('#3465a4');
 var $evancz$elm_playground$Playground$Group = function (a) {
@@ -10523,17 +10529,17 @@ var $author$project$Main$display = F7(
 				[
 					A2(
 					$evancz$elm_playground$Playground$moveY,
-					(computer.a.h / 2) - dy,
+					(computer.a.f / 2) - dy,
 					A2(
 						$evancz$elm_playground$Playground$moveX,
-						(computer.a.j / 2) - dx,
+						(computer.a.i / 2) - dx,
 						A2($evancz$elm_playground$Playground$words, color, str1))),
 					A2(
 					$evancz$elm_playground$Playground$moveY,
-					(computer.a.h / 2) - dy,
+					(computer.a.f / 2) - dy,
 					A2(
 						$evancz$elm_playground$Playground$moveX,
-						((computer.a.j / 2) - dx) + deltaX,
+						((computer.a.i / 2) - dx) + deltaX,
 						A2($evancz$elm_playground$Playground$words, color, str2)))
 				]));
 	});
@@ -10875,127 +10881,137 @@ var $author$project$Main$visualize = F2(
 			98);
 		var messageC1 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.h / 2) - 320) - dy2,
+			((computer.a.f / 2) - 320) - dy2,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.j / 2) - 121) - 62) - dx2,
+				(((computer.a.i / 2) - 121) - 62) - dx2,
 				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'Commands')));
 		var messageC10 = function () {
-			var c = (!state.ab) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			var c = (!state.S) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.h / 2) - 530) - dy2,
+				((computer.a.f / 2) - 530) - dy2,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.j / 2) - 188) - dx2,
+					((computer.a.i / 2) - 188) - dx2,
 					A2($evancz$elm_playground$Playground$words, c, 'n: no taxes')));
 		}();
 		var messageC11 = function () {
-			var c = (state.ab === 0.04) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			var c = (state.S === 0.04) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.h / 2) - 550) - dy2,
+				((computer.a.f / 2) - 550) - dy2,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.j / 2) - 177) - dx2,
+					((computer.a.i / 2) - 177) - dx2,
 					A2($evancz$elm_playground$Playground$words, c, 'e: tax rate  4%')));
 		}();
 		var messageC12 = function () {
-			var c = (state.ab === 0.08) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			var c = (state.S === 0.08) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.h / 2) - 570) - dy2,
+				((computer.a.f / 2) - 570) - dy2,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.j / 2) - 177) - dx2,
+					((computer.a.i / 2) - 177) - dx2,
 					A2($evancz$elm_playground$Playground$words, c, 'f: tax rate  8%')));
 		}();
 		var messageC13 = function () {
-			var c = (state.ab === 0.12) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			var c = (state.S === 0.12) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.h / 2) - 590) - dy2,
+				((computer.a.f / 2) - 590) - dy2,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.j / 2) - 172) - dx2,
+					((computer.a.i / 2) - 172) - dx2,
 					A2($evancz$elm_playground$Playground$words, c, 'g: tax rate 12%')));
 		}();
 		var messageC14 = function () {
-			var c = (state.ab === 0.16) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			var c = (state.S === 0.16) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.h / 2) - 610) - dy2,
+				((computer.a.f / 2) - 610) - dy2,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.j / 2) - 172) - dx2,
+					((computer.a.i / 2) - 172) - dx2,
 					A2($evancz$elm_playground$Playground$words, c, 'h: tax rate 16%')));
+		}();
+		var messageC15 = function () {
+			var c = (state.S === 0.2) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			return A2(
+				$evancz$elm_playground$Playground$moveY,
+				((computer.a.f / 2) - 630) - dy2,
+				A2(
+					$evancz$elm_playground$Playground$moveX,
+					((computer.a.i / 2) - 172) - dx2,
+					A2($evancz$elm_playground$Playground$words, c, 'i: tax rate 20%')));
 		}();
 		var messageC2 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.h / 2) - 350) - dy2,
+			((computer.a.f / 2) - 350) - dy2,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.j / 2) - 131) - 62) - dx2,
+				(((computer.a.i / 2) - 131) - 62) - dx2,
 				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'p: pause')));
 		var messageC3 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.h / 2) - 370) - dy2,
+			((computer.a.f / 2) - 370) - dy2,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.j / 2) - 140) - 62) - dx2,
+				(((computer.a.i / 2) - 140) - 62) - dx2,
 				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'r: run')));
 		var messageC4 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.h / 2) - 390) - dy2,
+			((computer.a.f / 2) - 390) - dy2,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.j / 2) - 136) - 62) - dx2,
+				(((computer.a.i / 2) - 136) - 62) - dx2,
 				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'x: reset')));
 		var messageC5 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((computer.a.h / 2) - 410) - dy2,
+			((computer.a.f / 2) - 410) - dy2,
 			A2(
 				$evancz$elm_playground$Playground$moveX,
-				(((computer.a.j / 2) - 122) - 62) - dx2,
+				(((computer.a.i / 2) - 122) - 62) - dx2,
 				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 's: new seed')));
 		var messageC6 = function () {
 			var c = (state.am === 0.5) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.h / 2) - 440) - dy2,
+				((computer.a.f / 2) - 440) - dy2,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.j / 2) - 122) - dx2,
+					((computer.a.i / 2) - 122) - dx2,
 					A2($evancz$elm_playground$Playground$words, c, 'a: set transaction amount to 0.5')));
 		}();
 		var messageC7 = function () {
 			var c = (state.am === 1.0) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.h / 2) - 460) - dy2,
+				((computer.a.f / 2) - 460) - dy2,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.j / 2) - 122) - dx2,
+					((computer.a.i / 2) - 122) - dx2,
 					A2($evancz$elm_playground$Playground$words, c, 'b: set transaction amount to 1.0')));
 		}();
 		var messageC8 = function () {
 			var c = (state.am === 1.5) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.h / 2) - 480) - dy2,
+				((computer.a.f / 2) - 480) - dy2,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.j / 2) - 122) - dx2,
+					((computer.a.i / 2) - 122) - dx2,
 					A2($evancz$elm_playground$Playground$words, c, 'c: set transaction amount to 1.5')));
 		}();
 		var messageC9 = function () {
 			var c = (state.am === 2.0) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
-				((computer.a.h / 2) - 500) - dy2,
+				((computer.a.f / 2) - 500) - dy2,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.j / 2) - 122) - dx2,
+					((computer.a.i / 2) - 122) - dx2,
 					A2($evancz$elm_playground$Playground$words, c, 'd: set transaction amount to 2.0')));
 		}();
 		return A2(
@@ -11084,9 +11100,12 @@ var $author$project$Main$visualize = F2(
 																															$elm$core$List$cons,
 																															messageC14,
 																															A2(
-																																$elm$core$List$indexedMap,
-																																$author$project$Main$personToShape(state.ar),
-																																state.a9))))))))))))))))))))))))))))));
+																																$elm$core$List$cons,
+																																messageC15,
+																																A2(
+																																	$elm$core$List$indexedMap,
+																																	$author$project$Main$personToShape(state.ar),
+																																	state.a9)))))))))))))))))))))))))))))));
 	});
 var $author$project$Main$view = F2(
 	function (computer, state) {
