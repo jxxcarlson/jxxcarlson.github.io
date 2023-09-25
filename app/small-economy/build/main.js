@@ -604,7 +604,7 @@ ${variant}`;
   var VERSION = "1.1.2";
   var TARGET_NAME = "My target name";
   var INITIAL_ELM_COMPILED_TIMESTAMP = Number(
-    "1695646685737"
+    "1695647735880"
   );
   var ORIGINAL_COMPILATION_MODE = "optimize";
   var ORIGINAL_BROWSER_UI_POSITION = "BottomLeft";
@@ -7621,15 +7621,15 @@ var $elm$random$Random$initialSeed = function (x) {
 		A2($elm$random$Random$Seed, state2, incr));
 };
 var $author$project$Model$config = {
-	aJ: 500.0,
+	ar: 500.0,
 	cX: 10.0,
 	bE: $elm$random$Random$initialSeed(1234),
 	de: 200,
 	b_: 1234,
-	aw: 1.0,
+	ax: 1.0,
 	ab: 0.0,
-	am: 1000,
-	an: 2.0,
+	al: 1000,
+	am: 2.0,
 	dV: false
 };
 var $evancz$elm_playground$Playground$Game = F3(
@@ -8977,7 +8977,7 @@ var $evancz$elm_playground$Playground$Mouse = F4(
 var $evancz$elm_playground$Playground$Time = $elm$core$Basics$identity;
 var $elm$core$Set$Set_elm_builtin = $elm$core$Basics$identity;
 var $elm$core$Set$empty = $elm$core$Dict$empty;
-var $evancz$elm_playground$Playground$emptyKeyboard = {aW: false, cK: false, a$: false, t: $elm$core$Set$empty, O: false, aj: false, be: false, bf: false, aQ: false};
+var $evancz$elm_playground$Playground$emptyKeyboard = {aW: false, cK: false, a$: false, t: $elm$core$Set$empty, O: false, ai: false, be: false, bf: false, aQ: false};
 var $evancz$elm_playground$Playground$mouseClick = F2(
 	function (bool, mouse) {
 		return _Utils_update(
@@ -9001,7 +9001,7 @@ var $elm$core$Basics$negate = function (n) {
 };
 var $evancz$elm_playground$Playground$toScreen = F2(
 	function (width, height) {
-		return {aY: (-height) / 2, h: height, O: (-width) / 2, aj: width / 2, bi: height / 2, j: width};
+		return {aY: (-height) / 2, h: height, O: (-width) / 2, ai: width / 2, bi: height / 2, j: width};
 	});
 var $elm$core$Set$insert = F2(
 	function (key, _v0) {
@@ -9410,7 +9410,7 @@ var $evancz$elm_playground$Playground$updateKeyboard = F3(
 			case 'ArrowRight':
 				return _Utils_update(
 					keyboard,
-					{t: keys, aj: isDown});
+					{t: keys, ai: isDown});
 			default:
 				return _Utils_update(
 					keyboard,
@@ -9927,7 +9927,7 @@ var $author$project$Random$Seeded$randomFloatPairsHelp = function (data) {
 			var _v0 = A2(
 				$elm$random$Random$step,
 				A2($elm$random$Random$float, data.p, data.o),
-				data.av);
+				data.aw);
 			var k1 = _v0.a;
 			var seed1 = _v0.b;
 			var _v1 = A2(
@@ -9944,7 +9944,7 @@ var $author$project$Random$Seeded$randomFloatPairsHelp = function (data) {
 					$elm$core$List$cons,
 					_Utils_Tuple2(k1, k2),
 					data.dc),
-				av: seed2
+				aw: seed2
 			};
 			data = $temp$data;
 			continue randomFloatPairsHelp;
@@ -9954,8 +9954,8 @@ var $author$project$Random$Seeded$randomFloatPairsHelp = function (data) {
 var $author$project$Random$Seeded$floatPairs = F4(
 	function (seed, low, high, n) {
 		var result = $author$project$Random$Seeded$randomFloatPairsHelp(
-			{o: high, p: low, l: n, dc: _List_Nil, av: seed});
-		return {dc: result.dc, av: result.av};
+			{o: high, p: low, l: n, dc: _List_Nil, aw: seed});
+		return {dc: result.dc, aw: result.aw};
 	});
 var $author$project$Model$initPerson = F3(
 	function (id, _v0, capital) {
@@ -9977,7 +9977,7 @@ var $author$project$Model$initPeople = F4(
 	function (seed, populationSize, gridSize, capital) {
 		var result = A4($author$project$Random$Seeded$floatPairs, seed, 0, gridSize, populationSize);
 		return _Utils_Tuple2(
-			result.av,
+			result.aw,
 			A2($author$project$Model$initPeople_, capital, result.dc));
 	});
 var $author$project$Model$initialState = function (config_) {
@@ -9985,14 +9985,14 @@ var $author$project$Model$initialState = function (config_) {
 		$author$project$Model$initPeople,
 		$elm$random$Random$initialSeed(config_.b_),
 		config_.de,
-		config_.aJ,
+		config_.ar,
 		config_.cX);
 	var newSeed = _v0.a;
 	var people = _v0.b;
-	return {aJ: config_.aJ, cX: config_.cX, ai: false, a9: people, de: config_.de, av: newSeed, b_: config_.b_, aw: config_.aw, dD: 0, ab: config_.ab, am: config_.am, an: config_.an, dV: config_.dV};
+	return {ar: config_.ar, cX: config_.cX, au: false, a9: people, de: config_.de, aw: newSeed, b_: config_.b_, ax: config_.ax, dD: 0, ab: config_.ab, al: config_.al, am: config_.am, dV: config_.dV};
 };
 var $author$project$Main$initialState = function (config) {
-	return $author$project$Model$initialState($author$project$Model$config);
+	return $author$project$Model$initialState(config);
 };
 var $elm$core$Basics$ge = _Utils_ge;
 var $elm$core$List$drop = F2(
@@ -10281,13 +10281,13 @@ var $author$project$Model$nextState = function (state) {
 			if ((!_v2.a.$) && (!_v2.b.$)) {
 				var personI = _v2.a.a;
 				var personJ = _v2.b.a;
-				if ((!_Utils_eq(ii, jj)) && ((personI.aZ - state.an) >= 0)) {
+				if ((!_Utils_eq(ii, jj)) && ((personI.aZ - state.am) >= 0)) {
 					var newPersonJ = _Utils_update(
 						personJ,
-						{aZ: personJ.aZ + state.an});
+						{aZ: personJ.aZ + state.am});
 					var newPersonI = _Utils_update(
 						personI,
-						{aZ: personI.aZ - state.an});
+						{aZ: personI.aZ - state.am});
 					return A3(
 						$elm_community$list_extra$List$Extra$setAt,
 						jj,
@@ -10301,7 +10301,7 @@ var $author$project$Model$nextState = function (state) {
 			}
 		});
 	var n = $elm$core$List$length(state.a9);
-	var _v0 = A3($author$project$Random$Seeded$intPair, state.av, 0, n - 1);
+	var _v0 = A3($author$project$Random$Seeded$intPair, state.aw, 0, n - 1);
 	var seed = _v0.a;
 	var _v1 = _v0.b;
 	var i = _v1.a;
@@ -10309,8 +10309,8 @@ var $author$project$Model$nextState = function (state) {
 	return _Utils_update(
 		state,
 		{
-			a9: ((state.dD > 1) && (state.dV && (!A2($elm$core$Basics$modBy, state.am, state.dD)))) ? $author$project$Model$runUBI(state) : A3(updatePeople, state.a9, i, j),
-			av: seed,
+			a9: ((state.dD > 1) && (state.dV && (!A2($elm$core$Basics$modBy, state.al, state.dD)))) ? $author$project$Model$runUBI(state) : A3(updatePeople, state.a9, i, j),
+			aw: seed,
 			dD: state.dD + 1
 		});
 };
@@ -10324,7 +10324,7 @@ var $author$project$Main$setTransactionAmount = F2(
 	function (state, newTransactionAmount) {
 		return _Utils_update(
 			state,
-			{an: newTransactionAmount});
+			{am: newTransactionAmount});
 	});
 var $elm$core$Dict$singleton = F2(
 	function (key, value) {
@@ -10339,7 +10339,7 @@ var $author$project$Main$unSetTaxRate = function (state) {
 		{ab: 0});
 	return _Utils_update(
 		state1,
-		{ai: true, dV: false});
+		{au: true, dV: false});
 };
 var $author$project$Main$update = F2(
 	function (computer, state) {
@@ -10349,14 +10349,14 @@ var $author$project$Main$update = F2(
 				$elm$core$Set$singleton('p'))) {
 				return _Utils_update(
 					state,
-					{ai: true});
+					{au: true});
 			} else {
 				if (_Utils_eq(
 					computer.s.t,
 					$elm$core$Set$singleton('r'))) {
 					return _Utils_update(
 						state,
-						{ai: false});
+						{au: false});
 				} else {
 					if (_Utils_eq(
 						computer.s.t,
@@ -10364,22 +10364,18 @@ var $author$project$Main$update = F2(
 						var state1 = $author$project$Main$initialState($author$project$Model$config);
 						return _Utils_update(
 							state1,
-							{ai: true});
+							{au: true});
 					} else {
 						if (_Utils_eq(
 							computer.s.t,
 							$elm$core$Set$singleton('s'))) {
+							var originalConfig = $author$project$Model$config;
 							var newSeedInteger = state.b_ + 1;
-							var state1 = function () {
-								var originalConfig = $author$project$Model$config;
-								return $author$project$Main$initialState(
-									_Utils_update(
-										originalConfig,
-										{b_: newSeedInteger}));
-							}();
-							return _Utils_update(
-								state1,
-								{ai: true});
+							var newState_ = $author$project$Main$initialState(
+								_Utils_update(
+									originalConfig,
+									{b_: newSeedInteger}));
+							return newState_;
 						} else {
 							if (_Utils_eq(
 								computer.s.t,
@@ -10441,7 +10437,7 @@ var $author$project$Main$update = F2(
 				}
 			}
 		}();
-		return newState.ai ? newState : $author$project$Model$nextState(newState);
+		return newState.au ? newState : $author$project$Model$nextState(newState);
 	});
 var $evancz$elm_playground$Playground$Hex = function (a) {
 	return {$: 0, a: a};
@@ -10745,28 +10741,26 @@ var $author$project$Main$visualize = F2(
 				state.a9));
 		var message10 = A2(
 			$evancz$elm_playground$Playground$moveY,
-			((-state.aJ) / 2) - 40,
+			((-state.ar) / 2) - 40,
 			A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 'Random Exchange Model'));
+		var message1 = A2(
+			$evancz$elm_playground$Playground$moveY,
+			((-state.ar) / 2) - 60,
+			A2(
+				$evancz$elm_playground$Playground$words,
+				$evancz$elm_playground$Playground$blue,
+				'transactions ' + $elm$core$String$fromInt(state.dD)));
 		var boundingBox = A3(
 			$evancz$elm_playground$Playground$rectangle,
 			A3($evancz$elm_playground$Playground$rgb, 30, 30, 60),
-			state.aJ + 20,
-			state.aJ + 20);
-		var _v0 = _Utils_Tuple2(180, 90);
+			state.ar + 20,
+			state.ar + 20);
+		var _v0 = _Utils_Tuple2(200, 90);
 		var dy1 = _v0.a;
 		var dy2 = _v0.b;
 		var _v1 = _Utils_Tuple2(40, 48);
 		var dx1 = _v1.a;
 		var dx2 = _v1.b;
-		var message1 = A7(
-			$author$project$Main$display,
-			computer,
-			$evancz$elm_playground$Playground$red,
-			'transactions ',
-			$elm$core$String$fromInt(state.dD),
-			271 - dx1,
-			270 - dy1,
-			83);
 		var message2 = A7(
 			$author$project$Main$display,
 			computer,
@@ -10785,7 +10779,7 @@ var $author$project$Main$visualize = F2(
 			computer,
 			$evancz$elm_playground$Playground$red,
 			'transaction ',
-			A2($author$project$Model$roundAt2, 2, state.an),
+			A2($author$project$Model$roundAt2, 2, state.am),
 			275 - dx1,
 			320 - dy1,
 			75);
@@ -10897,8 +10891,8 @@ var $author$project$Main$visualize = F2(
 				((computer.a.h / 2) - 550) - dy2,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.j / 2) - 172) - dx2,
-					A2($evancz$elm_playground$Playground$words, c, 'e: tax rate = 4%')));
+					((computer.a.j / 2) - 177) - dx2,
+					A2($evancz$elm_playground$Playground$words, c, 'e: tax rate  4%')));
 		}();
 		var messageC12 = function () {
 			var c = (state.ab === 0.08) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
@@ -10907,8 +10901,8 @@ var $author$project$Main$visualize = F2(
 				((computer.a.h / 2) - 570) - dy2,
 				A2(
 					$evancz$elm_playground$Playground$moveX,
-					((computer.a.j / 2) - 172) - dx2,
-					A2($evancz$elm_playground$Playground$words, c, 'f: tax rate = 8%')));
+					((computer.a.j / 2) - 177) - dx2,
+					A2($evancz$elm_playground$Playground$words, c, 'f: tax rate  8%')));
 		}();
 		var messageC13 = function () {
 			var c = (state.ab === 0.12) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
@@ -10959,7 +10953,7 @@ var $author$project$Main$visualize = F2(
 				(((computer.a.j / 2) - 122) - 62) - dx2,
 				A2($evancz$elm_playground$Playground$words, $evancz$elm_playground$Playground$blue, 's: new seed')));
 		var messageC6 = function () {
-			var c = (state.an === 0.5) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			var c = (state.am === 0.5) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
 				((computer.a.h / 2) - 440) - dy2,
@@ -10969,7 +10963,7 @@ var $author$project$Main$visualize = F2(
 					A2($evancz$elm_playground$Playground$words, c, 'a: set transaction amount to 0.5')));
 		}();
 		var messageC7 = function () {
-			var c = (state.an === 1.0) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			var c = (state.am === 1.0) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
 				((computer.a.h / 2) - 460) - dy2,
@@ -10979,7 +10973,7 @@ var $author$project$Main$visualize = F2(
 					A2($evancz$elm_playground$Playground$words, c, 'b: set transaction amount to 1.0')));
 		}();
 		var messageC8 = function () {
-			var c = (state.an === 1.5) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			var c = (state.am === 1.5) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
 				((computer.a.h / 2) - 480) - dy2,
@@ -10989,7 +10983,7 @@ var $author$project$Main$visualize = F2(
 					A2($evancz$elm_playground$Playground$words, c, 'c: set transaction amount to 1.5')));
 		}();
 		var messageC9 = function () {
-			var c = (state.an === 2.0) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
+			var c = (state.am === 2.0) ? $evancz$elm_playground$Playground$red : $evancz$elm_playground$Playground$blue;
 			return A2(
 				$evancz$elm_playground$Playground$moveY,
 				((computer.a.h / 2) - 500) - dy2,
@@ -11085,7 +11079,7 @@ var $author$project$Main$visualize = F2(
 																															messageC14,
 																															A2(
 																																$elm$core$List$indexedMap,
-																																$author$project$Main$personToShape(state.aJ),
+																																$author$project$Main$personToShape(state.ar),
 																																state.a9))))))))))))))))))))))))))))));
 	});
 var $author$project$Main$view = F2(
