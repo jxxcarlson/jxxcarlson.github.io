@@ -12702,7 +12702,7 @@ var $author$project$Drum$activeButtonStyle2 = function (predicate) {
 	return predicate ? $author$project$Drum$buttonStyleSelectedSmall : $author$project$Drum$buttonStyleSmall;
 };
 var $author$project$Drum$muteVoice1 = function (model) {
-	var labelTitle = A2($elm$core$List$member, 0, model.k) ? 'Play Voice 1' : 'Mute Voice 1';
+	var labelTitle = A2($elm$core$List$member, 0, model.k) ? 'Active' : 'Muted';
 	return A2(
 		$mdgriffith$elm_ui$Element$Input$button,
 		$author$project$Drum$activeButtonStyle2(
@@ -12776,7 +12776,7 @@ var $author$project$Drum$ReadVoice2 = function (a) {
 };
 var $author$project$Drum$MuteVoice2 = {$: 11};
 var $author$project$Drum$muteVoice2 = function (model) {
-	var labelTitle = A2($elm$core$List$member, 1, model.k) ? 'Play Voice 2' : 'Mute Voice 2';
+	var labelTitle = A2($elm$core$List$member, 1, model.k) ? 'Active' : 'Muted';
 	return A2(
 		$mdgriffith$elm_ui$Element$Input$button,
 		$author$project$Drum$activeButtonStyle2(
