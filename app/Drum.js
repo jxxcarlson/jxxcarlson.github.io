@@ -4764,7 +4764,7 @@ var $elm$core$Array$builderToArray = F2(
 			var treeLen = builder.f * $elm$core$Array$branchFactor;
 			var depth = $elm$core$Basics$floor(
 				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.i) : builder.i;
+			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.j) : builder.j;
 			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.f);
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
@@ -4784,7 +4784,7 @@ var $elm$core$Array$initializeHelp = F5(
 				return A2(
 					$elm$core$Array$builderToArray,
 					false,
-					{i: nodeList, f: (len / $elm$core$Array$branchFactor) | 0, h: tail});
+					{j: nodeList, f: (len / $elm$core$Array$branchFactor) | 0, h: tail});
 			} else {
 				var leaf = $elm$core$Array$Leaf(
 					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
@@ -5142,13 +5142,13 @@ var $author$project$Drum$init = function (flags) {
 	return _Utils_Tuple2(
 		{
 			P: 2,
-			r: 1,
+			m: 1,
 			R: '200',
 			a$: '',
 			a0: '',
 			A: $author$project$DrumSongs$initialTextVoice1,
 			B: $author$project$DrumSongs$initialTextVoice2,
-			k: _List_fromArray(
+			i: _List_fromArray(
 				[0, 1])
 		},
 		$elm$core$Platform$Cmd$none);
@@ -5648,46 +5648,48 @@ var $author$project$Drum$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{r: 1, A: $author$project$DrumSongs$initialTextVoice1, B: $author$project$DrumSongs$initialTextVoice2}),
+						{m: 1, A: $author$project$DrumSongs$initialTextVoice1, B: $author$project$DrumSongs$initialTextVoice2}),
 					$author$project$Drum$sendCommand('stop:now'));
 			case 9:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{P: 0, r: 1, A: $author$project$DrumSongs$sample1TextVoice1, B: $author$project$DrumSongs$sample1TextVoice2}),
+						{P: 0, m: 1, A: $author$project$DrumSongs$sample1TextVoice1, B: $author$project$DrumSongs$sample1TextVoice2}),
 					$author$project$Drum$sendCommand('stop:now'));
 			case 10:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{P: 1, r: 1, A: $author$project$DrumSongs$sample2TextVoice1, B: $author$project$DrumSongs$sample2TextVoice2}),
+						{P: 1, m: 1, A: $author$project$DrumSongs$sample2TextVoice1, B: $author$project$DrumSongs$sample2TextVoice2}),
 					$author$project$Drum$sendCommand('stop:now'));
 			case 11:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							k: A2($elm$core$List$member, 0, model.k) ? A2(
+							m: 1,
+							i: A2($elm$core$List$member, 0, model.i) ? A2(
 								$elm$core$List$filter,
 								function (v) {
 									return !(!v);
 								},
-								model.k) : A2($elm$core$List$cons, 0, model.k)
+								model.i) : A2($elm$core$List$cons, 0, model.i)
 						}),
-					$elm$core$Platform$Cmd$none);
+					A2($elm$core$List$member, 0, model.i) ? $author$project$Drum$sendCommand('stop:now') : $author$project$Drum$sendCommand('nada'));
 			case 12:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							k: A2($elm$core$List$member, 1, model.k) ? A2(
+							m: 1,
+							i: A2($elm$core$List$member, 1, model.i) ? A2(
 								$elm$core$List$filter,
 								function (v) {
 									return v !== 1;
 								},
-								model.k) : A2($elm$core$List$cons, 1, model.k)
+								model.i) : A2($elm$core$List$cons, 1, model.i)
 						}),
-					$elm$core$Platform$Cmd$none);
+					A2($elm$core$List$member, 1, model.i) ? $author$project$Drum$sendCommand('stop:now') : $author$project$Drum$sendCommand('nada'));
 			case 1:
 				var str = msg.a;
 				return _Utils_Tuple2(
@@ -5714,13 +5716,13 @@ var $author$project$Drum$update = F2(
 					model,
 					$author$project$Drum$sendCommand('tempo:' + model.R));
 			case 4:
-				if (!model.r) {
+				if (!model.m) {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				} else {
 					var noteList2 = $author$project$Phoneme$toPitchNameList(model.B);
-					var part2 = A2($elm$core$List$member, 1, model.k) ? A3($author$project$Player$partFromMelody, '4n', '0.4', noteList2) : A3($author$project$Player$partFromMelody, '4n', '0.4', _List_Nil);
+					var part2 = A2($elm$core$List$member, 1, model.i) ? A3($author$project$Player$partFromMelody, '4n', '0.4', noteList2) : A3($author$project$Player$partFromMelody, '4n', '0.4', _List_Nil);
 					var noteList1 = $author$project$Phoneme$toPitchNameList(model.A);
-					var part1 = A2($elm$core$List$member, 0, model.k) ? A3($author$project$Player$partFromMelody, '4n', '0.8', noteList1) : A3($author$project$Player$partFromMelody, '4n', '0.8', _List_Nil);
+					var part1 = A2($elm$core$List$member, 0, model.i) ? A3($author$project$Player$partFromMelody, '4n', '0.8', noteList1) : A3($author$project$Player$partFromMelody, '4n', '0.8', _List_Nil);
 					var parts = _List_fromArray(
 						[part1, part2]);
 					var piece = {
@@ -5741,7 +5743,7 @@ var $author$project$Drum$update = F2(
 						_Utils_update(
 							model,
 							{
-								r: 0,
+								m: 0,
 								a$: A2(
 									$elm$core$String$join,
 									' ',
@@ -5763,7 +5765,7 @@ var $author$project$Drum$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{r: 1}),
+						{m: 1}),
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[
@@ -5773,7 +5775,7 @@ var $author$project$Drum$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{r: 2}),
+						{m: 2}),
 					$author$project$Drum$sendCommand('reset:now'));
 		}
 	});
@@ -5817,6 +5819,17 @@ var $mdgriffith$elm_ui$Element$Background$color = function (clr) {
 			'bg-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(clr),
 			'background-color',
 			clr));
+};
+var $mdgriffith$elm_ui$Internal$Flag$fontColor = $mdgriffith$elm_ui$Internal$Flag$flag(14);
+var $mdgriffith$elm_ui$Element$Font$color = function (fontColor) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$fontColor,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Colored,
+			'fc-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(fontColor),
+			'color',
+			fontColor));
 };
 var $mdgriffith$elm_ui$Internal$Model$FocusStyleOption = function (a) {
 	return {$: 1, a: a};
@@ -8140,7 +8153,7 @@ var $elm$core$String$concat = function (strings) {
 var $mdgriffith$elm_ui$Internal$Style$Intermediate = $elm$core$Basics$identity;
 var $mdgriffith$elm_ui$Internal$Style$emptyIntermediate = F2(
 	function (selector, closing) {
-		return {av: closing, m: _List_Nil, N: _List_Nil, G: selector};
+		return {av: closing, n: _List_Nil, N: _List_Nil, G: selector};
 	});
 var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 	function (_v0, rulesToRender) {
@@ -8167,10 +8180,10 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 						return _Utils_update(
 							rendered,
 							{
-								m: A2(
+								n: A2(
 									$elm$core$List$cons,
-									{av: '\n}', m: _List_Nil, N: props, G: '@supports (' + (prop + (':' + (value + (') {' + parent.G))))},
-									rendered.m)
+									{av: '\n}', n: _List_Nil, N: props, G: '@supports (' + (prop + (':' + (value + (') {' + parent.G))))},
+									rendered.n)
 							});
 					case 4:
 						var selector = rule.a;
@@ -8178,13 +8191,13 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 						return _Utils_update(
 							rendered,
 							{
-								m: A2(
+								n: A2(
 									$elm$core$List$cons,
 									A2(
 										$mdgriffith$elm_ui$Internal$Style$renderRules,
 										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.G + (' + ' + selector), ''),
 										adjRules),
-									rendered.m)
+									rendered.n)
 							});
 					case 1:
 						var child = rule.a;
@@ -8192,13 +8205,13 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 						return _Utils_update(
 							rendered,
 							{
-								m: A2(
+								n: A2(
 									$elm$core$List$cons,
 									A2(
 										$mdgriffith$elm_ui$Internal$Style$renderRules,
 										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.G + (' > ' + child), ''),
 										childRules),
-									rendered.m)
+									rendered.n)
 							});
 					case 3:
 						var descriptor = rule.a;
@@ -8206,7 +8219,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 						return _Utils_update(
 							rendered,
 							{
-								m: A2(
+								n: A2(
 									$elm$core$List$cons,
 									A2(
 										$mdgriffith$elm_ui$Internal$Style$renderRules,
@@ -8215,20 +8228,20 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 											_Utils_ap(parent.G, descriptor),
 											''),
 										descriptorRules),
-									rendered.m)
+									rendered.n)
 							});
 					default:
 						var batched = rule.a;
 						return _Utils_update(
 							rendered,
 							{
-								m: A2(
+								n: A2(
 									$elm$core$List$cons,
 									A2(
 										$mdgriffith$elm_ui$Internal$Style$renderRules,
 										A2($mdgriffith$elm_ui$Internal$Style$emptyIntermediate, parent.G, ''),
 										batched),
-									rendered.m)
+									rendered.n)
 							});
 				}
 			});
@@ -8259,7 +8272,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderCompact = function (styleClasses) {
 		return _Utils_ap(
 			renderClass(rule),
 			$elm$core$String$concat(
-				A2($elm$core$List$map, renderIntermediate, rule.m)));
+				A2($elm$core$List$map, renderIntermediate, rule.n)));
 	};
 	return $elm$core$String$concat(
 		A2(
@@ -11234,7 +11247,6 @@ var $mdgriffith$elm_ui$Internal$Model$SansSerif = {$: 1};
 var $mdgriffith$elm_ui$Internal$Model$Typeface = function (a) {
 	return {$: 3, a: a};
 };
-var $mdgriffith$elm_ui$Internal$Flag$fontColor = $mdgriffith$elm_ui$Internal$Flag$flag(14);
 var $mdgriffith$elm_ui$Internal$Flag$fontFamily = $mdgriffith$elm_ui$Internal$Flag$flag(5);
 var $mdgriffith$elm_ui$Internal$Flag$fontSize = $mdgriffith$elm_ui$Internal$Flag$flag(4);
 var $elm$core$String$words = _String_words;
@@ -11333,19 +11345,35 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 				_Utils_ap($mdgriffith$elm_ui$Internal$Model$rootStyle, attrs)),
 			child);
 	});
+var $mdgriffith$elm_ui$Internal$Model$AlignX = function (a) {
+	return {$: 6, a: a};
+};
+var $mdgriffith$elm_ui$Internal$Model$Left = 0;
+var $mdgriffith$elm_ui$Element$alignLeft = $mdgriffith$elm_ui$Internal$Model$AlignX(0);
 var $author$project$Drum$DoReset = {$: 6};
 var $author$project$Drum$Play = {$: 4};
 var $author$project$Drum$Stop = {$: 5};
-var $mdgriffith$elm_ui$Element$Font$color = function (fontColor) {
+var $mdgriffith$elm_ui$Element$rgb255 = F3(
+	function (red, green, blue) {
+		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, 1);
+	});
+var $author$project$Color$gray = function (g) {
+	return A3($mdgriffith$elm_ui$Element$rgb255, g, g, g);
+};
+var $author$project$Color$buttonBGColor = $author$project$Color$gray(10);
+var $author$project$Color$buttonText = $author$project$Color$gray(200);
+var $mdgriffith$elm_ui$Internal$Flag$borderRound = $mdgriffith$elm_ui$Internal$Flag$flag(17);
+var $mdgriffith$elm_ui$Element$Border$rounded = function (radius) {
 	return A2(
 		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$fontColor,
+		$mdgriffith$elm_ui$Internal$Flag$borderRound,
 		A3(
-			$mdgriffith$elm_ui$Internal$Model$Colored,
-			'fc-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(fontColor),
-			'color',
-			fontColor));
+			$mdgriffith$elm_ui$Internal$Model$Single,
+			'br-' + $elm$core$String$fromInt(radius),
+			'border-radius',
+			$elm$core$String$fromInt(radius) + 'px'));
 };
+var $author$project$Drum$largeButtonBorder = $mdgriffith$elm_ui$Element$Border$rounded(12);
 var $mdgriffith$elm_ui$Internal$Model$PaddingStyle = F5(
 	function (a, b, c, d, e) {
 		return {$: 7, a: a, b: b, c: c, d: d, e: e};
@@ -11373,31 +11401,28 @@ var $mdgriffith$elm_ui$Element$paddingXY = F2(
 				y,
 				x));
 	});
-var $mdgriffith$elm_ui$Element$rgb255 = F3(
-	function (red, green, blue) {
-		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, 1);
-	});
 var $mdgriffith$elm_ui$Element$Font$size = function (i) {
 	return A2(
 		$mdgriffith$elm_ui$Internal$Model$StyleClass,
 		$mdgriffith$elm_ui$Internal$Flag$fontSize,
 		$mdgriffith$elm_ui$Internal$Model$FontSize(i));
 };
+var $author$project$Color$text = $author$project$Color$gray(250);
 var $author$project$Drum$buttonStyle = _List_fromArray(
 	[
-		$mdgriffith$elm_ui$Element$Background$color(
-		A3($mdgriffith$elm_ui$Element$rgb255, 80, 80, 80)),
-		$mdgriffith$elm_ui$Element$Font$color(
-		A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255)),
+		$mdgriffith$elm_ui$Element$Background$color($author$project$Color$buttonBGColor),
+		$mdgriffith$elm_ui$Element$Font$color($author$project$Color$text),
+		$mdgriffith$elm_ui$Element$Font$color($author$project$Color$buttonText),
+		$author$project$Drum$largeButtonBorder,
 		$mdgriffith$elm_ui$Element$Font$size(16),
 		A2($mdgriffith$elm_ui$Element$paddingXY, 15, 8)
 	]);
+var $author$project$Color$red = A3($mdgriffith$elm_ui$Element$rgb255, 130, 0, 0);
 var $author$project$Drum$buttonStyleSelected = _List_fromArray(
 	[
-		$mdgriffith$elm_ui$Element$Background$color(
-		A3($mdgriffith$elm_ui$Element$rgb255, 140, 30, 30)),
-		$mdgriffith$elm_ui$Element$Font$color(
-		A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255)),
+		$mdgriffith$elm_ui$Element$Background$color($author$project$Color$red),
+		$mdgriffith$elm_ui$Element$Font$color($author$project$Color$buttonText),
+		$author$project$Drum$largeButtonBorder,
 		$mdgriffith$elm_ui$Element$Font$size(16),
 		A2($mdgriffith$elm_ui$Element$paddingXY, 15, 8)
 	]);
@@ -11516,7 +11541,7 @@ var $mdgriffith$elm_ui$Element$width = $mdgriffith$elm_ui$Internal$Model$Width;
 var $mdgriffith$elm_ui$Element$Input$button = F2(
 	function (attrs, _v0) {
 		var onPress = _v0.F;
-		var label = _v0.o;
+		var label = _v0.p;
 		return A4(
 			$mdgriffith$elm_ui$Internal$Model$element,
 			$mdgriffith$elm_ui$Internal$Model$asEl,
@@ -11565,9 +11590,6 @@ var $mdgriffith$elm_ui$Element$Input$button = F2(
 				_List_fromArray(
 					[label])));
 	});
-var $mdgriffith$elm_ui$Internal$Model$AlignX = function (a) {
-	return {$: 6, a: a};
-};
 var $mdgriffith$elm_ui$Internal$Model$CenterX = 1;
 var $mdgriffith$elm_ui$Element$centerX = $mdgriffith$elm_ui$Internal$Model$AlignX(1);
 var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
@@ -11595,6 +11617,7 @@ var $mdgriffith$elm_ui$Element$el = F2(
 var $author$project$Drum$InputBPM = function (a) {
 	return {$: 3, a: a};
 };
+var $author$project$Color$inputText = $author$project$Color$gray(40);
 var $mdgriffith$elm_ui$Element$Input$Label = F3(
 	function (a, b, c) {
 		return {$: 0, a: a, b: b, c: c};
@@ -11750,17 +11773,6 @@ var $mdgriffith$elm_ui$Internal$Model$Fill = function (a) {
 	return {$: 2, a: a};
 };
 var $mdgriffith$elm_ui$Element$fill = $mdgriffith$elm_ui$Internal$Model$Fill(1);
-var $mdgriffith$elm_ui$Internal$Flag$borderRound = $mdgriffith$elm_ui$Internal$Flag$flag(17);
-var $mdgriffith$elm_ui$Element$Border$rounded = function (radius) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$borderRound,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$Single,
-			'br-' + $elm$core$String$fromInt(radius),
-			'border-radius',
-			$elm$core$String$fromInt(radius) + 'px'));
-};
 var $mdgriffith$elm_ui$Internal$Model$SpacingStyle = F3(
 	function (a, b, c) {
 		return {$: 5, a: a, b: b, c: c};
@@ -12191,7 +12203,7 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 											return _Utils_update(
 												found,
 												{
-													q: A2($elm$core$List$cons, attr, found.q),
+													r: A2($elm$core$List$cons, attr, found.r),
 													aC: $elm$core$Maybe$Just(
 														$mdgriffith$elm_ui$Internal$Model$isContent(len))
 												});
@@ -12211,7 +12223,7 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 													return _Utils_update(
 														found,
 														{
-															q: A2($elm$core$List$cons, attr, found.q),
+															r: A2($elm$core$List$cons, attr, found.r),
 															aE: $elm$core$Maybe$Just(
 																A4($mdgriffith$elm_ui$Element$Input$Padding, t, r, b, l))
 														});
@@ -12229,7 +12241,7 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 													return _Utils_update(
 														found,
 														{
-															q: found.q,
+															r: found.r,
 															aF: $elm$core$Maybe$Just(
 																A4($mdgriffith$elm_ui$Element$Input$Padding, t, r, b, l))
 														});
@@ -12245,7 +12257,7 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 													return _Utils_update(
 														found,
 														{
-															q: A2($elm$core$List$cons, attr, found.q),
+															r: A2($elm$core$List$cons, attr, found.r),
 															aG: $elm$core$Maybe$Just(y)
 														});
 												} else {
@@ -12261,15 +12273,15 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 							return _Utils_update(
 								found,
 								{
-									q: A2($elm$core$List$cons, attr, found.q)
+									r: A2($elm$core$List$cons, attr, found.r)
 								});
 						}),
-					{q: _List_Nil, aC: $elm$core$Maybe$Nothing, aE: $elm$core$Maybe$Nothing, aF: $elm$core$Maybe$Nothing, aG: $elm$core$Maybe$Nothing},
+					{r: _List_Nil, aC: $elm$core$Maybe$Nothing, aE: $elm$core$Maybe$Nothing, aF: $elm$core$Maybe$Nothing, aG: $elm$core$Maybe$Nothing},
 					attributes);
 				var maybePadding = _v3.aF;
 				var heightContent = _v3.aC;
 				var maybeSpacing = _v3.aG;
-				var adjustedAttributes = _v3.q;
+				var adjustedAttributes = _v3.r;
 				var maybeBorder = _v3.aE;
 				var spacing = A2($elm$core$Maybe$withDefault, 5, maybeSpacing);
 				return _Utils_Tuple3(
@@ -12387,7 +12399,7 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 									_List_fromArray(
 									[
 										$mdgriffith$elm_ui$Element$Input$focusDefault(attrs),
-										$mdgriffith$elm_ui$Element$Input$hiddenLabelAttribute(textOptions.o)
+										$mdgriffith$elm_ui$Element$Input$hiddenLabelAttribute(textOptions.p)
 									]),
 									inputAttrs,
 									behavior
@@ -12401,9 +12413,9 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 				A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$cursor, $mdgriffith$elm_ui$Internal$Style$classes.c8),
 				A2(
 					$elm$core$List$cons,
-					$mdgriffith$elm_ui$Element$Input$isHiddenLabel(textOptions.o) ? $mdgriffith$elm_ui$Internal$Model$NoAttribute : $mdgriffith$elm_ui$Element$spacing(5),
+					$mdgriffith$elm_ui$Element$Input$isHiddenLabel(textOptions.p) ? $mdgriffith$elm_ui$Internal$Model$NoAttribute : $mdgriffith$elm_ui$Element$spacing(5),
 					A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$Region$announce, attributesFromChild))),
-			textOptions.o,
+			textOptions.p,
 			inputElement);
 	});
 var $mdgriffith$elm_ui$Element$Input$text = $mdgriffith$elm_ui$Element$Input$textHelper(
@@ -12418,17 +12430,24 @@ var $author$project$Drum$inputBPM = function (model) {
 		_List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$width(
-				$mdgriffith$elm_ui$Element$px(60))
+				$mdgriffith$elm_ui$Element$px(60)),
+				$mdgriffith$elm_ui$Element$height(
+				$mdgriffith$elm_ui$Element$px(35)),
+				$mdgriffith$elm_ui$Element$Font$size(16),
+				$mdgriffith$elm_ui$Element$Font$color($author$project$Color$inputText)
 			]),
 		{
-			o: A2(
+			p: A2(
 				$mdgriffith$elm_ui$Element$Input$labelLeft,
-				_List_Nil,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Font$color($author$project$Color$text)
+					]),
 				A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$moveDown(13),
+							$mdgriffith$elm_ui$Element$moveDown(10),
 							A2($mdgriffith$elm_ui$Element$paddingXY, 4, 0)
 						]),
 					$mdgriffith$elm_ui$Element$text('BPM'))),
@@ -12443,7 +12462,7 @@ var $author$project$Drum$instructionsButton = function (model) {
 		$mdgriffith$elm_ui$Element$Input$button,
 		$author$project$Drum$activeButtonStyle(model.P === 2),
 		{
-			o: A2(
+			p: A2(
 				$mdgriffith$elm_ui$Element$el,
 				_List_fromArray(
 					[$mdgriffith$elm_ui$Element$centerX, $mdgriffith$elm_ui$Element$centerY]),
@@ -12475,7 +12494,7 @@ var $author$project$Drum$sampleButton1 = function (model) {
 		$mdgriffith$elm_ui$Element$Input$button,
 		$author$project$Drum$activeButtonStyle(!model.P),
 		{
-			o: A2(
+			p: A2(
 				$mdgriffith$elm_ui$Element$el,
 				_List_fromArray(
 					[$mdgriffith$elm_ui$Element$centerX, $mdgriffith$elm_ui$Element$centerY]),
@@ -12489,7 +12508,7 @@ var $author$project$Drum$sampleButton2 = function (model) {
 		$mdgriffith$elm_ui$Element$Input$button,
 		$author$project$Drum$activeButtonStyle(1 === model.P),
 		{
-			o: A2(
+			p: A2(
 				$mdgriffith$elm_ui$Element$el,
 				_List_fromArray(
 					[$mdgriffith$elm_ui$Element$centerX, $mdgriffith$elm_ui$Element$centerY]),
@@ -12512,9 +12531,9 @@ var $author$project$Drum$appButtons = function (model) {
 				$author$project$Drum$sampleButton2(model),
 				A2(
 				$mdgriffith$elm_ui$Element$Input$button,
-				$author$project$Drum$activeButtonStyle(!model.r),
+				$author$project$Drum$activeButtonStyle(!model.m),
 				{
-					o: A2(
+					p: A2(
 						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
 							[$mdgriffith$elm_ui$Element$centerX, $mdgriffith$elm_ui$Element$centerY]),
@@ -12523,9 +12542,9 @@ var $author$project$Drum$appButtons = function (model) {
 				}),
 				A2(
 				$mdgriffith$elm_ui$Element$Input$button,
-				$author$project$Drum$activeButtonStyle(model.r === 1),
+				$author$project$Drum$activeButtonStyle(model.m === 1),
 				{
-					o: A2(
+					p: A2(
 						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
 							[$mdgriffith$elm_ui$Element$centerX, $mdgriffith$elm_ui$Element$centerY]),
@@ -12534,9 +12553,9 @@ var $author$project$Drum$appButtons = function (model) {
 				}),
 				A2(
 				$mdgriffith$elm_ui$Element$Input$button,
-				$author$project$Drum$activeButtonStyle(model.r === 2),
+				$author$project$Drum$activeButtonStyle(model.m === 2),
 				{
-					o: A2(
+					p: A2(
 						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
 							[$mdgriffith$elm_ui$Element$centerX, $mdgriffith$elm_ui$Element$centerY]),
@@ -12621,15 +12640,21 @@ var $author$project$Drum$displayPeriod = function (model) {
 				]));
 	}
 };
+var $author$project$Color$appBGColor = $author$project$Color$gray(70);
+var $author$project$Drum$appBorder = $mdgriffith$elm_ui$Element$Border$rounded(24);
 var $author$project$Drum$mainColumnStyle = _List_fromArray(
 	[
 		$mdgriffith$elm_ui$Element$centerX,
 		$mdgriffith$elm_ui$Element$centerY,
-		$mdgriffith$elm_ui$Element$Background$color(
-		A3($mdgriffith$elm_ui$Element$rgb255, 180, 180, 190)),
+		$mdgriffith$elm_ui$Element$Background$color($author$project$Color$appBGColor),
+		$mdgriffith$elm_ui$Element$Font$color($author$project$Color$buttonText),
+		$author$project$Drum$appBorder,
+		$mdgriffith$elm_ui$Element$Border$width(1),
 		$mdgriffith$elm_ui$Element$width(
 		$mdgriffith$elm_ui$Element$px(800)),
-		A2($mdgriffith$elm_ui$Element$paddingXY, 20, 20)
+		A2($mdgriffith$elm_ui$Element$paddingXY, 40, 40),
+		$mdgriffith$elm_ui$Element$Font$color(
+		A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255))
 	]);
 var $elm$html$Html$Attributes$href = function (url) {
 	return A2(
@@ -12642,7 +12667,7 @@ var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty(
 var $mdgriffith$elm_ui$Element$newTabLink = F2(
 	function (attrs, _v0) {
 		var url = _v0.ex;
-		var label = _v0.o;
+		var label = _v0.p;
 		return A4(
 			$mdgriffith$elm_ui$Internal$Model$element,
 			$mdgriffith$elm_ui$Internal$Model$asEl,
@@ -12706,24 +12731,39 @@ var $mdgriffith$elm_ui$Element$Input$multiline = F2(
 			$mdgriffith$elm_ui$Element$Input$textHelper,
 			{w: $elm$core$Maybe$Nothing, x: multi.cj, z: $mdgriffith$elm_ui$Element$Input$TextArea},
 			attrs,
-			{o: multi.o, a2: multi.a2, a3: multi.a3, bc: multi.bc});
+			{p: multi.p, a2: multi.a2, a3: multi.a3, bc: multi.bc});
 	});
+var $author$project$Drum$multilineInputStyle = _List_fromArray(
+	[
+		$mdgriffith$elm_ui$Element$width(
+		$mdgriffith$elm_ui$Element$px(700)),
+		$mdgriffith$elm_ui$Element$height(
+		$mdgriffith$elm_ui$Element$px(180)),
+		$mdgriffith$elm_ui$Element$Font$size(14),
+		$mdgriffith$elm_ui$Element$Font$color(
+		A3($mdgriffith$elm_ui$Element$rgb255, 0, 0, 0)),
+		$mdgriffith$elm_ui$Element$Background$color(
+		A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+		$mdgriffith$elm_ui$Element$Border$width(1),
+		$mdgriffith$elm_ui$Element$Border$color(
+		A3($mdgriffith$elm_ui$Element$rgb255, 0, 0, 0))
+	]);
 var $author$project$Drum$MuteVoice1 = {$: 11};
+var $author$project$Drum$smallButtonBorder = $mdgriffith$elm_ui$Element$Border$rounded(4);
 var $author$project$Drum$buttonStyleSelectedSmall = _List_fromArray(
 	[
 		$mdgriffith$elm_ui$Element$Background$color(
 		A3($mdgriffith$elm_ui$Element$rgb255, 140, 30, 30)),
-		$mdgriffith$elm_ui$Element$Font$color(
-		A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255)),
+		$mdgriffith$elm_ui$Element$Font$color($author$project$Color$buttonText),
+		$author$project$Drum$smallButtonBorder,
 		$mdgriffith$elm_ui$Element$Font$size(12),
 		A2($mdgriffith$elm_ui$Element$paddingXY, 4, 2)
 	]);
 var $author$project$Drum$buttonStyleSmall = _List_fromArray(
 	[
-		$mdgriffith$elm_ui$Element$Background$color(
-		A3($mdgriffith$elm_ui$Element$rgb255, 80, 80, 80)),
-		$mdgriffith$elm_ui$Element$Font$color(
-		A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255)),
+		$mdgriffith$elm_ui$Element$Background$color($author$project$Color$buttonBGColor),
+		$mdgriffith$elm_ui$Element$Font$color($author$project$Color$buttonText),
+		$author$project$Drum$smallButtonBorder,
 		$mdgriffith$elm_ui$Element$Font$size(12),
 		A2($mdgriffith$elm_ui$Element$paddingXY, 4, 2)
 	]);
@@ -12731,13 +12771,13 @@ var $author$project$Drum$activeButtonStyle2 = function (predicate) {
 	return predicate ? $author$project$Drum$buttonStyleSelectedSmall : $author$project$Drum$buttonStyleSmall;
 };
 var $author$project$Drum$muteVoice1 = function (model) {
-	var labelTitle = A2($elm$core$List$member, 0, model.k) ? 'Active' : 'Muted';
+	var labelTitle = A2($elm$core$List$member, 0, model.i) ? 'Active' : 'Muted';
 	return A2(
 		$mdgriffith$elm_ui$Element$Input$button,
 		$author$project$Drum$activeButtonStyle2(
-			A2($elm$core$List$member, 0, model.k)),
+			A2($elm$core$List$member, 0, model.i)),
 		{
-			o: A2(
+			p: A2(
 				$mdgriffith$elm_ui$Element$el,
 				_List_fromArray(
 					[$mdgriffith$elm_ui$Element$centerX, $mdgriffith$elm_ui$Element$centerY]),
@@ -12774,20 +12814,9 @@ var $author$project$Drum$readVoice1 = function (model) {
 					])),
 				A2(
 				$mdgriffith$elm_ui$Element$Input$multiline,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$width(
-						$mdgriffith$elm_ui$Element$px(700)),
-						$mdgriffith$elm_ui$Element$height(
-						$mdgriffith$elm_ui$Element$px(200)),
-						$mdgriffith$elm_ui$Element$Background$color(
-						A3($mdgriffith$elm_ui$Element$rgb255, 230, 230, 235)),
-						$mdgriffith$elm_ui$Element$Border$width(1),
-						$mdgriffith$elm_ui$Element$Border$color(
-						A3($mdgriffith$elm_ui$Element$rgb255, 0, 0, 0))
-					]),
+				$author$project$Drum$multilineInputStyle,
 				{
-					o: A2(
+					p: A2(
 						$mdgriffith$elm_ui$Element$Input$labelLeft,
 						_List_Nil,
 						A2(
@@ -12810,13 +12839,13 @@ var $author$project$Drum$ReadVoice2 = function (a) {
 };
 var $author$project$Drum$MuteVoice2 = {$: 12};
 var $author$project$Drum$muteVoice2 = function (model) {
-	var labelTitle = A2($elm$core$List$member, 1, model.k) ? 'Active' : 'Muted';
+	var labelTitle = A2($elm$core$List$member, 1, model.i) ? 'Active' : 'Muted';
 	return A2(
 		$mdgriffith$elm_ui$Element$Input$button,
 		$author$project$Drum$activeButtonStyle2(
-			A2($elm$core$List$member, 1, model.k)),
+			A2($elm$core$List$member, 1, model.i)),
 		{
-			o: A2(
+			p: A2(
 				$mdgriffith$elm_ui$Element$el,
 				_List_fromArray(
 					[$mdgriffith$elm_ui$Element$centerX, $mdgriffith$elm_ui$Element$centerY]),
@@ -12853,20 +12882,9 @@ var $author$project$Drum$readVoice2 = function (model) {
 					])),
 				A2(
 				$mdgriffith$elm_ui$Element$Input$multiline,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$width(
-						$mdgriffith$elm_ui$Element$px(700)),
-						$mdgriffith$elm_ui$Element$height(
-						$mdgriffith$elm_ui$Element$px(200)),
-						$mdgriffith$elm_ui$Element$Background$color(
-						A3($mdgriffith$elm_ui$Element$rgb255, 230, 230, 235)),
-						$mdgriffith$elm_ui$Element$Border$width(1),
-						$mdgriffith$elm_ui$Element$Border$color(
-						A3($mdgriffith$elm_ui$Element$rgb255, 0, 0, 0))
-					]),
+				$author$project$Drum$multilineInputStyle,
 				{
-					o: A2(
+					p: A2(
 						$mdgriffith$elm_ui$Element$Input$labelLeft,
 						_List_Nil,
 						A2(
@@ -12898,6 +12916,7 @@ var $author$project$Drum$title = function (str) {
 				$mdgriffith$elm_ui$Element$text(str)
 			]));
 };
+var $mdgriffith$elm_ui$Element$Font$underline = $mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.ev);
 var $author$project$Drum$mainColumn = function (model) {
 	return A2(
 		$mdgriffith$elm_ui$Element$column,
@@ -12922,17 +12941,19 @@ var $author$project$Drum$mainColumn = function (model) {
 						$mdgriffith$elm_ui$Element$newTabLink,
 						_List_fromArray(
 							[
-								$mdgriffith$elm_ui$Element$centerX,
-								$mdgriffith$elm_ui$Element$Font$size(12)
+								$mdgriffith$elm_ui$Element$alignLeft,
+								$mdgriffith$elm_ui$Element$Font$size(12),
+								A2($mdgriffith$elm_ui$Element$paddingXY, 18, 0)
 							]),
 						{
-							o: A2(
+							p: A2(
 								$mdgriffith$elm_ui$Element$el,
 								_List_fromArray(
 									[
 										$mdgriffith$elm_ui$Element$Font$size(14),
+										$mdgriffith$elm_ui$Element$Font$underline,
 										$mdgriffith$elm_ui$Element$Font$color(
-										A3($mdgriffith$elm_ui$Element$rgb, 0, 0, 1))
+										A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1))
 									]),
 								$mdgriffith$elm_ui$Element$text('Article')),
 							ex: 'https://jxxcarlson.io/posts/2019-06-29-drum-language/'
@@ -12941,6 +12962,7 @@ var $author$project$Drum$mainColumn = function (model) {
 			]));
 };
 var $author$project$Drum$noFocus = {cN: $elm$core$Maybe$Nothing, cT: $elm$core$Maybe$Nothing, d0: $elm$core$Maybe$Nothing};
+var $author$project$Color$windowBGColor = $author$project$Color$gray(110);
 var $author$project$Drum$view = function (model) {
 	return A3(
 		$mdgriffith$elm_ui$Element$layoutWith,
@@ -12952,8 +12974,9 @@ var $author$project$Drum$view = function (model) {
 		},
 		_List_fromArray(
 			[
-				$mdgriffith$elm_ui$Element$Background$color(
-				A3($mdgriffith$elm_ui$Element$rgb255, 40, 40, 40))
+				$mdgriffith$elm_ui$Element$Background$color($author$project$Color$windowBGColor),
+				$mdgriffith$elm_ui$Element$Font$color(
+				A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1))
 			]),
 		$author$project$Drum$mainColumn(model));
 };
