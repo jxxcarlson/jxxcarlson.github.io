@@ -5135,7 +5135,7 @@ var $author$project$Drum$Stopped = 1;
 var $author$project$Drum$Voice1 = 0;
 var $author$project$Drum$Voice2 = 1;
 var $author$project$DrumSongs$initialTextVoice1 = 'This app turns text into a kind of techno-music by imitating\nthe princples of African drum languages.  Things to try: (1) put text\nin this box and press "Play".  (2) Alter the tempo (beats per minute).\n(3) Try patterns, e.g., "Wawachaachaadadadada,,"  Here spaces and\ncommas both give one beat rests. (4) It is fun to experiment with\npatterns like palindromes: What is si tahW is si sii sii,,,,\nrepetition, etc.\n';
-var $author$project$DrumSongs$initialTextVoice2 = 'Note that there are two voices.  The first (above) is playing\nin quarter notes, while the second (here) is playing in eight notes.\n\nTo my ear, Sample 2 is the most interesting.  Note that the two\nparts have lengths 36 and 11, in quarter and eight notes, respectively.\nCounted in eighth notes, the lengths are 72 and 11.  Thus the song\nrepeats itself every 72 x 11 = 792 beats.\n';
+var $author$project$DrumSongs$initialTextVoice2 = 'Note that there are two voices.  The first (above) is playing\nin quarter notes, while the second (here) is playing in eight notes.\n\nTo my ear, Sample 2 is the most interesting.  Note that the two\nparts have lengths 36 and 11, in quarter and eight notes, respectively.\nCounted in eighth notes, the lengths are 72 and 11.  Thus the song\nrepeats itself every 72 x 11 = 792 beats. (In general, the song length\nis the least common multiple of twice the length of part 1 and the\nlength of part 2.)\n';
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Drum$init = function (flags) {
