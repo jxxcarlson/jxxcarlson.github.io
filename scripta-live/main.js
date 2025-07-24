@@ -54003,7 +54003,6 @@ var $author$project$Main$header = function (model) {
 				$mdgriffith$elm_ui$Element$el,
 				_List_fromArray(
 					[
-						$mdgriffith$elm_ui$Element$alignLeft,
 						$mdgriffith$elm_ui$Element$Font$color(
 						A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1))
 					]),
