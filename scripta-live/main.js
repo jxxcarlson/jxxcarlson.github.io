@@ -53920,12 +53920,11 @@ var $author$project$Main$htmlId = function (str) {
 	return $mdgriffith$elm_ui$Element$htmlAttribute(
 		$elm$html$Html$Attributes$id(str));
 };
-var $author$project$Main$margin = {between: 20, bottom: 60, left: 20, right: 20, top: 20};
 var $author$project$Main$panelHeight = function (model) {
 	return $mdgriffith$elm_ui$Element$height(
-		$mdgriffith$elm_ui$Element$px(
-			($author$project$Main$appHeight(model) - $author$project$Main$margin.bottom) - $author$project$Main$margin.top));
+		$mdgriffith$elm_ui$Element$px(model.windowHeight - 100));
 };
+var $author$project$Main$margin = {between: 20, bottom: 60, left: 20, right: 20, top: 20};
 var $author$project$Main$tocWidth = 250;
 var $author$project$Main$panelWidth = function (model) {
 	return ((($author$project$Main$appWidth(model) - $author$project$Main$tocWidth) - (($author$project$Main$margin.left + $author$project$Main$margin.right) + (2 * $author$project$Main$margin.between))) / 2) | 0;
@@ -54825,7 +54824,8 @@ var $author$project$Main$inputText = function (model) {
 				$mdgriffith$elm_ui$Element$px(
 					$author$project$Main$panelWidth(model))),
 				$author$project$Main$panelHeight(model),
-				$mdgriffith$elm_ui$Element$Font$size(14)
+				$mdgriffith$elm_ui$Element$Font$size(14),
+				$mdgriffith$elm_ui$Element$alignTop
 			]),
 		{
 			label: A2(
@@ -54856,32 +54856,41 @@ var $author$project$Main$mainColumnStyle = _List_fromArray(
 		A2($mdgriffith$elm_ui$Element$paddingXY, 20, 20)
 	]);
 var $mdgriffith$elm_ui$Element$map = $mdgriffith$elm_ui$Internal$Model$map;
-var $author$project$Tools$view = function (model) {
+var $author$project$Main$sidebar = function (model) {
 	return A2(
 		$mdgriffith$elm_ui$Element$column,
 		_List_fromArray(
 			[
-				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-				$mdgriffith$elm_ui$Element$height(
-				$mdgriffith$elm_ui$Element$px(model.windowHeight - 140)),
-				A2($mdgriffith$elm_ui$Element$paddingXY, 16, 16),
-				$mdgriffith$elm_ui$Element$spacing(6),
-				$mdgriffith$elm_ui$Element$Font$size(14),
-				$mdgriffith$elm_ui$Element$Background$color(
-				A2(
-					$author$project$Render$Settings$getThemedElementColor,
-					function ($) {
-						return $.background;
-					},
-					$author$project$Theme$mapTheme(model.theme)))
+				$mdgriffith$elm_ui$Element$paddingEach(
+				{bottom: 0, left: 0, right: 0, top: 16})
 			]),
 		_List_fromArray(
 			[
-				$mdgriffith$elm_ui$Element$text('Bare bones:'),
-				$mdgriffith$elm_ui$Element$text('ctrl-T: toggle theme'),
-				$mdgriffith$elm_ui$Element$text('ctrl-E: export to LaTeX'),
-				$mdgriffith$elm_ui$Element$text('ctrl-R: export to Raw LaTeX'),
-				$mdgriffith$elm_ui$Element$text('Alas: no way to save docs')
+				A2(
+				$mdgriffith$elm_ui$Element$column,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+						$author$project$Main$panelHeight(model),
+						A2($mdgriffith$elm_ui$Element$paddingXY, 16, 16),
+						$mdgriffith$elm_ui$Element$spacing(6),
+						$mdgriffith$elm_ui$Element$Font$size(14),
+						$mdgriffith$elm_ui$Element$Background$color(
+						A2(
+							$author$project$Render$Settings$getThemedElementColor,
+							function ($) {
+								return $.background;
+							},
+							$author$project$Theme$mapTheme(model.theme)))
+					]),
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$text('Bare bones:'),
+						$mdgriffith$elm_ui$Element$text('ctrl-T: toggle theme'),
+						$mdgriffith$elm_ui$Element$text('ctrl-E: export to LaTeX'),
+						$mdgriffith$elm_ui$Element$text('ctrl-R: export to Raw LaTeX'),
+						$mdgriffith$elm_ui$Element$text('Alas: no way to save docs')
+					]))
 			]));
 };
 var $author$project$Main$mainColumn = function (model) {
@@ -54922,7 +54931,7 @@ var $author$project$Main$mainColumn = function (model) {
 								$mdgriffith$elm_ui$Element$map,
 								$author$project$Main$Render,
 								$author$project$Main$displayRenderedText(model)),
-								$author$project$Tools$view(model)
+								$author$project$Main$sidebar(model)
 							]))
 					]))
 			]));
