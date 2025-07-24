@@ -54825,8 +54825,7 @@ var $author$project$Main$inputText = function (model) {
 				$mdgriffith$elm_ui$Element$px(
 					$author$project$Main$panelWidth(model))),
 				$author$project$Main$panelHeight(model),
-				$mdgriffith$elm_ui$Element$Font$size(14),
-				$mdgriffith$elm_ui$Element$alignTop
+				$mdgriffith$elm_ui$Element$Font$size(14)
 			]),
 		{
 			label: A2(
