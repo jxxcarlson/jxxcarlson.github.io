@@ -54825,7 +54825,8 @@ var $author$project$Main$inputText = function (model) {
 				$mdgriffith$elm_ui$Element$px(
 					$author$project$Main$panelWidth(model))),
 				$author$project$Main$panelHeight(model),
-				$mdgriffith$elm_ui$Element$Font$size(14)
+				$mdgriffith$elm_ui$Element$Font$size(14),
+				$mdgriffith$elm_ui$Element$alignTop
 			]),
 		{
 			label: A2(
@@ -54862,8 +54863,9 @@ var $author$project$Tools$view = function (model) {
 		_List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-				$mdgriffith$elm_ui$Element$padding(16),
+				$mdgriffith$elm_ui$Element$height(
+				$mdgriffith$elm_ui$Element$px(model.windowHeight - 140)),
+				A2($mdgriffith$elm_ui$Element$paddingXY, 16, 16),
 				$mdgriffith$elm_ui$Element$spacing(6),
 				$mdgriffith$elm_ui$Element$Font$size(14),
 				$mdgriffith$elm_ui$Element$Background$color(
