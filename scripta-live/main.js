@@ -32394,6 +32394,16 @@ var $mdgriffith$elm_ui$Element$column = F2(
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
 var $author$project$ScriptaV2$Compiler$SuppressDocumentBlocks = {$: 'SuppressDocumentBlocks'};
+var $mdgriffith$elm_ui$Element$Font$color = function (fontColor) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$fontColor,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Colored,
+			'fc-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(fontColor),
+			'color',
+			fontColor));
+};
 var $author$project$ScriptaV2$Compiler$filterForest = F2(
 	function (filter, forest) {
 		if (filter.$ === 'NoFilter') {
@@ -32448,16 +32458,6 @@ var $author$project$Generic$ASTTools$banner = function (ast) {
 		$elm$core$Maybe$map,
 		A2($author$project$Generic$ASTTools$changeName, 'banner', 'visibleBanner'),
 		A2($author$project$Generic$ASTTools$getBlockByName, 'banner', ast));
-};
-var $mdgriffith$elm_ui$Element$Font$color = function (fontColor) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$fontColor,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$Colored,
-			'fc-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(fontColor),
-			'color',
-			fontColor));
 };
 var $author$project$Render$Settings$default = F3(
 	function (theme, selectedId, width) {
@@ -53930,6 +53930,14 @@ var $author$project$Main$panelWidth = function (model) {
 	return ((($author$project$Main$appWidth(model) - $author$project$Main$tocWidth) - (($author$project$Main$margin.left + $author$project$Main$margin.right) + (2 * $author$project$Main$margin.between))) / 2) | 0;
 };
 var $mdgriffith$elm_ui$Element$scrollbarY = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.scrollbarsY);
+var $author$project$Main$textColor = function (theme) {
+	return A2(
+		$author$project$Render$Settings$getThemedElementColor,
+		function ($) {
+			return $.text;
+		},
+		$author$project$Theme$mapTheme(theme));
+};
 var $author$project$Main$xPadding = 16;
 var $author$project$Main$displayRenderedText = function (model) {
 	return A2(
@@ -53960,7 +53968,9 @@ var $author$project$Main$displayRenderedText = function (model) {
 						$author$project$Main$panelHeight(model),
 						A2($mdgriffith$elm_ui$Element$paddingXY, 16, 32),
 						$author$project$Main$htmlId('rendered-text'),
-						$mdgriffith$elm_ui$Element$scrollbarY
+						$mdgriffith$elm_ui$Element$scrollbarY,
+						$mdgriffith$elm_ui$Element$Font$color(
+						$author$project$Main$textColor(model.theme))
 					]),
 				A4(
 					$author$project$ScriptaV2$API$compileStringWithTitle,
@@ -54002,6 +54012,14 @@ var $author$project$Main$header = function (model) {
 };
 var $author$project$Main$InputText = function (a) {
 	return {$: 'InputText', a: a};
+};
+var $author$project$Main$backgroundColor = function (theme) {
+	return A2(
+		$author$project$Render$Settings$getThemedElementColor,
+		function ($) {
+			return $.background;
+		},
+		$author$project$Theme$mapTheme(theme));
 };
 var $mdgriffith$elm_ui$Element$Input$Above = {$: 'Above'};
 var $mdgriffith$elm_ui$Element$Input$Label = F3(
@@ -54825,7 +54843,11 @@ var $author$project$Main$inputText = function (model) {
 					$author$project$Main$panelWidth(model))),
 				$author$project$Main$panelHeight(model),
 				$mdgriffith$elm_ui$Element$Font$size(14),
-				$mdgriffith$elm_ui$Element$alignTop
+				$mdgriffith$elm_ui$Element$alignTop,
+				$mdgriffith$elm_ui$Element$Font$color(
+				$author$project$Main$textColor(model.theme)),
+				$mdgriffith$elm_ui$Element$Background$color(
+				$author$project$Main$backgroundColor(model.theme))
 			]),
 		{
 			label: A2(
@@ -54872,6 +54894,8 @@ var $author$project$Main$sidebar = function (model) {
 					[
 						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 						$author$project$Main$panelHeight(model),
+						$mdgriffith$elm_ui$Element$Font$color(
+						$author$project$Main$textColor(model.theme)),
 						A2($mdgriffith$elm_ui$Element$paddingXY, 16, 16),
 						$mdgriffith$elm_ui$Element$spacing(6),
 						$mdgriffith$elm_ui$Element$Font$size(14),
