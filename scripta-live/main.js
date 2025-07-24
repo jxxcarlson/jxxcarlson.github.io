@@ -22387,17 +22387,27 @@ var $elm$time$Time$Posix = function (a) {
 var $elm$time$Time$millisToPosix = $elm$time$Time$Posix;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Document$text = $elm$core$String$trimLeft('\n  | title\n  Example\n  \n  | image figure:1 caption: Humming bird\n   https://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n  \n  \n  # About Scripta\n  \n  - This is a demo of the [u Scripta Markup Language].  Compare source and rendered text to see how it works. Your document is rendered as you type.  There is no setup ... just have at it.\n  \n  - You can\'t save documents right now, but you will be able to do that as soon as the full scripta app is released.\n  \n  - Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.  This an early alpha release of Scripta, so you [b will] find bugs. We love to hear about them.\n  \n  - Note the use of our experimental  [u ergonomic TeX]: TeX without backslashes.\n  \n  - Press ctrl-E to export your file to LaTeX.  This feature does not yet work with images, so for now you will have to hide them with a [u hide] or\n  [u code] block.  A fix is on its way\n  \n  \n  # Examples\n  \n  | mathmacros\n  secpder:  frac(partial^2 #1, partial #2^2)\n  nat:    mathbb N\n  reals: mathbb R\n  pder:  frac(partial #1, partial #2)\n  set:    \\{ #1 \\}\n  sett:   \\{ #1 \\ | \\ #2 \\}\n  \n  Pythagoras said: $a^2 + b^2 = c^2$.\n  \n  \n  This will be on the test:\n  \n  | equation\n  int_0^1 x^n dx = frac(1,n+1)\n  \n  and so will this:\n  \n  \n  | equation numbered\n  \\label{wave-equation}\n  secpder(u,x) + secpder(u,y) + secpder(u,z) = frac(1,c^2) secpder(u,t))  qquad "Wave Equation"\n  \n  Both of the above equalities were written using an `equation` block.  If you look \n  at the source text you will see that [eqref wave-equation] an [u argument] `numbered` and\n  a property, namely  `label:wave-equation`. That property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\n  to see what happens.\n  \n  Here is an [u aligned] block:\n  \n  | aligned\n  nat &= set("positive whole numbers and zero")\n  nat &= sett(n " is a whole number", n > 0)\n  \n  \n  | equation\n  \\begin{pmatrix}\n    2 & 1 \\\\\n    1 & 2\n  \\end{pmatrix}\n  \\begin{pmatrix}\n    2 & 1 \\\\\n    1 & 2\n  \\end{pmatrix}\n  =\n  \\begin{pmatrix}\n    5 & 4 \\\\\n    4 & 5\n  \\end{pmatrix}\n  \n  \n\n\n');
+var $author$project$Main$normalize = function (input) {
+	return A2(
+		$elm$core$String$join,
+		'\n',
+		A2(
+			$elm$core$List$map,
+			$elm$core$String$trim,
+			$elm$core$String$lines(input)));
+};
+var $author$project$Document$text = '\n  | title\n  Example\n  \n  | image figure:1 caption: Humming bird\n   https://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n  \n  \n  # About Scripta\n  \n  - This is a demo of the [u Scripta Markup Language].  Compare source and rendered text to see how it works. Your document is rendered as you type.  There is no setup ... just have at it.\n  \n  - You can\'t save documents right now, but you will be able to do that as soon as the full scripta app is released.\n  \n  - Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.  This an early alpha release of Scripta, so you [b will] find bugs. We love to hear about them.\n  \n  - Note the use of our experimental  [u ergonomic TeX]: TeX without backslashes.\n  \n  - Press ctrl-E to export your file to LaTeX.  This feature does not yet work with images, so for now you will have to hide them with a [u hide] or\n  [u code] block.  A fix is on its way\n  \n  \n  # Examples\n  \n  | mathmacros\n  secpder:  frac(partial^2 #1, partial #2^2)\n  nat:    mathbb N\n  reals: mathbb R\n  pder:  frac(partial #1, partial #2)\n  set:    \\{ #1 \\}\n  sett:   \\{ #1 \\ | \\ #2 \\}\n  \n  Pythagoras said: $a^2 + b^2 = c^2$.\n  \n  \n  This will be on the test:\n  \n  | equation\n  int_0^1 x^n dx = frac(1,n+1)\n  \n  and so will this:\n  \n  \n  | equation numbered\n  \\label{wave-equation}\n  secpder(u,x) + secpder(u,y) + secpder(u,z) = frac(1,c^2) secpder(u,t))  qquad "Wave Equation"\n  \n  Both of the above equalities were written using an `equation` block.  If you look \n  at the source text you will see that [eqref wave-equation] an [u argument] `numbered` and\n  a property, namely  `label:wave-equation`. That property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\n  to see what happens.\n  \n  Here is an [u aligned] block:\n  \n  | aligned\n  nat &= set("positive whole numbers and zero")\n  nat &= sett(n " is a whole number", n > 0)\n  \n  \n  | equation\n  \\begin{pmatrix}\n    2 & 1 \\\\\n    1 & 2\n  \\end{pmatrix}\n  \\begin{pmatrix}\n    2 & 1 \\\\\n    1 & 2\n  \\end{pmatrix}\n  =\n  \\begin{pmatrix}\n    5 & 4 \\\\\n    4 & 5\n  \\end{pmatrix}\n  \n  \n\n\n';
 var $author$project$Main$init = function (flags) {
+	var normalizedTex = $author$project$Main$normalize($author$project$Document$text);
 	return _Utils_Tuple2(
 		{
 			count: 1,
 			currentLanguage: $author$project$ScriptaV2$Language$EnclosureLang,
 			currentTime: $elm$time$Time$millisToPosix(0),
-			editRecord: A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, $author$project$ScriptaV2$Language$EnclosureLang, $author$project$Document$text),
+			editRecord: A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, $author$project$ScriptaV2$Language$EnclosureLang, normalizedTex),
 			pressedKeys: _List_Nil,
 			selectId: '@InitID',
-			sourceText: $author$project$Document$text,
+			sourceText: normalizedTex,
 			theme: $author$project$Theme$Light,
 			windowHeight: flags.window.windowHeight,
 			windowWidth: flags.window.windowWidth
@@ -26612,13 +26622,14 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'InputText':
 				var str = msg.a;
+				var normalizedText = $author$project$Main$normalize(str);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
 							count: model.count + 1,
-							editRecord: A2($author$project$ScriptaV2$DifferentialCompiler$update, model.editRecord, model.sourceText),
-							sourceText: str
+							editRecord: A2($author$project$ScriptaV2$DifferentialCompiler$update, model.editRecord, normalizedText),
+							sourceText: normalizedText
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'KeyMsg':

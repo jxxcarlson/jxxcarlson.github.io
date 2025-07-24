@@ -29,8 +29,6 @@ function initKatex() {
       const content = this.content || '';
       const display = this.display || false;
       
-      console.log('math-text element connected:', {content, display});
-      
       this.shadowRoot.innerHTML =
         katex.renderToString(
           content,
