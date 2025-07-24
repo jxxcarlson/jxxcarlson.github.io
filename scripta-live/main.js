@@ -32393,7 +32393,7 @@ var $mdgriffith$elm_ui$Element$column = F2(
 						attrs))),
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
-var $author$project$ScriptaV2$Compiler$NoFilter = {$: 'NoFilter'};
+var $author$project$ScriptaV2$Compiler$SuppressDocumentBlocks = {$: 'SuppressDocumentBlocks'};
 var $author$project$ScriptaV2$Compiler$filterForest = F2(
 	function (filter, forest) {
 		if (filter.$ === 'NoFilter') {
@@ -53969,7 +53969,7 @@ var $author$project$Main$displayRenderedText = function (model) {
 					{
 						docWidth: $author$project$Main$panelWidth(model) - (3 * $author$project$Main$xPadding),
 						editCount: model.count,
-						filter: $author$project$ScriptaV2$Compiler$NoFilter,
+						filter: $author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
 						idsOfOpenNodes: _List_Nil,
 						lang: $author$project$ScriptaV2$Language$EnclosureLang,
 						selectedId: model.selectId
