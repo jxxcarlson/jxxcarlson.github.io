@@ -32412,6 +32412,11 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 var $author$project$Main$Render = function (a) {
 	return {$: 'Render', a: a};
 };
+var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
+	return {$: 'AlignY', a: a};
+};
+var $mdgriffith$elm_ui$Internal$Model$Top = {$: 'Top'};
+var $mdgriffith$elm_ui$Element$alignTop = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Top);
 var $author$project$Main$headerHeight = 18;
 var $author$project$Main$appHeight = function (model) {
 	return model.windowHeight - $author$project$Main$headerHeight;
@@ -32789,11 +32794,6 @@ var $author$project$Render$OrdinaryBlock$indentOrdinaryBlock = F4(
 	function (indent, id, settings, x) {
 		return A4($author$project$Render$Indentation$indentOrdinaryBlock, indent, id, settings, x);
 	});
-var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
-	return {$: 'AlignY', a: a};
-};
-var $mdgriffith$elm_ui$Internal$Model$Top = {$: 'Top'};
-var $mdgriffith$elm_ui$Element$alignTop = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Top);
 var $mdgriffith$elm_ui$Element$padding = function (x) {
 	var f = x;
 	return A2(
@@ -54050,6 +54050,7 @@ var $author$project$Main$displayRenderedText = function (model) {
 							$author$project$Main$panelWidth(model))),
 						$author$project$Main$panelHeight(model),
 						$author$project$Main$htmlId('rendered-text'),
+						$mdgriffith$elm_ui$Element$alignTop,
 						$mdgriffith$elm_ui$Element$scrollbarY,
 						$mdgriffith$elm_ui$Element$centerX,
 						$mdgriffith$elm_ui$Element$Font$color(
@@ -55263,7 +55264,8 @@ var $author$project$Main$mainColumn = function (model) {
 								$mdgriffith$elm_ui$Element$el,
 								_List_fromArray(
 									[
-										$mdgriffith$elm_ui$Element$moveUp(2)
+										$mdgriffith$elm_ui$Element$moveUp(2),
+										$mdgriffith$elm_ui$Element$alignTop
 									]),
 								$author$project$Main$inputText(model)),
 								A2(
