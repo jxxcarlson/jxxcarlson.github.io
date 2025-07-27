@@ -34770,11 +34770,6 @@ var $author$project$Render$Tree$renderTree = F6(
 	});
 var $author$project$ScriptaV2$Compiler$renderForest = F5(
 	function (theme, count, renderSettings, accumulator, forest) {
-		var _v0 = A2(
-			$elm$core$Debug$log,
-			'@@::title blocks',
-			A2($author$project$Generic$ASTTools$getBlockByName, 'title', forest));
-		var _v1 = A2($elm$core$Debug$log, '@@::renderForest', forest);
 		return A2(
 			$elm$core$List$map,
 			A5($author$project$Render$Tree$renderTree, theme, count, accumulator, renderSettings, _List_Nil),
@@ -50446,23 +50441,6 @@ var $ohanhi$keyboard$Keyboard$Character = function (a) {
 };
 var $ohanhi$keyboard$Keyboard$Control = {$: 'Control'};
 var $author$project$Theme$Light = {$: 'Light'};
-var $author$project$Generic$ASTTools$getBlockArgsByName = F2(
-	function (key, ast) {
-		var _v0 = A2($author$project$Generic$ASTTools$getBlockByName, key, ast);
-		if (_v0.$ === 'Nothing') {
-			return _List_Nil;
-		} else {
-			var block = _v0.a;
-			return block.args;
-		}
-	});
-var $author$project$Render$Export$LaTeX$counterValue = function (ast) {
-	return A2(
-		$elm$core$Maybe$andThen,
-		$elm$core$String$toInt,
-		$elm$core$List$head(
-			A2($author$project$Generic$ASTTools$getBlockArgsByName, 'setcounter', ast)));
-};
 var $author$project$Generic$ASTTools$expressionNames = function (forest) {
 	return $elm$core$List$sort(
 		$elm_community$list_extra$List$Extra$unique(
@@ -50890,6 +50868,23 @@ var $author$project$Generic$BlockUtilities$condenseUrls = function (block) {
 					A2($elm$core$List$map, $author$project$Generic$BlockUtilities$condenseUrl, exprList))
 			});
 	}
+};
+var $author$project$Generic$ASTTools$getBlockArgsByName = F2(
+	function (key, ast) {
+		var _v0 = A2($author$project$Generic$ASTTools$getBlockByName, key, ast);
+		if (_v0.$ === 'Nothing') {
+			return _List_Nil;
+		} else {
+			var block = _v0.a;
+			return block.args;
+		}
+	});
+var $author$project$Render$Export$LaTeX$counterValue = function (ast) {
+	return A2(
+		$elm$core$Maybe$andThen,
+		$elm$core$String$toInt,
+		$elm$core$List$head(
+			A2($author$project$Generic$ASTTools$getBlockArgsByName, 'setcounter', ast)));
 };
 var $author$project$Render$Export$LaTeX$OutsideList = {$: 'OutsideList'};
 var $author$project$Render$Export$LaTeX$InsideDescriptionList = {$: 'InsideDescriptionList'};
@@ -52845,14 +52840,6 @@ var $author$project$Render$Export$LaTeX$tableofcontents = function (rawBlockName
 			},
 			rawBlockNames_)) > 1) ? '\n\n\\tableofcontents' : '';
 };
-var $author$project$Render$Export$LaTeX$zeroOrSome = function (mInt) {
-	if (mInt.$ === 'Nothing') {
-		return 0;
-	} else {
-		var k = mInt.a;
-		return k;
-	}
-};
 var $author$project$Render$Export$LaTeX$export = F3(
 	function (currentTime, settings_, ast) {
 		var titleData = A2($author$project$Generic$ASTTools$getBlockByName, 'title', ast);
@@ -52877,9 +52864,27 @@ var $author$project$Render$Export$LaTeX$export = F3(
 		var expressionNames = _Utils_ap(
 			$author$project$Generic$ASTTools$expressionNames(ast),
 			macrosInTextMacroDefinitions);
-		return A2($author$project$Render$Export$Preamble$make, rawBlockNames, expressionNames) + (A2($author$project$Render$Export$LaTeX$frontMatter, currentTime, ast) + (('\n\\setcounter{section}{' + ($elm$core$String$fromInt(
-			$author$project$Render$Export$LaTeX$zeroOrSome(
-				$author$project$Render$Export$LaTeX$counterValue(ast))) + '}\n')) + ($author$project$Render$Export$LaTeX$tableofcontents(rawBlockNames) + ('\n\n' + (A2($author$project$Render$Export$LaTeX$rawExport, settings, ast) + '\n\n\\end{document}\n')))));
+		var counterValue_ = A2(
+			$elm$core$Maybe$map,
+			function (x) {
+				return x - 1;
+			},
+			A2(
+				$elm$core$Maybe$andThen,
+				$elm$core$String$toInt,
+				A2($elm$core$Dict$get, 'first-section', properties)));
+		var setTheFirstSection = function () {
+			if (counterValue_.$ === 'Nothing') {
+				return '';
+			} else {
+				var k = counterValue_.a;
+				return '\n\\setcounter{section}{' + ($elm$core$String$fromInt(k) + '}\n');
+			}
+		}();
+		return A2(
+			$author$project$Render$Export$Preamble$make,
+			A2($elm$core$Debug$log, '@@@EXPORT_RAW_BLOCK_NAMES', rawBlockNames),
+			expressionNames) + (A2($author$project$Render$Export$LaTeX$frontMatter, currentTime, ast) + ($author$project$Render$Export$LaTeX$tableofcontents(rawBlockNames) + (setTheFirstSection + ('\n\n' + (A2($author$project$Render$Export$LaTeX$rawExport, settings, ast) + '\n\n\\end{document}\n')))));
 	});
 var $author$project$Main$NoOp = {$: 'NoOp'};
 var $elm$core$Task$onError = _Scheduler_onError;
@@ -53935,6 +53940,14 @@ var $author$project$Main$appHeight = function (model) {
 var $author$project$Main$appWidth = function (model) {
 	return model.windowWidth;
 };
+var $author$project$Main$borderColor = function (model) {
+	var _v0 = model.theme;
+	if (_v0.$ === 'Light') {
+		return A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.5, 0.5);
+	} else {
+		return A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.5, 0.5);
+	}
+};
 var $mdgriffith$elm_ui$Element$clipY = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.clipY);
 var $author$project$Main$container = F2(
 	function (model, elements_) {
@@ -54122,7 +54135,11 @@ var $author$project$Main$header = function (model) {
 				$author$project$Main$backgroundColor(model.theme)),
 				$mdgriffith$elm_ui$Element$paddingEach(
 				{bottom: 0, left: 18, right: 18, top: 0}),
-				forceColorStyle
+				forceColorStyle,
+				$mdgriffith$elm_ui$Element$Border$widthEach(
+				{bottom: 1, left: 0, right: 0, top: 0}),
+				$mdgriffith$elm_ui$Element$Border$color(
+				$author$project$Main$borderColor(model))
 			]),
 		_List_fromArray(
 			[
@@ -54132,11 +54149,7 @@ var $author$project$Main$header = function (model) {
 					[
 						$mdgriffith$elm_ui$Element$centerX,
 						$mdgriffith$elm_ui$Element$Font$color(debugTextColor),
-						forceColorStyle,
-						$mdgriffith$elm_ui$Element$Border$widthEach(
-						{bottom: 1, left: 0, right: 0, top: 0}),
-						$mdgriffith$elm_ui$Element$Border$color(
-						A3($mdgriffith$elm_ui$Element$rgb255, 1, 1, 1))
+						forceColorStyle
 					]),
 				$mdgriffith$elm_ui$Element$text('Scripta Live: ' + model.title))
 			]));
@@ -55002,6 +55015,7 @@ var $author$project$Main$inputText = function (model) {
 				[
 					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+					A2($mdgriffith$elm_ui$Element$paddingXY, 0, 12),
 					$mdgriffith$elm_ui$Element$htmlAttribute(
 					A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
 					$mdgriffith$elm_ui$Element$htmlAttribute(
@@ -55288,7 +55302,11 @@ var $author$project$Main$sidebar = function (model) {
 						$mdgriffith$elm_ui$Element$htmlAttribute(
 						A2($elm$html$Html$Attributes$style, 'min-height', '0')),
 						$mdgriffith$elm_ui$Element$htmlAttribute(
-						A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
+						A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box')),
+						$mdgriffith$elm_ui$Element$Border$widthEach(
+						{bottom: 0, left: 1, right: 0, top: 0}),
+						$mdgriffith$elm_ui$Element$Border$color(
+						A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.5, 0.5))
 					]),
 				_List_fromArray(
 					[
@@ -55297,11 +55315,7 @@ var $author$project$Main$sidebar = function (model) {
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$paddingEach(
-								{bottom: 12, left: 0, right: 0, top: 0}),
-								$mdgriffith$elm_ui$Element$Border$widthEach(
-								{bottom: 0, left: 1, right: 0, top: 0}),
-								$mdgriffith$elm_ui$Element$Border$color(
-								A3($mdgriffith$elm_ui$Element$rgb255, 1, 0, 0))
+								{bottom: 12, left: 0, right: 0, top: 0})
 							]),
 						A4($author$project$Download$downloadButton, 'Download script', 'process_images.sh', 'application/x-sh', $author$project$AppData$processImagesText)),
 						$mdgriffith$elm_ui$Element$text('Bare bones:'),
@@ -55343,6 +55357,17 @@ var $author$project$Main$mainColumn = function (model) {
 						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
 							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+								$mdgriffith$elm_ui$Element$height(
+								$mdgriffith$elm_ui$Element$px(1)),
+								$mdgriffith$elm_ui$Element$Background$color(
+								$author$project$Main$borderColor(model))
+							]),
+						$mdgriffith$elm_ui$Element$none),
+						A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
 								$mdgriffith$elm_ui$Element$paddingEach(
 								{bottom: 0, left: 0, right: 0, top: 8})
 							]),
@@ -55364,9 +55389,31 @@ var $author$project$Main$mainColumn = function (model) {
 								[
 									$author$project$Main$inputText(model),
 									A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$width(
+											$mdgriffith$elm_ui$Element$px(1)),
+											$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+											$mdgriffith$elm_ui$Element$Background$color(
+											$author$project$Main$borderColor(model))
+										]),
+									$mdgriffith$elm_ui$Element$none),
+									A2(
 									$mdgriffith$elm_ui$Element$map,
 									$author$project$Main$Render,
 									$author$project$Main$displayRenderedText(model)),
+									A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$width(
+											$mdgriffith$elm_ui$Element$px(1)),
+											$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+											$mdgriffith$elm_ui$Element$Background$color(
+											$author$project$Main$borderColor(model))
+										]),
+									$mdgriffith$elm_ui$Element$none),
 									$author$project$Main$sidebar(model)
 								])))
 					]))
