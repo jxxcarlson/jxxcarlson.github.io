@@ -21031,11 +21031,14 @@ var $author$project$Generic$Acc$transformBlock = F2(
 										$elm$core$Dict$insert,
 										'tag',
 										$author$project$Tools$String$makeSlug(block.firstLine),
-										A3(
-											$elm$core$Dict$insert,
-											'label',
-											$author$project$Generic$Vector$toString(acc.headingIndex),
-											block.properties))
+										A2(
+											$elm$core$Debug$log,
+											'@@transformBlock',
+											A3(
+												$elm$core$Dict$insert,
+												'label',
+												$author$project$Generic$Vector$toString(acc.headingIndex),
+												block.properties)))
 								});
 						case 'quiver':
 							return _Utils_update(
@@ -23702,87 +23705,71 @@ var $author$project$MicroLaTeX$Util$normalizedWord = function (words) {
 			A2($elm$core$Basics$composeR, $elm$core$String$toLower, $author$project$Tools$Utility$removeNonAlphaNum),
 			words));
 };
-var $author$project$Render$Export$LaTeX$section1 = F2(
-	function (args, body) {
+var $author$project$Render$Export$LaTeX$section = F3(
+	function (settings, args, body) {
 		var tag = $author$project$MicroLaTeX$Util$normalizedWord(
 			$elm$core$String$words(body));
 		var suffix = function () {
-			var _v1 = A2($elm_community$list_extra$List$Extra$getAt, 1, args);
-			if (_v1.$ === 'Nothing') {
+			var _v2 = A2($elm_community$list_extra$List$Extra$getAt, 1, args);
+			if (_v2.$ === 'Nothing') {
 				return '';
 			} else {
-				if (_v1.a === '-') {
+				if (_v2.a === '-') {
 					return '*';
 				} else {
 					return '';
 				}
 			}
 		}();
+		var maxNumberedLevel = A2(
+			$elm$core$Maybe$withDefault,
+			3,
+			A2(
+				$elm$core$Maybe$andThen,
+				$elm$core$String$toFloat,
+				A2(
+					$elm$core$Debug$log,
+					'@@@@maxNumberedLevel',
+					A2($elm$core$Dict$get, 'number-to-level', settings.properties))));
+		var levelAsString = A3($author$project$Render$Utility$getArg, '4', 0, args);
+		var levelAsFloat = function () {
+			var _v1 = $elm$core$String$toFloat(levelAsString);
+			if (_v1.$ === 'Just') {
+				var n = _v1.a;
+				return n;
+			} else {
+				return 0;
+			}
+		}();
 		var label = ' \\label{' + (tag + '}');
-		var _v0 = A3($author$project$Render$Utility$getArg, '4', 0, args);
-		switch (_v0) {
+		switch (levelAsString) {
 			case '1':
 				return _Utils_ap(
 					A2($author$project$Render$Export$LaTeX$macro1, 'title' + suffix, body),
 					label);
 			case '2':
-				return _Utils_ap(
+				return (_Utils_cmp(levelAsFloat, maxNumberedLevel) < 1) ? _Utils_ap(
 					A2($author$project$Render$Export$LaTeX$macro1, 'section' + suffix, body),
+					label) : _Utils_ap(
+					A2($author$project$Render$Export$LaTeX$macro1, 'section*' + suffix, body),
 					label);
 			case '3':
-				return _Utils_ap(
+				return (_Utils_cmp(levelAsFloat, maxNumberedLevel) < 1) ? _Utils_ap(
 					A2($author$project$Render$Export$LaTeX$macro1, 'subsection' + suffix, body),
+					label) : _Utils_ap(
+					A2($author$project$Render$Export$LaTeX$macro1, 'subsection*' + suffix, body),
 					label);
 			case '4':
-				return _Utils_ap(
+				return (_Utils_cmp(levelAsFloat, maxNumberedLevel) < 1) ? _Utils_ap(
 					A2($author$project$Render$Export$LaTeX$macro1, 'subsubsection' + suffix, body),
+					label) : _Utils_ap(
+					A2($author$project$Render$Export$LaTeX$macro1, 'subsubsection*' + suffix, body),
 					label);
 			default:
 				return _Utils_ap(
 					A2($author$project$Render$Export$LaTeX$macro1, 'subheading' + suffix, body),
 					label);
 		}
-	});
-var $author$project$Render$Export$LaTeX$section2 = F2(
-	function (args, body) {
-		var tag = $author$project$MicroLaTeX$Util$normalizedWord(
-			$elm$core$String$words(body));
-		var suffix = function () {
-			var _v1 = A2($elm_community$list_extra$List$Extra$getAt, 1, args);
-			if (_v1.$ === 'Nothing') {
-				return '';
-			} else {
-				if (_v1.a === '-') {
-					return '*';
-				} else {
-					return '';
-				}
-			}
-		}();
-		var label = ' \\label{' + (tag + '}');
-		var _v0 = A3($author$project$Render$Utility$getArg, '4', 0, args);
-		switch (_v0) {
-			case '1':
-				return _Utils_ap(
-					A2($author$project$Render$Export$LaTeX$macro1, 'section' + suffix, body),
-					label);
-			case '2':
-				return _Utils_ap(
-					A2($author$project$Render$Export$LaTeX$macro1, 'subsection' + suffix, body),
-					label);
-			case '3':
-				return _Utils_ap(
-					A2($author$project$Render$Export$LaTeX$macro1, 'subsubsection' + suffix, body),
-					label);
-			default:
-				return _Utils_ap(
-					A2($author$project$Render$Export$LaTeX$macro1, 'subheading' + suffix, body),
-					label);
-		}
-	});
-var $author$project$Render$Export$LaTeX$section = F3(
-	function (settings, args, body) {
-		return settings.isStandaloneDocument ? A2($author$project$Render$Export$LaTeX$section1, args, body) : A2($author$project$Render$Export$LaTeX$section2, args, body);
 	});
 var $author$project$Render$Export$LaTeX$smallsubheading = F3(
 	function (settings, args, body) {
@@ -25783,15 +25770,31 @@ var $author$project$Render$Export$LaTeX$zeroOrSome = function (mInt) {
 };
 var $author$project$Render$Export$LaTeX$export = F3(
 	function (currentTime, settings_, ast) {
+		var titleData = A2($author$project$Generic$ASTTools$getBlockByName, 'title', ast);
 		var textMacroDefinitions = A2($author$project$Generic$ASTTools$getVerbatimBlockValue, 'textmacros', ast);
 		var rawBlockNames = $author$project$Generic$ASTTools$rawBlockNames(ast);
+		var properties = A2(
+			$elm$core$Debug$log,
+			'@@@@EXPORT_PROPERTIES',
+			A2(
+				$elm$core$Maybe$withDefault,
+				$elm$core$Dict$empty,
+				A2(
+					$elm$core$Maybe$map,
+					function ($) {
+						return $.properties;
+					},
+					titleData)));
+		var settings = _Utils_update(
+			settings_,
+			{properties: properties});
 		var macrosInTextMacroDefinitions = $author$project$Generic$TextMacro$getTextMacroFunctionNames(textMacroDefinitions);
 		var expressionNames = _Utils_ap(
 			$author$project$Generic$ASTTools$expressionNames(ast),
 			macrosInTextMacroDefinitions);
 		return A2($author$project$Render$Export$Preamble$make, rawBlockNames, expressionNames) + (A2($author$project$Render$Export$LaTeX$frontMatter, currentTime, ast) + (('\n\\setcounter{section}{' + ($elm$core$String$fromInt(
 			$author$project$Render$Export$LaTeX$zeroOrSome(
-				$author$project$Render$Export$LaTeX$counterValue(ast))) + '}\n')) + ($author$project$Render$Export$LaTeX$tableofcontents(rawBlockNames) + ('\n\n' + (A2($author$project$Render$Export$LaTeX$rawExport, settings_, ast) + '\n\n\\end{document}\n')))));
+				$author$project$Render$Export$LaTeX$counterValue(ast))) + '}\n')) + ($author$project$Render$Export$LaTeX$tableofcontents(rawBlockNames) + ('\n\n' + (A2($author$project$Render$Export$LaTeX$rawExport, settings, ast) + '\n\n\\end{document}\n')))));
 	});
 var $author$project$Main$NoOp = {$: 'NoOp'};
 var $elm$core$Task$onError = _Scheduler_onError;
@@ -25839,10 +25842,12 @@ var $avh4$elm_color$Color$rgba = F4(
 	});
 var $author$project$Render$NewColor$blue300 = A4($avh4$elm_color$Color$rgba, 0.54, 0.71, 0.94, 1);
 var $author$project$Render$NewColor$gray100 = A4($avh4$elm_color$Color$rgba, 0.96, 0.96, 0.96, 1);
+var $author$project$Render$NewColor$gray700 = A4($avh4$elm_color$Color$rgba, 0.33, 0.35, 0.37, 1);
 var $author$project$Render$NewColor$gray900 = A4($avh4$elm_color$Color$rgba, 0.19, 0.21, 0.23, 1);
 var $author$project$Render$NewColor$indigo500 = A4($avh4$elm_color$Color$rgba, 0.35, 0.38, 0.67, 1);
 var $author$project$Render$Settings$darkTheme = {
 	background: $author$project$Render$NewColor$gray900,
+	border: $author$project$Render$NewColor$gray700,
 	codeBackground: A4($avh4$elm_color$Color$rgba, 0.298, 0.314, 0.329, 1),
 	codeText: $author$project$Render$NewColor$gray100,
 	highlight: $author$project$Render$NewColor$indigo500,
@@ -25855,13 +25860,18 @@ var $author$project$Render$NewColor$blue500 = A4($avh4$elm_color$Color$rgba, 0.0
 var $author$project$Render$NewColor$gray300 = A4($avh4$elm_color$Color$rgba, 0.82, 0.82, 0.82, 1);
 var $author$project$Render$NewColor$gray950 = A4($avh4$elm_color$Color$rgba, 0.09, 0.11, 0.13, 1);
 var $author$project$Render$NewColor$indigo200 = A4($avh4$elm_color$Color$rgba, 0.82, 0.84, 0.93, 1);
+var $avh4$elm_color$Color$rgb = F3(
+	function (r, g, b) {
+		return A4($avh4$elm_color$Color$RgbaSpace, r, g, b, 1.0);
+	});
 var $author$project$Render$Settings$lightTheme = {
 	background: A4($avh4$elm_color$Color$rgba, 1, 1, 1, 1),
+	border: $author$project$Render$NewColor$gray300,
 	codeBackground: A4($avh4$elm_color$Color$rgba, 0.835, 0.847, 0.882, 1),
 	codeText: $author$project$Render$NewColor$gray900,
 	highlight: $author$project$Render$NewColor$indigo200,
 	link: $author$project$Render$NewColor$blue500,
-	offsetBackground: $author$project$Render$NewColor$gray300,
+	offsetBackground: A3($avh4$elm_color$Color$rgb, 1, 1, 1),
 	offsetText: $author$project$Render$NewColor$gray950,
 	text: $author$project$Render$NewColor$gray950
 };
@@ -25947,6 +25957,7 @@ var $author$project$Render$Settings$makeSettings = F6(
 			paddingBottom: 0,
 			paddingTop: 0,
 			paragraphSpacing: 28,
+			properties: $elm$core$Dict$empty,
 			redColor: A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0, 0),
 			selectedId: selectedId,
 			selectedSlug: selectedSlug,
@@ -38921,7 +38932,13 @@ var $author$project$Render$Blocks$Document$topPadding = function (k) {
 };
 var $author$project$Render$Blocks$Document$section = F5(
 	function (count, acc, settings, attr, block) {
-		var maxNumberedLevel = 1;
+		var maxNumberedLevel = A2(
+			$elm$core$Maybe$withDefault,
+			3,
+			A2(
+				$elm$core$Maybe$andThen,
+				$elm$core$String$toFloat,
+				A2($elm$core$Dict$get, 'number-to-level', settings.properties)));
 		var headingLevel = function () {
 			var _v0 = A2($elm$core$Dict$get, 'level', block.properties);
 			if (_v0.$ === 'Nothing') {
@@ -53528,10 +53545,17 @@ var $author$project$Render$Tree$renderTree = F6(
 					tree)
 				]));
 	});
-var $author$project$ScriptaV2$Compiler$renderForest = F4(
-	function (theme, count, renderSettings, accumulator) {
-		return $elm$core$List$map(
-			A5($author$project$Render$Tree$renderTree, theme, count, accumulator, renderSettings, _List_Nil));
+var $author$project$ScriptaV2$Compiler$renderForest = F5(
+	function (theme, count, renderSettings, accumulator, forest) {
+		var _v0 = A2(
+			$elm$core$Debug$log,
+			'@@::title blocks',
+			A2($author$project$Generic$ASTTools$getBlockByName, 'title', forest));
+		var _v1 = A2($elm$core$Debug$log, '@@::renderForest', forest);
+		return A2(
+			$elm$core$List$map,
+			A5($author$project$Render$Tree$renderTree, theme, count, accumulator, renderSettings, _List_Nil),
+			forest);
 	});
 var $author$project$Library$Tree$lev = function (_v0) {
 	var block = _v0.block;
@@ -53583,6 +53607,45 @@ var $author$project$Generic$ASTTools$tableOfContents = F2(
 			$elm$core$List$concat(
 				A2($elm$core$List$map, $author$project$Library$Tree$flatten, ast)));
 	});
+var $author$project$Render$TOCTree$style_ = function (theme_) {
+	if (theme_.$ === 'Dark') {
+		return _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$Background$color(
+				A2(
+					$author$project$Render$Settings$getThemedElementColor,
+					function ($) {
+						return $.background;
+					},
+					theme_)),
+				$mdgriffith$elm_ui$Element$Font$color(
+				A2(
+					$author$project$Render$Settings$getThemedElementColor,
+					function ($) {
+						return $.text;
+					},
+					theme_))
+			]);
+	} else {
+		return _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$Background$color(
+				A2(
+					$author$project$Render$Settings$getThemedElementColor,
+					function ($) {
+						return $.background;
+					},
+					theme_)),
+				$mdgriffith$elm_ui$Element$Font$color(
+				A2(
+					$author$project$Render$Settings$getThemedElementColor,
+					function ($) {
+						return $.text;
+					},
+					theme_))
+			]);
+	}
+};
 var $author$project$ScriptaV2$Msg$ToggleTOCNodeID = function (a) {
 	return {$: 'ToggleTOCNodeID', a: a};
 };
@@ -53647,8 +53710,8 @@ var $author$project$Render$TOCTree$tocIndent = function (args) {
 			top: 0
 		});
 };
-var $author$project$Render$TOCTree$viewTocItem_ = F4(
-	function (viewParameters, acc, hasChildren, block) {
+var $author$project$Render$TOCTree$viewTocItem_ = F5(
+	function (theme, viewParameters, acc, hasChildren, block) {
 		var args = block.args;
 		var body = block.body;
 		var properties = block.properties;
@@ -53718,13 +53781,15 @@ var $author$project$Render$TOCTree$viewTocItem_ = F4(
 			}();
 			var content = A2(
 				$mdgriffith$elm_ui$Element$row,
-				_List_fromArray(
-					[
-						$author$project$Render$TOCTree$tocIndent(args),
-						$mdgriffith$elm_ui$Element$width(
-						$mdgriffith$elm_ui$Element$px(180)),
-						$mdgriffith$elm_ui$Element$spacing(8)
-					]),
+				_Utils_ap(
+					_List_fromArray(
+						[
+							$author$project$Render$TOCTree$tocIndent(args),
+							$mdgriffith$elm_ui$Element$width(
+							$mdgriffith$elm_ui$Element$px(180)),
+							$mdgriffith$elm_ui$Element$spacing(8)
+						]),
+					$author$project$Render$TOCTree$style_(theme)),
 				A2(
 					$elm$core$List$cons,
 					sectionNumber,
@@ -53732,7 +53797,12 @@ var $author$project$Render$TOCTree$viewTocItem_ = F4(
 						$elm$core$List$map,
 						A4($author$project$Render$Expression$render, viewParameters.counter, acc, viewParameters.settings, viewParameters.attr),
 						exprs2)));
-			var color = _Utils_eq(id, viewParameters.selectedId) ? A3($mdgriffith$elm_ui$Element$rgb, 0.8, 0, 0.0) : A3($mdgriffith$elm_ui$Element$rgb, 0, 0, 0.8);
+			var color = _Utils_eq(id, viewParameters.selectedId) ? A2(
+				$author$project$Render$Settings$getThemedElementColor,
+				function ($) {
+					return $.text;
+				},
+				theme) : A3($mdgriffith$elm_ui$Element$rgb, 0, 0, 0.8);
 			var clickHandlers = hasChildren ? _List_fromArray(
 				[
 					$mdgriffith$elm_ui$Element$Events$onClick(
@@ -53759,20 +53829,21 @@ var $author$project$Render$TOCTree$viewTocItem_ = F4(
 					}));
 		}
 	});
-var $author$project$Render$TOCTree$viewNodeWithChildren = F5(
-	function (viewParameters, acc, indentation, node, hasChildren) {
-		return A4($author$project$Render$TOCTree$viewTocItem_, viewParameters, acc, hasChildren, node.block);
+var $author$project$Render$TOCTree$viewNodeWithChildren = F6(
+	function (theme, viewParameters, acc, indentation, node, hasChildren) {
+		return A5($author$project$Render$TOCTree$viewTocItem_, theme, viewParameters, acc, hasChildren, node.block);
 	});
 var $author$project$Render$TOCTree$viewTOCTree = F7(
-	function (format, viewParameters, acc, depth, indentation, maybeFoundIds, tocTree) {
+	function (theme, viewParameters, acc, depth, indentation, maybeFoundIds, tocTree) {
 		var val = $maca$elm_rose_tree$RoseTree$Tree$value(tocTree);
+		var style = $author$project$Render$TOCTree$style_(theme);
 		var actualChildren = $maca$elm_rose_tree$RoseTree$Tree$children(tocTree);
 		var children = A2($elm$core$List$member, val.block.meta.id, viewParameters.idsOfOpenNodes) ? actualChildren : _List_Nil;
 		var hasChildren = !$elm$core$List$isEmpty(actualChildren);
 		return ((depth < 0) || (!val.visible)) ? $mdgriffith$elm_ui$Element$none : ($elm$core$List$isEmpty(children) ? A2(
 			$mdgriffith$elm_ui$Element$el,
-			_List_Nil,
-			A5($author$project$Render$TOCTree$viewNodeWithChildren, viewParameters, acc, indentation, val, hasChildren)) : A2(
+			style,
+			A6($author$project$Render$TOCTree$viewNodeWithChildren, theme, viewParameters, acc, indentation, val, hasChildren)) : A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
 				[
@@ -53782,25 +53853,34 @@ var $author$project$Render$TOCTree$viewTOCTree = F7(
 				$elm$core$List$cons,
 				A2(
 					$mdgriffith$elm_ui$Element$el,
-					_List_Nil,
-					A5($author$project$Render$TOCTree$viewNodeWithChildren, viewParameters, acc, indentation, val, hasChildren)),
+					style,
+					A6($author$project$Render$TOCTree$viewNodeWithChildren, theme, viewParameters, acc, indentation, val, hasChildren)),
 				A2(
 					$elm$core$List$map,
-					A6($author$project$Render$TOCTree$viewTOCTree, _List_Nil, viewParameters, acc, depth - 1, indentation + 1, maybeFoundIds),
+					A6($author$project$Render$TOCTree$viewTOCTree, theme, viewParameters, acc, depth - 1, indentation + 1, maybeFoundIds),
 					children))));
 	});
-var $author$project$Render$TOCTree$view = F3(
-	function (viewParameters, acc, documentAst) {
+var $author$project$Render$TOCTree$view = F4(
+	function (theme, viewParameters, acc, documentAst) {
 		var vee = function (t) {
 			return {
 				length: A3($elm$core$Basics$composeR, $maca$elm_rose_tree$RoseTree$Tree$children, $elm$core$List$length, t),
-				view: A7($author$project$Render$TOCTree$viewTOCTree, _List_Nil, viewParameters, acc, 4, 0, $elm$core$Maybe$Nothing, t)
+				view: A7($author$project$Render$TOCTree$viewTOCTree, theme, viewParameters, acc, 4, 0, $elm$core$Maybe$Nothing, t)
 			};
 		};
 		var vee2 = function (t) {
 			var data = vee(t);
 			var format = (data.length > 0) ? _List_fromArray(
-				[$mdgriffith$elm_ui$Element$Font$italic]) : _List_Nil;
+				[
+					$mdgriffith$elm_ui$Element$Font$italic,
+					$mdgriffith$elm_ui$Element$Font$color(
+					A2(
+						$author$project$Render$Settings$getThemedElementColor,
+						function ($) {
+							return $.text;
+						},
+						theme))
+				]) : _List_Nil;
 			return A2($mdgriffith$elm_ui$Element$el, format, data.view);
 		};
 		var tocAST = A2($author$project$Generic$ASTTools$tableOfContents, 8, documentAst);
@@ -53818,7 +53898,7 @@ var $author$project$ScriptaV2$Compiler$render = F3(
 		var _v0 = A2($author$project$Generic$Acc$transformAccumulate, $author$project$Generic$Acc$initialData, forest_);
 		var accumulator = _v0.a;
 		var forest = _v0.b;
-		var toc = A3($author$project$Render$TOCTree$view, viewParameters, accumulator, forest_);
+		var toc = A4($author$project$Render$TOCTree$view, theme, viewParameters, accumulator, forest_);
 		var banner = A2(
 			$elm$core$Maybe$map,
 			$mdgriffith$elm_ui$Element$row(
