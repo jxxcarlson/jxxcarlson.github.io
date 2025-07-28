@@ -5661,7 +5661,7 @@ var $author$project$Main$Tick = function (a) {
 	return {$: 'Tick', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$AppData$defaultDocumentText = '| title number-to-level:0\nAnnouncement\n\n[vspace 30]\n[large [italic This is what you can do with Scripta Live:]]\n\n| image figure:1 caption: Humming bird\nhttps://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n\n| equation numbered\n\\label{wave-equation}\nsecpder(u,x) + secpder(u,y) + secpder(u,z) = frac(1,c^2) secpder(u,t))  quad "Wave Equation"\n\n[large [i Beautiful things, created simply ...]][vspace 30]\n\n\n# About Scripta\n\nScripta is a markup language much like LaTeX, but with a simplified, ergonomic syntax — not the usual swarm backslashes and  curly braces (see examples below).  Better yet: what you write (here, on the left) is rendered\n[i instantaneously ] in the right-hand window pane.\n\n- Your documents are saved in the browser\'s local storage.  If you refresh the\nbrowser or close it and com back to it later, it weill be there, waiting for you..\n\n- Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.\n\n- Scripta documents can be exported to standard LaTeX.  If there are no images\nin the document, it can be turned into a pdf file using `pdflatex`.  Otherwise,\nuse the downloadable shell script — use the button  [blue Download Script]\nto download a text file that provides both instructions and a shell script.  We\nwill soon proved a simpler solution.\n\n\n# Examples\n\n| mathmacros\nsecpder:  frac(partial^2 #1, partial #2^2)\nnat:    mathbb N\nreals: mathbb R\npder:  frac(partial #1, partial #2)\nset:    \\{ #1 \\}\nsett:   \\{ #1 \\ | \\ #2 \\}\n\nPythagoras said: $a^2 + b^2 = c^2$.\n\nThis will be on the test:\n\n| equation\nint_0^1 x^n dx = frac(1,n+1)\n\nand so will this:\n\nBoth of the above equalities were written using an `equation` block.  If you look\nat the source text you will see that [eqref wave-equation] an [u argument] `numbered` and\na property, namely  `label:wave-equation`. That property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\nto see what happens.\n\nHere is an [u aligned] block:\n\n| aligned\nnat &= set("positive whole numbers and zero")\nnat &= sett(n " is a whole number", n > 0)\n\n\n| equation\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n=\n\\begin{pmatrix}\n5 & 4 \\\\\n4 & 5\n\\end{pmatrix}\n\n\n\n\n';
+var $author$project$AppData$defaultDocumentText = '| title number-to-level:0\nAnnouncement\n\n[vspace 30]\n[large [italic This is what you can do with Scripta Live:]]\n\n| image figure:1 caption: Humming bird\nhttps://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n\n| equation numbered\n\\label{wave-equation}\nsecpder(u,x) + secpder(u,y) + secpder(u,z) = frac(1,c^2) secpder(u,t))  quad "Wave Equation"\n\n[large [i Make beautiful things with simply simple tools...]][vspace 30]\n\n\n# About Scripta Live\n\nScripta is a markup language much like LaTeX, but with a simplified, ergonomic syntax.\nBetter yet: what you write (here, on the left) is rendered\n[i instantaneously ] in the right-hand window pane. No setup required.\nJust click the "New" button and start writing.\n\n- Your documents are saved in the browser\'s local storage.  If you refresh the\nbrowser or close it and come back to it later, it weill be there, waiting for you..\n\n- Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.\n\n- Scripta documents can be exported to standard LaTeX.  If there are no images\nin the document, it can be turned into a pdf file using `pdflatex`.  Otherwise,\nuse the downloadable shell script — get it by clicking on the button  [blue Download Script],\nlower right corner.  We\nwill soon proved a simpler solution.\n\n\n# Examples\n\n| mathmacros\nsecpder:  frac(partial^2 #1, partial #2^2)\nnat:    mathbb N\nreals: mathbb R\npder:  frac(partial #1, partial #2)\nset:    \\{ #1 \\}\nsett:   \\{ #1 \\ | \\ #2 \\}\n\nPythagoras said: $a^2 + b^2 = c^2$.\n\nThis will be on the test:\n\n| equation\nint_0^1 x^n dx = frac(1,n+1)\n\nand so will this:\n\nBoth of the above equalities were written using an `equation` block.  If you look\nat the source text you will see that [eqref wave-equation] an [u argument] `numbered` and\na property, namely  `label:wave-equation`. That property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\nto see what happens.\n\nHere is an [u aligned] block:\n\n| aligned\nnat &= set("positive whole numbers and zero")\nnat &= sett(n " is a whole number", n > 0)\n\n\n| equation\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n=\n\\begin{pmatrix}\n5 & 4 \\\\\n4 & 5\n\\end{pmatrix}\n\n\n\n\n';
 var $author$project$Generic$Language$Ordinary = function (a) {
 	return {$: 'Ordinary', a: a};
 };
@@ -50182,6 +50182,11 @@ var $author$project$Main$loadDocuments = _Platform_outgoingPort(
 	function ($) {
 		return $elm$json$Json$Encode$null;
 	});
+var $author$project$Main$loadUserName = _Platform_outgoingPort(
+	'loadUserName',
+	function ($) {
+		return $elm$json$Json$Encode$null;
+	});
 var $author$project$Render$Theme$Dark = {$: 'Dark'};
 var $author$project$Render$Theme$Light = {$: 'Light'};
 var $author$project$Theme$mapTheme = function (theme) {
@@ -50259,6 +50264,7 @@ var $author$project$Main$init = function (flags) {
 			sourceText: normalizedTex,
 			theme: theme,
 			title: title_,
+			userName: '',
 			windowHeight: flags.window.windowHeight,
 			windowWidth: flags.window.windowWidth
 		},
@@ -50266,7 +50272,11 @@ var $author$project$Main$init = function (flags) {
 			_List_fromArray(
 				[
 					$author$project$Main$loadDocuments(_Utils_Tuple0),
-					A2($elm$core$Task$perform, $author$project$Main$Tick, $elm$time$Time$now)
+					A2($elm$core$Task$perform, $author$project$Main$Tick, $elm$time$Time$now),
+					A2(
+					$elm$core$Debug$log,
+					'@@!!@@ Loading username at init',
+					$author$project$Main$loadUserName(_Utils_Tuple0))
 				])));
 };
 var $elm$json$Json$Decode$int = _Json_decodeInt;
@@ -50288,6 +50298,9 @@ var $author$project$Main$KeyMsg = function (a) {
 };
 var $author$project$Main$ThemeLoaded = function (a) {
 	return {$: 'ThemeLoaded', a: a};
+};
+var $author$project$Main$UserNameLoaded = function (a) {
+	return {$: 'UserNameLoaded', a: a};
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$json$Json$Decode$value = _Json_decodeValue;
@@ -50733,6 +50746,7 @@ var $ohanhi$keyboard$Keyboard$subscriptions = $elm$core$Platform$Sub$batch(
 			$ohanhi$keyboard$Keyboard$ups($ohanhi$keyboard$Keyboard$Up)
 		]));
 var $author$project$Main$themeLoaded = _Platform_incomingPort('themeLoaded', $elm$json$Json$Decode$string);
+var $author$project$Main$userNameLoaded = _Platform_incomingPort('userNameLoaded', $elm$json$Json$Decode$string);
 var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$batch(
 		_List_fromArray(
@@ -50742,6 +50756,7 @@ var $author$project$Main$subscriptions = function (model) {
 				$author$project$Main$documentsLoaded($author$project$Main$DocumentsLoaded),
 				$author$project$Main$documentLoaded($author$project$Main$DocumentLoaded),
 				$author$project$Main$themeLoaded($author$project$Main$ThemeLoaded),
+				$author$project$Main$userNameLoaded($author$project$Main$UserNameLoaded),
 				A2($elm$time$Time$every, 30 * 1000, $author$project$Main$AutoSave)
 			]));
 };
@@ -53440,6 +53455,7 @@ var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$AppData$processImagesText = '\n#!/bin/bash\n\n # Usage:\n #\n # sh ./process_images.sh <input_file> : gives a way\n #\n # Purpose: process LaTeX exported from scripta files that contain images,\n # first creating a corresponding LaTeX file, then\n # a pdf file.\n #\n # Prerequisite software installation:\n # - ImageMagick (for converting images to EPS)\n # - pdflatex (for making PDFs LaTeX files)\n #\n # Setup:\n # Make a folder call "tex" and make a subfolder "image" in it.\n # Put this script in the "tex" folder.\n # Put your file downloaded from Scripta Live or Scripta.io in the "tex" folder.\n # Run the script with the same filename as an argument: `sh ./process_file.sh myfile.tex`\n #\n # Plans:\n # This work will be automated in the near future, so that you can just\n # Press a button to do all the work\n #\n # Detail: the script processes its inputs follows:\n # First, it examines the file, finding all urls pointing to images (JPEG or PNG).\n # Next, it downloads the corresponding images, constructing a filename for each\n # image based on its URL, and converts them to EPS format using ImageMagick.\n # These images are then stored in the directory "./image". The URLS in the\n # original LaTeX file are replaced with the local EPS filenames.\n\n\n# Check if correct number of arguments provided\nif [ $# -ne 1 ]; then\n    echo "Usage: $0 <input_file>"\n    echo "Example: $0 document.tex"\n    exit 1\nfi\n\nINPUT_FILE="$1"\n\n# Check if input file exists in current directory\nif [ ! -f "$INPUT_FILE" ]; then\n    echo "Error: File $INPUT_FILE not found in current directory"\n    exit 1\nfi\n\n# Create output directory\nOUTPUT_DIR="./image"\nmkdir -p "$OUTPUT_DIR"\n\n# Check if ImageMagick is installed\nif ! command -v convert &> /dev/null; then\n    echo "Error: ImageMagick is not installed. Please install it first."\n    exit 1\nfi\n\n# Create a temporary file for the modified LaTeX\nTEMP_FILE=$(mktemp)\ncp "$INPUT_FILE" "$TEMP_FILE"\n\necho "Searching for image URLs in $INPUT_FILE..."\necho "Output directory: $OUTPUT_DIR"\necho\n\n# Extract URLs ending with .jpg, .jpeg, or .png\n# Using grep with extended regex to find URLs (including those with spaces before them)\ngrep -Eo \'https?://[^"{}]+\\.(jpg|jpeg|png)(\\?[^"{}]*)?\' "$INPUT_FILE" | sort -u | while read -r url; do\n    # Remove query parameters if present\n    url_without_query="${url%%\\?*}"\n\n    # Extract path after domain\n    # Remove protocol and domain to get just the path\n    path_after_domain=$(echo "$url_without_query" | sed -E \'s|https?://[^/]*/?||\')\n    # Remove file extension\n    path_without_ext="${path_after_domain%.*}"\n    # Replace slashes with hyphens and remove special characters\n    eps_base_name=$(echo "$path_without_ext" | tr \'/\' \'-\' | tr -d \'():=\')\n    eps_filename="${eps_base_name}.eps"\n\n    # Get original filename for download\n    original_filename=$(basename "$url")\n    original_filename="${original_filename%%\\?*}"\n\n    echo "Processing: $url"\n    echo "  Path after domain: $path_after_domain"\n    echo "  Path without ext: $path_without_ext"\n    echo "  EPS base name: $eps_base_name"\n    echo "  Downloading as: $original_filename"\n    echo "  EPS filename: $eps_filename"\n\n    # Download the image\n    if curl -s -L -o "$OUTPUT_DIR/$original_filename" "$url"; then\n        echo "  Converting to EPS..."\n\n        # Convert to EPS using ImageMagick\n        if convert "$OUTPUT_DIR/$original_filename" -compress lzw "$OUTPUT_DIR/$eps_filename" 2>/dev/null; then\n            echo "  ✓ Successfully converted to EPS"\n\n            # Replace URL with EPS filename in the temporary file\n            # Use perl for more reliable replacement\n            perl -i -pe "s|\\Q$url\\E|$eps_filename|g" "$TEMP_FILE"\n            echo "  ✓ Replaced URL in LaTeX file"\n\n            # Remove the original downloaded file\n            rm "$OUTPUT_DIR/$original_filename"\n        else\n            echo "  ✗ Failed to convert to EPS"\n            rm "$OUTPUT_DIR/$original_filename"\n        fi\n    else\n        echo "  ✗ Failed to download"\n    fi\n    echo\ndone\n\n# Replace the original file with the modified one\nmv "$TEMP_FILE" "$INPUT_FILE"\n\n# Count results\neps_count=$(find "$OUTPUT_DIR" -name "*.eps" -type f | wc -l)\necho "Completed! Created $eps_count EPS files in $OUTPUT_DIR"\necho "LaTeX file has been updated with local EPS references"\n\n# Check if pdflatex is installed\nif command -v pdflatex &> /dev/null; then\n    echo\n    echo "Running pdflatex on $INPUT_FILE..."\n\n    # Get base filename without extension\n    BASE_NAME="${INPUT_FILE%.tex}"\n\n    # Run pdflatex twice (for references, TOC, etc.)\n    for i in 1 2; do\n        echo "Pass $i of 2..."\n        if pdflatex -interaction=nonstopmode "$INPUT_FILE" > /dev/null 2>&1; then\n            echo "  ✓ Pass $i completed"\n        else\n            echo "  ✗ Pass $i failed"\n            echo "  Check the .log file for errors"\n        fi\n    done\n\n    if [ -f "${BASE_NAME}.pdf" ]; then\n        echo "✓ PDF generated: ${BASE_NAME}.pdf"\n    fi\nelse\n    echo "Warning: pdflatex not found. Skipping PDF generation."\nfi\n\n# Cleanup auxiliary files\necho\necho "Cleaning up auxiliary files..."\nrm -f *.aux *.log *.toc *.out *.synctex.gz *.fls *.fdb_latexmk\n\necho "Done!"\n';
 var $author$project$Main$saveDocument = _Platform_outgoingPort('saveDocument', $elm$core$Basics$identity);
 var $author$project$Main$saveTheme = _Platform_outgoingPort('saveTheme', $elm$json$Json$Encode$string);
+var $author$project$Main$saveUserName = _Platform_outgoingPort('saveUserName', $elm$json$Json$Encode$string);
 var $elm$file$File$Download$string = F3(
 	function (name, mime, content) {
 		return A2(
@@ -54261,7 +54277,9 @@ var $author$project$Main$update = F2(
 						A2($elm$random$Random$generate, $author$project$Main$GeneratedId, $author$project$Main$generateId));
 				case 'GeneratedId':
 					var id = msg.a;
-					var newDoc = A6($author$project$Document$newDocument, id, 'Untitled Document', '', '', model.theme, model.currentTime);
+					var newDocumentContent = '| title\nNew Document\n';
+					var newDoc = A6($author$project$Document$newDocument, id, 'New Document', model.userName, newDocumentContent, model.theme, model.currentTime);
+					var editRecord = A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, model.currentLanguage, newDocumentContent);
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -54271,11 +54289,11 @@ var $author$project$Main$update = F2(
 									$author$project$Theme$mapTheme(model.theme),
 									$author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
 									model.displaySettings,
-									A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, model.currentLanguage, '')),
+									editRecord),
 								currentDocument: $elm$core$Maybe$Just(newDoc),
-								editRecord: A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, model.currentLanguage, ''),
-								sourceText: '',
-								title: 'Untitled Document'
+								editRecord: editRecord,
+								sourceText: newDocumentContent,
+								title: 'New Document'
 							}),
 						$author$project$Main$saveDocument(
 							$author$project$Document$encodeDocument(newDoc)));
@@ -54355,7 +54373,7 @@ var $author$project$Main$update = F2(
 								var updatedDoc = _Utils_update(
 									existingDoc,
 									{
-										author: 'James Carlson',
+										author: model.userName,
 										content: $author$project$Main$normalize($author$project$AppData$defaultDocumentText),
 										modifiedAt: model.currentTime
 									});
@@ -54399,6 +54417,7 @@ var $author$project$Main$update = F2(
 										editRecord),
 									currentDocument: $elm$core$Maybe$Just(doc),
 									editRecord: editRecord,
+									lastSaved: doc.modifiedAt,
 									sourceText: doc.content,
 									title: doc.title
 								}),
@@ -54433,7 +54452,7 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{currentTime: time}),
+							{count: model.count + 1, currentTime: time}),
 						$elm$core$Platform$Cmd$none);
 				case 'ExportToLaTeX':
 					var settings = A6(
@@ -54471,7 +54490,7 @@ var $author$project$Main$update = F2(
 					var currentTime = msg.c;
 					var theme = msg.d;
 					var id = msg.e;
-					var initialDoc = {author: 'James Carlson', content: content, createdAt: currentTime, id: id, modifiedAt: currentTime, theme: theme, title: title};
+					var initialDoc = {author: model.userName, content: content, createdAt: currentTime, id: id, modifiedAt: currentTime, theme: theme, title: title};
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -54480,7 +54499,7 @@ var $author$project$Main$update = F2(
 							}),
 						$author$project$Main$saveDocument(
 							$author$project$Document$encodeDocument(initialDoc)));
-				default:
+				case 'ThemeLoaded':
 					var themeStr = msg.a;
 					var newTheme = function () {
 						switch (themeStr) {
@@ -54502,6 +54521,21 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{compilerOutput: newCompilerOutput, theme: newTheme}),
+						$elm$core$Platform$Cmd$none);
+				case 'InputUserName':
+					var name = msg.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{userName: name}),
+						$author$project$Main$saveUserName(name));
+				default:
+					var name = msg.a;
+					var _v11 = A2($elm$core$Debug$log, '@@!!@@ UserNameLoaded received', name);
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{userName: name}),
 						$elm$core$Platform$Cmd$none);
 			}
 		}
@@ -55860,6 +55894,9 @@ var $author$project$Main$mainColumnStyle = _List_fromArray(
 	]);
 var $mdgriffith$elm_ui$Element$map = $mdgriffith$elm_ui$Internal$Model$map;
 var $author$project$Main$DownloadScript = {$: 'DownloadScript'};
+var $author$project$Main$InputUserName = function (a) {
+	return {$: 'InputUserName', a: a};
+};
 var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
 var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
 var $author$project$Main$buttonBackgroundColor = function (theme) {
@@ -55910,6 +55947,14 @@ var $author$project$Main$listButton = function (model) {
 						$mdgriffith$elm_ui$Element$Border$color(
 						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
 					])),
+				$mdgriffith$elm_ui$Element$mouseDown(
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Background$color(
+						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+						$mdgriffith$elm_ui$Element$Border$color(
+						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.7))
+					])),
 				$mdgriffith$elm_ui$Element$htmlAttribute(
 				A2(
 					$elm$html$Html$Attributes$style,
@@ -55949,6 +55994,14 @@ var $author$project$Main$newButton = function (model) {
 						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2)),
 						$mdgriffith$elm_ui$Element$Border$color(
 						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
+					])),
+				$mdgriffith$elm_ui$Element$mouseDown(
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Background$color(
+						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+						$mdgriffith$elm_ui$Element$Border$color(
+						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.7))
 					])),
 				$mdgriffith$elm_ui$Element$htmlAttribute(
 				A2(
@@ -55990,6 +56043,14 @@ var $author$project$Main$saveButton = function (model) {
 						$mdgriffith$elm_ui$Element$Border$color(
 						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
 					])),
+				$mdgriffith$elm_ui$Element$mouseDown(
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Background$color(
+						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+						$mdgriffith$elm_ui$Element$Border$color(
+						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.7))
+					])),
 				$mdgriffith$elm_ui$Element$htmlAttribute(
 				A2(
 					$elm$html$Html$Attributes$style,
@@ -56029,10 +56090,16 @@ var $author$project$Main$DeleteDocument = function (a) {
 var $author$project$Main$LoadDocument = function (a) {
 	return {$: 'LoadDocument', a: a};
 };
-var $author$project$Main$formatTime = function (time) {
-	var millis = $elm$time$Time$posixToMillis(time);
-	return (!millis) ? 'Never' : 'Recently';
-};
+var $author$project$Main$formatRelativeTime = F2(
+	function (currentTime, savedTime) {
+		var savedMillis = $elm$time$Time$posixToMillis(savedTime);
+		var currentMillis = $elm$time$Time$posixToMillis(currentTime);
+		var diffMillis = currentMillis - savedMillis;
+		var seconds = (diffMillis / 1000) | 0;
+		var minutes = (seconds / 60) | 0;
+		var hours = (minutes / 60) | 0;
+		return (!savedMillis) ? 'Never' : ((seconds < 5) ? 'Just now' : ((seconds < 60) ? ($elm$core$String$fromInt(seconds) + ' seconds ago') : ((minutes < 60) ? ($elm$core$String$fromInt(minutes) + (' minute' + (((minutes === 1) ? '' : 's') + ' ago'))) : ((hours < 24) ? ($elm$core$String$fromInt(hours) + (' hour' + (((hours === 1) ? '' : 's') + ' ago'))) : ($elm$core$String$fromInt((hours / 24) | 0) + (' day' + (((((hours / 24) | 0) === 1) ? '' : 's') + ' ago')))))));
+	});
 var $author$project$Main$documentItem = F2(
 	function (model, doc) {
 		var isActive = function () {
@@ -56107,7 +56174,7 @@ var $author$project$Main$documentItem = F2(
 											A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.7, 0.7))
 										]),
 									$mdgriffith$elm_ui$Element$text(
-										$author$project$Main$formatTime(doc.modifiedAt)))
+										A2($author$project$Main$formatRelativeTime, model.currentTime, doc.modifiedAt)))
 								])),
 						onPress: $elm$core$Maybe$Just(
 							$author$project$Main$LoadDocument(doc.id))
@@ -56123,6 +56190,12 @@ var $author$project$Main$documentItem = F2(
 								[
 									$mdgriffith$elm_ui$Element$Font$color(
 									A3($mdgriffith$elm_ui$Element$rgb, 1, 0.3, 0.3))
+								])),
+							$mdgriffith$elm_ui$Element$mouseDown(
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$Font$color(
+									A3($mdgriffith$elm_ui$Element$rgb, 1, 0.2, 0.2))
 								]))
 						]),
 					{
@@ -56172,6 +56245,14 @@ var $author$project$Main$exportStuff = function (model) {
 								$mdgriffith$elm_ui$Element$Border$color(
 								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
 							])),
+						$mdgriffith$elm_ui$Element$mouseDown(
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Background$color(
+								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+								$mdgriffith$elm_ui$Element$Border$color(
+								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.7))
+							])),
 						$mdgriffith$elm_ui$Element$htmlAttribute(
 						A2(
 							$elm$html$Html$Attributes$style,
@@ -56210,6 +56291,14 @@ var $author$project$Main$exportStuff = function (model) {
 								$mdgriffith$elm_ui$Element$Border$color(
 								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
 							])),
+						$mdgriffith$elm_ui$Element$mouseDown(
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Background$color(
+								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+								$mdgriffith$elm_ui$Element$Border$color(
+								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.7))
+							])),
 						$mdgriffith$elm_ui$Element$htmlAttribute(
 						A2(
 							$elm$html$Html$Attributes$style,
@@ -56229,6 +56318,33 @@ var $author$project$Main$exportStuff = function (model) {
 				})
 			]));
 };
+var $mdgriffith$elm_ui$Element$Input$HiddenLabel = function (a) {
+	return {$: 'HiddenLabel', a: a};
+};
+var $mdgriffith$elm_ui$Element$Input$labelHidden = $mdgriffith$elm_ui$Element$Input$HiddenLabel;
+var $author$project$Main$lastSaveInfo = function (model) {
+	var _v0 = model.currentDocument;
+	if (_v0.$ === 'Just') {
+		var doc = _v0.a;
+		return A2(
+			$mdgriffith$elm_ui$Element$el,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$paddingEach(
+					{bottom: 0, left: 0, right: 0, top: 12}),
+					$mdgriffith$elm_ui$Element$Font$size(14)
+				]),
+			$mdgriffith$elm_ui$Element$text(
+				'Last saved: ' + A2($author$project$Main$formatRelativeTime, model.currentTime, model.lastSaved)));
+	} else {
+		return $mdgriffith$elm_ui$Element$none;
+	}
+};
+var $mdgriffith$elm_ui$Element$Input$Placeholder = F2(
+	function (a, b) {
+		return {$: 'Placeholder', a: a, b: b};
+	});
+var $mdgriffith$elm_ui$Element$Input$placeholder = $mdgriffith$elm_ui$Element$Input$Placeholder;
 var $author$project$Main$rightPanelBackgroundColor = function (theme) {
 	if (theme.$ === 'Light') {
 		return A3($mdgriffith$elm_ui$Element$rgb255, 230, 230, 230);
@@ -56240,6 +56356,15 @@ var $author$project$Main$rightPanelBackground_ = function (model) {
 	return $mdgriffith$elm_ui$Element$Background$color(
 		$author$project$Main$rightPanelBackgroundColor(model.theme));
 };
+var $mdgriffith$elm_ui$Element$Input$TextInputNode = function (a) {
+	return {$: 'TextInputNode', a: a};
+};
+var $mdgriffith$elm_ui$Element$Input$text = $mdgriffith$elm_ui$Element$Input$textHelper(
+	{
+		autofill: $elm$core$Maybe$Nothing,
+		spellchecked: false,
+		type_: $mdgriffith$elm_ui$Element$Input$TextInputNode('text')
+	});
 var $author$project$Main$sidebar = function (model) {
 	var forceColorStyle = function () {
 		var _v1 = model.theme;
@@ -56296,6 +56421,41 @@ var $author$project$Main$sidebar = function (model) {
 								$mdgriffith$elm_ui$Element$paddingEach(
 								{bottom: 8, left: 0, right: 0, top: 0})
 							]),
+						$mdgriffith$elm_ui$Element$text('Your Name')),
+						A2(
+						$mdgriffith$elm_ui$Element$Input$text,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+								A2($mdgriffith$elm_ui$Element$paddingXY, 8, 4),
+								$mdgriffith$elm_ui$Element$Border$width(1),
+								$mdgriffith$elm_ui$Element$Border$rounded(4),
+								$mdgriffith$elm_ui$Element$Border$color(
+								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+								$mdgriffith$elm_ui$Element$Background$color(
+								$author$project$Main$backgroundColor(model.theme)),
+								$mdgriffith$elm_ui$Element$Font$color(
+								$author$project$Main$textColor(model.theme)),
+								$mdgriffith$elm_ui$Element$Font$size(14)
+							]),
+						{
+							label: $mdgriffith$elm_ui$Element$Input$labelHidden('Your name'),
+							onChange: $author$project$Main$InputUserName,
+							placeholder: $elm$core$Maybe$Just(
+								A2(
+									$mdgriffith$elm_ui$Element$Input$placeholder,
+									_List_Nil,
+									$mdgriffith$elm_ui$Element$text('Enter your name'))),
+							text: model.userName
+						}),
+						A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Font$bold,
+								$mdgriffith$elm_ui$Element$paddingEach(
+								{bottom: 8, left: 0, right: 0, top: 16})
+							]),
 						$mdgriffith$elm_ui$Element$text('Documents')),
 						A2(
 						$mdgriffith$elm_ui$Element$row,
@@ -56306,6 +56466,7 @@ var $author$project$Main$sidebar = function (model) {
 							]),
 						_List_Nil),
 						$author$project$Main$crudButtons(model),
+						$author$project$Main$lastSaveInfo(model),
 						$author$project$Main$exportStuff(model),
 						model.showDocumentList ? A2(
 						$mdgriffith$elm_ui$Element$column,
@@ -56372,6 +56533,14 @@ var $author$project$Main$sidebar = function (model) {
 										A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2)),
 										$mdgriffith$elm_ui$Element$Border$color(
 										A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
+									])),
+								$mdgriffith$elm_ui$Element$mouseDown(
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$Background$color(
+										A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+										$mdgriffith$elm_ui$Element$Border$color(
+										A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.7))
 									])),
 								$mdgriffith$elm_ui$Element$htmlAttribute(
 								A2(
