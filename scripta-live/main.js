@@ -4862,6 +4862,10 @@ function _File_toUrl(blob)
 	});
 }
 
+var $elm$core$Maybe$Just = function (a) {
+	return {$: 'Just', a: a};
+};
+var $elm$core$Maybe$Nothing = {$: 'Nothing'};
 var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var $elm$core$Array$foldr = F3(
@@ -4965,10 +4969,6 @@ var $elm$json$Json$Decode$OneOf = function (a) {
 };
 var $elm$core$Basics$False = {$: 'False'};
 var $elm$core$Basics$add = _Basics_add;
-var $elm$core$Maybe$Just = function (a) {
-	return {$: 'Just', a: a};
-};
-var $elm$core$Maybe$Nothing = {$: 'Nothing'};
 var $elm$core$String$all = _String_all;
 var $elm$core$Basics$and = _Basics_and;
 var $elm$core$Basics$append = _Utils_append;
@@ -5655,6 +5655,7 @@ var $elm$browser$Browser$element = _Browser_element;
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $author$project$Theme$Dark = {$: 'Dark'};
 var $author$project$ScriptaV2$Language$EnclosureLang = {$: 'EnclosureLang'};
+var $author$project$Theme$Light = {$: 'Light'};
 var $author$project$ScriptaV2$Compiler$SuppressDocumentBlocks = {$: 'SuppressDocumentBlocks'};
 var $author$project$Main$Tick = function (a) {
 	return {$: 'Tick', a: a};
@@ -50212,7 +50213,25 @@ var $elm$time$Time$Zone = F2(
 var $elm$time$Time$customZone = $elm$time$Time$Zone;
 var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
 var $author$project$Main$init = function (flags) {
-	var theme = $author$project$Theme$Dark;
+	var theme = function () {
+		var _v0 = flags.theme;
+		_v0$2:
+		while (true) {
+			if (_v0.$ === 'Just') {
+				switch (_v0.a) {
+					case 'light':
+						return $author$project$Theme$Light;
+					case 'dark':
+						return $author$project$Theme$Dark;
+					default:
+						break _v0$2;
+				}
+			} else {
+				break _v0$2;
+			}
+		}
+		return $author$project$Theme$Dark;
+	}();
 	var normalizedTex = $author$project$Main$normalize($author$project$AppData$defaultDocumentText);
 	var title_ = $author$project$Main$getTitle(normalizedTex);
 	var editRecord = A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, $author$project$ScriptaV2$Language$EnclosureLang, normalizedTex);
@@ -50266,6 +50285,9 @@ var $author$project$Main$GotNewWindowDimensions = F2(
 	});
 var $author$project$Main$KeyMsg = function (a) {
 	return {$: 'KeyMsg', a: a};
+};
+var $author$project$Main$ThemeLoaded = function (a) {
+	return {$: 'ThemeLoaded', a: a};
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$json$Json$Decode$value = _Json_decodeValue;
@@ -50710,6 +50732,7 @@ var $ohanhi$keyboard$Keyboard$subscriptions = $elm$core$Platform$Sub$batch(
 			$ohanhi$keyboard$Keyboard$downs($ohanhi$keyboard$Keyboard$Down),
 			$ohanhi$keyboard$Keyboard$ups($ohanhi$keyboard$Keyboard$Up)
 		]));
+var $author$project$Main$themeLoaded = _Platform_incomingPort('themeLoaded', $elm$json$Json$Decode$string);
 var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$batch(
 		_List_fromArray(
@@ -50718,6 +50741,7 @@ var $author$project$Main$subscriptions = function (model) {
 				A2($elm$core$Platform$Sub$map, $author$project$Main$KeyMsg, $ohanhi$keyboard$Keyboard$subscriptions),
 				$author$project$Main$documentsLoaded($author$project$Main$DocumentsLoaded),
 				$author$project$Main$documentLoaded($author$project$Main$DocumentLoaded),
+				$author$project$Main$themeLoaded($author$project$Main$ThemeLoaded),
 				A2($elm$time$Time$every, 30 * 1000, $author$project$Main$AutoSave)
 			]));
 };
@@ -50733,7 +50757,6 @@ var $author$project$Main$InitialDocumentId = F5(
 	function (a, b, c, d, e) {
 		return {$: 'InitialDocumentId', a: a, b: b, c: c, d: d, e: e};
 	});
-var $author$project$Theme$Light = {$: 'Light'};
 var $author$project$Main$SaveDocument = {$: 'SaveDocument'};
 var $author$project$Main$ToggleTheme = {$: 'ToggleTheme'};
 var $elm$json$Json$Decode$decodeValue = _Json_run;
@@ -53416,6 +53439,7 @@ var $author$project$Document$newDocument = F6(
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$AppData$processImagesText = '\n#!/bin/bash\n\n # Usage:\n #\n # sh ./process_images.sh <input_file> : gives a way\n #\n # Purpose: process LaTeX exported from scripta files that contain images,\n # first creating a corresponding LaTeX file, then\n # a pdf file.\n #\n # Prerequisite software installation:\n # - ImageMagick (for converting images to EPS)\n # - pdflatex (for making PDFs LaTeX files)\n #\n # Setup:\n # Make a folder call "tex" and make a subfolder "image" in it.\n # Put this script in the "tex" folder.\n # Put your file downloaded from Scripta Live or Scripta.io in the "tex" folder.\n # Run the script with the same filename as an argument: `sh ./process_file.sh myfile.tex`\n #\n # Plans:\n # This work will be automated in the near future, so that you can just\n # Press a button to do all the work\n #\n # Detail: the script processes its inputs follows:\n # First, it examines the file, finding all urls pointing to images (JPEG or PNG).\n # Next, it downloads the corresponding images, constructing a filename for each\n # image based on its URL, and converts them to EPS format using ImageMagick.\n # These images are then stored in the directory "./image". The URLS in the\n # original LaTeX file are replaced with the local EPS filenames.\n\n\n# Check if correct number of arguments provided\nif [ $# -ne 1 ]; then\n    echo "Usage: $0 <input_file>"\n    echo "Example: $0 document.tex"\n    exit 1\nfi\n\nINPUT_FILE="$1"\n\n# Check if input file exists in current directory\nif [ ! -f "$INPUT_FILE" ]; then\n    echo "Error: File $INPUT_FILE not found in current directory"\n    exit 1\nfi\n\n# Create output directory\nOUTPUT_DIR="./image"\nmkdir -p "$OUTPUT_DIR"\n\n# Check if ImageMagick is installed\nif ! command -v convert &> /dev/null; then\n    echo "Error: ImageMagick is not installed. Please install it first."\n    exit 1\nfi\n\n# Create a temporary file for the modified LaTeX\nTEMP_FILE=$(mktemp)\ncp "$INPUT_FILE" "$TEMP_FILE"\n\necho "Searching for image URLs in $INPUT_FILE..."\necho "Output directory: $OUTPUT_DIR"\necho\n\n# Extract URLs ending with .jpg, .jpeg, or .png\n# Using grep with extended regex to find URLs (including those with spaces before them)\ngrep -Eo \'https?://[^"{}]+\\.(jpg|jpeg|png)(\\?[^"{}]*)?\' "$INPUT_FILE" | sort -u | while read -r url; do\n    # Remove query parameters if present\n    url_without_query="${url%%\\?*}"\n\n    # Extract path after domain\n    # Remove protocol and domain to get just the path\n    path_after_domain=$(echo "$url_without_query" | sed -E \'s|https?://[^/]*/?||\')\n    # Remove file extension\n    path_without_ext="${path_after_domain%.*}"\n    # Replace slashes with hyphens and remove special characters\n    eps_base_name=$(echo "$path_without_ext" | tr \'/\' \'-\' | tr -d \'():=\')\n    eps_filename="${eps_base_name}.eps"\n\n    # Get original filename for download\n    original_filename=$(basename "$url")\n    original_filename="${original_filename%%\\?*}"\n\n    echo "Processing: $url"\n    echo "  Path after domain: $path_after_domain"\n    echo "  Path without ext: $path_without_ext"\n    echo "  EPS base name: $eps_base_name"\n    echo "  Downloading as: $original_filename"\n    echo "  EPS filename: $eps_filename"\n\n    # Download the image\n    if curl -s -L -o "$OUTPUT_DIR/$original_filename" "$url"; then\n        echo "  Converting to EPS..."\n\n        # Convert to EPS using ImageMagick\n        if convert "$OUTPUT_DIR/$original_filename" -compress lzw "$OUTPUT_DIR/$eps_filename" 2>/dev/null; then\n            echo "  ✓ Successfully converted to EPS"\n\n            # Replace URL with EPS filename in the temporary file\n            # Use perl for more reliable replacement\n            perl -i -pe "s|\\Q$url\\E|$eps_filename|g" "$TEMP_FILE"\n            echo "  ✓ Replaced URL in LaTeX file"\n\n            # Remove the original downloaded file\n            rm "$OUTPUT_DIR/$original_filename"\n        else\n            echo "  ✗ Failed to convert to EPS"\n            rm "$OUTPUT_DIR/$original_filename"\n        fi\n    else\n        echo "  ✗ Failed to download"\n    fi\n    echo\ndone\n\n# Replace the original file with the modified one\nmv "$TEMP_FILE" "$INPUT_FILE"\n\n# Count results\neps_count=$(find "$OUTPUT_DIR" -name "*.eps" -type f | wc -l)\necho "Completed! Created $eps_count EPS files in $OUTPUT_DIR"\necho "LaTeX file has been updated with local EPS references"\n\n# Check if pdflatex is installed\nif command -v pdflatex &> /dev/null; then\n    echo\n    echo "Running pdflatex on $INPUT_FILE..."\n\n    # Get base filename without extension\n    BASE_NAME="${INPUT_FILE%.tex}"\n\n    # Run pdflatex twice (for references, TOC, etc.)\n    for i in 1 2; do\n        echo "Pass $i of 2..."\n        if pdflatex -interaction=nonstopmode "$INPUT_FILE" > /dev/null 2>&1; then\n            echo "  ✓ Pass $i completed"\n        else\n            echo "  ✗ Pass $i failed"\n            echo "  Check the .log file for errors"\n        fi\n    done\n\n    if [ -f "${BASE_NAME}.pdf" ]; then\n        echo "✓ PDF generated: ${BASE_NAME}.pdf"\n    fi\nelse\n    echo "Warning: pdflatex not found. Skipping PDF generation."\nfi\n\n# Cleanup auxiliary files\necho\necho "Cleaning up auxiliary files..."\nrm -f *.aux *.log *.toc *.out *.synctex.gz *.fls *.fdb_latexmk\n\necho "Done!"\n';
 var $author$project$Main$saveDocument = _Platform_outgoingPort('saveDocument', $elm$core$Basics$identity);
+var $author$project$Main$saveTheme = _Platform_outgoingPort('saveTheme', $elm$json$Json$Encode$string);
 var $elm$file$File$Download$string = F3(
 	function (name, mime, content) {
 		return A2(
@@ -54206,18 +54230,31 @@ var $author$project$Main$update = F2(
 					}
 				case 'ToggleTheme':
 					var newTheme = function () {
-						var _v2 = model.theme;
-						if (_v2.$ === 'Light') {
+						var _v3 = model.theme;
+						if (_v3.$ === 'Light') {
 							return $author$project$Theme$Dark;
 						} else {
 							return $author$project$Theme$Light;
 						}
 					}();
+					var newCompilerOutput = A4(
+						$author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput,
+						$author$project$Theme$mapTheme(newTheme),
+						$author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
+						model.displaySettings,
+						model.editRecord);
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{theme: newTheme}),
-						$elm$core$Platform$Cmd$none);
+							{compilerOutput: newCompilerOutput, count: model.count + 1, theme: newTheme}),
+						$author$project$Main$saveTheme(
+							function () {
+								if (newTheme.$ === 'Light') {
+									return 'light';
+								} else {
+									return 'dark';
+								}
+							}()));
 				case 'CreateNewDocument':
 					return _Utils_Tuple2(
 						model,
@@ -54243,9 +54280,9 @@ var $author$project$Main$update = F2(
 						$author$project$Main$saveDocument(
 							$author$project$Document$encodeDocument(newDoc)));
 				case 'SaveDocument':
-					var _v3 = model.currentDocument;
-					if (_v3.$ === 'Just') {
-						var doc = _v3.a;
+					var _v4 = model.currentDocument;
+					if (_v4.$ === 'Just') {
+						var doc = _v4.a;
 						var updatedDoc = _Utils_update(
 							doc,
 							{content: model.sourceText, modifiedAt: model.currentTime, theme: model.theme, title: model.title});
@@ -54279,9 +54316,9 @@ var $author$project$Main$update = F2(
 						},
 						model.documents);
 					var needNewDoc = function () {
-						var _v4 = model.currentDocument;
-						if (_v4.$ === 'Just') {
-							var doc = _v4.a;
+						var _v5 = model.currentDocument;
+						if (_v5.$ === 'Just') {
+							var doc = _v5.a;
 							return _Utils_eq(doc.id, id);
 						} else {
 							return false;
@@ -54299,12 +54336,12 @@ var $author$project$Main$update = F2(
 						$author$project$Main$deleteDocument(id));
 				case 'DocumentsLoaded':
 					var value = msg.a;
-					var _v5 = A2(
+					var _v6 = A2(
 						$elm$json$Json$Decode$decodeValue,
 						$elm$json$Json$Decode$list($author$project$Document$documentDecoder),
 						value);
-					if (_v5.$ === 'Ok') {
-						var docs = _v5.a;
+					if (_v6.$ === 'Ok') {
+						var docs = _v6.a;
 						var announcementDoc = $elm$core$List$head(
 							A2(
 								$elm$core$List$filter,
@@ -54346,9 +54383,9 @@ var $author$project$Main$update = F2(
 					}
 				case 'DocumentLoaded':
 					var value = msg.a;
-					var _v7 = A2($elm$json$Json$Decode$decodeValue, $author$project$Document$documentDecoder, value);
-					if (_v7.$ === 'Ok') {
-						var doc = _v7.a;
+					var _v8 = A2($elm$json$Json$Decode$decodeValue, $author$project$Document$documentDecoder, value);
+					if (_v8.$ === 'Ok') {
+						var doc = _v8.a;
 						var editRecord = A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, model.currentLanguage, doc.content);
 						return _Utils_Tuple2(
 							_Utils_update(
@@ -54356,14 +54393,13 @@ var $author$project$Main$update = F2(
 								{
 									compilerOutput: A4(
 										$author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput,
-										$author$project$Theme$mapTheme(doc.theme),
+										$author$project$Theme$mapTheme(model.theme),
 										$author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
 										model.displaySettings,
 										editRecord),
 									currentDocument: $elm$core$Maybe$Just(doc),
 									editRecord: editRecord,
 									sourceText: doc.content,
-									theme: doc.theme,
 									title: doc.title
 								}),
 							$elm$core$Platform$Cmd$none);
@@ -54377,9 +54413,9 @@ var $author$project$Main$update = F2(
 							{showDocumentList: !model.showDocumentList}),
 						$elm$core$Platform$Cmd$none);
 				case 'AutoSave':
-					var _v8 = model.currentDocument;
-					if (_v8.$ === 'Just') {
-						var doc = _v8.a;
+					var _v9 = model.currentDocument;
+					if (_v9.$ === 'Just') {
+						var doc = _v9.a;
 						if (!_Utils_eq(model.sourceText, doc.content)) {
 							var $temp$msg = $author$project$Main$SaveDocument,
 								$temp$model = model;
@@ -54429,7 +54465,7 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(
 						model,
 						A3($elm$file$File$Download$string, 'process_images.sh', 'application/x-sh', $author$project$AppData$processImagesText));
-				default:
+				case 'InitialDocumentId':
 					var content = msg.a;
 					var title = msg.b;
 					var currentTime = msg.c;
@@ -54444,6 +54480,29 @@ var $author$project$Main$update = F2(
 							}),
 						$author$project$Main$saveDocument(
 							$author$project$Document$encodeDocument(initialDoc)));
+				default:
+					var themeStr = msg.a;
+					var newTheme = function () {
+						switch (themeStr) {
+							case 'light':
+								return $author$project$Theme$Light;
+							case 'dark':
+								return $author$project$Theme$Dark;
+							default:
+								return $author$project$Theme$Dark;
+						}
+					}();
+					var newCompilerOutput = A4(
+						$author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput,
+						$author$project$Theme$mapTheme(newTheme),
+						$author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
+						model.displaySettings,
+						model.editRecord);
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{compilerOutput: newCompilerOutput, theme: newTheme}),
+						$elm$core$Platform$Cmd$none);
 			}
 		}
 	});
@@ -55803,10 +55862,17 @@ var $mdgriffith$elm_ui$Element$map = $mdgriffith$elm_ui$Internal$Model$map;
 var $author$project$Main$DownloadScript = {$: 'DownloadScript'};
 var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
 var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
+var $author$project$Main$buttonBackgroundColor = function (theme) {
+	if (theme.$ === 'Light') {
+		return A3($mdgriffith$elm_ui$Element$rgb255, 25, 25, 35);
+	} else {
+		return $author$project$Main$backgroundColor(theme);
+	}
+};
 var $author$project$Main$ToggleDocumentList = {$: 'ToggleDocumentList'};
 var $author$project$Main$buttonTextColor = function (theme) {
 	if (theme.$ === 'Light') {
-		return A3($mdgriffith$elm_ui$Element$rgb255, 255, 140, 0);
+		return A3($mdgriffith$elm_ui$Element$rgb255, 255, 165, 0);
 	} else {
 		return A3($mdgriffith$elm_ui$Element$rgb255, 255, 165, 0);
 	}
@@ -55828,7 +55894,7 @@ var $author$project$Main$listButton = function (model) {
 		_List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$Background$color(
-				$author$project$Main$backgroundColor(model.theme)),
+				$author$project$Main$buttonBackgroundColor(model.theme)),
 				$mdgriffith$elm_ui$Element$Font$color(
 				$author$project$Main$buttonTextColor(model.theme)),
 				A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
@@ -55868,7 +55934,7 @@ var $author$project$Main$newButton = function (model) {
 		_List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$Background$color(
-				$author$project$Main$backgroundColor(model.theme)),
+				$author$project$Main$buttonBackgroundColor(model.theme)),
 				$mdgriffith$elm_ui$Element$Font$color(
 				$author$project$Main$buttonTextColor(model.theme)),
 				A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
@@ -55908,7 +55974,7 @@ var $author$project$Main$saveButton = function (model) {
 		_List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$Background$color(
-				$author$project$Main$backgroundColor(model.theme)),
+				$author$project$Main$buttonBackgroundColor(model.theme)),
 				$mdgriffith$elm_ui$Element$Font$color(
 				$author$project$Main$buttonTextColor(model.theme)),
 				A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
@@ -55970,31 +56036,44 @@ var $author$project$Main$formatTime = function (time) {
 var $author$project$Main$documentItem = F2(
 	function (model, doc) {
 		var isActive = function () {
-			var _v0 = model.currentDocument;
-			if (_v0.$ === 'Just') {
-				var currentDoc = _v0.a;
+			var _v1 = model.currentDocument;
+			if (_v1.$ === 'Just') {
+				var currentDoc = _v1.a;
 				return _Utils_eq(currentDoc.id, doc.id);
 			} else {
 				return false;
 			}
 		}();
-		var bgColor = isActive ? A3($mdgriffith$elm_ui$Element$rgb, 0.3, 0.3, 0.5) : A4($mdgriffith$elm_ui$Element$rgba, 0, 0, 0, 0);
+		var borderAttrs = isActive ? _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$Border$width(1),
+				$mdgriffith$elm_ui$Element$Border$color(
+				function () {
+					var _v0 = model.theme;
+					if (_v0.$ === 'Light') {
+						return A3($mdgriffith$elm_ui$Element$rgb255, 64, 64, 64);
+					} else {
+						return A3($mdgriffith$elm_ui$Element$rgb255, 220, 220, 220);
+					}
+				}())
+			]) : _List_Nil;
 		return A2(
 			$mdgriffith$elm_ui$Element$row,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$padding(8),
-					$mdgriffith$elm_ui$Element$Background$color(bgColor),
-					$mdgriffith$elm_ui$Element$Border$rounded(4),
-					$mdgriffith$elm_ui$Element$spacing(8),
-					$mdgriffith$elm_ui$Element$mouseOver(
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$Background$color(
-							A3($mdgriffith$elm_ui$Element$rgb, 0.4, 0.4, 0.5))
-						]))
-				]),
+			_Utils_ap(
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+						$mdgriffith$elm_ui$Element$padding(8),
+						$mdgriffith$elm_ui$Element$Border$rounded(4),
+						$mdgriffith$elm_ui$Element$spacing(8),
+						$mdgriffith$elm_ui$Element$mouseOver(
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Background$color(
+								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2))
+							]))
+					]),
+				borderAttrs),
 			_List_fromArray(
 				[
 					A2(
@@ -56055,7 +56134,7 @@ var $author$project$Main$documentItem = F2(
 	});
 var $author$project$Main$electricBlueColor = function (theme) {
 	if (theme.$ === 'Light') {
-		return A3($mdgriffith$elm_ui$Element$rgb255, 0, 123, 255);
+		return A3($mdgriffith$elm_ui$Element$rgb255, 20, 123, 255);
 	} else {
 		return A3($mdgriffith$elm_ui$Element$rgb255, 0, 191, 255);
 	}
@@ -56077,7 +56156,7 @@ var $author$project$Main$exportStuff = function (model) {
 				_List_fromArray(
 					[
 						$mdgriffith$elm_ui$Element$Background$color(
-						$author$project$Main$backgroundColor(model.theme)),
+						$author$project$Main$buttonBackgroundColor(model.theme)),
 						$mdgriffith$elm_ui$Element$Font$color(
 						$author$project$Main$buttonTextColor(model.theme)),
 						A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
@@ -56115,7 +56194,7 @@ var $author$project$Main$exportStuff = function (model) {
 				_List_fromArray(
 					[
 						$mdgriffith$elm_ui$Element$Background$color(
-						$author$project$Main$backgroundColor(model.theme)),
+						$author$project$Main$buttonBackgroundColor(model.theme)),
 						$mdgriffith$elm_ui$Element$Font$color(
 						$author$project$Main$buttonTextColor(model.theme)),
 						A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
@@ -56150,6 +56229,17 @@ var $author$project$Main$exportStuff = function (model) {
 				})
 			]));
 };
+var $author$project$Main$rightPanelBackgroundColor = function (theme) {
+	if (theme.$ === 'Light') {
+		return A3($mdgriffith$elm_ui$Element$rgb255, 230, 230, 230);
+	} else {
+		return $author$project$Main$backgroundColor(theme);
+	}
+};
+var $author$project$Main$rightPanelBackground_ = function (model) {
+	return $mdgriffith$elm_ui$Element$Background$color(
+		$author$project$Main$rightPanelBackgroundColor(model.theme));
+};
 var $author$project$Main$sidebar = function (model) {
 	var forceColorStyle = function () {
 		var _v1 = model.theme;
@@ -56171,7 +56261,7 @@ var $author$project$Main$sidebar = function (model) {
 				$mdgriffith$elm_ui$Element$Font$color(
 				$author$project$Main$textColor(model.theme)),
 				$mdgriffith$elm_ui$Element$Font$size(14),
-				$author$project$Main$background_(model),
+				$author$project$Main$rightPanelBackground_(model),
 				forceColorStyle,
 				$mdgriffith$elm_ui$Element$Border$widthEach(
 				{bottom: 0, left: 1, right: 0, top: 0}),
@@ -56267,7 +56357,7 @@ var $author$project$Main$sidebar = function (model) {
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$Background$color(
-								$author$project$Main$backgroundColor(model.theme)),
+								$author$project$Main$buttonBackgroundColor(model.theme)),
 								$mdgriffith$elm_ui$Element$Font$color(
 								$author$project$Main$electricBlueColor(model.theme)),
 								A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
@@ -56411,11 +56501,24 @@ _Platform_export({'Main':{'init':$author$project$Main$main(
 		function (window) {
 			return A2(
 				$elm$json$Json$Decode$andThen,
-				function (currentTime) {
-					return $elm$json$Json$Decode$succeed(
-						{currentTime: currentTime, window: window});
+				function (theme) {
+					return A2(
+						$elm$json$Json$Decode$andThen,
+						function (currentTime) {
+							return $elm$json$Json$Decode$succeed(
+								{currentTime: currentTime, theme: theme, window: window});
+						},
+						A2($elm$json$Json$Decode$field, 'currentTime', $elm$json$Json$Decode$int));
 				},
-				A2($elm$json$Json$Decode$field, 'currentTime', $elm$json$Json$Decode$int));
+				A2(
+					$elm$json$Json$Decode$field,
+					'theme',
+					$elm$json$Json$Decode$oneOf(
+						_List_fromArray(
+							[
+								$elm$json$Json$Decode$null($elm$core$Maybe$Nothing),
+								A2($elm$json$Json$Decode$map, $elm$core$Maybe$Just, $elm$json$Json$Decode$string)
+							]))));
 		},
 		A2(
 			$elm$json$Json$Decode$field,
