@@ -5656,12 +5656,17 @@ var $elm$json$Json$Decode$field = _Json_decodeField;
 var $author$project$Theme$Dark = {$: 'Dark'};
 var $author$project$ScriptaV2$Language$EnclosureLang = {$: 'EnclosureLang'};
 var $author$project$Theme$Light = {$: 'Light'};
+var $author$project$Main$LoadUserNameDelayed = {$: 'LoadUserNameDelayed'};
 var $author$project$ScriptaV2$Compiler$SuppressDocumentBlocks = {$: 'SuppressDocumentBlocks'};
 var $author$project$Main$Tick = function (a) {
 	return {$: 'Tick', a: a};
 };
+var $elm$core$Basics$always = F2(
+	function (a, _v0) {
+		return a;
+	});
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$AppData$defaultDocumentText = '| title number-to-level:0\nAnnouncement\n\n[vspace 30]\n[large [italic This is what you can do with Scripta Live:]]\n\n| image figure:1 caption: Humming bird\nhttps://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n\n| equation numbered\n\\label{wave-equation}\nsecpder(u,x) + secpder(u,y) + secpder(u,z) = frac(1,c^2) secpder(u,t))  quad "Wave Equation"\n\n[large [i Make beautiful things with simply simple tools...]][vspace 30]\n\n\n# About Scripta Live\n\nScripta is a markup language much like LaTeX, but with a simplified, ergonomic syntax.\nBetter yet: what you write (here, on the left) is rendered\n[i instantaneously ] in the right-hand window pane. No setup required.\nJust click the "New" button and start writing.\n\n- Your documents are saved in the browser\'s local storage.  If you refresh the\nbrowser or close it and come back to it later, it weill be there, waiting for you..\n\n- Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.\n\n- Scripta documents can be exported to standard LaTeX.  If there are no images\nin the document, it can be turned into a pdf file using `pdflatex`.  Otherwise,\nuse the downloadable shell script — get it by clicking on the button  [blue Download Script],\nlower right corner.  We\nwill soon proved a simpler solution.\n\n\n# Examples\n\n| mathmacros\nsecpder:  frac(partial^2 #1, partial #2^2)\nnat:    mathbb N\nreals: mathbb R\npder:  frac(partial #1, partial #2)\nset:    \\{ #1 \\}\nsett:   \\{ #1 \\ | \\ #2 \\}\n\nPythagoras said: $a^2 + b^2 = c^2$.\n\nThis will be on the test:\n\n| equation\nint_0^1 x^n dx = frac(1,n+1)\n\nand so will this:\n\nBoth of the above equalities were written using an `equation` block.  If you look\nat the source text you will see that [eqref wave-equation] an [u argument] `numbered` and\na property, namely  `label:wave-equation`. That property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\nto see what happens.\n\nHere is an [u aligned] block:\n\n| aligned\nnat &= set("positive whole numbers and zero")\nnat &= sett(n " is a whole number", n > 0)\n\n\n| equation\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n=\n\\begin{pmatrix}\n5 & 4 \\\\\n4 & 5\n\\end{pmatrix}\n\n\n\n\n';
+var $author$project$AppData$defaultDocumentText = '| title number-to-level:0\nAnnouncement\n\n[vspace 30]\n[large [italic This is what you can do with Scripta Live:]]\n\n| image figure:1 caption: Humming bird\nhttps://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n\n| equation numbered\n\\label{wave-equation}\nsecpder(u,x) + secpder(u,y) + secpder(u,z) = frac(1,c^2) secpder(u,t))  quad "Wave Equation"\n\n[large [i Make beautiful things with simple tools...]][vspace 30]\n\n\n# About Scripta Live\n\nScripta is a markup language much like LaTeX, but with a simplified, ergonomic syntax.\nBetter yet: what you write (here, on the left) is rendered\n[i instantaneously ] in the right-hand window pane. No setup required.\nJust click the "New" button and start writing.\n\n- Your documents are saved in the browser\'s local storage.  If you refresh the\nbrowser or close it and come back to it later, it weill be there, waiting for you..\n\n- Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.\n\n- Scripta documents can be exported to standard LaTeX.  If there are no images\nin the document, it can be turned into a pdf file using `pdflatex`.  Otherwise,\nuse the downloadable shell script — get it by clicking on the button  [blue Download Script],\nlower right corner.  We\nwill soon proved a simpler solution.\n\n\n# Examples\n\n| mathmacros\nsecpder:  frac(partial^2 #1, partial #2^2)\nnat:    mathbb N\nreals: mathbb R\npder:  frac(partial #1, partial #2)\nset:    \\{ #1 \\}\nsett:   \\{ #1 \\ | \\ #2 \\}\n\nPythagoras said: $a^2 + b^2 = c^2$.\n\nThis will be on the test:\n\n| equation\nint_0^1 x^n dx = frac(1,n+1)\n\nand so will this:\n\nBoth of the above equalities were written using an `equation` block.  If you look\nat the source text you will see that [eqref wave-equation] an [u argument] `numbered` and\na property, namely  `label:wave-equation`. That property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\nto see what happens.\n\nHere is an [u aligned] block:\n\n| aligned\nnat &= set("positive whole numbers and zero")\nnat &= sett(n " is a whole number", n > 0)\n\n\n| equation\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n=\n\\begin{pmatrix}\n5 & 4 \\\\\n4 & 5\n\\end{pmatrix}\n\n\n\n\n';
 var $author$project$Generic$Language$Ordinary = function (a) {
 	return {$: 'Ordinary', a: a};
 };
@@ -12565,10 +12570,6 @@ var $author$project$Generic$ASTTools$filterOutExpressionsOnName = F2(
 				return !A2($author$project$Generic$ASTTools$matchExprOnName, name, expr);
 			},
 			exprs);
-	});
-var $elm$core$Basics$always = F2(
-	function (a, _v0) {
-		return a;
 	});
 var $mdgriffith$elm_ui$Internal$Model$unstyled = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Unstyled, $elm$core$Basics$always);
 var $mdgriffith$elm_ui$Element$html = $mdgriffith$elm_ui$Internal$Model$unstyled;
@@ -50182,11 +50183,6 @@ var $author$project$Main$loadDocuments = _Platform_outgoingPort(
 	function ($) {
 		return $elm$json$Json$Encode$null;
 	});
-var $author$project$Main$loadUserName = _Platform_outgoingPort(
-	'loadUserName',
-	function ($) {
-		return $elm$json$Json$Encode$null;
-	});
 var $author$project$Render$Theme$Dark = {$: 'Dark'};
 var $author$project$Render$Theme$Light = {$: 'Light'};
 var $author$project$Theme$mapTheme = function (theme) {
@@ -50217,6 +50213,7 @@ var $elm$time$Time$Zone = F2(
 	});
 var $elm$time$Time$customZone = $elm$time$Time$Zone;
 var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
+var $elm$core$Process$sleep = _Process_sleep;
 var $author$project$Main$init = function (flags) {
 	var theme = function () {
 		var _v0 = flags.theme;
@@ -50274,9 +50271,9 @@ var $author$project$Main$init = function (flags) {
 					$author$project$Main$loadDocuments(_Utils_Tuple0),
 					A2($elm$core$Task$perform, $author$project$Main$Tick, $elm$time$Time$now),
 					A2(
-					$elm$core$Debug$log,
-					'@@!!@@ Loading username at init',
-					$author$project$Main$loadUserName(_Utils_Tuple0))
+					$elm$core$Task$perform,
+					$elm$core$Basics$always($author$project$Main$LoadUserNameDelayed),
+					$elm$core$Process$sleep(100))
 				])));
 };
 var $elm$json$Json$Decode$int = _Json_decodeInt;
@@ -53447,6 +53444,11 @@ var $author$project$Main$jumpToTopOf = function (id) {
 };
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $author$project$Main$loadDocument = _Platform_outgoingPort('loadDocument', $elm$json$Json$Encode$string);
+var $author$project$Main$loadUserName = _Platform_outgoingPort(
+	'loadUserName',
+	function ($) {
+		return $elm$json$Json$Encode$null;
+	});
 var $author$project$Document$newDocument = F6(
 	function (id, title, author, content, theme, now) {
 		return {author: author, content: content, createdAt: now, id: id, modifiedAt: now, theme: theme, title: title};
@@ -54529,7 +54531,7 @@ var $author$project$Main$update = F2(
 							model,
 							{userName: name}),
 						$author$project$Main$saveUserName(name));
-				default:
+				case 'UserNameLoaded':
 					var name = msg.a;
 					var _v11 = A2($elm$core$Debug$log, '@@!!@@ UserNameLoaded received', name);
 					return _Utils_Tuple2(
@@ -54537,6 +54539,13 @@ var $author$project$Main$update = F2(
 							model,
 							{userName: name}),
 						$elm$core$Platform$Cmd$none);
+				default:
+					return _Utils_Tuple2(
+						model,
+						A2(
+							$elm$core$Debug$log,
+							'@@!!@@ Loading username after delay',
+							$author$project$Main$loadUserName(_Utils_Tuple0)));
 			}
 		}
 	});
