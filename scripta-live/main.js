@@ -5655,16 +5655,12 @@ var $elm$browser$Browser$element = _Browser_element;
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $author$project$Theme$Dark = {$: 'Dark'};
 var $author$project$ScriptaV2$Language$EnclosureLang = {$: 'EnclosureLang'};
-var $author$project$Main$InitialDocumentId = F5(
-	function (a, b, c, d, e) {
-		return {$: 'InitialDocumentId', a: a, b: b, c: c, d: d, e: e};
-	});
 var $author$project$ScriptaV2$Compiler$SuppressDocumentBlocks = {$: 'SuppressDocumentBlocks'};
 var $author$project$Main$Tick = function (a) {
 	return {$: 'Tick', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$AppData$defaultDocumentText = '|| title number-to-level:0\nAnnouncement\n\n[vspace 30]\n[large [italic This is what you can do with Scripta Live:]]\n\n| image figure:1 caption: Humming bird\nhttps://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n\n| equation numbered\n\\label{wave-equation}\nsecpder(u,x) + secpder(u,y) + secpder(u,z) = frac(1,c^2) secpder(u,t))  quad "Wave Equation"\n\n[large [i Beautiful things, created simply ...]][vspace 30]\n\n\n# About Scripta\n\nScripta is a markup language much like LaTeX, but with a simplified, ergonomic syntax — not the usual swarm backslashes and  curly braces (see examples below).  Better yet: what you write (here, on the left) is rendered\n[i instantaneously ] in the right-hand window pane.\n\n- Your documents are saved in the browser\'s local storage.  If you refresh the\nbrowser or close it and com back to it later, it weill be there, waiting for you..\n\n- Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.\n\n- Scripta documents can be exported to standard LaTeX.  If there are no images\nin the document, it can be turned into a pdf file using `pdflatex`.  Otherwise,\nuse the downloadable shell scrip;t — use the button  [blue Download Script]\nto download a text file that provides both instructions and a shell script.  We\nwill soon proved a simpler solution.\n\n\n# Examples\n\n| mathmacros\nsecpder:  frac(partial^2 #1, partial #2^2)\nnat:    mathbb N\nreals: mathbb R\npder:  frac(partial #1, partial #2)\nset:    \\{ #1 \\}\nsett:   \\{ #1 \\ | \\ #2 \\}\n\nPythagoras said: $a^2 + b^2 = c^2$.\n\nThis will be on the test:\n\n| equation\nint_0^1 x^n dx = frac(1,n+1)\n\nand so will this:\n\nBoth of the above equalities were written using an `equation` block.  If you look\nat the source text you will see that [eqref wave-equation] an [u argument] `numbered` and\na property, namely  `label:wave-equation`. That property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\nto see what happens.\n\nHere is an [u aligned] block:\n\n| aligned\nnat &= set("positive whole numbers and zero")\nnat &= sett(n " is a whole number", n > 0)\n\n\n| equation\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n=\n\\begin{pmatrix}\n5 & 4 \\\\\n4 & 5\n\\end{pmatrix}\n\n\n\n\n';
+var $author$project$AppData$defaultDocumentText = '|| title number-to-level:0\nAnnouncement\n\n[vspace 30]\n[large [italic This is what you can do with Scripta Live:]]\n\n| image figure:1 caption: Humming bird\nhttps://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n\n| equation numbered\n\\label{wave-equation}\nsecpder(u,x) + secpder(u,y) + secpder(u,z) = frac(1,c^2) secpder(u,t))  quad "Wave Equation"\n\n[large [i Beautiful things, created simply ...]][vspace 30]\n\n\n# About Scripta\n\nScripta is a markup language much like LaTeX, but with a simplified, ergonomic syntax — not the usual swarm backslashes and  curly braces (see examples below).  Better yet: what you write (here, on the left) is rendered\n[i instantaneously ] in the right-hand window pane.\n\n- Your documents are saved in the browser\'s local storage.  If you refresh the\nbrowser or close it and com back to it later, it weill be there, waiting for you..\n\n- Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.\n\n- Scripta documents can be exported to standard LaTeX.  If there are no images\nin the document, it can be turned into a pdf file using `pdflatex`.  Otherwise,\nuse the downloadable shell script — use the button  [blue Download Script]\nto download a text file that provides both instructions and a shell script.  We\nwill soon proved a simpler solution.\n\n\n# Examples\n\n| mathmacros\nsecpder:  frac(partial^2 #1, partial #2^2)\nnat:    mathbb N\nreals: mathbb R\npder:  frac(partial #1, partial #2)\nset:    \\{ #1 \\}\nsett:   \\{ #1 \\ | \\ #2 \\}\n\nPythagoras said: $a^2 + b^2 = c^2$.\n\nThis will be on the test:\n\n| equation\nint_0^1 x^n dx = frac(1,n+1)\n\nand so will this:\n\nBoth of the above equalities were written using an `equation` block.  If you look\nat the source text you will see that [eqref wave-equation] an [u argument] `numbered` and\na property, namely  `label:wave-equation`. That property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\nto see what happens.\n\nHere is an [u aligned] block:\n\n| aligned\nnat &= set("positive whole numbers and zero")\nnat &= sett(n " is a whole number", n > 0)\n\n\n| equation\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n=\n\\begin{pmatrix}\n5 & 4 \\\\\n4 & 5\n\\end{pmatrix}\n\n\n\n\n';
 var $author$project$Generic$Language$Ordinary = function (a) {
 	return {$: 'Ordinary', a: a};
 };
@@ -35898,148 +35894,6 @@ var $author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput = 
 			toc: toc
 		};
 	});
-var $elm$random$Random$Generate = function (a) {
-	return {$: 'Generate', a: a};
-};
-var $elm$random$Random$Seed = F2(
-	function (a, b) {
-		return {$: 'Seed', a: a, b: b};
-	});
-var $elm$random$Random$next = function (_v0) {
-	var state0 = _v0.a;
-	var incr = _v0.b;
-	return A2($elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
-};
-var $elm$random$Random$initialSeed = function (x) {
-	var _v0 = $elm$random$Random$next(
-		A2($elm$random$Random$Seed, 0, 1013904223));
-	var state1 = _v0.a;
-	var incr = _v0.b;
-	var state2 = (state1 + x) >>> 0;
-	return $elm$random$Random$next(
-		A2($elm$random$Random$Seed, state2, incr));
-};
-var $elm$time$Time$Name = function (a) {
-	return {$: 'Name', a: a};
-};
-var $elm$time$Time$Offset = function (a) {
-	return {$: 'Offset', a: a};
-};
-var $elm$time$Time$Zone = F2(
-	function (a, b) {
-		return {$: 'Zone', a: a, b: b};
-	});
-var $elm$time$Time$customZone = $elm$time$Time$Zone;
-var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
-var $elm$random$Random$init = A2(
-	$elm$core$Task$andThen,
-	function (time) {
-		return $elm$core$Task$succeed(
-			$elm$random$Random$initialSeed(
-				$elm$time$Time$posixToMillis(time)));
-	},
-	$elm$time$Time$now);
-var $elm$random$Random$step = F2(
-	function (_v0, seed) {
-		var generator = _v0.a;
-		return generator(seed);
-	});
-var $elm$random$Random$onEffects = F3(
-	function (router, commands, seed) {
-		if (!commands.b) {
-			return $elm$core$Task$succeed(seed);
-		} else {
-			var generator = commands.a.a;
-			var rest = commands.b;
-			var _v1 = A2($elm$random$Random$step, generator, seed);
-			var value = _v1.a;
-			var newSeed = _v1.b;
-			return A2(
-				$elm$core$Task$andThen,
-				function (_v2) {
-					return A3($elm$random$Random$onEffects, router, rest, newSeed);
-				},
-				A2($elm$core$Platform$sendToApp, router, value));
-		}
-	});
-var $elm$random$Random$onSelfMsg = F3(
-	function (_v0, _v1, seed) {
-		return $elm$core$Task$succeed(seed);
-	});
-var $elm$random$Random$Generator = function (a) {
-	return {$: 'Generator', a: a};
-};
-var $elm$random$Random$map = F2(
-	function (func, _v0) {
-		var genA = _v0.a;
-		return $elm$random$Random$Generator(
-			function (seed0) {
-				var _v1 = genA(seed0);
-				var a = _v1.a;
-				var seed1 = _v1.b;
-				return _Utils_Tuple2(
-					func(a),
-					seed1);
-			});
-	});
-var $elm$random$Random$cmdMap = F2(
-	function (func, _v0) {
-		var generator = _v0.a;
-		return $elm$random$Random$Generate(
-			A2($elm$random$Random$map, func, generator));
-	});
-_Platform_effectManagers['Random'] = _Platform_createManager($elm$random$Random$init, $elm$random$Random$onEffects, $elm$random$Random$onSelfMsg, $elm$random$Random$cmdMap);
-var $elm$random$Random$command = _Platform_leaf('Random');
-var $elm$random$Random$generate = F2(
-	function (tagger, generator) {
-		return $elm$random$Random$command(
-			$elm$random$Random$Generate(
-				A2($elm$random$Random$map, tagger, generator)));
-	});
-var $elm$core$Bitwise$xor = _Bitwise_xor;
-var $elm$random$Random$peel = function (_v0) {
-	var state = _v0.a;
-	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
-	return ((word >>> 22) ^ word) >>> 0;
-};
-var $elm$random$Random$int = F2(
-	function (a, b) {
-		return $elm$random$Random$Generator(
-			function (seed0) {
-				var _v0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
-				var lo = _v0.a;
-				var hi = _v0.b;
-				var range = (hi - lo) + 1;
-				if (!((range - 1) & range)) {
-					return _Utils_Tuple2(
-						(((range - 1) & $elm$random$Random$peel(seed0)) >>> 0) + lo,
-						$elm$random$Random$next(seed0));
-				} else {
-					var threshhold = (((-range) >>> 0) % range) >>> 0;
-					var accountForBias = function (seed) {
-						accountForBias:
-						while (true) {
-							var x = $elm$random$Random$peel(seed);
-							var seedN = $elm$random$Random$next(seed);
-							if (_Utils_cmp(x, threshhold) < 0) {
-								var $temp$seed = seedN;
-								seed = $temp$seed;
-								continue accountForBias;
-							} else {
-								return _Utils_Tuple2((x % range) + lo, seedN);
-							}
-						}
-					};
-					return accountForBias(seed0);
-				}
-			});
-	});
-var $author$project$Main$generateId = A2(
-	$elm$random$Random$map,
-	function (n) {
-		return 'doc-' + $elm$core$String$fromInt(n);
-	},
-	A2($elm$random$Random$int, 100000, 999999));
 var $elm_community$list_extra$List$Extra$dropWhile = F2(
 	function (predicate, list) {
 		dropWhile:
@@ -50345,6 +50199,18 @@ var $author$project$Main$normalize = function (input) {
 			$elm$core$String$trim,
 			$elm$core$String$lines(input)));
 };
+var $elm$time$Time$Name = function (a) {
+	return {$: 'Name', a: a};
+};
+var $elm$time$Time$Offset = function (a) {
+	return {$: 'Offset', a: a};
+};
+var $elm$time$Time$Zone = F2(
+	function (a, b) {
+		return {$: 'Zone', a: a, b: b};
+	});
+var $elm$time$Time$customZone = $elm$time$Time$Zone;
+var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
 var $author$project$Main$init = function (flags) {
 	var theme = $author$project$Theme$Dark;
 	var normalizedTex = $author$project$Main$normalize($author$project$AppData$defaultDocumentText);
@@ -50381,11 +50247,7 @@ var $author$project$Main$init = function (flags) {
 			_List_fromArray(
 				[
 					$author$project$Main$loadDocuments(_Utils_Tuple0),
-					A2($elm$core$Task$perform, $author$project$Main$Tick, $elm$time$Time$now),
-					A2(
-					$elm$random$Random$generate,
-					A4($author$project$Main$InitialDocumentId, normalizedTex, title_, currentTime, theme),
-					$author$project$Main$generateId)
+					A2($elm$core$Task$perform, $author$project$Main$Tick, $elm$time$Time$now)
 				])));
 };
 var $elm$json$Json$Decode$int = _Json_decodeInt;
@@ -50867,8 +50729,13 @@ var $author$project$Main$CreateNewDocument = {$: 'CreateNewDocument'};
 var $author$project$Main$GeneratedId = function (a) {
 	return {$: 'GeneratedId', a: a};
 };
+var $author$project$Main$InitialDocumentId = F5(
+	function (a, b, c, d, e) {
+		return {$: 'InitialDocumentId', a: a, b: b, c: c, d: d, e: e};
+	});
 var $author$project$Theme$Light = {$: 'Light'};
 var $author$project$Main$SaveDocument = {$: 'SaveDocument'};
+var $author$project$Main$ToggleTheme = {$: 'ToggleTheme'};
 var $elm$json$Json$Decode$decodeValue = _Json_run;
 var $author$project$Main$deleteDocument = _Platform_outgoingPort('deleteDocument', $elm$json$Json$Encode$string);
 var $author$project$Document$Document = F7(
@@ -53375,6 +53242,136 @@ var $author$project$Render$Export$LaTeX$export = F3(
 		}();
 		return A2($author$project$Render$Export$Preamble$make, rawBlockNames, expressionNames) + (A2($author$project$Render$Export$LaTeX$frontMatter, currentTime, ast) + (setTheFirstSection + ($author$project$Render$Export$LaTeX$tableofcontents(rawBlockNames) + ('\n\n' + (A2($author$project$Render$Export$LaTeX$rawExport, settings, ast) + '\n\n\\end{document}\n')))));
 	});
+var $elm$random$Random$Generate = function (a) {
+	return {$: 'Generate', a: a};
+};
+var $elm$random$Random$Seed = F2(
+	function (a, b) {
+		return {$: 'Seed', a: a, b: b};
+	});
+var $elm$random$Random$next = function (_v0) {
+	var state0 = _v0.a;
+	var incr = _v0.b;
+	return A2($elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
+};
+var $elm$random$Random$initialSeed = function (x) {
+	var _v0 = $elm$random$Random$next(
+		A2($elm$random$Random$Seed, 0, 1013904223));
+	var state1 = _v0.a;
+	var incr = _v0.b;
+	var state2 = (state1 + x) >>> 0;
+	return $elm$random$Random$next(
+		A2($elm$random$Random$Seed, state2, incr));
+};
+var $elm$random$Random$init = A2(
+	$elm$core$Task$andThen,
+	function (time) {
+		return $elm$core$Task$succeed(
+			$elm$random$Random$initialSeed(
+				$elm$time$Time$posixToMillis(time)));
+	},
+	$elm$time$Time$now);
+var $elm$random$Random$step = F2(
+	function (_v0, seed) {
+		var generator = _v0.a;
+		return generator(seed);
+	});
+var $elm$random$Random$onEffects = F3(
+	function (router, commands, seed) {
+		if (!commands.b) {
+			return $elm$core$Task$succeed(seed);
+		} else {
+			var generator = commands.a.a;
+			var rest = commands.b;
+			var _v1 = A2($elm$random$Random$step, generator, seed);
+			var value = _v1.a;
+			var newSeed = _v1.b;
+			return A2(
+				$elm$core$Task$andThen,
+				function (_v2) {
+					return A3($elm$random$Random$onEffects, router, rest, newSeed);
+				},
+				A2($elm$core$Platform$sendToApp, router, value));
+		}
+	});
+var $elm$random$Random$onSelfMsg = F3(
+	function (_v0, _v1, seed) {
+		return $elm$core$Task$succeed(seed);
+	});
+var $elm$random$Random$Generator = function (a) {
+	return {$: 'Generator', a: a};
+};
+var $elm$random$Random$map = F2(
+	function (func, _v0) {
+		var genA = _v0.a;
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v1 = genA(seed0);
+				var a = _v1.a;
+				var seed1 = _v1.b;
+				return _Utils_Tuple2(
+					func(a),
+					seed1);
+			});
+	});
+var $elm$random$Random$cmdMap = F2(
+	function (func, _v0) {
+		var generator = _v0.a;
+		return $elm$random$Random$Generate(
+			A2($elm$random$Random$map, func, generator));
+	});
+_Platform_effectManagers['Random'] = _Platform_createManager($elm$random$Random$init, $elm$random$Random$onEffects, $elm$random$Random$onSelfMsg, $elm$random$Random$cmdMap);
+var $elm$random$Random$command = _Platform_leaf('Random');
+var $elm$random$Random$generate = F2(
+	function (tagger, generator) {
+		return $elm$random$Random$command(
+			$elm$random$Random$Generate(
+				A2($elm$random$Random$map, tagger, generator)));
+	});
+var $elm$core$Bitwise$xor = _Bitwise_xor;
+var $elm$random$Random$peel = function (_v0) {
+	var state = _v0.a;
+	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
+	return ((word >>> 22) ^ word) >>> 0;
+};
+var $elm$random$Random$int = F2(
+	function (a, b) {
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
+				var lo = _v0.a;
+				var hi = _v0.b;
+				var range = (hi - lo) + 1;
+				if (!((range - 1) & range)) {
+					return _Utils_Tuple2(
+						(((range - 1) & $elm$random$Random$peel(seed0)) >>> 0) + lo,
+						$elm$random$Random$next(seed0));
+				} else {
+					var threshhold = (((-range) >>> 0) % range) >>> 0;
+					var accountForBias = function (seed) {
+						accountForBias:
+						while (true) {
+							var x = $elm$random$Random$peel(seed);
+							var seedN = $elm$random$Random$next(seed);
+							if (_Utils_cmp(x, threshhold) < 0) {
+								var $temp$seed = seedN;
+								seed = $temp$seed;
+								continue accountForBias;
+							} else {
+								return _Utils_Tuple2((x % range) + lo, seedN);
+							}
+						}
+					};
+					return accountForBias(seed0);
+				}
+			});
+	});
+var $author$project$Main$generateId = A2(
+	$elm$random$Random$map,
+	function (n) {
+		return 'doc-' + $elm$core$String$fromInt(n);
+	},
+	A2($elm$random$Random$int, 100000, 999999));
 var $author$project$Main$NoOp = {$: 'NoOp'};
 var $elm$core$Task$onError = _Scheduler_onError;
 var $elm$core$Task$attempt = F2(
@@ -54138,22 +54135,16 @@ var $author$project$Main$update = F2(
 					var cmd = function () {
 						if (A2($elm$core$List$member, $ohanhi$keyboard$Keyboard$Control, pressedKeys) && A2(
 							$elm$core$List$member,
-							$ohanhi$keyboard$Keyboard$Character('E'),
+							$ohanhi$keyboard$Keyboard$Character('T'),
 							pressedKeys)) {
-							var settings = A6(
-								$author$project$Render$Settings$makeSettings,
-								$author$project$Theme$mapTheme(model.theme),
-								'-',
-								$elm$core$Maybe$Nothing,
-								1.0,
-								model.windowWidth,
-								$elm$core$Dict$empty);
-							var exportText = A3($author$project$Render$Export$LaTeX$export, model.currentTime, settings, model.editRecord.tree);
-							return A3($elm$file$File$Download$string, model.title + '.tex', 'application/x-latex', exportText);
+							return A2(
+								$elm$core$Task$perform,
+								$elm$core$Basics$always($author$project$Main$ToggleTheme),
+								$elm$core$Task$succeed(_Utils_Tuple0));
 						} else {
 							if (A2($elm$core$List$member, $ohanhi$keyboard$Keyboard$Control, pressedKeys) && A2(
 								$elm$core$List$member,
-								$ohanhi$keyboard$Keyboard$Character('R'),
+								$ohanhi$keyboard$Keyboard$Character('E'),
 								pressedKeys)) {
 								var settings = A6(
 									$author$project$Render$Settings$makeSettings,
@@ -54163,10 +54154,26 @@ var $author$project$Main$update = F2(
 									1.0,
 									model.windowWidth,
 									$elm$core$Dict$empty);
-								var exportText = A2($author$project$Render$Export$LaTeX$rawExport, settings, model.editRecord.tree);
+								var exportText = A3($author$project$Render$Export$LaTeX$export, model.currentTime, settings, model.editRecord.tree);
 								return A3($elm$file$File$Download$string, model.title + '.tex', 'application/x-latex', exportText);
 							} else {
-								return $elm$core$Platform$Cmd$none;
+								if (A2($elm$core$List$member, $ohanhi$keyboard$Keyboard$Control, pressedKeys) && A2(
+									$elm$core$List$member,
+									$ohanhi$keyboard$Keyboard$Character('R'),
+									pressedKeys)) {
+									var settings = A6(
+										$author$project$Render$Settings$makeSettings,
+										$author$project$Theme$mapTheme(model.theme),
+										'-',
+										$elm$core$Maybe$Nothing,
+										1.0,
+										model.windowWidth,
+										$elm$core$Dict$empty);
+									var exportText = A2($author$project$Render$Export$LaTeX$rawExport, settings, model.editRecord.tree);
+									return A3($elm$file$File$Download$string, model.title + '.tex', 'application/x-latex', exportText);
+								} else {
+									return $elm$core$Platform$Cmd$none;
+								}
 							}
 						}
 					}();
@@ -54298,19 +54305,50 @@ var $author$project$Main$update = F2(
 						value);
 					if (_v5.$ === 'Ok') {
 						var docs = _v5.a;
+						var announcementDoc = $elm$core$List$head(
+							A2(
+								$elm$core$List$filter,
+								function (doc) {
+									return doc.title === 'Announcement';
+								},
+								docs));
+						var cmd = function () {
+							if (announcementDoc.$ === 'Just') {
+								var existingDoc = announcementDoc.a;
+								var updatedDoc = _Utils_update(
+									existingDoc,
+									{
+										author: 'James Carlson',
+										content: $author$project$Main$normalize($author$project$AppData$defaultDocumentText),
+										modifiedAt: model.currentTime
+									});
+								return $author$project$Main$saveDocument(
+									$author$project$Document$encodeDocument(updatedDoc));
+							} else {
+								return A2(
+									$elm$random$Random$generate,
+									A4(
+										$author$project$Main$InitialDocumentId,
+										$author$project$Main$normalize($author$project$AppData$defaultDocumentText),
+										'Announcement',
+										model.currentTime,
+										model.theme),
+									$author$project$Main$generateId);
+							}
+						}();
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{documents: docs}),
-							$elm$core$Platform$Cmd$none);
+							cmd);
 					} else {
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					}
 				case 'DocumentLoaded':
 					var value = msg.a;
-					var _v6 = A2($elm$json$Json$Decode$decodeValue, $author$project$Document$documentDecoder, value);
-					if (_v6.$ === 'Ok') {
-						var doc = _v6.a;
+					var _v7 = A2($elm$json$Json$Decode$decodeValue, $author$project$Document$documentDecoder, value);
+					if (_v7.$ === 'Ok') {
+						var doc = _v7.a;
 						var editRecord = A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, model.currentLanguage, doc.content);
 						return _Utils_Tuple2(
 							_Utils_update(
@@ -54339,9 +54377,9 @@ var $author$project$Main$update = F2(
 							{showDocumentList: !model.showDocumentList}),
 						$elm$core$Platform$Cmd$none);
 				case 'AutoSave':
-					var _v7 = model.currentDocument;
-					if (_v7.$ === 'Just') {
-						var doc = _v7.a;
+					var _v8 = model.currentDocument;
+					if (_v8.$ === 'Just') {
+						var doc = _v8.a;
 						if (!_Utils_eq(model.sourceText, doc.content)) {
 							var $temp$msg = $author$project$Main$SaveDocument,
 								$temp$model = model;
