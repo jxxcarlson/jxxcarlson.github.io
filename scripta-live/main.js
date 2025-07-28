@@ -4641,6 +4641,52 @@ var _Regex_infinity = Infinity;
 
 
 
+function _Time_now(millisToPosix)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		callback(_Scheduler_succeed(millisToPosix(Date.now())));
+	});
+}
+
+var _Time_setInterval = F2(function(interval, task)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var id = setInterval(function() { _Scheduler_rawSpawn(task); }, interval);
+		return function() { clearInterval(id); };
+	});
+});
+
+function _Time_here()
+{
+	return _Scheduler_binding(function(callback)
+	{
+		callback(_Scheduler_succeed(
+			A2($elm$time$Time$customZone, -(new Date().getTimezoneOffset()), _List_Nil)
+		));
+	});
+}
+
+
+function _Time_getZoneName()
+{
+	return _Scheduler_binding(function(callback)
+	{
+		try
+		{
+			var name = $elm$time$Time$Name(Intl.DateTimeFormat().resolvedOptions().timeZone);
+		}
+		catch (e)
+		{
+			var name = $elm$time$Time$Offset(new Date().getTimezoneOffset());
+		}
+		callback(_Scheduler_succeed(name));
+	});
+}
+
+
+
 // DECODER
 
 var _File_decoder = _Json_decodePrim(function(value) {
@@ -5609,8 +5655,16 @@ var $elm$browser$Browser$element = _Browser_element;
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $author$project$Theme$Dark = {$: 'Dark'};
 var $author$project$ScriptaV2$Language$EnclosureLang = {$: 'EnclosureLang'};
+var $author$project$Main$InitialDocumentId = F5(
+	function (a, b, c, d, e) {
+		return {$: 'InitialDocumentId', a: a, b: b, c: c, d: d, e: e};
+	});
 var $author$project$ScriptaV2$Compiler$SuppressDocumentBlocks = {$: 'SuppressDocumentBlocks'};
-var $author$project$AppData$defaultDocumentText = '| title number-to-level:0\n       Announcement\n\n       [vspace 30]\n       [large [italic This is what you can do:]]\n\n       | image figure:1 caption: Humming bird\n       https://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n\n       | equation numbered\n       \\label{wave-equation}\n       secpder(u,x) + secpder(u,y) + secpder(u,z) = frac(1,c^2) secpder(u,t))  quad "Wave Equation"\n\n       [large [i Beautiful things, created simply ...]][vspace 30]\n\n\n       # About Scripta\n\n       Scripta is a markup language much like LaTeX, but with a simplified, ergonomic syntax — no backslashes, no curly braces (see examples below).\n       What you write (here, on the left) is rendered instantaneously in the right-hand window pane.\n\n       - You can\'t save documents right now, but you will be able to do that when Scripta.io goes into alpha release.\n\n       - Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.\n         Right now we are gathering bug reports and suggestions on the Scripta language.\n\n       - Press ctrl-E to export your file to LaTeX.\n       If your document has no images, you can run pdfatex on it as is. Otherwise, download the\n       shell script to process it using the button (upper right corner)\n\n\n       # Examples\n\n       | mathmacros\n       secpder:  frac(partial^2 #1, partial #2^2)\n       nat:    mathbb N\n       reals: mathbb R\n       pder:  frac(partial #1, partial #2)\n       set:    \\{ #1 \\}\n       sett:   \\{ #1 \\ | \\ #2 \\}\n\n       Pythagoras said: $a^2 + b^2 = c^2$.\n\n\n       This will be on the test:\n\n       | equation\n       int_0^1 x^n dx = frac(1,n+1)\n\n       and so will this:\n\n\n\n\n       Both of the above equalities were written using an `equation` block.  If you look\n       at the source text you will see that [eqref wave-equation] an [u argument] `numbered` and\n       a property, namely  `label:wave-equation`. That property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\n       to see what happens.\n\n       Here is an [u aligned] block:\n\n       | aligned\n       nat &= set("positive whole numbers and zero")\n       nat &= sett(n " is a whole number", n > 0)\n\n\n       | equation\n       \\begin{pmatrix}\n       2 & 1 \\\\\n       1 & 2\n       \\end{pmatrix}\n       \\begin{pmatrix}\n       2 & 1 \\\\\n       1 & 2\n       \\end{pmatrix}\n       =\n       \\begin{pmatrix}\n       5 & 4 \\\\\n       4 & 5\n       \\end{pmatrix}\n\n\n\n';
+var $author$project$Main$Tick = function (a) {
+	return {$: 'Tick', a: a};
+};
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $author$project$AppData$defaultDocumentText = '|| title number-to-level:0\nAnnouncement\n\n[vspace 30]\n[large [italic This is what you can do with Scripta Live:]]\n\n| image figure:1 caption: Humming bird\nhttps://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n\n| equation numbered\n\\label{wave-equation}\nsecpder(u,x) + secpder(u,y) + secpder(u,z) = frac(1,c^2) secpder(u,t))  quad "Wave Equation"\n\n[large [i Beautiful things, created simply ...]][vspace 30]\n\n\n# About Scripta\n\nScripta is a markup language much like LaTeX, but with a simplified, ergonomic syntax — not the usual swarm backslashes and  curly braces (see examples below).  Better yet: what you write (here, on the left) is rendered\n[i instantaneously ] in the right-hand window pane.\n\n- Your documents are saved in the browser\'s local storage.  If you refresh the\nbrowser or close it and com back to it later, it weill be there, waiting for you..\n\n- Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.\n\n- Scripta documents can be exported to standard LaTeX.  If there are no images\nin the document, it can be turned into a pdf file using `pdflatex`.  Otherwise,\nuse the downloadable shell scrip;t — use the button  [blue Download Script]\nto download a text file that provides both instructions and a shell script.  We\nwill soon proved a simpler solution.\n\n\n# Examples\n\n| mathmacros\nsecpder:  frac(partial^2 #1, partial #2^2)\nnat:    mathbb N\nreals: mathbb R\npder:  frac(partial #1, partial #2)\nset:    \\{ #1 \\}\nsett:   \\{ #1 \\ | \\ #2 \\}\n\nPythagoras said: $a^2 + b^2 = c^2$.\n\nThis will be on the test:\n\n| equation\nint_0^1 x^n dx = frac(1,n+1)\n\nand so will this:\n\nBoth of the above equalities were written using an `equation` block.  If you look\nat the source text you will see that [eqref wave-equation] an [u argument] `numbered` and\na property, namely  `label:wave-equation`. That property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\nto see what happens.\n\nHere is an [u aligned] block:\n\n| aligned\nnat &= set("positive whole numbers and zero")\nnat &= sett(n " is a whole number", n > 0)\n\n\n| equation\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n=\n\\begin{pmatrix}\n5 & 4 \\\\\n4 & 5\n\\end{pmatrix}\n\n\n\n\n';
 var $author$project$Generic$Language$Ordinary = function (a) {
 	return {$: 'Ordinary', a: a};
 };
@@ -35844,6 +35898,148 @@ var $author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput = 
 			toc: toc
 		};
 	});
+var $elm$random$Random$Generate = function (a) {
+	return {$: 'Generate', a: a};
+};
+var $elm$random$Random$Seed = F2(
+	function (a, b) {
+		return {$: 'Seed', a: a, b: b};
+	});
+var $elm$random$Random$next = function (_v0) {
+	var state0 = _v0.a;
+	var incr = _v0.b;
+	return A2($elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
+};
+var $elm$random$Random$initialSeed = function (x) {
+	var _v0 = $elm$random$Random$next(
+		A2($elm$random$Random$Seed, 0, 1013904223));
+	var state1 = _v0.a;
+	var incr = _v0.b;
+	var state2 = (state1 + x) >>> 0;
+	return $elm$random$Random$next(
+		A2($elm$random$Random$Seed, state2, incr));
+};
+var $elm$time$Time$Name = function (a) {
+	return {$: 'Name', a: a};
+};
+var $elm$time$Time$Offset = function (a) {
+	return {$: 'Offset', a: a};
+};
+var $elm$time$Time$Zone = F2(
+	function (a, b) {
+		return {$: 'Zone', a: a, b: b};
+	});
+var $elm$time$Time$customZone = $elm$time$Time$Zone;
+var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
+var $elm$random$Random$init = A2(
+	$elm$core$Task$andThen,
+	function (time) {
+		return $elm$core$Task$succeed(
+			$elm$random$Random$initialSeed(
+				$elm$time$Time$posixToMillis(time)));
+	},
+	$elm$time$Time$now);
+var $elm$random$Random$step = F2(
+	function (_v0, seed) {
+		var generator = _v0.a;
+		return generator(seed);
+	});
+var $elm$random$Random$onEffects = F3(
+	function (router, commands, seed) {
+		if (!commands.b) {
+			return $elm$core$Task$succeed(seed);
+		} else {
+			var generator = commands.a.a;
+			var rest = commands.b;
+			var _v1 = A2($elm$random$Random$step, generator, seed);
+			var value = _v1.a;
+			var newSeed = _v1.b;
+			return A2(
+				$elm$core$Task$andThen,
+				function (_v2) {
+					return A3($elm$random$Random$onEffects, router, rest, newSeed);
+				},
+				A2($elm$core$Platform$sendToApp, router, value));
+		}
+	});
+var $elm$random$Random$onSelfMsg = F3(
+	function (_v0, _v1, seed) {
+		return $elm$core$Task$succeed(seed);
+	});
+var $elm$random$Random$Generator = function (a) {
+	return {$: 'Generator', a: a};
+};
+var $elm$random$Random$map = F2(
+	function (func, _v0) {
+		var genA = _v0.a;
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v1 = genA(seed0);
+				var a = _v1.a;
+				var seed1 = _v1.b;
+				return _Utils_Tuple2(
+					func(a),
+					seed1);
+			});
+	});
+var $elm$random$Random$cmdMap = F2(
+	function (func, _v0) {
+		var generator = _v0.a;
+		return $elm$random$Random$Generate(
+			A2($elm$random$Random$map, func, generator));
+	});
+_Platform_effectManagers['Random'] = _Platform_createManager($elm$random$Random$init, $elm$random$Random$onEffects, $elm$random$Random$onSelfMsg, $elm$random$Random$cmdMap);
+var $elm$random$Random$command = _Platform_leaf('Random');
+var $elm$random$Random$generate = F2(
+	function (tagger, generator) {
+		return $elm$random$Random$command(
+			$elm$random$Random$Generate(
+				A2($elm$random$Random$map, tagger, generator)));
+	});
+var $elm$core$Bitwise$xor = _Bitwise_xor;
+var $elm$random$Random$peel = function (_v0) {
+	var state = _v0.a;
+	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
+	return ((word >>> 22) ^ word) >>> 0;
+};
+var $elm$random$Random$int = F2(
+	function (a, b) {
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
+				var lo = _v0.a;
+				var hi = _v0.b;
+				var range = (hi - lo) + 1;
+				if (!((range - 1) & range)) {
+					return _Utils_Tuple2(
+						(((range - 1) & $elm$random$Random$peel(seed0)) >>> 0) + lo,
+						$elm$random$Random$next(seed0));
+				} else {
+					var threshhold = (((-range) >>> 0) % range) >>> 0;
+					var accountForBias = function (seed) {
+						accountForBias:
+						while (true) {
+							var x = $elm$random$Random$peel(seed);
+							var seedN = $elm$random$Random$next(seed);
+							if (_Utils_cmp(x, threshhold) < 0) {
+								var $temp$seed = seedN;
+								seed = $temp$seed;
+								continue accountForBias;
+							} else {
+								return _Utils_Tuple2((x % range) + lo, seedN);
+							}
+						}
+					};
+					return accountForBias(seed0);
+				}
+			});
+	});
+var $author$project$Main$generateId = A2(
+	$elm$random$Random$map,
+	function (n) {
+		return 'doc-' + $elm$core$String$fromInt(n);
+	},
+	A2($elm$random$Random$int, 100000, 999999));
 var $elm_community$list_extra$List$Extra$dropWhile = F2(
 	function (predicate, list) {
 		dropWhile:
@@ -48758,14 +48954,11 @@ var $author$project$Generic$Acc$transformBlock = F2(
 										$elm$core$Dict$insert,
 										'tag',
 										$author$project$Tools$String$makeSlug(block.firstLine),
-										A2(
-											$elm$core$Debug$log,
-											'@@transformBlock',
-											A3(
-												$elm$core$Dict$insert,
-												'label',
-												$author$project$Generic$Vector$toString(acc.headingIndex),
-												block.properties)))
+										A3(
+											$elm$core$Dict$insert,
+											'label',
+											$author$project$Generic$Vector$toString(acc.headingIndex),
+											block.properties))
 								});
 						case 'quiver':
 							return _Utils_update(
@@ -49347,14 +49540,11 @@ var $author$project$Generic$Acc$extractFootnote = F3(
 			var end = _v2.b.end;
 			var index = _v2.b.index;
 			var id = _v2.b.id;
-			return A2(
-				$elm$core$Debug$log,
-				'@@TermData ' + (id + (', ' + id_)),
-				$elm$core$Maybe$Just(
-					{
-						loc: {begin: begin, end: end, id: id, mSourceId: mSourceId},
-						term: content
-					}));
+			return $elm$core$Maybe$Just(
+				{
+					loc: {begin: begin, end: end, id: id, mSourceId: mSourceId},
+					term: content
+				});
 		} else {
 			return $elm$core$Maybe$Nothing;
 		}
@@ -49931,6 +50121,42 @@ var $author$project$Generic$Acc$updateAccumulator = F2(
 						} else {
 							return accumulator;
 						}
+					case 'title':
+						var headingIndex = function () {
+							var _v7 = A2($elm$core$Dict$get, 'first-section', block.properties);
+							if (_v7.$ === 'Nothing') {
+								return {
+									content: _List_fromArray(
+										[0, 0, 0, 0]),
+									size: 4
+								};
+							} else {
+								var firstSection_ = _v7.a;
+								var _v8 = $elm$core$String$toInt(firstSection_);
+								if (_v8.$ === 'Just') {
+									var n = _v8.a;
+									return {
+										content: _List_fromArray(
+											[
+												A2($elm$core$Basics$max, n - 1, 0),
+												0,
+												0,
+												0
+											]),
+										size: 4
+									};
+								} else {
+									return {
+										content: _List_fromArray(
+											[0, 0, 0, 0]),
+										size: 4
+									};
+								}
+							}
+						}();
+						return _Utils_update(
+							accumulator,
+							{headingIndex: headingIndex});
 					case 'setcounter':
 						var n = A2(
 							$elm$core$Maybe$withDefault,
@@ -49977,34 +50203,34 @@ var $author$project$Generic$Acc$updateAccumulator = F2(
 			case 'Verbatim':
 				switch (heading.a) {
 					case 'mathmacros':
-						var _v7 = $author$project$Generic$Language$getVerbatimContent(block);
-						if (_v7.$ === 'Nothing') {
+						var _v9 = $author$project$Generic$Language$getVerbatimContent(block);
+						if (_v9.$ === 'Nothing') {
 							return accumulator;
 						} else {
-							var str = _v7.a;
+							var str = _v9.a;
 							return A2($author$project$Generic$Acc$updateWithMathMacros, str, accumulator);
 						}
 					case 'textmacros':
-						var _v8 = $author$project$Generic$Language$getVerbatimContent(block);
-						if (_v8.$ === 'Nothing') {
+						var _v10 = $author$project$Generic$Language$getVerbatimContent(block);
+						if (_v10.$ === 'Nothing') {
 							return accumulator;
 						} else {
-							var str = _v8.a;
+							var str = _v10.a;
 							return A2($author$project$Generic$Acc$updateWithTextMacros, str, accumulator);
 						}
 					default:
 						var name_ = heading.a;
-						var _v9 = block.body;
-						if (_v9.$ === 'Left') {
-							var str = _v9.a;
+						var _v11 = block.body;
+						if (_v11.$ === 'Left') {
+							var str = _v11.a;
 							return A2($author$project$Generic$Acc$updateWithVerbatimBlock, block, accumulator);
 						} else {
 							return accumulator;
 						}
 				}
 			default:
-				var _v10 = $author$project$Generic$Acc$getNameContentIdTag(block);
-				if (_v10.$ === 'Nothing') {
+				var _v12 = $author$project$Generic$Acc$getNameContentIdTag(block);
+				if (_v12.$ === 'Nothing') {
 					return A2(
 						$author$project$Generic$Acc$updateReferenceWithBlock,
 						block,
@@ -50017,10 +50243,10 @@ var $author$project$Generic$Acc$updateAccumulator = F2(
 									inListState: A2($author$project$Generic$Acc$nextInListState, block.heading, accumulator.inListState)
 								})));
 				} else {
-					var name = _v10.a.name;
-					var content = _v10.a.content;
-					var id = _v10.a.id;
-					var tag = _v10.a.tag;
+					var name = _v12.a.name;
+					var content = _v12.a.content;
+					var id = _v12.a.id;
+					var tag = _v12.a.tag;
 					return A2(
 						$author$project$Generic$Acc$updateReferenceWithBlock,
 						block,
@@ -50095,6 +50321,12 @@ var $author$project$ScriptaV2$DifferentialCompiler$init = F3(
 var $author$project$Main$initialDisplaySettings = function (flags) {
 	return {counter: 0, data: $elm$core$Dict$empty, idsOfOpenNodes: _List_Nil, longEquationLimit: flags.window.windowWidth, scale: 1.0, selectedId: 'nada', selectedSlug: $elm$core$Maybe$Nothing, windowWidth: (flags.window.windowWidth / 3) | 0};
 };
+var $elm$json$Json$Encode$null = _Json_encodeNull;
+var $author$project$Main$loadDocuments = _Platform_outgoingPort(
+	'loadDocuments',
+	function ($) {
+		return $elm$json$Json$Encode$null;
+	});
 var $author$project$Render$Theme$Dark = {$: 'Dark'};
 var $author$project$Render$Theme$Light = {$: 'Light'};
 var $author$project$Theme$mapTheme = function (theme) {
@@ -50104,8 +50336,6 @@ var $author$project$Theme$mapTheme = function (theme) {
 		return $author$project$Render$Theme$Dark;
 	}
 };
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$normalize = function (input) {
 	return A2(
 		$elm$core$String$join,
@@ -50121,6 +50351,7 @@ var $author$project$Main$init = function (flags) {
 	var title_ = $author$project$Main$getTitle(normalizedTex);
 	var editRecord = A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, $author$project$ScriptaV2$Language$EnclosureLang, normalizedTex);
 	var displaySettings = $author$project$Main$initialDisplaySettings(flags);
+	var currentTime = $elm$time$Time$millisToPosix(flags.currentTime);
 	return _Utils_Tuple2(
 		{
 			compilerOutput: A4(
@@ -50130,21 +50361,43 @@ var $author$project$Main$init = function (flags) {
 				displaySettings,
 				editRecord),
 			count: 1,
+			currentDocument: $elm$core$Maybe$Nothing,
 			currentLanguage: $author$project$ScriptaV2$Language$EnclosureLang,
-			currentTime: $elm$time$Time$millisToPosix(0),
+			currentTime: currentTime,
 			displaySettings: displaySettings,
+			documents: _List_Nil,
 			editRecord: editRecord,
+			lastSaved: currentTime,
 			pressedKeys: _List_Nil,
 			selectId: '@InitID',
+			showDocumentList: true,
 			sourceText: normalizedTex,
 			theme: theme,
 			title: title_,
 			windowHeight: flags.window.windowHeight,
 			windowWidth: flags.window.windowWidth
 		},
-		$elm$core$Platform$Cmd$none);
+		$elm$core$Platform$Cmd$batch(
+			_List_fromArray(
+				[
+					$author$project$Main$loadDocuments(_Utils_Tuple0),
+					A2($elm$core$Task$perform, $author$project$Main$Tick, $elm$time$Time$now),
+					A2(
+					$elm$random$Random$generate,
+					A4($author$project$Main$InitialDocumentId, normalizedTex, title_, currentTime, theme),
+					$author$project$Main$generateId)
+				])));
 };
 var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $author$project$Main$AutoSave = function (a) {
+	return {$: 'AutoSave', a: a};
+};
+var $author$project$Main$DocumentLoaded = function (a) {
+	return {$: 'DocumentLoaded', a: a};
+};
+var $author$project$Main$DocumentsLoaded = function (a) {
+	return {$: 'DocumentsLoaded', a: a};
+};
 var $author$project$Main$GotNewWindowDimensions = F2(
 	function (a, b) {
 		return {$: 'GotNewWindowDimensions', a: a, b: b};
@@ -50153,34 +50406,40 @@ var $author$project$Main$KeyMsg = function (a) {
 	return {$: 'KeyMsg', a: a};
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$core$Platform$Sub$map = _Platform_map;
-var $elm$browser$Browser$Events$Window = {$: 'Window'};
-var $elm$browser$Browser$Events$MySub = F3(
-	function (a, b, c) {
-		return {$: 'MySub', a: a, b: b, c: c};
+var $elm$json$Json$Decode$value = _Json_decodeValue;
+var $author$project$Main$documentLoaded = _Platform_incomingPort('documentLoaded', $elm$json$Json$Decode$value);
+var $author$project$Main$documentsLoaded = _Platform_incomingPort('documentsLoaded', $elm$json$Json$Decode$value);
+var $elm$time$Time$Every = F2(
+	function (a, b) {
+		return {$: 'Every', a: a, b: b};
 	});
-var $elm$browser$Browser$Events$State = F2(
-	function (subs, pids) {
-		return {pids: pids, subs: subs};
+var $elm$time$Time$State = F2(
+	function (taggers, processes) {
+		return {processes: processes, taggers: taggers};
 	});
-var $elm$browser$Browser$Events$init = $elm$core$Task$succeed(
-	A2($elm$browser$Browser$Events$State, _List_Nil, $elm$core$Dict$empty));
-var $elm$browser$Browser$Events$nodeToKey = function (node) {
-	if (node.$ === 'Document') {
-		return 'd_';
-	} else {
-		return 'w_';
-	}
-};
-var $elm$browser$Browser$Events$addKey = function (sub) {
-	var node = sub.a;
-	var name = sub.b;
-	return _Utils_Tuple2(
-		_Utils_ap(
-			$elm$browser$Browser$Events$nodeToKey(node),
-			name),
-		sub);
-};
+var $elm$time$Time$init = $elm$core$Task$succeed(
+	A2($elm$time$Time$State, $elm$core$Dict$empty, $elm$core$Dict$empty));
+var $elm$time$Time$addMySub = F2(
+	function (_v0, state) {
+		var interval = _v0.a;
+		var tagger = _v0.b;
+		var _v1 = A2($elm$core$Dict$get, interval, state);
+		if (_v1.$ === 'Nothing') {
+			return A3(
+				$elm$core$Dict$insert,
+				interval,
+				_List_fromArray(
+					[tagger]),
+				state);
+		} else {
+			var taggers = _v1.a;
+			return A3(
+				$elm$core$Dict$insert,
+				interval,
+				A2($elm$core$List$cons, tagger, taggers),
+				state);
+		}
+	});
 var $elm$core$Process$kill = _Scheduler_kill;
 var $elm$core$Dict$merge = F6(
 	function (leftStep, bothStep, rightStep, leftDict, rightDict, initialResult) {
@@ -50243,11 +50502,172 @@ var $elm$core$Dict$merge = F6(
 			intermediateResult,
 			leftovers);
 	});
+var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
+var $elm$time$Time$setInterval = _Time_setInterval;
+var $elm$core$Process$spawn = _Scheduler_spawn;
+var $elm$time$Time$spawnHelp = F3(
+	function (router, intervals, processes) {
+		if (!intervals.b) {
+			return $elm$core$Task$succeed(processes);
+		} else {
+			var interval = intervals.a;
+			var rest = intervals.b;
+			var spawnTimer = $elm$core$Process$spawn(
+				A2(
+					$elm$time$Time$setInterval,
+					interval,
+					A2($elm$core$Platform$sendToSelf, router, interval)));
+			var spawnRest = function (id) {
+				return A3(
+					$elm$time$Time$spawnHelp,
+					router,
+					rest,
+					A3($elm$core$Dict$insert, interval, id, processes));
+			};
+			return A2($elm$core$Task$andThen, spawnRest, spawnTimer);
+		}
+	});
+var $elm$time$Time$onEffects = F3(
+	function (router, subs, _v0) {
+		var processes = _v0.processes;
+		var rightStep = F3(
+			function (_v6, id, _v7) {
+				var spawns = _v7.a;
+				var existing = _v7.b;
+				var kills = _v7.c;
+				return _Utils_Tuple3(
+					spawns,
+					existing,
+					A2(
+						$elm$core$Task$andThen,
+						function (_v5) {
+							return kills;
+						},
+						$elm$core$Process$kill(id)));
+			});
+		var newTaggers = A3($elm$core$List$foldl, $elm$time$Time$addMySub, $elm$core$Dict$empty, subs);
+		var leftStep = F3(
+			function (interval, taggers, _v4) {
+				var spawns = _v4.a;
+				var existing = _v4.b;
+				var kills = _v4.c;
+				return _Utils_Tuple3(
+					A2($elm$core$List$cons, interval, spawns),
+					existing,
+					kills);
+			});
+		var bothStep = F4(
+			function (interval, taggers, id, _v3) {
+				var spawns = _v3.a;
+				var existing = _v3.b;
+				var kills = _v3.c;
+				return _Utils_Tuple3(
+					spawns,
+					A3($elm$core$Dict$insert, interval, id, existing),
+					kills);
+			});
+		var _v1 = A6(
+			$elm$core$Dict$merge,
+			leftStep,
+			bothStep,
+			rightStep,
+			newTaggers,
+			processes,
+			_Utils_Tuple3(
+				_List_Nil,
+				$elm$core$Dict$empty,
+				$elm$core$Task$succeed(_Utils_Tuple0)));
+		var spawnList = _v1.a;
+		var existingDict = _v1.b;
+		var killTask = _v1.c;
+		return A2(
+			$elm$core$Task$andThen,
+			function (newProcesses) {
+				return $elm$core$Task$succeed(
+					A2($elm$time$Time$State, newTaggers, newProcesses));
+			},
+			A2(
+				$elm$core$Task$andThen,
+				function (_v2) {
+					return A3($elm$time$Time$spawnHelp, router, spawnList, existingDict);
+				},
+				killTask));
+	});
+var $elm$time$Time$onSelfMsg = F3(
+	function (router, interval, state) {
+		var _v0 = A2($elm$core$Dict$get, interval, state.taggers);
+		if (_v0.$ === 'Nothing') {
+			return $elm$core$Task$succeed(state);
+		} else {
+			var taggers = _v0.a;
+			var tellTaggers = function (time) {
+				return $elm$core$Task$sequence(
+					A2(
+						$elm$core$List$map,
+						function (tagger) {
+							return A2(
+								$elm$core$Platform$sendToApp,
+								router,
+								tagger(time));
+						},
+						taggers));
+			};
+			return A2(
+				$elm$core$Task$andThen,
+				function (_v1) {
+					return $elm$core$Task$succeed(state);
+				},
+				A2($elm$core$Task$andThen, tellTaggers, $elm$time$Time$now));
+		}
+	});
+var $elm$time$Time$subMap = F2(
+	function (f, _v0) {
+		var interval = _v0.a;
+		var tagger = _v0.b;
+		return A2(
+			$elm$time$Time$Every,
+			interval,
+			A2($elm$core$Basics$composeL, f, tagger));
+	});
+_Platform_effectManagers['Time'] = _Platform_createManager($elm$time$Time$init, $elm$time$Time$onEffects, $elm$time$Time$onSelfMsg, 0, $elm$time$Time$subMap);
+var $elm$time$Time$subscription = _Platform_leaf('Time');
+var $elm$time$Time$every = F2(
+	function (interval, tagger) {
+		return $elm$time$Time$subscription(
+			A2($elm$time$Time$Every, interval, tagger));
+	});
+var $elm$core$Platform$Sub$map = _Platform_map;
+var $elm$browser$Browser$Events$Window = {$: 'Window'};
+var $elm$browser$Browser$Events$MySub = F3(
+	function (a, b, c) {
+		return {$: 'MySub', a: a, b: b, c: c};
+	});
+var $elm$browser$Browser$Events$State = F2(
+	function (subs, pids) {
+		return {pids: pids, subs: subs};
+	});
+var $elm$browser$Browser$Events$init = $elm$core$Task$succeed(
+	A2($elm$browser$Browser$Events$State, _List_Nil, $elm$core$Dict$empty));
+var $elm$browser$Browser$Events$nodeToKey = function (node) {
+	if (node.$ === 'Document') {
+		return 'd_';
+	} else {
+		return 'w_';
+	}
+};
+var $elm$browser$Browser$Events$addKey = function (sub) {
+	var node = sub.a;
+	var name = sub.b;
+	return _Utils_Tuple2(
+		_Utils_ap(
+			$elm$browser$Browser$Events$nodeToKey(node),
+			name),
+		sub);
+};
 var $elm$browser$Browser$Events$Event = F2(
 	function (key, event) {
 		return {event: event, key: key};
 	});
-var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
 var $elm$browser$Browser$Events$spawn = F3(
 	function (router, key, _v0) {
 		var node = _v0.a;
@@ -50428,19 +50848,100 @@ var $ohanhi$keyboard$Keyboard$subscriptions = $elm$core$Platform$Sub$batch(
 			$ohanhi$keyboard$Keyboard$downs($ohanhi$keyboard$Keyboard$Down),
 			$ohanhi$keyboard$Keyboard$ups($ohanhi$keyboard$Keyboard$Up)
 		]));
-var $author$project$Main$subscriptions = function (_v0) {
+var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$batch(
 		_List_fromArray(
 			[
 				$elm$browser$Browser$Events$onResize($author$project$Main$GotNewWindowDimensions),
-				A2($elm$core$Platform$Sub$map, $author$project$Main$KeyMsg, $ohanhi$keyboard$Keyboard$subscriptions)
+				A2($elm$core$Platform$Sub$map, $author$project$Main$KeyMsg, $ohanhi$keyboard$Keyboard$subscriptions),
+				$author$project$Main$documentsLoaded($author$project$Main$DocumentsLoaded),
+				$author$project$Main$documentLoaded($author$project$Main$DocumentLoaded),
+				A2($elm$time$Time$every, 30 * 1000, $author$project$Main$AutoSave)
 			]));
 };
 var $ohanhi$keyboard$Keyboard$Character = function (a) {
 	return {$: 'Character', a: a};
 };
 var $ohanhi$keyboard$Keyboard$Control = {$: 'Control'};
+var $author$project$Main$CreateNewDocument = {$: 'CreateNewDocument'};
+var $author$project$Main$GeneratedId = function (a) {
+	return {$: 'GeneratedId', a: a};
+};
 var $author$project$Theme$Light = {$: 'Light'};
+var $author$project$Main$SaveDocument = {$: 'SaveDocument'};
+var $elm$json$Json$Decode$decodeValue = _Json_run;
+var $author$project$Main$deleteDocument = _Platform_outgoingPort('deleteDocument', $elm$json$Json$Encode$string);
+var $author$project$Document$Document = F7(
+	function (id, title, author, content, theme, createdAt, modifiedAt) {
+		return {author: author, content: content, createdAt: createdAt, id: id, modifiedAt: modifiedAt, theme: theme, title: title};
+	});
+var $elm$json$Json$Decode$map7 = _Json_map7;
+var $author$project$Document$themeDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	function (str) {
+		switch (str) {
+			case 'light':
+				return $elm$json$Json$Decode$succeed($author$project$Theme$Light);
+			case 'dark':
+				return $elm$json$Json$Decode$succeed($author$project$Theme$Dark);
+			default:
+				return $elm$json$Json$Decode$fail('Unknown theme');
+		}
+	},
+	$elm$json$Json$Decode$string);
+var $author$project$Document$documentDecoder = A8(
+	$elm$json$Json$Decode$map7,
+	$author$project$Document$Document,
+	A2($elm$json$Json$Decode$field, 'id', $elm$json$Json$Decode$string),
+	A2($elm$json$Json$Decode$field, 'title', $elm$json$Json$Decode$string),
+	A2($elm$json$Json$Decode$field, 'author', $elm$json$Json$Decode$string),
+	A2($elm$json$Json$Decode$field, 'content', $elm$json$Json$Decode$string),
+	A2($elm$json$Json$Decode$field, 'theme', $author$project$Document$themeDecoder),
+	A2(
+		$elm$json$Json$Decode$field,
+		'createdAt',
+		A2($elm$json$Json$Decode$map, $elm$time$Time$millisToPosix, $elm$json$Json$Decode$int)),
+	A2(
+		$elm$json$Json$Decode$field,
+		'modifiedAt',
+		A2($elm$json$Json$Decode$map, $elm$time$Time$millisToPosix, $elm$json$Json$Decode$int)));
+var $author$project$Document$encodeTheme = function (theme) {
+	if (theme.$ === 'Light') {
+		return $elm$json$Json$Encode$string('light');
+	} else {
+		return $elm$json$Json$Encode$string('dark');
+	}
+};
+var $elm$json$Json$Encode$int = _Json_wrap;
+var $author$project$Document$encodeDocument = function (doc) {
+	return $elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'id',
+				$elm$json$Json$Encode$string(doc.id)),
+				_Utils_Tuple2(
+				'title',
+				$elm$json$Json$Encode$string(doc.title)),
+				_Utils_Tuple2(
+				'author',
+				$elm$json$Json$Encode$string(doc.author)),
+				_Utils_Tuple2(
+				'content',
+				$elm$json$Json$Encode$string(doc.content)),
+				_Utils_Tuple2(
+				'theme',
+				$author$project$Document$encodeTheme(doc.theme)),
+				_Utils_Tuple2(
+				'createdAt',
+				$elm$json$Json$Encode$int(
+					$elm$time$Time$posixToMillis(doc.createdAt))),
+				_Utils_Tuple2(
+				'modifiedAt',
+				$elm$json$Json$Encode$int(
+					$elm$time$Time$posixToMillis(doc.modifiedAt)))
+			]));
+};
 var $author$project$Generic$ASTTools$expressionNames = function (forest) {
 	return $elm$core$List$sort(
 		$elm_community$list_extra$List$Extra$unique(
@@ -51327,10 +51828,7 @@ var $author$project$Render$Export$LaTeX$section = F3(
 			A2(
 				$elm$core$Maybe$andThen,
 				$elm$core$String$toFloat,
-				A2(
-					$elm$core$Debug$log,
-					'@@@@maxNumberedLevel',
-					A2($elm$core$Dict$get, 'number-to-level', settings.properties))));
+				A2($elm$core$Dict$get, 'number-to-level', settings.properties)));
 		var levelAsString = A3($author$project$Render$Utility$getArg, '4', 0, args);
 		var levelAsFloat = function () {
 			var _v1 = $elm$core$String$toFloat(levelAsString);
@@ -52802,11 +53300,8 @@ var $author$project$Render$Export$LaTeX$shiftSection = F2(
 	});
 var $author$project$Render$Export$LaTeX$rawExport = F2(
 	function (settings, ast) {
-		var mathMacroDict = A2(
-			$elm$core$Debug$log,
-			'rawExport,  mathMacroDict',
-			$author$project$ETeX$Transform$makeMacroDict(
-				A2($author$project$Generic$ASTTools$getVerbatimBlockValue, 'mathmacros', ast)));
+		var mathMacroDict = $author$project$ETeX$Transform$makeMacroDict(
+			A2($author$project$Generic$ASTTools$getVerbatimBlockValue, 'mathmacros', ast));
 		return A2(
 			$elm$core$String$join,
 			'\n\n',
@@ -52846,17 +53341,14 @@ var $author$project$Render$Export$LaTeX$export = F3(
 		var textMacroDefinitions = A2($author$project$Generic$ASTTools$getVerbatimBlockValue, 'textmacros', ast);
 		var rawBlockNames = $author$project$Generic$ASTTools$rawBlockNames(ast);
 		var properties = A2(
-			$elm$core$Debug$log,
-			'@@@@EXPORT_PROPERTIES',
+			$elm$core$Maybe$withDefault,
+			$elm$core$Dict$empty,
 			A2(
-				$elm$core$Maybe$withDefault,
-				$elm$core$Dict$empty,
-				A2(
-					$elm$core$Maybe$map,
-					function ($) {
-						return $.properties;
-					},
-					titleData)));
+				$elm$core$Maybe$map,
+				function ($) {
+					return $.properties;
+				},
+				titleData));
 		var settings = _Utils_update(
 			settings_,
 			{properties: properties});
@@ -52881,10 +53373,7 @@ var $author$project$Render$Export$LaTeX$export = F3(
 				return '\n\\setcounter{section}{' + ($elm$core$String$fromInt(k) + '}\n');
 			}
 		}();
-		return A2(
-			$author$project$Render$Export$Preamble$make,
-			A2($elm$core$Debug$log, '@@@EXPORT_RAW_BLOCK_NAMES', rawBlockNames),
-			expressionNames) + (A2($author$project$Render$Export$LaTeX$frontMatter, currentTime, ast) + ($author$project$Render$Export$LaTeX$tableofcontents(rawBlockNames) + (setTheFirstSection + ('\n\n' + (A2($author$project$Render$Export$LaTeX$rawExport, settings, ast) + '\n\n\\end{document}\n')))));
+		return A2($author$project$Render$Export$Preamble$make, rawBlockNames, expressionNames) + (A2($author$project$Render$Export$LaTeX$frontMatter, currentTime, ast) + (setTheFirstSection + ($author$project$Render$Export$LaTeX$tableofcontents(rawBlockNames) + ('\n\n' + (A2($author$project$Render$Export$LaTeX$rawExport, settings, ast) + '\n\n\\end{document}\n')))));
 	});
 var $author$project$Main$NoOp = {$: 'NoOp'};
 var $elm$core$Task$onError = _Scheduler_onError;
@@ -52921,6 +53410,15 @@ var $author$project$Main$jumpToTopOf = function (id) {
 			},
 			$elm$browser$Browser$Dom$getViewportOf(id)));
 };
+var $elm$json$Json$Decode$list = _Json_decodeList;
+var $author$project$Main$loadDocument = _Platform_outgoingPort('loadDocument', $elm$json$Json$Encode$string);
+var $author$project$Document$newDocument = F6(
+	function (id, title, author, content, theme, now) {
+		return {author: author, content: content, createdAt: now, id: id, modifiedAt: now, theme: theme, title: title};
+	});
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$AppData$processImagesText = '\n#!/bin/bash\n\n # Usage:\n #\n # sh ./process_images.sh <input_file> : gives a way\n #\n # Purpose: process LaTeX exported from scripta files that contain images,\n # first creating a corresponding LaTeX file, then\n # a pdf file.\n #\n # Prerequisite software installation:\n # - ImageMagick (for converting images to EPS)\n # - pdflatex (for making PDFs LaTeX files)\n #\n # Setup:\n # Make a folder call "tex" and make a subfolder "image" in it.\n # Put this script in the "tex" folder.\n # Put your file downloaded from Scripta Live or Scripta.io in the "tex" folder.\n # Run the script with the same filename as an argument: `sh ./process_file.sh myfile.tex`\n #\n # Plans:\n # This work will be automated in the near future, so that you can just\n # Press a button to do all the work\n #\n # Detail: the script processes its inputs follows:\n # First, it examines the file, finding all urls pointing to images (JPEG or PNG).\n # Next, it downloads the corresponding images, constructing a filename for each\n # image based on its URL, and converts them to EPS format using ImageMagick.\n # These images are then stored in the directory "./image". The URLS in the\n # original LaTeX file are replaced with the local EPS filenames.\n\n\n# Check if correct number of arguments provided\nif [ $# -ne 1 ]; then\n    echo "Usage: $0 <input_file>"\n    echo "Example: $0 document.tex"\n    exit 1\nfi\n\nINPUT_FILE="$1"\n\n# Check if input file exists in current directory\nif [ ! -f "$INPUT_FILE" ]; then\n    echo "Error: File $INPUT_FILE not found in current directory"\n    exit 1\nfi\n\n# Create output directory\nOUTPUT_DIR="./image"\nmkdir -p "$OUTPUT_DIR"\n\n# Check if ImageMagick is installed\nif ! command -v convert &> /dev/null; then\n    echo "Error: ImageMagick is not installed. Please install it first."\n    exit 1\nfi\n\n# Create a temporary file for the modified LaTeX\nTEMP_FILE=$(mktemp)\ncp "$INPUT_FILE" "$TEMP_FILE"\n\necho "Searching for image URLs in $INPUT_FILE..."\necho "Output directory: $OUTPUT_DIR"\necho\n\n# Extract URLs ending with .jpg, .jpeg, or .png\n# Using grep with extended regex to find URLs (including those with spaces before them)\ngrep -Eo \'https?://[^"{}]+\\.(jpg|jpeg|png)(\\?[^"{}]*)?\' "$INPUT_FILE" | sort -u | while read -r url; do\n    # Remove query parameters if present\n    url_without_query="${url%%\\?*}"\n\n    # Extract path after domain\n    # Remove protocol and domain to get just the path\n    path_after_domain=$(echo "$url_without_query" | sed -E \'s|https?://[^/]*/?||\')\n    # Remove file extension\n    path_without_ext="${path_after_domain%.*}"\n    # Replace slashes with hyphens and remove special characters\n    eps_base_name=$(echo "$path_without_ext" | tr \'/\' \'-\' | tr -d \'():=\')\n    eps_filename="${eps_base_name}.eps"\n\n    # Get original filename for download\n    original_filename=$(basename "$url")\n    original_filename="${original_filename%%\\?*}"\n\n    echo "Processing: $url"\n    echo "  Path after domain: $path_after_domain"\n    echo "  Path without ext: $path_without_ext"\n    echo "  EPS base name: $eps_base_name"\n    echo "  Downloading as: $original_filename"\n    echo "  EPS filename: $eps_filename"\n\n    # Download the image\n    if curl -s -L -o "$OUTPUT_DIR/$original_filename" "$url"; then\n        echo "  Converting to EPS..."\n\n        # Convert to EPS using ImageMagick\n        if convert "$OUTPUT_DIR/$original_filename" -compress lzw "$OUTPUT_DIR/$eps_filename" 2>/dev/null; then\n            echo "  ✓ Successfully converted to EPS"\n\n            # Replace URL with EPS filename in the temporary file\n            # Use perl for more reliable replacement\n            perl -i -pe "s|\\Q$url\\E|$eps_filename|g" "$TEMP_FILE"\n            echo "  ✓ Replaced URL in LaTeX file"\n\n            # Remove the original downloaded file\n            rm "$OUTPUT_DIR/$original_filename"\n        else\n            echo "  ✗ Failed to convert to EPS"\n            rm "$OUTPUT_DIR/$original_filename"\n        fi\n    else\n        echo "  ✗ Failed to download"\n    fi\n    echo\ndone\n\n# Replace the original file with the modified one\nmv "$TEMP_FILE" "$INPUT_FILE"\n\n# Count results\neps_count=$(find "$OUTPUT_DIR" -name "*.eps" -type f | wc -l)\necho "Completed! Created $eps_count EPS files in $OUTPUT_DIR"\necho "LaTeX file has been updated with local EPS references"\n\n# Check if pdflatex is installed\nif command -v pdflatex &> /dev/null; then\n    echo\n    echo "Running pdflatex on $INPUT_FILE..."\n\n    # Get base filename without extension\n    BASE_NAME="${INPUT_FILE%.tex}"\n\n    # Run pdflatex twice (for references, TOC, etc.)\n    for i in 1 2; do\n        echo "Pass $i of 2..."\n        if pdflatex -interaction=nonstopmode "$INPUT_FILE" > /dev/null 2>&1; then\n            echo "  ✓ Pass $i completed"\n        else\n            echo "  ✗ Pass $i failed"\n            echo "  Check the .log file for errors"\n        fi\n    done\n\n    if [ -f "${BASE_NAME}.pdf" ]; then\n        echo "✓ PDF generated: ${BASE_NAME}.pdf"\n    fi\nelse\n    echo "Warning: pdflatex not found. Skipping PDF generation."\nfi\n\n# Cleanup auxiliary files\necho\necho "Cleaning up auxiliary files..."\nrm -f *.aux *.log *.toc *.out *.synctex.gz *.fls *.fdb_latexmk\n\necho "Done!"\n';
+var $author$project$Main$saveDocument = _Platform_outgoingPort('saveDocument', $elm$core$Basics$identity);
 var $elm$file$File$Download$string = F3(
 	function (name, mime, content) {
 		return A2(
@@ -53597,63 +54095,50 @@ var $author$project$ScriptaV2$DifferentialCompiler$update = F2(
 	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		switch (msg.$) {
-			case 'NoOp':
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-			case 'GotNewWindowDimensions':
-				var width = msg.a;
-				var height = msg.b;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{windowHeight: height, windowWidth: width}),
-					$elm$core$Platform$Cmd$none);
-			case 'InputText':
-				var str = msg.a;
-				var oldDisplaySettings = model.displaySettings;
-				var newDisplaySettings = _Utils_update(
-					oldDisplaySettings,
-					{counter: model.count + 1, selectedId: model.selectId});
-				var editRecord = A2($author$project$ScriptaV2$DifferentialCompiler$update, model.editRecord, str);
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							compilerOutput: A4(
-								$author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput,
-								$author$project$Theme$mapTheme(model.theme),
-								$author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
-								newDisplaySettings,
-								editRecord),
-							count: model.count + 1,
-							displaySettings: newDisplaySettings,
-							editRecord: editRecord,
-							sourceText: str,
-							title: $author$project$Main$getTitle(str)
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 'KeyMsg':
-				var keyMsg = msg.a;
-				var pressedKeys = A2($ohanhi$keyboard$Keyboard$update, keyMsg, model.pressedKeys);
-				var cmd = function () {
-					if (A2($elm$core$List$member, $ohanhi$keyboard$Keyboard$Control, pressedKeys) && A2(
-						$elm$core$List$member,
-						$ohanhi$keyboard$Keyboard$Character('E'),
-						pressedKeys)) {
-						var settings = A6(
-							$author$project$Render$Settings$makeSettings,
-							$author$project$Theme$mapTheme(model.theme),
-							'-',
-							$elm$core$Maybe$Nothing,
-							1.0,
-							model.windowWidth,
-							$elm$core$Dict$empty);
-						var exportText = A3($author$project$Render$Export$LaTeX$export, model.currentTime, settings, model.editRecord.tree);
-						return A3($elm$file$File$Download$string, model.title + '.tex', 'application/x-latex', exportText);
-					} else {
+		update:
+		while (true) {
+			switch (msg.$) {
+				case 'NoOp':
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				case 'GotNewWindowDimensions':
+					var width = msg.a;
+					var height = msg.b;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{windowHeight: height, windowWidth: width}),
+						$elm$core$Platform$Cmd$none);
+				case 'InputText':
+					var str = msg.a;
+					var oldDisplaySettings = model.displaySettings;
+					var newDisplaySettings = _Utils_update(
+						oldDisplaySettings,
+						{counter: model.count + 1, selectedId: model.selectId});
+					var editRecord = A2($author$project$ScriptaV2$DifferentialCompiler$update, model.editRecord, str);
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								compilerOutput: A4(
+									$author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput,
+									$author$project$Theme$mapTheme(model.theme),
+									$author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
+									newDisplaySettings,
+									editRecord),
+								count: model.count + 1,
+								displaySettings: newDisplaySettings,
+								editRecord: editRecord,
+								sourceText: str,
+								title: $author$project$Main$getTitle(str)
+							}),
+						$elm$core$Platform$Cmd$none);
+				case 'KeyMsg':
+					var keyMsg = msg.a;
+					var pressedKeys = A2($ohanhi$keyboard$Keyboard$update, keyMsg, model.pressedKeys);
+					var cmd = function () {
 						if (A2($elm$core$List$member, $ohanhi$keyboard$Keyboard$Control, pressedKeys) && A2(
 							$elm$core$List$member,
-							$ohanhi$keyboard$Keyboard$Character('R'),
+							$ohanhi$keyboard$Keyboard$Character('E'),
 							pressedKeys)) {
 							var settings = A6(
 								$author$project$Render$Settings$makeSettings,
@@ -53663,54 +54148,265 @@ var $author$project$Main$update = F2(
 								1.0,
 								model.windowWidth,
 								$elm$core$Dict$empty);
-							var exportText = A2($author$project$Render$Export$LaTeX$rawExport, settings, model.editRecord.tree);
+							var exportText = A3($author$project$Render$Export$LaTeX$export, model.currentTime, settings, model.editRecord.tree);
 							return A3($elm$file$File$Download$string, model.title + '.tex', 'application/x-latex', exportText);
 						} else {
-							return $elm$core$Platform$Cmd$none;
+							if (A2($elm$core$List$member, $ohanhi$keyboard$Keyboard$Control, pressedKeys) && A2(
+								$elm$core$List$member,
+								$ohanhi$keyboard$Keyboard$Character('R'),
+								pressedKeys)) {
+								var settings = A6(
+									$author$project$Render$Settings$makeSettings,
+									$author$project$Theme$mapTheme(model.theme),
+									'-',
+									$elm$core$Maybe$Nothing,
+									1.0,
+									model.windowWidth,
+									$elm$core$Dict$empty);
+								var exportText = A2($author$project$Render$Export$LaTeX$rawExport, settings, model.editRecord.tree);
+								return A3($elm$file$File$Download$string, model.title + '.tex', 'application/x-latex', exportText);
+							} else {
+								return $elm$core$Platform$Cmd$none;
+							}
 						}
+					}();
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								pressedKeys: ($elm$core$List$length(pressedKeys) > 1) ? _List_Nil : pressedKeys
+							}),
+						cmd);
+				case 'Render':
+					var msg_ = msg.a;
+					switch (msg_.$) {
+						case 'SelectId':
+							var id = msg_.a;
+							return (id === 'title') ? _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{selectId: id}),
+								$author$project$Main$jumpToTopOf('rendered-text')) : _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{selectId: id}),
+								$elm$core$Platform$Cmd$none);
+						case 'SendLineNumber':
+							var line = msg_.a;
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+						default:
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					}
-				}();
-				return _Utils_Tuple2(
-					_Utils_update(
+				case 'ToggleTheme':
+					var newTheme = function () {
+						var _v2 = model.theme;
+						if (_v2.$ === 'Light') {
+							return $author$project$Theme$Dark;
+						} else {
+							return $author$project$Theme$Light;
+						}
+					}();
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{theme: newTheme}),
+						$elm$core$Platform$Cmd$none);
+				case 'CreateNewDocument':
+					return _Utils_Tuple2(
 						model,
-						{
-							pressedKeys: ($elm$core$List$length(pressedKeys) > 1) ? _List_Nil : pressedKeys
-						}),
-					cmd);
-			case 'Render':
-				var msg_ = msg.a;
-				switch (msg_.$) {
-					case 'SelectId':
-						var id = msg_.a;
-						return (id === 'title') ? _Utils_Tuple2(
+						A2($elm$random$Random$generate, $author$project$Main$GeneratedId, $author$project$Main$generateId));
+				case 'GeneratedId':
+					var id = msg.a;
+					var newDoc = A6($author$project$Document$newDocument, id, 'Untitled Document', '', '', model.theme, model.currentTime);
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								compilerOutput: A4(
+									$author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput,
+									$author$project$Theme$mapTheme(model.theme),
+									$author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
+									model.displaySettings,
+									A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, model.currentLanguage, '')),
+								currentDocument: $elm$core$Maybe$Just(newDoc),
+								editRecord: A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, model.currentLanguage, ''),
+								sourceText: '',
+								title: 'Untitled Document'
+							}),
+						$author$project$Main$saveDocument(
+							$author$project$Document$encodeDocument(newDoc)));
+				case 'SaveDocument':
+					var _v3 = model.currentDocument;
+					if (_v3.$ === 'Just') {
+						var doc = _v3.a;
+						var updatedDoc = _Utils_update(
+							doc,
+							{content: model.sourceText, modifiedAt: model.currentTime, theme: model.theme, title: model.title});
+						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{selectId: id}),
-							$author$project$Main$jumpToTopOf('rendered-text')) : _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{selectId: id}),
-							$elm$core$Platform$Cmd$none);
-					case 'SendLineNumber':
-						var line = msg_.a;
-						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-					default:
-						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
-			default:
-				var newTheme = function () {
-					var _v2 = model.theme;
-					if (_v2.$ === 'Light') {
-						return $author$project$Theme$Dark;
+								{
+									currentDocument: $elm$core$Maybe$Just(updatedDoc),
+									lastSaved: model.currentTime
+								}),
+							$author$project$Main$saveDocument(
+								$author$project$Document$encodeDocument(updatedDoc)));
 					} else {
-						return $author$project$Theme$Light;
+						var $temp$msg = $author$project$Main$CreateNewDocument,
+							$temp$model = model;
+						msg = $temp$msg;
+						model = $temp$model;
+						continue update;
 					}
-				}();
-				return _Utils_Tuple2(
-					_Utils_update(
+				case 'LoadDocument':
+					var id = msg.a;
+					return _Utils_Tuple2(
 						model,
-						{theme: newTheme}),
-					$elm$core$Platform$Cmd$none);
+						$author$project$Main$loadDocument(id));
+				case 'DeleteDocument':
+					var id = msg.a;
+					var updatedDocuments = A2(
+						$elm$core$List$filter,
+						function (d) {
+							return !_Utils_eq(d.id, id);
+						},
+						model.documents);
+					var needNewDoc = function () {
+						var _v4 = model.currentDocument;
+						if (_v4.$ === 'Just') {
+							var doc = _v4.a;
+							return _Utils_eq(doc.id, id);
+						} else {
+							return false;
+						}
+					}();
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								currentDocument: needNewDoc ? $elm$core$Maybe$Nothing : model.currentDocument,
+								documents: updatedDocuments,
+								sourceText: needNewDoc ? '' : model.sourceText,
+								title: needNewDoc ? 'Untitled Document' : model.title
+							}),
+						$author$project$Main$deleteDocument(id));
+				case 'DocumentsLoaded':
+					var value = msg.a;
+					var _v5 = A2(
+						$elm$json$Json$Decode$decodeValue,
+						$elm$json$Json$Decode$list($author$project$Document$documentDecoder),
+						value);
+					if (_v5.$ === 'Ok') {
+						var docs = _v5.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{documents: docs}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					}
+				case 'DocumentLoaded':
+					var value = msg.a;
+					var _v6 = A2($elm$json$Json$Decode$decodeValue, $author$project$Document$documentDecoder, value);
+					if (_v6.$ === 'Ok') {
+						var doc = _v6.a;
+						var editRecord = A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, model.currentLanguage, doc.content);
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									compilerOutput: A4(
+										$author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput,
+										$author$project$Theme$mapTheme(doc.theme),
+										$author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
+										model.displaySettings,
+										editRecord),
+									currentDocument: $elm$core$Maybe$Just(doc),
+									editRecord: editRecord,
+									sourceText: doc.content,
+									theme: doc.theme,
+									title: doc.title
+								}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					}
+				case 'ToggleDocumentList':
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{showDocumentList: !model.showDocumentList}),
+						$elm$core$Platform$Cmd$none);
+				case 'AutoSave':
+					var _v7 = model.currentDocument;
+					if (_v7.$ === 'Just') {
+						var doc = _v7.a;
+						if (!_Utils_eq(model.sourceText, doc.content)) {
+							var $temp$msg = $author$project$Main$SaveDocument,
+								$temp$model = model;
+							msg = $temp$msg;
+							model = $temp$model;
+							continue update;
+						} else {
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+						}
+					} else {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					}
+				case 'Tick':
+					var time = msg.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{currentTime: time}),
+						$elm$core$Platform$Cmd$none);
+				case 'ExportToLaTeX':
+					var settings = A6(
+						$author$project$Render$Settings$makeSettings,
+						$author$project$Theme$mapTheme(model.theme),
+						'-',
+						$elm$core$Maybe$Nothing,
+						1.0,
+						model.windowWidth,
+						$elm$core$Dict$empty);
+					var exportText = A3($author$project$Render$Export$LaTeX$export, model.currentTime, settings, model.editRecord.tree);
+					return _Utils_Tuple2(
+						model,
+						A3($elm$file$File$Download$string, model.title + '.tex', 'application/x-latex', exportText));
+				case 'ExportToRawLaTeX':
+					var settings = A6(
+						$author$project$Render$Settings$makeSettings,
+						$author$project$Theme$mapTheme(model.theme),
+						'-',
+						$elm$core$Maybe$Nothing,
+						1.0,
+						model.windowWidth,
+						$elm$core$Dict$empty);
+					var exportText = A2($author$project$Render$Export$LaTeX$rawExport, settings, model.editRecord.tree);
+					return _Utils_Tuple2(
+						model,
+						A3($elm$file$File$Download$string, model.title + '.tex', 'application/x-latex', exportText));
+				case 'DownloadScript':
+					return _Utils_Tuple2(
+						model,
+						A3($elm$file$File$Download$string, 'process_images.sh', 'application/x-sh', $author$project$AppData$processImagesText));
+				default:
+					var content = msg.a;
+					var title = msg.b;
+					var currentTime = msg.c;
+					var theme = msg.d;
+					var id = msg.e;
+					var initialDoc = {author: 'James Carlson', content: content, createdAt: currentTime, id: id, modifiedAt: currentTime, theme: theme, title: title};
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								currentDocument: $elm$core$Maybe$Just(initialDoc)
+							}),
+						$author$project$Main$saveDocument(
+							$author$project$Document$encodeDocument(initialDoc)));
+			}
 		}
 	});
 var $author$project$Main$backgroundColor = function (theme) {
@@ -53933,13 +54629,6 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 var $author$project$Main$Render = function (a) {
 	return {$: 'Render', a: a};
 };
-var $author$project$Main$headerHeight = 90;
-var $author$project$Main$appHeight = function (model) {
-	return model.windowHeight - $author$project$Main$headerHeight;
-};
-var $author$project$Main$appWidth = function (model) {
-	return model.windowWidth;
-};
 var $author$project$Main$borderColor = function (model) {
 	var _v0 = model.theme;
 	if (_v0.$ === 'Light') {
@@ -53967,13 +54656,16 @@ var $author$project$Main$htmlId = function (str) {
 	return $mdgriffith$elm_ui$Element$htmlAttribute(
 		$elm$html$Html$Attributes$id(str));
 };
-var $author$project$Main$sidebarWidth = 200;
+var $author$project$Main$appWidth = function (model) {
+	return model.windowWidth;
+};
+var $author$project$Main$sidebarWidth = 260;
 var $author$project$Main$panelWidth = function (model) {
 	return ((((($author$project$Main$appWidth(model) - $author$project$Main$sidebarWidth) - 16) - 4) - 16) / 2) | 0;
 };
 var $author$project$Main$textColor = function (theme) {
 	if (theme.$ === 'Light') {
-		return A3($mdgriffith$elm_ui$Element$rgb255, 213, 216, 225);
+		return A3($mdgriffith$elm_ui$Element$rgb255, 33, 33, 33);
 	} else {
 		return A3($mdgriffith$elm_ui$Element$rgb255, 240, 240, 240);
 	}
@@ -53994,9 +54686,7 @@ var $author$project$Main$displayRenderedText = function (model) {
 		_List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$alignTop,
-				$mdgriffith$elm_ui$Element$height(
-				$mdgriffith$elm_ui$Element$px(
-					$author$project$Main$appHeight(model) - 45)),
+				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 				$mdgriffith$elm_ui$Element$width(
 				$mdgriffith$elm_ui$Element$px(
 					$author$project$Main$panelWidth(model))),
@@ -54064,6 +54754,7 @@ var $author$project$Main$displayRenderedText = function (model) {
 							]))
 					]))));
 };
+var $author$project$Main$headerHeight = 90;
 var $mdgriffith$elm_ui$Element$Border$widthXY = F2(
 	function (x, y) {
 		return A2(
@@ -54126,9 +54817,7 @@ var $author$project$Main$header = function (model) {
 			[
 				$mdgriffith$elm_ui$Element$height(
 				$mdgriffith$elm_ui$Element$px($author$project$Main$headerHeight)),
-				$mdgriffith$elm_ui$Element$width(
-				$mdgriffith$elm_ui$Element$px(
-					$author$project$Main$appWidth(model))),
+				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 				$mdgriffith$elm_ui$Element$spacing(32),
 				$mdgriffith$elm_ui$Element$centerX,
 				$mdgriffith$elm_ui$Element$Background$color(
@@ -54148,7 +54837,10 @@ var $author$project$Main$header = function (model) {
 				_List_fromArray(
 					[
 						$mdgriffith$elm_ui$Element$centerX,
+						$mdgriffith$elm_ui$Element$centerY,
 						$mdgriffith$elm_ui$Element$Font$color(debugTextColor),
+						$mdgriffith$elm_ui$Element$Font$size(18),
+						$mdgriffith$elm_ui$Element$Font$semiBold,
 						forceColorStyle
 					]),
 				$mdgriffith$elm_ui$Element$text('Scripta Live: ' + model.title))
@@ -54996,9 +55688,7 @@ var $author$project$Main$inputText = function (model) {
 		_List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$alignTop,
-				$mdgriffith$elm_ui$Element$height(
-				$mdgriffith$elm_ui$Element$px(
-					$author$project$Main$appHeight(model) - 45)),
+				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 				$mdgriffith$elm_ui$Element$width(
 				$mdgriffith$elm_ui$Element$px(
 					$author$project$Main$panelWidth(model))),
@@ -55015,7 +55705,6 @@ var $author$project$Main$inputText = function (model) {
 				[
 					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-					A2($mdgriffith$elm_ui$Element$paddingXY, 0, 12),
 					$mdgriffith$elm_ui$Element$htmlAttribute(
 					A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
 					$mdgriffith$elm_ui$Element$htmlAttribute(
@@ -55051,7 +55740,7 @@ var $author$project$Main$inputText = function (model) {
 						$mdgriffith$elm_ui$Element$htmlAttribute(
 						A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box')),
 						$mdgriffith$elm_ui$Element$htmlAttribute(
-						A2($elm$html$Html$Attributes$style, 'padding', '8px'))
+						A2($elm$html$Html$Attributes$style, 'padding', '8px 8px 24px 8px'))
 					]),
 				{
 					label: A2(
@@ -55067,144 +55756,23 @@ var $author$project$Main$inputText = function (model) {
 					text: model.sourceText
 				})));
 };
-var $author$project$Main$bgGray = function (g) {
-	return $mdgriffith$elm_ui$Element$Background$color(
-		A3($mdgriffith$elm_ui$Element$rgb, g, g, g));
-};
 var $author$project$Main$mainColumnStyle = _List_fromArray(
 	[
-		$mdgriffith$elm_ui$Element$centerX,
-		$mdgriffith$elm_ui$Element$centerY,
-		$author$project$Main$bgGray(0.4),
-		A2($mdgriffith$elm_ui$Element$paddingXY, 20, 20),
+		$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 		$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
 	]);
 var $mdgriffith$elm_ui$Element$map = $mdgriffith$elm_ui$Internal$Model$map;
-var $elm$html$Html$a = _VirtualDom_node('a');
-var $author$project$Download$toHex = function (n) {
-	var toHexChar = function (x) {
-		return (x < 10) ? $elm$core$String$fromInt(x) : $elm$core$String$fromChar(
-			$elm$core$Char$fromCode(
-				(x - 10) + $elm$core$Char$toCode(
-					_Utils_chr('A'))));
-	};
-	return _Utils_ap(
-		toHexChar((n / 16) | 0),
-		toHexChar(
-			A2($elm$core$Basics$modBy, 16, n)));
-};
-var $author$project$Download$byteToHex = function (_byte) {
-	return '%' + $elm$core$String$toUpper(
-		$author$project$Download$toHex(_byte));
-};
-var $author$project$Download$toUtf8Bytes = function (code) {
-	return (code < 128) ? _List_fromArray(
-		[code]) : ((code < 2048) ? _List_fromArray(
-		[
-			192 + ((code / 64) | 0),
-			128 + A2($elm$core$Basics$modBy, 64, code)
-		]) : ((code < 65536) ? _List_fromArray(
-		[
-			224 + ((code / 4096) | 0),
-			128 + A2($elm$core$Basics$modBy, 64, (code / 64) | 0),
-			128 + A2($elm$core$Basics$modBy, 64, code)
-		]) : _List_fromArray(
-		[
-			240 + ((code / 262144) | 0),
-			128 + A2($elm$core$Basics$modBy, 64, (code / 4096) | 0),
-			128 + A2($elm$core$Basics$modBy, 64, (code / 64) | 0),
-			128 + A2($elm$core$Basics$modBy, 64, code)
-		])));
-};
-var $author$project$Download$percentEncodeUtf8 = function (_char) {
-	return $elm$core$String$concat(
-		A2(
-			$elm$core$List$map,
-			$author$project$Download$byteToHex,
-			$elm$core$List$concat(
-				A2(
-					$elm$core$List$map,
-					$author$project$Download$toUtf8Bytes,
-					A2(
-						$elm$core$List$map,
-						$elm$core$Char$toCode,
-						$elm$core$String$toList(
-							$elm$core$String$fromChar(_char)))))));
-};
-var $author$project$Download$encodeChar = function (_char) {
-	switch (_char.valueOf()) {
-		case ' ':
-			return '%20';
-		case '\n':
-			return '%0A';
-		case '\u000D':
-			return '%0D';
-		case '\"':
-			return '%22';
-		case '#':
-			return '%23';
-		case '%':
-			return '%25';
-		case '&':
-			return '%26';
-		case '+':
-			return '%2B';
-		case ',':
-			return '%2C';
-		case '/':
-			return '%2F';
-		case ':':
-			return '%3A';
-		case ';':
-			return '%3B';
-		case '<':
-			return '%3C';
-		case '=':
-			return '%3D';
-		case '>':
-			return '%3E';
-		case '?':
-			return '%3F';
-		case '@':
-			return '%40';
-		case '[':
-			return '%5B';
-		case '\\':
-			return '%5C';
-		case ']':
-			return '%5D';
-		case '^':
-			return '%5E';
-		case '`':
-			return '%60';
-		case '{':
-			return '%7B';
-		case '|':
-			return '%7C';
-		case '}':
-			return '%7D';
-		case '~':
-			return '%7E';
-		default:
-			return ($elm$core$Char$toCode(_char) > 127) ? $author$project$Download$percentEncodeUtf8(_char) : $elm$core$String$fromChar(_char);
+var $author$project$Main$DownloadScript = {$: 'DownloadScript'};
+var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
+var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
+var $author$project$Main$ToggleDocumentList = {$: 'ToggleDocumentList'};
+var $author$project$Main$buttonTextColor = function (theme) {
+	if (theme.$ === 'Light') {
+		return A3($mdgriffith$elm_ui$Element$rgb255, 255, 140, 0);
+	} else {
+		return A3($mdgriffith$elm_ui$Element$rgb255, 255, 165, 0);
 	}
 };
-var $author$project$Download$percentEncode = function (string) {
-	return $elm$core$String$concat(
-		A2(
-			$elm$core$List$map,
-			$author$project$Download$encodeChar,
-			$elm$core$String$toList(string)));
-};
-var $author$project$Download$dataUrl = F2(
-	function (mimeType, content) {
-		return 'data:' + (mimeType + (';charset=utf-8,' + $author$project$Download$percentEncode(content)));
-	});
-var $elm$html$Html$Attributes$download = function (fileName) {
-	return A2($elm$html$Html$Attributes$stringProperty, 'download', fileName);
-};
-var $mdgriffith$elm_ui$Element$layout = $mdgriffith$elm_ui$Element$layoutWith(
-	{options: _List_Nil});
 var $mdgriffith$elm_ui$Internal$Model$Hover = {$: 'Hover'};
 var $mdgriffith$elm_ui$Internal$Flag$hover = $mdgriffith$elm_ui$Internal$Flag$flag(33);
 var $mdgriffith$elm_ui$Element$mouseOver = function (decs) {
@@ -55216,54 +55784,338 @@ var $mdgriffith$elm_ui$Element$mouseOver = function (decs) {
 			$mdgriffith$elm_ui$Internal$Model$Hover,
 			$mdgriffith$elm_ui$Internal$Model$unwrapDecorations(decs)));
 };
-var $mdgriffith$elm_ui$Element$Font$sansSerif = $mdgriffith$elm_ui$Internal$Model$SansSerif;
-var $author$project$Download$downloadButton = F4(
-	function (buttonTitle, fileName, mimeType, content) {
-		return $mdgriffith$elm_ui$Element$html(
-			A2(
-				$elm$html$Html$a,
+var $author$project$Main$listButton = function (model) {
+	return A2(
+		$mdgriffith$elm_ui$Element$Input$button,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$Background$color(
+				$author$project$Main$backgroundColor(model.theme)),
+				$mdgriffith$elm_ui$Element$Font$color(
+				$author$project$Main$buttonTextColor(model.theme)),
+				A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
+				$mdgriffith$elm_ui$Element$Border$rounded(4),
+				$mdgriffith$elm_ui$Element$Border$width(1),
+				$mdgriffith$elm_ui$Element$Border$color(
+				A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+				$mdgriffith$elm_ui$Element$mouseOver(
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$href(
-						A2($author$project$Download$dataUrl, mimeType, content)),
-						$elm$html$Html$Attributes$download(fileName),
-						A2($elm$html$Html$Attributes$style, 'text-decoration', 'none')
-					]),
+						$mdgriffith$elm_ui$Element$Background$color(
+						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2)),
+						$mdgriffith$elm_ui$Element$Border$color(
+						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
+					])),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2(
+					$elm$html$Html$Attributes$style,
+					'color',
+					function () {
+						var _v0 = model.theme;
+						if (_v0.$ === 'Light') {
+							return 'rgb(255, 140, 0)';
+						} else {
+							return 'rgb(255, 165, 0)';
+						}
+					}()))
+			]),
+		{
+			label: $mdgriffith$elm_ui$Element$text('List'),
+			onPress: $elm$core$Maybe$Just($author$project$Main$ToggleDocumentList)
+		});
+};
+var $author$project$Main$newButton = function (model) {
+	return A2(
+		$mdgriffith$elm_ui$Element$Input$button,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$Background$color(
+				$author$project$Main$backgroundColor(model.theme)),
+				$mdgriffith$elm_ui$Element$Font$color(
+				$author$project$Main$buttonTextColor(model.theme)),
+				A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
+				$mdgriffith$elm_ui$Element$Border$rounded(4),
+				$mdgriffith$elm_ui$Element$Border$width(1),
+				$mdgriffith$elm_ui$Element$Border$color(
+				A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+				$mdgriffith$elm_ui$Element$mouseOver(
 				_List_fromArray(
 					[
-						A2(
-						$mdgriffith$elm_ui$Element$layout,
-						_List_Nil,
-						A2(
-							$mdgriffith$elm_ui$Element$el,
+						$mdgriffith$elm_ui$Element$Background$color(
+						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2)),
+						$mdgriffith$elm_ui$Element$Border$color(
+						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
+					])),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2(
+					$elm$html$Html$Attributes$style,
+					'color',
+					function () {
+						var _v0 = model.theme;
+						if (_v0.$ === 'Light') {
+							return 'rgb(255, 140, 0)';
+						} else {
+							return 'rgb(255, 165, 0)';
+						}
+					}()))
+			]),
+		{
+			label: $mdgriffith$elm_ui$Element$text('New'),
+			onPress: $elm$core$Maybe$Just($author$project$Main$CreateNewDocument)
+		});
+};
+var $author$project$Main$saveButton = function (model) {
+	return A2(
+		$mdgriffith$elm_ui$Element$Input$button,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$Background$color(
+				$author$project$Main$backgroundColor(model.theme)),
+				$mdgriffith$elm_ui$Element$Font$color(
+				$author$project$Main$buttonTextColor(model.theme)),
+				A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
+				$mdgriffith$elm_ui$Element$Border$rounded(4),
+				$mdgriffith$elm_ui$Element$Border$width(1),
+				$mdgriffith$elm_ui$Element$Border$color(
+				A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+				$mdgriffith$elm_ui$Element$mouseOver(
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Background$color(
+						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2)),
+						$mdgriffith$elm_ui$Element$Border$color(
+						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
+					])),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2(
+					$elm$html$Html$Attributes$style,
+					'color',
+					function () {
+						var _v0 = model.theme;
+						if (_v0.$ === 'Light') {
+							return 'rgb(255, 140, 0)';
+						} else {
+							return 'rgb(255, 165, 0)';
+						}
+					}()))
+			]),
+		{
+			label: $mdgriffith$elm_ui$Element$text('Save'),
+			onPress: $elm$core$Maybe$Just($author$project$Main$SaveDocument)
+		});
+};
+var $author$project$Main$crudButtons = function (model) {
+	return A2(
+		$mdgriffith$elm_ui$Element$row,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$spacing(8),
+				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+			]),
+		_List_fromArray(
+			[
+				$author$project$Main$newButton(model),
+				$author$project$Main$saveButton(model),
+				$author$project$Main$listButton(model)
+			]));
+};
+var $author$project$Main$DeleteDocument = function (a) {
+	return {$: 'DeleteDocument', a: a};
+};
+var $author$project$Main$LoadDocument = function (a) {
+	return {$: 'LoadDocument', a: a};
+};
+var $author$project$Main$formatTime = function (time) {
+	var millis = $elm$time$Time$posixToMillis(time);
+	return (!millis) ? 'Never' : 'Recently';
+};
+var $author$project$Main$documentItem = F2(
+	function (model, doc) {
+		var isActive = function () {
+			var _v0 = model.currentDocument;
+			if (_v0.$ === 'Just') {
+				var currentDoc = _v0.a;
+				return _Utils_eq(currentDoc.id, doc.id);
+			} else {
+				return false;
+			}
+		}();
+		var bgColor = isActive ? A3($mdgriffith$elm_ui$Element$rgb, 0.3, 0.3, 0.5) : A4($mdgriffith$elm_ui$Element$rgba, 0, 0, 0, 0);
+		return A2(
+			$mdgriffith$elm_ui$Element$row,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$padding(8),
+					$mdgriffith$elm_ui$Element$Background$color(bgColor),
+					$mdgriffith$elm_ui$Element$Border$rounded(4),
+					$mdgriffith$elm_ui$Element$spacing(8),
+					$mdgriffith$elm_ui$Element$mouseOver(
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Background$color(
+							A3($mdgriffith$elm_ui$Element$rgb, 0.4, 0.4, 0.5))
+						]))
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$Input$button,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+						]),
+					{
+						label: A2(
+							$mdgriffith$elm_ui$Element$column,
 							_List_fromArray(
 								[
-									$mdgriffith$elm_ui$Element$Background$color(
-									A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
-									$mdgriffith$elm_ui$Element$Font$color(
-									A3($mdgriffith$elm_ui$Element$rgb, 0.8, 0.8, 0.8)),
-									A2($mdgriffith$elm_ui$Element$paddingXY, 16, 8),
-									$mdgriffith$elm_ui$Element$Border$rounded(4),
-									$mdgriffith$elm_ui$Element$pointer,
-									$mdgriffith$elm_ui$Element$Font$size(12),
-									$mdgriffith$elm_ui$Element$Font$family(
-									_List_fromArray(
-										[$mdgriffith$elm_ui$Element$Font$sansSerif])),
-									$mdgriffith$elm_ui$Element$mouseOver(
+									$mdgriffith$elm_ui$Element$spacing(2)
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$mdgriffith$elm_ui$Element$el,
 									_List_fromArray(
 										[
-											$mdgriffith$elm_ui$Element$Background$color(
-											A3($mdgriffith$elm_ui$Element$rgb255, 0, 105, 217))
-										]))
-								]),
-							$mdgriffith$elm_ui$Element$text(buttonTitle)))
-					])));
+											$mdgriffith$elm_ui$Element$Font$size(13)
+										]),
+									$mdgriffith$elm_ui$Element$text(doc.title)),
+									A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$Font$size(11),
+											$mdgriffith$elm_ui$Element$Font$color(
+											A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.7, 0.7))
+										]),
+									$mdgriffith$elm_ui$Element$text(
+										$author$project$Main$formatTime(doc.modifiedAt)))
+								])),
+						onPress: $elm$core$Maybe$Just(
+							$author$project$Main$LoadDocument(doc.id))
+					}),
+					A2(
+					$mdgriffith$elm_ui$Element$Input$button,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Font$color(
+							A3($mdgriffith$elm_ui$Element$rgb, 1, 0.5, 0.5)),
+							$mdgriffith$elm_ui$Element$mouseOver(
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$Font$color(
+									A3($mdgriffith$elm_ui$Element$rgb, 1, 0.3, 0.3))
+								]))
+						]),
+					{
+						label: $mdgriffith$elm_ui$Element$text('×'),
+						onPress: $elm$core$Maybe$Just(
+							$author$project$Main$DeleteDocument(doc.id))
+					})
+				]));
 	});
-var $author$project$AppData$processImagesText = '\n#!/bin/bash\n\n # Usage:\n #\n # sh ./process_images.sh <input_file> : gives a way\n #\n # Purpose: process LaTeX exported from scripta files that contain images,\n # first creating a corresponding LaTeX file, then\n # a pdf file.\n #\n # Prerequisite software installation:\n # - ImageMagick (for converting images to EPS)\n # - pdflatex (for making PDFs LaTeX files)\n #\n # Setup:\n # Make a folder call "tex" and make a subfolder "image" in it.\n # Put this script in the "tex" folder.\n # Put your file downloaded from Scripta Live or Scripta.io in the "tex" folder.\n # Run the script with the same filename as an argument: `sh ./process_file.sh myfile.tex`\n #\n # Plans:\n # This work will be automated in the near future, so that you can just\n # Press a button to do all the work\n #\n # Detail: the script processes its inputs follows:\n # First, it examines the file, finding all urls pointing to images (JPEG or PNG).\n # Next, it downloads the corresponding images, constructing a filename for each\n # image based on its URL, and converts them to EPS format using ImageMagick.\n # These images are then stored in the directory "./image". The URLS in the\n # original LaTeX file are replaced with the local EPS filenames.\n\n\n# Check if correct number of arguments provided\nif [ $# -ne 1 ]; then\n    echo "Usage: $0 <input_file>"\n    echo "Example: $0 document.tex"\n    exit 1\nfi\n\nINPUT_FILE="$1"\n\n# Check if input file exists in current directory\nif [ ! -f "$INPUT_FILE" ]; then\n    echo "Error: File $INPUT_FILE not found in current directory"\n    exit 1\nfi\n\n# Create output directory\nOUTPUT_DIR="./image"\nmkdir -p "$OUTPUT_DIR"\n\n# Check if ImageMagick is installed\nif ! command -v convert &> /dev/null; then\n    echo "Error: ImageMagick is not installed. Please install it first."\n    exit 1\nfi\n\n# Create a temporary file for the modified LaTeX\nTEMP_FILE=$(mktemp)\ncp "$INPUT_FILE" "$TEMP_FILE"\n\necho "Searching for image URLs in $INPUT_FILE..."\necho "Output directory: $OUTPUT_DIR"\necho\n\n# Extract URLs ending with .jpg, .jpeg, or .png\n# Using grep with extended regex to find URLs (including those with spaces before them)\ngrep -Eo \'https?://[^"{}]+\\.(jpg|jpeg|png)(\\?[^"{}]*)?\' "$INPUT_FILE" | sort -u | while read -r url; do\n    # Remove query parameters if present\n    url_without_query="${url%%\\?*}"\n\n    # Extract path after domain\n    # Remove protocol and domain to get just the path\n    path_after_domain=$(echo "$url_without_query" | sed -E \'s|https?://[^/]*/?||\')\n    # Remove file extension\n    path_without_ext="${path_after_domain%.*}"\n    # Replace slashes with hyphens and remove special characters\n    eps_base_name=$(echo "$path_without_ext" | tr \'/\' \'-\' | tr -d \'():=\')\n    eps_filename="${eps_base_name}.eps"\n\n    # Get original filename for download\n    original_filename=$(basename "$url")\n    original_filename="${original_filename%%\\?*}"\n\n    echo "Processing: $url"\n    echo "  Path after domain: $path_after_domain"\n    echo "  Path without ext: $path_without_ext"\n    echo "  EPS base name: $eps_base_name"\n    echo "  Downloading as: $original_filename"\n    echo "  EPS filename: $eps_filename"\n\n    # Download the image\n    if curl -s -L -o "$OUTPUT_DIR/$original_filename" "$url"; then\n        echo "  Converting to EPS..."\n\n        # Convert to EPS using ImageMagick\n        if convert "$OUTPUT_DIR/$original_filename" -compress lzw "$OUTPUT_DIR/$eps_filename" 2>/dev/null; then\n            echo "  ✓ Successfully converted to EPS"\n\n            # Replace URL with EPS filename in the temporary file\n            # Use perl for more reliable replacement\n            perl -i -pe "s|\\Q$url\\E|$eps_filename|g" "$TEMP_FILE"\n            echo "  ✓ Replaced URL in LaTeX file"\n\n            # Remove the original downloaded file\n            rm "$OUTPUT_DIR/$original_filename"\n        else\n            echo "  ✗ Failed to convert to EPS"\n            rm "$OUTPUT_DIR/$original_filename"\n        fi\n    else\n        echo "  ✗ Failed to download"\n    fi\n    echo\ndone\n\n# Replace the original file with the modified one\nmv "$TEMP_FILE" "$INPUT_FILE"\n\n# Count results\neps_count=$(find "$OUTPUT_DIR" -name "*.eps" -type f | wc -l)\necho "Completed! Created $eps_count EPS files in $OUTPUT_DIR"\necho "LaTeX file has been updated with local EPS references"\n\n# Check if pdflatex is installed\nif command -v pdflatex &> /dev/null; then\n    echo\n    echo "Running pdflatex on $INPUT_FILE..."\n\n    # Get base filename without extension\n    BASE_NAME="${INPUT_FILE%.tex}"\n\n    # Run pdflatex twice (for references, TOC, etc.)\n    for i in 1 2; do\n        echo "Pass $i of 2..."\n        if pdflatex -interaction=nonstopmode "$INPUT_FILE" > /dev/null 2>&1; then\n            echo "  ✓ Pass $i completed"\n        else\n            echo "  ✗ Pass $i failed"\n            echo "  Check the .log file for errors"\n        fi\n    done\n\n    if [ -f "${BASE_NAME}.pdf" ]; then\n        echo "✓ PDF generated: ${BASE_NAME}.pdf"\n    fi\nelse\n    echo "Warning: pdflatex not found. Skipping PDF generation."\nfi\n\n# Cleanup auxiliary files\necho\necho "Cleaning up auxiliary files..."\nrm -f *.aux *.log *.toc *.out *.synctex.gz *.fls *.fdb_latexmk\n\necho "Done!"\n';
+var $author$project$Main$electricBlueColor = function (theme) {
+	if (theme.$ === 'Light') {
+		return A3($mdgriffith$elm_ui$Element$rgb255, 0, 123, 255);
+	} else {
+		return A3($mdgriffith$elm_ui$Element$rgb255, 0, 191, 255);
+	}
+};
+var $author$project$Main$ExportToLaTeX = {$: 'ExportToLaTeX'};
+var $author$project$Main$ExportToRawLaTeX = {$: 'ExportToRawLaTeX'};
+var $author$project$Main$exportStuff = function (model) {
+	return A2(
+		$mdgriffith$elm_ui$Element$row,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$spacing(8),
+				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$mdgriffith$elm_ui$Element$Input$button,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Background$color(
+						$author$project$Main$backgroundColor(model.theme)),
+						$mdgriffith$elm_ui$Element$Font$color(
+						$author$project$Main$buttonTextColor(model.theme)),
+						A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
+						$mdgriffith$elm_ui$Element$Border$rounded(4),
+						$mdgriffith$elm_ui$Element$Border$width(1),
+						$mdgriffith$elm_ui$Element$Border$color(
+						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+						$mdgriffith$elm_ui$Element$mouseOver(
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Background$color(
+								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2)),
+								$mdgriffith$elm_ui$Element$Border$color(
+								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
+							])),
+						$mdgriffith$elm_ui$Element$htmlAttribute(
+						A2(
+							$elm$html$Html$Attributes$style,
+							'color',
+							function () {
+								var _v0 = model.theme;
+								if (_v0.$ === 'Light') {
+									return 'rgb(255, 140, 0)';
+								} else {
+									return 'rgb(255, 165, 0)';
+								}
+							}()))
+					]),
+				{
+					label: $mdgriffith$elm_ui$Element$text('LaTeX'),
+					onPress: $elm$core$Maybe$Just($author$project$Main$ExportToLaTeX)
+				}),
+				A2(
+				$mdgriffith$elm_ui$Element$Input$button,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Background$color(
+						$author$project$Main$backgroundColor(model.theme)),
+						$mdgriffith$elm_ui$Element$Font$color(
+						$author$project$Main$buttonTextColor(model.theme)),
+						A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
+						$mdgriffith$elm_ui$Element$Border$rounded(4),
+						$mdgriffith$elm_ui$Element$Border$width(1),
+						$mdgriffith$elm_ui$Element$Border$color(
+						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+						$mdgriffith$elm_ui$Element$mouseOver(
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Background$color(
+								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2)),
+								$mdgriffith$elm_ui$Element$Border$color(
+								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
+							])),
+						$mdgriffith$elm_ui$Element$htmlAttribute(
+						A2(
+							$elm$html$Html$Attributes$style,
+							'color',
+							function () {
+								var _v1 = model.theme;
+								if (_v1.$ === 'Light') {
+									return 'rgb(255, 140, 0)';
+								} else {
+									return 'rgb(255, 165, 0)';
+								}
+							}()))
+					]),
+				{
+					label: $mdgriffith$elm_ui$Element$text('Raw LaTeX'),
+					onPress: $elm$core$Maybe$Just($author$project$Main$ExportToRawLaTeX)
+				})
+			]));
+};
 var $author$project$Main$sidebar = function (model) {
 	var forceColorStyle = function () {
-		var _v0 = model.theme;
-		if (_v0.$ === 'Light') {
+		var _v1 = model.theme;
+		if (_v1.$ === 'Light') {
 			return $mdgriffith$elm_ui$Element$htmlAttribute(
 				A2($elm$html$Html$Attributes$style, 'color', 'black'));
 		} else {
@@ -55275,9 +56127,18 @@ var $author$project$Main$sidebar = function (model) {
 		$mdgriffith$elm_ui$Element$column,
 		_List_fromArray(
 			[
-				$mdgriffith$elm_ui$Element$paddingEach(
-				{bottom: 0, left: 0, right: 0, top: 16}),
-				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+				$mdgriffith$elm_ui$Element$width(
+				$mdgriffith$elm_ui$Element$px($author$project$Main$sidebarWidth)),
+				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$Font$color(
+				$author$project$Main$textColor(model.theme)),
+				$mdgriffith$elm_ui$Element$Font$size(14),
+				$author$project$Main$background_(model),
+				forceColorStyle,
+				$mdgriffith$elm_ui$Element$Border$widthEach(
+				{bottom: 0, left: 1, right: 0, top: 0}),
+				$mdgriffith$elm_ui$Element$Border$color(
+				A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.5, 0.5))
 			]),
 		_List_fromArray(
 			[
@@ -55285,26 +56146,70 @@ var $author$project$Main$sidebar = function (model) {
 				$mdgriffith$elm_ui$Element$column,
 				_List_fromArray(
 					[
-						$mdgriffith$elm_ui$Element$width(
-						$mdgriffith$elm_ui$Element$px($author$project$Main$sidebarWidth)),
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$alignTop,
-						$mdgriffith$elm_ui$Element$Font$color(
-						$author$project$Main$textColor(model.theme)),
 						A2($mdgriffith$elm_ui$Element$paddingXY, 16, 16),
-						$mdgriffith$elm_ui$Element$spacing(6),
-						$mdgriffith$elm_ui$Element$Font$size(14),
-						$author$project$Main$background_(model),
-						forceColorStyle,
+						$mdgriffith$elm_ui$Element$spacing(12),
 						$mdgriffith$elm_ui$Element$scrollbarY,
 						$mdgriffith$elm_ui$Element$htmlAttribute(
 						A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
 						$mdgriffith$elm_ui$Element$htmlAttribute(
 						A2($elm$html$Html$Attributes$style, 'min-height', '0')),
 						$mdgriffith$elm_ui$Element$htmlAttribute(
-						A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box')),
+						A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Font$bold,
+								$mdgriffith$elm_ui$Element$paddingEach(
+								{bottom: 8, left: 0, right: 0, top: 0})
+							]),
+						$mdgriffith$elm_ui$Element$text('Documents')),
+						A2(
+						$mdgriffith$elm_ui$Element$row,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$spacing(8),
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						_List_Nil),
+						$author$project$Main$crudButtons(model),
+						$author$project$Main$exportStuff(model),
+						model.showDocumentList ? A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$spacing(4),
+								$mdgriffith$elm_ui$Element$paddingEach(
+								{bottom: 0, left: 0, right: 0, top: 12}),
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+								$mdgriffith$elm_ui$Element$height(
+								$mdgriffith$elm_ui$Element$px(300)),
+								$mdgriffith$elm_ui$Element$scrollbarY,
+								$mdgriffith$elm_ui$Element$htmlAttribute(
+								A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
+								$mdgriffith$elm_ui$Element$htmlAttribute(
+								A2($elm$html$Html$Attributes$style, 'overflow-x', 'hidden'))
+							]),
+						A2(
+							$elm$core$List$map,
+							$author$project$Main$documentItem(model),
+							model.documents)) : $mdgriffith$elm_ui$Element$none
+					])),
+				A2(
+				$mdgriffith$elm_ui$Element$column,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+						$mdgriffith$elm_ui$Element$alignBottom,
+						A2($mdgriffith$elm_ui$Element$paddingXY, 16, 16),
+						$mdgriffith$elm_ui$Element$spacing(12),
 						$mdgriffith$elm_ui$Element$Border$widthEach(
-						{bottom: 0, left: 1, right: 0, top: 0}),
+						{bottom: 0, left: 0, right: 0, top: 1}),
 						$mdgriffith$elm_ui$Element$Border$color(
 						A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.5, 0.5))
 					]),
@@ -55314,14 +56219,50 @@ var $author$project$Main$sidebar = function (model) {
 						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
 							[
+								$mdgriffith$elm_ui$Element$Font$bold,
 								$mdgriffith$elm_ui$Element$paddingEach(
-								{bottom: 12, left: 0, right: 0, top: 0})
+								{bottom: 8, left: 0, right: 0, top: 0})
 							]),
-						A4($author$project$Download$downloadButton, 'Download script', 'process_images.sh', 'application/x-sh', $author$project$AppData$processImagesText)),
-						$mdgriffith$elm_ui$Element$text('Bare bones:'),
-						$mdgriffith$elm_ui$Element$text('ctrl-E: export to LaTeX'),
-						$mdgriffith$elm_ui$Element$text('ctrl-R: export to Raw LaTeX'),
-						$mdgriffith$elm_ui$Element$text('No way to save docs (yet)')
+						$mdgriffith$elm_ui$Element$text('Tools:')),
+						A2(
+						$mdgriffith$elm_ui$Element$Input$button,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Background$color(
+								$author$project$Main$backgroundColor(model.theme)),
+								$mdgriffith$elm_ui$Element$Font$color(
+								$author$project$Main$electricBlueColor(model.theme)),
+								A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
+								$mdgriffith$elm_ui$Element$Border$rounded(4),
+								$mdgriffith$elm_ui$Element$Border$width(1),
+								$mdgriffith$elm_ui$Element$Border$color(
+								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+								$mdgriffith$elm_ui$Element$mouseOver(
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$Background$color(
+										A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2)),
+										$mdgriffith$elm_ui$Element$Border$color(
+										A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
+									])),
+								$mdgriffith$elm_ui$Element$htmlAttribute(
+								A2(
+									$elm$html$Html$Attributes$style,
+									'color',
+									function () {
+										var _v0 = model.theme;
+										if (_v0.$ === 'Light') {
+											return 'rgb(0, 123, 255)';
+										} else {
+											return 'rgb(0, 191, 255)';
+										}
+									}())),
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						{
+							label: $mdgriffith$elm_ui$Element$text('Download script'),
+							onPress: $elm$core$Maybe$Just($author$project$Main$DownloadScript)
+						})
 					]))
 			]));
 };
@@ -55338,12 +56279,8 @@ var $author$project$Main$mainColumn = function (model) {
 				$mdgriffith$elm_ui$Element$column,
 				_List_fromArray(
 					[
-						$mdgriffith$elm_ui$Element$width(
-						$mdgriffith$elm_ui$Element$px(
-							$author$project$Main$appWidth(model))),
-						$mdgriffith$elm_ui$Element$height(
-						$mdgriffith$elm_ui$Element$px(
-							$author$project$Main$appHeight(model))),
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 						$mdgriffith$elm_ui$Element$clipY,
 						$mdgriffith$elm_ui$Element$htmlAttribute(
 						A2($elm$html$Html$Attributes$style, 'display', 'flex')),
@@ -55365,57 +56302,46 @@ var $author$project$Main$mainColumn = function (model) {
 							]),
 						$mdgriffith$elm_ui$Element$none),
 						A2(
-						$mdgriffith$elm_ui$Element$el,
+						$mdgriffith$elm_ui$Element$row,
 						_List_fromArray(
 							[
-								$mdgriffith$elm_ui$Element$paddingEach(
-								{bottom: 0, left: 0, right: 0, top: 8})
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+								$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+								$mdgriffith$elm_ui$Element$htmlAttribute(
+								A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box')),
+								A2($mdgriffith$elm_ui$Element$paddingXY, 0, 0)
 							]),
-						A2(
-							$mdgriffith$elm_ui$Element$row,
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Element$width(
-									$mdgriffith$elm_ui$Element$px(
-										$author$project$Main$appWidth(model))),
-									$mdgriffith$elm_ui$Element$height(
-									$mdgriffith$elm_ui$Element$px(
-										($author$project$Main$appHeight(model) - 45) - 8)),
-									$mdgriffith$elm_ui$Element$htmlAttribute(
-									A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box')),
-									A2($mdgriffith$elm_ui$Element$paddingXY, 8, 0)
-								]),
-							_List_fromArray(
-								[
-									$author$project$Main$inputText(model),
-									A2(
-									$mdgriffith$elm_ui$Element$el,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$width(
-											$mdgriffith$elm_ui$Element$px(1)),
-											$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-											$mdgriffith$elm_ui$Element$Background$color(
-											$author$project$Main$borderColor(model))
-										]),
-									$mdgriffith$elm_ui$Element$none),
-									A2(
-									$mdgriffith$elm_ui$Element$map,
-									$author$project$Main$Render,
-									$author$project$Main$displayRenderedText(model)),
-									A2(
-									$mdgriffith$elm_ui$Element$el,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$width(
-											$mdgriffith$elm_ui$Element$px(1)),
-											$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-											$mdgriffith$elm_ui$Element$Background$color(
-											$author$project$Main$borderColor(model))
-										]),
-									$mdgriffith$elm_ui$Element$none),
-									$author$project$Main$sidebar(model)
-								])))
+						_List_fromArray(
+							[
+								$author$project$Main$inputText(model),
+								A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$width(
+										$mdgriffith$elm_ui$Element$px(1)),
+										$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+										$mdgriffith$elm_ui$Element$Background$color(
+										$author$project$Main$borderColor(model))
+									]),
+								$mdgriffith$elm_ui$Element$none),
+								A2(
+								$mdgriffith$elm_ui$Element$map,
+								$author$project$Main$Render,
+								$author$project$Main$displayRenderedText(model)),
+								A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$width(
+										$mdgriffith$elm_ui$Element$px(1)),
+										$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+										$mdgriffith$elm_ui$Element$Background$color(
+										$author$project$Main$borderColor(model))
+									]),
+								$mdgriffith$elm_ui$Element$none),
+								$author$project$Main$sidebar(model)
+							]))
 					]))
 			]));
 };
@@ -55445,8 +56371,13 @@ _Platform_export({'Main':{'init':$author$project$Main$main(
 	A2(
 		$elm$json$Json$Decode$andThen,
 		function (window) {
-			return $elm$json$Json$Decode$succeed(
-				{window: window});
+			return A2(
+				$elm$json$Json$Decode$andThen,
+				function (currentTime) {
+					return $elm$json$Json$Decode$succeed(
+						{currentTime: currentTime, window: window});
+				},
+				A2($elm$json$Json$Decode$field, 'currentTime', $elm$json$Json$Decode$int));
 		},
 		A2(
 			$elm$json$Json$Decode$field,
