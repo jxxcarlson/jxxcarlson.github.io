@@ -50949,7 +50949,7 @@ var $ohanhi$keyboard$Keyboard$subscriptions = $elm$core$Platform$Sub$batch(
 			$ohanhi$keyboard$Keyboard$downs($ohanhi$keyboard$Keyboard$Down),
 			$ohanhi$keyboard$Keyboard$ups($ohanhi$keyboard$Keyboard$Up)
 		]));
-var $author$project$Main$subscriptions = function (model) {
+var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$batch(
 		_List_fromArray(
 			[
@@ -54745,7 +54745,7 @@ var $author$project$Main$update = F2(
 			}
 		}
 	});
-var $author$project$Main$backgroundColor = function (theme) {
+var $author$project$Style$backgroundColor = function (theme) {
 	if (theme.$ === 'Light') {
 		return A2(
 			$author$project$Render$Settings$getThemedElementColor,
@@ -54757,9 +54757,9 @@ var $author$project$Main$backgroundColor = function (theme) {
 		return A3($mdgriffith$elm_ui$Element$rgb255, 48, 54, 59);
 	}
 };
-var $author$project$Main$background_ = function (model) {
+var $author$project$Style$background_ = function (theme) {
 	return $mdgriffith$elm_ui$Element$Background$color(
-		$author$project$Main$backgroundColor(model.theme));
+		$author$project$Style$backgroundColor(theme));
 };
 var $mdgriffith$elm_ui$Internal$Model$FocusStyleOption = function (a) {
 	return {$: 'FocusStyleOption', a: a};
@@ -54965,9 +54965,8 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 var $author$project$Main$Render = function (a) {
 	return {$: 'Render', a: a};
 };
-var $author$project$Main$borderColor = function (model) {
-	var _v0 = model.theme;
-	if (_v0.$ === 'Light') {
+var $author$project$Style$borderColor = function (theme) {
+	if (theme.$ === 'Light') {
 		return A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.5, 0.5);
 	} else {
 		return A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.5, 0.5);
@@ -54980,7 +54979,7 @@ var $author$project$Main$container = F2(
 			$mdgriffith$elm_ui$Element$column,
 			A2(
 				$elm$core$List$cons,
-				$author$project$Main$background_(model),
+				$author$project$Style$background_(model.theme),
 				_List_fromArray(
 					[
 						$mdgriffith$elm_ui$Element$centerX,
@@ -54988,7 +54987,37 @@ var $author$project$Main$container = F2(
 					])),
 			elements_);
 	});
-var $author$project$Main$htmlId = function (str) {
+var $author$project$Style$displayColumn = _List_fromArray(
+	[
+		$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+		$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+		$mdgriffith$elm_ui$Element$htmlAttribute(
+		A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
+		$mdgriffith$elm_ui$Element$htmlAttribute(
+		A2($elm$html$Html$Attributes$style, 'overflow-x', 'hidden')),
+		$mdgriffith$elm_ui$Element$htmlAttribute(
+		A2($elm$html$Html$Attributes$style, 'position', 'absolute')),
+		$mdgriffith$elm_ui$Element$htmlAttribute(
+		A2($elm$html$Html$Attributes$style, 'top', '0')),
+		$mdgriffith$elm_ui$Element$htmlAttribute(
+		A2($elm$html$Html$Attributes$style, 'left', '0')),
+		$mdgriffith$elm_ui$Element$htmlAttribute(
+		A2($elm$html$Html$Attributes$style, 'right', '0')),
+		$mdgriffith$elm_ui$Element$htmlAttribute(
+		A2($elm$html$Html$Attributes$style, 'bottom', '0')),
+		$mdgriffith$elm_ui$Element$htmlAttribute(
+		A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
+	]);
+var $author$project$Style$forceColorStyle = function (theme) {
+	if (theme.$ === 'Light') {
+		return $mdgriffith$elm_ui$Element$htmlAttribute(
+			A2($elm$html$Html$Attributes$style, 'color', 'black'));
+	} else {
+		return $mdgriffith$elm_ui$Element$htmlAttribute(
+			A2($elm$html$Html$Attributes$style, 'color', 'white'));
+	}
+};
+var $author$project$Style$htmlId = function (str) {
 	return $mdgriffith$elm_ui$Element$htmlAttribute(
 		$elm$html$Html$Attributes$id(str));
 };
@@ -54999,7 +55028,7 @@ var $author$project$Main$sidebarWidth = 260;
 var $author$project$Main$panelWidth = function (model) {
 	return ((((($author$project$Main$appWidth(model) - $author$project$Main$sidebarWidth) - 16) - 4) - 16) / 2) | 0;
 };
-var $author$project$Main$textColor = function (theme) {
+var $author$project$Style$textColor = function (theme) {
 	if (theme.$ === 'Light') {
 		return A3($mdgriffith$elm_ui$Element$rgb255, 33, 33, 33);
 	} else {
@@ -55007,16 +55036,6 @@ var $author$project$Main$textColor = function (theme) {
 	}
 };
 var $author$project$Main$displayRenderedText = function (model) {
-	var forceColorStyle = function () {
-		var _v0 = model.theme;
-		if (_v0.$ === 'Light') {
-			return $mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'color', 'black'));
-		} else {
-			return $mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'color', 'white'));
-		}
-	}();
 	return A2(
 		$mdgriffith$elm_ui$Element$el,
 		_List_fromArray(
@@ -55035,27 +55054,7 @@ var $author$project$Main$displayRenderedText = function (model) {
 			]),
 		A2(
 			$mdgriffith$elm_ui$Element$el,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'overflow-x', 'hidden')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'position', 'absolute')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'top', '0')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'left', '0')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'right', '0')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'bottom', '0')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
-				]),
+			$author$project$Style$displayColumn,
 			A2(
 				$mdgriffith$elm_ui$Element$column,
 				_List_fromArray(
@@ -55070,15 +55069,15 @@ var $author$project$Main$displayRenderedText = function (model) {
 						$mdgriffith$elm_ui$Element$column,
 						_List_fromArray(
 							[
-								$author$project$Main$background_(model),
+								$author$project$Style$background_(model.theme),
 								$mdgriffith$elm_ui$Element$spacing(24),
 								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-								$author$project$Main$htmlId('rendered-text'),
+								$author$project$Style$htmlId('rendered-text'),
 								$mdgriffith$elm_ui$Element$alignTop,
 								$mdgriffith$elm_ui$Element$centerX,
 								$mdgriffith$elm_ui$Element$Font$color(
-								$author$project$Main$textColor(model.theme)),
-								forceColorStyle,
+								$author$project$Style$textColor(model.theme)),
+								$author$project$Style$forceColorStyle(model.theme),
 								$mdgriffith$elm_ui$Element$htmlAttribute(
 								A2($elm$html$Html$Attributes$style, 'padding', '16px')),
 								$mdgriffith$elm_ui$Element$htmlAttribute(
@@ -55089,6 +55088,13 @@ var $author$project$Main$displayRenderedText = function (model) {
 								A2($author$project$Main$container, model, model.compilerOutput.body)
 							]))
 					]))));
+};
+var $author$project$Style$debugTextColor = function (theme_) {
+	if (theme_.$ === 'Light') {
+		return A3($mdgriffith$elm_ui$Element$rgb255, 0, 0, 0);
+	} else {
+		return A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255);
+	}
 };
 var $author$project$Main$headerHeight = 90;
 var $mdgriffith$elm_ui$Element$Border$widthXY = F2(
@@ -55121,32 +55127,6 @@ var $mdgriffith$elm_ui$Element$Border$widthEach = function (_v0) {
 			left));
 };
 var $author$project$Main$header = function (model) {
-	var themeLabel = function () {
-		var _v2 = model.theme;
-		if (_v2.$ === 'Light') {
-			return 'Light Mode';
-		} else {
-			return 'Dark Mode';
-		}
-	}();
-	var forceColorStyle = function () {
-		var _v1 = model.theme;
-		if (_v1.$ === 'Light') {
-			return $mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'color', 'black'));
-		} else {
-			return $mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'color', 'white'));
-		}
-	}();
-	var debugTextColor = function () {
-		var _v0 = model.theme;
-		if (_v0.$ === 'Light') {
-			return A3($mdgriffith$elm_ui$Element$rgb255, 0, 0, 0);
-		} else {
-			return A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255);
-		}
-	}();
 	return A2(
 		$mdgriffith$elm_ui$Element$row,
 		_List_fromArray(
@@ -55157,14 +55137,14 @@ var $author$project$Main$header = function (model) {
 				$mdgriffith$elm_ui$Element$spacing(32),
 				$mdgriffith$elm_ui$Element$centerX,
 				$mdgriffith$elm_ui$Element$Background$color(
-				$author$project$Main$backgroundColor(model.theme)),
+				$author$project$Style$backgroundColor(model.theme)),
 				$mdgriffith$elm_ui$Element$paddingEach(
 				{bottom: 0, left: 18, right: 18, top: 0}),
-				forceColorStyle,
+				$author$project$Style$forceColorStyle(model.theme),
 				$mdgriffith$elm_ui$Element$Border$widthEach(
 				{bottom: 1, left: 0, right: 0, top: 0}),
 				$mdgriffith$elm_ui$Element$Border$color(
-				$author$project$Main$borderColor(model))
+				$author$project$Style$borderColor(model.theme))
 			]),
 		_List_fromArray(
 			[
@@ -55174,16 +55154,37 @@ var $author$project$Main$header = function (model) {
 					[
 						$mdgriffith$elm_ui$Element$centerX,
 						$mdgriffith$elm_ui$Element$centerY,
-						$mdgriffith$elm_ui$Element$Font$color(debugTextColor),
+						$mdgriffith$elm_ui$Element$Font$color(
+						$author$project$Style$debugTextColor(model.theme)),
 						$mdgriffith$elm_ui$Element$Font$size(18),
 						$mdgriffith$elm_ui$Element$Font$semiBold,
-						forceColorStyle
+						$author$project$Style$forceColorStyle(model.theme)
 					]),
 				$mdgriffith$elm_ui$Element$text('Scripta Live: ' + model.title))
 			]));
 };
 var $author$project$Main$InputText = function (a) {
 	return {$: 'InputText', a: a};
+};
+var $author$project$Style$innerMultiline = function (theme) {
+	return _List_fromArray(
+		[
+			$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+			$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+			$mdgriffith$elm_ui$Element$Font$size(14),
+			$mdgriffith$elm_ui$Element$alignTop,
+			$mdgriffith$elm_ui$Element$Font$color(
+			$author$project$Style$textColor(theme)),
+			$mdgriffith$elm_ui$Element$Background$color(
+			$author$project$Style$backgroundColor(theme)),
+			$author$project$Style$forceColorStyle(theme),
+			$mdgriffith$elm_ui$Element$htmlAttribute(
+			$elm$html$Html$Attributes$id('source-text-input')),
+			$mdgriffith$elm_ui$Element$htmlAttribute(
+			A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box')),
+			$mdgriffith$elm_ui$Element$htmlAttribute(
+			A2($elm$html$Html$Attributes$style, 'padding', '8px 8px 24px 8px'))
+		]);
 };
 var $mdgriffith$elm_ui$Element$Input$Above = {$: 'Above'};
 var $mdgriffith$elm_ui$Element$Input$Label = F3(
@@ -56008,17 +56009,31 @@ var $mdgriffith$elm_ui$Element$Input$multiline = F2(
 			attrs,
 			{label: multi.label, onChange: multi.onChange, placeholder: multi.placeholder, text: multi.text});
 	});
+var $author$project$Style$multiline = F2(
+	function (width, height) {
+		return _List_fromArray(
+			[
+				width($mdgriffith$elm_ui$Element$fill),
+				height($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'overflow-x', 'hidden')),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'position', 'absolute')),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'top', '0')),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'left', '0')),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'right', '0')),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'bottom', '0')),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
+			]);
+	});
 var $author$project$Main$inputText = function (model) {
-	var forceColorStyle = function () {
-		var _v0 = model.theme;
-		if (_v0.$ === 'Light') {
-			return $mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'color', 'black'));
-		} else {
-			return $mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'color', 'white'));
-		}
-	}();
 	return A2(
 		$mdgriffith$elm_ui$Element$el,
 		_List_fromArray(
@@ -56037,47 +56052,10 @@ var $author$project$Main$inputText = function (model) {
 			]),
 		A2(
 			$mdgriffith$elm_ui$Element$el,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'overflow-x', 'hidden')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'position', 'absolute')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'top', '0')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'left', '0')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'right', '0')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'bottom', '0')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
-				]),
+			A2($author$project$Style$multiline, $mdgriffith$elm_ui$Element$width, $mdgriffith$elm_ui$Element$height),
 			A2(
 				$mdgriffith$elm_ui$Element$Input$multiline,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$Font$size(14),
-						$mdgriffith$elm_ui$Element$alignTop,
-						$mdgriffith$elm_ui$Element$Font$color(
-						$author$project$Main$textColor(model.theme)),
-						$mdgriffith$elm_ui$Element$Background$color(
-						$author$project$Main$backgroundColor(model.theme)),
-						forceColorStyle,
-						$mdgriffith$elm_ui$Element$htmlAttribute(
-						$elm$html$Html$Attributes$id('source-text-input')),
-						$mdgriffith$elm_ui$Element$htmlAttribute(
-						A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box')),
-						$mdgriffith$elm_ui$Element$htmlAttribute(
-						A2($elm$html$Html$Attributes$style, 'padding', '8px 8px 24px 8px'))
-					]),
+				$author$project$Style$innerMultiline(model.theme),
 				{
 					label: A2(
 						$mdgriffith$elm_ui$Element$Input$labelAbove,
@@ -56104,14 +56082,14 @@ var $author$project$Main$InputUserName = function (a) {
 };
 var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
 var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
-var $author$project$Main$buttonBackgroundColor = function (theme) {
+var $author$project$Style$buttonBackgroundColor = function (theme) {
 	if (theme.$ === 'Light') {
 		return A3($mdgriffith$elm_ui$Element$rgb255, 25, 25, 35);
 	} else {
-		return $author$project$Main$backgroundColor(theme);
+		return $author$project$Style$backgroundColor(theme);
 	}
 };
-var $author$project$Main$buttonTextColor = function (theme) {
+var $author$project$Style$buttonTextColor = function (theme) {
 	if (theme.$ === 'Light') {
 		return A3($mdgriffith$elm_ui$Element$rgb255, 255, 165, 0);
 	} else {
@@ -56119,160 +56097,72 @@ var $author$project$Main$buttonTextColor = function (theme) {
 	}
 };
 var $author$project$Main$ToggleDocumentList = {$: 'ToggleDocumentList'};
-var $mdgriffith$elm_ui$Internal$Model$Hover = {$: 'Hover'};
-var $mdgriffith$elm_ui$Internal$Flag$hover = $mdgriffith$elm_ui$Internal$Flag$flag(33);
-var $mdgriffith$elm_ui$Element$mouseOver = function (decs) {
+var $mdgriffith$elm_ui$Element$Border$roundEach = function (_v0) {
+	var topLeft = _v0.topLeft;
+	var topRight = _v0.topRight;
+	var bottomLeft = _v0.bottomLeft;
+	var bottomRight = _v0.bottomRight;
 	return A2(
 		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$hover,
-		A2(
-			$mdgriffith$elm_ui$Internal$Model$PseudoSelector,
-			$mdgriffith$elm_ui$Internal$Model$Hover,
-			$mdgriffith$elm_ui$Internal$Model$unwrapDecorations(decs)));
+		$mdgriffith$elm_ui$Internal$Flag$borderRound,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Single,
+			'br-' + ($elm$core$String$fromInt(topLeft) + ('-' + ($elm$core$String$fromInt(topRight) + ($elm$core$String$fromInt(bottomLeft) + ('-' + $elm$core$String$fromInt(bottomRight)))))),
+			'border-radius',
+			$elm$core$String$fromInt(topLeft) + ('px ' + ($elm$core$String$fromInt(topRight) + ('px ' + ($elm$core$String$fromInt(bottomRight) + ('px ' + ($elm$core$String$fromInt(bottomLeft) + 'px'))))))));
 };
+var $author$project$Widget$sidebarButton = F3(
+	function (theme, msg, label) {
+		return A2(
+			$mdgriffith$elm_ui$Element$Input$button,
+			_List_fromArray(
+				[
+					A2($mdgriffith$elm_ui$Element$paddingXY, 12, 6),
+					$mdgriffith$elm_ui$Element$Background$color(
+					_Utils_eq(theme, $author$project$Theme$Light) ? A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255) : A3($mdgriffith$elm_ui$Element$rgb255, 80, 80, 80)),
+					$mdgriffith$elm_ui$Element$Font$color(
+					_Utils_eq(theme, $author$project$Theme$Light) ? A3($mdgriffith$elm_ui$Element$rgb255, 50, 50, 50) : A3($mdgriffith$elm_ui$Element$rgb255, 150, 150, 150)),
+					$mdgriffith$elm_ui$Element$htmlAttribute(
+					A2(
+						$elm$html$Html$Attributes$style,
+						'color',
+						function () {
+							if (theme.$ === 'Light') {
+								return 'rgb(255, 140, 0)';
+							} else {
+								return 'rgb(255, 165, 0)';
+							}
+						}())),
+					$mdgriffith$elm_ui$Element$Border$roundEach(
+					{bottomLeft: 0, bottomRight: 4, topLeft: 0, topRight: 4}),
+					$mdgriffith$elm_ui$Element$Font$size(14),
+					$mdgriffith$elm_ui$Element$Font$bold
+				]),
+			{
+				label: $mdgriffith$elm_ui$Element$text(label),
+				onPress: msg
+			});
+	});
 var $author$project$Main$listButton = function (model) {
-	return A2(
-		$mdgriffith$elm_ui$Element$Input$button,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$Background$color(
-				$author$project$Main$buttonBackgroundColor(model.theme)),
-				$mdgriffith$elm_ui$Element$Font$color(
-				$author$project$Main$buttonTextColor(model.theme)),
-				A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
-				$mdgriffith$elm_ui$Element$Border$rounded(4),
-				$mdgriffith$elm_ui$Element$Border$width(1),
-				$mdgriffith$elm_ui$Element$Border$color(
-				A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
-				$mdgriffith$elm_ui$Element$mouseOver(
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$Background$color(
-						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2)),
-						$mdgriffith$elm_ui$Element$Border$color(
-						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
-					])),
-				$mdgriffith$elm_ui$Element$mouseDown(
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$Background$color(
-						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
-						$mdgriffith$elm_ui$Element$Border$color(
-						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.7))
-					])),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2(
-					$elm$html$Html$Attributes$style,
-					'color',
-					function () {
-						var _v0 = model.theme;
-						if (_v0.$ === 'Light') {
-							return 'rgb(255, 140, 0)';
-						} else {
-							return 'rgb(255, 165, 0)';
-						}
-					}()))
-			]),
-		{
-			label: $mdgriffith$elm_ui$Element$text('List'),
-			onPress: $elm$core$Maybe$Just($author$project$Main$ToggleDocumentList)
-		});
+	return A3(
+		$author$project$Widget$sidebarButton,
+		model.theme,
+		$elm$core$Maybe$Just($author$project$Main$ToggleDocumentList),
+		'List');
 };
 var $author$project$Main$newButton = function (model) {
-	return A2(
-		$mdgriffith$elm_ui$Element$Input$button,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$Background$color(
-				$author$project$Main$buttonBackgroundColor(model.theme)),
-				$mdgriffith$elm_ui$Element$Font$color(
-				$author$project$Main$buttonTextColor(model.theme)),
-				A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
-				$mdgriffith$elm_ui$Element$Border$rounded(4),
-				$mdgriffith$elm_ui$Element$Border$width(1),
-				$mdgriffith$elm_ui$Element$Border$color(
-				A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
-				$mdgriffith$elm_ui$Element$mouseOver(
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$Background$color(
-						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2)),
-						$mdgriffith$elm_ui$Element$Border$color(
-						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
-					])),
-				$mdgriffith$elm_ui$Element$mouseDown(
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$Background$color(
-						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
-						$mdgriffith$elm_ui$Element$Border$color(
-						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.7))
-					])),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2(
-					$elm$html$Html$Attributes$style,
-					'color',
-					function () {
-						var _v0 = model.theme;
-						if (_v0.$ === 'Light') {
-							return 'rgb(255, 140, 0)';
-						} else {
-							return 'rgb(255, 165, 0)';
-						}
-					}()))
-			]),
-		{
-			label: $mdgriffith$elm_ui$Element$text('New'),
-			onPress: $elm$core$Maybe$Just($author$project$Main$CreateNewDocument)
-		});
+	return A3(
+		$author$project$Widget$sidebarButton,
+		model.theme,
+		$elm$core$Maybe$Just($author$project$Main$CreateNewDocument),
+		'New');
 };
 var $author$project$Main$saveButton = function (model) {
-	return A2(
-		$mdgriffith$elm_ui$Element$Input$button,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$Background$color(
-				$author$project$Main$buttonBackgroundColor(model.theme)),
-				$mdgriffith$elm_ui$Element$Font$color(
-				$author$project$Main$buttonTextColor(model.theme)),
-				A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
-				$mdgriffith$elm_ui$Element$Border$rounded(4),
-				$mdgriffith$elm_ui$Element$Border$width(1),
-				$mdgriffith$elm_ui$Element$Border$color(
-				A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
-				$mdgriffith$elm_ui$Element$mouseOver(
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$Background$color(
-						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2)),
-						$mdgriffith$elm_ui$Element$Border$color(
-						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
-					])),
-				$mdgriffith$elm_ui$Element$mouseDown(
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$Background$color(
-						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
-						$mdgriffith$elm_ui$Element$Border$color(
-						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.7))
-					])),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2(
-					$elm$html$Html$Attributes$style,
-					'color',
-					function () {
-						var _v0 = model.theme;
-						if (_v0.$ === 'Light') {
-							return 'rgb(255, 140, 0)';
-						} else {
-							return 'rgb(255, 165, 0)';
-						}
-					}()))
-			]),
-		{
-			label: $mdgriffith$elm_ui$Element$text('Save'),
-			onPress: $elm$core$Maybe$Just($author$project$Main$SaveDocument)
-		});
+	return A3(
+		$author$project$Widget$sidebarButton,
+		model.theme,
+		$elm$core$Maybe$Just($author$project$Main$SaveDocument),
+		'Save');
 };
 var $author$project$Main$crudButtons = function (model) {
 	return A2(
@@ -56295,7 +56185,7 @@ var $author$project$Main$DeleteDocument = function (a) {
 var $author$project$Main$LoadDocument = function (a) {
 	return {$: 'LoadDocument', a: a};
 };
-var $author$project$Main$formatRelativeTime = F2(
+var $author$project$Style$formatRelativeTime = F2(
 	function (currentTime, savedTime) {
 		var savedMillis = $elm$time$Time$posixToMillis(savedTime);
 		var currentMillis = $elm$time$Time$posixToMillis(currentTime);
@@ -56305,6 +56195,17 @@ var $author$project$Main$formatRelativeTime = F2(
 		var hours = (minutes / 60) | 0;
 		return (!savedMillis) ? 'Never' : ((seconds < 5) ? 'Just now' : ((seconds < 60) ? ($elm$core$String$fromInt(seconds) + ' seconds ago') : ((minutes < 60) ? ($elm$core$String$fromInt(minutes) + (' minute' + (((minutes === 1) ? '' : 's') + ' ago'))) : ((hours < 24) ? ($elm$core$String$fromInt(hours) + (' hour' + (((hours === 1) ? '' : 's') + ' ago'))) : ($elm$core$String$fromInt((hours / 24) | 0) + (' day' + (((((hours / 24) | 0) === 1) ? '' : 's') + ' ago')))))));
 	});
+var $mdgriffith$elm_ui$Internal$Model$Hover = {$: 'Hover'};
+var $mdgriffith$elm_ui$Internal$Flag$hover = $mdgriffith$elm_ui$Internal$Flag$flag(33);
+var $mdgriffith$elm_ui$Element$mouseOver = function (decs) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$hover,
+		A2(
+			$mdgriffith$elm_ui$Internal$Model$PseudoSelector,
+			$mdgriffith$elm_ui$Internal$Model$Hover,
+			$mdgriffith$elm_ui$Internal$Model$unwrapDecorations(decs)));
+};
 var $author$project$Main$documentItem = F2(
 	function (model, doc) {
 		var isActive = function () {
@@ -56386,7 +56287,7 @@ var $author$project$Main$documentItem = F2(
 											}())
 										]),
 									$mdgriffith$elm_ui$Element$text(
-										A2($author$project$Main$formatRelativeTime, model.currentTime, doc.modifiedAt)))
+										A2($author$project$Style$formatRelativeTime, model.currentTime, doc.modifiedAt)))
 								])),
 						onPress: $elm$core$Maybe$Just(
 							$author$project$Main$LoadDocument(doc.id))
@@ -56417,7 +56318,7 @@ var $author$project$Main$documentItem = F2(
 					})
 				]));
 	});
-var $author$project$Main$electricBlueColor = function (theme) {
+var $author$project$Style$electricBlueColor = function (theme) {
 	if (theme.$ === 'Light') {
 		return A3($mdgriffith$elm_ui$Element$rgb255, 20, 123, 255);
 	} else {
@@ -56436,134 +56337,36 @@ var $author$project$Main$exportStuff = function (model) {
 			]),
 		_List_fromArray(
 			[
-				A2(
-				$mdgriffith$elm_ui$Element$Input$button,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$Background$color(
-						$author$project$Main$buttonBackgroundColor(model.theme)),
-						$mdgriffith$elm_ui$Element$Font$color(
-						$author$project$Main$buttonTextColor(model.theme)),
-						A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
-						$mdgriffith$elm_ui$Element$Border$rounded(4),
-						$mdgriffith$elm_ui$Element$Border$width(1),
-						$mdgriffith$elm_ui$Element$Border$color(
-						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
-						$mdgriffith$elm_ui$Element$mouseOver(
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$Background$color(
-								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2)),
-								$mdgriffith$elm_ui$Element$Border$color(
-								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
-							])),
-						$mdgriffith$elm_ui$Element$mouseDown(
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$Background$color(
-								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
-								$mdgriffith$elm_ui$Element$Border$color(
-								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.7))
-							])),
-						$mdgriffith$elm_ui$Element$htmlAttribute(
-						A2(
-							$elm$html$Html$Attributes$style,
-							'color',
-							function () {
-								var _v0 = model.theme;
-								if (_v0.$ === 'Light') {
-									return 'rgb(255, 140, 0)';
-								} else {
-									return 'rgb(255, 165, 0)';
-								}
-							}()))
-					]),
-				{
-					label: $mdgriffith$elm_ui$Element$text('LaTeX'),
-					onPress: $elm$core$Maybe$Just($author$project$Main$ExportToLaTeX)
-				}),
-				A2(
-				$mdgriffith$elm_ui$Element$Input$button,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$Background$color(
-						$author$project$Main$buttonBackgroundColor(model.theme)),
-						$mdgriffith$elm_ui$Element$Font$color(
-						$author$project$Main$buttonTextColor(model.theme)),
-						A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
-						$mdgriffith$elm_ui$Element$Border$rounded(4),
-						$mdgriffith$elm_ui$Element$Border$width(1),
-						$mdgriffith$elm_ui$Element$Border$color(
-						A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
-						$mdgriffith$elm_ui$Element$mouseOver(
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$Background$color(
-								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2)),
-								$mdgriffith$elm_ui$Element$Border$color(
-								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
-							])),
-						$mdgriffith$elm_ui$Element$mouseDown(
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$Background$color(
-								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
-								$mdgriffith$elm_ui$Element$Border$color(
-								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.7))
-							])),
-						$mdgriffith$elm_ui$Element$htmlAttribute(
-						A2(
-							$elm$html$Html$Attributes$style,
-							'color',
-							function () {
-								var _v1 = model.theme;
-								if (_v1.$ === 'Light') {
-									return 'rgb(255, 140, 0)';
-								} else {
-									return 'rgb(255, 165, 0)';
-								}
-							}()))
-					]),
-				{
-					label: $mdgriffith$elm_ui$Element$text('Raw LaTeX'),
-					onPress: $elm$core$Maybe$Just($author$project$Main$ExportToRawLaTeX)
-				})
+				A3(
+				$author$project$Widget$sidebarButton,
+				model.theme,
+				$elm$core$Maybe$Just($author$project$Main$ExportToLaTeX),
+				'LaTeX'),
+				A3(
+				$author$project$Widget$sidebarButton,
+				model.theme,
+				$elm$core$Maybe$Just($author$project$Main$ExportToRawLaTeX),
+				'Raw LaTeX')
 			]));
 };
+var $author$project$Style$innerColumn = _List_fromArray(
+	[
+		$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+		$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+		A2($mdgriffith$elm_ui$Element$paddingXY, 16, 16),
+		$mdgriffith$elm_ui$Element$spacing(12),
+		$mdgriffith$elm_ui$Element$scrollbarY,
+		$mdgriffith$elm_ui$Element$htmlAttribute(
+		A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
+		$mdgriffith$elm_ui$Element$htmlAttribute(
+		A2($elm$html$Html$Attributes$style, 'min-height', '0')),
+		$mdgriffith$elm_ui$Element$htmlAttribute(
+		A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
+	]);
 var $mdgriffith$elm_ui$Element$Input$HiddenLabel = function (a) {
 	return {$: 'HiddenLabel', a: a};
 };
 var $mdgriffith$elm_ui$Element$Input$labelHidden = $mdgriffith$elm_ui$Element$Input$HiddenLabel;
-var $mdgriffith$elm_ui$Element$Input$Placeholder = F2(
-	function (a, b) {
-		return {$: 'Placeholder', a: a, b: b};
-	});
-var $mdgriffith$elm_ui$Element$Input$placeholder = $mdgriffith$elm_ui$Element$Input$Placeholder;
-var $author$project$Main$rightPanelBackgroundColor = function (theme) {
-	if (theme.$ === 'Light') {
-		return A3($mdgriffith$elm_ui$Element$rgb255, 230, 230, 230);
-	} else {
-		return $author$project$Main$backgroundColor(theme);
-	}
-};
-var $author$project$Main$rightPanelBackground_ = function (model) {
-	return $mdgriffith$elm_ui$Element$Background$color(
-		$author$project$Main$rightPanelBackgroundColor(model.theme));
-};
-var $mdgriffith$elm_ui$Element$Border$roundEach = function (_v0) {
-	var topLeft = _v0.topLeft;
-	var topRight = _v0.topRight;
-	var bottomLeft = _v0.bottomLeft;
-	var bottomRight = _v0.bottomRight;
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$borderRound,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$Single,
-			'br-' + ($elm$core$String$fromInt(topLeft) + ('-' + ($elm$core$String$fromInt(topRight) + ($elm$core$String$fromInt(bottomLeft) + ('-' + $elm$core$String$fromInt(bottomRight)))))),
-			'border-radius',
-			$elm$core$String$fromInt(topLeft) + ('px ' + ($elm$core$String$fromInt(topRight) + ('px ' + ($elm$core$String$fromInt(bottomRight) + ('px ' + ($elm$core$String$fromInt(bottomLeft) + 'px'))))))));
-};
 var $mdgriffith$elm_ui$Element$Input$TextInputNode = function (a) {
 	return {$: 'TextInputNode', a: a};
 };
@@ -56573,17 +56376,44 @@ var $mdgriffith$elm_ui$Element$Input$text = $mdgriffith$elm_ui$Element$Input$tex
 		spellchecked: false,
 		type_: $mdgriffith$elm_ui$Element$Input$TextInputNode('text')
 	});
+var $author$project$Widget$inputTextWidget = F3(
+	function (theme, input, msg) {
+		return A2(
+			$mdgriffith$elm_ui$Element$Input$text,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					A2($mdgriffith$elm_ui$Element$paddingXY, 8, 4),
+					$mdgriffith$elm_ui$Element$Border$width(1),
+					$mdgriffith$elm_ui$Element$Border$rounded(4),
+					$mdgriffith$elm_ui$Element$Border$color(
+					A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+					$mdgriffith$elm_ui$Element$Background$color(
+					$author$project$Style$backgroundColor(theme)),
+					$mdgriffith$elm_ui$Element$Font$color(
+					$author$project$Style$textColor(theme)),
+					$mdgriffith$elm_ui$Element$Font$size(14),
+					$mdgriffith$elm_ui$Element$Font$bold
+				]),
+			{
+				label: $mdgriffith$elm_ui$Element$Input$labelHidden('Your name'),
+				onChange: msg,
+				placeholder: $elm$core$Maybe$Nothing,
+				text: input
+			});
+	});
+var $author$project$Style$rightPanelBackgroundColor = function (theme) {
+	if (theme.$ === 'Light') {
+		return A3($mdgriffith$elm_ui$Element$rgb255, 230, 230, 230);
+	} else {
+		return $author$project$Style$backgroundColor(theme);
+	}
+};
+var $author$project$Style$rightPanelBackground_ = function (theme) {
+	return $mdgriffith$elm_ui$Element$Background$color(
+		$author$project$Style$rightPanelBackgroundColor(theme));
+};
 var $author$project$Main$sidebar = function (model) {
-	var forceColorStyle = function () {
-		var _v2 = model.theme;
-		if (_v2.$ === 'Light') {
-			return $mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'color', 'black'));
-		} else {
-			return $mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'color', 'white'));
-		}
-	}();
 	return A2(
 		$mdgriffith$elm_ui$Element$column,
 		_List_fromArray(
@@ -56592,10 +56422,10 @@ var $author$project$Main$sidebar = function (model) {
 				$mdgriffith$elm_ui$Element$px($author$project$Main$sidebarWidth)),
 				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 				$mdgriffith$elm_ui$Element$Font$color(
-				$author$project$Main$textColor(model.theme)),
+				$author$project$Style$textColor(model.theme)),
 				$mdgriffith$elm_ui$Element$Font$size(14),
-				$author$project$Main$rightPanelBackground_(model),
-				forceColorStyle,
+				$author$project$Style$rightPanelBackground_(model.theme),
+				$author$project$Style$forceColorStyle(model.theme),
 				$mdgriffith$elm_ui$Element$Border$widthEach(
 				{bottom: 0, left: 1, right: 0, top: 0}),
 				$mdgriffith$elm_ui$Element$Border$color(
@@ -56605,49 +56435,14 @@ var $author$project$Main$sidebar = function (model) {
 			[
 				A2(
 				$mdgriffith$elm_ui$Element$column,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-						A2($mdgriffith$elm_ui$Element$paddingXY, 16, 16),
-						$mdgriffith$elm_ui$Element$spacing(12),
-						$mdgriffith$elm_ui$Element$scrollbarY,
-						$mdgriffith$elm_ui$Element$htmlAttribute(
-						A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
-						$mdgriffith$elm_ui$Element$htmlAttribute(
-						A2($elm$html$Html$Attributes$style, 'min-height', '0')),
-						$mdgriffith$elm_ui$Element$htmlAttribute(
-						A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
-					]),
+				$author$project$Style$innerColumn,
 				_List_fromArray(
 					[
 						function () {
 						var _v0 = model.userName;
 						if (_v0.$ === 'Just') {
 							var name = _v0.a;
-							return ($elm$core$String$trim(name) !== '') ? A2(
-								$mdgriffith$elm_ui$Element$Input$text,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-										A2($mdgriffith$elm_ui$Element$paddingXY, 8, 4),
-										$mdgriffith$elm_ui$Element$Border$width(1),
-										$mdgriffith$elm_ui$Element$Border$rounded(4),
-										$mdgriffith$elm_ui$Element$Border$color(
-										A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
-										$mdgriffith$elm_ui$Element$Background$color(
-										$author$project$Main$backgroundColor(model.theme)),
-										$mdgriffith$elm_ui$Element$Font$color(
-										$author$project$Main$textColor(model.theme)),
-										$mdgriffith$elm_ui$Element$Font$size(14),
-										$mdgriffith$elm_ui$Element$Font$bold
-									]),
-								{
-									label: $mdgriffith$elm_ui$Element$Input$labelHidden('Your name'),
-									onChange: $author$project$Main$InputUserName,
-									placeholder: $elm$core$Maybe$Nothing,
-									text: name
-								}) : A2(
+							return ($elm$core$String$trim(name) !== '') ? A3($author$project$Widget$inputTextWidget, model.theme, name, $author$project$Main$InputUserName) : A2(
 								$mdgriffith$elm_ui$Element$column,
 								_List_fromArray(
 									[
@@ -56664,32 +56459,7 @@ var $author$project$Main$sidebar = function (model) {
 												{bottom: 8, left: 0, right: 0, top: 0})
 											]),
 										$mdgriffith$elm_ui$Element$text('Your Name')),
-										A2(
-										$mdgriffith$elm_ui$Element$Input$text,
-										_List_fromArray(
-											[
-												$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-												A2($mdgriffith$elm_ui$Element$paddingXY, 8, 4),
-												$mdgriffith$elm_ui$Element$Border$width(1),
-												$mdgriffith$elm_ui$Element$Border$rounded(4),
-												$mdgriffith$elm_ui$Element$Border$color(
-												A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
-												$mdgriffith$elm_ui$Element$Background$color(
-												$author$project$Main$backgroundColor(model.theme)),
-												$mdgriffith$elm_ui$Element$Font$color(
-												$author$project$Main$textColor(model.theme)),
-												$mdgriffith$elm_ui$Element$Font$size(14)
-											]),
-										{
-											label: $mdgriffith$elm_ui$Element$Input$labelHidden('Your name'),
-											onChange: $author$project$Main$InputUserName,
-											placeholder: $elm$core$Maybe$Just(
-												A2(
-													$mdgriffith$elm_ui$Element$Input$placeholder,
-													_List_Nil,
-													$mdgriffith$elm_ui$Element$text('Enter your name'))),
-											text: ''
-										})
+										A3($author$project$Widget$inputTextWidget, model.theme, name, $author$project$Main$InputUserName)
 									]));
 						} else {
 							return A2(
@@ -56709,32 +56479,7 @@ var $author$project$Main$sidebar = function (model) {
 												{bottom: 8, left: 0, right: 0, top: 0})
 											]),
 										$mdgriffith$elm_ui$Element$text('Your Name')),
-										A2(
-										$mdgriffith$elm_ui$Element$Input$text,
-										_List_fromArray(
-											[
-												$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-												A2($mdgriffith$elm_ui$Element$paddingXY, 8, 4),
-												$mdgriffith$elm_ui$Element$Border$width(1),
-												$mdgriffith$elm_ui$Element$Border$rounded(4),
-												$mdgriffith$elm_ui$Element$Border$color(
-												A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
-												$mdgriffith$elm_ui$Element$Background$color(
-												$author$project$Main$backgroundColor(model.theme)),
-												$mdgriffith$elm_ui$Element$Font$color(
-												$author$project$Main$textColor(model.theme)),
-												$mdgriffith$elm_ui$Element$Font$size(14)
-											]),
-										{
-											label: $mdgriffith$elm_ui$Element$Input$labelHidden('Your name'),
-											onChange: $author$project$Main$InputUserName,
-											placeholder: $elm$core$Maybe$Just(
-												A2(
-													$mdgriffith$elm_ui$Element$Input$placeholder,
-													_List_Nil,
-													$mdgriffith$elm_ui$Element$text('Enter your name'))),
-											text: ''
-										})
+										A3($author$project$Widget$inputTextWidget, model.theme, '', $author$project$Main$InputUserName)
 									]));
 						}
 					}(),
@@ -56768,9 +56513,9 @@ var $author$project$Main$sidebar = function (model) {
 											[
 												A2($mdgriffith$elm_ui$Element$paddingXY, 12, 6),
 												$mdgriffith$elm_ui$Element$Background$color(
-												_Utils_eq(model.theme, $author$project$Theme$Dark) ? $author$project$Main$buttonBackgroundColor(model.theme) : A3($mdgriffith$elm_ui$Element$rgb255, 230, 230, 230)),
+												_Utils_eq(model.theme, $author$project$Theme$Dark) ? $author$project$Style$buttonBackgroundColor(model.theme) : A3($mdgriffith$elm_ui$Element$rgb255, 230, 230, 230)),
 												$mdgriffith$elm_ui$Element$Font$color(
-												_Utils_eq(model.theme, $author$project$Theme$Dark) ? $author$project$Main$buttonTextColor(model.theme) : A3($mdgriffith$elm_ui$Element$rgb255, 100, 100, 100)),
+												_Utils_eq(model.theme, $author$project$Theme$Dark) ? $author$project$Style$buttonTextColor(model.theme) : A3($mdgriffith$elm_ui$Element$rgb255, 100, 100, 100)),
 												$mdgriffith$elm_ui$Element$Border$roundEach(
 												{bottomLeft: 4, bottomRight: 0, topLeft: 4, topRight: 0}),
 												$mdgriffith$elm_ui$Element$Font$size(14),
@@ -56780,24 +56525,11 @@ var $author$project$Main$sidebar = function (model) {
 											label: $mdgriffith$elm_ui$Element$text('Dark'),
 											onPress: $elm$core$Maybe$Just($author$project$Main$ToggleTheme)
 										}),
-										A2(
-										$mdgriffith$elm_ui$Element$Input$button,
-										_List_fromArray(
-											[
-												A2($mdgriffith$elm_ui$Element$paddingXY, 12, 6),
-												$mdgriffith$elm_ui$Element$Background$color(
-												_Utils_eq(model.theme, $author$project$Theme$Light) ? A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255) : A3($mdgriffith$elm_ui$Element$rgb255, 80, 80, 80)),
-												$mdgriffith$elm_ui$Element$Font$color(
-												_Utils_eq(model.theme, $author$project$Theme$Light) ? A3($mdgriffith$elm_ui$Element$rgb255, 50, 50, 50) : A3($mdgriffith$elm_ui$Element$rgb255, 150, 150, 150)),
-												$mdgriffith$elm_ui$Element$Border$roundEach(
-												{bottomLeft: 0, bottomRight: 4, topLeft: 0, topRight: 4}),
-												$mdgriffith$elm_ui$Element$Font$size(14),
-												$mdgriffith$elm_ui$Element$Font$bold
-											]),
-										{
-											label: $mdgriffith$elm_ui$Element$text('Light'),
-											onPress: $elm$core$Maybe$Just($author$project$Main$ToggleTheme)
-										})
+										A3(
+										$author$project$Widget$sidebarButton,
+										model.theme,
+										$elm$core$Maybe$Just($author$project$Main$ToggleTheme),
+										'Light')
 									]))
 							])),
 						A2(
@@ -56860,9 +56592,9 @@ var $author$project$Main$sidebar = function (model) {
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$Background$color(
-								$author$project$Main$buttonBackgroundColor(model.theme)),
+								$author$project$Style$buttonBackgroundColor(model.theme)),
 								$mdgriffith$elm_ui$Element$Font$color(
-								$author$project$Main$electricBlueColor(model.theme)),
+								$author$project$Style$electricBlueColor(model.theme)),
 								A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
 								$mdgriffith$elm_ui$Element$Border$rounded(4),
 								$mdgriffith$elm_ui$Element$Border$width(1),
@@ -56910,7 +56642,7 @@ var $author$project$Main$mainColumn = function (model) {
 		$mdgriffith$elm_ui$Element$column,
 		A2(
 			$elm$core$List$cons,
-			$author$project$Main$background_(model),
+			$author$project$Style$background_(model.theme),
 			$author$project$Main$mainColumnStyle),
 		_List_fromArray(
 			[
@@ -56937,7 +56669,7 @@ var $author$project$Main$mainColumn = function (model) {
 								$mdgriffith$elm_ui$Element$height(
 								$mdgriffith$elm_ui$Element$px(1)),
 								$mdgriffith$elm_ui$Element$Background$color(
-								$author$project$Main$borderColor(model))
+								$author$project$Style$borderColor(model.theme))
 							]),
 						$mdgriffith$elm_ui$Element$none),
 						A2(
@@ -56961,7 +56693,7 @@ var $author$project$Main$mainColumn = function (model) {
 										$mdgriffith$elm_ui$Element$px(1)),
 										$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 										$mdgriffith$elm_ui$Element$Background$color(
-										$author$project$Main$borderColor(model))
+										$author$project$Style$borderColor(model.theme))
 									]),
 								$mdgriffith$elm_ui$Element$none),
 								A2(
@@ -56976,7 +56708,7 @@ var $author$project$Main$mainColumn = function (model) {
 										$mdgriffith$elm_ui$Element$px(1)),
 										$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 										$mdgriffith$elm_ui$Element$Background$color(
-										$author$project$Main$borderColor(model))
+										$author$project$Style$borderColor(model.theme))
 									]),
 								$mdgriffith$elm_ui$Element$none),
 								$author$project$Main$sidebar(model)
@@ -56996,7 +56728,7 @@ var $author$project$Main$view = function (model) {
 		},
 		_List_fromArray(
 			[
-				$author$project$Main$background_(model),
+				$author$project$Style$background_(model.theme),
 				$mdgriffith$elm_ui$Element$htmlAttribute(
 				A2($elm$html$Html$Attributes$style, 'height', '100vh')),
 				$mdgriffith$elm_ui$Element$htmlAttribute(
