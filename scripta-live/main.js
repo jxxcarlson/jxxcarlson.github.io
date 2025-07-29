@@ -50381,8 +50381,11 @@ var $author$project$Model$init = function (flags) {
 			documents: _List_Nil,
 			editRecord: editRecord,
 			editorData: {begin: 0, end: 0},
+			initialText: normalizedTex,
 			lastChanged: currentTime,
+			lastLoadedDocumentId: $elm$core$Maybe$Nothing,
 			lastSaved: currentTime,
+			loadDocumentIntoEditor: true,
 			maybeSelectionOffset: $elm$core$Maybe$Nothing,
 			pressedKeys: _List_Nil,
 			selectId: '@InitID',
@@ -53584,7 +53587,10 @@ var $author$project$Main$handleIncomingPortMsg = F2(
 								editRecord),
 							currentDocument: $elm$core$Maybe$Just(doc),
 							editRecord: editRecord,
+							initialText: doc.content,
+							lastLoadedDocumentId: $elm$core$Maybe$Just(doc.id),
 							lastSaved: doc.modifiedAt,
+							loadDocumentIntoEditor: true,
 							sourceText: doc.content,
 							title: doc.title
 						}),
@@ -54397,6 +54403,7 @@ var $author$project$Main$update = F2(
 								displaySettings: newDisplaySettings,
 								editRecord: editRecord,
 								lastChanged: model.currentTime,
+								loadDocumentIntoEditor: false,
 								sourceText: source,
 								title: $author$project$Model$getTitle(source)
 							}),
@@ -54554,6 +54561,9 @@ var $author$project$Main$update = F2(
 									editRecord),
 								currentDocument: $elm$core$Maybe$Just(newDoc),
 								editRecord: editRecord,
+								initialText: newDocumentContent,
+								lastLoadedDocumentId: $elm$core$Maybe$Just(id),
+								loadDocumentIntoEditor: true,
 								sourceText: newDocumentContent,
 								title: 'New Document'
 							}),
@@ -56714,8 +56724,8 @@ var $author$project$Editor$view_ = function (model) {
 					'codemirror-editor',
 					_List_fromArray(
 						[
-							A2($elm$html$Html$Attributes$attribute, 'load', model.sourceText),
-							A2($elm$html$Html$Attributes$attribute, 'text', model.sourceText),
+							model.loadDocumentIntoEditor ? A2($elm$html$Html$Attributes$attribute, 'load', model.sourceText) : A2($elm$html$Html$Attributes$attribute, 'noOp', 'true'),
+							A2($elm$html$Html$Attributes$attribute, 'text', model.initialText),
 							A2(
 							$elm$html$Html$Attributes$attribute,
 							'editordata',
