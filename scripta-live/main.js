@@ -55013,7 +55013,6 @@ var $author$project$Style$borderColor = function (theme) {
 		return A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.5, 0.5);
 	}
 };
-var $mdgriffith$elm_ui$Element$clipY = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.clipY);
 var $author$project$Main$container = F2(
 	function (model, elements_) {
 		return A2(
@@ -55028,27 +55027,6 @@ var $author$project$Main$container = F2(
 					])),
 			elements_);
 	});
-var $author$project$Style$displayColumn = _List_fromArray(
-	[
-		$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-		$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-		$mdgriffith$elm_ui$Element$htmlAttribute(
-		A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
-		$mdgriffith$elm_ui$Element$htmlAttribute(
-		A2($elm$html$Html$Attributes$style, 'overflow-x', 'hidden')),
-		$mdgriffith$elm_ui$Element$htmlAttribute(
-		A2($elm$html$Html$Attributes$style, 'position', 'absolute')),
-		$mdgriffith$elm_ui$Element$htmlAttribute(
-		A2($elm$html$Html$Attributes$style, 'top', '0')),
-		$mdgriffith$elm_ui$Element$htmlAttribute(
-		A2($elm$html$Html$Attributes$style, 'left', '0')),
-		$mdgriffith$elm_ui$Element$htmlAttribute(
-		A2($elm$html$Html$Attributes$style, 'right', '0')),
-		$mdgriffith$elm_ui$Element$htmlAttribute(
-		A2($elm$html$Html$Attributes$style, 'bottom', '0')),
-		$mdgriffith$elm_ui$Element$htmlAttribute(
-		A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
-	]);
 var $author$project$Style$forceColorStyle = function (theme) {
 	if (theme.$ === 'Light') {
 		return $mdgriffith$elm_ui$Element$htmlAttribute(
@@ -55069,6 +55047,7 @@ var $author$project$Main$sidebarWidth = 260;
 var $author$project$Main$panelWidth = function (model) {
 	return ((((($author$project$Main$appWidth(model) - $author$project$Main$sidebarWidth) - 16) - 4) - 16) / 2) | 0;
 };
+var $mdgriffith$elm_ui$Element$scrollbarY = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.scrollbarsY);
 var $author$project$Style$textColor = function (theme) {
 	if (theme.$ === 'Light') {
 		return A3($mdgriffith$elm_ui$Element$rgb255, 33, 33, 33);
@@ -55086,49 +55065,38 @@ var $author$project$Main$displayRenderedText = function (model) {
 				$mdgriffith$elm_ui$Element$width(
 				$mdgriffith$elm_ui$Element$px(
 					$author$project$Main$panelWidth(model))),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'overflow', 'hidden')),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'position', 'relative')),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
+				$mdgriffith$elm_ui$Element$scrollbarY
 			]),
 		A2(
-			$mdgriffith$elm_ui$Element$el,
-			$author$project$Style$displayColumn,
-			A2(
-				$mdgriffith$elm_ui$Element$column,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$Font$size(14),
-						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$mdgriffith$elm_ui$Element$column,
-						_List_fromArray(
-							[
-								$author$project$Style$background_(model.theme),
-								$mdgriffith$elm_ui$Element$spacing(24),
-								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-								$author$project$Style$htmlId('rendered-text'),
-								$mdgriffith$elm_ui$Element$alignTop,
-								$mdgriffith$elm_ui$Element$centerX,
-								$mdgriffith$elm_ui$Element$Font$color(
-								$author$project$Style$textColor(model.theme)),
-								$author$project$Style$forceColorStyle(model.theme),
-								$mdgriffith$elm_ui$Element$htmlAttribute(
-								A2($elm$html$Html$Attributes$style, 'padding', '16px')),
-								$mdgriffith$elm_ui$Element$htmlAttribute(
-								A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
-							]),
-						_List_fromArray(
-							[
-								A2($author$project$Main$container, model, model.compilerOutput.body)
-							]))
-					]))));
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$size(14),
+					$mdgriffith$elm_ui$Element$padding(16),
+					$mdgriffith$elm_ui$Element$spacing(24),
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$column,
+					_List_fromArray(
+						[
+							$author$project$Style$background_(model.theme),
+							$mdgriffith$elm_ui$Element$spacing(24),
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+							$author$project$Style$htmlId('rendered-text'),
+							$mdgriffith$elm_ui$Element$alignTop,
+							$mdgriffith$elm_ui$Element$centerX,
+							$mdgriffith$elm_ui$Element$Font$color(
+							$author$project$Style$textColor(model.theme)),
+							$author$project$Style$forceColorStyle(model.theme)
+						]),
+					_List_fromArray(
+						[
+							A2($author$project$Main$container, model, model.compilerOutput.body)
+						]))
+				])));
 };
 var $author$project$Style$debugTextColor = function (theme_) {
 	if (theme_.$ === 'Light') {
@@ -55483,7 +55451,6 @@ var $author$project$Main$exportStuff = function (model) {
 				'Raw LaTeX')
 			]));
 };
-var $mdgriffith$elm_ui$Element$scrollbarY = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.scrollbarsY);
 var $author$project$Style$innerColumn = _List_fromArray(
 	[
 		$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
@@ -56580,12 +56547,9 @@ var $author$project$Main$sidebar = function (model) {
 					]))
 			]));
 };
-var $author$project$Editor$appWidth = function (model) {
-	return model.windowWidth;
-};
-var $author$project$Editor$sidebarWidth = 260;
-var $author$project$Editor$panelWidth = function (model) {
-	return ((((($author$project$Editor$appWidth(model) - $author$project$Editor$sidebarWidth) - 16) - 4) - 16) / 2) | 0;
+var $author$project$Editor$headerHeight = 90;
+var $author$project$Editor$editorHeight = function (model) {
+	return (model.windowHeight - $author$project$Editor$headerHeight) - 1;
 };
 var $mdgriffith$elm_ui$Element$Keyed$el = F2(
 	function (attrs, child) {
@@ -56696,10 +56660,17 @@ var $author$project$Editor$onTextChange = A2(
 	$elm$html$Html$Events$on,
 	'text-change',
 	A2($elm$json$Json$Decode$map, $author$project$Model$InputText2, $author$project$Editor$dataDecoder));
+var $author$project$Editor$appWidth = function (model) {
+	return model.windowWidth;
+};
+var $author$project$Editor$sidebarWidth = 260;
+var $author$project$Editor$panelWidth = function (model) {
+	return ((((($author$project$Editor$appWidth(model) - $author$project$Editor$sidebarWidth) - 16) - 4) - 16) / 2) | 0;
+};
 var $author$project$Editor$stringOfBool = function (bool) {
 	return bool ? 'true' : 'false';
 };
-var $author$project$Editor$view_ = function (model) {
+var $author$project$Editor$view = function (model) {
 	return A2(
 		$mdgriffith$elm_ui$Element$Keyed$el,
 		_List_fromArray(
@@ -56708,8 +56679,12 @@ var $author$project$Editor$view_ = function (model) {
 				$mdgriffith$elm_ui$Element$alignBottom,
 				$mdgriffith$elm_ui$Element$htmlAttribute($author$project$Editor$onTextChange),
 				$author$project$Editor$htmlId('editor-here'),
-				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$height(
+				$mdgriffith$elm_ui$Element$px(
+					$author$project$Editor$editorHeight(model))),
+				$mdgriffith$elm_ui$Element$width(
+				$mdgriffith$elm_ui$Element$px(
+					$author$project$Editor$panelWidth(model))),
 				$mdgriffith$elm_ui$Element$Background$color(
 				A3($mdgriffith$elm_ui$Element$rgb255, 0, 68, 85)),
 				$mdgriffith$elm_ui$Element$Font$color(
@@ -56749,28 +56724,6 @@ var $author$project$Editor$view_ = function (model) {
 						]),
 					_List_Nil))));
 };
-var $author$project$Editor$view = function (model) {
-	return A2(
-		$mdgriffith$elm_ui$Element$el,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$alignTop,
-				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-				$mdgriffith$elm_ui$Element$width(
-				$mdgriffith$elm_ui$Element$px(
-					$author$project$Editor$panelWidth(model))),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'overflow', 'hidden')),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'position', 'relative')),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
-			]),
-		A2(
-			$mdgriffith$elm_ui$Element$el,
-			_List_Nil,
-			$author$project$Editor$view_(model)));
-};
 var $author$project$Main$mainColumn = function (model) {
 	return A2(
 		$mdgriffith$elm_ui$Element$column,
@@ -56786,7 +56739,6 @@ var $author$project$Main$mainColumn = function (model) {
 					[
 						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$clipY,
 						$mdgriffith$elm_ui$Element$htmlAttribute(
 						A2($elm$html$Html$Attributes$style, 'display', 'flex')),
 						$mdgriffith$elm_ui$Element$htmlAttribute(
@@ -56813,8 +56765,7 @@ var $author$project$Main$mainColumn = function (model) {
 								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 								$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 								$mdgriffith$elm_ui$Element$htmlAttribute(
-								A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box')),
-								A2($mdgriffith$elm_ui$Element$paddingXY, 0, 0)
+								A2($elm$html$Html$Attributes$style, 'overflow', 'hidden'))
 							]),
 						_List_fromArray(
 							[
@@ -56864,9 +56815,7 @@ var $author$project$Main$view = function (model) {
 			[
 				$author$project$Style$background_(model.theme),
 				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'height', '100vh')),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'overflow', 'hidden'))
+				A2($elm$html$Html$Attributes$style, 'height', '100vh'))
 			]),
 		$author$project$Main$mainColumn(model));
 };
