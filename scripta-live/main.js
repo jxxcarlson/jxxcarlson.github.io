@@ -56111,7 +56111,6 @@ var $author$project$Main$buttonBackgroundColor = function (theme) {
 		return $author$project$Main$backgroundColor(theme);
 	}
 };
-var $author$project$Main$ToggleDocumentList = {$: 'ToggleDocumentList'};
 var $author$project$Main$buttonTextColor = function (theme) {
 	if (theme.$ === 'Light') {
 		return A3($mdgriffith$elm_ui$Element$rgb255, 255, 165, 0);
@@ -56119,6 +56118,7 @@ var $author$project$Main$buttonTextColor = function (theme) {
 		return A3($mdgriffith$elm_ui$Element$rgb255, 255, 165, 0);
 	}
 };
+var $author$project$Main$ToggleDocumentList = {$: 'ToggleDocumentList'};
 var $mdgriffith$elm_ui$Internal$Model$Hover = {$: 'Hover'};
 var $mdgriffith$elm_ui$Internal$Flag$hover = $mdgriffith$elm_ui$Internal$Flag$flag(33);
 var $mdgriffith$elm_ui$Element$mouseOver = function (decs) {
@@ -56534,24 +56534,6 @@ var $mdgriffith$elm_ui$Element$Input$HiddenLabel = function (a) {
 	return {$: 'HiddenLabel', a: a};
 };
 var $mdgriffith$elm_ui$Element$Input$labelHidden = $mdgriffith$elm_ui$Element$Input$HiddenLabel;
-var $author$project$Main$lastSaveInfo = function (model) {
-	var _v0 = model.currentDocument;
-	if (_v0.$ === 'Just') {
-		var doc = _v0.a;
-		return A2(
-			$mdgriffith$elm_ui$Element$el,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$paddingEach(
-					{bottom: 0, left: 0, right: 0, top: 12}),
-					$mdgriffith$elm_ui$Element$Font$size(14)
-				]),
-			$mdgriffith$elm_ui$Element$text(
-				'Last saved: ' + A2($author$project$Main$formatRelativeTime, model.currentTime, model.lastSaved)));
-	} else {
-		return $mdgriffith$elm_ui$Element$none;
-	}
-};
 var $mdgriffith$elm_ui$Element$Input$Placeholder = F2(
 	function (a, b) {
 		return {$: 'Placeholder', a: a, b: b};
@@ -56567,6 +56549,20 @@ var $author$project$Main$rightPanelBackgroundColor = function (theme) {
 var $author$project$Main$rightPanelBackground_ = function (model) {
 	return $mdgriffith$elm_ui$Element$Background$color(
 		$author$project$Main$rightPanelBackgroundColor(model.theme));
+};
+var $mdgriffith$elm_ui$Element$Border$roundEach = function (_v0) {
+	var topLeft = _v0.topLeft;
+	var topRight = _v0.topRight;
+	var bottomLeft = _v0.bottomLeft;
+	var bottomRight = _v0.bottomRight;
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$borderRound,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Single,
+			'br-' + ($elm$core$String$fromInt(topLeft) + ('-' + ($elm$core$String$fromInt(topRight) + ($elm$core$String$fromInt(bottomLeft) + ('-' + $elm$core$String$fromInt(bottomRight)))))),
+			'border-radius',
+			$elm$core$String$fromInt(topLeft) + ('px ' + ($elm$core$String$fromInt(topRight) + ('px ' + ($elm$core$String$fromInt(bottomRight) + ('px ' + ($elm$core$String$fromInt(bottomLeft) + 'px'))))))));
 };
 var $mdgriffith$elm_ui$Element$Input$TextInputNode = function (a) {
 	return {$: 'TextInputNode', a: a};
@@ -56743,14 +56739,67 @@ var $author$project$Main$sidebar = function (model) {
 						}
 					}(),
 						A2(
-						$mdgriffith$elm_ui$Element$el,
+						$mdgriffith$elm_ui$Element$row,
 						_List_fromArray(
 							[
-								$mdgriffith$elm_ui$Element$Font$bold,
 								$mdgriffith$elm_ui$Element$paddingEach(
-								{bottom: 8, left: 0, right: 0, top: 16})
+								{bottom: 8, left: 0, right: 0, top: 16}),
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+								$mdgriffith$elm_ui$Element$spacing(8)
 							]),
-						$mdgriffith$elm_ui$Element$text('Documents')),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$row,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$Border$width(1),
+										$mdgriffith$elm_ui$Element$Border$color(
+										A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.7, 0.7)),
+										$mdgriffith$elm_ui$Element$Border$rounded(4),
+										$mdgriffith$elm_ui$Element$height(
+										$mdgriffith$elm_ui$Element$px(30))
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$mdgriffith$elm_ui$Element$Input$button,
+										_List_fromArray(
+											[
+												A2($mdgriffith$elm_ui$Element$paddingXY, 12, 6),
+												$mdgriffith$elm_ui$Element$Background$color(
+												_Utils_eq(model.theme, $author$project$Theme$Dark) ? $author$project$Main$buttonBackgroundColor(model.theme) : A3($mdgriffith$elm_ui$Element$rgb255, 230, 230, 230)),
+												$mdgriffith$elm_ui$Element$Font$color(
+												_Utils_eq(model.theme, $author$project$Theme$Dark) ? $author$project$Main$buttonTextColor(model.theme) : A3($mdgriffith$elm_ui$Element$rgb255, 100, 100, 100)),
+												$mdgriffith$elm_ui$Element$Border$roundEach(
+												{bottomLeft: 4, bottomRight: 0, topLeft: 4, topRight: 0}),
+												$mdgriffith$elm_ui$Element$Font$size(14),
+												$mdgriffith$elm_ui$Element$Font$bold
+											]),
+										{
+											label: $mdgriffith$elm_ui$Element$text('Dark'),
+											onPress: $elm$core$Maybe$Just($author$project$Main$ToggleTheme)
+										}),
+										A2(
+										$mdgriffith$elm_ui$Element$Input$button,
+										_List_fromArray(
+											[
+												A2($mdgriffith$elm_ui$Element$paddingXY, 12, 6),
+												$mdgriffith$elm_ui$Element$Background$color(
+												_Utils_eq(model.theme, $author$project$Theme$Light) ? A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255) : A3($mdgriffith$elm_ui$Element$rgb255, 80, 80, 80)),
+												$mdgriffith$elm_ui$Element$Font$color(
+												_Utils_eq(model.theme, $author$project$Theme$Light) ? A3($mdgriffith$elm_ui$Element$rgb255, 50, 50, 50) : A3($mdgriffith$elm_ui$Element$rgb255, 150, 150, 150)),
+												$mdgriffith$elm_ui$Element$Border$roundEach(
+												{bottomLeft: 0, bottomRight: 4, topLeft: 0, topRight: 4}),
+												$mdgriffith$elm_ui$Element$Font$size(14),
+												$mdgriffith$elm_ui$Element$Font$bold
+											]),
+										{
+											label: $mdgriffith$elm_ui$Element$text('Light'),
+											onPress: $elm$core$Maybe$Just($author$project$Main$ToggleTheme)
+										})
+									]))
+							])),
 						A2(
 						$mdgriffith$elm_ui$Element$row,
 						_List_fromArray(
@@ -56760,7 +56809,6 @@ var $author$project$Main$sidebar = function (model) {
 							]),
 						_List_Nil),
 						$author$project$Main$crudButtons(model),
-						$author$project$Main$lastSaveInfo(model),
 						$author$project$Main$exportStuff(model),
 						model.showDocumentList ? A2(
 						$mdgriffith$elm_ui$Element$column,
