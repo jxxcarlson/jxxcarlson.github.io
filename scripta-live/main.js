@@ -5656,6 +5656,7 @@ var $elm$json$Json$Decode$field = _Json_decodeField;
 var $author$project$Theme$Dark = {$: 'Dark'};
 var $author$project$ScriptaV2$Language$EnclosureLang = {$: 'EnclosureLang'};
 var $author$project$Theme$Light = {$: 'Light'};
+var $author$project$Ports$LoadDocuments = {$: 'LoadDocuments'};
 var $author$project$Main$LoadUserNameDelayed = {$: 'LoadUserNameDelayed'};
 var $author$project$ScriptaV2$Compiler$SuppressDocumentBlocks = {$: 'SuppressDocumentBlocks'};
 var $author$project$Main$Tick = function (a) {
@@ -5666,7 +5667,7 @@ var $elm$core$Basics$always = F2(
 		return a;
 	});
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$AppData$defaultDocumentText = '| title number-to-level:0\nAnnouncement\n\n[vspace 30]\n[large [italic This is what you can do with Scripta Live:]]\n\n| image figure:1 caption: Humming bird\nhttps://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n\n| equation numbered\n\\label{wave-equation}\nsecpder(u,x) + secpder(u,y) + secpder(u,z) = frac(1,c^2) secpder(u,t))  quad "Wave Equation"\n\n[large [i Make beautiful things with simple tools...]][vspace 30]\n\n\n# About Scripta Live\n\nScripta is a markup language much like LaTeX, but with a simplified, ergonomic syntax.\nBetter yet: what you write (here, on the left) is rendered\n[i instantaneously ] in the right-hand window pane. No setup required.\nJust click the "New" button and start writing.\n\n- Your documents are saved in the browser\'s local storage.  If you refresh the\nbrowser or close it and come back to it later, it weill be there, waiting for you..\n\n- Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.\n\n- Scripta documents can be exported to standard LaTeX.  If there are no images\nin the document, it can be turned into a pdf file using `pdflatex`.  Otherwise,\nuse the downloadable shell script — get it by clicking on the button  [blue Download Script],\nlower right corner.  We\nwill soon proved a simpler solution.\n\n\n# Examples\n\n| mathmacros\nsecpder:  frac(partial^2 #1, partial #2^2)\nnat:    mathbb N\nreals: mathbb R\npder:  frac(partial #1, partial #2)\nset:    \\{ #1 \\}\nsett:   \\{ #1 \\ | \\ #2 \\}\n\nPythagoras said: $a^2 + b^2 = c^2$.\n\nThis will be on the test:\n\n| equation\nint_0^1 x^n dx = frac(1,n+1)\n\nand so will this:\n\nBoth of the above equalities were written using an `equation` block.  If you look\nat the source text you will see that [eqref wave-equation] an [u argument] `numbered` and\na property, namely  `label:wave-equation`. That property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\nto see what happens.\n\nHere is an [u aligned] block:\n\n| aligned\nnat &= set("positive whole numbers and zero")\nnat &= sett(n " is a whole number", n > 0)\n\n\n| equation\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n=\n\\begin{pmatrix}\n5 & 4 \\\\\n4 & 5\n\\end{pmatrix}\n\n\n\n\n';
+var $author$project$AppData$defaultDocumentText = '| title number-to-level:0\nAnnouncement\n\n[vspace 3\n0]\n[large [italic This is what you can do with Scripta Live:]]\n\n| image figure:1 caption: Humming bird\nhttps://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n\n| equation numbered\n\\label{wave-equation}\nsecpder(u,x) + secpder(u,y) + secpder(u,z) = frac(1,c^2) secpder(u,t))\n\n[large [i ...make beautiful things with simple tools.]]\n[vspace 30]\n\n\n# About Scripta Live\n\nScripta is a markup language much like LaTeX, but with a simplified, ergonomic syntax.\nBetter yet: what you write (here, on the left) is rendered\n[i instantaneously ] in the right-hand window pane. No setup required.\nJust click the "New" button and start writing.\n\n- Your documents are saved in the browser\'s local storage.  If you refresh the\nbrowser or close it and come back to it later, it weill be there, waiting for you..\n\n- Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.\n\n- Scripta documents can be exported to standard LaTeX.  If there are no images\nin the document, it can be turned into a pdf file using `pdflatex`.  Otherwise,\nuse the downloadable shell script — get it by clicking on the button  [blue Download Script],\nlower right corner.  We\nwill soon provide a simpler solution.\n\n\n# Examples\n\n| mathmacros\nsecpder:  frac(partial^2 #1, partial #2^2)\nnat:    mathbb N\nreals: mathbb R\npder:  frac(partial #1, partial #2)\nset:    \\{ #1 \\}\nsett:   \\{ #1 \\ | \\ #2 \\}\n\nPythagoras said: $a^2 + b^2 = c^2$.\n\nThis will be on the test:\n\n| equation\nint_0^1 x^n dx = frac(1,n+1)\n\n\nBoth of the above equalities were written using an `equation` block.  If you look\nat the source text you will see that [eqref wave-equation] an [u argument] `numbered` and\na property, namely  `label:wave-equation`. That property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\nto see what happens.\n\nHere is an [u aligned] block:\n\n| aligned\nnat &= set("positive whole numbers and zero")\nnat &= sett(n " is a whole number", n > 0)\n\n\n| equation\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n=\n\\begin{pmatrix}\n5 & 4 \\\\\n4 & 5\n\\end{pmatrix}\n\n\n\n\n';
 var $author$project$Generic$Language$Ordinary = function (a) {
 	return {$: 'Ordinary', a: a};
 };
@@ -50177,12 +50178,6 @@ var $author$project$ScriptaV2$DifferentialCompiler$init = F3(
 var $author$project$Main$initialDisplaySettings = function (flags) {
 	return {counter: 0, data: $elm$core$Dict$empty, idsOfOpenNodes: _List_Nil, longEquationLimit: flags.window.windowWidth, scale: 1.0, selectedId: 'nada', selectedSlug: $elm$core$Maybe$Nothing, windowWidth: (flags.window.windowWidth / 3) | 0};
 };
-var $elm$json$Json$Encode$null = _Json_encodeNull;
-var $author$project$Main$loadDocuments = _Platform_outgoingPort(
-	'loadDocuments',
-	function ($) {
-		return $elm$json$Json$Encode$null;
-	});
 var $author$project$Render$Theme$Dark = {$: 'Dark'};
 var $author$project$Render$Theme$Light = {$: 'Light'};
 var $author$project$Theme$mapTheme = function (theme) {
@@ -50213,6 +50208,136 @@ var $elm$time$Time$Zone = F2(
 	});
 var $elm$time$Time$customZone = $elm$time$Time$Zone;
 var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
+var $author$project$Document$encodeTheme = function (theme) {
+	if (theme.$ === 'Light') {
+		return $elm$json$Json$Encode$string('light');
+	} else {
+		return $elm$json$Json$Encode$string('dark');
+	}
+};
+var $elm$json$Json$Encode$int = _Json_wrap;
+var $author$project$Document$encodeDocument = function (doc) {
+	return $elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'id',
+				$elm$json$Json$Encode$string(doc.id)),
+				_Utils_Tuple2(
+				'title',
+				$elm$json$Json$Encode$string(doc.title)),
+				_Utils_Tuple2(
+				'author',
+				$elm$json$Json$Encode$string(doc.author)),
+				_Utils_Tuple2(
+				'content',
+				$elm$json$Json$Encode$string(doc.content)),
+				_Utils_Tuple2(
+				'theme',
+				$author$project$Document$encodeTheme(doc.theme)),
+				_Utils_Tuple2(
+				'createdAt',
+				$elm$json$Json$Encode$int(
+					$elm$time$Time$posixToMillis(doc.createdAt))),
+				_Utils_Tuple2(
+				'modifiedAt',
+				$elm$json$Json$Encode$int(
+					$elm$time$Time$posixToMillis(doc.modifiedAt)))
+			]));
+};
+var $author$project$Ports$encodeOutgoing = function (msg) {
+	switch (msg.$) {
+		case 'SaveDocument':
+			var doc = msg.a;
+			return $elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'tag',
+						$elm$json$Json$Encode$string('SaveDocument')),
+						_Utils_Tuple2(
+						'data',
+						$author$project$Document$encodeDocument(doc))
+					]));
+		case 'LoadDocuments':
+			return $elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'tag',
+						$elm$json$Json$Encode$string('LoadDocuments'))
+					]));
+		case 'LoadDocument':
+			var id = msg.a;
+			return $elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'tag',
+						$elm$json$Json$Encode$string('LoadDocument')),
+						_Utils_Tuple2(
+						'data',
+						$elm$json$Json$Encode$string(id))
+					]));
+		case 'DeleteDocument':
+			var id = msg.a;
+			return $elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'tag',
+						$elm$json$Json$Encode$string('DeleteDocument')),
+						_Utils_Tuple2(
+						'data',
+						$elm$json$Json$Encode$string(id))
+					]));
+		case 'SaveTheme':
+			var theme = msg.a;
+			return $elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'tag',
+						$elm$json$Json$Encode$string('SaveTheme')),
+						_Utils_Tuple2(
+						'data',
+						$elm$json$Json$Encode$string(theme))
+					]));
+		case 'LoadTheme':
+			return $elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'tag',
+						$elm$json$Json$Encode$string('LoadTheme'))
+					]));
+		case 'SaveUserName':
+			var name = msg.a;
+			return $elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'tag',
+						$elm$json$Json$Encode$string('SaveUserName')),
+						_Utils_Tuple2(
+						'data',
+						$elm$json$Json$Encode$string(name))
+					]));
+		default:
+			return $elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'tag',
+						$elm$json$Json$Encode$string('LoadUserName'))
+					]));
+	}
+};
+var $author$project$Ports$outgoing = _Platform_outgoingPort('outgoing', $elm$core$Basics$identity);
+var $author$project$Ports$send = function (msg) {
+	return $author$project$Ports$outgoing(
+		$author$project$Ports$encodeOutgoing(msg));
+};
 var $elm$core$Process$sleep = _Process_sleep;
 var $author$project$Main$init = function (flags) {
 	var theme = function () {
@@ -50254,6 +50379,7 @@ var $author$project$Main$init = function (flags) {
 			displaySettings: displaySettings,
 			documents: _List_Nil,
 			editRecord: editRecord,
+			lastChanged: currentTime,
 			lastSaved: currentTime,
 			pressedKeys: _List_Nil,
 			selectId: '@InitID',
@@ -50261,14 +50387,14 @@ var $author$project$Main$init = function (flags) {
 			sourceText: normalizedTex,
 			theme: theme,
 			title: title_,
-			userName: '',
+			userName: $elm$core$Maybe$Nothing,
 			windowHeight: flags.window.windowHeight,
 			windowWidth: flags.window.windowWidth
 		},
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
-					$author$project$Main$loadDocuments(_Utils_Tuple0),
+					$author$project$Ports$send($author$project$Ports$LoadDocuments),
 					A2($elm$core$Task$perform, $author$project$Main$Tick, $elm$time$Time$now),
 					A2(
 					$elm$core$Task$perform,
@@ -50280,12 +50406,6 @@ var $elm$json$Json$Decode$int = _Json_decodeInt;
 var $author$project$Main$AutoSave = function (a) {
 	return {$: 'AutoSave', a: a};
 };
-var $author$project$Main$DocumentLoaded = function (a) {
-	return {$: 'DocumentLoaded', a: a};
-};
-var $author$project$Main$DocumentsLoaded = function (a) {
-	return {$: 'DocumentsLoaded', a: a};
-};
 var $author$project$Main$GotNewWindowDimensions = F2(
 	function (a, b) {
 		return {$: 'GotNewWindowDimensions', a: a, b: b};
@@ -50293,16 +50413,10 @@ var $author$project$Main$GotNewWindowDimensions = F2(
 var $author$project$Main$KeyMsg = function (a) {
 	return {$: 'KeyMsg', a: a};
 };
-var $author$project$Main$ThemeLoaded = function (a) {
-	return {$: 'ThemeLoaded', a: a};
-};
-var $author$project$Main$UserNameLoaded = function (a) {
-	return {$: 'UserNameLoaded', a: a};
+var $author$project$Main$PortMsgReceived = function (a) {
+	return {$: 'PortMsgReceived', a: a};
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$json$Json$Decode$value = _Json_decodeValue;
-var $author$project$Main$documentLoaded = _Platform_incomingPort('documentLoaded', $elm$json$Json$Decode$value);
-var $author$project$Main$documentsLoaded = _Platform_incomingPort('documentsLoaded', $elm$json$Json$Decode$value);
 var $elm$time$Time$Every = F2(
 	function (a, b) {
 		return {$: 'Every', a: a, b: b};
@@ -50712,67 +50826,19 @@ var $elm$browser$Browser$Events$onResize = function (func) {
 				A2($elm$json$Json$Decode$field, 'innerWidth', $elm$json$Json$Decode$int),
 				A2($elm$json$Json$Decode$field, 'innerHeight', $elm$json$Json$Decode$int))));
 };
-var $ohanhi$keyboard$Keyboard$Down = function (a) {
-	return {$: 'Down', a: a};
-};
-var $ohanhi$keyboard$Keyboard$Up = function (a) {
-	return {$: 'Up', a: a};
-};
-var $ohanhi$keyboard$Keyboard$RawKey = function (a) {
-	return {$: 'RawKey', a: a};
-};
-var $ohanhi$keyboard$Keyboard$eventKeyDecoder = A2(
-	$elm$json$Json$Decode$field,
-	'key',
-	A2($elm$json$Json$Decode$map, $ohanhi$keyboard$Keyboard$RawKey, $elm$json$Json$Decode$string));
-var $elm$browser$Browser$Events$Document = {$: 'Document'};
-var $elm$browser$Browser$Events$onKeyDown = A2($elm$browser$Browser$Events$on, $elm$browser$Browser$Events$Document, 'keydown');
-var $ohanhi$keyboard$Keyboard$downs = function (toMsg) {
-	return $elm$browser$Browser$Events$onKeyDown(
-		A2($elm$json$Json$Decode$map, toMsg, $ohanhi$keyboard$Keyboard$eventKeyDecoder));
-};
-var $elm$browser$Browser$Events$onKeyUp = A2($elm$browser$Browser$Events$on, $elm$browser$Browser$Events$Document, 'keyup');
-var $ohanhi$keyboard$Keyboard$ups = function (toMsg) {
-	return $elm$browser$Browser$Events$onKeyUp(
-		A2($elm$json$Json$Decode$map, toMsg, $ohanhi$keyboard$Keyboard$eventKeyDecoder));
-};
-var $ohanhi$keyboard$Keyboard$subscriptions = $elm$core$Platform$Sub$batch(
-	_List_fromArray(
-		[
-			$ohanhi$keyboard$Keyboard$downs($ohanhi$keyboard$Keyboard$Down),
-			$ohanhi$keyboard$Keyboard$ups($ohanhi$keyboard$Keyboard$Up)
-		]));
-var $author$project$Main$themeLoaded = _Platform_incomingPort('themeLoaded', $elm$json$Json$Decode$string);
-var $author$project$Main$userNameLoaded = _Platform_incomingPort('userNameLoaded', $elm$json$Json$Decode$string);
-var $author$project$Main$subscriptions = function (model) {
-	return $elm$core$Platform$Sub$batch(
-		_List_fromArray(
-			[
-				$elm$browser$Browser$Events$onResize($author$project$Main$GotNewWindowDimensions),
-				A2($elm$core$Platform$Sub$map, $author$project$Main$KeyMsg, $ohanhi$keyboard$Keyboard$subscriptions),
-				$author$project$Main$documentsLoaded($author$project$Main$DocumentsLoaded),
-				$author$project$Main$documentLoaded($author$project$Main$DocumentLoaded),
-				$author$project$Main$themeLoaded($author$project$Main$ThemeLoaded),
-				$author$project$Main$userNameLoaded($author$project$Main$UserNameLoaded),
-				A2($elm$time$Time$every, 30 * 1000, $author$project$Main$AutoSave)
-			]));
-};
-var $ohanhi$keyboard$Keyboard$Character = function (a) {
-	return {$: 'Character', a: a};
-};
-var $ohanhi$keyboard$Keyboard$Control = {$: 'Control'};
-var $author$project$Main$CreateNewDocument = {$: 'CreateNewDocument'};
-var $author$project$Main$GeneratedId = function (a) {
-	return {$: 'GeneratedId', a: a};
-};
-var $author$project$Main$InitialDocumentId = F5(
-	function (a, b, c, d, e) {
-		return {$: 'InitialDocumentId', a: a, b: b, c: c, d: d, e: e};
-	});
-var $author$project$Main$SaveDocument = {$: 'SaveDocument'};
-var $author$project$Main$ToggleTheme = {$: 'ToggleTheme'};
 var $elm$json$Json$Decode$decodeValue = _Json_run;
-var $author$project$Main$deleteDocument = _Platform_outgoingPort('deleteDocument', $elm$json$Json$Encode$string);
+var $author$project$Ports$DocumentLoaded = function (a) {
+	return {$: 'DocumentLoaded', a: a};
+};
+var $author$project$Ports$DocumentsLoaded = function (a) {
+	return {$: 'DocumentsLoaded', a: a};
+};
+var $author$project$Ports$ThemeLoaded = function (a) {
+	return {$: 'ThemeLoaded', a: a};
+};
+var $author$project$Ports$UserNameLoaded = function (a) {
+	return {$: 'UserNameLoaded', a: a};
+};
 var $author$project$Document$Document = F7(
 	function (id, title, author, content, theme, createdAt, modifiedAt) {
 		return {author: author, content: content, createdAt: createdAt, id: id, modifiedAt: modifiedAt, theme: theme, title: title};
@@ -50807,43 +50873,120 @@ var $author$project$Document$documentDecoder = A8(
 		$elm$json$Json$Decode$field,
 		'modifiedAt',
 		A2($elm$json$Json$Decode$map, $elm$time$Time$millisToPosix, $elm$json$Json$Decode$int)));
-var $author$project$Document$encodeTheme = function (theme) {
-	if (theme.$ === 'Light') {
-		return $elm$json$Json$Encode$string('light');
-	} else {
-		return $elm$json$Json$Encode$string('dark');
+var $elm$json$Json$Decode$list = _Json_decodeList;
+var $author$project$Ports$decodeByTag = function (tag) {
+	switch (tag) {
+		case 'DocumentsLoaded':
+			return A2(
+				$elm$json$Json$Decode$map,
+				$author$project$Ports$DocumentsLoaded,
+				A2(
+					$elm$json$Json$Decode$field,
+					'data',
+					$elm$json$Json$Decode$list($author$project$Document$documentDecoder)));
+		case 'DocumentLoaded':
+			return A2(
+				$elm$json$Json$Decode$map,
+				$author$project$Ports$DocumentLoaded,
+				A2($elm$json$Json$Decode$field, 'data', $author$project$Document$documentDecoder));
+		case 'ThemeLoaded':
+			return A2(
+				$elm$json$Json$Decode$map,
+				$author$project$Ports$ThemeLoaded,
+				A2($elm$json$Json$Decode$field, 'data', $elm$json$Json$Decode$string));
+		case 'UserNameLoaded':
+			return A2(
+				$elm$json$Json$Decode$map,
+				$author$project$Ports$UserNameLoaded,
+				A2($elm$json$Json$Decode$field, 'data', $elm$json$Json$Decode$string));
+		default:
+			return $elm$json$Json$Decode$fail('Unknown tag: ' + tag);
 	}
 };
-var $elm$json$Json$Encode$int = _Json_wrap;
-var $author$project$Document$encodeDocument = function (doc) {
-	return $elm$json$Json$Encode$object(
+var $author$project$Ports$incomingDecoder = A2(
+	$elm$json$Json$Decode$andThen,
+	$author$project$Ports$decodeByTag,
+	A2($elm$json$Json$Decode$field, 'tag', $elm$json$Json$Decode$string));
+var $author$project$Ports$decodeIncoming = function (value) {
+	return A2($elm$json$Json$Decode$decodeValue, $author$project$Ports$incomingDecoder, value);
+};
+var $elm$json$Json$Decode$value = _Json_decodeValue;
+var $author$project$Ports$incoming = _Platform_incomingPort('incoming', $elm$json$Json$Decode$value);
+var $author$project$Ports$receive = function (toMsg) {
+	return $author$project$Ports$incoming(
+		function (value) {
+			return toMsg(
+				$author$project$Ports$decodeIncoming(value));
+		});
+};
+var $ohanhi$keyboard$Keyboard$Down = function (a) {
+	return {$: 'Down', a: a};
+};
+var $ohanhi$keyboard$Keyboard$Up = function (a) {
+	return {$: 'Up', a: a};
+};
+var $ohanhi$keyboard$Keyboard$RawKey = function (a) {
+	return {$: 'RawKey', a: a};
+};
+var $ohanhi$keyboard$Keyboard$eventKeyDecoder = A2(
+	$elm$json$Json$Decode$field,
+	'key',
+	A2($elm$json$Json$Decode$map, $ohanhi$keyboard$Keyboard$RawKey, $elm$json$Json$Decode$string));
+var $elm$browser$Browser$Events$Document = {$: 'Document'};
+var $elm$browser$Browser$Events$onKeyDown = A2($elm$browser$Browser$Events$on, $elm$browser$Browser$Events$Document, 'keydown');
+var $ohanhi$keyboard$Keyboard$downs = function (toMsg) {
+	return $elm$browser$Browser$Events$onKeyDown(
+		A2($elm$json$Json$Decode$map, toMsg, $ohanhi$keyboard$Keyboard$eventKeyDecoder));
+};
+var $elm$browser$Browser$Events$onKeyUp = A2($elm$browser$Browser$Events$on, $elm$browser$Browser$Events$Document, 'keyup');
+var $ohanhi$keyboard$Keyboard$ups = function (toMsg) {
+	return $elm$browser$Browser$Events$onKeyUp(
+		A2($elm$json$Json$Decode$map, toMsg, $ohanhi$keyboard$Keyboard$eventKeyDecoder));
+};
+var $ohanhi$keyboard$Keyboard$subscriptions = $elm$core$Platform$Sub$batch(
+	_List_fromArray(
+		[
+			$ohanhi$keyboard$Keyboard$downs($ohanhi$keyboard$Keyboard$Down),
+			$ohanhi$keyboard$Keyboard$ups($ohanhi$keyboard$Keyboard$Up)
+		]));
+var $author$project$Main$subscriptions = function (model) {
+	return $elm$core$Platform$Sub$batch(
 		_List_fromArray(
 			[
-				_Utils_Tuple2(
-				'id',
-				$elm$json$Json$Encode$string(doc.id)),
-				_Utils_Tuple2(
-				'title',
-				$elm$json$Json$Encode$string(doc.title)),
-				_Utils_Tuple2(
-				'author',
-				$elm$json$Json$Encode$string(doc.author)),
-				_Utils_Tuple2(
-				'content',
-				$elm$json$Json$Encode$string(doc.content)),
-				_Utils_Tuple2(
-				'theme',
-				$author$project$Document$encodeTheme(doc.theme)),
-				_Utils_Tuple2(
-				'createdAt',
-				$elm$json$Json$Encode$int(
-					$elm$time$Time$posixToMillis(doc.createdAt))),
-				_Utils_Tuple2(
-				'modifiedAt',
-				$elm$json$Json$Encode$int(
-					$elm$time$Time$posixToMillis(doc.modifiedAt)))
+				$elm$browser$Browser$Events$onResize($author$project$Main$GotNewWindowDimensions),
+				A2($elm$core$Platform$Sub$map, $author$project$Main$KeyMsg, $ohanhi$keyboard$Keyboard$subscriptions),
+				$author$project$Ports$receive($author$project$Main$PortMsgReceived),
+				A2($elm$time$Time$every, 30 * 1000, $author$project$Main$AutoSave),
+				A2($elm$time$Time$every, 1000, $author$project$Main$Tick)
 			]));
 };
+var $ohanhi$keyboard$Keyboard$Character = function (a) {
+	return {$: 'Character', a: a};
+};
+var $ohanhi$keyboard$Keyboard$Control = {$: 'Control'};
+var $author$project$Main$CreateNewDocument = {$: 'CreateNewDocument'};
+var $author$project$Ports$DeleteDocument = function (a) {
+	return {$: 'DeleteDocument', a: a};
+};
+var $author$project$Main$GeneratedId = function (a) {
+	return {$: 'GeneratedId', a: a};
+};
+var $author$project$Ports$LoadDocument = function (a) {
+	return {$: 'LoadDocument', a: a};
+};
+var $author$project$Ports$LoadUserName = {$: 'LoadUserName'};
+var $author$project$Main$SaveDocument = {$: 'SaveDocument'};
+var $author$project$Ports$SaveDocument = function (a) {
+	return {$: 'SaveDocument', a: a};
+};
+var $author$project$Ports$SaveTheme = function (a) {
+	return {$: 'SaveTheme', a: a};
+};
+var $author$project$Ports$SaveUserName = function (a) {
+	return {$: 'SaveUserName', a: a};
+};
+var $author$project$Main$ToggleTheme = {$: 'ToggleTheme'};
+var $author$project$Constants$constants = {autoSaveCheckInterval: 1000, maxUnsavedDuration: 5};
 var $author$project$Generic$ASTTools$expressionNames = function (forest) {
 	return $elm$core$List$sort(
 		$elm_community$list_extra$List$Extra$unique(
@@ -53407,6 +53550,74 @@ var $author$project$Main$generateId = A2(
 		return 'doc-' + $elm$core$String$fromInt(n);
 	},
 	A2($elm$random$Random$int, 100000, 999999));
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Main$handleIncomingPortMsg = F2(
+	function (msg, model) {
+		switch (msg.$) {
+			case 'DocumentsLoaded':
+				var docs = msg.a;
+				var _v1 = A2(
+					$elm$core$Debug$log,
+					'@@!!@@ Documents loaded from localStorage',
+					$elm$core$List$length(docs));
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{documents: docs}),
+					$elm$core$Platform$Cmd$none);
+			case 'DocumentLoaded':
+				var doc = msg.a;
+				var editRecord = A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, model.currentLanguage, doc.content);
+				var _v2 = A2($elm$core$Debug$log, '@@!!@@ Loaded document', doc.title);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							compilerOutput: A4(
+								$author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput,
+								$author$project$Theme$mapTheme(model.theme),
+								$author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
+								model.displaySettings,
+								editRecord),
+							currentDocument: $elm$core$Maybe$Just(doc),
+							editRecord: editRecord,
+							lastSaved: doc.modifiedAt,
+							sourceText: doc.content,
+							title: doc.title
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 'ThemeLoaded':
+				var themeStr = msg.a;
+				var newTheme = function () {
+					if (themeStr === 'light') {
+						return $author$project$Theme$Light;
+					} else {
+						return $author$project$Theme$Dark;
+					}
+				}();
+				var newCompilerOutput = A4(
+					$author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput,
+					$author$project$Theme$mapTheme(newTheme),
+					$author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
+					model.displaySettings,
+					model.editRecord);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{compilerOutput: newCompilerOutput, theme: newTheme}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				var name = msg.a;
+				var _v4 = A2($elm$core$Debug$log, '@@!!@@ UserNameLoaded received', name);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							userName: $elm$core$Maybe$Just(name)
+						}),
+					$elm$core$Platform$Cmd$none);
+		}
+	});
 var $author$project$Main$NoOp = {$: 'NoOp'};
 var $elm$core$Task$onError = _Scheduler_onError;
 var $elm$core$Task$attempt = F2(
@@ -53442,22 +53653,11 @@ var $author$project$Main$jumpToTopOf = function (id) {
 			},
 			$elm$browser$Browser$Dom$getViewportOf(id)));
 };
-var $elm$json$Json$Decode$list = _Json_decodeList;
-var $author$project$Main$loadDocument = _Platform_outgoingPort('loadDocument', $elm$json$Json$Encode$string);
-var $author$project$Main$loadUserName = _Platform_outgoingPort(
-	'loadUserName',
-	function ($) {
-		return $elm$json$Json$Encode$null;
-	});
 var $author$project$Document$newDocument = F6(
 	function (id, title, author, content, theme, now) {
 		return {author: author, content: content, createdAt: now, id: id, modifiedAt: now, theme: theme, title: title};
 	});
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$AppData$processImagesText = '\n#!/bin/bash\n\n # Usage:\n #\n # sh ./process_images.sh <input_file> : gives a way\n #\n # Purpose: process LaTeX exported from scripta files that contain images,\n # first creating a corresponding LaTeX file, then\n # a pdf file.\n #\n # Prerequisite software installation:\n # - ImageMagick (for converting images to EPS)\n # - pdflatex (for making PDFs LaTeX files)\n #\n # Setup:\n # Make a folder call "tex" and make a subfolder "image" in it.\n # Put this script in the "tex" folder.\n # Put your file downloaded from Scripta Live or Scripta.io in the "tex" folder.\n # Run the script with the same filename as an argument: `sh ./process_file.sh myfile.tex`\n #\n # Plans:\n # This work will be automated in the near future, so that you can just\n # Press a button to do all the work\n #\n # Detail: the script processes its inputs follows:\n # First, it examines the file, finding all urls pointing to images (JPEG or PNG).\n # Next, it downloads the corresponding images, constructing a filename for each\n # image based on its URL, and converts them to EPS format using ImageMagick.\n # These images are then stored in the directory "./image". The URLS in the\n # original LaTeX file are replaced with the local EPS filenames.\n\n\n# Check if correct number of arguments provided\nif [ $# -ne 1 ]; then\n    echo "Usage: $0 <input_file>"\n    echo "Example: $0 document.tex"\n    exit 1\nfi\n\nINPUT_FILE="$1"\n\n# Check if input file exists in current directory\nif [ ! -f "$INPUT_FILE" ]; then\n    echo "Error: File $INPUT_FILE not found in current directory"\n    exit 1\nfi\n\n# Create output directory\nOUTPUT_DIR="./image"\nmkdir -p "$OUTPUT_DIR"\n\n# Check if ImageMagick is installed\nif ! command -v convert &> /dev/null; then\n    echo "Error: ImageMagick is not installed. Please install it first."\n    exit 1\nfi\n\n# Create a temporary file for the modified LaTeX\nTEMP_FILE=$(mktemp)\ncp "$INPUT_FILE" "$TEMP_FILE"\n\necho "Searching for image URLs in $INPUT_FILE..."\necho "Output directory: $OUTPUT_DIR"\necho\n\n# Extract URLs ending with .jpg, .jpeg, or .png\n# Using grep with extended regex to find URLs (including those with spaces before them)\ngrep -Eo \'https?://[^"{}]+\\.(jpg|jpeg|png)(\\?[^"{}]*)?\' "$INPUT_FILE" | sort -u | while read -r url; do\n    # Remove query parameters if present\n    url_without_query="${url%%\\?*}"\n\n    # Extract path after domain\n    # Remove protocol and domain to get just the path\n    path_after_domain=$(echo "$url_without_query" | sed -E \'s|https?://[^/]*/?||\')\n    # Remove file extension\n    path_without_ext="${path_after_domain%.*}"\n    # Replace slashes with hyphens and remove special characters\n    eps_base_name=$(echo "$path_without_ext" | tr \'/\' \'-\' | tr -d \'():=\')\n    eps_filename="${eps_base_name}.eps"\n\n    # Get original filename for download\n    original_filename=$(basename "$url")\n    original_filename="${original_filename%%\\?*}"\n\n    echo "Processing: $url"\n    echo "  Path after domain: $path_after_domain"\n    echo "  Path without ext: $path_without_ext"\n    echo "  EPS base name: $eps_base_name"\n    echo "  Downloading as: $original_filename"\n    echo "  EPS filename: $eps_filename"\n\n    # Download the image\n    if curl -s -L -o "$OUTPUT_DIR/$original_filename" "$url"; then\n        echo "  Converting to EPS..."\n\n        # Convert to EPS using ImageMagick\n        if convert "$OUTPUT_DIR/$original_filename" -compress lzw "$OUTPUT_DIR/$eps_filename" 2>/dev/null; then\n            echo "  ✓ Successfully converted to EPS"\n\n            # Replace URL with EPS filename in the temporary file\n            # Use perl for more reliable replacement\n            perl -i -pe "s|\\Q$url\\E|$eps_filename|g" "$TEMP_FILE"\n            echo "  ✓ Replaced URL in LaTeX file"\n\n            # Remove the original downloaded file\n            rm "$OUTPUT_DIR/$original_filename"\n        else\n            echo "  ✗ Failed to convert to EPS"\n            rm "$OUTPUT_DIR/$original_filename"\n        fi\n    else\n        echo "  ✗ Failed to download"\n    fi\n    echo\ndone\n\n# Replace the original file with the modified one\nmv "$TEMP_FILE" "$INPUT_FILE"\n\n# Count results\neps_count=$(find "$OUTPUT_DIR" -name "*.eps" -type f | wc -l)\necho "Completed! Created $eps_count EPS files in $OUTPUT_DIR"\necho "LaTeX file has been updated with local EPS references"\n\n# Check if pdflatex is installed\nif command -v pdflatex &> /dev/null; then\n    echo\n    echo "Running pdflatex on $INPUT_FILE..."\n\n    # Get base filename without extension\n    BASE_NAME="${INPUT_FILE%.tex}"\n\n    # Run pdflatex twice (for references, TOC, etc.)\n    for i in 1 2; do\n        echo "Pass $i of 2..."\n        if pdflatex -interaction=nonstopmode "$INPUT_FILE" > /dev/null 2>&1; then\n            echo "  ✓ Pass $i completed"\n        else\n            echo "  ✗ Pass $i failed"\n            echo "  Check the .log file for errors"\n        fi\n    done\n\n    if [ -f "${BASE_NAME}.pdf" ]; then\n        echo "✓ PDF generated: ${BASE_NAME}.pdf"\n    fi\nelse\n    echo "Warning: pdflatex not found. Skipping PDF generation."\nfi\n\n# Cleanup auxiliary files\necho\necho "Cleaning up auxiliary files..."\nrm -f *.aux *.log *.toc *.out *.synctex.gz *.fls *.fdb_latexmk\n\necho "Done!"\n';
-var $author$project$Main$saveDocument = _Platform_outgoingPort('saveDocument', $elm$core$Basics$identity);
-var $author$project$Main$saveTheme = _Platform_outgoingPort('saveTheme', $elm$json$Json$Encode$string);
-var $author$project$Main$saveUserName = _Platform_outgoingPort('saveUserName', $elm$json$Json$Encode$string);
 var $elm$file$File$Download$string = F3(
 	function (name, mime, content) {
 		return A2(
@@ -54167,6 +54367,7 @@ var $author$project$Main$update = F2(
 								count: model.count + 1,
 								displaySettings: newDisplaySettings,
 								editRecord: editRecord,
+								lastChanged: model.currentTime,
 								sourceText: str,
 								title: $author$project$Main$getTitle(str)
 							}),
@@ -54265,22 +54466,52 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{compilerOutput: newCompilerOutput, count: model.count + 1, theme: newTheme}),
-						$author$project$Main$saveTheme(
-							function () {
-								if (newTheme.$ === 'Light') {
-									return 'light';
-								} else {
-									return 'dark';
-								}
-							}()));
+						$author$project$Ports$send(
+							$author$project$Ports$SaveTheme(
+								function () {
+									if (newTheme.$ === 'Light') {
+										return 'light';
+									} else {
+										return 'dark';
+									}
+								}())));
 				case 'CreateNewDocument':
-					return _Utils_Tuple2(
-						model,
-						A2($elm$random$Random$generate, $author$project$Main$GeneratedId, $author$project$Main$generateId));
+					var _v4 = model.currentDocument;
+					if (_v4.$ === 'Just') {
+						var doc = _v4.a;
+						if (!_Utils_eq(model.sourceText, doc.content)) {
+							var _v5 = A2($author$project$Main$update, $author$project$Main$SaveDocument, model);
+							var newModel = _v5.a;
+							var saveCmd = _v5.b;
+							return _Utils_Tuple2(
+								newModel,
+								$elm$core$Platform$Cmd$batch(
+									_List_fromArray(
+										[
+											saveCmd,
+											A2($elm$random$Random$generate, $author$project$Main$GeneratedId, $author$project$Main$generateId)
+										])));
+						} else {
+							return _Utils_Tuple2(
+								model,
+								A2($elm$random$Random$generate, $author$project$Main$GeneratedId, $author$project$Main$generateId));
+						}
+					} else {
+						return _Utils_Tuple2(
+							model,
+							A2($elm$random$Random$generate, $author$project$Main$GeneratedId, $author$project$Main$generateId));
+					}
 				case 'GeneratedId':
 					var id = msg.a;
 					var newDocumentContent = '| title\nNew Document\n';
-					var newDoc = A6($author$project$Document$newDocument, id, 'New Document', model.userName, newDocumentContent, model.theme, model.currentTime);
+					var newDoc = A6(
+						$author$project$Document$newDocument,
+						id,
+						'New Document',
+						A2($elm$core$Maybe$withDefault, '', model.userName),
+						newDocumentContent,
+						model.theme,
+						model.currentTime);
 					var editRecord = A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, model.currentLanguage, newDocumentContent);
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -54297,12 +54528,12 @@ var $author$project$Main$update = F2(
 								sourceText: newDocumentContent,
 								title: 'New Document'
 							}),
-						$author$project$Main$saveDocument(
-							$author$project$Document$encodeDocument(newDoc)));
+						$author$project$Ports$send(
+							$author$project$Ports$SaveDocument(newDoc)));
 				case 'SaveDocument':
-					var _v4 = model.currentDocument;
-					if (_v4.$ === 'Just') {
-						var doc = _v4.a;
+					var _v6 = model.currentDocument;
+					if (_v6.$ === 'Just') {
+						var doc = _v6.a;
 						var updatedDoc = _Utils_update(
 							doc,
 							{content: model.sourceText, modifiedAt: model.currentTime, theme: model.theme, title: model.title});
@@ -54313,8 +54544,8 @@ var $author$project$Main$update = F2(
 									currentDocument: $elm$core$Maybe$Just(updatedDoc),
 									lastSaved: model.currentTime
 								}),
-							$author$project$Main$saveDocument(
-								$author$project$Document$encodeDocument(updatedDoc)));
+							$author$project$Ports$send(
+								$author$project$Ports$SaveDocument(updatedDoc)));
 					} else {
 						var $temp$msg = $author$project$Main$CreateNewDocument,
 							$temp$model = model;
@@ -54324,9 +54555,37 @@ var $author$project$Main$update = F2(
 					}
 				case 'LoadDocument':
 					var id = msg.a;
-					return _Utils_Tuple2(
-						model,
-						$author$project$Main$loadDocument(id));
+					var _v7 = model.currentDocument;
+					if (_v7.$ === 'Just') {
+						var doc = _v7.a;
+						if (!_Utils_eq(model.sourceText, doc.content)) {
+							var updatedDoc = _Utils_update(
+								doc,
+								{content: model.sourceText, modifiedAt: model.currentTime, theme: model.theme, title: model.title});
+							var _v8 = A2($author$project$Main$update, $author$project$Main$SaveDocument, model);
+							var newModel = _v8.a;
+							var saveCmd = _v8.b;
+							return _Utils_Tuple2(
+								newModel,
+								$elm$core$Platform$Cmd$batch(
+									_List_fromArray(
+										[
+											saveCmd,
+											$author$project$Ports$send(
+											$author$project$Ports$LoadDocument(id))
+										])));
+						} else {
+							return _Utils_Tuple2(
+								model,
+								$author$project$Ports$send(
+									$author$project$Ports$LoadDocument(id)));
+						}
+					} else {
+						return _Utils_Tuple2(
+							model,
+							$author$project$Ports$send(
+								$author$project$Ports$LoadDocument(id)));
+					}
 				case 'DeleteDocument':
 					var id = msg.a;
 					var updatedDocuments = A2(
@@ -54336,9 +54595,9 @@ var $author$project$Main$update = F2(
 						},
 						model.documents);
 					var needNewDoc = function () {
-						var _v5 = model.currentDocument;
-						if (_v5.$ === 'Just') {
-							var doc = _v5.a;
+						var _v9 = model.currentDocument;
+						if (_v9.$ === 'Just') {
+							var doc = _v9.a;
 							return _Utils_eq(doc.id, id);
 						} else {
 							return false;
@@ -54353,80 +54612,8 @@ var $author$project$Main$update = F2(
 								sourceText: needNewDoc ? '' : model.sourceText,
 								title: needNewDoc ? 'Untitled Document' : model.title
 							}),
-						$author$project$Main$deleteDocument(id));
-				case 'DocumentsLoaded':
-					var value = msg.a;
-					var _v6 = A2(
-						$elm$json$Json$Decode$decodeValue,
-						$elm$json$Json$Decode$list($author$project$Document$documentDecoder),
-						value);
-					if (_v6.$ === 'Ok') {
-						var docs = _v6.a;
-						var announcementDoc = $elm$core$List$head(
-							A2(
-								$elm$core$List$filter,
-								function (doc) {
-									return doc.title === 'Announcement';
-								},
-								docs));
-						var cmd = function () {
-							if (announcementDoc.$ === 'Just') {
-								var existingDoc = announcementDoc.a;
-								var updatedDoc = _Utils_update(
-									existingDoc,
-									{
-										author: model.userName,
-										content: $author$project$Main$normalize($author$project$AppData$defaultDocumentText),
-										modifiedAt: model.currentTime
-									});
-								return $author$project$Main$saveDocument(
-									$author$project$Document$encodeDocument(updatedDoc));
-							} else {
-								return A2(
-									$elm$random$Random$generate,
-									A4(
-										$author$project$Main$InitialDocumentId,
-										$author$project$Main$normalize($author$project$AppData$defaultDocumentText),
-										'Announcement',
-										model.currentTime,
-										model.theme),
-									$author$project$Main$generateId);
-							}
-						}();
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{documents: docs}),
-							cmd);
-					} else {
-						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-					}
-				case 'DocumentLoaded':
-					var value = msg.a;
-					var _v8 = A2($elm$json$Json$Decode$decodeValue, $author$project$Document$documentDecoder, value);
-					if (_v8.$ === 'Ok') {
-						var doc = _v8.a;
-						var editRecord = A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, model.currentLanguage, doc.content);
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{
-									compilerOutput: A4(
-										$author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput,
-										$author$project$Theme$mapTheme(model.theme),
-										$author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
-										model.displaySettings,
-										editRecord),
-									currentDocument: $elm$core$Maybe$Just(doc),
-									editRecord: editRecord,
-									lastSaved: doc.modifiedAt,
-									sourceText: doc.content,
-									title: doc.title
-								}),
-							$elm$core$Platform$Cmd$none);
-					} else {
-						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-					}
+						$author$project$Ports$send(
+							$author$project$Ports$DeleteDocument(id)));
 				case 'ToggleDocumentList':
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -54434,9 +54621,9 @@ var $author$project$Main$update = F2(
 							{showDocumentList: !model.showDocumentList}),
 						$elm$core$Platform$Cmd$none);
 				case 'AutoSave':
-					var _v9 = model.currentDocument;
-					if (_v9.$ === 'Just') {
-						var doc = _v9.a;
+					var _v10 = model.currentDocument;
+					if (_v10.$ === 'Just') {
+						var doc = _v10.a;
 						if (!_Utils_eq(model.sourceText, doc.content)) {
 							var $temp$msg = $author$project$Main$SaveDocument,
 								$temp$model = model;
@@ -54451,11 +54638,31 @@ var $author$project$Main$update = F2(
 					}
 				case 'Tick':
 					var time = msg.a;
-					return _Utils_Tuple2(
-						_Utils_update(
+					var timeSinceLastChange = (($elm$time$Time$posixToMillis(time) - $elm$time$Time$posixToMillis(model.lastChanged)) / 1000) | 0;
+					var shouldAutoSave = function () {
+						var _v11 = model.currentDocument;
+						if (_v11.$ === 'Just') {
+							var doc = _v11.a;
+							return (!_Utils_eq(model.sourceText, doc.content)) && (_Utils_cmp(timeSinceLastChange, $author$project$Constants$constants.maxUnsavedDuration) > -1);
+						} else {
+							return false;
+						}
+					}();
+					if (shouldAutoSave) {
+						var $temp$msg = $author$project$Main$SaveDocument,
+							$temp$model = _Utils_update(
 							model,
-							{count: model.count + 1, currentTime: time}),
-						$elm$core$Platform$Cmd$none);
+							{count: model.count + 1, currentTime: time});
+						msg = $temp$msg;
+						model = $temp$model;
+						continue update;
+					} else {
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{count: model.count + 1, currentTime: time}),
+							$elm$core$Platform$Cmd$none);
+					}
 				case 'ExportToLaTeX':
 					var settings = A6(
 						$author$project$Render$Settings$makeSettings,
@@ -54492,60 +54699,49 @@ var $author$project$Main$update = F2(
 					var currentTime = msg.c;
 					var theme = msg.d;
 					var id = msg.e;
-					var initialDoc = {author: model.userName, content: content, createdAt: currentTime, id: id, modifiedAt: currentTime, theme: theme, title: title};
+					var initialDoc = A6(
+						$author$project$Document$newDocument,
+						id,
+						title,
+						A2($elm$core$Maybe$withDefault, '', model.userName),
+						content,
+						theme,
+						currentTime);
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
 								currentDocument: $elm$core$Maybe$Just(initialDoc)
 							}),
-						$author$project$Main$saveDocument(
-							$author$project$Document$encodeDocument(initialDoc)));
-				case 'ThemeLoaded':
-					var themeStr = msg.a;
-					var newTheme = function () {
-						switch (themeStr) {
-							case 'light':
-								return $author$project$Theme$Light;
-							case 'dark':
-								return $author$project$Theme$Dark;
-							default:
-								return $author$project$Theme$Dark;
-						}
-					}();
-					var newCompilerOutput = A4(
-						$author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput,
-						$author$project$Theme$mapTheme(newTheme),
-						$author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
-						model.displaySettings,
-						model.editRecord);
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{compilerOutput: newCompilerOutput, theme: newTheme}),
-						$elm$core$Platform$Cmd$none);
+						$author$project$Ports$send(
+							$author$project$Ports$SaveDocument(initialDoc)));
 				case 'InputUserName':
 					var name = msg.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{userName: name}),
-						$author$project$Main$saveUserName(name));
-				case 'UserNameLoaded':
-					var name = msg.a;
-					var _v11 = A2($elm$core$Debug$log, '@@!!@@ UserNameLoaded received', name);
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{userName: name}),
-						$elm$core$Platform$Cmd$none);
-				default:
+							{
+								userName: $elm$core$Maybe$Just(name)
+							}),
+						$author$project$Ports$send(
+							$author$project$Ports$SaveUserName(name)));
+				case 'LoadUserNameDelayed':
 					return _Utils_Tuple2(
 						model,
 						A2(
 							$elm$core$Debug$log,
 							'@@!!@@ Loading username after delay',
-							$author$project$Main$loadUserName(_Utils_Tuple0)));
+							$author$project$Ports$send($author$project$Ports$LoadUserName)));
+				default:
+					var result = msg.a;
+					if (result.$ === 'Ok') {
+						var incomingMsg = result.a;
+						return A2($author$project$Main$handleIncomingPortMsg, incomingMsg, model);
+					} else {
+						var error = result.a;
+						var _v13 = A2($elm$core$Debug$log, '@@!!@@ Port decoding error', error);
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					}
 			}
 		}
 	});
@@ -56112,9 +56308,9 @@ var $author$project$Main$formatRelativeTime = F2(
 var $author$project$Main$documentItem = F2(
 	function (model, doc) {
 		var isActive = function () {
-			var _v1 = model.currentDocument;
-			if (_v1.$ === 'Just') {
-				var currentDoc = _v1.a;
+			var _v2 = model.currentDocument;
+			if (_v2.$ === 'Just') {
+				var currentDoc = _v2.a;
 				return _Utils_eq(currentDoc.id, doc.id);
 			} else {
 				return false;
@@ -56125,8 +56321,8 @@ var $author$project$Main$documentItem = F2(
 				$mdgriffith$elm_ui$Element$Border$width(1),
 				$mdgriffith$elm_ui$Element$Border$color(
 				function () {
-					var _v0 = model.theme;
-					if (_v0.$ === 'Light') {
+					var _v1 = model.theme;
+					if (_v1.$ === 'Light') {
 						return A3($mdgriffith$elm_ui$Element$rgb255, 64, 64, 64);
 					} else {
 						return A3($mdgriffith$elm_ui$Element$rgb255, 220, 220, 220);
@@ -56180,7 +56376,14 @@ var $author$project$Main$documentItem = F2(
 										[
 											$mdgriffith$elm_ui$Element$Font$size(11),
 											$mdgriffith$elm_ui$Element$Font$color(
-											A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.7, 0.7))
+											function () {
+												var _v0 = model.theme;
+												if (_v0.$ === 'Light') {
+													return A3($mdgriffith$elm_ui$Element$rgb, 0.4, 0.4, 0.4);
+												} else {
+													return A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.7, 0.7);
+												}
+											}())
 										]),
 									$mdgriffith$elm_ui$Element$text(
 										A2($author$project$Main$formatRelativeTime, model.currentTime, doc.modifiedAt)))
@@ -56376,8 +56579,8 @@ var $mdgriffith$elm_ui$Element$Input$text = $mdgriffith$elm_ui$Element$Input$tex
 	});
 var $author$project$Main$sidebar = function (model) {
 	var forceColorStyle = function () {
-		var _v1 = model.theme;
-		if (_v1.$ === 'Light') {
+		var _v2 = model.theme;
+		if (_v2.$ === 'Light') {
 			return $mdgriffith$elm_ui$Element$htmlAttribute(
 				A2($elm$html$Html$Attributes$style, 'color', 'black'));
 		} else {
@@ -56422,41 +56625,123 @@ var $author$project$Main$sidebar = function (model) {
 					]),
 				_List_fromArray(
 					[
-						A2(
-						$mdgriffith$elm_ui$Element$el,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$Font$bold,
-								$mdgriffith$elm_ui$Element$paddingEach(
-								{bottom: 8, left: 0, right: 0, top: 0})
-							]),
-						$mdgriffith$elm_ui$Element$text('Your Name')),
-						A2(
-						$mdgriffith$elm_ui$Element$Input$text,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-								A2($mdgriffith$elm_ui$Element$paddingXY, 8, 4),
-								$mdgriffith$elm_ui$Element$Border$width(1),
-								$mdgriffith$elm_ui$Element$Border$rounded(4),
-								$mdgriffith$elm_ui$Element$Border$color(
-								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
-								$mdgriffith$elm_ui$Element$Background$color(
-								$author$project$Main$backgroundColor(model.theme)),
-								$mdgriffith$elm_ui$Element$Font$color(
-								$author$project$Main$textColor(model.theme)),
-								$mdgriffith$elm_ui$Element$Font$size(14)
-							]),
-						{
-							label: $mdgriffith$elm_ui$Element$Input$labelHidden('Your name'),
-							onChange: $author$project$Main$InputUserName,
-							placeholder: $elm$core$Maybe$Just(
-								A2(
-									$mdgriffith$elm_ui$Element$Input$placeholder,
-									_List_Nil,
-									$mdgriffith$elm_ui$Element$text('Enter your name'))),
-							text: model.userName
-						}),
+						function () {
+						var _v0 = model.userName;
+						if (_v0.$ === 'Just') {
+							var name = _v0.a;
+							return ($elm$core$String$trim(name) !== '') ? A2(
+								$mdgriffith$elm_ui$Element$Input$text,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+										A2($mdgriffith$elm_ui$Element$paddingXY, 8, 4),
+										$mdgriffith$elm_ui$Element$Border$width(1),
+										$mdgriffith$elm_ui$Element$Border$rounded(4),
+										$mdgriffith$elm_ui$Element$Border$color(
+										A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+										$mdgriffith$elm_ui$Element$Background$color(
+										$author$project$Main$backgroundColor(model.theme)),
+										$mdgriffith$elm_ui$Element$Font$color(
+										$author$project$Main$textColor(model.theme)),
+										$mdgriffith$elm_ui$Element$Font$size(14),
+										$mdgriffith$elm_ui$Element$Font$bold
+									]),
+								{
+									label: $mdgriffith$elm_ui$Element$Input$labelHidden('Your name'),
+									onChange: $author$project$Main$InputUserName,
+									placeholder: $elm$core$Maybe$Nothing,
+									text: name
+								}) : A2(
+								$mdgriffith$elm_ui$Element$column,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$spacing(8)
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$mdgriffith$elm_ui$Element$el,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$bold,
+												$mdgriffith$elm_ui$Element$paddingEach(
+												{bottom: 8, left: 0, right: 0, top: 0})
+											]),
+										$mdgriffith$elm_ui$Element$text('Your Name')),
+										A2(
+										$mdgriffith$elm_ui$Element$Input$text,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+												A2($mdgriffith$elm_ui$Element$paddingXY, 8, 4),
+												$mdgriffith$elm_ui$Element$Border$width(1),
+												$mdgriffith$elm_ui$Element$Border$rounded(4),
+												$mdgriffith$elm_ui$Element$Border$color(
+												A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+												$mdgriffith$elm_ui$Element$Background$color(
+												$author$project$Main$backgroundColor(model.theme)),
+												$mdgriffith$elm_ui$Element$Font$color(
+												$author$project$Main$textColor(model.theme)),
+												$mdgriffith$elm_ui$Element$Font$size(14)
+											]),
+										{
+											label: $mdgriffith$elm_ui$Element$Input$labelHidden('Your name'),
+											onChange: $author$project$Main$InputUserName,
+											placeholder: $elm$core$Maybe$Just(
+												A2(
+													$mdgriffith$elm_ui$Element$Input$placeholder,
+													_List_Nil,
+													$mdgriffith$elm_ui$Element$text('Enter your name'))),
+											text: ''
+										})
+									]));
+						} else {
+							return A2(
+								$mdgriffith$elm_ui$Element$column,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$spacing(8)
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$mdgriffith$elm_ui$Element$el,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$Font$bold,
+												$mdgriffith$elm_ui$Element$paddingEach(
+												{bottom: 8, left: 0, right: 0, top: 0})
+											]),
+										$mdgriffith$elm_ui$Element$text('Your Name')),
+										A2(
+										$mdgriffith$elm_ui$Element$Input$text,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+												A2($mdgriffith$elm_ui$Element$paddingXY, 8, 4),
+												$mdgriffith$elm_ui$Element$Border$width(1),
+												$mdgriffith$elm_ui$Element$Border$rounded(4),
+												$mdgriffith$elm_ui$Element$Border$color(
+												A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
+												$mdgriffith$elm_ui$Element$Background$color(
+												$author$project$Main$backgroundColor(model.theme)),
+												$mdgriffith$elm_ui$Element$Font$color(
+												$author$project$Main$textColor(model.theme)),
+												$mdgriffith$elm_ui$Element$Font$size(14)
+											]),
+										{
+											label: $mdgriffith$elm_ui$Element$Input$labelHidden('Your name'),
+											onChange: $author$project$Main$InputUserName,
+											placeholder: $elm$core$Maybe$Just(
+												A2(
+													$mdgriffith$elm_ui$Element$Input$placeholder,
+													_List_Nil,
+													$mdgriffith$elm_ui$Element$text('Enter your name'))),
+											text: ''
+										})
+									]));
+						}
+					}(),
 						A2(
 						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
@@ -56556,8 +56841,8 @@ var $author$project$Main$sidebar = function (model) {
 									$elm$html$Html$Attributes$style,
 									'color',
 									function () {
-										var _v0 = model.theme;
-										if (_v0.$ === 'Light') {
+										var _v1 = model.theme;
+										if (_v1.$ === 'Light') {
 											return 'rgb(0, 123, 255)';
 										} else {
 											return 'rgb(0, 191, 255)';
