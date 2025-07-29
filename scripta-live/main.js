@@ -5657,9 +5657,9 @@ var $author$project$Theme$Dark = {$: 'Dark'};
 var $author$project$ScriptaV2$Language$EnclosureLang = {$: 'EnclosureLang'};
 var $author$project$Theme$Light = {$: 'Light'};
 var $author$project$Ports$LoadDocuments = {$: 'LoadDocuments'};
-var $author$project$Main$LoadUserNameDelayed = {$: 'LoadUserNameDelayed'};
+var $author$project$Model$LoadUserNameDelayed = {$: 'LoadUserNameDelayed'};
 var $author$project$ScriptaV2$Compiler$SuppressDocumentBlocks = {$: 'SuppressDocumentBlocks'};
-var $author$project$Main$Tick = function (a) {
+var $author$project$Model$Tick = function (a) {
 	return {$: 'Tick', a: a};
 };
 var $elm$core$Basics$always = F2(
@@ -35918,7 +35918,7 @@ var $elm_community$list_extra$List$Extra$dropWhile = F2(
 			}
 		}
 	});
-var $author$project$Main$getTitle = function (str) {
+var $author$project$Model$getTitle = function (str) {
 	return A2(
 		$elm$core$Maybe$withDefault,
 		'No title yet',
@@ -50175,7 +50175,7 @@ var $author$project$ScriptaV2$DifferentialCompiler$init = F3(
 			initialData,
 			str + '\n');
 	});
-var $author$project$Main$initialDisplaySettings = function (flags) {
+var $author$project$Model$initialDisplaySettings = function (flags) {
 	return {counter: 0, data: $elm$core$Dict$empty, idsOfOpenNodes: _List_Nil, longEquationLimit: flags.window.windowWidth, scale: 1.0, selectedId: 'nada', selectedSlug: $elm$core$Maybe$Nothing, windowWidth: (flags.window.windowWidth / 3) | 0};
 };
 var $author$project$Render$Theme$Dark = {$: 'Dark'};
@@ -50187,7 +50187,7 @@ var $author$project$Theme$mapTheme = function (theme) {
 		return $author$project$Render$Theme$Dark;
 	}
 };
-var $author$project$Main$normalize = function (input) {
+var $author$project$Model$normalize = function (input) {
 	return A2(
 		$elm$core$String$join,
 		'\n',
@@ -50339,7 +50339,7 @@ var $author$project$Ports$send = function (msg) {
 		$author$project$Ports$encodeOutgoing(msg));
 };
 var $elm$core$Process$sleep = _Process_sleep;
-var $author$project$Main$init = function (flags) {
+var $author$project$Model$init = function (flags) {
 	var theme = function () {
 		var _v0 = flags.theme;
 		_v0$2:
@@ -50359,10 +50359,10 @@ var $author$project$Main$init = function (flags) {
 		}
 		return $author$project$Theme$Dark;
 	}();
-	var normalizedTex = $author$project$Main$normalize($author$project$AppData$defaultDocumentText);
-	var title_ = $author$project$Main$getTitle(normalizedTex);
+	var normalizedTex = $author$project$Model$normalize($author$project$AppData$defaultDocumentText);
+	var title_ = $author$project$Model$getTitle(normalizedTex);
 	var editRecord = A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, $author$project$ScriptaV2$Language$EnclosureLang, normalizedTex);
-	var displaySettings = $author$project$Main$initialDisplaySettings(flags);
+	var displaySettings = $author$project$Model$initialDisplaySettings(flags);
 	var currentTime = $elm$time$Time$millisToPosix(flags.currentTime);
 	return _Utils_Tuple2(
 		{
@@ -50377,10 +50377,13 @@ var $author$project$Main$init = function (flags) {
 			currentLanguage: $author$project$ScriptaV2$Language$EnclosureLang,
 			currentTime: currentTime,
 			displaySettings: displaySettings,
+			doSync: false,
 			documents: _List_Nil,
 			editRecord: editRecord,
+			editorData: {begin: 0, end: 0},
 			lastChanged: currentTime,
 			lastSaved: currentTime,
+			maybeSelectionOffset: $elm$core$Maybe$Nothing,
 			pressedKeys: _List_Nil,
 			selectId: '@InitID',
 			showDocumentList: true,
@@ -50395,25 +50398,25 @@ var $author$project$Main$init = function (flags) {
 			_List_fromArray(
 				[
 					$author$project$Ports$send($author$project$Ports$LoadDocuments),
-					A2($elm$core$Task$perform, $author$project$Main$Tick, $elm$time$Time$now),
+					A2($elm$core$Task$perform, $author$project$Model$Tick, $elm$time$Time$now),
 					A2(
 					$elm$core$Task$perform,
-					$elm$core$Basics$always($author$project$Main$LoadUserNameDelayed),
+					$elm$core$Basics$always($author$project$Model$LoadUserNameDelayed),
 					$elm$core$Process$sleep(100))
 				])));
 };
 var $elm$json$Json$Decode$int = _Json_decodeInt;
-var $author$project$Main$AutoSave = function (a) {
+var $author$project$Model$AutoSave = function (a) {
 	return {$: 'AutoSave', a: a};
 };
-var $author$project$Main$GotNewWindowDimensions = F2(
+var $author$project$Model$GotNewWindowDimensions = F2(
 	function (a, b) {
 		return {$: 'GotNewWindowDimensions', a: a, b: b};
 	});
-var $author$project$Main$KeyMsg = function (a) {
+var $author$project$Model$KeyMsg = function (a) {
 	return {$: 'KeyMsg', a: a};
 };
-var $author$project$Main$PortMsgReceived = function (a) {
+var $author$project$Model$PortMsgReceived = function (a) {
 	return {$: 'PortMsgReceived', a: a};
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -50953,29 +50956,29 @@ var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$batch(
 		_List_fromArray(
 			[
-				$elm$browser$Browser$Events$onResize($author$project$Main$GotNewWindowDimensions),
-				A2($elm$core$Platform$Sub$map, $author$project$Main$KeyMsg, $ohanhi$keyboard$Keyboard$subscriptions),
-				$author$project$Ports$receive($author$project$Main$PortMsgReceived),
-				A2($elm$time$Time$every, 30 * 1000, $author$project$Main$AutoSave),
-				A2($elm$time$Time$every, 1000, $author$project$Main$Tick)
+				$elm$browser$Browser$Events$onResize($author$project$Model$GotNewWindowDimensions),
+				A2($elm$core$Platform$Sub$map, $author$project$Model$KeyMsg, $ohanhi$keyboard$Keyboard$subscriptions),
+				$author$project$Ports$receive($author$project$Model$PortMsgReceived),
+				A2($elm$time$Time$every, 30 * 1000, $author$project$Model$AutoSave),
+				A2($elm$time$Time$every, 1000, $author$project$Model$Tick)
 			]));
 };
 var $ohanhi$keyboard$Keyboard$Character = function (a) {
 	return {$: 'Character', a: a};
 };
 var $ohanhi$keyboard$Keyboard$Control = {$: 'Control'};
-var $author$project$Main$CreateNewDocument = {$: 'CreateNewDocument'};
+var $author$project$Model$CreateNewDocument = {$: 'CreateNewDocument'};
 var $author$project$Ports$DeleteDocument = function (a) {
 	return {$: 'DeleteDocument', a: a};
 };
-var $author$project$Main$GeneratedId = function (a) {
+var $author$project$Model$GeneratedId = function (a) {
 	return {$: 'GeneratedId', a: a};
 };
 var $author$project$Ports$LoadDocument = function (a) {
 	return {$: 'LoadDocument', a: a};
 };
 var $author$project$Ports$LoadUserName = {$: 'LoadUserName'};
-var $author$project$Main$SaveDocument = {$: 'SaveDocument'};
+var $author$project$Model$SaveDocument = {$: 'SaveDocument'};
 var $author$project$Ports$SaveDocument = function (a) {
 	return {$: 'SaveDocument', a: a};
 };
@@ -50985,7 +50988,7 @@ var $author$project$Ports$SaveTheme = function (a) {
 var $author$project$Ports$SaveUserName = function (a) {
 	return {$: 'SaveUserName', a: a};
 };
-var $author$project$Main$ToggleTheme = {$: 'ToggleTheme'};
+var $author$project$Model$ToggleTheme = {$: 'ToggleTheme'};
 var $author$project$Constants$constants = {autoSaveCheckInterval: 1000, maxUnsavedDuration: 5};
 var $author$project$Generic$ASTTools$expressionNames = function (forest) {
 	return $elm$core$List$sort(
@@ -53618,7 +53621,7 @@ var $author$project$Main$handleIncomingPortMsg = F2(
 					$elm$core$Platform$Cmd$none);
 		}
 	});
-var $author$project$Main$NoOp = {$: 'NoOp'};
+var $author$project$Model$NoOp = {$: 'NoOp'};
 var $elm$core$Task$onError = _Scheduler_onError;
 var $elm$core$Task$attempt = F2(
 	function (resultToMessage, task) {
@@ -53644,7 +53647,7 @@ var $author$project$Main$jumpToTopOf = function (id) {
 	return A2(
 		$elm$core$Task$attempt,
 		function (_v0) {
-			return $author$project$Main$NoOp;
+			return $author$project$Model$NoOp;
 		},
 		A2(
 			$elm$core$Task$andThen,
@@ -54369,7 +54372,33 @@ var $author$project$Main$update = F2(
 								editRecord: editRecord,
 								lastChanged: model.currentTime,
 								sourceText: str,
-								title: $author$project$Main$getTitle(str)
+								title: $author$project$Model$getTitle(str)
+							}),
+						$elm$core$Platform$Cmd$none);
+				case 'InputText2':
+					var position = msg.a.position;
+					var source = msg.a.source;
+					var oldDisplaySettings = model.displaySettings;
+					var newDisplaySettings = _Utils_update(
+						oldDisplaySettings,
+						{counter: model.count + 1, selectedId: model.selectId});
+					var editRecord = A2($author$project$ScriptaV2$DifferentialCompiler$update, model.editRecord, source);
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								compilerOutput: A4(
+									$author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput,
+									$author$project$Theme$mapTheme(model.theme),
+									$author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
+									newDisplaySettings,
+									editRecord),
+								count: model.count + 1,
+								displaySettings: newDisplaySettings,
+								editRecord: editRecord,
+								lastChanged: model.currentTime,
+								sourceText: source,
+								title: $author$project$Model$getTitle(source)
 							}),
 						$elm$core$Platform$Cmd$none);
 				case 'KeyMsg':
@@ -54382,7 +54411,7 @@ var $author$project$Main$update = F2(
 							pressedKeys)) {
 							return A2(
 								$elm$core$Task$perform,
-								$elm$core$Basics$always($author$project$Main$ToggleTheme),
+								$elm$core$Basics$always($author$project$Model$ToggleTheme),
 								$elm$core$Task$succeed(_Utils_Tuple0));
 						} else {
 							if (A2($elm$core$List$member, $ohanhi$keyboard$Keyboard$Control, pressedKeys) && A2(
@@ -54480,7 +54509,7 @@ var $author$project$Main$update = F2(
 					if (_v4.$ === 'Just') {
 						var doc = _v4.a;
 						if (!_Utils_eq(model.sourceText, doc.content)) {
-							var _v5 = A2($author$project$Main$update, $author$project$Main$SaveDocument, model);
+							var _v5 = A2($author$project$Main$update, $author$project$Model$SaveDocument, model);
 							var newModel = _v5.a;
 							var saveCmd = _v5.b;
 							return _Utils_Tuple2(
@@ -54489,17 +54518,17 @@ var $author$project$Main$update = F2(
 									_List_fromArray(
 										[
 											saveCmd,
-											A2($elm$random$Random$generate, $author$project$Main$GeneratedId, $author$project$Main$generateId)
+											A2($elm$random$Random$generate, $author$project$Model$GeneratedId, $author$project$Main$generateId)
 										])));
 						} else {
 							return _Utils_Tuple2(
 								model,
-								A2($elm$random$Random$generate, $author$project$Main$GeneratedId, $author$project$Main$generateId));
+								A2($elm$random$Random$generate, $author$project$Model$GeneratedId, $author$project$Main$generateId));
 						}
 					} else {
 						return _Utils_Tuple2(
 							model,
-							A2($elm$random$Random$generate, $author$project$Main$GeneratedId, $author$project$Main$generateId));
+							A2($elm$random$Random$generate, $author$project$Model$GeneratedId, $author$project$Main$generateId));
 					}
 				case 'GeneratedId':
 					var id = msg.a;
@@ -54547,7 +54576,7 @@ var $author$project$Main$update = F2(
 							$author$project$Ports$send(
 								$author$project$Ports$SaveDocument(updatedDoc)));
 					} else {
-						var $temp$msg = $author$project$Main$CreateNewDocument,
+						var $temp$msg = $author$project$Model$CreateNewDocument,
 							$temp$model = model;
 						msg = $temp$msg;
 						model = $temp$model;
@@ -54562,7 +54591,7 @@ var $author$project$Main$update = F2(
 							var updatedDoc = _Utils_update(
 								doc,
 								{content: model.sourceText, modifiedAt: model.currentTime, theme: model.theme, title: model.title});
-							var _v8 = A2($author$project$Main$update, $author$project$Main$SaveDocument, model);
+							var _v8 = A2($author$project$Main$update, $author$project$Model$SaveDocument, model);
 							var newModel = _v8.a;
 							var saveCmd = _v8.b;
 							return _Utils_Tuple2(
@@ -54625,7 +54654,7 @@ var $author$project$Main$update = F2(
 					if (_v10.$ === 'Just') {
 						var doc = _v10.a;
 						if (!_Utils_eq(model.sourceText, doc.content)) {
-							var $temp$msg = $author$project$Main$SaveDocument,
+							var $temp$msg = $author$project$Model$SaveDocument,
 								$temp$model = model;
 							msg = $temp$msg;
 							model = $temp$model;
@@ -54649,7 +54678,7 @@ var $author$project$Main$update = F2(
 						}
 					}();
 					if (shouldAutoSave) {
-						var $temp$msg = $author$project$Main$SaveDocument,
+						var $temp$msg = $author$project$Model$SaveDocument,
 							$temp$model = _Utils_update(
 							model,
 							{count: model.count + 1, currentTime: time});
@@ -54732,7 +54761,7 @@ var $author$project$Main$update = F2(
 							$elm$core$Debug$log,
 							'@@!!@@ Loading username after delay',
 							$author$project$Ports$send($author$project$Ports$LoadUserName)));
-				default:
+				case 'PortMsgReceived':
 					var result = msg.a;
 					if (result.$ === 'Ok') {
 						var incomingMsg = result.a;
@@ -54742,6 +54771,8 @@ var $author$project$Main$update = F2(
 						var _v13 = A2($elm$core$Debug$log, '@@!!@@ Port decoding error', error);
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					}
+				default:
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			}
 		}
 	});
@@ -54962,7 +54993,7 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 				_Utils_ap($mdgriffith$elm_ui$Internal$Model$rootStyle, attrs)),
 			child);
 	});
-var $author$project$Main$Render = function (a) {
+var $author$project$Model$Render = function (a) {
 	return {$: 'Render', a: a};
 };
 var $author$project$Style$borderColor = function (theme) {
@@ -55163,35 +55194,307 @@ var $author$project$Main$header = function (model) {
 				$mdgriffith$elm_ui$Element$text('Scripta Live: ' + model.title))
 			]));
 };
-var $author$project$Main$InputText = function (a) {
-	return {$: 'InputText', a: a};
+var $author$project$Main$mainColumnStyle = _List_fromArray(
+	[
+		$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+		$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+	]);
+var $mdgriffith$elm_ui$Element$map = $mdgriffith$elm_ui$Internal$Model$map;
+var $author$project$Model$DownloadScript = {$: 'DownloadScript'};
+var $author$project$Model$InputUserName = function (a) {
+	return {$: 'InputUserName', a: a};
 };
-var $author$project$Style$innerMultiline = function (theme) {
-	return _List_fromArray(
-		[
-			$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-			$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-			$mdgriffith$elm_ui$Element$Font$size(14),
-			$mdgriffith$elm_ui$Element$alignTop,
-			$mdgriffith$elm_ui$Element$Font$color(
-			$author$project$Style$textColor(theme)),
-			$mdgriffith$elm_ui$Element$Background$color(
-			$author$project$Style$backgroundColor(theme)),
-			$author$project$Style$forceColorStyle(theme),
-			$mdgriffith$elm_ui$Element$htmlAttribute(
-			$elm$html$Html$Attributes$id('source-text-input')),
-			$mdgriffith$elm_ui$Element$htmlAttribute(
-			A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box')),
-			$mdgriffith$elm_ui$Element$htmlAttribute(
-			A2($elm$html$Html$Attributes$style, 'padding', '8px 8px 24px 8px'))
-		]);
+var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
+var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
+var $author$project$Style$buttonBackgroundColor = function (theme) {
+	if (theme.$ === 'Light') {
+		return A3($mdgriffith$elm_ui$Element$rgb255, 25, 25, 35);
+	} else {
+		return $author$project$Style$backgroundColor(theme);
+	}
 };
-var $mdgriffith$elm_ui$Element$Input$Above = {$: 'Above'};
-var $mdgriffith$elm_ui$Element$Input$Label = F3(
-	function (a, b, c) {
-		return {$: 'Label', a: a, b: b, c: c};
+var $author$project$Style$buttonTextColor = function (theme) {
+	if (theme.$ === 'Light') {
+		return A3($mdgriffith$elm_ui$Element$rgb255, 255, 165, 0);
+	} else {
+		return A3($mdgriffith$elm_ui$Element$rgb255, 255, 165, 0);
+	}
+};
+var $author$project$Model$ToggleDocumentList = {$: 'ToggleDocumentList'};
+var $mdgriffith$elm_ui$Element$Border$roundEach = function (_v0) {
+	var topLeft = _v0.topLeft;
+	var topRight = _v0.topRight;
+	var bottomLeft = _v0.bottomLeft;
+	var bottomRight = _v0.bottomRight;
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$borderRound,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Single,
+			'br-' + ($elm$core$String$fromInt(topLeft) + ('-' + ($elm$core$String$fromInt(topRight) + ($elm$core$String$fromInt(bottomLeft) + ('-' + $elm$core$String$fromInt(bottomRight)))))),
+			'border-radius',
+			$elm$core$String$fromInt(topLeft) + ('px ' + ($elm$core$String$fromInt(topRight) + ('px ' + ($elm$core$String$fromInt(bottomRight) + ('px ' + ($elm$core$String$fromInt(bottomLeft) + 'px'))))))));
+};
+var $author$project$Widget$sidebarButton = F3(
+	function (theme, msg, label) {
+		return A2(
+			$mdgriffith$elm_ui$Element$Input$button,
+			_List_fromArray(
+				[
+					A2($mdgriffith$elm_ui$Element$paddingXY, 12, 6),
+					$mdgriffith$elm_ui$Element$Background$color(
+					_Utils_eq(theme, $author$project$Theme$Light) ? A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255) : A3($mdgriffith$elm_ui$Element$rgb255, 80, 80, 80)),
+					$mdgriffith$elm_ui$Element$Font$color(
+					_Utils_eq(theme, $author$project$Theme$Light) ? A3($mdgriffith$elm_ui$Element$rgb255, 50, 50, 50) : A3($mdgriffith$elm_ui$Element$rgb255, 150, 150, 150)),
+					$mdgriffith$elm_ui$Element$htmlAttribute(
+					A2(
+						$elm$html$Html$Attributes$style,
+						'color',
+						function () {
+							if (theme.$ === 'Light') {
+								return 'rgb(255, 140, 0)';
+							} else {
+								return 'rgb(255, 165, 0)';
+							}
+						}())),
+					$mdgriffith$elm_ui$Element$Border$roundEach(
+					{bottomLeft: 0, bottomRight: 4, topLeft: 0, topRight: 4}),
+					$mdgriffith$elm_ui$Element$Font$size(14),
+					$mdgriffith$elm_ui$Element$Font$bold
+				]),
+			{
+				label: $mdgriffith$elm_ui$Element$text(label),
+				onPress: msg
+			});
 	});
-var $mdgriffith$elm_ui$Element$Input$labelAbove = $mdgriffith$elm_ui$Element$Input$Label($mdgriffith$elm_ui$Element$Input$Above);
+var $author$project$Main$listButton = function (model) {
+	return A3(
+		$author$project$Widget$sidebarButton,
+		model.theme,
+		$elm$core$Maybe$Just($author$project$Model$ToggleDocumentList),
+		'List');
+};
+var $author$project$Main$newButton = function (model) {
+	return A3(
+		$author$project$Widget$sidebarButton,
+		model.theme,
+		$elm$core$Maybe$Just($author$project$Model$CreateNewDocument),
+		'New');
+};
+var $author$project$Main$saveButton = function (model) {
+	return A3(
+		$author$project$Widget$sidebarButton,
+		model.theme,
+		$elm$core$Maybe$Just($author$project$Model$SaveDocument),
+		'Save');
+};
+var $author$project$Main$crudButtons = function (model) {
+	return A2(
+		$mdgriffith$elm_ui$Element$row,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$spacing(8),
+				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+			]),
+		_List_fromArray(
+			[
+				$author$project$Main$newButton(model),
+				$author$project$Main$saveButton(model),
+				$author$project$Main$listButton(model)
+			]));
+};
+var $author$project$Model$DeleteDocument = function (a) {
+	return {$: 'DeleteDocument', a: a};
+};
+var $author$project$Model$LoadDocument = function (a) {
+	return {$: 'LoadDocument', a: a};
+};
+var $author$project$Style$formatRelativeTime = F2(
+	function (currentTime, savedTime) {
+		var savedMillis = $elm$time$Time$posixToMillis(savedTime);
+		var currentMillis = $elm$time$Time$posixToMillis(currentTime);
+		var diffMillis = currentMillis - savedMillis;
+		var seconds = (diffMillis / 1000) | 0;
+		var minutes = (seconds / 60) | 0;
+		var hours = (minutes / 60) | 0;
+		return (!savedMillis) ? 'Never' : ((seconds < 5) ? 'Just now' : ((seconds < 60) ? ($elm$core$String$fromInt(seconds) + ' seconds ago') : ((minutes < 60) ? ($elm$core$String$fromInt(minutes) + (' minute' + (((minutes === 1) ? '' : 's') + ' ago'))) : ((hours < 24) ? ($elm$core$String$fromInt(hours) + (' hour' + (((hours === 1) ? '' : 's') + ' ago'))) : ($elm$core$String$fromInt((hours / 24) | 0) + (' day' + (((((hours / 24) | 0) === 1) ? '' : 's') + ' ago')))))));
+	});
+var $mdgriffith$elm_ui$Internal$Model$Hover = {$: 'Hover'};
+var $mdgriffith$elm_ui$Internal$Flag$hover = $mdgriffith$elm_ui$Internal$Flag$flag(33);
+var $mdgriffith$elm_ui$Element$mouseOver = function (decs) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$hover,
+		A2(
+			$mdgriffith$elm_ui$Internal$Model$PseudoSelector,
+			$mdgriffith$elm_ui$Internal$Model$Hover,
+			$mdgriffith$elm_ui$Internal$Model$unwrapDecorations(decs)));
+};
+var $author$project$Main$documentItem = F2(
+	function (model, doc) {
+		var isActive = function () {
+			var _v2 = model.currentDocument;
+			if (_v2.$ === 'Just') {
+				var currentDoc = _v2.a;
+				return _Utils_eq(currentDoc.id, doc.id);
+			} else {
+				return false;
+			}
+		}();
+		var borderAttrs = isActive ? _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$Border$width(1),
+				$mdgriffith$elm_ui$Element$Border$color(
+				function () {
+					var _v1 = model.theme;
+					if (_v1.$ === 'Light') {
+						return A3($mdgriffith$elm_ui$Element$rgb255, 64, 64, 64);
+					} else {
+						return A3($mdgriffith$elm_ui$Element$rgb255, 220, 220, 220);
+					}
+				}())
+			]) : _List_Nil;
+		return A2(
+			$mdgriffith$elm_ui$Element$row,
+			_Utils_ap(
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+						$mdgriffith$elm_ui$Element$padding(8),
+						$mdgriffith$elm_ui$Element$Border$rounded(4),
+						$mdgriffith$elm_ui$Element$spacing(8),
+						$mdgriffith$elm_ui$Element$mouseOver(
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Background$color(
+								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2))
+							]))
+					]),
+				borderAttrs),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$Input$button,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+						]),
+					{
+						label: A2(
+							$mdgriffith$elm_ui$Element$column,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$spacing(2)
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$Font$size(13)
+										]),
+									$mdgriffith$elm_ui$Element$text(doc.title)),
+									A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$Font$size(11),
+											$mdgriffith$elm_ui$Element$Font$color(
+											function () {
+												var _v0 = model.theme;
+												if (_v0.$ === 'Light') {
+													return A3($mdgriffith$elm_ui$Element$rgb, 0.4, 0.4, 0.4);
+												} else {
+													return A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.7, 0.7);
+												}
+											}())
+										]),
+									$mdgriffith$elm_ui$Element$text(
+										A2($author$project$Style$formatRelativeTime, model.currentTime, doc.modifiedAt)))
+								])),
+						onPress: $elm$core$Maybe$Just(
+							$author$project$Model$LoadDocument(doc.id))
+					}),
+					A2(
+					$mdgriffith$elm_ui$Element$Input$button,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Font$color(
+							A3($mdgriffith$elm_ui$Element$rgb, 1, 0.5, 0.5)),
+							$mdgriffith$elm_ui$Element$mouseOver(
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$Font$color(
+									A3($mdgriffith$elm_ui$Element$rgb, 1, 0.3, 0.3))
+								])),
+							$mdgriffith$elm_ui$Element$mouseDown(
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$Font$color(
+									A3($mdgriffith$elm_ui$Element$rgb, 1, 0.2, 0.2))
+								]))
+						]),
+					{
+						label: $mdgriffith$elm_ui$Element$text('×'),
+						onPress: $elm$core$Maybe$Just(
+							$author$project$Model$DeleteDocument(doc.id))
+					})
+				]));
+	});
+var $author$project$Style$electricBlueColor = function (theme) {
+	if (theme.$ === 'Light') {
+		return A3($mdgriffith$elm_ui$Element$rgb255, 20, 123, 255);
+	} else {
+		return A3($mdgriffith$elm_ui$Element$rgb255, 0, 191, 255);
+	}
+};
+var $author$project$Model$ExportToLaTeX = {$: 'ExportToLaTeX'};
+var $author$project$Model$ExportToRawLaTeX = {$: 'ExportToRawLaTeX'};
+var $author$project$Main$exportStuff = function (model) {
+	return A2(
+		$mdgriffith$elm_ui$Element$row,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$spacing(8),
+				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+			]),
+		_List_fromArray(
+			[
+				A3(
+				$author$project$Widget$sidebarButton,
+				model.theme,
+				$elm$core$Maybe$Just($author$project$Model$ExportToLaTeX),
+				'LaTeX'),
+				A3(
+				$author$project$Widget$sidebarButton,
+				model.theme,
+				$elm$core$Maybe$Just($author$project$Model$ExportToRawLaTeX),
+				'Raw LaTeX')
+			]));
+};
+var $mdgriffith$elm_ui$Element$scrollbarY = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.scrollbarsY);
+var $author$project$Style$innerColumn = _List_fromArray(
+	[
+		$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+		$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+		A2($mdgriffith$elm_ui$Element$paddingXY, 16, 16),
+		$mdgriffith$elm_ui$Element$spacing(12),
+		$mdgriffith$elm_ui$Element$scrollbarY,
+		$mdgriffith$elm_ui$Element$htmlAttribute(
+		A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
+		$mdgriffith$elm_ui$Element$htmlAttribute(
+		A2($elm$html$Html$Attributes$style, 'min-height', '0')),
+		$mdgriffith$elm_ui$Element$htmlAttribute(
+		A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
+	]);
+var $mdgriffith$elm_ui$Element$Input$HiddenLabel = function (a) {
+	return {$: 'HiddenLabel', a: a};
+};
+var $mdgriffith$elm_ui$Element$Input$labelHidden = $mdgriffith$elm_ui$Element$Input$HiddenLabel;
+var $mdgriffith$elm_ui$Element$Input$TextInputNode = function (a) {
+	return {$: 'TextInputNode', a: a};
+};
 var $mdgriffith$elm_ui$Element$Input$TextArea = {$: 'TextArea'};
 var $mdgriffith$elm_ui$Internal$Model$LivePolite = {$: 'LivePolite'};
 var $mdgriffith$elm_ui$Element$Region$announce = $mdgriffith$elm_ui$Internal$Model$Describe($mdgriffith$elm_ui$Internal$Model$LivePolite);
@@ -55750,7 +56053,6 @@ var $mdgriffith$elm_ui$Element$Input$renderPlaceholder = F3(
 					placeholderAttrs)),
 			placeholderEl);
 	});
-var $mdgriffith$elm_ui$Element$scrollbarY = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.scrollbarsY);
 var $elm$html$Html$Attributes$spellcheck = $elm$html$Html$Attributes$boolProperty('spellcheck');
 var $mdgriffith$elm_ui$Element$Input$spellcheck = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Attr, $elm$html$Html$Attributes$spellcheck);
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
@@ -56001,375 +56303,6 @@ var $mdgriffith$elm_ui$Element$Input$textHelper = F3(
 			textOptions.label,
 			wrappedInput);
 	});
-var $mdgriffith$elm_ui$Element$Input$multiline = F2(
-	function (attrs, multi) {
-		return A3(
-			$mdgriffith$elm_ui$Element$Input$textHelper,
-			{autofill: $elm$core$Maybe$Nothing, spellchecked: multi.spellcheck, type_: $mdgriffith$elm_ui$Element$Input$TextArea},
-			attrs,
-			{label: multi.label, onChange: multi.onChange, placeholder: multi.placeholder, text: multi.text});
-	});
-var $author$project$Style$multiline = F2(
-	function (width, height) {
-		return _List_fromArray(
-			[
-				width($mdgriffith$elm_ui$Element$fill),
-				height($mdgriffith$elm_ui$Element$fill),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'overflow-x', 'hidden')),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'position', 'absolute')),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'top', '0')),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'left', '0')),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'right', '0')),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'bottom', '0')),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
-			]);
-	});
-var $author$project$Main$inputText = function (model) {
-	return A2(
-		$mdgriffith$elm_ui$Element$el,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$alignTop,
-				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-				$mdgriffith$elm_ui$Element$width(
-				$mdgriffith$elm_ui$Element$px(
-					$author$project$Main$panelWidth(model))),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'overflow', 'hidden')),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'position', 'relative')),
-				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
-			]),
-		A2(
-			$mdgriffith$elm_ui$Element$el,
-			A2($author$project$Style$multiline, $mdgriffith$elm_ui$Element$width, $mdgriffith$elm_ui$Element$height),
-			A2(
-				$mdgriffith$elm_ui$Element$Input$multiline,
-				$author$project$Style$innerMultiline(model.theme),
-				{
-					label: A2(
-						$mdgriffith$elm_ui$Element$Input$labelAbove,
-						_List_Nil,
-						A2(
-							$mdgriffith$elm_ui$Element$el,
-							_List_Nil,
-							$mdgriffith$elm_ui$Element$text(''))),
-					onChange: $author$project$Main$InputText,
-					placeholder: $elm$core$Maybe$Nothing,
-					spellcheck: false,
-					text: model.sourceText
-				})));
-};
-var $author$project$Main$mainColumnStyle = _List_fromArray(
-	[
-		$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-		$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
-	]);
-var $mdgriffith$elm_ui$Element$map = $mdgriffith$elm_ui$Internal$Model$map;
-var $author$project$Main$DownloadScript = {$: 'DownloadScript'};
-var $author$project$Main$InputUserName = function (a) {
-	return {$: 'InputUserName', a: a};
-};
-var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
-var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
-var $author$project$Style$buttonBackgroundColor = function (theme) {
-	if (theme.$ === 'Light') {
-		return A3($mdgriffith$elm_ui$Element$rgb255, 25, 25, 35);
-	} else {
-		return $author$project$Style$backgroundColor(theme);
-	}
-};
-var $author$project$Style$buttonTextColor = function (theme) {
-	if (theme.$ === 'Light') {
-		return A3($mdgriffith$elm_ui$Element$rgb255, 255, 165, 0);
-	} else {
-		return A3($mdgriffith$elm_ui$Element$rgb255, 255, 165, 0);
-	}
-};
-var $author$project$Main$ToggleDocumentList = {$: 'ToggleDocumentList'};
-var $mdgriffith$elm_ui$Element$Border$roundEach = function (_v0) {
-	var topLeft = _v0.topLeft;
-	var topRight = _v0.topRight;
-	var bottomLeft = _v0.bottomLeft;
-	var bottomRight = _v0.bottomRight;
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$borderRound,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$Single,
-			'br-' + ($elm$core$String$fromInt(topLeft) + ('-' + ($elm$core$String$fromInt(topRight) + ($elm$core$String$fromInt(bottomLeft) + ('-' + $elm$core$String$fromInt(bottomRight)))))),
-			'border-radius',
-			$elm$core$String$fromInt(topLeft) + ('px ' + ($elm$core$String$fromInt(topRight) + ('px ' + ($elm$core$String$fromInt(bottomRight) + ('px ' + ($elm$core$String$fromInt(bottomLeft) + 'px'))))))));
-};
-var $author$project$Widget$sidebarButton = F3(
-	function (theme, msg, label) {
-		return A2(
-			$mdgriffith$elm_ui$Element$Input$button,
-			_List_fromArray(
-				[
-					A2($mdgriffith$elm_ui$Element$paddingXY, 12, 6),
-					$mdgriffith$elm_ui$Element$Background$color(
-					_Utils_eq(theme, $author$project$Theme$Light) ? A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255) : A3($mdgriffith$elm_ui$Element$rgb255, 80, 80, 80)),
-					$mdgriffith$elm_ui$Element$Font$color(
-					_Utils_eq(theme, $author$project$Theme$Light) ? A3($mdgriffith$elm_ui$Element$rgb255, 50, 50, 50) : A3($mdgriffith$elm_ui$Element$rgb255, 150, 150, 150)),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2(
-						$elm$html$Html$Attributes$style,
-						'color',
-						function () {
-							if (theme.$ === 'Light') {
-								return 'rgb(255, 140, 0)';
-							} else {
-								return 'rgb(255, 165, 0)';
-							}
-						}())),
-					$mdgriffith$elm_ui$Element$Border$roundEach(
-					{bottomLeft: 0, bottomRight: 4, topLeft: 0, topRight: 4}),
-					$mdgriffith$elm_ui$Element$Font$size(14),
-					$mdgriffith$elm_ui$Element$Font$bold
-				]),
-			{
-				label: $mdgriffith$elm_ui$Element$text(label),
-				onPress: msg
-			});
-	});
-var $author$project$Main$listButton = function (model) {
-	return A3(
-		$author$project$Widget$sidebarButton,
-		model.theme,
-		$elm$core$Maybe$Just($author$project$Main$ToggleDocumentList),
-		'List');
-};
-var $author$project$Main$newButton = function (model) {
-	return A3(
-		$author$project$Widget$sidebarButton,
-		model.theme,
-		$elm$core$Maybe$Just($author$project$Main$CreateNewDocument),
-		'New');
-};
-var $author$project$Main$saveButton = function (model) {
-	return A3(
-		$author$project$Widget$sidebarButton,
-		model.theme,
-		$elm$core$Maybe$Just($author$project$Main$SaveDocument),
-		'Save');
-};
-var $author$project$Main$crudButtons = function (model) {
-	return A2(
-		$mdgriffith$elm_ui$Element$row,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$spacing(8),
-				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-			]),
-		_List_fromArray(
-			[
-				$author$project$Main$newButton(model),
-				$author$project$Main$saveButton(model),
-				$author$project$Main$listButton(model)
-			]));
-};
-var $author$project$Main$DeleteDocument = function (a) {
-	return {$: 'DeleteDocument', a: a};
-};
-var $author$project$Main$LoadDocument = function (a) {
-	return {$: 'LoadDocument', a: a};
-};
-var $author$project$Style$formatRelativeTime = F2(
-	function (currentTime, savedTime) {
-		var savedMillis = $elm$time$Time$posixToMillis(savedTime);
-		var currentMillis = $elm$time$Time$posixToMillis(currentTime);
-		var diffMillis = currentMillis - savedMillis;
-		var seconds = (diffMillis / 1000) | 0;
-		var minutes = (seconds / 60) | 0;
-		var hours = (minutes / 60) | 0;
-		return (!savedMillis) ? 'Never' : ((seconds < 5) ? 'Just now' : ((seconds < 60) ? ($elm$core$String$fromInt(seconds) + ' seconds ago') : ((minutes < 60) ? ($elm$core$String$fromInt(minutes) + (' minute' + (((minutes === 1) ? '' : 's') + ' ago'))) : ((hours < 24) ? ($elm$core$String$fromInt(hours) + (' hour' + (((hours === 1) ? '' : 's') + ' ago'))) : ($elm$core$String$fromInt((hours / 24) | 0) + (' day' + (((((hours / 24) | 0) === 1) ? '' : 's') + ' ago')))))));
-	});
-var $mdgriffith$elm_ui$Internal$Model$Hover = {$: 'Hover'};
-var $mdgriffith$elm_ui$Internal$Flag$hover = $mdgriffith$elm_ui$Internal$Flag$flag(33);
-var $mdgriffith$elm_ui$Element$mouseOver = function (decs) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$hover,
-		A2(
-			$mdgriffith$elm_ui$Internal$Model$PseudoSelector,
-			$mdgriffith$elm_ui$Internal$Model$Hover,
-			$mdgriffith$elm_ui$Internal$Model$unwrapDecorations(decs)));
-};
-var $author$project$Main$documentItem = F2(
-	function (model, doc) {
-		var isActive = function () {
-			var _v2 = model.currentDocument;
-			if (_v2.$ === 'Just') {
-				var currentDoc = _v2.a;
-				return _Utils_eq(currentDoc.id, doc.id);
-			} else {
-				return false;
-			}
-		}();
-		var borderAttrs = isActive ? _List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$Border$width(1),
-				$mdgriffith$elm_ui$Element$Border$color(
-				function () {
-					var _v1 = model.theme;
-					if (_v1.$ === 'Light') {
-						return A3($mdgriffith$elm_ui$Element$rgb255, 64, 64, 64);
-					} else {
-						return A3($mdgriffith$elm_ui$Element$rgb255, 220, 220, 220);
-					}
-				}())
-			]) : _List_Nil;
-		return A2(
-			$mdgriffith$elm_ui$Element$row,
-			_Utils_ap(
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$padding(8),
-						$mdgriffith$elm_ui$Element$Border$rounded(4),
-						$mdgriffith$elm_ui$Element$spacing(8),
-						$mdgriffith$elm_ui$Element$mouseOver(
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$Background$color(
-								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2))
-							]))
-					]),
-				borderAttrs),
-			_List_fromArray(
-				[
-					A2(
-					$mdgriffith$elm_ui$Element$Input$button,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-						]),
-					{
-						label: A2(
-							$mdgriffith$elm_ui$Element$column,
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Element$spacing(2)
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$mdgriffith$elm_ui$Element$el,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$Font$size(13)
-										]),
-									$mdgriffith$elm_ui$Element$text(doc.title)),
-									A2(
-									$mdgriffith$elm_ui$Element$el,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$Font$size(11),
-											$mdgriffith$elm_ui$Element$Font$color(
-											function () {
-												var _v0 = model.theme;
-												if (_v0.$ === 'Light') {
-													return A3($mdgriffith$elm_ui$Element$rgb, 0.4, 0.4, 0.4);
-												} else {
-													return A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.7, 0.7);
-												}
-											}())
-										]),
-									$mdgriffith$elm_ui$Element$text(
-										A2($author$project$Style$formatRelativeTime, model.currentTime, doc.modifiedAt)))
-								])),
-						onPress: $elm$core$Maybe$Just(
-							$author$project$Main$LoadDocument(doc.id))
-					}),
-					A2(
-					$mdgriffith$elm_ui$Element$Input$button,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$Font$color(
-							A3($mdgriffith$elm_ui$Element$rgb, 1, 0.5, 0.5)),
-							$mdgriffith$elm_ui$Element$mouseOver(
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Element$Font$color(
-									A3($mdgriffith$elm_ui$Element$rgb, 1, 0.3, 0.3))
-								])),
-							$mdgriffith$elm_ui$Element$mouseDown(
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Element$Font$color(
-									A3($mdgriffith$elm_ui$Element$rgb, 1, 0.2, 0.2))
-								]))
-						]),
-					{
-						label: $mdgriffith$elm_ui$Element$text('×'),
-						onPress: $elm$core$Maybe$Just(
-							$author$project$Main$DeleteDocument(doc.id))
-					})
-				]));
-	});
-var $author$project$Style$electricBlueColor = function (theme) {
-	if (theme.$ === 'Light') {
-		return A3($mdgriffith$elm_ui$Element$rgb255, 20, 123, 255);
-	} else {
-		return A3($mdgriffith$elm_ui$Element$rgb255, 0, 191, 255);
-	}
-};
-var $author$project$Main$ExportToLaTeX = {$: 'ExportToLaTeX'};
-var $author$project$Main$ExportToRawLaTeX = {$: 'ExportToRawLaTeX'};
-var $author$project$Main$exportStuff = function (model) {
-	return A2(
-		$mdgriffith$elm_ui$Element$row,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$spacing(8),
-				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-			]),
-		_List_fromArray(
-			[
-				A3(
-				$author$project$Widget$sidebarButton,
-				model.theme,
-				$elm$core$Maybe$Just($author$project$Main$ExportToLaTeX),
-				'LaTeX'),
-				A3(
-				$author$project$Widget$sidebarButton,
-				model.theme,
-				$elm$core$Maybe$Just($author$project$Main$ExportToRawLaTeX),
-				'Raw LaTeX')
-			]));
-};
-var $author$project$Style$innerColumn = _List_fromArray(
-	[
-		$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-		$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-		A2($mdgriffith$elm_ui$Element$paddingXY, 16, 16),
-		$mdgriffith$elm_ui$Element$spacing(12),
-		$mdgriffith$elm_ui$Element$scrollbarY,
-		$mdgriffith$elm_ui$Element$htmlAttribute(
-		A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
-		$mdgriffith$elm_ui$Element$htmlAttribute(
-		A2($elm$html$Html$Attributes$style, 'min-height', '0')),
-		$mdgriffith$elm_ui$Element$htmlAttribute(
-		A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
-	]);
-var $mdgriffith$elm_ui$Element$Input$HiddenLabel = function (a) {
-	return {$: 'HiddenLabel', a: a};
-};
-var $mdgriffith$elm_ui$Element$Input$labelHidden = $mdgriffith$elm_ui$Element$Input$HiddenLabel;
-var $mdgriffith$elm_ui$Element$Input$TextInputNode = function (a) {
-	return {$: 'TextInputNode', a: a};
-};
 var $mdgriffith$elm_ui$Element$Input$text = $mdgriffith$elm_ui$Element$Input$textHelper(
 	{
 		autofill: $elm$core$Maybe$Nothing,
@@ -56442,7 +56375,7 @@ var $author$project$Main$sidebar = function (model) {
 						var _v0 = model.userName;
 						if (_v0.$ === 'Just') {
 							var name = _v0.a;
-							return ($elm$core$String$trim(name) !== '') ? A3($author$project$Widget$inputTextWidget, model.theme, name, $author$project$Main$InputUserName) : A2(
+							return ($elm$core$String$trim(name) !== '') ? A3($author$project$Widget$inputTextWidget, model.theme, name, $author$project$Model$InputUserName) : A2(
 								$mdgriffith$elm_ui$Element$column,
 								_List_fromArray(
 									[
@@ -56459,7 +56392,7 @@ var $author$project$Main$sidebar = function (model) {
 												{bottom: 8, left: 0, right: 0, top: 0})
 											]),
 										$mdgriffith$elm_ui$Element$text('Your Name')),
-										A3($author$project$Widget$inputTextWidget, model.theme, name, $author$project$Main$InputUserName)
+										A3($author$project$Widget$inputTextWidget, model.theme, name, $author$project$Model$InputUserName)
 									]));
 						} else {
 							return A2(
@@ -56479,7 +56412,7 @@ var $author$project$Main$sidebar = function (model) {
 												{bottom: 8, left: 0, right: 0, top: 0})
 											]),
 										$mdgriffith$elm_ui$Element$text('Your Name')),
-										A3($author$project$Widget$inputTextWidget, model.theme, '', $author$project$Main$InputUserName)
+										A3($author$project$Widget$inputTextWidget, model.theme, '', $author$project$Model$InputUserName)
 									]));
 						}
 					}(),
@@ -56523,12 +56456,12 @@ var $author$project$Main$sidebar = function (model) {
 											]),
 										{
 											label: $mdgriffith$elm_ui$Element$text('Dark'),
-											onPress: $elm$core$Maybe$Just($author$project$Main$ToggleTheme)
+											onPress: $elm$core$Maybe$Just($author$project$Model$ToggleTheme)
 										}),
 										A3(
 										$author$project$Widget$sidebarButton,
 										model.theme,
-										$elm$core$Maybe$Just($author$project$Main$ToggleTheme),
+										$elm$core$Maybe$Just($author$project$Model$ToggleTheme),
 										'Light')
 									]))
 							])),
@@ -56632,10 +56565,201 @@ var $author$project$Main$sidebar = function (model) {
 							]),
 						{
 							label: $mdgriffith$elm_ui$Element$text('Download script'),
-							onPress: $elm$core$Maybe$Just($author$project$Main$DownloadScript)
+							onPress: $elm$core$Maybe$Just($author$project$Model$DownloadScript)
 						})
 					]))
 			]));
+};
+var $author$project$Editor$appWidth = function (model) {
+	return model.windowWidth;
+};
+var $author$project$Editor$sidebarWidth = 260;
+var $author$project$Editor$panelWidth = function (model) {
+	return ((((($author$project$Editor$appWidth(model) - $author$project$Editor$sidebarWidth) - 16) - 4) - 16) / 2) | 0;
+};
+var $mdgriffith$elm_ui$Element$Keyed$el = F2(
+	function (attrs, child) {
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asEl,
+			$mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
+					attrs)),
+			$mdgriffith$elm_ui$Internal$Model$Keyed(
+				_List_fromArray(
+					[child])));
+	});
+var $author$project$Editor$encodeEditorData = function (_v0) {
+	var begin = _v0.begin;
+	var end = _v0.end;
+	return A2(
+		$elm$json$Json$Encode$encode,
+		2,
+		$elm$json$Json$Encode$object(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					'begin',
+					$elm$json$Json$Encode$int(begin)),
+					_Utils_Tuple2(
+					'end',
+					$elm$json$Json$Encode$int(end))
+				])));
+};
+var $author$project$Editor$encodeRefinedSelection = F2(
+	function (_v0, _v1) {
+		var focusOffset = _v0.focusOffset;
+		var anchorOffset = _v0.anchorOffset;
+		var text = _v0.text;
+		var begin = _v1.begin;
+		var end = _v1.end;
+		var _v2 = A2(
+			$elm$core$Debug$log,
+			'@@encodeRefinedSelection.elm(1)',
+			_Utils_Tuple2(focusOffset, anchorOffset));
+		var _v3 = A2(
+			$elm$core$Debug$log,
+			'@@encodeRefinedSelection.elm(2)',
+			_Utils_Tuple3(text, begin, end));
+		return A2(
+			$elm$json$Json$Encode$encode,
+			2,
+			$elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'focusOffset',
+						$elm$json$Json$Encode$int(focusOffset)),
+						_Utils_Tuple2(
+						'anchorOffset',
+						$elm$json$Json$Encode$int(anchorOffset)),
+						_Utils_Tuple2(
+						'text',
+						$elm$json$Json$Encode$string(text)),
+						_Utils_Tuple2(
+						'begin',
+						$elm$json$Json$Encode$int(begin)),
+						_Utils_Tuple2(
+						'end',
+						$elm$json$Json$Encode$int(end))
+					])));
+	});
+var $author$project$Editor$htmlId = function (str) {
+	return $mdgriffith$elm_ui$Element$htmlAttribute(
+		$elm$html$Html$Attributes$id(str));
+};
+var $author$project$Model$SelectedText = function (a) {
+	return {$: 'SelectedText', a: a};
+};
+var $author$project$Editor$textDecoder = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['detail']),
+	$elm$json$Json$Decode$string);
+var $author$project$Editor$onSelectionChange = A2(
+	$elm$html$Html$Events$on,
+	'selected-text',
+	A2($elm$json$Json$Decode$map, $author$project$Model$SelectedText, $author$project$Editor$textDecoder));
+var $author$project$Model$InputText2 = function (a) {
+	return {$: 'InputText2', a: a};
+};
+var $author$project$Document$SourceTextRecord = F2(
+	function (position, source) {
+		return {position: position, source: source};
+	});
+var $author$project$Editor$dataDecoder_ = A3(
+	$elm$json$Json$Decode$map2,
+	$author$project$Document$SourceTextRecord,
+	A2($elm$json$Json$Decode$field, 'position', $elm$json$Json$Decode$int),
+	A2($elm$json$Json$Decode$field, 'source', $elm$json$Json$Decode$string));
+var $author$project$Editor$dataDecoder = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['detail']),
+	$author$project$Editor$dataDecoder_);
+var $author$project$Editor$onTextChange = A2(
+	$elm$html$Html$Events$on,
+	'text-change',
+	A2($elm$json$Json$Decode$map, $author$project$Model$InputText2, $author$project$Editor$dataDecoder));
+var $author$project$Editor$stringOfBool = function (bool) {
+	return bool ? 'true' : 'false';
+};
+var $author$project$Editor$view_ = function (model) {
+	return A2(
+		$mdgriffith$elm_ui$Element$Keyed$el,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$htmlAttribute($author$project$Editor$onSelectionChange),
+				$mdgriffith$elm_ui$Element$alignBottom,
+				$mdgriffith$elm_ui$Element$htmlAttribute($author$project$Editor$onTextChange),
+				$author$project$Editor$htmlId('editor-here'),
+				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$Background$color(
+				A3($mdgriffith$elm_ui$Element$rgb255, 0, 68, 85)),
+				$mdgriffith$elm_ui$Element$Font$color(
+				A3($mdgriffith$elm_ui$Element$rgb, 0.85, 0.85, 0.85)),
+				$mdgriffith$elm_ui$Element$Font$size(12)
+			]),
+		_Utils_Tuple2(
+			$author$project$Editor$stringOfBool(false),
+			$mdgriffith$elm_ui$Element$html(
+				A3(
+					$elm$html$Html$node,
+					'codemirror-editor',
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$attribute, 'load', model.sourceText),
+							A2($elm$html$Html$Attributes$attribute, 'text', model.sourceText),
+							A2(
+							$elm$html$Html$Attributes$attribute,
+							'editordata',
+							$author$project$Editor$encodeEditorData(model.editorData)),
+							function () {
+							var _v0 = model.maybeSelectionOffset;
+							if (_v0.$ === 'Nothing') {
+								return A2($elm$html$Html$Attributes$attribute, 'noOp', 'true');
+							} else {
+								var refinedSelection = _v0.a;
+								return A2(
+									$elm$html$Html$Attributes$attribute,
+									'refineselection',
+									A2($author$project$Editor$encodeRefinedSelection, refinedSelection, model.editorData));
+							}
+						}(),
+							A2(
+							$elm$html$Html$Attributes$attribute,
+							'selection',
+							$author$project$Editor$stringOfBool(model.doSync))
+						]),
+					_List_Nil))));
+};
+var $author$project$Editor$view = function (model) {
+	return A2(
+		$mdgriffith$elm_ui$Element$el,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$alignTop,
+				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$width(
+				$mdgriffith$elm_ui$Element$px(
+					$author$project$Editor$panelWidth(model))),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'overflow', 'hidden')),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'position', 'relative')),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
+			]),
+		A2(
+			$mdgriffith$elm_ui$Element$el,
+			_List_Nil,
+			$author$project$Editor$view_(model)));
 };
 var $author$project$Main$mainColumn = function (model) {
 	return A2(
@@ -56684,7 +56808,7 @@ var $author$project$Main$mainColumn = function (model) {
 							]),
 						_List_fromArray(
 							[
-								$author$project$Main$inputText(model),
+								$author$project$Editor$view(model),
 								A2(
 								$mdgriffith$elm_ui$Element$el,
 								_List_fromArray(
@@ -56698,7 +56822,7 @@ var $author$project$Main$mainColumn = function (model) {
 								$mdgriffith$elm_ui$Element$none),
 								A2(
 								$mdgriffith$elm_ui$Element$map,
-								$author$project$Main$Render,
+								$author$project$Model$Render,
 								$author$project$Main$displayRenderedText(model)),
 								A2(
 								$mdgriffith$elm_ui$Element$el,
@@ -56737,7 +56861,7 @@ var $author$project$Main$view = function (model) {
 		$author$project$Main$mainColumn(model));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
+	{init: $author$project$Model$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	A2(
 		$elm$json$Json$Decode$andThen,
