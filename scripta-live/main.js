@@ -55169,7 +55169,7 @@ var $author$project$Main$header = function (model) {
 						$mdgriffith$elm_ui$Element$Font$semiBold,
 						$author$project$Style$forceColorStyle(model.theme)
 					]),
-				$mdgriffith$elm_ui$Element$text('Scripta Live: ' + model.title))
+				$mdgriffith$elm_ui$Element$text('Scripta Live v0.1: ' + model.title))
 			]));
 };
 var $author$project$Main$mainColumnStyle = _List_fromArray(
@@ -56676,7 +56676,7 @@ var $author$project$Editor$view = function (model) {
 		_List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$htmlAttribute($author$project$Editor$onSelectionChange),
-				$mdgriffith$elm_ui$Element$alignBottom,
+				$mdgriffith$elm_ui$Element$alignTop,
 				$mdgriffith$elm_ui$Element$htmlAttribute($author$project$Editor$onTextChange),
 				$author$project$Editor$htmlId('editor-here'),
 				$mdgriffith$elm_ui$Element$height(
