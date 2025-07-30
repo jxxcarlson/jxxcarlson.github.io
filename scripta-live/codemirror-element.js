@@ -30432,9 +30432,7 @@ window.initCodeMirror = function () {
 
    class CodemirrorEditor extends HTMLElement {
 
-       // static get observedAttributes() { return ['selection', 'load', 'refineselection', 'editordata', 'text']; }
-       static get observedAttributes() { return ['selection', 'load', 'refineselection', 'text']; }
-       // static get observedAttributes() { return ['selection', 'load', 'editordata', 'text']; }
+       static get observedAttributes() { return ['selection', 'load', 'refineselection', 'editordata', 'text']; }
 
        constructor(self) {
 
@@ -30706,10 +30704,10 @@ window.initCodeMirror = function () {
 }
 
 
-exports.init = async function(app) {
-
-// The code is already bundled in this file, so we just need to call the function
-initCodeMirror();
-
-}
+// exports.init = async function(app) {
+//
+// // The code is already bundled in this file, so we just need to call the function
+// initCodeMirror();
+//
+// }
 

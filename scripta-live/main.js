@@ -50381,6 +50381,8 @@ var $author$project$Model$init = function (flags) {
 			documents: _List_Nil,
 			editRecord: editRecord,
 			editorData: {begin: 0, end: 0},
+			foundIdIndex: 0,
+			foundIds: _List_Nil,
 			initialText: normalizedTex,
 			lastChanged: currentTime,
 			lastLoadedDocumentId: $elm$core$Maybe$Nothing,
@@ -50388,9 +50390,12 @@ var $author$project$Model$init = function (flags) {
 			loadDocumentIntoEditor: true,
 			maybeSelectionOffset: $elm$core$Maybe$Nothing,
 			pressedKeys: _List_Nil,
+			searchCount: 0,
 			selectId: '@InitID',
+			selectedId: '',
 			showDocumentList: true,
 			sourceText: normalizedTex,
+			targetData: $elm$core$Maybe$Nothing,
 			theme: theme,
 			title: title_,
 			userName: $elm$core$Maybe$Nothing,
@@ -53662,11 +53667,51 @@ var $author$project$Main$jumpToTopOf = function (id) {
 			},
 			$elm$browser$Browser$Dom$getViewportOf(id)));
 };
+var $author$project$Generic$ASTTools$idOfMatchingBlockContent = F2(
+	function (key, block) {
+		return A2($elm$core$String$contains, key, block.meta.sourceText) ? $elm$core$Maybe$Just(block.meta.id) : $elm$core$Maybe$Nothing;
+	});
+var $author$project$Generic$ASTTools$matchingIdsInAST = F2(
+	function (key, ast) {
+		return A2(
+			$elm$core$List$filterMap,
+			$author$project$Generic$ASTTools$idOfMatchingBlockContent(key),
+			$elm$core$List$concat(
+				A2($elm$core$List$map, $author$project$Library$Tree$flatten, ast)));
+	});
+var $author$project$ScriptaV2$Helper$matchingIdsInAST = $author$project$Generic$ASTTools$matchingIdsInAST;
 var $author$project$Document$newDocument = F6(
 	function (id, title, author, content, theme, now) {
 		return {author: author, content: content, createdAt: now, id: id, modifiedAt: now, theme: theme, title: title};
 	});
 var $author$project$AppData$processImagesText = '\n#!/bin/bash\n\n # Usage:\n #\n # sh ./process_images.sh <input_file> : gives a way\n #\n # Purpose: process LaTeX exported from scripta files that contain images,\n # first creating a corresponding LaTeX file, then\n # a pdf file.\n #\n # Prerequisite software installation:\n # - ImageMagick (for converting images to EPS)\n # - pdflatex (for making PDFs LaTeX files)\n #\n # Setup:\n # Make a folder call "tex" and make a subfolder "image" in it.\n # Put this script in the "tex" folder.\n # Put your file downloaded from Scripta Live or Scripta.io in the "tex" folder.\n # Run the script with the same filename as an argument: `sh ./process_file.sh myfile.tex`\n #\n # Plans:\n # This work will be automated in the near future, so that you can just\n # Press a button to do all the work\n #\n # Detail: the script processes its inputs follows:\n # First, it examines the file, finding all urls pointing to images (JPEG or PNG).\n # Next, it downloads the corresponding images, constructing a filename for each\n # image based on its URL, and converts them to EPS format using ImageMagick.\n # These images are then stored in the directory "./image". The URLS in the\n # original LaTeX file are replaced with the local EPS filenames.\n\n\n# Check if correct number of arguments provided\nif [ $# -ne 1 ]; then\n    echo "Usage: $0 <input_file>"\n    echo "Example: $0 document.tex"\n    exit 1\nfi\n\nINPUT_FILE="$1"\n\n# Check if input file exists in current directory\nif [ ! -f "$INPUT_FILE" ]; then\n    echo "Error: File $INPUT_FILE not found in current directory"\n    exit 1\nfi\n\n# Create output directory\nOUTPUT_DIR="./image"\nmkdir -p "$OUTPUT_DIR"\n\n# Check if ImageMagick is installed\nif ! command -v convert &> /dev/null; then\n    echo "Error: ImageMagick is not installed. Please install it first."\n    exit 1\nfi\n\n# Create a temporary file for the modified LaTeX\nTEMP_FILE=$(mktemp)\ncp "$INPUT_FILE" "$TEMP_FILE"\n\necho "Searching for image URLs in $INPUT_FILE..."\necho "Output directory: $OUTPUT_DIR"\necho\n\n# Extract URLs ending with .jpg, .jpeg, or .png\n# Using grep with extended regex to find URLs (including those with spaces before them)\ngrep -Eo \'https?://[^"{}]+\\.(jpg|jpeg|png)(\\?[^"{}]*)?\' "$INPUT_FILE" | sort -u | while read -r url; do\n    # Remove query parameters if present\n    url_without_query="${url%%\\?*}"\n\n    # Extract path after domain\n    # Remove protocol and domain to get just the path\n    path_after_domain=$(echo "$url_without_query" | sed -E \'s|https?://[^/]*/?||\')\n    # Remove file extension\n    path_without_ext="${path_after_domain%.*}"\n    # Replace slashes with hyphens and remove special characters\n    eps_base_name=$(echo "$path_without_ext" | tr \'/\' \'-\' | tr -d \'():=\')\n    eps_filename="${eps_base_name}.eps"\n\n    # Get original filename for download\n    original_filename=$(basename "$url")\n    original_filename="${original_filename%%\\?*}"\n\n    echo "Processing: $url"\n    echo "  Path after domain: $path_after_domain"\n    echo "  Path without ext: $path_without_ext"\n    echo "  EPS base name: $eps_base_name"\n    echo "  Downloading as: $original_filename"\n    echo "  EPS filename: $eps_filename"\n\n    # Download the image\n    if curl -s -L -o "$OUTPUT_DIR/$original_filename" "$url"; then\n        echo "  Converting to EPS..."\n\n        # Convert to EPS using ImageMagick\n        if convert "$OUTPUT_DIR/$original_filename" -compress lzw "$OUTPUT_DIR/$eps_filename" 2>/dev/null; then\n            echo "  ✓ Successfully converted to EPS"\n\n            # Replace URL with EPS filename in the temporary file\n            # Use perl for more reliable replacement\n            perl -i -pe "s|\\Q$url\\E|$eps_filename|g" "$TEMP_FILE"\n            echo "  ✓ Replaced URL in LaTeX file"\n\n            # Remove the original downloaded file\n            rm "$OUTPUT_DIR/$original_filename"\n        else\n            echo "  ✗ Failed to convert to EPS"\n            rm "$OUTPUT_DIR/$original_filename"\n        fi\n    else\n        echo "  ✗ Failed to download"\n    fi\n    echo\ndone\n\n# Replace the original file with the modified one\nmv "$TEMP_FILE" "$INPUT_FILE"\n\n# Count results\neps_count=$(find "$OUTPUT_DIR" -name "*.eps" -type f | wc -l)\necho "Completed! Created $eps_count EPS files in $OUTPUT_DIR"\necho "LaTeX file has been updated with local EPS references"\n\n# Check if pdflatex is installed\nif command -v pdflatex &> /dev/null; then\n    echo\n    echo "Running pdflatex on $INPUT_FILE..."\n\n    # Get base filename without extension\n    BASE_NAME="${INPUT_FILE%.tex}"\n\n    # Run pdflatex twice (for references, TOC, etc.)\n    for i in 1 2; do\n        echo "Pass $i of 2..."\n        if pdflatex -interaction=nonstopmode "$INPUT_FILE" > /dev/null 2>&1; then\n            echo "  ✓ Pass $i completed"\n        else\n            echo "  ✗ Pass $i failed"\n            echo "  Check the .log file for errors"\n        fi\n    done\n\n    if [ -f "${BASE_NAME}.pdf" ]; then\n        echo "✓ PDF generated: ${BASE_NAME}.pdf"\n    fi\nelse\n    echo "Warning: pdflatex not found. Skipping PDF generation."\nfi\n\n# Cleanup auxiliary files\necho\necho "Cleaning up auxiliary files..."\nrm -f *.aux *.log *.toc *.out *.synctex.gz *.fls *.fdb_latexmk\n\necho "Done!"\n';
+var $elm_community$list_extra$List$Extra$indexedFoldr = F3(
+	function (func, acc, list) {
+		var step = F2(
+			function (x, _v0) {
+				var i = _v0.a;
+				var thisAcc = _v0.b;
+				return _Utils_Tuple2(
+					i - 1,
+					A3(func, i, x, thisAcc));
+			});
+		return A3(
+			$elm$core$List$foldr,
+			step,
+			_Utils_Tuple2(
+				$elm$core$List$length(list) - 1,
+				acc),
+			list).b;
+	});
+var $elm_community$list_extra$List$Extra$removeIfIndex = function (predicate) {
+	return A2(
+		$elm_community$list_extra$List$Extra$indexedFoldr,
+		F3(
+			function (index, item, acc) {
+				return predicate(index) ? acc : A2($elm$core$List$cons, item, acc);
+			}),
+		_List_Nil);
+};
 var $elm$file$File$Download$string = F3(
 	function (name, mime, content) {
 		return A2(
@@ -54478,15 +54523,74 @@ var $author$project$Main$update = F2(
 									{selectId: id}),
 								$elm$core$Platform$Cmd$none);
 						case 'SendLineNumber':
-							var line = msg_.a;
-							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+							var editorData = msg_.a;
+							var _v2 = A2($elm$core$Debug$log, '@@SendLineNumber, editorData', editorData);
+							var _v3 = model.currentDocument;
+							if (_v3.$ === 'Nothing') {
+								return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+							} else {
+								var doc = _v3.a;
+								var target = A2(
+									$elm$core$Maybe$andThen,
+									$elm$core$List$head,
+									A2(
+										$elm$core$Maybe$map,
+										$elm$core$String$split('\n\n'),
+										A2(
+											$elm$core$Maybe$map,
+											$elm$core$String$join('\n'),
+											A2(
+												$elm$core$Maybe$map,
+												$elm_community$list_extra$List$Extra$removeIfIndex(
+													function (k) {
+														return (_Utils_cmp(k, editorData.begin - 1) < 0) || (_Utils_cmp(k, editorData.end) > 0);
+													}),
+												A2(
+													$elm$core$Maybe$map,
+													A2(
+														$elm$core$Basics$composeR,
+														function ($) {
+															return $.content;
+														},
+														$elm$core$String$lines),
+													model.currentDocument)))));
+								var targetData = function () {
+									if (target.$ === 'Nothing') {
+										return $elm$core$Maybe$Nothing;
+									} else {
+										var target_ = target.a;
+										return $elm$core$Maybe$Just(
+											{editorData: editorData, target: target_});
+									}
+								}();
+								var foundIds_ = A2(
+									$author$project$ScriptaV2$Helper$matchingIdsInAST,
+									A2($elm$core$Maybe$withDefault, '--xx--', target),
+									model.editRecord.tree);
+								var id_ = A2(
+									$elm$core$Maybe$withDefault,
+									'(nothing)',
+									$elm$core$List$head(foundIds_));
+								var _v4 = A2($elm$core$Debug$log, '@@SendLineNumber, target', target);
+								var _v5 = A2($elm$core$Debug$log, '@@SendLineNumber, foundIds', foundIds_);
+								var _v6 = A2($elm$core$Debug$log, '@@SendLineNumber, sending to port with editorData', editorData);
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											editorData: A2($elm$core$Debug$log, '@@SetEditorData(2)', editorData),
+											targetData: targetData
+										}),
+									$elm$core$Platform$Cmd$none);
+							}
 						default:
+							var _v8 = A2($elm$core$Debug$log, '@@!!@@ Render message received', msg_);
 							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					}
 				case 'ToggleTheme':
 					var newTheme = function () {
-						var _v3 = model.theme;
-						if (_v3.$ === 'Light') {
+						var _v10 = model.theme;
+						if (_v10.$ === 'Light') {
 							return $author$project$Theme$Dark;
 						} else {
 							return $author$project$Theme$Light;
@@ -54512,13 +54616,13 @@ var $author$project$Main$update = F2(
 									}
 								}())));
 				case 'CreateNewDocument':
-					var _v4 = model.currentDocument;
-					if (_v4.$ === 'Just') {
-						var doc = _v4.a;
+					var _v11 = model.currentDocument;
+					if (_v11.$ === 'Just') {
+						var doc = _v11.a;
 						if (!_Utils_eq(model.sourceText, doc.content)) {
-							var _v5 = A2($author$project$Main$update, $author$project$Model$SaveDocument, model);
-							var newModel = _v5.a;
-							var saveCmd = _v5.b;
+							var _v12 = A2($author$project$Main$update, $author$project$Model$SaveDocument, model);
+							var newModel = _v12.a;
+							var saveCmd = _v12.b;
 							return _Utils_Tuple2(
 								newModel,
 								$elm$core$Platform$Cmd$batch(
@@ -54570,9 +54674,9 @@ var $author$project$Main$update = F2(
 						$author$project$Ports$send(
 							$author$project$Ports$SaveDocument(newDoc)));
 				case 'SaveDocument':
-					var _v6 = model.currentDocument;
-					if (_v6.$ === 'Just') {
-						var doc = _v6.a;
+					var _v13 = model.currentDocument;
+					if (_v13.$ === 'Just') {
+						var doc = _v13.a;
 						var updatedDoc = _Utils_update(
 							doc,
 							{content: model.sourceText, modifiedAt: model.currentTime, theme: model.theme, title: model.title});
@@ -54594,16 +54698,16 @@ var $author$project$Main$update = F2(
 					}
 				case 'LoadDocument':
 					var id = msg.a;
-					var _v7 = model.currentDocument;
-					if (_v7.$ === 'Just') {
-						var doc = _v7.a;
+					var _v14 = model.currentDocument;
+					if (_v14.$ === 'Just') {
+						var doc = _v14.a;
 						if (!_Utils_eq(model.sourceText, doc.content)) {
 							var updatedDoc = _Utils_update(
 								doc,
 								{content: model.sourceText, modifiedAt: model.currentTime, theme: model.theme, title: model.title});
-							var _v8 = A2($author$project$Main$update, $author$project$Model$SaveDocument, model);
-							var newModel = _v8.a;
-							var saveCmd = _v8.b;
+							var _v15 = A2($author$project$Main$update, $author$project$Model$SaveDocument, model);
+							var newModel = _v15.a;
+							var saveCmd = _v15.b;
 							return _Utils_Tuple2(
 								newModel,
 								$elm$core$Platform$Cmd$batch(
@@ -54634,9 +54738,9 @@ var $author$project$Main$update = F2(
 						},
 						model.documents);
 					var needNewDoc = function () {
-						var _v9 = model.currentDocument;
-						if (_v9.$ === 'Just') {
-							var doc = _v9.a;
+						var _v16 = model.currentDocument;
+						if (_v16.$ === 'Just') {
+							var doc = _v16.a;
 							return _Utils_eq(doc.id, id);
 						} else {
 							return false;
@@ -54660,9 +54764,9 @@ var $author$project$Main$update = F2(
 							{showDocumentList: !model.showDocumentList}),
 						$elm$core$Platform$Cmd$none);
 				case 'AutoSave':
-					var _v10 = model.currentDocument;
-					if (_v10.$ === 'Just') {
-						var doc = _v10.a;
+					var _v17 = model.currentDocument;
+					if (_v17.$ === 'Just') {
+						var doc = _v17.a;
 						if (!_Utils_eq(model.sourceText, doc.content)) {
 							var $temp$msg = $author$project$Model$SaveDocument,
 								$temp$model = model;
@@ -54679,9 +54783,9 @@ var $author$project$Main$update = F2(
 					var time = msg.a;
 					var timeSinceLastChange = (($elm$time$Time$posixToMillis(time) - $elm$time$Time$posixToMillis(model.lastChanged)) / 1000) | 0;
 					var shouldAutoSave = function () {
-						var _v11 = model.currentDocument;
-						if (_v11.$ === 'Just') {
-							var doc = _v11.a;
+						var _v18 = model.currentDocument;
+						if (_v18.$ === 'Just') {
+							var doc = _v18.a;
 							return (!_Utils_eq(model.sourceText, doc.content)) && (_Utils_cmp(timeSinceLastChange, $author$project$Constants$constants.maxUnsavedDuration) > -1);
 						} else {
 							return false;
@@ -54778,9 +54882,35 @@ var $author$project$Main$update = F2(
 						return A2($author$project$Main$handleIncomingPortMsg, incomingMsg, model);
 					} else {
 						var error = result.a;
-						var _v13 = A2($elm$core$Debug$log, '@@!!@@ Port decoding error', error);
+						var _v20 = A2($elm$core$Debug$log, '@@!!@@ Port decoding error', error);
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					}
+				case 'GetSelection':
+					var str = msg.a;
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				case 'RequestAnchorOffset':
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				case 'ReceiveAnchorOffset':
+					var maybeSelectionOffset = msg.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{maybeSelectionOffset: maybeSelectionOffset}),
+						$elm$core$Platform$Cmd$none);
+				case 'StartSync':
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{doSync: !model.doSync}),
+						$elm$core$Platform$Cmd$none);
+				case 'SelectedText':
+					var str = msg.a;
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				case 'LRSync':
+					var target = msg.a;
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				case 'NextSync':
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				default:
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			}
@@ -55166,7 +55296,7 @@ var $author$project$Main$header = function (model) {
 						$mdgriffith$elm_ui$Element$Font$semiBold,
 						$author$project$Style$forceColorStyle(model.theme)
 					]),
-				$mdgriffith$elm_ui$Element$text('Scripta Live v0.1d: ' + model.title))
+				$mdgriffith$elm_ui$Element$text('Scripta Live v0.2: ' + model.title))
 			]));
 };
 var $author$project$Main$mainColumnStyle = _List_fromArray(
@@ -56701,7 +56831,8 @@ var $author$project$Editor$view = function (model) {
 							A2(
 							$elm$html$Html$Attributes$attribute,
 							'editordata',
-							$author$project$Editor$encodeEditorData(model.editorData)),
+							$author$project$Editor$encodeEditorData(
+								A2($elm$core$Debug$log, '@@!!@@_editordata_ENCODE', model.editorData))),
 							function () {
 							var _v0 = model.maybeSelectionOffset;
 							if (_v0.$ === 'Nothing') {
@@ -56711,7 +56842,10 @@ var $author$project$Editor$view = function (model) {
 								return A2(
 									$elm$html$Html$Attributes$attribute,
 									'refineselection',
-									A2($author$project$Editor$encodeRefinedSelection, refinedSelection, model.editorData));
+									A2(
+										$author$project$Editor$encodeRefinedSelection,
+										A2($elm$core$Debug$log, '@@!!@@_refinedSelection_ENCODE', refinedSelection),
+										model.editorData));
 							}
 						}(),
 							A2(
