@@ -56815,7 +56815,9 @@ var $author$project$Main$view = function (model) {
 			[
 				$author$project$Style$background_(model.theme),
 				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'height', '100vh'))
+				A2($elm$html$Html$Attributes$style, 'height', '100vh')),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'overflow', 'hidden'))
 			]),
 		$author$project$Main$mainColumn(model));
 };
