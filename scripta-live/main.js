@@ -5667,7 +5667,6 @@ var $elm$core$Basics$always = F2(
 		return a;
 	});
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $author$project$AppData$defaultDocumentText = '| title number-to-level:0\nAnnouncement\n\n[vspace 3\n0]\n[large [italic This is what you can do with Scripta Live:]]\n\n| image figure:1 caption: Humming bird\nhttps://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n\n| equation numbered\n\\label{wave-equation}\nsecpder(u,x) + secpder(u,y) + secpder(u,z) = frac(1,c^2) secpder(u,t))\n\n[large [i ...make beautiful things with simple tools.]]\n[vspace 30]\n\n\n# About Scripta Live\n\nScripta is a markup language much like LaTeX, but with a simplified, ergonomic syntax.\nBetter yet: what you write (here, on the left) is rendered\n[i instantaneously ] in the right-hand window pane. No setup required.\nJust click the "New" button and start writing.\n\n- Your documents are saved in the browser\'s local storage.  If you refresh the\nbrowser or close it and come back to it later, it weill be there, waiting for you..\n\n- Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.\n\n- Scripta documents can be exported to standard LaTeX.  If there are no images\nin the document, it can be turned into a pdf file using `pdflatex`.  Otherwise,\nuse the downloadable shell script — get it by clicking on the button  [blue Download Script],\nlower right corner.  We\nwill soon provide a simpler solution.\n\n\n# Examples\n\n| mathmacros\nsecpder:  frac(partial^2 #1, partial #2^2)\nnat:    mathbb N\nreals: mathbb R\npder:  frac(partial #1, partial #2)\nset:    \\{ #1 \\}\nsett:   \\{ #1 \\ | \\ #2 \\}\n\nPythagoras said: $a^2 + b^2 = c^2$.\n\nThis will be on the test:\n\n| equation\nint_0^1 x^n dx = frac(1,n+1)\n\n\nBoth of the above equalities were written using an `equation` block.  If you look\nat the source text you will see that [eqref wave-equation] an [u argument] `numbered` and\na property, namely  `label:wave-equation`. That property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\nto see what happens.\n\nHere is an [u aligned] block:\n\n| aligned\nnat &= set("positive whole numbers and zero")\nnat &= sett(n " is a whole number", n > 0)\n\n\n| equation\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n=\n\\begin{pmatrix}\n5 & 4 \\\\\n4 & 5\n\\end{pmatrix}\n\n\n\n\n';
 var $author$project$Generic$Language$Ordinary = function (a) {
 	return {$: 'Ordinary', a: a};
 };
@@ -35897,42 +35896,6 @@ var $author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput = 
 			toc: toc
 		};
 	});
-var $elm_community$list_extra$List$Extra$dropWhile = F2(
-	function (predicate, list) {
-		dropWhile:
-		while (true) {
-			if (!list.b) {
-				return _List_Nil;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				if (predicate(x)) {
-					var $temp$predicate = predicate,
-						$temp$list = xs;
-					predicate = $temp$predicate;
-					list = $temp$list;
-					continue dropWhile;
-				} else {
-					return list;
-				}
-			}
-		}
-	});
-var $author$project$Model$getTitle = function (str) {
-	return A2(
-		$elm$core$Maybe$withDefault,
-		'No title yet',
-		$elm$core$List$head(
-			A2(
-				$elm_community$list_extra$List$Extra$dropWhile,
-				function (line) {
-					return (line === '') || A2($elm$core$String$startsWith, '|', line);
-				},
-				A2(
-					$elm$core$List$map,
-					$elm$core$String$trim,
-					$elm$core$String$lines(str)))));
-};
 var $author$project$Differential$AbstractDifferentialParser$init = F3(
 	function (f, initialData, content) {
 		var chunks = f.chunker(content);
@@ -50187,15 +50150,6 @@ var $author$project$Theme$mapTheme = function (theme) {
 		return $author$project$Render$Theme$Dark;
 	}
 };
-var $author$project$Model$normalize = function (input) {
-	return A2(
-		$elm$core$String$join,
-		'\n',
-		A2(
-			$elm$core$List$map,
-			$elm$core$String$trim,
-			$elm$core$String$lines(input)));
-};
 var $elm$time$Time$Name = function (a) {
 	return {$: 'Name', a: a};
 };
@@ -50340,6 +50294,7 @@ var $author$project$Ports$send = function (msg) {
 };
 var $elm$core$Process$sleep = _Process_sleep;
 var $author$project$Model$init = function (flags) {
+	var title_ = 'Loading...';
 	var theme = function () {
 		var _v0 = flags.theme;
 		_v0$2:
@@ -50359,8 +50314,7 @@ var $author$project$Model$init = function (flags) {
 		}
 		return $author$project$Theme$Dark;
 	}();
-	var normalizedTex = $author$project$Model$normalize($author$project$AppData$defaultDocumentText);
-	var title_ = $author$project$Model$getTitle(normalizedTex);
+	var normalizedTex = '';
 	var editRecord = A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, $author$project$ScriptaV2$Language$EnclosureLang, normalizedTex);
 	var displaySettings = $author$project$Model$initialDisplaySettings(flags);
 	var currentTime = $elm$time$Time$millisToPosix(flags.currentTime);
@@ -53561,10 +53515,47 @@ var $author$project$Main$generateId = A2(
 		return 'doc-' + $elm$core$String$fromInt(n);
 	},
 	A2($elm$random$Random$int, 100000, 999999));
+var $elm_community$list_extra$List$Extra$dropWhile = F2(
+	function (predicate, list) {
+		dropWhile:
+		while (true) {
+			if (!list.b) {
+				return _List_Nil;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (predicate(x)) {
+					var $temp$predicate = predicate,
+						$temp$list = xs;
+					predicate = $temp$predicate;
+					list = $temp$list;
+					continue dropWhile;
+				} else {
+					return list;
+				}
+			}
+		}
+	});
+var $author$project$Model$getTitle = function (str) {
+	return A2(
+		$elm$core$Maybe$withDefault,
+		'No title yet',
+		$elm$core$List$head(
+			A2(
+				$elm_community$list_extra$List$Extra$dropWhile,
+				function (line) {
+					return (line === '') || A2($elm$core$String$startsWith, '|', line);
+				},
+				A2(
+					$elm$core$List$map,
+					$elm$core$String$trim,
+					$elm$core$String$lines(str)))));
+};
 var $author$project$Model$InitialDocumentId = F5(
 	function (a, b, c, d, e) {
 		return {$: 'InitialDocumentId', a: a, b: b, c: c, d: d, e: e};
 	});
+var $author$project$AppData$defaultDocumentText = '| title number-to-level:0\nAnnouncement\n\n[vspace 3\n0]\n[large [italic This is what you can do with Scripta Live:]]\n\n| image figure:1 caption: Humming bird\nhttps://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n\n| equation numbered\n\\label{wave-equation}\nsecpder(u,x) + secpder(u,y) + secpder(u,z) = frac(1,c^2) secpder(u,t))\n\n[large [i ...make beautiful things with simple tools.]]\n[vspace 30]\n\n\n# About Scripta Live\n\nScripta is a markup language much like LaTeX, but with a simplified, ergonomic syntax.\nBetter yet: what you write (here, on the left) is rendered\n[i instantaneously ] in the right-hand window pane. No setup required.\nJust click the "New" button and start writing.\n\n- Your documents are saved in the browser\'s local storage.  If you refresh the\nbrowser or close it and come back to it later, it weill be there, waiting for you..\n\n- Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.\n\n- Scripta documents can be exported to standard LaTeX.  If there are no images\nin the document, it can be turned into a pdf file using `pdflatex`.  Otherwise,\nuse the downloadable shell script — get it by clicking on the button  [blue Download Script],\nlower right corner.  We\nwill soon provide a simpler solution.\n\n\n# Examples\n\n| mathmacros\nsecpder:  frac(partial^2 #1, partial #2^2)\nnat:    mathbb N\nreals: mathbb R\npder:  frac(partial #1, partial #2)\nset:    \\{ #1 \\}\nsett:   \\{ #1 \\ | \\ #2 \\}\n\nPythagoras said: $a^2 + b^2 = c^2$.\n\nThis will be on the test:\n\n| equation\nint_0^1 x^n dx = frac(1,n+1)\n\n\nBoth of the above equalities were written using an `equation` block.  If you look\nat the source text you will see that [eqref wave-equation] an [u argument] `numbered` and\na property, namely  `label:wave-equation`. That property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\nto see what happens.\n\nHere is an [u aligned] block:\n\n| aligned\nnat &= set("positive whole numbers and zero")\nnat &= sett(n " is a whole number", n > 0)\n\n\n| equation\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n\\begin{pmatrix}\n2 & 1 \\\\\n1 & 2\n\\end{pmatrix}\n=\n\\begin{pmatrix}\n5 & 4 \\\\\n4 & 5\n\\end{pmatrix}\n\n\n\n\n';
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$handleIncomingPortMsg = F2(
 	function (msg, model) {
@@ -54861,11 +54852,23 @@ var $author$project$Main$update = F2(
 						content,
 						theme,
 						currentTime);
+					var editRecord = A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, model.currentLanguage, content);
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								currentDocument: $elm$core$Maybe$Just(initialDoc)
+								compilerOutput: A4(
+									$author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput,
+									$author$project$Theme$mapTheme(model.theme),
+									$author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
+									model.displaySettings,
+									editRecord),
+								currentDocument: $elm$core$Maybe$Just(initialDoc),
+								editRecord: editRecord,
+								initialText: content,
+								loadDocumentIntoEditor: true,
+								sourceText: content,
+								title: title
 							}),
 						$author$project$Ports$send(
 							$author$project$Ports$SaveDocument(initialDoc)));
@@ -55307,7 +55310,7 @@ var $author$project$Main$header = function (model) {
 						$mdgriffith$elm_ui$Element$Font$semiBold,
 						$author$project$Style$forceColorStyle(model.theme)
 					]),
-				$mdgriffith$elm_ui$Element$text('Scripta Live v0.2b: ' + model.title))
+				$mdgriffith$elm_ui$Element$text('Scripta Live v0.2b.1: ' + model.title))
 			]));
 };
 var $author$project$Main$mainColumnStyle = _List_fromArray(
