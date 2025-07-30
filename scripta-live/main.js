@@ -55065,7 +55065,11 @@ var $author$project$Main$displayRenderedText = function (model) {
 				$mdgriffith$elm_ui$Element$width(
 				$mdgriffith$elm_ui$Element$px(
 					$author$project$Main$panelWidth(model))),
-				$mdgriffith$elm_ui$Element$scrollbarY
+				$mdgriffith$elm_ui$Element$scrollbarY,
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'overflow-x', 'hidden'))
 			]),
 		A2(
 			$mdgriffith$elm_ui$Element$column,
@@ -55074,7 +55078,8 @@ var $author$project$Main$displayRenderedText = function (model) {
 					$mdgriffith$elm_ui$Element$Font$size(14),
 					$mdgriffith$elm_ui$Element$padding(16),
 					$mdgriffith$elm_ui$Element$spacing(24),
-					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					$author$project$Style$htmlId('rendered-text')
 				]),
 			_List_fromArray(
 				[
@@ -55085,7 +55090,6 @@ var $author$project$Main$displayRenderedText = function (model) {
 							$author$project$Style$background_(model.theme),
 							$mdgriffith$elm_ui$Element$spacing(24),
 							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-							$author$project$Style$htmlId('rendered-text'),
 							$mdgriffith$elm_ui$Element$alignTop,
 							$mdgriffith$elm_ui$Element$centerX,
 							$mdgriffith$elm_ui$Element$Font$color(
@@ -55169,7 +55173,7 @@ var $author$project$Main$header = function (model) {
 						$mdgriffith$elm_ui$Element$Font$semiBold,
 						$author$project$Style$forceColorStyle(model.theme)
 					]),
-				$mdgriffith$elm_ui$Element$text('Scripta Live v0.1: ' + model.title))
+				$mdgriffith$elm_ui$Element$text('Scripta Live v0.1a: ' + model.title))
 			]));
 };
 var $author$project$Main$mainColumnStyle = _List_fromArray(
