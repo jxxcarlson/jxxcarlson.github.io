@@ -55057,7 +55057,7 @@ var $author$project$Style$textColor = function (theme) {
 };
 var $author$project$Main$displayRenderedText = function (model) {
 	return A2(
-		$mdgriffith$elm_ui$Element$el,
+		$mdgriffith$elm_ui$Element$column,
 		_List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$alignTop,
@@ -55069,38 +55069,63 @@ var $author$project$Main$displayRenderedText = function (model) {
 				$mdgriffith$elm_ui$Element$htmlAttribute(
 				A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
 				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'overflow-x', 'hidden'))
+				A2($elm$html$Html$Attributes$style, 'overflow-x', 'hidden')),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, '-webkit-overflow-scrolling', 'touch')),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'position', 'relative')),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'flex', '1')),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'display', 'flex')),
+				$mdgriffith$elm_ui$Element$htmlAttribute(
+				A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'))
 			]),
-		A2(
-			$mdgriffith$elm_ui$Element$column,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$Font$size(14),
-					$mdgriffith$elm_ui$Element$padding(16),
-					$mdgriffith$elm_ui$Element$spacing(24),
-					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-					$author$project$Style$htmlId('rendered-text')
-				]),
-			_List_fromArray(
-				[
-					A2(
+		_List_fromArray(
+			[
+				A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+						$mdgriffith$elm_ui$Element$scrollbarY,
+						$mdgriffith$elm_ui$Element$htmlAttribute(
+						A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
+						$mdgriffith$elm_ui$Element$htmlAttribute(
+						A2($elm$html$Html$Attributes$style, 'flex', '1'))
+					]),
+				A2(
 					$mdgriffith$elm_ui$Element$column,
 					_List_fromArray(
 						[
-							$author$project$Style$background_(model.theme),
+							$mdgriffith$elm_ui$Element$Font$size(14),
+							$mdgriffith$elm_ui$Element$padding(16),
 							$mdgriffith$elm_ui$Element$spacing(24),
 							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-							$mdgriffith$elm_ui$Element$alignTop,
-							$mdgriffith$elm_ui$Element$centerX,
-							$mdgriffith$elm_ui$Element$Font$color(
-							$author$project$Style$textColor(model.theme)),
-							$author$project$Style$forceColorStyle(model.theme)
+							$author$project$Style$htmlId('rendered-text')
 						]),
 					_List_fromArray(
 						[
-							A2($author$project$Main$container, model, model.compilerOutput.body)
-						]))
-				])));
+							A2(
+							$mdgriffith$elm_ui$Element$column,
+							_List_fromArray(
+								[
+									$author$project$Style$background_(model.theme),
+									$mdgriffith$elm_ui$Element$spacing(24),
+									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+									$mdgriffith$elm_ui$Element$alignTop,
+									$mdgriffith$elm_ui$Element$centerX,
+									$mdgriffith$elm_ui$Element$Font$color(
+									$author$project$Style$textColor(model.theme)),
+									$author$project$Style$forceColorStyle(model.theme)
+								]),
+							_List_fromArray(
+								[
+									A2($author$project$Main$container, model, model.compilerOutput.body)
+								]))
+						])))
+			]));
 };
 var $author$project$Style$debugTextColor = function (theme_) {
 	if (theme_.$ === 'Light') {
@@ -55173,7 +55198,7 @@ var $author$project$Main$header = function (model) {
 						$mdgriffith$elm_ui$Element$Font$semiBold,
 						$author$project$Style$forceColorStyle(model.theme)
 					]),
-				$mdgriffith$elm_ui$Element$text('Scripta Live v0.1a: ' + model.title))
+				$mdgriffith$elm_ui$Element$text('Scripta Live v0.1b: ' + model.title))
 			]));
 };
 var $author$project$Main$mainColumnStyle = _List_fromArray(
