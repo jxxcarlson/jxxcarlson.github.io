@@ -53561,6 +53561,10 @@ var $author$project$Main$generateId = A2(
 		return 'doc-' + $elm$core$String$fromInt(n);
 	},
 	A2($elm$random$Random$int, 100000, 999999));
+var $author$project$Model$InitialDocumentId = F5(
+	function (a, b, c, d, e) {
+		return {$: 'InitialDocumentId', a: a, b: b, c: c, d: d, e: e};
+	});
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$handleIncomingPortMsg = F2(
 	function (msg, model) {
@@ -53571,7 +53575,14 @@ var $author$project$Main$handleIncomingPortMsg = F2(
 					$elm$core$Debug$log,
 					'@@!!@@ Documents loaded from localStorage',
 					$elm$core$List$length(docs));
-				return _Utils_Tuple2(
+				return $elm$core$List$isEmpty(docs) ? _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{documents: docs}),
+					A2(
+						$elm$random$Random$generate,
+						A4($author$project$Model$InitialDocumentId, $author$project$AppData$defaultDocumentText, 'Announcement', model.currentTime, model.theme),
+						$author$project$Main$generateId)) : _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{documents: docs}),
@@ -55296,7 +55307,7 @@ var $author$project$Main$header = function (model) {
 						$mdgriffith$elm_ui$Element$Font$semiBold,
 						$author$project$Style$forceColorStyle(model.theme)
 					]),
-				$mdgriffith$elm_ui$Element$text('Scripta Live v0.2: ' + model.title))
+				$mdgriffith$elm_ui$Element$text('Scripta Live v0.2b: ' + model.title))
 			]));
 };
 var $author$project$Main$mainColumnStyle = _List_fromArray(
