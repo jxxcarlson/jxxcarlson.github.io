@@ -55013,6 +55013,7 @@ var $author$project$Style$borderColor = function (theme) {
 		return A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.5, 0.5);
 	}
 };
+var $mdgriffith$elm_ui$Element$clipY = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.clipY);
 var $author$project$Main$container = F2(
 	function (model, elements_) {
 		return A2(
@@ -55036,6 +55037,7 @@ var $author$project$Style$forceColorStyle = function (theme) {
 			A2($elm$html$Html$Attributes$style, 'color', 'white'));
 	}
 };
+var $author$project$Main$headerHeight = 90;
 var $author$project$Style$htmlId = function (str) {
 	return $mdgriffith$elm_ui$Element$htmlAttribute(
 		$elm$html$Html$Attributes$id(str));
@@ -55061,63 +55063,38 @@ var $author$project$Main$displayRenderedText = function (model) {
 		_List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$alignTop,
-				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$height(
+				$mdgriffith$elm_ui$Element$px((model.windowHeight - $author$project$Main$headerHeight) - 1)),
 				$mdgriffith$elm_ui$Element$width(
 				$mdgriffith$elm_ui$Element$px(
 					$author$project$Main$panelWidth(model))),
+				$mdgriffith$elm_ui$Element$clipY,
+				$mdgriffith$elm_ui$Element$scrollbarY,
 				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'position', 'relative')),
+				A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
 				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'overflow', 'hidden'))
+				A2($elm$html$Html$Attributes$style, 'overflow-x', 'hidden'))
 			]),
 		A2(
-			$mdgriffith$elm_ui$Element$el,
+			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
 				[
+					$mdgriffith$elm_ui$Element$Font$size(14),
+					$mdgriffith$elm_ui$Element$padding(16),
+					$mdgriffith$elm_ui$Element$spacing(24),
 					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$scrollbarY,
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'overflow-x', 'hidden')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, '-webkit-overflow-scrolling', 'touch')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'height', '100%')),
-					$mdgriffith$elm_ui$Element$htmlAttribute(
-					A2($elm$html$Html$Attributes$style, 'max-height', '100%'))
+					$author$project$Style$htmlId('rendered-text'),
+					$author$project$Style$background_(model.theme),
+					$mdgriffith$elm_ui$Element$alignTop,
+					$mdgriffith$elm_ui$Element$centerX,
+					$mdgriffith$elm_ui$Element$Font$color(
+					$author$project$Style$textColor(model.theme)),
+					$author$project$Style$forceColorStyle(model.theme)
 				]),
-			A2(
-				$mdgriffith$elm_ui$Element$column,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$Font$size(14),
-						$mdgriffith$elm_ui$Element$padding(16),
-						$mdgriffith$elm_ui$Element$spacing(24),
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-						$author$project$Style$htmlId('rendered-text')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$mdgriffith$elm_ui$Element$column,
-						_List_fromArray(
-							[
-								$author$project$Style$background_(model.theme),
-								$mdgriffith$elm_ui$Element$spacing(24),
-								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-								$mdgriffith$elm_ui$Element$alignTop,
-								$mdgriffith$elm_ui$Element$centerX,
-								$mdgriffith$elm_ui$Element$Font$color(
-								$author$project$Style$textColor(model.theme)),
-								$author$project$Style$forceColorStyle(model.theme)
-							]),
-						_List_fromArray(
-							[
-								A2($author$project$Main$container, model, model.compilerOutput.body)
-							]))
-					]))));
+			_List_fromArray(
+				[
+					A2($author$project$Main$container, model, model.compilerOutput.body)
+				])));
 };
 var $author$project$Style$debugTextColor = function (theme_) {
 	if (theme_.$ === 'Light') {
@@ -55126,7 +55103,6 @@ var $author$project$Style$debugTextColor = function (theme_) {
 		return A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255);
 	}
 };
-var $author$project$Main$headerHeight = 90;
 var $mdgriffith$elm_ui$Element$Border$widthXY = F2(
 	function (x, y) {
 		return A2(
@@ -55190,7 +55166,7 @@ var $author$project$Main$header = function (model) {
 						$mdgriffith$elm_ui$Element$Font$semiBold,
 						$author$project$Style$forceColorStyle(model.theme)
 					]),
-				$mdgriffith$elm_ui$Element$text('Scripta Live v0.1c: ' + model.title))
+				$mdgriffith$elm_ui$Element$text('Scripta Live v0.1d: ' + model.title))
 			]));
 };
 var $author$project$Main$mainColumnStyle = _List_fromArray(
