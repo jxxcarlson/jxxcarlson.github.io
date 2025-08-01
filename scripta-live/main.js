@@ -50277,13 +50277,33 @@ var $author$project$Ports$encodeOutgoing = function (msg) {
 						'data',
 						$elm$json$Json$Encode$string(name))
 					]));
-		default:
+		case 'LoadUserName':
 			return $elm$json$Json$Encode$object(
 				_List_fromArray(
 					[
 						_Utils_Tuple2(
 						'tag',
 						$elm$json$Json$Encode$string('LoadUserName'))
+					]));
+		case 'SaveLastDocumentId':
+			var id = msg.a;
+			return $elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'tag',
+						$elm$json$Json$Encode$string('SaveLastDocumentId')),
+						_Utils_Tuple2(
+						'data',
+						$elm$json$Json$Encode$string(id))
+					]));
+		default:
+			return $elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'tag',
+						$elm$json$Json$Encode$string('LoadLastDocumentId'))
 					]));
 	}
 };
@@ -50798,6 +50818,9 @@ var $author$project$Ports$DocumentLoaded = function (a) {
 var $author$project$Ports$DocumentsLoaded = function (a) {
 	return {$: 'DocumentsLoaded', a: a};
 };
+var $author$project$Ports$LastDocumentIdLoaded = function (a) {
+	return {$: 'LastDocumentIdLoaded', a: a};
+};
 var $author$project$Ports$ThemeLoaded = function (a) {
 	return {$: 'ThemeLoaded', a: a};
 };
@@ -50863,6 +50886,11 @@ var $author$project$Ports$decodeByTag = function (tag) {
 			return A2(
 				$elm$json$Json$Decode$map,
 				$author$project$Ports$UserNameLoaded,
+				A2($elm$json$Json$Decode$field, 'data', $elm$json$Json$Decode$string));
+		case 'LastDocumentIdLoaded':
+			return A2(
+				$elm$json$Json$Decode$map,
+				$author$project$Ports$LastDocumentIdLoaded,
 				A2($elm$json$Json$Decode$field, 'data', $elm$json$Json$Decode$string));
 		default:
 			return $elm$json$Json$Decode$fail('Unknown tag: ' + tag);
@@ -53622,7 +53650,7 @@ var $author$project$Main$handleIncomingPortMsg = F2(
 						model,
 						{compilerOutput: newCompilerOutput, theme: newTheme}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'UserNameLoaded':
 				var name = msg.a;
 				var _v4 = A2($elm$core$Debug$log, '@@!!@@ UserNameLoaded received', name);
 				return _Utils_Tuple2(
@@ -53632,6 +53660,9 @@ var $author$project$Main$handleIncomingPortMsg = F2(
 							userName: $elm$core$Maybe$Just(name)
 						}),
 					$elm$core$Platform$Cmd$none);
+			default:
+				var id = msg.a;
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Model$NoOp = {$: 'NoOp'};
@@ -53654,8 +53685,41 @@ var $elm$core$Task$attempt = F2(
 							$elm$core$Result$Ok),
 						task))));
 	});
-var $elm$browser$Browser$Dom$getViewportOf = _Browser_getViewportOf;
+var $elm$browser$Browser$Dom$getElement = _Browser_getElement;
 var $elm$browser$Browser$Dom$setViewportOf = _Browser_setViewportOf;
+var $author$project$Main$jumpToId = function (id) {
+	var _v0 = A2($elm$core$Debug$log, '@@jumpToId attempting to jump to', id);
+	return A2(
+		$elm$core$Task$attempt,
+		function (result) {
+			if (result.$ === 'Ok') {
+				var _v4 = A2($elm$core$Debug$log, '@@jumpToId success', id);
+				return $author$project$Model$NoOp;
+			} else {
+				var err = result.a;
+				var _v5 = A2($elm$core$Debug$log, '@@jumpToId error', err);
+				return $author$project$Model$NoOp;
+			}
+		},
+		A2(
+			$elm$core$Task$andThen,
+			function (_v1) {
+				var targetEl = _v1.a;
+				var containerEl = _v1.b;
+				var targetY = targetEl.element.y - containerEl.element.y;
+				var _v2 = A2(
+					$elm$core$Debug$log,
+					'@@jumpToId target.y, container.y, scrollTo',
+					_Utils_Tuple3(targetEl.element.y, containerEl.element.y, targetY));
+				return A3($elm$browser$Browser$Dom$setViewportOf, 'rendered-text-container', 0, targetY);
+			},
+			A3(
+				$elm$core$Task$map2,
+				$elm$core$Tuple$pair,
+				$elm$browser$Browser$Dom$getElement(id),
+				$elm$browser$Browser$Dom$getElement('rendered-text-container'))));
+};
+var $elm$browser$Browser$Dom$getViewportOf = _Browser_getViewportOf;
 var $author$project$Main$jumpToTopOf = function (id) {
 	return A2(
 		$elm$core$Task$attempt,
@@ -54398,10 +54462,20 @@ var $author$project$Main$update = F2(
 				case 'GotNewWindowDimensions':
 					var width = msg.a;
 					var height = msg.b;
+					var oldDisplaySettings = model.displaySettings;
+					var newDisplaySettings = _Utils_update(
+						oldDisplaySettings,
+						{windowWidth: (width / 3) | 0});
+					var newCompilerOutput = A4(
+						$author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput,
+						$author$project$Theme$mapTheme(model.theme),
+						$author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
+						newDisplaySettings,
+						model.editRecord);
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{windowHeight: height, windowWidth: width}),
+							{compilerOutput: newCompilerOutput, displaySettings: newDisplaySettings, windowHeight: height, windowWidth: width}),
 						$elm$core$Platform$Cmd$none);
 				case 'InputText':
 					var str = msg.a;
@@ -54526,12 +54600,11 @@ var $author$project$Main$update = F2(
 								$elm$core$Platform$Cmd$none);
 						case 'SendLineNumber':
 							var editorData = msg_.a;
-							var _v2 = A2($elm$core$Debug$log, '@@SendLineNumber, editorData', editorData);
-							var _v3 = model.currentDocument;
-							if (_v3.$ === 'Nothing') {
+							var _v2 = model.currentDocument;
+							if (_v2.$ === 'Nothing') {
 								return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 							} else {
-								var doc = _v3.a;
+								var doc = _v2.a;
 								var target = A2(
 									$elm$core$Maybe$andThen,
 									$elm$core$List$head,
@@ -54573,26 +54646,21 @@ var $author$project$Main$update = F2(
 									$elm$core$Maybe$withDefault,
 									'(nothing)',
 									$elm$core$List$head(foundIds_));
-								var _v4 = A2($elm$core$Debug$log, '@@SendLineNumber, target', target);
-								var _v5 = A2($elm$core$Debug$log, '@@SendLineNumber, foundIds', foundIds_);
-								var _v6 = A2($elm$core$Debug$log, '@@SendLineNumber, sending to port with editorData', editorData);
+								var _v3 = _Utils_Tuple0;
 								return _Utils_Tuple2(
 									_Utils_update(
 										model,
-										{
-											editorData: A2($elm$core$Debug$log, '@@SetEditorData(2)', editorData),
-											targetData: targetData
-										}),
+										{editorData: editorData, targetData: targetData}),
 									$elm$core$Platform$Cmd$none);
 							}
 						default:
-							var _v8 = A2($elm$core$Debug$log, '@@!!@@ Render message received', msg_);
+							var _v5 = A2($elm$core$Debug$log, '@@!!@@ Render message received', msg_);
 							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					}
 				case 'ToggleTheme':
 					var newTheme = function () {
-						var _v10 = model.theme;
-						if (_v10.$ === 'Light') {
+						var _v7 = model.theme;
+						if (_v7.$ === 'Light') {
 							return $author$project$Theme$Dark;
 						} else {
 							return $author$project$Theme$Light;
@@ -54618,13 +54686,13 @@ var $author$project$Main$update = F2(
 									}
 								}())));
 				case 'CreateNewDocument':
-					var _v11 = model.currentDocument;
-					if (_v11.$ === 'Just') {
-						var doc = _v11.a;
+					var _v8 = model.currentDocument;
+					if (_v8.$ === 'Just') {
+						var doc = _v8.a;
 						if (!_Utils_eq(model.sourceText, doc.content)) {
-							var _v12 = A2($author$project$Main$update, $author$project$Model$SaveDocument, model);
-							var newModel = _v12.a;
-							var saveCmd = _v12.b;
+							var _v9 = A2($author$project$Main$update, $author$project$Model$SaveDocument, model);
+							var newModel = _v9.a;
+							var saveCmd = _v9.b;
 							return _Utils_Tuple2(
 								newModel,
 								$elm$core$Platform$Cmd$batch(
@@ -54676,9 +54744,9 @@ var $author$project$Main$update = F2(
 						$author$project$Ports$send(
 							$author$project$Ports$SaveDocument(newDoc)));
 				case 'SaveDocument':
-					var _v13 = model.currentDocument;
-					if (_v13.$ === 'Just') {
-						var doc = _v13.a;
+					var _v10 = model.currentDocument;
+					if (_v10.$ === 'Just') {
+						var doc = _v10.a;
 						var updatedDoc = _Utils_update(
 							doc,
 							{content: model.sourceText, modifiedAt: model.currentTime, theme: model.theme, title: model.title});
@@ -54700,16 +54768,16 @@ var $author$project$Main$update = F2(
 					}
 				case 'LoadDocument':
 					var id = msg.a;
-					var _v14 = model.currentDocument;
-					if (_v14.$ === 'Just') {
-						var doc = _v14.a;
+					var _v11 = model.currentDocument;
+					if (_v11.$ === 'Just') {
+						var doc = _v11.a;
 						if (!_Utils_eq(model.sourceText, doc.content)) {
 							var updatedDoc = _Utils_update(
 								doc,
 								{content: model.sourceText, modifiedAt: model.currentTime, theme: model.theme, title: model.title});
-							var _v15 = A2($author$project$Main$update, $author$project$Model$SaveDocument, model);
-							var newModel = _v15.a;
-							var saveCmd = _v15.b;
+							var _v12 = A2($author$project$Main$update, $author$project$Model$SaveDocument, model);
+							var newModel = _v12.a;
+							var saveCmd = _v12.b;
 							return _Utils_Tuple2(
 								newModel,
 								$elm$core$Platform$Cmd$batch(
@@ -54740,9 +54808,9 @@ var $author$project$Main$update = F2(
 						},
 						model.documents);
 					var needNewDoc = function () {
-						var _v16 = model.currentDocument;
-						if (_v16.$ === 'Just') {
-							var doc = _v16.a;
+						var _v13 = model.currentDocument;
+						if (_v13.$ === 'Just') {
+							var doc = _v13.a;
 							return _Utils_eq(doc.id, id);
 						} else {
 							return false;
@@ -54766,9 +54834,9 @@ var $author$project$Main$update = F2(
 							{showDocumentList: !model.showDocumentList}),
 						$elm$core$Platform$Cmd$none);
 				case 'AutoSave':
-					var _v17 = model.currentDocument;
-					if (_v17.$ === 'Just') {
-						var doc = _v17.a;
+					var _v14 = model.currentDocument;
+					if (_v14.$ === 'Just') {
+						var doc = _v14.a;
 						if (!_Utils_eq(model.sourceText, doc.content)) {
 							var $temp$msg = $author$project$Model$SaveDocument,
 								$temp$model = model;
@@ -54785,9 +54853,9 @@ var $author$project$Main$update = F2(
 					var time = msg.a;
 					var timeSinceLastChange = (($elm$time$Time$posixToMillis(time) - $elm$time$Time$posixToMillis(model.lastChanged)) / 1000) | 0;
 					var shouldAutoSave = function () {
-						var _v18 = model.currentDocument;
-						if (_v18.$ === 'Just') {
-							var doc = _v18.a;
+						var _v15 = model.currentDocument;
+						if (_v15.$ === 'Just') {
+							var doc = _v15.a;
 							return (!_Utils_eq(model.sourceText, doc.content)) && (_Utils_cmp(timeSinceLastChange, $author$project$Constants$constants.maxUnsavedDuration) > -1);
 						} else {
 							return false;
@@ -54896,7 +54964,7 @@ var $author$project$Main$update = F2(
 						return A2($author$project$Main$handleIncomingPortMsg, incomingMsg, model);
 					} else {
 						var error = result.a;
-						var _v20 = A2($elm$core$Debug$log, '@@!!@@ Port decoding error', error);
+						var _v17 = A2($elm$core$Debug$log, '@@!!@@ Port decoding error', error);
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					}
 				case 'GetSelection':
@@ -54919,7 +54987,46 @@ var $author$project$Main$update = F2(
 						$elm$core$Platform$Cmd$none);
 				case 'SelectedText':
 					var str = msg.a;
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					var oldDisplaySettings = model.displaySettings;
+					var foundIds = A2(
+						$elm$core$Debug$log,
+						'@@SelectedText foundIds',
+						A2(
+							$elm$core$List$filter,
+							function (id) {
+								return id !== '';
+							},
+							A2($author$project$ScriptaV2$Helper$matchingIdsInAST, str, model.editRecord.tree)));
+					var firstId = A2(
+						$elm$core$Debug$log,
+						'@@SelectedText firstId',
+						A2(
+							$elm$core$Maybe$withDefault,
+							'',
+							$elm$core$List$head(foundIds)));
+					var newDisplaySettings = _Utils_update(
+						oldDisplaySettings,
+						{selectedId: firstId});
+					var newCompilerOutput = A4(
+						$author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput,
+						$author$project$Theme$mapTheme(model.theme),
+						$author$project$ScriptaV2$Compiler$SuppressDocumentBlocks,
+						newDisplaySettings,
+						model.editRecord);
+					var newModel = _Utils_update(
+						model,
+						{
+							compilerOutput: newCompilerOutput,
+							displaySettings: newDisplaySettings,
+							foundIdIndex: $elm$core$List$isEmpty(foundIds) ? 0 : 1,
+							foundIds: foundIds,
+							selectId: firstId,
+							selectedId: firstId
+						});
+					var _v18 = A2($elm$core$Debug$log, '@@SelectedText received', str);
+					return _Utils_Tuple2(
+						newModel,
+						(firstId !== '') ? $author$project$Main$jumpToId(firstId) : $elm$core$Platform$Cmd$none);
 				case 'LRSync':
 					var target = msg.a;
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -55191,7 +55298,10 @@ var $author$project$Main$appWidth = function (model) {
 };
 var $author$project$Main$sidebarWidth = 260;
 var $author$project$Main$panelWidth = function (model) {
-	return ((((($author$project$Main$appWidth(model) - $author$project$Main$sidebarWidth) - 16) - 4) - 16) / 2) | 0;
+	return A2(
+		$elm$core$Basics$max,
+		200,
+		((((($author$project$Main$appWidth(model) - $author$project$Main$sidebarWidth) - 16) - 4) - 16) / 2) | 0);
 };
 var $mdgriffith$elm_ui$Element$scrollbarY = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.scrollbarsY);
 var $author$project$Style$textColor = function (theme) {
@@ -55208,7 +55318,8 @@ var $author$project$Main$displayRenderedText = function (model) {
 			[
 				$mdgriffith$elm_ui$Element$alignTop,
 				$mdgriffith$elm_ui$Element$height(
-				$mdgriffith$elm_ui$Element$px((model.windowHeight - $author$project$Main$headerHeight) - 1)),
+				$mdgriffith$elm_ui$Element$px(
+					A2($elm$core$Basics$max, 100, (model.windowHeight - $author$project$Main$headerHeight) - 1))),
 				$mdgriffith$elm_ui$Element$width(
 				$mdgriffith$elm_ui$Element$px(
 					$author$project$Main$panelWidth(model))),
@@ -55217,7 +55328,8 @@ var $author$project$Main$displayRenderedText = function (model) {
 				$mdgriffith$elm_ui$Element$htmlAttribute(
 				A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
 				$mdgriffith$elm_ui$Element$htmlAttribute(
-				A2($elm$html$Html$Attributes$style, 'overflow-x', 'hidden'))
+				A2($elm$html$Html$Attributes$style, 'overflow-x', 'hidden')),
+				$author$project$Style$htmlId('rendered-text-container')
 			]),
 		A2(
 			$mdgriffith$elm_ui$Element$column,
@@ -55310,7 +55422,7 @@ var $author$project$Main$header = function (model) {
 						$mdgriffith$elm_ui$Element$Font$semiBold,
 						$author$project$Style$forceColorStyle(model.theme)
 					]),
-				$mdgriffith$elm_ui$Element$text('Scripta Live v0.2c: ' + model.title))
+				$mdgriffith$elm_ui$Element$text(model.title))
 			]));
 };
 var $author$project$Main$mainColumnStyle = _List_fromArray(
@@ -55319,27 +55431,6 @@ var $author$project$Main$mainColumnStyle = _List_fromArray(
 		$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
 	]);
 var $mdgriffith$elm_ui$Element$map = $mdgriffith$elm_ui$Internal$Model$map;
-var $author$project$Model$DownloadScript = {$: 'DownloadScript'};
-var $author$project$Model$InputUserName = function (a) {
-	return {$: 'InputUserName', a: a};
-};
-var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
-var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
-var $author$project$Style$buttonBackgroundColor = function (theme) {
-	if (theme.$ === 'Light') {
-		return A3($mdgriffith$elm_ui$Element$rgb255, 25, 25, 35);
-	} else {
-		return $author$project$Style$backgroundColor(theme);
-	}
-};
-var $author$project$Style$buttonTextColor = function (theme) {
-	if (theme.$ === 'Light') {
-		return A3($mdgriffith$elm_ui$Element$rgb255, 255, 165, 0);
-	} else {
-		return A3($mdgriffith$elm_ui$Element$rgb255, 255, 165, 0);
-	}
-};
-var $author$project$Model$ToggleDocumentList = {$: 'ToggleDocumentList'};
 var $mdgriffith$elm_ui$Element$Border$roundEach = function (_v0) {
 	var topLeft = _v0.topLeft;
 	var topRight = _v0.topRight;
@@ -55362,7 +55453,7 @@ var $author$project$Widget$sidebarButton = F3(
 				[
 					A2($mdgriffith$elm_ui$Element$paddingXY, 12, 6),
 					$mdgriffith$elm_ui$Element$Background$color(
-					_Utils_eq(theme, $author$project$Theme$Light) ? A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255) : A3($mdgriffith$elm_ui$Element$rgb255, 80, 80, 80)),
+					_Utils_eq(theme, $author$project$Theme$Light) ? A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255) : A3($mdgriffith$elm_ui$Element$rgb255, 48, 54, 59)),
 					$mdgriffith$elm_ui$Element$Font$color(
 					_Utils_eq(theme, $author$project$Theme$Light) ? A3($mdgriffith$elm_ui$Element$rgb255, 50, 50, 50) : A3($mdgriffith$elm_ui$Element$rgb255, 150, 150, 150)),
 					$mdgriffith$elm_ui$Element$htmlAttribute(
@@ -55371,28 +55462,24 @@ var $author$project$Widget$sidebarButton = F3(
 						'color',
 						function () {
 							if (theme.$ === 'Light') {
-								return 'rgb(255, 140, 0)';
+								return 'rgb(0, 40, 40)';
 							} else {
 								return 'rgb(255, 165, 0)';
 							}
 						}())),
 					$mdgriffith$elm_ui$Element$Border$roundEach(
 					{bottomLeft: 0, bottomRight: 4, topLeft: 0, topRight: 4}),
-					$mdgriffith$elm_ui$Element$Font$size(14),
-					$mdgriffith$elm_ui$Element$Font$bold
+					$mdgriffith$elm_ui$Element$Border$width(
+					_Utils_eq(theme, $author$project$Theme$Light) ? 1 : 1),
+					$mdgriffith$elm_ui$Element$Border$color(
+					_Utils_eq(theme, $author$project$Theme$Light) ? A4($mdgriffith$elm_ui$Element$rgba, 0.2, 0.2, 0.2, 1.0) : A4($mdgriffith$elm_ui$Element$rgba, 1.0, 0.647, 0.0, 0.5)),
+					$mdgriffith$elm_ui$Element$Font$size(14)
 				]),
 			{
 				label: $mdgriffith$elm_ui$Element$text(label),
 				onPress: msg
 			});
 	});
-var $author$project$Main$listButton = function (model) {
-	return A3(
-		$author$project$Widget$sidebarButton,
-		model.theme,
-		$elm$core$Maybe$Just($author$project$Model$ToggleDocumentList),
-		'List');
-};
 var $author$project$Main$newButton = function (model) {
 	return A3(
 		$author$project$Widget$sidebarButton,
@@ -55418,8 +55505,7 @@ var $author$project$Main$crudButtons = function (model) {
 		_List_fromArray(
 			[
 				$author$project$Main$newButton(model),
-				$author$project$Main$saveButton(model),
-				$author$project$Main$listButton(model)
+				$author$project$Main$saveButton(model)
 			]));
 };
 var $author$project$Model$DeleteDocument = function (a) {
@@ -55561,13 +55647,6 @@ var $author$project$Main$documentItem = F2(
 					})
 				]));
 	});
-var $author$project$Style$electricBlueColor = function (theme) {
-	if (theme.$ === 'Light') {
-		return A3($mdgriffith$elm_ui$Element$rgb255, 20, 123, 255);
-	} else {
-		return A3($mdgriffith$elm_ui$Element$rgb255, 0, 191, 255);
-	}
-};
 var $author$project$Model$ExportToLaTeX = {$: 'ExportToLaTeX'};
 var $author$project$Model$ExportToRawLaTeX = {$: 'ExportToRawLaTeX'};
 var $author$project$Main$exportStuff = function (model) {
@@ -55606,6 +55685,9 @@ var $author$project$Style$innerColumn = _List_fromArray(
 		$mdgriffith$elm_ui$Element$htmlAttribute(
 		A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
 	]);
+var $author$project$Model$InputUserName = function (a) {
+	return {$: 'InputUserName', a: a};
+};
 var $mdgriffith$elm_ui$Element$Input$HiddenLabel = function (a) {
 	return {$: 'HiddenLabel', a: a};
 };
@@ -56453,6 +56535,46 @@ var $author$project$Widget$inputTextWidget = F3(
 				text: input
 			});
 	});
+var $author$project$Widget$nameElement = function (model) {
+	var _v0 = model.userName;
+	if (_v0.$ === 'Just') {
+		var name = _v0.a;
+		return ($elm$core$String$trim(name) !== '') ? A3($author$project$Widget$inputTextWidget, model.theme, name, $author$project$Model$InputUserName) : A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$spacing(8)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_Nil,
+					$mdgriffith$elm_ui$Element$text('Your Name')),
+					A3($author$project$Widget$inputTextWidget, model.theme, name, $author$project$Model$InputUserName)
+				]));
+	} else {
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$spacing(8)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Font$bold,
+							$mdgriffith$elm_ui$Element$paddingEach(
+							{bottom: 8, left: 0, right: 0, top: 0})
+						]),
+					$mdgriffith$elm_ui$Element$text('Your Name')),
+					A3($author$project$Widget$inputTextWidget, model.theme, '', $author$project$Model$InputUserName)
+				]));
+	}
+};
 var $author$project$Style$rightPanelBackgroundColor = function (theme) {
 	if (theme.$ === 'Light') {
 		return A3($mdgriffith$elm_ui$Element$rgb255, 230, 230, 230);
@@ -56463,6 +56585,79 @@ var $author$project$Style$rightPanelBackgroundColor = function (theme) {
 var $author$project$Style$rightPanelBackground_ = function (theme) {
 	return $mdgriffith$elm_ui$Element$Background$color(
 		$author$project$Style$rightPanelBackgroundColor(theme));
+};
+var $mdgriffith$elm_ui$Element$Font$extraLight = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.textExtraLight);
+var $author$project$Widget$sidebarButton2 = F4(
+	function (buttonTheme, modelTheme, msg, label) {
+		return A2(
+			$mdgriffith$elm_ui$Element$Input$button,
+			_List_fromArray(
+				[
+					A2($mdgriffith$elm_ui$Element$paddingXY, 12, 6),
+					$mdgriffith$elm_ui$Element$Background$color(
+					_Utils_eq(modelTheme, $author$project$Theme$Light) ? A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255) : A3($mdgriffith$elm_ui$Element$rgb255, 48, 54, 59)),
+					$mdgriffith$elm_ui$Element$Font$color(
+					_Utils_eq(modelTheme, $author$project$Theme$Light) ? A3($mdgriffith$elm_ui$Element$rgb255, 50, 50, 50) : A3($mdgriffith$elm_ui$Element$rgb255, 150, 150, 150)),
+					$mdgriffith$elm_ui$Element$htmlAttribute(
+					A2(
+						$elm$html$Html$Attributes$style,
+						'color',
+						function () {
+							if (modelTheme.$ === 'Light') {
+								return 'rgb(0, 40, 40)';
+							} else {
+								return 'rgb(255, 165, 0)';
+							}
+						}())),
+					$mdgriffith$elm_ui$Element$Border$roundEach(
+					{bottomLeft: 0, bottomRight: 4, topLeft: 0, topRight: 4}),
+					$mdgriffith$elm_ui$Element$Border$width(
+					_Utils_eq(modelTheme, $author$project$Theme$Light) ? 1 : 1),
+					$mdgriffith$elm_ui$Element$Border$color(
+					_Utils_eq(modelTheme, $author$project$Theme$Light) ? A4($mdgriffith$elm_ui$Element$rgba, 0.2, 0.2, 0.2, 1.0) : A4($mdgriffith$elm_ui$Element$rgba, 1.0, 0.647, 0.0, 0.5)),
+					$mdgriffith$elm_ui$Element$Font$size(16),
+					_Utils_eq(buttonTheme, modelTheme) ? $mdgriffith$elm_ui$Element$Font$bold : $mdgriffith$elm_ui$Element$Font$extraLight
+				]),
+			{
+				label: $mdgriffith$elm_ui$Element$text(label),
+				onPress: msg
+			});
+	});
+var $author$project$Widget$toggleTheme = function (model) {
+	return A2(
+		$mdgriffith$elm_ui$Element$row,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$Border$width(1),
+				$mdgriffith$elm_ui$Element$Border$color(
+				A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.7, 0.7)),
+				$mdgriffith$elm_ui$Element$Border$rounded(4),
+				$mdgriffith$elm_ui$Element$height(
+				$mdgriffith$elm_ui$Element$px(30))
+			]),
+		_List_fromArray(
+			[
+				_Utils_eq(model.theme, $author$project$Theme$Dark) ? A4(
+				$author$project$Widget$sidebarButton2,
+				model.theme,
+				$author$project$Theme$Dark,
+				$elm$core$Maybe$Just($author$project$Model$ToggleTheme),
+				'Dark') : A3(
+				$author$project$Widget$sidebarButton,
+				model.theme,
+				$elm$core$Maybe$Just($author$project$Model$ToggleTheme),
+				'Dark'),
+				_Utils_eq(model.theme, $author$project$Theme$Light) ? A4(
+				$author$project$Widget$sidebarButton2,
+				model.theme,
+				$author$project$Theme$Light,
+				$elm$core$Maybe$Just($author$project$Model$ToggleTheme),
+				'Light') : A3(
+				$author$project$Widget$sidebarButton,
+				model.theme,
+				$elm$core$Maybe$Just($author$project$Model$ToggleTheme),
+				'Light')
+			]));
 };
 var $author$project$Main$sidebar = function (model) {
 	return A2(
@@ -56489,117 +56684,31 @@ var $author$project$Main$sidebar = function (model) {
 				$author$project$Style$innerColumn,
 				_List_fromArray(
 					[
-						function () {
-						var _v0 = model.userName;
-						if (_v0.$ === 'Just') {
-							var name = _v0.a;
-							return ($elm$core$String$trim(name) !== '') ? A3($author$project$Widget$inputTextWidget, model.theme, name, $author$project$Model$InputUserName) : A2(
-								$mdgriffith$elm_ui$Element$column,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$spacing(8)
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$mdgriffith$elm_ui$Element$el,
-										_List_fromArray(
-											[
-												$mdgriffith$elm_ui$Element$Font$bold,
-												$mdgriffith$elm_ui$Element$paddingEach(
-												{bottom: 8, left: 0, right: 0, top: 0})
-											]),
-										$mdgriffith$elm_ui$Element$text('Your Name')),
-										A3($author$project$Widget$inputTextWidget, model.theme, name, $author$project$Model$InputUserName)
-									]));
-						} else {
-							return A2(
-								$mdgriffith$elm_ui$Element$column,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$spacing(8)
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$mdgriffith$elm_ui$Element$el,
-										_List_fromArray(
-											[
-												$mdgriffith$elm_ui$Element$Font$bold,
-												$mdgriffith$elm_ui$Element$paddingEach(
-												{bottom: 8, left: 0, right: 0, top: 0})
-											]),
-										$mdgriffith$elm_ui$Element$text('Your Name')),
-										A3($author$project$Widget$inputTextWidget, model.theme, '', $author$project$Model$InputUserName)
-									]));
-						}
-					}(),
+						$author$project$Widget$nameElement(model),
 						A2(
-						$mdgriffith$elm_ui$Element$row,
+						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
 							[
-								$mdgriffith$elm_ui$Element$paddingEach(
-								{bottom: 8, left: 0, right: 0, top: 16}),
-								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-								$mdgriffith$elm_ui$Element$spacing(8)
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$mdgriffith$elm_ui$Element$row,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$Border$width(1),
-										$mdgriffith$elm_ui$Element$Border$color(
-										A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.7, 0.7)),
-										$mdgriffith$elm_ui$Element$Border$rounded(4),
-										$mdgriffith$elm_ui$Element$height(
-										$mdgriffith$elm_ui$Element$px(30))
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$mdgriffith$elm_ui$Element$Input$button,
-										_List_fromArray(
-											[
-												A2($mdgriffith$elm_ui$Element$paddingXY, 12, 6),
-												$mdgriffith$elm_ui$Element$Background$color(
-												_Utils_eq(model.theme, $author$project$Theme$Dark) ? $author$project$Style$buttonBackgroundColor(model.theme) : A3($mdgriffith$elm_ui$Element$rgb255, 230, 230, 230)),
-												$mdgriffith$elm_ui$Element$Font$color(
-												_Utils_eq(model.theme, $author$project$Theme$Dark) ? $author$project$Style$buttonTextColor(model.theme) : A3($mdgriffith$elm_ui$Element$rgb255, 100, 100, 100)),
-												$mdgriffith$elm_ui$Element$Border$roundEach(
-												{bottomLeft: 4, bottomRight: 0, topLeft: 4, topRight: 0}),
-												$mdgriffith$elm_ui$Element$Font$size(14),
-												$mdgriffith$elm_ui$Element$Font$bold
-											]),
-										{
-											label: $mdgriffith$elm_ui$Element$text('Dark'),
-											onPress: $elm$core$Maybe$Just($author$project$Model$ToggleTheme)
-										}),
-										A3(
-										$author$project$Widget$sidebarButton,
-										model.theme,
-										$elm$core$Maybe$Just($author$project$Model$ToggleTheme),
-										'Light')
-									]))
-							])),
-						A2(
-						$mdgriffith$elm_ui$Element$row,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$spacing(8),
+								A2($mdgriffith$elm_ui$Element$paddingXY, 0, 8),
 								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 							]),
-						_List_Nil),
+						$mdgriffith$elm_ui$Element$text('')),
+						$author$project$Widget$toggleTheme(model),
 						$author$project$Main$crudButtons(model),
 						$author$project$Main$exportStuff(model),
-						model.showDocumentList ? A2(
+						A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								A2($mdgriffith$elm_ui$Element$paddingXY, 0, 8),
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						$mdgriffith$elm_ui$Element$text('')),
+						A2(
 						$mdgriffith$elm_ui$Element$column,
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$spacing(4),
-								$mdgriffith$elm_ui$Element$paddingEach(
-								{bottom: 0, left: 0, right: 0, top: 12}),
 								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 								$mdgriffith$elm_ui$Element$height(
 								$mdgriffith$elm_ui$Element$px(300)),
@@ -56612,85 +56721,18 @@ var $author$project$Main$sidebar = function (model) {
 						A2(
 							$elm$core$List$map,
 							$author$project$Main$documentItem(model),
-							model.documents)) : $mdgriffith$elm_ui$Element$none
-					])),
-				A2(
-				$mdgriffith$elm_ui$Element$column,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$alignBottom,
-						A2($mdgriffith$elm_ui$Element$paddingXY, 16, 16),
-						$mdgriffith$elm_ui$Element$spacing(12),
-						$mdgriffith$elm_ui$Element$Border$widthEach(
-						{bottom: 0, left: 0, right: 0, top: 1}),
-						$mdgriffith$elm_ui$Element$Border$color(
-						A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.5, 0.5))
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$mdgriffith$elm_ui$Element$el,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$Font$bold,
-								$mdgriffith$elm_ui$Element$paddingEach(
-								{bottom: 8, left: 0, right: 0, top: 0})
-							]),
-						$mdgriffith$elm_ui$Element$text('Tools:')),
-						A2(
-						$mdgriffith$elm_ui$Element$Input$button,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$Background$color(
-								$author$project$Style$buttonBackgroundColor(model.theme)),
-								$mdgriffith$elm_ui$Element$Font$color(
-								$author$project$Style$electricBlueColor(model.theme)),
-								A2($mdgriffith$elm_ui$Element$paddingXY, 12, 8),
-								$mdgriffith$elm_ui$Element$Border$rounded(4),
-								$mdgriffith$elm_ui$Element$Border$width(1),
-								$mdgriffith$elm_ui$Element$Border$color(
-								A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
-								$mdgriffith$elm_ui$Element$mouseOver(
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$Background$color(
-										A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.2)),
-										$mdgriffith$elm_ui$Element$Border$color(
-										A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.5))
-									])),
-								$mdgriffith$elm_ui$Element$mouseDown(
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$Background$color(
-										A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.3)),
-										$mdgriffith$elm_ui$Element$Border$color(
-										A4($mdgriffith$elm_ui$Element$rgba, 0.5, 0.5, 0.5, 0.7))
-									])),
-								$mdgriffith$elm_ui$Element$htmlAttribute(
-								A2(
-									$elm$html$Html$Attributes$style,
-									'color',
-									function () {
-										var _v1 = model.theme;
-										if (_v1.$ === 'Light') {
-											return 'rgb(0, 123, 255)';
-										} else {
-											return 'rgb(0, 191, 255)';
-										}
-									}())),
-								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-							]),
-						{
-							label: $mdgriffith$elm_ui$Element$text('Download script'),
-							onPress: $elm$core$Maybe$Just($author$project$Model$DownloadScript)
-						})
+							A2(
+								$elm$core$List$sortBy,
+								function (d) {
+									return d.title;
+								},
+								model.documents)))
 					]))
 			]));
 };
 var $author$project$Editor$headerHeight = 90;
 var $author$project$Editor$editorHeight = function (model) {
-	return (model.windowHeight - $author$project$Editor$headerHeight) - 1;
+	return A2($elm$core$Basics$max, 100, (model.windowHeight - $author$project$Editor$headerHeight) - 1);
 };
 var $mdgriffith$elm_ui$Element$Keyed$el = F2(
 	function (attrs, child) {
@@ -56806,7 +56848,10 @@ var $author$project$Editor$appWidth = function (model) {
 };
 var $author$project$Editor$sidebarWidth = 260;
 var $author$project$Editor$panelWidth = function (model) {
-	return ((((($author$project$Editor$appWidth(model) - $author$project$Editor$sidebarWidth) - 16) - 4) - 16) / 2) | 0;
+	return A2(
+		$elm$core$Basics$max,
+		200,
+		((((($author$project$Editor$appWidth(model) - $author$project$Editor$sidebarWidth) - 16) - 4) - 16) / 2) | 0);
 };
 var $author$project$Editor$stringOfBool = function (bool) {
 	return bool ? 'true' : 'false';
@@ -56845,8 +56890,7 @@ var $author$project$Editor$view = function (model) {
 							A2(
 							$elm$html$Html$Attributes$attribute,
 							'editordata',
-							$author$project$Editor$encodeEditorData(
-								A2($elm$core$Debug$log, '@@!!@@_editordata_ENCODE', model.editorData))),
+							$author$project$Editor$encodeEditorData(model.editorData)),
 							function () {
 							var _v0 = model.maybeSelectionOffset;
 							if (_v0.$ === 'Nothing') {
