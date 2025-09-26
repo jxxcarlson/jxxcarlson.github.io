@@ -54541,7 +54541,12 @@ var $author$project$MainSQLite$handleStorageMsg = F2(
 							A2(
 								$elm$core$Basics$composeL,
 								$author$project$MainSQLite$CommonMsg,
-								A4($author$project$Common$Model$InitialDocumentId, $author$project$AppData$defaultDocumentText, 'Announcement', common.currentTime, common.theme)),
+								A4(
+									$author$project$Common$Model$InitialDocumentId,
+									$elm$core$String$trim($author$project$AppData$defaultDocumentText),
+									'Announcement',
+									common.currentTime,
+									common.theme)),
 							$author$project$MainSQLite$generateId)) : _Utils_Tuple2(
 						_Utils_update(
 							model,
