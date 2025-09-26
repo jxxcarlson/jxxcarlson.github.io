@@ -51941,7 +51941,7 @@ var $author$project$Render$Export$Preamble$packagesNeeded = function (names) {
 		$elm_community$list_extra$List$Extra$unique(
 			$author$project$Render$Export$Preamble$newPackageList(names)));
 };
-var $author$project$Render$Export$Preamble$standardPackages = '\n%% Packages\n\n%% Standard packages\n\\usepackage{geometry}\n\\geometry{letterpaper}\n\\usepackage{changepage}   % for the adjustwidth environment\n\\usepackage{tocbibind}    % put unnumbered sections in toc\n\n%% AMS\n\\usepackage{amssymb}\n\\usepackage{amsmath}\n\n\\usepackage{amscd}\n\n\\usepackage{fancyvrb} %% for inline verbatim\n';
+var $author$project$Render$Export$Preamble$standardPackages = '\n%% Packages\n\n%% Standard packages\n\\usepackage{geometry}\n\\geometry{letterpaper}\n\\usepackage{changepage}   % for the adjustwidth environment\n\n%% AMS\n\\usepackage{amssymb}\n\\usepackage{amsmath}\n\n\\usepackage{amscd}\n\n\\usepackage{fancyvrb} %% for inline verbatim\n';
 var $author$project$Render$Export$Preamble$addCode = F4(
 	function (packagesInDocument, _package, codeText, accumulatedCodeText) {
 		return A2($elm$core$List$member, _package, packagesInDocument) ? (codeText + ('\n\n' + accumulatedCodeText)) : accumulatedCodeText;
@@ -54509,7 +54509,7 @@ var $author$project$Common$Model$InitialDocumentId = F5(
 var $author$project$Common$Model$LoadDocument = function (a) {
 	return {$: 'LoadDocument', a: a};
 };
-var $author$project$AppData$defaultDocumentText = '| | title number-to-level:0\n         Announcement\n\n         [vspace 3\n         0]\n         [large [italic This is what you can do with Scripta Live:]]\n\n         | image figure:1 caption: Humming bird\n         https://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n\n         | equation label:wave-equation\n         pdd(u,x) + pdd(u,y) + pdd(u,z) = frac(1,c^2) pdd(u,t))\n\n         [large [i ...make beautiful things with simple tools.]]\n         [vspace 30]\n\n\n         # About Scripta Live\n\n         Scripta is a markup language much like LaTeX, but with a simplified, ergonomic syntax.\n         Better yet: what you write (here, on the left) is rendered\n         [i instantaneously ] in the right-hand window pane. No setup required.\n         Just click the "New" button and start writing.\n\n         - Your documents are saved in the browser\'s local storage.  If you refresh the\n         browser or close it and come back to it later, it weill be there, waiting for you..\n\n         - Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.\n\n         - Scripta documents can be exported to standard LaTeX.  If there are no images\n         in the document, it can be turned into a pdf file using `pdflatex`.  Otherwise,\n         use the downloadable shell script — get it by clicking on the button  [blue Download Script],\n         lower right corner.  We\n         will soon provide a simpler solution.\n\n\n         # Examples\n\n         | mathmacros\n         pdd:  frac(partial^2 #1, partial #2^2)\n         nat:    mathbb N\n         reals: mathbb R\n         pd:  frac(partial #1, partial #2)\n         set:    \\{ #1 \\}\n         sett:   \\{ #1 \\ | \\ #2 \\}\n\n         Pythagoras said: $a^2 + b^2 = c^2$.\n\n         This will be on the test:\n\n         | equation\n         int_0^1 x^n dx = frac(1,n+1)\n\n\n         Both of the above equalities were written using an `equation` block.  If you look\n         at the source text you will see that [eqref wave-equation] an [u argument] `numbered` and\n         a property, namely  `label:wave-equation`. That property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\n         to see what happens.\n\n         Here is an [u aligned] block:\n\n         | aligned\n         nat &= set("positive whole numbers and zero")\n         nat &= sett(n " is a whole number", n > 0)\n\n\n         | equation\n         \\begin{pmatrix}\n         2 & 1 \\\\\n         1 & 2\n         \\end{pmatrix}\n         \\begin{pmatrix}\n         2 & 1 \\\\\n         1 & 2\n         \\end{pmatrix}\n         =\n         \\begin{pmatrix}\n         5 & 4 \\\\\n         4 & 5\n         \\end{pmatrix}\n\n\n         [b Note:] The equation [eqref wave-equation] is the wave equation in four dimensions —\n         three of space and one of time.\n            [vspace 20]\n';
+var $author$project$AppData$defaultDocumentText = '| title number-to-level:0\nAnnouncement\n\n [vspace 3\n 0]\n [large [italic This is what you can do with Scripta Live:]]\n\n | image figure:1 caption: Humming bird\n https://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n\n | equation label:wave-equation\n pdd(u,x) + pdd(u,y) + pdd(u,z) = frac(1,c^2) pdd(u,t))\n\n [large [i ...make beautiful things with simple tools.]]\n [vspace 30]\n\n\n # About Scripta Live\n\n Scripta is a markup language much like LaTeX, but with a simplified, ergonomic syntax.\n Better yet: what you write (here, on the left) is rendered\n [i instantaneously ] in the right-hand window pane. No setup required.\n Just click the "New" button and start writing.\n\n - Your documents are saved in the browser\'s local storage.  If you refresh the\n browser or close it and come back to it later, it weill be there, waiting for you..\n\n - Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.\n\n - Scripta documents can be exported to standard LaTeX.  If there are no images\n in the document, it can be turned into a pdf file using `pdflatex`.  Otherwise,\n use the downloadable shell script — get it by clicking on the button  [blue Download Script],\n lower right corner.  We\n will soon provide a simpler solution.\n\n\n # Examples\n\n | mathmacros\n pdd:  frac(partial^2 #1, partial #2^2)\n nat:    mathbb N\n reals: mathbb R\n pd:  frac(partial #1, partial #2)\n set:    \\{ #1 \\}\n sett:   \\{ #1 \\ | \\ #2 \\}\n\n Pythagoras said: $a^2 + b^2 = c^2$.\n\n This will be on the test:\n\n | equation\n int_0^1 x^n dx = frac(1,n+1)\n\n\n Both of the above equalities were written using an `equation` block.  If you look\n at the source text you will see that [eqref wave-equation] an [u argument] `numbered` and\n a property, namely  `label:wave-equation`. That property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\n to see what happens.\n\n Here is an [u aligned] block:\n\n | aligned\n nat &= set("positive whole numbers and zero")\n nat &= sett(n " is a whole number", n > 0)\n\n\n | equation\n \\begin{pmatrix}\n 2 & 1 \\\\\n 1 & 2\n \\end{pmatrix}\n \\begin{pmatrix}\n 2 & 1 \\\\\n 1 & 2\n \\end{pmatrix}\n =\n \\begin{pmatrix}\n 5 & 4 \\\\\n 4 & 5\n \\end{pmatrix}\n\n\n [b Note:] The equation [eqref wave-equation] is the wave equation in four dimensions —\n three of space and one of time.\n    [vspace 20]\n';
 var $author$project$Render$Theme$Dark = {$: 'Dark'};
 var $author$project$Render$Theme$Light = {$: 'Light'};
 var $author$project$Theme$mapTheme = function (theme) {
@@ -54682,7 +54682,7 @@ var $author$project$MainSQLite$handleStorageMsg = F2(
 				}
 			case 'LastDocumentIdSaved':
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-			default:
+			case 'StorageInitialized':
 				if (msg.a.$ === 'Ok') {
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -54700,6 +54700,20 @@ var $author$project$MainSQLite$handleStorageMsg = F2(
 					var error = msg.a.a;
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
+			case 'FileOpened':
+				var content = msg.a;
+				var newCommon = _Utils_update(
+					common,
+					{sourceText: content});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{common: newCommon}),
+					$elm$core$Platform$Cmd$none);
+			case 'FileSaved':
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Common$Model$NoOp = {$: 'NoOp'};
@@ -57622,6 +57636,28 @@ var $author$project$Common$View$exportStuff = F2(
 									]),
 								_List_fromArray(
 									[
+										A2(
+										$mdgriffith$elm_ui$Element$row,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$spacing(4),
+												$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+											]),
+										_List_fromArray(
+											[
+												A3(
+												$author$project$Widget$sidebarButton,
+												model.theme,
+												$elm$core$Maybe$Just(
+													toMsg($author$project$Common$Model$ExportScriptaFile)),
+												'Save Scripta'),
+												A3(
+												$author$project$Widget$sidebarButton,
+												model.theme,
+												$elm$core$Maybe$Just(
+													toMsg($author$project$Common$Model$ImportScriptaFile)),
+												'Import Scripta')
+											])),
 										function () {
 										var _v1 = model.pdfResponse;
 										if (_v1.$ === 'Nothing') {
