@@ -58666,7 +58666,7 @@ var $author$project$Common$View$nameElement = F2(
 								$mdgriffith$elm_ui$Element$Font$color(
 								$author$project$Style$textColor(model.theme))
 							]),
-						$mdgriffith$elm_ui$Element$text('Your name:')),
+						$mdgriffith$elm_ui$Element$text('Name your app:')),
 						A3(
 						$author$project$Common$View$inputTextWidget,
 						model.theme,
@@ -58690,7 +58690,7 @@ var $author$project$Common$View$nameElement = F2(
 								$mdgriffith$elm_ui$Element$Font$color(
 								$author$project$Style$textColor(model.theme))
 							]),
-						$mdgriffith$elm_ui$Element$text('Your name:')),
+						$mdgriffith$elm_ui$Element$text('Name your app:')),
 						A3(
 						$author$project$Common$View$inputTextWidget,
 						model.theme,
