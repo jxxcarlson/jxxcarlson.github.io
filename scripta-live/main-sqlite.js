@@ -22870,7 +22870,7 @@ var $author$project$Common$Model$initCommon = function (flags) {
 		targetData: $elm$core$Maybe$Nothing,
 		theme: theme,
 		title: '',
-		userName: $elm$core$Maybe$Nothing,
+		userName: $elm$core$Maybe$Just(''),
 		windowHeight: flags.window.windowHeight,
 		windowWidth: flags.window.windowWidth
 	};
@@ -23862,6 +23862,7 @@ var $author$project$Common$Model$GeneratedId = function (a) {
 var $author$project$Common$Model$InputText = function (a) {
 	return {$: 'InputText', a: a};
 };
+var $author$project$Common$Model$LoadContentIntoEditorDelayed = {$: 'LoadContentIntoEditorDelayed'};
 var $author$project$Common$Model$PrintProcessing = {$: 'PrintProcessing'};
 var $author$project$Common$Model$PrintReady = {$: 'PrintReady'};
 var $author$project$Common$Model$ResetLoadFlag = {$: 'ResetLoadFlag'};
@@ -56649,6 +56650,7 @@ var $author$project$MainSQLite$updateCommon = F2(
 					{
 						compilerOutput: compilerOutput,
 						currentDocument: $elm$core$Maybe$Just(initialDoc),
+						documents: A2($elm$core$List$cons, initialDoc, common.documents),
 						editRecord: editRecord,
 						initialText: content,
 						loadDocumentIntoEditor: true,
@@ -56669,7 +56671,12 @@ var $author$project$MainSQLite$updateCommon = F2(
 						_List_fromArray(
 							[
 								storage.saveDocument(initialDoc),
-								storage.saveLastDocumentId(initialDoc.id)
+								storage.saveLastDocumentId(initialDoc.id),
+								A2(
+								$elm$core$Task$perform,
+								$elm$core$Basics$always(
+									$author$project$MainSQLite$CommonMsg($author$project$Common$Model$LoadContentIntoEditorDelayed)),
+								$elm$core$Process$sleep(200))
 							])));
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -57758,6 +57765,27 @@ var $author$project$Style$innerColumn = _List_fromArray(
 var $author$project$Common$Model$InputUserName = function (a) {
 	return {$: 'InputUserName', a: a};
 };
+var $mdgriffith$elm_ui$Internal$Model$Transparency = F2(
+	function (a, b) {
+		return {$: 'Transparency', a: a, b: b};
+	});
+var $mdgriffith$elm_ui$Internal$Flag$transparency = $mdgriffith$elm_ui$Internal$Flag$flag(0);
+var $mdgriffith$elm_ui$Element$alpha = function (o) {
+	var transparency = function (x) {
+		return 1 - x;
+	}(
+		A2(
+			$elm$core$Basics$min,
+			1.0,
+			A2($elm$core$Basics$max, 0.0, o)));
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$transparency,
+		A2(
+			$mdgriffith$elm_ui$Internal$Model$Transparency,
+			'transparency-' + $mdgriffith$elm_ui$Internal$Model$floatClass(transparency),
+			transparency));
+};
 var $mdgriffith$elm_ui$Element$Input$HiddenLabel = function (a) {
 	return {$: 'HiddenLabel', a: a};
 };
@@ -58271,27 +58299,6 @@ var $mdgriffith$elm_ui$Element$Input$renderBox = function (_v0) {
 	var left = _v0.left;
 	return $elm$core$String$fromInt(top) + ('px ' + ($elm$core$String$fromInt(right) + ('px ' + ($elm$core$String$fromInt(bottom) + ('px ' + ($elm$core$String$fromInt(left) + 'px'))))));
 };
-var $mdgriffith$elm_ui$Internal$Model$Transparency = F2(
-	function (a, b) {
-		return {$: 'Transparency', a: a, b: b};
-	});
-var $mdgriffith$elm_ui$Internal$Flag$transparency = $mdgriffith$elm_ui$Internal$Flag$flag(0);
-var $mdgriffith$elm_ui$Element$alpha = function (o) {
-	var transparency = function (x) {
-		return 1 - x;
-	}(
-		A2(
-			$elm$core$Basics$min,
-			1.0,
-			A2($elm$core$Basics$max, 0.0, o)));
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$transparency,
-		A2(
-			$mdgriffith$elm_ui$Internal$Model$Transparency,
-			'transparency-' + $mdgriffith$elm_ui$Internal$Model$floatClass(transparency),
-			transparency));
-};
 var $mdgriffith$elm_ui$Element$Input$charcoal = A3($mdgriffith$elm_ui$Element$rgb, 136 / 255, 138 / 255, 133 / 255);
 var $mdgriffith$elm_ui$Element$Input$renderPlaceholder = F3(
 	function (_v0, forPlaceholder, on) {
@@ -58622,61 +58629,32 @@ var $author$project$Common$View$inputTextWidget = F3(
 	});
 var $author$project$Common$View$nameElement = F2(
 	function (toMsg, model) {
-		var _v0 = model.userName;
-		if (_v0.$ === 'Just') {
-			var name = _v0.a;
-			return ($elm$core$String$trim(name) !== '') ? A3(
-				$author$project$Common$View$inputTextWidget,
-				model.theme,
-				name,
-				A2($elm$core$Basics$composeL, toMsg, $author$project$Common$Model$InputUserName)) : A2(
-				$mdgriffith$elm_ui$Element$column,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$spacing(8)
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$mdgriffith$elm_ui$Element$el,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$Font$size(14),
-								$mdgriffith$elm_ui$Element$Font$color(
-								$author$project$Style$textColor(model.theme))
-							]),
-						$mdgriffith$elm_ui$Element$text('Name your app:')),
-						A3(
-						$author$project$Common$View$inputTextWidget,
-						model.theme,
-						'',
-						A2($elm$core$Basics$composeL, toMsg, $author$project$Common$Model$InputUserName))
-					]));
-		} else {
-			return A2(
-				$mdgriffith$elm_ui$Element$column,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$spacing(8)
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$mdgriffith$elm_ui$Element$el,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$Font$size(14),
-								$mdgriffith$elm_ui$Element$Font$color(
-								$author$project$Style$textColor(model.theme))
-							]),
-						$mdgriffith$elm_ui$Element$text('Name your app:')),
-						A3(
-						$author$project$Common$View$inputTextWidget,
-						model.theme,
-						'',
-						A2($elm$core$Basics$composeL, toMsg, $author$project$Common$Model$InputUserName))
-					]));
-		}
+		var currentValue = A2($elm$core$Maybe$withDefault, '', model.userName);
+		var showLabel = $elm$core$String$trim(currentValue) === '';
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$spacing(8)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Font$size(14),
+							$mdgriffith$elm_ui$Element$Font$color(
+							$author$project$Style$textColor(model.theme)),
+							showLabel ? $mdgriffith$elm_ui$Element$alpha(1) : $mdgriffith$elm_ui$Element$alpha(0)
+						]),
+					$mdgriffith$elm_ui$Element$text('Name your app:')),
+					A3(
+					$author$project$Common$View$inputTextWidget,
+					model.theme,
+					currentValue,
+					A2($elm$core$Basics$composeL, toMsg, $author$project$Common$Model$InputUserName))
+				]));
 	});
 var $author$project$Style$rightPanelBackgroundColor = function (theme) {
 	if (theme.$ === 'Light') {
