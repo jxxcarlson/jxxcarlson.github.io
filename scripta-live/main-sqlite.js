@@ -56658,7 +56658,7 @@ var $author$project$MainSQLite$updateCommon = F2(
 						documents: A2($elm$core$List$cons, initialDoc, common.documents),
 						editRecord: editRecord,
 						initialText: content,
-						loadDocumentIntoEditor: true,
+						loadDocumentIntoEditor: false,
 						sourceText: content,
 						title: title
 					});
