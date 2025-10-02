@@ -38244,7 +38244,7 @@ var $author$project$MicroLaTeX$PrimitiveBlock$handleVerbatimBlock = F2(
 var $author$project$MicroLaTeX$PrimitiveBlock$Filled = {$: 'Filled'};
 var $author$project$MicroLaTeX$PrimitiveBlock$Started = {$: 'Started'};
 var $author$project$MicroLaTeX$PrimitiveBlock$verbatimBlockNames = _List_fromArray(
-	['equation', 'table', 'array', 'textarray', 'aligned', 'math', 'code', 'verbatim', 'verse', 'mathmacros', 'textmacros', 'hide', 'docinfo', 'csvtable', 'chart', 'svg', 'quiver', 'image', 'tikz', 'load-files', 'include', 'iframe']);
+	['equation', 'table', 'array', 'textarray', 'align', 'aligned', 'math', 'code', 'verbatim', 'figure', 'verse', 'mathmacros', 'textmacros', 'hide', 'docinfo', 'csvtable', 'chart', 'svg', 'quiver', 'image', 'tikz', 'load-files', 'include', 'iframe']);
 var $author$project$MicroLaTeX$PrimitiveBlock$getHeading = function (str) {
 	var _v0 = $author$project$MicroLaTeX$ClassifyBlock$classify(str);
 	switch (_v0.$) {
@@ -39114,7 +39114,7 @@ var $author$project$MicroLaTeX$PrimitiveBlock$finishBlock = F2(
 		}
 	});
 var $author$project$MicroLaTeX$PrimitiveBlock$verbatimBlocks = _List_fromArray(
-	['table', 'textarray', 'array', 'code', 'equation', 'aligned', 'verbatim']);
+	['table', 'textarray', 'array', 'code', 'equation', 'align', 'aligned', 'verbatim', 'figure']);
 var $author$project$MicroLaTeX$PrimitiveBlock$endBlockOnMismatch = F4(
 	function (label_, classifier, line, state) {
 		var _v0 = $elm_community$list_extra$List$Extra$uncons(state.stack);
@@ -39698,6 +39698,7 @@ var $author$project$MicroLaTeX$PrimitiveBlock$plainText = F2(
 							$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('equation'),
 							$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('array'),
 							$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('textarray'),
+							$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('align'),
 							$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('aligned')
 						])))) ? $author$project$MicroLaTeX$PrimitiveBlock$Loop(
 					A5($author$project$MicroLaTeX$PrimitiveBlock$dispatchBeginBlock, state.idPrefix, state.outerCount, $author$project$MicroLaTeX$ClassifyBlock$CPlainText, currentLine, state)) : $author$project$MicroLaTeX$PrimitiveBlock$Loop(state);
@@ -39787,6 +39788,29 @@ var $author$project$MicroLaTeX$PrimitiveBlock$nexStepAux = F3(
 					_List_fromArray(
 						[
 							$elm$core$Maybe$Just(
+							$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('align')),
+							$elm$core$Maybe$Just(
+							$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('aligned'))
+						])) ? $author$project$MicroLaTeX$PrimitiveBlock$Loop(
+					A4(
+						$author$project$MicroLaTeX$PrimitiveBlock$endBlockOnMatch,
+						$elm$core$Maybe$Nothing,
+						$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('align'),
+						currentLine,
+						_Utils_update(
+							state,
+							{label: 'CEndBlock 4'}))) : (A2(
+					$elm$core$List$member,
+					A2(
+						$elm$core$Maybe$map,
+						function ($) {
+							return $.classification;
+						},
+						$elm$core$List$head(
+							$elm$core$List$reverse(state.labelStack))),
+					_List_fromArray(
+						[
+							$elm$core$Maybe$Just(
 							$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('aligned'))
 						])) ? $author$project$MicroLaTeX$PrimitiveBlock$Loop(
 					A4(
@@ -39796,7 +39820,7 @@ var $author$project$MicroLaTeX$PrimitiveBlock$nexStepAux = F3(
 						currentLine,
 						_Utils_update(
 							state,
-							{label: 'CEndBlock 4'}))) : (A2(
+							{label: 'CEndBlock 4a'}))) : (A2(
 					$elm$core$List$member,
 					A2(
 						$elm$core$Maybe$map,
@@ -39865,7 +39889,7 @@ var $author$project$MicroLaTeX$PrimitiveBlock$nexStepAux = F3(
 					currentLine,
 					_Utils_update(
 						state,
-						{label: 'CEndBlock 5'})))))));
+						{label: 'CEndBlock 5'}))))))));
 			case 'CSpecialBlock':
 				var label = _v0.a;
 				var _v3 = _Utils_Tuple2(label, currentLine.lineNumber);
@@ -51503,7 +51527,7 @@ var $author$project$Generic$TextMacro$getTextMacroFunctionNames = function (str)
 								$author$project$Generic$TextMacro$buildDictionary(
 									$elm$core$String$lines(str)))))))));
 };
-var $author$project$Render$Export$Preamble$commands = '\n%% Commands\n\n\\newcommand{\\code}[1]{{\\tt #1}}\n\\newcommand{\\ellie}[1]{\\href{#1}{Link to Ellie}}\n% \\newcommand{\\image}[3]{\\includegraphics[width=3cm]{#1}}\n\n%% width=4truein,keepaspectratio]\n\n\n\\newcommand{\\imagecentercaptioned}[3]{\n   \\medskip\n   \\begin{figure}[htp]\n   \\centering\n    \\includegraphics[width=#2]{#1}\n    \\vglue0pt\n    \\caption{#3}\n    \\end{figure}\n    \\medskip\n}\n\n\\newcommand{\\imagecenter}[2]{\n   \\medskip\n   \\begin{figure}[htp]\n   \\centering\n    \\includegraphics[width=#2]{#1}\n    \\vglue0pt\n    \\end{figure}\n    \\medskip\n}\n\n\\newcommand{\\imagefloat}[4]{\n    \\begin{wrapfigure}{#4}{#2}\n    \\includegraphics[width=#2]{#1}\n    \\caption{#3}\n    \\end{wrapfigure}\n}\n\n\n\\newcommand{\\imagefloatright}[3]{\n    \\begin{wrapfigure}{R}{0.30\\textwidth}\n    \\includegraphics[width=0.30\\textwidth]{#1}\n    \\caption{#2}\n    \\end{wrapfigure}\n}\n\n\\newcommand{\\hide}[1]{}\n\n\n\\newcommand{\\imagefloatleft}[3]{\n    \\begin{wrapfigure}{L}{0.3-\\textwidth}\n    \\includegraphics[width=0.30\\textwidth]{#1}\n    \\caption{#2}\n    \\end{wrapfigure}\n}\n% Font style\n\\newcommand{\\italic}[1]{{\\sl #1}}\n\\newcommand{\\strong}[1]{{\\bf #1}}\n\\newcommand{\\strike}[1]{\\st{#1}}\n\n% Scripta\n\\newcommand{\\ilink}[2]{\\href{{https://scripta.io/s/#1}}{#2}}\n\\newcommand{\\markwith}[1]{}\n\\newcommand{\\anchor}[1]{#1}\n\n% Color\n\\newcommand{\\red}[1]{\\textcolor{red}{#1}}\n\\newcommand{\\blue}[1]{\\textcolor{blue}{#1}}\n\\newcommand{\\violet}[1]{\\textcolor{violet}{#1}}\n\\newcommand{\\highlight}[1]{\\hl{#1}}\n\\newcommand{\\note}[2]{\\textcolor{blue}{#1}{\\hl{#1}}}\n\n% WTF?\n\\newcommand{\\remote}[1]{\\textcolor{red}{#1}}\n\\newcommand{\\local}[1]{\\textcolor{blue}{#1}}\n\n% Unclassified\n\\newcommand{\\subheading}[1]{{\\bf #1}\\par}\n\\newcommand{\\term}[1]{{\\sl #1}}\n\\newcommand{\\termx}[1]{}\n\\newcommand{\\comment}[1]{}\n\\newcommand{\\innertableofcontents}{}\n\n\n% Special character\n\\newcommand{\\dollarSign}[0]{{\\$}}\n\\newcommand{\\backTick}[0]{\\`{}}\n\n%% Theorems\n\\newtheorem{remark}{Remark}\n\\newtheorem{theorem}{Theorem}\n\\newtheorem{axiom}{Axiom}\n\\newtheorem{lemma}{Lemma}\n\\newtheorem{proposition}{Proposition}\n\\newtheorem{corollary}{Corollary}\n\\newtheorem{definition}{Definition}\n\\newtheorem{example}{Example}\n\\newtheorem{exercise}{Exercise}\n\\newtheorem{problem}{Problem}\n\\newtheorem{exercises}{Exercises}\n\\newcommand{\\bs}[1]{$\\backslash$#1}\n\\newcommand{\\texarg}[1]{\\{#1\\}}\n\n\n%% Environments\n\\renewenvironment{quotation}\n  {\\begin{adjustwidth}{2cm}{} \\footnotesize}\n  {\\end{adjustwidth}}\n\n\\def\\changemargin#1#2{\\list{}{\\rightmargin#2\\leftmargin#1}\\item[]}\n\\let\\endchangemargin=\\endlist\n\n\\renewenvironment{indent}\n  {\\begin{adjustwidth}{0.75cm}{}}\n  {\\end{adjustwidth}}\n\n\n%% NEWCOMMAND\n\n% \\definecolor{mypink1}{rgb}{0.858, 0.188, 0.478}\n% \\definecolor{mypink2}{RGB}{219, 48, 122}\n\\newcommand{\\fontRGB}[4]{\n    \\definecolor{mycolor}{RGB}{#1, #2, #3}\n    \\textcolor{mycolor}{#4}\n    }\n\n\\newcommand{\\highlightRGB}[4]{\n    \\definecolor{mycolor}{RGB}{#1, #2, #3}\n    \\sethlcolor{mycolor}\n    \\hl{#4}\n     \\sethlcolor{yellow}\n    }\n\n\\newcommand{\\gray}[2]{\n\\definecolor{mygray}{gray}{#1}\n\\textcolor{mygray}{#2}\n}\n\n\\newcommand{\\white}[1]{\\gray{1}[#1]}\n\\newcommand{\\medgray}[1]{\\gray{0.5}[#1]}\n\\newcommand{\\black}[1]{\\gray{0}[#1]}\n\n% Spacing\n\\parindent0pt\n\\parskip5pt\n\n';
+var $author$project$Render$Export$Preamble$commands = '\n%% Commands\n\n\\newcommand{\\hang}[1]{%\n  {%\n    \\setlength{\\leftskip}{1em}%\n    \\setlength{\\hangindent}{1em}%\n    \\hangafter=1 %\n    #1\\ \\vpace{4}%\n  }%\n}\n\n\\renewcommand{\\labelitemi}{\\scalebox{0.7}{\\textbullet}}\n\n% Dot box = 1em, gap = 1em → total = 2em\n\\newcommand{\\compactItem}[1]{%\n  \\par\n\\noindent\n  \\hangindent=2em \\hangafter=1%\n  \\makebox[1em][l]{\\labelitemi}\\hspace{1em}#1\\par\n}\n\n\\newcommand{\\code}[1]{{\\tt #1}}\n\\newcommand{\\ellie}[1]{\\href{#1}{Link to Ellie}}\n% \\newcommand{\\image}[3]{\\includegraphics[width=3cm]{#1}}\n\n%% width=4truein,keepaspectratio]\n\n\n% imagecentercaptioned command removed - using standard figure environment instead\n\n\\newcommand{\\imagecenter}[2]{\n   \\medskip\n   \\begin{figure}[htp]\n   \\centering\n    \\includegraphics[width=#2]{#1}\n    \\vglue0pt\n    \\end{figure}\n    \\medskip\n}\n\n\\newcommand{\\imagefloat}[4]{\n    \\begin{wrapfigure}{#4}{#2}\n    \\includegraphics[width=#2]{#1}\n    \\caption{#3}\n    \\end{wrapfigure}\n}\n\n\n\\newcommand{\\imagefloatright}[3]{\n    \\begin{wrapfigure}{R}{0.30\\textwidth}\n    \\includegraphics[width=0.30\\textwidth]{#1}\n    \\caption{#2}\n    \\end{wrapfigure}\n}\n\n\\newcommand{\\hide}[1]{}\n\n\n\\newcommand{\\imagefloatleft}[3]{\n    \\begin{wrapfigure}{L}{0.3-\\textwidth}\n    \\includegraphics[width=0.30\\textwidth]{#1}\n    \\caption{#2}\n    \\end{wrapfigure}\n}\n% Font style\n\\newcommand{\\italic}[1]{{\\sl #1}}\n\\newcommand{\\strong}[1]{{\\bf #1}}\n\\newcommand{\\strike}[1]{\\st{#1}}\n\n% Scripta\n\\newcommand{\\ilink}[2]{\\href{{https://scripta.io/s/#1}}{#2}}\n\\newcommand{\\markwith}[1]{}\n\\newcommand{\\anchor}[1]{#1}\n\n% Color\n\\newcommand{\\red}[1]{\\textcolor{red}{#1}}\n\\newcommand{\\blue}[1]{\\textcolor{blue}{#1}}\n\\newcommand{\\violet}[1]{\\textcolor{violet}{#1}}\n\\newcommand{\\highlight}[1]{\\hl{#1}}\n\\newcommand{\\note}[2]{\\textcolor{blue}{#1}{\\hl{#1}}}\n\n% WTF?\n\\newcommand{\\remote}[1]{\\textcolor{red}{#1}}\n\\newcommand{\\local}[1]{\\textcolor{blue}{#1}}\n\n% Unclassified\n\\newcommand{\\subheading}[1]{{\\bf #1}\\par}\n\\newcommand{\\term}[1]{{\\sl #1}}\n\\newcommand{\\termx}[1]{}\n\\newcommand{\\comment}[1]{}\n\\newcommand{\\innertableofcontents}{}\n\n\n% Special character\n\\newcommand{\\dollarSign}[0]{{\\$}}\n\\newcommand{\\backTick}[0]{\\`{}}\n\n%% Theorems\n\\newtheorem{remark}{Remark}\n\\newtheorem{theorem}{Theorem}\n\\newtheorem{axiom}{Axiom}\n\\newtheorem{lemma}{Lemma}\n\\newtheorem{proposition}{Proposition}\n\\newtheorem{corollary}{Corollary}\n\\newtheorem{definition}{Definition}\n\\newtheorem{example}{Example}\n\\newtheorem{exercise}{Exercise}\n\\newtheorem{problem}{Problem}\n\\newtheorem{exercises}{Exercises}\n\\newcommand{\\bs}[1]{$\\backslash$#1}\n\\newcommand{\\texarg}[1]{\\{#1\\}}\n\n\n%% Environments\n\\renewenvironment{quotation}\n  {\\begin{adjustwidth}{2cm}{} \\footnotesize}\n  {\\end{adjustwidth}}\n\n\\def\\changemargin#1#2{\\list{}{\\rightmargin#2\\leftmargin#1}\\item[]}\n\\let\\endchangemargin=\\endlist\n\n\\renewenvironment{indent}\n  {\\begin{adjustwidth}{0.75cm}{}}\n  {\\end{adjustwidth}}\n\n\n%% NEWCOMMAND\n\n% \\definecolor{mypink1}{rgb}{0.858, 0.188, 0.478}\n% \\definecolor{mypink2}{RGB}{219, 48, 122}\n\\newcommand{\\fontRGB}[4]{\n    \\definecolor{mycolor}{RGB}{#1, #2, #3}\n    \\textcolor{mycolor}{#4}\n    }\n\n\\newcommand{\\highlightRGB}[4]{\n    \\definecolor{mycolor}{RGB}{#1, #2, #3}\n    \\sethlcolor{mycolor}\n    \\hl{#4}\n     \\sethlcolor{yellow}\n    }\n\n\\newcommand{\\gray}[2]{\n\\definecolor{mygray}{gray}{#1}\n\\textcolor{mygray}{#2}\n}\n\n\\newcommand{\\white}[1]{\\gray{1}[#1]}\n\\newcommand{\\medgray}[1]{\\gray{0.5}[#1]}\n\\newcommand{\\black}[1]{\\gray{0}[#1]}\n\n% Spacing\n\\parindent0pt\n\\parskip5pt\n\n';
 var $author$project$Render$Export$Preamble$newPackageText = function (packagesNeeded_) {
 	return A2(
 		$elm$core$String$join,
@@ -51611,7 +51635,7 @@ var $author$project$Render$Export$Preamble$packagesNeeded = function (names) {
 		$elm_community$list_extra$List$Extra$unique(
 			$author$project$Render$Export$Preamble$newPackageList(names)));
 };
-var $author$project$Render$Export$Preamble$standardPackages = '\n%% Packages\n\n%% Standard packages\n\\usepackage{geometry}\n\\geometry{letterpaper}\n\\usepackage{changepage}   % for the adjustwidth environment\n\n%% AMS\n\\usepackage{amssymb}\n\\usepackage{amsmath}\n\n\\usepackage{amscd}\n\n\\usepackage{fancyvrb} %% for inline verbatim\n';
+var $author$project$Render$Export$Preamble$standardPackages = '\n%% Packages\n\n%% Standard packages\n\\usepackage{geometry}\n\\geometry{letterpaper}\n\\usepackage{changepage}  % for the adjustwidth environment\n\\usepackage{graphicx}    % for \\includegraphics\n\n%% AMS\n\\usepackage{amssymb}\n\\usepackage{amsmath}\n\n\\usepackage{amscd}\n\n\\usepackage{fancyvrb} %% for inline verbatim\n';
 var $author$project$Render$Export$Preamble$addCode = F4(
 	function (packagesInDocument, _package, codeText, accumulatedCodeText) {
 		return A2($elm$core$List$member, _package, packagesInDocument) ? (codeText + ('\n\n' + accumulatedCodeText)) : accumulatedCodeText;
@@ -51703,9 +51727,6 @@ var $author$project$Generic$BlockUtilities$condenseUrls = function (block) {
 	}
 };
 var $author$project$Render$Export$LaTeX$OutsideList = {$: 'OutsideList'};
-var $author$project$Render$Export$LaTeX$InsideDescriptionList = {$: 'InsideDescriptionList'};
-var $author$project$Render$Export$LaTeX$InsideItemizedList = {$: 'InsideItemizedList'};
-var $author$project$Render$Export$LaTeX$InsideNumberedList = {$: 'InsideNumberedList'};
 var $author$project$Generic$Language$expressionBlockEmpty = {
 	args: _List_Nil,
 	body: $toastal$either$Either$Right(_List_Nil),
@@ -51717,69 +51738,6 @@ var $author$project$Generic$Language$expressionBlockEmpty = {
 	style: $elm$core$Maybe$Nothing
 };
 var $author$project$Render$Export$LaTeX$emptyExpressionBlock = $author$project$Generic$Language$expressionBlockEmpty;
-var $author$project$Render$Export$LaTeX$beginDescriptionBlock = A2(
-	$author$project$Generic$BlockUtilities$updateMeta,
-	function (m) {
-		return _Utils_update(
-			m,
-			{numberOfLines: 2, sourceText: '| beginBlock\ndescription'});
-	},
-	_Utils_update(
-		$author$project$Render$Export$LaTeX$emptyExpressionBlock,
-		{
-			body: $toastal$either$Either$Right(
-				_List_fromArray(
-					[
-						A2(
-						$author$project$Generic$Language$Text,
-						'description',
-						{begin: 0, end: 7, id: 'begin', index: 0})
-					])),
-			heading: $author$project$Generic$Language$Ordinary('beginDescriptionBlock'),
-			indent: 1
-		}));
-var $author$project$Render$Export$LaTeX$beginItemizedBlock = A2(
-	$author$project$Generic$BlockUtilities$updateMeta,
-	function (m) {
-		return _Utils_update(
-			m,
-			{numberOfLines: 2, sourceText: '| beginBlock\nitemize'});
-	},
-	_Utils_update(
-		$author$project$Render$Export$LaTeX$emptyExpressionBlock,
-		{
-			body: $toastal$either$Either$Right(
-				_List_fromArray(
-					[
-						A2(
-						$author$project$Generic$Language$Text,
-						'itemize',
-						{begin: 0, end: 7, id: '', index: 0})
-					])),
-			heading: $author$project$Generic$Language$Ordinary('beginBlock'),
-			indent: 1
-		}));
-var $author$project$Render$Export$LaTeX$beginNumberedBlock = A2(
-	$author$project$Generic$BlockUtilities$updateMeta,
-	function (m) {
-		return _Utils_update(
-			m,
-			{numberOfLines: 2, sourceText: '| beginBlock\nitemize'});
-	},
-	_Utils_update(
-		$author$project$Render$Export$LaTeX$emptyExpressionBlock,
-		{
-			body: $toastal$either$Either$Right(
-				_List_fromArray(
-					[
-						A2(
-						$author$project$Generic$Language$Text,
-						'enumerate',
-						{begin: 0, end: 7, id: 'begin', index: 0})
-					])),
-			heading: $author$project$Generic$Language$Ordinary('beginNumberedBlock'),
-			indent: 1
-		}));
 var $author$project$Render$Export$LaTeX$endDescriptionBlock = A2(
 	$author$project$Generic$BlockUtilities$updateMeta,
 	function (m) {
@@ -51841,6 +51799,72 @@ var $author$project$Render$Export$LaTeX$endNumberedBlock = A2(
 						{begin: 0, end: 7, id: 'begin', index: 0})
 					])),
 			heading: $author$project$Generic$Language$Ordinary('endNumberedBlock'),
+			indent: 1
+		}));
+var $author$project$Render$Export$LaTeX$InsideDescriptionList = {$: 'InsideDescriptionList'};
+var $author$project$Render$Export$LaTeX$InsideItemizedList = {$: 'InsideItemizedList'};
+var $author$project$Render$Export$LaTeX$InsideNumberedList = {$: 'InsideNumberedList'};
+var $author$project$Render$Export$LaTeX$beginDescriptionBlock = A2(
+	$author$project$Generic$BlockUtilities$updateMeta,
+	function (m) {
+		return _Utils_update(
+			m,
+			{numberOfLines: 2, sourceText: '| beginBlock\ndescription'});
+	},
+	_Utils_update(
+		$author$project$Render$Export$LaTeX$emptyExpressionBlock,
+		{
+			body: $toastal$either$Either$Right(
+				_List_fromArray(
+					[
+						A2(
+						$author$project$Generic$Language$Text,
+						'description',
+						{begin: 0, end: 7, id: 'begin', index: 0})
+					])),
+			heading: $author$project$Generic$Language$Ordinary('beginDescriptionBlock'),
+			indent: 1
+		}));
+var $author$project$Render$Export$LaTeX$beginItemizedBlock = A2(
+	$author$project$Generic$BlockUtilities$updateMeta,
+	function (m) {
+		return _Utils_update(
+			m,
+			{numberOfLines: 2, sourceText: '| beginBlock\nitemize'});
+	},
+	_Utils_update(
+		$author$project$Render$Export$LaTeX$emptyExpressionBlock,
+		{
+			body: $toastal$either$Either$Right(
+				_List_fromArray(
+					[
+						A2(
+						$author$project$Generic$Language$Text,
+						'itemize',
+						{begin: 0, end: 7, id: '', index: 0})
+					])),
+			heading: $author$project$Generic$Language$Ordinary('beginBlock'),
+			indent: 1
+		}));
+var $author$project$Render$Export$LaTeX$beginNumberedBlock = A2(
+	$author$project$Generic$BlockUtilities$updateMeta,
+	function (m) {
+		return _Utils_update(
+			m,
+			{numberOfLines: 2, sourceText: '| beginBlock\nitemize'});
+	},
+	_Utils_update(
+		$author$project$Render$Export$LaTeX$emptyExpressionBlock,
+		{
+			body: $toastal$either$Either$Right(
+				_List_fromArray(
+					[
+						A2(
+						$author$project$Generic$Language$Text,
+						'enumerate',
+						{begin: 0, end: 7, id: 'begin', index: 0})
+					])),
+			heading: $author$project$Generic$Language$Ordinary('beginNumberedBlock'),
 			indent: 1
 		}));
 var $author$project$Render$Export$LaTeX$nextState = F2(
@@ -52002,7 +52026,29 @@ var $author$project$Render$Export$LaTeX$nextState = F2(
 var $author$project$Render$Export$LaTeX$nextStep = function (state) {
 	var _v0 = $elm$core$List$head(state.input);
 	if (_v0.$ === 'Nothing') {
-		return $author$project$Tools$Loop$Done(state.output);
+		var _v1 = state.status;
+		switch (_v1.$) {
+			case 'InsideItemizedList':
+				return $author$project$Tools$Loop$Done(
+					A2(
+						$elm$core$List$cons,
+						$maca$elm_rose_tree$RoseTree$Tree$leaf($author$project$Render$Export$LaTeX$endItemizedBlock),
+						state.output));
+			case 'InsideNumberedList':
+				return $author$project$Tools$Loop$Done(
+					A2(
+						$elm$core$List$cons,
+						$maca$elm_rose_tree$RoseTree$Tree$leaf($author$project$Render$Export$LaTeX$endNumberedBlock),
+						state.output));
+			case 'InsideDescriptionList':
+				return $author$project$Tools$Loop$Done(
+					A2(
+						$elm$core$List$cons,
+						$maca$elm_rose_tree$RoseTree$Tree$leaf($author$project$Render$Export$LaTeX$endDescriptionBlock),
+						state.output));
+			default:
+				return $author$project$Tools$Loop$Done(state.output);
+		}
 	} else {
 		var tree = _v0.a;
 		return $author$project$Tools$Loop$Loop(
@@ -52010,11 +52056,26 @@ var $author$project$Render$Export$LaTeX$nextStep = function (state) {
 	}
 };
 var $author$project$Render$Export$LaTeX$encloseLists = function (blocks) {
+	var processedBlocks = A2($elm$core$List$map, $author$project$Render$Export$LaTeX$processTreeChildren, blocks);
 	return $elm$core$List$reverse(
 		A2(
 			$author$project$Tools$Loop$loop,
-			{input: blocks, itemNumber: 0, output: _List_Nil, status: $author$project$Render$Export$LaTeX$OutsideList},
+			{input: processedBlocks, itemNumber: 0, output: _List_Nil, status: $author$project$Render$Export$LaTeX$OutsideList},
 			$author$project$Render$Export$LaTeX$nextStep));
+};
+var $author$project$Render$Export$LaTeX$processTreeChildren = function (_v0) {
+	var block = _v0.a;
+	var children = _v0.b;
+	var childList = $elm$core$Array$toList(children);
+	var processedChildren = function () {
+		if (!childList.b) {
+			return $elm$core$Array$empty;
+		} else {
+			return $elm$core$Array$fromList(
+				$author$project$Render$Export$LaTeX$encloseLists(childList));
+		}
+	}();
+	return A2($maca$elm_rose_tree$RoseTree$Tree$Tree, block, processedChildren);
 };
 var $author$project$Render$Export$LaTeX$addTikzPictureClosing = F2(
 	function (flagUp, str) {
@@ -52040,6 +52101,16 @@ var $author$project$Render$Export$LaTeX$descriptionItem = F2(
 			return '\\item[' + (arg + (']{' + (body + '}')));
 		}
 	});
+var $author$project$Render$Utility$getArg = F3(
+	function (_default, index, args) {
+		var _v0 = A2($elm_community$list_extra$List$Extra$getAt, index, args);
+		if (_v0.$ === 'Nothing') {
+			return _default;
+		} else {
+			var a = _v0.a;
+			return a;
+		}
+	});
 var $author$project$Render$Export$LaTeX$functionDict = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
@@ -52056,9 +52127,11 @@ var $author$project$Render$Export$LaTeX$mapChars2 = function (str) {
 var $author$project$Render$Export$LaTeX$aliases = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
-			_Utils_Tuple2('i', 'italic'),
+			_Utils_Tuple2('i', 'textit'),
+			_Utils_Tuple2('italic', 'textit'),
 			_Utils_Tuple2('b', 'textbf'),
-			_Utils_Tuple2('bold', 'textbf')
+			_Utils_Tuple2('bold', 'textbf'),
+			_Utils_Tuple2('large', 'large')
 		]));
 var $author$project$Render$Export$LaTeX$unalias = function (str) {
 	var _v0 = A2($elm$core$Dict$get, str, $author$project$Render$Export$LaTeX$aliases);
@@ -52091,16 +52164,6 @@ var $author$project$Render$Export$LaTeX$macro1 = F2(
 					}
 				}
 			}
-		}
-	});
-var $author$project$Render$Utility$getArg = F3(
-	function (_default, index, args) {
-		var _v0 = A2($elm_community$list_extra$List$Extra$getAt, index, args);
-		if (_v0.$ === 'Nothing') {
-			return _default;
-		} else {
-			var a = _v0.a;
-			return a;
 		}
 	});
 var $author$project$Tools$Utility$removeNonAlphaNum = function (string) {
@@ -52308,7 +52371,7 @@ var $author$project$Render$Export$LaTeX$blockDict = function (mathMacroDict) {
 				'item',
 				F3(
 					function (_v38, _v39, body) {
-						return A2($author$project$Render$Export$LaTeX$macro1, 'item', body);
+						return '\\item ' + body;
 					})),
 				_Utils_Tuple2(
 				'itemList',
@@ -52326,7 +52389,7 @@ var $author$project$Render$Export$LaTeX$blockDict = function (mathMacroDict) {
 				'numbered',
 				F3(
 					function (_v43, _v44, body) {
-						return A2($author$project$Render$Export$LaTeX$macro1, 'item', body);
+						return '\\item ' + body;
 					})),
 				_Utils_Tuple2(
 				'desc',
@@ -52403,17 +52466,33 @@ var $author$project$Render$Export$LaTeX$environment = F2(
 					A2($author$project$Render$Export$LaTeX$tagged, 'end', name)
 				]));
 	});
+var $elm$core$String$filter = _String_filter;
 var $author$project$Render$Export$Image$exportCenteredFigure = F3(
 	function (url, options, caption) {
-		return (caption === 'none') ? A2(
-			$elm$core$String$join,
-			'',
-			_List_fromArray(
-				['\\imagecenter{', url, '}{' + (options + '}')])) : A2(
-			$elm$core$String$join,
-			'',
-			_List_fromArray(
-				['\\imagecentercaptioned{', url, '}{' + (options + ('}{' + (caption + '}')))]));
+		if ((caption === 'none') || (caption === '')) {
+			return A2(
+				$elm$core$String$join,
+				'',
+				_List_fromArray(
+					['\\begin{center}\n', '\\includegraphics[width=' + (options + (']{' + (url + '}\n'))), '\\end{center}']));
+		} else {
+			var label = A2(
+				$elm$core$String$filter,
+				$elm$core$Char$isAlphaNum,
+				$elm$core$String$toLower(
+					A2(
+						$elm$core$String$join,
+						'',
+						A2(
+							$elm$core$List$take,
+							2,
+							$elm$core$String$words(caption)))));
+			return A2(
+				$elm$core$String$join,
+				'',
+				_List_fromArray(
+					['\\begin{figure}[h]\n', '  \\centering\n', '  \\includegraphics[width=' + (options + (']{' + (url + '}\n'))), '  \\caption{' + (caption + '}\n'), '  \\label{fig:' + (label + '}\n'), '\\end{figure}']));
+		}
 	});
 var $author$project$Render$Export$Image$fractionaRescale = function (k) {
 	var f = $elm$core$String$fromFloat(k / 600.0);
@@ -52507,16 +52586,9 @@ var $author$project$Render$Export$Image$imageParametersForBlock = F2(
 var $author$project$Render$Export$Image$exportBlock = F2(
 	function (settings, block) {
 		var params = A2($author$project$Render$Export$Image$imageParametersForBlock, settings, block);
-		var options = A2(
-			$elm$core$String$join,
-			'',
-			_List_fromArray(
-				[params.fractionalWidth, ',keepaspectratio']));
-		return A3($author$project$Render$Export$Image$exportCenteredFigure, params.url, options, params.caption);
+		var widthOption = (params.fractionalWidth === '') ? '0.75\\textwidth' : params.fractionalWidth;
+		return A3($author$project$Render$Export$Image$exportCenteredFigure, params.url, widthOption, params.caption);
 	});
-var $author$project$Render$Export$LaTeX$encloseWithBraces = function (str_) {
-	return '{' + ($elm$core$String$trim(str_) + '}');
-};
 var $author$project$Render$Export$LaTeX$blindIndex = '';
 var $author$project$Render$Export$Util$getArgs = A2(
 	$elm$core$Basics$composeR,
@@ -52553,25 +52625,41 @@ var $author$project$Render$Export$LaTeX$dontRender = F2(
 	});
 var $author$project$Render$Export$Image$exportWrappedFigure = F4(
 	function (placement, url, options, caption) {
-		return A2(
-			$elm$core$String$join,
-			'',
-			_List_fromArray(
-				['\\imagefloat{', url, '}{' + (options + ('}{' + (caption + ('}{' + (placement + '}')))))]));
+		var placementChar = function () {
+			switch (placement) {
+				case 'L':
+					return 'l';
+				case 'R':
+					return 'r';
+				default:
+					return 'r';
+			}
+		}();
+		if ((caption === 'none') || (caption === '')) {
+			return A2(
+				$elm$core$String$join,
+				'',
+				_List_fromArray(
+					['\\begin{wrapfigure}{' + (placementChar + ('}{' + (options + '}\n'))), '\\centering\n', '\\includegraphics[width=' + (options + (']{' + (url + '}\n'))), '\\end{wrapfigure}']));
+		} else {
+			var label = A2(
+				$elm$core$String$filter,
+				$elm$core$Char$isAlphaNum,
+				$elm$core$String$toLower(
+					A2(
+						$elm$core$String$join,
+						'',
+						A2(
+							$elm$core$List$take,
+							2,
+							$elm$core$String$words(caption)))));
+			return A2(
+				$elm$core$String$join,
+				'',
+				_List_fromArray(
+					['\\begin{wrapfigure}{' + (placementChar + ('}{' + (options + '}\n'))), '\\centering\n', '\\includegraphics[width=' + (options + (']{' + (url + '}\n'))), '\\caption{' + (caption + '}\n'), '\\label{fig:' + (label + '}\n'), '\\end{wrapfigure}']));
+		}
 	});
-var $author$project$Render$Export$Image$fixWidth = function (w) {
-	return ((w === '') || (w === 'fill')) ? '500' : w;
-};
-var $author$project$Render$Export$Util$getOneArg = function (exprs) {
-	var _v0 = $elm$core$List$head(
-		$author$project$Render$Export$Util$getArgs(exprs));
-	if (_v0.$ === 'Nothing') {
-		return '';
-	} else {
-		var str = _v0.a;
-		return str;
-	}
-};
 var $author$project$Render$Export$Image$imageParameters = F2(
 	function (settings, body) {
 		var displayWidth = settings.width;
@@ -52687,23 +52775,8 @@ var $author$project$Render$Export$Image$imageParameters = F2(
 var $author$project$Render$Export$Image$export = F2(
 	function (s, exprs) {
 		var params = A2($author$project$Render$Export$Image$imageParameters, s, exprs);
-		var options = A2(
-			$elm$core$String$join,
-			'',
-			_List_fromArray(
-				[
-					$author$project$Render$Export$Image$fixWidth(params.width),
-					',keepaspectratio'
-				]));
-		var args = $elm$core$String$words(
-			$author$project$Render$Export$Util$getOneArg(exprs));
-		var _v0 = $elm$core$List$head(args);
-		if (_v0.$ === 'Nothing') {
-			return 'ERROR IN IMAGE';
-		} else {
-			var url_ = _v0.a;
-			return (params.placement === 'C') ? A3($author$project$Render$Export$Image$exportCenteredFigure, url_, options, params.caption) : A4($author$project$Render$Export$Image$exportWrappedFigure, params.placement, url_, params.fractionalWidth, params.caption);
-		}
+		var widthOption = (params.fractionalWidth === '') ? '0.75\\textwidth' : params.fractionalWidth;
+		return (params.url === 'no-image') ? 'ERROR IN IMAGE' : ((params.placement === 'C') ? A3($author$project$Render$Export$Image$exportCenteredFigure, params.url, widthOption, params.caption) : A4($author$project$Render$Export$Image$exportWrappedFigure, params.placement, params.url, params.fractionalWidth, params.caption));
 	});
 var $author$project$Render$Export$Util$getTwoArgs = function (exprs) {
 	var args = $author$project$Render$Export$Util$getArgs(exprs);
@@ -52736,6 +52809,16 @@ var $author$project$Render$Export$LaTeX$link = function (exprs) {
 		'',
 		_List_fromArray(
 			['\\href{', args.second, '}{', args.first, '}']));
+};
+var $author$project$Render$Export$Util$getOneArg = function (exprs) {
+	var _v0 = $elm$core$List$head(
+		$author$project$Render$Export$Util$getArgs(exprs));
+	if (_v0.$ === 'Nothing') {
+		return '';
+	} else {
+		var str = _v0.a;
+		return str;
+	}
 };
 var $author$project$Render$Export$LaTeX$markwith = function (exprs) {
 	var arg = $author$project$Render$Export$Util$getOneArg(exprs);
@@ -53124,16 +53207,12 @@ var $author$project$Render$Export$LaTeX$exportExpr = F3(
 						var f = _v2.a;
 						return A2(f, settings, exps_);
 					} else {
-						return '\\' + ($author$project$Render$Export$LaTeX$unalias(name) + A2(
-							$elm$core$String$join,
-							'',
-							A2(
-								$elm$core$List$map,
-								A2(
-									$elm$core$Basics$composeL,
-									$author$project$Render$Export$LaTeX$encloseWithBraces,
-									A2($author$project$Render$Export$LaTeX$exportExpr, mathMacroDict, settings)),
-								exps_)));
+						var exportedExprs = A2(
+							$elm$core$List$map,
+							A2($author$project$Render$Export$LaTeX$exportExpr, mathMacroDict, settings),
+							exps_);
+						var combinedContent = A2($elm$core$String$join, '', exportedExprs);
+						return '\\' + ($author$project$Render$Export$LaTeX$unalias(name) + ('{' + (combinedContent + '}')));
 					}
 				}
 			case 'Text':
@@ -53695,6 +53774,17 @@ var $author$project$Render$Export$LaTeX$exportBlock = F3(
 var $author$project$Generic$Language$getHeadingFromBlock = function (block) {
 	return block.heading;
 };
+var $author$project$Render$Export$LaTeX$indentNestedList = function (str) {
+	return A2(
+		$elm$core$String$join,
+		'\n',
+		A2(
+			$elm$core$List$map,
+			function (line) {
+				return '  ' + line;
+			},
+			$elm$core$String$lines(str)));
+};
 var $author$project$Render$Export$LaTeX$exportTree = F3(
 	function (mathMacroDict, settings, tree) {
 		var _v0 = $author$project$Generic$Language$getHeadingFromBlock(
@@ -53704,23 +53794,6 @@ var $author$project$Render$Export$LaTeX$exportTree = F3(
 			if (_v0.$ === 'Ordinary') {
 				switch (_v0.a) {
 					case 'itemList':
-						var hang = function (str) {
-							return '\\leftskip=1em\\hangindent=1em\n\\hangafter=1\n' + str;
-						};
-						var renderExprList = function (exprs) {
-							return A2(
-								$elm$core$String$join,
-								'\n\n',
-								A2(
-									$elm$core$List$map,
-									A2(
-										$elm$core$Basics$composeR,
-										A2($author$project$Render$Export$LaTeX$exportExpr, mathMacroDict, settings),
-										function (x) {
-											return ' •  ' + hang(x);
-										}),
-									exprs));
-						};
 						var exprList = function () {
 							var _v1 = $maca$elm_rose_tree$RoseTree$Tree$value(tree).body;
 							if (_v1.$ === 'Left') {
@@ -53730,6 +53803,21 @@ var $author$project$Render$Export$LaTeX$exportTree = F3(
 								return exprs;
 							}
 						}();
+						var compactItem = function (x) {
+							return '\\compactItem{' + (x + '}');
+						};
+						var renderExprList = function (exprs) {
+							return A2(
+								$elm$core$String$join,
+								'\n',
+								A2(
+									$elm$core$List$map,
+									A2(
+										$elm$core$Basics$composeR,
+										A2($author$project$Render$Export$LaTeX$exportExpr, mathMacroDict, settings),
+										compactItem),
+									exprs));
+						};
 						return renderExprList(exprList);
 					case 'numberedList':
 						var label = function (n) {
@@ -53782,6 +53870,23 @@ var $author$project$Render$Export$LaTeX$exportTree = F3(
 				$maca$elm_rose_tree$RoseTree$Tree$value(tree));
 		} else {
 			var children = _v3;
+			var _v4 = $author$project$Generic$BlockUtilities$getExpressionBlockName(
+				$maca$elm_rose_tree$RoseTree$Tree$value(tree));
+			_v4$2:
+			while (true) {
+				if (_v4.$ === 'Just') {
+					switch (_v4.a) {
+						case 'item':
+							return A4($author$project$Render$Export$LaTeX$handleItemWithChildren, mathMacroDict, settings, tree, children);
+						case 'numbered':
+							return A4($author$project$Render$Export$LaTeX$handleItemWithChildren, mathMacroDict, settings, tree, children);
+						default:
+							break _v4$2;
+					}
+				} else {
+					break _v4$2;
+				}
+			}
 			var root = $elm$core$String$lines(
 				A3(
 					$author$project$Render$Export$LaTeX$exportBlock,
@@ -53796,16 +53901,16 @@ var $author$project$Render$Export$LaTeX$exportTree = F3(
 						$elm$core$List$map,
 						A2($author$project$Render$Export$LaTeX$exportTree, mathMacroDict, settings),
 						children)));
-			var _v4 = $elm_community$list_extra$List$Extra$unconsLast(root);
-			if (_v4.$ === 'Nothing') {
+			var _v5 = $elm_community$list_extra$List$Extra$unconsLast(root);
+			if (_v5.$ === 'Nothing') {
 				return '';
 			} else {
-				var _v5 = _v4.a;
-				var lastLine = _v5.a;
-				var firstLines = _v5.b;
-				var _v6 = firstLines;
-				var _v7 = renderedChildren;
-				var _v8 = lastLine;
+				var _v6 = _v5.a;
+				var lastLine = _v6.a;
+				var firstLines = _v6.b;
+				var _v7 = firstLines;
+				var _v8 = renderedChildren;
+				var _v9 = lastLine;
 				return A2(
 					$elm$core$String$join,
 					'\n',
@@ -53816,6 +53921,48 @@ var $author$project$Render$Export$LaTeX$exportTree = F3(
 							_List_fromArray(
 								[lastLine]))));
 			}
+		}
+	});
+var $author$project$Render$Export$LaTeX$handleItemWithChildren = F4(
+	function (mathMacroDict, settings, tree, children) {
+		var itemContent = A3(
+			$author$project$Render$Export$LaTeX$exportBlock,
+			mathMacroDict,
+			settings,
+			$maca$elm_rose_tree$RoseTree$Tree$value(tree));
+		var firstChildIsBeginBlock = A2(
+			$elm$core$Maybe$withDefault,
+			false,
+			A2(
+				$elm$core$Maybe$map,
+				function (name) {
+					return (name === 'beginBlock') || (name === 'beginNumberedBlock');
+				},
+				A2(
+					$elm$core$Maybe$andThen,
+					$author$project$Generic$BlockUtilities$getExpressionBlockName,
+					A2(
+						$elm$core$Maybe$map,
+						$maca$elm_rose_tree$RoseTree$Tree$value,
+						$elm$core$List$head(children)))));
+		if (firstChildIsBeginBlock) {
+			var childrenOutput = $author$project$Render$Export$LaTeX$indentNestedList(
+				A2(
+					$elm$core$String$join,
+					'\n',
+					A2(
+						$elm$core$List$map,
+						A2($author$project$Render$Export$LaTeX$exportTree, mathMacroDict, settings),
+						children)));
+			return itemContent + ('\n' + childrenOutput);
+		} else {
+			return itemContent + ('\n' + A2(
+				$elm$core$String$join,
+				'\n',
+				A2(
+					$elm$core$List$map,
+					A2($author$project$Render$Export$LaTeX$exportTree, mathMacroDict, settings),
+					children)));
 		}
 	});
 var $elm$core$Elm$JsArray$map = _JsArray_map;
@@ -53875,6 +54022,42 @@ var $maca$elm_rose_tree$RoseTree$Tree$map = F2(
 					$maca$elm_rose_tree$RoseTree$Tree$map(f),
 					ns)));
 	});
+var $author$project$Render$Export$LaTeX$smartJoin = function (strings) {
+	var isListStructure = function (str) {
+		return A2($elm$core$String$startsWith, '\\begin{itemize}', str) || (A2($elm$core$String$startsWith, '\\end{itemize}', str) || (A2($elm$core$String$startsWith, '\\begin{enumerate}', str) || (A2($elm$core$String$startsWith, '\\end{enumerate}', str) || (A2($elm$core$String$startsWith, '\\begin{description}', str) || (A2($elm$core$String$startsWith, '\\end{description}', str) || A2($elm$core$String$startsWith, '\\item ', str))))));
+	};
+	var joinPair = function (_v2) {
+		var prev = _v2.a;
+		var curr = _v2.b;
+		return (isListStructure(prev) && isListStructure(curr)) ? '\n' : '\n\n';
+	};
+	var joined = function () {
+		if (!strings.b) {
+			return '';
+		} else {
+			var first = strings.a;
+			var rest = strings.b;
+			return A3(
+				$elm$core$List$foldl,
+				F2(
+					function (curr, _v1) {
+						var acc = _v1.a;
+						var prevStr = _v1.b;
+						return _Utils_Tuple2(
+							_Utils_ap(
+								acc,
+								_Utils_ap(
+									joinPair(
+										_Utils_Tuple2(prevStr, curr)),
+									curr)),
+							curr);
+					}),
+				_Utils_Tuple2(first, first),
+				rest).a;
+		}
+	}();
+	return joined;
+};
 var $author$project$Render$Export$LaTeX$rawExport = F2(
 	function (settings, ast_) {
 		var mathMacroDict = $author$project$ETeX$Transform$makeMacroDict(
@@ -53921,24 +54104,23 @@ var $author$project$Render$Export$LaTeX$rawExport = F2(
 						ast_));
 			}
 		}();
-		return A2(
-			$elm$core$String$join,
-			'\n\n',
+		var processedTrees = $author$project$Render$Export$LaTeX$encloseLists(
 			A2(
-				$elm$core$List$map,
-				A2($author$project$Render$Export$LaTeX$exportTree, mathMacroDict, settings),
-				$author$project$Render$Export$LaTeX$encloseLists(
-					A2(
-						$author$project$Generic$Forest$map,
-						$author$project$Generic$BlockUtilities$condenseUrls,
-						A2(
-							$author$project$Generic$ASTTools$filterForestOnLabelNames,
-							function (name) {
-								return !_Utils_eq(
-									name,
-									$elm$core$Maybe$Just('runninghead'));
-							},
-							ast)))));
+				$author$project$Generic$Forest$map,
+				$author$project$Generic$BlockUtilities$condenseUrls,
+				A2(
+					$author$project$Generic$ASTTools$filterForestOnLabelNames,
+					function (name) {
+						return !_Utils_eq(
+							name,
+							$elm$core$Maybe$Just('runninghead'));
+					},
+					ast)));
+		var exportedStrings = A2(
+			$elm$core$List$map,
+			A2($author$project$Render$Export$LaTeX$exportTree, mathMacroDict, settings),
+			processedTrees);
+		return $author$project$Render$Export$LaTeX$smartJoin(exportedStrings);
 	});
 var $author$project$Render$Export$LaTeX$tableofcontents = F2(
 	function (properties, rawBlockNames_) {
@@ -54353,7 +54535,7 @@ var $author$project$Document$newDocument = F6(
 	function (id, title, author, content, theme, now) {
 		return {author: author, content: content, createdAt: now, id: id, modifiedAt: now, theme: theme, title: title};
 	});
-var $author$project$AppData$processImagesText = '\n#!/bin/bash\n\n # Usage:\n #\n # sh ./process_images.sh <input_file> : gives a way\n #\n # Purpose: process LaTeX exported from scripta files that contain images,\n # first creating a corresponding LaTeX file, then\n # a pdf file.\n #\n # Prerequisite software installation:\n # - ImageMagick (for converting images to EPS)\n # - pdflatex (for making PDFs LaTeX files)\n #\n # Setup:\n # Make a folder call "tex" and make a subfolder "image" in it.\n # Put this script in the "tex" folder.\n # Put your file downloaded from Scripta Live or Scripta.io in the "tex" folder.\n # Run the script with the same filename as an argument: `sh ./process_file.sh myfile.tex`\n #\n # Plans:\n # This work will be automated in the near future, so that you can just\n # Press a button to do all the work\n #\n # Detail: the script processes its inputs follows:\n # First, it examines the file, finding all urls pointing to images (JPEG or PNG).\n # Next, it downloads the corresponding images, constructing a filename for each\n # image based on its URL, and converts them to EPS format using ImageMagick.\n # These images are then stored in the directory "./image". The URLS in the\n # original LaTeX file are replaced with the local EPS filenames.\n\n\n# Check if correct number of arguments provided\nif [ $# -ne 1 ]; then\n    echo "Usage: $0 <input_file>"\n    echo "Example: $0 document.tex"\n    exit 1\nfi\n\nINPUT_FILE="$1"\n\n# Check if input file exists in current directory\nif [ ! -f "$INPUT_FILE" ]; then\n    echo "Error: File $INPUT_FILE not found in current directory"\n    exit 1\nfi\n\n# Create output directory\nOUTPUT_DIR="./image"\nmkdir -p "$OUTPUT_DIR"\n\n# Check if ImageMagick is installed\nif ! command -v convert &> /dev/null; then\n    echo "Error: ImageMagick is not installed. Please install it first."\n    exit 1\nfi\n\n# Create a temporary file for the modified LaTeX\nTEMP_FILE=$(mktemp)\ncp "$INPUT_FILE" "$TEMP_FILE"\n\necho "Searching for image URLs in $INPUT_FILE..."\necho "Output directory: $OUTPUT_DIR"\necho\n\n# Extract URLs ending with .jpg, .jpeg, or .png\n# Using grep with extended regex to find URLs (including those with spaces before them)\ngrep -Eo \'https?://[^"{}]+\\.(jpg|jpeg|png)(\\?[^"{}]*)?\' "$INPUT_FILE" | sort -u | while read -r url; do\n    # Remove query parameters if present\n    url_without_query="${url%%\\?*}"\n\n    # Extract path after domain\n    # Remove protocol and domain to get just the path\n    path_after_domain=$(echo "$url_without_query" | sed -E \'s|https?://[^/]*/?||\')\n    # Remove file extension\n    path_without_ext="${path_after_domain%.*}"\n    # Replace slashes with hyphens and remove special characters\n    eps_base_name=$(echo "$path_without_ext" | tr \'/\' \'-\' | tr -d \'():=\')\n    eps_filename="${eps_base_name}.eps"\n\n    # Get original filename for download\n    original_filename=$(basename "$url")\n    original_filename="${original_filename%%\\?*}"\n\n    echo "Processing: $url"\n    echo "  Path after domain: $path_after_domain"\n    echo "  Path without ext: $path_without_ext"\n    echo "  EPS base name: $eps_base_name"\n    echo "  Downloading as: $original_filename"\n    echo "  EPS filename: $eps_filename"\n\n    # Download the image\n    if curl -s -L -o "$OUTPUT_DIR/$original_filename" "$url"; then\n        echo "  Converting to EPS..."\n\n        # Convert to EPS using ImageMagick\n        if convert "$OUTPUT_DIR/$original_filename" -compress lzw "$OUTPUT_DIR/$eps_filename" 2>/dev/null; then\n            echo "  ✓ Successfully converted to EPS"\n\n            # Replace URL with EPS filename in the temporary file\n            # Use perl for more reliable replacement\n            perl -i -pe "s|\\Q$url\\E|$eps_filename|g" "$TEMP_FILE"\n            echo "  ✓ Replaced URL in LaTeX file"\n\n            # Remove the original downloaded file\n            rm "$OUTPUT_DIR/$original_filename"\n        else\n            echo "  ✗ Failed to convert to EPS"\n            rm "$OUTPUT_DIR/$original_filename"\n        fi\n    else\n        echo "  ✗ Failed to download"\n    fi\n    echo\ndone\n\n# Replace the original file with the modified one\nmv "$TEMP_FILE" "$INPUT_FILE"\n\n# Count results\neps_count=$(find "$OUTPUT_DIR" -name "*.eps" -type f | wc -l)\necho "Completed! Created $eps_count EPS files in $OUTPUT_DIR"\necho "LaTeX file has been updated with local EPS references"\n\n# Check if pdflatex is installed\nif command -v pdflatex &> /dev/null; then\n    echo\n    echo "Running pdflatex on $INPUT_FILE..."\n\n    # Get base filename without extension\n    BASE_NAME="${INPUT_FILE%.tex}"\n\n    # Run pdflatex twice (for references, TOC, etc.)\n    for i in 1 2; do\n        echo "Pass $i of 2..."\n        if pdflatex -interaction=nonstopmode "$INPUT_FILE" > /dev/null 2>&1; then\n            echo "  ✓ Pass $i completed"\n        else\n            echo "  ✗ Pass $i failed"\n            echo "  Check the .log file for errors"\n        fi\n    done\n\n    if [ -f "${BASE_NAME}.pdf" ]; then\n        echo "✓ PDF generated: ${BASE_NAME}.pdf"\n    fi\nelse\n    echo "Warning: pdflatex not found. Skipping PDF generation."\nfi\n\n# Cleanup auxiliary files\necho\necho "Cleaning up auxiliary files..."\nrm -f *.aux *.log *.toc *.out *.synctex.gz *.fls *.fdb_latexmk\n\necho "Done!"\n';
+var $author$project$AppData$processImagesText = '\n#!/bin/bash\n\n # Usage:\n #\n # sh ./process_images.sh <input_file> : gives a way\n #\n # Purpose: process LaTeX exported from scripta files that contain images,\n # first creating a corresponding LaTeX file, then\n # a pdf file.\n #\n # Prerequisite software installation:\n # - ImageMagick (for converting images to EPS)\n # - pdflatex (for making PDFs LaTeX files)\n #\n # Setup:\n # Make a folder call "tex" and make a subfolder "image" in it.\n # Put this script in the "tex" folder.\n # Put your file downloaded from Scripta Live or Scripta.io in the "tex" folder.\n # Run the script with the same filename as an argument: `sh ./process_file.sh myfile.tex`\n #\n # Plans:\n # This work will be automated in the near future, so that you can just\n # Press a button to do all the work\n #\n # Detail: the script processes its inputs follows:\n # First, it examines the file, finding all urls pointing to images (JPEG or PNG).\n # Next, it downloads the corresponding images, constructing a filename for each\n # image based on its URL, and converts them to EPS format using ImageMagick.\n # These images are then stored in the directory "./image". The URLS in the\n # original LaTeX file are replaced with the local EPS filenames.\n\n\n# Check if correct number of arguments provided\nif [ $# -ne 1 ]; then\n    echo "Usage: $0 <input_file>"\n    echo "Example: $0 document.tex"\n    exit 1\nfi\n\nINPUT_FILE="$1"\n\n# Check if input file exists in current directory\nif [ ! -f "$INPUT_FILE" ]; then\n    echo "Error: File $INPUT_FILE not found in current directory"\n    exit 1\nfi\n\n# Create output directory\nOUTPUT_DIR="./image"\nmkdir -p "$OUTPUT_DIR"\n\n# Check if ImageMagick is installed\nif ! command -v convert &> /dev/null; then\n    echo "Error: ImageMagick is not installed. Please install it first."\n    exit 1\nfi\n\n# Create a temporary file for the modified LaTeX\nTEMP_FILE=$(mktemp)\ncp "$INPUT_FILE" "$TEMP_FILE"\n\necho "Searching for image URLs in $INPUT_FILE..."\necho "Output directory: $OUTPUT_DIR"\necho\n\n# Extract URLs ending with .jpg, .jpeg, or .png\n# Using grep with extended regex to find URLs (including those with spaces before them)\ngrep -Eo \'https?://[^"{}]+\\.(jpg|jpeg|png)(\\?[^"{}]*)?\' "$INPUT_FILE" | sort -u | while read -r url; do\n    # Remove query parameters if present\n    url_without_query="${url%%\\?*}"\n\n    # Extract path after domain\n    # Remove protocol and domain to get just the path\n    path_after_domain=$(echo "$url_without_query" | sed -E \'s|https?://[^/]*/?||\')\n    # Remove file extension\n    path_without_ext="${path_after_domain%.*}"\n    # Replace slashes with hyphens and remove special characters\n    eps_base_name=$(echo "$path_without_ext" | tr \'/\' \'-\' | tr -d \'():=\')\n    eps_filename="${eps_base_name}.eps"\n\n    # Get original filename for download\n    original_filename=$(basename "$url")\n    original_filename="${original_filename%%\\?*}"\n\n    echo "Processing: $url"\n    echo "  Path after domain: $path_after_domain"\n    echo "  Path without ext: $path_without_ext"\n    echo "  EPS base name: $eps_base_name"\n    echo "  Downloading as: $original_filename"\n    echo "  EPS filename: $eps_filename"\n\n    # Download the image\n    if curl -s -L -o "$OUTPUT_DIR/$original_filename" "$url"; then\n        echo "  Converting to EPS..."\n\n        # Convert to EPS using ImageMagick\n        if convert "$OUTPUT_DIR/$original_filename" -compress lzw "$OUTPUT_DIR/$eps_filename" 2>/dev/null; then\n            echo "  ✓ Successfully converted to EPS"\n\n            # Replace URL with EPS filename in the temporary file\n            # Use perl for more reliable replacement\n            perl -i -pe "s|\\Q$url\\E|$eps_filename|g" "$TEMP_FILE"\n            echo "  ✓ Replaced URL in LaTeX file"\n\n            # Remove the original downloaded file\n            rm "$OUTPUT_DIR/$original_filename"\n        else\n            echo "  ✗ Failed to convert to EPS"\n            rm "$OUTPUT_DIR/$original_filename"\n        fi\n    else\n        echo "  ✗ Failed to download"\n    fi\n    echo\ndone\n\n# Replace the original file with the modified one\nmv "$TEMP_FILE" "$INPUT_FILE"\n\n# Count results\neps_count=$(find "$OUTPUT_DIR" -name "*.eps" -type f | wc -l)\necho "Completed! Created $eps_count EPS files in $OUTPUT_DIR"\necho "LaTeX file has been updated with local EPS references"\n\n# Check if pdflatex is installed\nif command -v pdflatex &> /dev/null; then\n    echo\n    echo "Running pdflatex on $INPUT_FILE..."\n\n    # Get base filename without extension\n    BASE_NAME="${INPUT_FILE%.tex}"\n\n    # Run pdflatex twice (for references, TOC, etc.)\n    for i in 1 2; do\n        echo "Pass $i of 2..."\n        if pdflatex -interaction=nonstopmode "$INPUT_FILE" > /dev/null 2>&1; then\n            echo "  ✓ Pass $i completed"\n        else\n            echo "  ✗ Pass $i failed"\n            echo "  Check the .log file for errors"\n        fi\n    done\n\n    if [ -f "${BASE_NAME}.pdf" ]; then\n        echo "✓ PDF generated: ${BASE_NAME}.pdf"\n    fi/\nelse\n    echo "Warning: pdflatex not found. Skipping PDF generation."\nfi\n\n# Cleanup auxiliary files\necho\necho "Cleaning up auxiliary files..."\nrm -f *.aux *.log *.toc *.out *.synctex.gz *.fls *.fdb_latexmk\n\necho "Done!"\n';
 var $elm_community$list_extra$List$Extra$indexedFoldr = F3(
 	function (func, acc, list) {
 		var step = F2(

@@ -5849,6 +5849,7 @@ var $elm$core$Basics$composeL = F3(
 			f(x));
 	});
 var $author$project$Storage$SQLite$init = {dbReady: false, initialized: false};
+var $author$project$Common$Model$Alphabetical = {$: 'Alphabetical'};
 var $author$project$Theme$Dark = {$: 'Dark'};
 var $author$project$ScriptaV2$Language$EnclosureLang = {$: 'EnclosureLang'};
 var $author$project$Theme$Light = {$: 'Light'};
@@ -8897,7 +8898,7 @@ var $elm$core$List$isEmpty = function (xs) {
 var $author$project$MicroLaTeX$PrimitiveBlock$Filled = {$: 'Filled'};
 var $author$project$MicroLaTeX$PrimitiveBlock$Started = {$: 'Started'};
 var $author$project$MicroLaTeX$PrimitiveBlock$verbatimBlockNames = _List_fromArray(
-	['equation', 'table', 'array', 'textarray', 'aligned', 'math', 'code', 'verbatim', 'verse', 'mathmacros', 'textmacros', 'hide', 'docinfo', 'csvtable', 'chart', 'svg', 'quiver', 'image', 'tikz', 'load-files', 'include', 'iframe']);
+	['equation', 'table', 'array', 'textarray', 'align', 'aligned', 'math', 'code', 'verbatim', 'figure', 'verse', 'mathmacros', 'textmacros', 'hide', 'docinfo', 'csvtable', 'chart', 'svg', 'quiver', 'image', 'tikz', 'load-files', 'include', 'iframe']);
 var $author$project$MicroLaTeX$PrimitiveBlock$getHeading = function (str) {
 	var _v0 = $author$project$MicroLaTeX$ClassifyBlock$classify(str);
 	switch (_v0.$) {
@@ -9851,7 +9852,7 @@ var $author$project$MicroLaTeX$PrimitiveBlock$finishBlock = F2(
 		}
 	});
 var $author$project$MicroLaTeX$PrimitiveBlock$verbatimBlocks = _List_fromArray(
-	['table', 'textarray', 'array', 'code', 'equation', 'aligned', 'verbatim']);
+	['table', 'textarray', 'array', 'code', 'equation', 'align', 'aligned', 'verbatim', 'figure']);
 var $author$project$MicroLaTeX$PrimitiveBlock$endBlockOnMismatch = F4(
 	function (label_, classifier, line, state) {
 		var _v0 = $elm_community$list_extra$List$Extra$uncons(state.stack);
@@ -10444,6 +10445,7 @@ var $author$project$MicroLaTeX$PrimitiveBlock$plainText = F2(
 							$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('equation'),
 							$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('array'),
 							$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('textarray'),
+							$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('align'),
 							$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('aligned')
 						])))) ? $author$project$MicroLaTeX$PrimitiveBlock$Loop(
 					A5($author$project$MicroLaTeX$PrimitiveBlock$dispatchBeginBlock, state.idPrefix, state.outerCount, $author$project$MicroLaTeX$ClassifyBlock$CPlainText, currentLine, state)) : $author$project$MicroLaTeX$PrimitiveBlock$Loop(state);
@@ -10533,6 +10535,29 @@ var $author$project$MicroLaTeX$PrimitiveBlock$nexStepAux = F3(
 					_List_fromArray(
 						[
 							$elm$core$Maybe$Just(
+							$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('align')),
+							$elm$core$Maybe$Just(
+							$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('aligned'))
+						])) ? $author$project$MicroLaTeX$PrimitiveBlock$Loop(
+					A4(
+						$author$project$MicroLaTeX$PrimitiveBlock$endBlockOnMatch,
+						$elm$core$Maybe$Nothing,
+						$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('align'),
+						currentLine,
+						_Utils_update(
+							state,
+							{label: 'CEndBlock 4'}))) : (A2(
+					$elm$core$List$member,
+					A2(
+						$elm$core$Maybe$map,
+						function ($) {
+							return $.classification;
+						},
+						$elm$core$List$head(
+							$elm$core$List$reverse(state.labelStack))),
+					_List_fromArray(
+						[
+							$elm$core$Maybe$Just(
 							$author$project$MicroLaTeX$ClassifyBlock$CBeginBlock('aligned'))
 						])) ? $author$project$MicroLaTeX$PrimitiveBlock$Loop(
 					A4(
@@ -10542,7 +10567,7 @@ var $author$project$MicroLaTeX$PrimitiveBlock$nexStepAux = F3(
 						currentLine,
 						_Utils_update(
 							state,
-							{label: 'CEndBlock 4'}))) : (A2(
+							{label: 'CEndBlock 4a'}))) : (A2(
 					$elm$core$List$member,
 					A2(
 						$elm$core$Maybe$map,
@@ -10611,7 +10636,7 @@ var $author$project$MicroLaTeX$PrimitiveBlock$nexStepAux = F3(
 					currentLine,
 					_Utils_update(
 						state,
-						{label: 'CEndBlock 5'})))))));
+						{label: 'CEndBlock 5'}))))))));
 			case 'CSpecialBlock':
 				var label = _v0.a;
 				var _v3 = _Utils_Tuple2(label, currentLine.lineNumber);
@@ -19576,9 +19601,12 @@ var $author$project$ETeX$Transform$convertToETeXMathExpr = function (expr) {
 			return $author$project$ETeX$MathMacros$RightParen;
 		case 'Comma':
 			return $author$project$ETeX$MathMacros$Comma;
-		default:
+		case 'Text':
 			var str = expr.a;
 			return $author$project$ETeX$MathMacros$MathSymbols(str);
+		default:
+			var str = expr.a;
+			return $author$project$ETeX$MathMacros$AlphaNum('\\' + str);
 	}
 };
 var $author$project$ETeX$Transform$ExpectingBackslash = {$: 'ExpectingBackslash'};
@@ -19765,6 +19793,26 @@ var $author$project$ETeX$Transform$commaParser = A2(
 	$elm$parser$Parser$Advanced$succeed($author$project$ETeX$Transform$Comma),
 	$elm$parser$Parser$Advanced$symbol(
 		A2($elm$parser$Parser$Advanced$Token, ',', $author$project$ETeX$Transform$ExpectingComma)));
+var $author$project$ETeX$Transform$ExpectingGreekLetter = {$: 'ExpectingGreekLetter'};
+var $elm$parser$Parser$Advanced$problem = function (x) {
+	return $elm$parser$Parser$Advanced$Parser(
+		function (s) {
+			return A2(
+				$elm$parser$Parser$Advanced$Bad,
+				false,
+				A2($elm$parser$Parser$Advanced$fromState, s, x));
+		});
+};
+var $author$project$ETeX$Transform$greekSymbolParser = A2(
+	$elm$parser$Parser$Advanced$andThen,
+	function (str) {
+		return A2($elm$core$List$member, str, $author$project$ETeX$KaTeX$greekLetters) ? $elm$parser$Parser$Advanced$succeed(
+			$author$project$ETeX$Transform$AlphaNum('\\' + str)) : $elm$parser$Parser$Advanced$problem($author$project$ETeX$Transform$ExpectingGreekLetter);
+	},
+	A2(
+		$elm$parser$Parser$Advanced$keeper,
+		$elm$parser$Parser$Advanced$succeed($elm$core$Basics$identity),
+		$author$project$ETeX$Transform$alphaNumParser_));
 var $elm$parser$Parser$Advanced$lazy = function (thunk) {
 	return $elm$parser$Parser$Advanced$Parser(
 		function (s) {
@@ -20282,13 +20330,14 @@ var $author$project$ETeX$Transform$mathExprParser = function (userMacroDict) {
 		_List_fromArray(
 			[
 				$author$project$ETeX$Transform$textParser,
+				$elm$parser$Parser$Advanced$backtrackable($author$project$ETeX$Transform$greekSymbolParser),
 				$author$project$ETeX$Transform$mathMediumSpaceParser,
 				$author$project$ETeX$Transform$mathSmallSpaceParser,
 				$author$project$ETeX$Transform$mathSpaceParser,
 				$author$project$ETeX$Transform$leftBraceParser,
 				$author$project$ETeX$Transform$rightBraceParser,
-				$author$project$ETeX$Transform$macroParser(userMacroDict),
 				$author$project$ETeX$Transform$alphaNumWithLookaheadParser(userMacroDict),
+				$author$project$ETeX$Transform$macroParser(userMacroDict),
 				$elm$parser$Parser$Advanced$lazy(
 				function (_v1) {
 					return $author$project$ETeX$Transform$standaloneParenthExprParser(userMacroDict);
@@ -22846,6 +22895,7 @@ var $author$project$Common$Model$initCommon = function (flags) {
 					((((flags.window.windowWidth - 230) - ((flags.window.windowWidth >= 1000) ? 221 : 0)) - 3) / 2) | 0) - 40)
 		},
 		doSync: false,
+		documentSearchText: '',
 		documents: _List_Nil,
 		editRecord: A3($author$project$ScriptaV2$DifferentialCompiler$init, $elm$core$Dict$empty, $author$project$ScriptaV2$Language$EnclosureLang, ''),
 		editorData: {begin: 0, end: 0},
@@ -22866,6 +22916,7 @@ var $author$project$Common$Model$initCommon = function (flags) {
 		selectId: '',
 		selectedId: '',
 		showDocumentList: false,
+		sortOrder: $author$project$Common$Model$Alphabetical,
 		sourceText: '',
 		targetData: $elm$core$Maybe$Nothing,
 		theme: theme,
@@ -23862,9 +23913,16 @@ var $author$project$Common$Model$GeneratedId = function (a) {
 var $author$project$Common$Model$InputText = function (a) {
 	return {$: 'InputText', a: a};
 };
+var $author$project$MainSQLite$LaTeXFileLoaded = function (a) {
+	return {$: 'LaTeXFileLoaded', a: a};
+};
+var $author$project$MainSQLite$LaTeXFileSelected = function (a) {
+	return {$: 'LaTeXFileSelected', a: a};
+};
 var $author$project$Common$Model$LoadContentIntoEditorDelayed = {$: 'LoadContentIntoEditorDelayed'};
 var $author$project$Common$Model$PrintProcessing = {$: 'PrintProcessing'};
 var $author$project$Common$Model$PrintReady = {$: 'PrintReady'};
+var $author$project$Common$Model$Recent = {$: 'Recent'};
 var $author$project$Common$Model$ResetLoadFlag = {$: 'ResetLoadFlag'};
 var $author$project$Common$Model$SaveDocument = {$: 'SaveDocument'};
 var $author$project$Common$Model$SelectId = function (a) {
@@ -33117,6 +33175,9 @@ var $author$project$Render$Math$InlineMathMode = {$: 'InlineMathMode'};
 var $author$project$ETeX$Transform$Expr = function (a) {
 	return {$: 'Expr', a: a};
 };
+var $author$project$ETeX$Transform$GreekSymbol = function (a) {
+	return {$: 'GreekSymbol', a: a};
+};
 var $author$project$ETeX$Transform$LeftParen = {$: 'LeftParen'};
 var $author$project$ETeX$Transform$RightParen = {$: 'RightParen'};
 var $author$project$ETeX$Transform$convertFromETeXDeco = function (deco) {
@@ -33294,9 +33355,12 @@ var $author$project$ETeX$Transform$replaceParam_ = F3(
 				return $author$project$ETeX$Transform$RightParen;
 			case 'Comma':
 				return $author$project$ETeX$Transform$Comma;
-			default:
+			case 'MathSymbols':
 				var str = target.a;
 				return $author$project$ETeX$Transform$MathSymbols(str);
+			default:
+				var str = target.a;
+				return $author$project$ETeX$Transform$GreekSymbol(str);
 		}
 	});
 var $author$project$ETeX$Transform$replaceParam = F3(
@@ -33518,18 +33582,25 @@ var $author$project$ETeX$Transform$expandMacroWithDict = F2(
 				return $author$project$ETeX$Transform$RightParen;
 			case 'Comma':
 				return $author$project$ETeX$Transform$Comma;
-			default:
+			case 'MathSymbols':
 				var str = expr.a;
 				return $author$project$ETeX$Transform$MathSymbols(str);
+			default:
+				var str = expr.a;
+				return $author$project$ETeX$Transform$GreekSymbol(str);
 		}
 	});
+var $elm$core$Debug$log = _Debug_log;
 var $author$project$ETeX$Transform$parseWithDict = F2(
 	function (userMacroDict, str) {
 		return A2(
-			$elm$parser$Parser$Advanced$run,
-			$author$project$ETeX$Transform$many(
-				$author$project$ETeX$Transform$mathExprParser(userMacroDict)),
-			str);
+			$elm$core$Debug$log,
+			'EXPRS',
+			A2(
+				$elm$parser$Parser$Advanced$run,
+				$author$project$ETeX$Transform$many(
+					$author$project$ETeX$Transform$mathExprParser(userMacroDict)),
+				str));
 	});
 var $author$project$ETeX$Transform$parseManyWithDict = F2(
 	function (userMacroDict, str) {
@@ -33639,9 +33710,12 @@ var $author$project$ETeX$Transform$print = function (expr) {
 			var exprs = expr.a;
 			return $author$project$ETeX$Transform$encloseP(
 				$author$project$ETeX$Transform$printList(exprs));
-		default:
+		case 'Text':
 			var str = expr.a;
 			return '\\text{' + (str + '}');
+		default:
+			var str = expr.a;
+			return '\\' + str;
 	}
 };
 var $author$project$ETeX$Transform$printArgList = function (exprs) {
@@ -46710,15 +46784,6 @@ var $pablohirafuji$elm_syntax_highlight$SyntaxHighlight$Language$Helpers$delimit
 var $elm$parser$Parser$Problem = function (a) {
 	return {$: 'Problem', a: a};
 };
-var $elm$parser$Parser$Advanced$problem = function (x) {
-	return $elm$parser$Parser$Advanced$Parser(
-		function (s) {
-			return A2(
-				$elm$parser$Parser$Advanced$Bad,
-				false,
-				A2($elm$parser$Parser$Advanced$fromState, s, x));
-		});
-};
 var $elm$parser$Parser$problem = function (msg) {
 	return $elm$parser$Parser$Advanced$problem(
 		$elm$parser$Parser$Problem(msg));
@@ -51605,6 +51670,7 @@ var $author$project$ScriptaV2$DifferentialCompiler$editRecordToCompilerOutput = 
 			toc: toc
 		};
 	});
+var $elm$core$String$endsWith = _String_endsWith;
 var $author$project$Generic$ASTTools$expressionNames = function (forest) {
 	return $elm$core$List$sort(
 		$elm_community$list_extra$List$Extra$unique(
@@ -51834,7 +51900,7 @@ var $author$project$Generic$TextMacro$getTextMacroFunctionNames = function (str)
 								$author$project$Generic$TextMacro$buildDictionary(
 									$elm$core$String$lines(str)))))))));
 };
-var $author$project$Render$Export$Preamble$commands = '\n%% Commands\n\n\\newcommand{\\code}[1]{{\\tt #1}}\n\\newcommand{\\ellie}[1]{\\href{#1}{Link to Ellie}}\n% \\newcommand{\\image}[3]{\\includegraphics[width=3cm]{#1}}\n\n%% width=4truein,keepaspectratio]\n\n\n\\newcommand{\\imagecentercaptioned}[3]{\n   \\medskip\n   \\begin{figure}[htp]\n   \\centering\n    \\includegraphics[width=#2]{#1}\n    \\vglue0pt\n    \\caption{#3}\n    \\end{figure}\n    \\medskip\n}\n\n\\newcommand{\\imagecenter}[2]{\n   \\medskip\n   \\begin{figure}[htp]\n   \\centering\n    \\includegraphics[width=#2]{#1}\n    \\vglue0pt\n    \\end{figure}\n    \\medskip\n}\n\n\\newcommand{\\imagefloat}[4]{\n    \\begin{wrapfigure}{#4}{#2}\n    \\includegraphics[width=#2]{#1}\n    \\caption{#3}\n    \\end{wrapfigure}\n}\n\n\n\\newcommand{\\imagefloatright}[3]{\n    \\begin{wrapfigure}{R}{0.30\\textwidth}\n    \\includegraphics[width=0.30\\textwidth]{#1}\n    \\caption{#2}\n    \\end{wrapfigure}\n}\n\n\\newcommand{\\hide}[1]{}\n\n\n\\newcommand{\\imagefloatleft}[3]{\n    \\begin{wrapfigure}{L}{0.3-\\textwidth}\n    \\includegraphics[width=0.30\\textwidth]{#1}\n    \\caption{#2}\n    \\end{wrapfigure}\n}\n% Font style\n\\newcommand{\\italic}[1]{{\\sl #1}}\n\\newcommand{\\strong}[1]{{\\bf #1}}\n\\newcommand{\\strike}[1]{\\st{#1}}\n\n% Scripta\n\\newcommand{\\ilink}[2]{\\href{{https://scripta.io/s/#1}}{#2}}\n\\newcommand{\\markwith}[1]{}\n\\newcommand{\\anchor}[1]{#1}\n\n% Color\n\\newcommand{\\red}[1]{\\textcolor{red}{#1}}\n\\newcommand{\\blue}[1]{\\textcolor{blue}{#1}}\n\\newcommand{\\violet}[1]{\\textcolor{violet}{#1}}\n\\newcommand{\\highlight}[1]{\\hl{#1}}\n\\newcommand{\\note}[2]{\\textcolor{blue}{#1}{\\hl{#1}}}\n\n% WTF?\n\\newcommand{\\remote}[1]{\\textcolor{red}{#1}}\n\\newcommand{\\local}[1]{\\textcolor{blue}{#1}}\n\n% Unclassified\n\\newcommand{\\subheading}[1]{{\\bf #1}\\par}\n\\newcommand{\\term}[1]{{\\sl #1}}\n\\newcommand{\\termx}[1]{}\n\\newcommand{\\comment}[1]{}\n\\newcommand{\\innertableofcontents}{}\n\n\n% Special character\n\\newcommand{\\dollarSign}[0]{{\\$}}\n\\newcommand{\\backTick}[0]{\\`{}}\n\n%% Theorems\n\\newtheorem{remark}{Remark}\n\\newtheorem{theorem}{Theorem}\n\\newtheorem{axiom}{Axiom}\n\\newtheorem{lemma}{Lemma}\n\\newtheorem{proposition}{Proposition}\n\\newtheorem{corollary}{Corollary}\n\\newtheorem{definition}{Definition}\n\\newtheorem{example}{Example}\n\\newtheorem{exercise}{Exercise}\n\\newtheorem{problem}{Problem}\n\\newtheorem{exercises}{Exercises}\n\\newcommand{\\bs}[1]{$\\backslash$#1}\n\\newcommand{\\texarg}[1]{\\{#1\\}}\n\n\n%% Environments\n\\renewenvironment{quotation}\n  {\\begin{adjustwidth}{2cm}{} \\footnotesize}\n  {\\end{adjustwidth}}\n\n\\def\\changemargin#1#2{\\list{}{\\rightmargin#2\\leftmargin#1}\\item[]}\n\\let\\endchangemargin=\\endlist\n\n\\renewenvironment{indent}\n  {\\begin{adjustwidth}{0.75cm}{}}\n  {\\end{adjustwidth}}\n\n\n%% NEWCOMMAND\n\n% \\definecolor{mypink1}{rgb}{0.858, 0.188, 0.478}\n% \\definecolor{mypink2}{RGB}{219, 48, 122}\n\\newcommand{\\fontRGB}[4]{\n    \\definecolor{mycolor}{RGB}{#1, #2, #3}\n    \\textcolor{mycolor}{#4}\n    }\n\n\\newcommand{\\highlightRGB}[4]{\n    \\definecolor{mycolor}{RGB}{#1, #2, #3}\n    \\sethlcolor{mycolor}\n    \\hl{#4}\n     \\sethlcolor{yellow}\n    }\n\n\\newcommand{\\gray}[2]{\n\\definecolor{mygray}{gray}{#1}\n\\textcolor{mygray}{#2}\n}\n\n\\newcommand{\\white}[1]{\\gray{1}[#1]}\n\\newcommand{\\medgray}[1]{\\gray{0.5}[#1]}\n\\newcommand{\\black}[1]{\\gray{0}[#1]}\n\n% Spacing\n\\parindent0pt\n\\parskip5pt\n\n';
+var $author$project$Render$Export$Preamble$commands = '\n%% Commands\n\n\\newcommand{\\hang}[1]{%\n  {%\n    \\setlength{\\leftskip}{1em}%\n    \\setlength{\\hangindent}{1em}%\n    \\hangafter=1 %\n    #1\\ \\vpace{4}%\n  }%\n}\n\n\\renewcommand{\\labelitemi}{\\scalebox{0.7}{\\textbullet}}\n\n% Dot box = 1em, gap = 1em → total = 2em\n\\newcommand{\\compactItem}[1]{%\n  \\par\n\\noindent\n  \\hangindent=2em \\hangafter=1%\n  \\makebox[1em][l]{\\labelitemi}\\hspace{1em}#1\\par\n}\n\n\\newcommand{\\code}[1]{{\\tt #1}}\n\\newcommand{\\ellie}[1]{\\href{#1}{Link to Ellie}}\n% \\newcommand{\\image}[3]{\\includegraphics[width=3cm]{#1}}\n\n%% width=4truein,keepaspectratio]\n\n\n% imagecentercaptioned command removed - using standard figure environment instead\n\n\\newcommand{\\imagecenter}[2]{\n   \\medskip\n   \\begin{figure}[htp]\n   \\centering\n    \\includegraphics[width=#2]{#1}\n    \\vglue0pt\n    \\end{figure}\n    \\medskip\n}\n\n\\newcommand{\\imagefloat}[4]{\n    \\begin{wrapfigure}{#4}{#2}\n    \\includegraphics[width=#2]{#1}\n    \\caption{#3}\n    \\end{wrapfigure}\n}\n\n\n\\newcommand{\\imagefloatright}[3]{\n    \\begin{wrapfigure}{R}{0.30\\textwidth}\n    \\includegraphics[width=0.30\\textwidth]{#1}\n    \\caption{#2}\n    \\end{wrapfigure}\n}\n\n\\newcommand{\\hide}[1]{}\n\n\n\\newcommand{\\imagefloatleft}[3]{\n    \\begin{wrapfigure}{L}{0.3-\\textwidth}\n    \\includegraphics[width=0.30\\textwidth]{#1}\n    \\caption{#2}\n    \\end{wrapfigure}\n}\n% Font style\n\\newcommand{\\italic}[1]{{\\sl #1}}\n\\newcommand{\\strong}[1]{{\\bf #1}}\n\\newcommand{\\strike}[1]{\\st{#1}}\n\n% Scripta\n\\newcommand{\\ilink}[2]{\\href{{https://scripta.io/s/#1}}{#2}}\n\\newcommand{\\markwith}[1]{}\n\\newcommand{\\anchor}[1]{#1}\n\n% Color\n\\newcommand{\\red}[1]{\\textcolor{red}{#1}}\n\\newcommand{\\blue}[1]{\\textcolor{blue}{#1}}\n\\newcommand{\\violet}[1]{\\textcolor{violet}{#1}}\n\\newcommand{\\highlight}[1]{\\hl{#1}}\n\\newcommand{\\note}[2]{\\textcolor{blue}{#1}{\\hl{#1}}}\n\n% WTF?\n\\newcommand{\\remote}[1]{\\textcolor{red}{#1}}\n\\newcommand{\\local}[1]{\\textcolor{blue}{#1}}\n\n% Unclassified\n\\newcommand{\\subheading}[1]{{\\bf #1}\\par}\n\\newcommand{\\term}[1]{{\\sl #1}}\n\\newcommand{\\termx}[1]{}\n\\newcommand{\\comment}[1]{}\n\\newcommand{\\innertableofcontents}{}\n\n\n% Special character\n\\newcommand{\\dollarSign}[0]{{\\$}}\n\\newcommand{\\backTick}[0]{\\`{}}\n\n%% Theorems\n\\newtheorem{remark}{Remark}\n\\newtheorem{theorem}{Theorem}\n\\newtheorem{axiom}{Axiom}\n\\newtheorem{lemma}{Lemma}\n\\newtheorem{proposition}{Proposition}\n\\newtheorem{corollary}{Corollary}\n\\newtheorem{definition}{Definition}\n\\newtheorem{example}{Example}\n\\newtheorem{exercise}{Exercise}\n\\newtheorem{problem}{Problem}\n\\newtheorem{exercises}{Exercises}\n\\newcommand{\\bs}[1]{$\\backslash$#1}\n\\newcommand{\\texarg}[1]{\\{#1\\}}\n\n\n%% Environments\n\\renewenvironment{quotation}\n  {\\begin{adjustwidth}{2cm}{} \\footnotesize}\n  {\\end{adjustwidth}}\n\n\\def\\changemargin#1#2{\\list{}{\\rightmargin#2\\leftmargin#1}\\item[]}\n\\let\\endchangemargin=\\endlist\n\n\\renewenvironment{indent}\n  {\\begin{adjustwidth}{0.75cm}{}}\n  {\\end{adjustwidth}}\n\n\n%% NEWCOMMAND\n\n% \\definecolor{mypink1}{rgb}{0.858, 0.188, 0.478}\n% \\definecolor{mypink2}{RGB}{219, 48, 122}\n\\newcommand{\\fontRGB}[4]{\n    \\definecolor{mycolor}{RGB}{#1, #2, #3}\n    \\textcolor{mycolor}{#4}\n    }\n\n\\newcommand{\\highlightRGB}[4]{\n    \\definecolor{mycolor}{RGB}{#1, #2, #3}\n    \\sethlcolor{mycolor}\n    \\hl{#4}\n     \\sethlcolor{yellow}\n    }\n\n\\newcommand{\\gray}[2]{\n\\definecolor{mygray}{gray}{#1}\n\\textcolor{mygray}{#2}\n}\n\n\\newcommand{\\white}[1]{\\gray{1}[#1]}\n\\newcommand{\\medgray}[1]{\\gray{0.5}[#1]}\n\\newcommand{\\black}[1]{\\gray{0}[#1]}\n\n% Spacing\n\\parindent0pt\n\\parskip5pt\n\n';
 var $author$project$Render$Export$Preamble$newPackageText = function (packagesNeeded_) {
 	return A2(
 		$elm$core$String$join,
@@ -51942,7 +52008,7 @@ var $author$project$Render$Export$Preamble$packagesNeeded = function (names) {
 		$elm_community$list_extra$List$Extra$unique(
 			$author$project$Render$Export$Preamble$newPackageList(names)));
 };
-var $author$project$Render$Export$Preamble$standardPackages = '\n%% Packages\n\n%% Standard packages\n\\usepackage{geometry}\n\\geometry{letterpaper}\n\\usepackage{changepage}   % for the adjustwidth environment\n\n%% AMS\n\\usepackage{amssymb}\n\\usepackage{amsmath}\n\n\\usepackage{amscd}\n\n\\usepackage{fancyvrb} %% for inline verbatim\n';
+var $author$project$Render$Export$Preamble$standardPackages = '\n%% Packages\n\n%% Standard packages\n\\usepackage{geometry}\n\\geometry{letterpaper}\n\\usepackage{changepage}  % for the adjustwidth environment\n\\usepackage{graphicx}    % for \\includegraphics\n\n%% AMS\n\\usepackage{amssymb}\n\\usepackage{amsmath}\n\n\\usepackage{amscd}\n\n\\usepackage{fancyvrb} %% for inline verbatim\n';
 var $author$project$Render$Export$Preamble$addCode = F4(
 	function (packagesInDocument, _package, codeText, accumulatedCodeText) {
 		return A2($elm$core$List$member, _package, packagesInDocument) ? (codeText + ('\n\n' + accumulatedCodeText)) : accumulatedCodeText;
@@ -52034,9 +52100,6 @@ var $author$project$Generic$BlockUtilities$condenseUrls = function (block) {
 	}
 };
 var $author$project$Render$Export$LaTeX$OutsideList = {$: 'OutsideList'};
-var $author$project$Render$Export$LaTeX$InsideDescriptionList = {$: 'InsideDescriptionList'};
-var $author$project$Render$Export$LaTeX$InsideItemizedList = {$: 'InsideItemizedList'};
-var $author$project$Render$Export$LaTeX$InsideNumberedList = {$: 'InsideNumberedList'};
 var $author$project$Generic$Language$expressionBlockEmpty = {
 	args: _List_Nil,
 	body: $toastal$either$Either$Right(_List_Nil),
@@ -52048,69 +52111,6 @@ var $author$project$Generic$Language$expressionBlockEmpty = {
 	style: $elm$core$Maybe$Nothing
 };
 var $author$project$Render$Export$LaTeX$emptyExpressionBlock = $author$project$Generic$Language$expressionBlockEmpty;
-var $author$project$Render$Export$LaTeX$beginDescriptionBlock = A2(
-	$author$project$Generic$BlockUtilities$updateMeta,
-	function (m) {
-		return _Utils_update(
-			m,
-			{numberOfLines: 2, sourceText: '| beginBlock\ndescription'});
-	},
-	_Utils_update(
-		$author$project$Render$Export$LaTeX$emptyExpressionBlock,
-		{
-			body: $toastal$either$Either$Right(
-				_List_fromArray(
-					[
-						A2(
-						$author$project$Generic$Language$Text,
-						'description',
-						{begin: 0, end: 7, id: 'begin', index: 0})
-					])),
-			heading: $author$project$Generic$Language$Ordinary('beginDescriptionBlock'),
-			indent: 1
-		}));
-var $author$project$Render$Export$LaTeX$beginItemizedBlock = A2(
-	$author$project$Generic$BlockUtilities$updateMeta,
-	function (m) {
-		return _Utils_update(
-			m,
-			{numberOfLines: 2, sourceText: '| beginBlock\nitemize'});
-	},
-	_Utils_update(
-		$author$project$Render$Export$LaTeX$emptyExpressionBlock,
-		{
-			body: $toastal$either$Either$Right(
-				_List_fromArray(
-					[
-						A2(
-						$author$project$Generic$Language$Text,
-						'itemize',
-						{begin: 0, end: 7, id: '', index: 0})
-					])),
-			heading: $author$project$Generic$Language$Ordinary('beginBlock'),
-			indent: 1
-		}));
-var $author$project$Render$Export$LaTeX$beginNumberedBlock = A2(
-	$author$project$Generic$BlockUtilities$updateMeta,
-	function (m) {
-		return _Utils_update(
-			m,
-			{numberOfLines: 2, sourceText: '| beginBlock\nitemize'});
-	},
-	_Utils_update(
-		$author$project$Render$Export$LaTeX$emptyExpressionBlock,
-		{
-			body: $toastal$either$Either$Right(
-				_List_fromArray(
-					[
-						A2(
-						$author$project$Generic$Language$Text,
-						'enumerate',
-						{begin: 0, end: 7, id: 'begin', index: 0})
-					])),
-			heading: $author$project$Generic$Language$Ordinary('beginNumberedBlock'),
-			indent: 1
-		}));
 var $author$project$Render$Export$LaTeX$endDescriptionBlock = A2(
 	$author$project$Generic$BlockUtilities$updateMeta,
 	function (m) {
@@ -52172,6 +52172,72 @@ var $author$project$Render$Export$LaTeX$endNumberedBlock = A2(
 						{begin: 0, end: 7, id: 'begin', index: 0})
 					])),
 			heading: $author$project$Generic$Language$Ordinary('endNumberedBlock'),
+			indent: 1
+		}));
+var $author$project$Render$Export$LaTeX$InsideDescriptionList = {$: 'InsideDescriptionList'};
+var $author$project$Render$Export$LaTeX$InsideItemizedList = {$: 'InsideItemizedList'};
+var $author$project$Render$Export$LaTeX$InsideNumberedList = {$: 'InsideNumberedList'};
+var $author$project$Render$Export$LaTeX$beginDescriptionBlock = A2(
+	$author$project$Generic$BlockUtilities$updateMeta,
+	function (m) {
+		return _Utils_update(
+			m,
+			{numberOfLines: 2, sourceText: '| beginBlock\ndescription'});
+	},
+	_Utils_update(
+		$author$project$Render$Export$LaTeX$emptyExpressionBlock,
+		{
+			body: $toastal$either$Either$Right(
+				_List_fromArray(
+					[
+						A2(
+						$author$project$Generic$Language$Text,
+						'description',
+						{begin: 0, end: 7, id: 'begin', index: 0})
+					])),
+			heading: $author$project$Generic$Language$Ordinary('beginDescriptionBlock'),
+			indent: 1
+		}));
+var $author$project$Render$Export$LaTeX$beginItemizedBlock = A2(
+	$author$project$Generic$BlockUtilities$updateMeta,
+	function (m) {
+		return _Utils_update(
+			m,
+			{numberOfLines: 2, sourceText: '| beginBlock\nitemize'});
+	},
+	_Utils_update(
+		$author$project$Render$Export$LaTeX$emptyExpressionBlock,
+		{
+			body: $toastal$either$Either$Right(
+				_List_fromArray(
+					[
+						A2(
+						$author$project$Generic$Language$Text,
+						'itemize',
+						{begin: 0, end: 7, id: '', index: 0})
+					])),
+			heading: $author$project$Generic$Language$Ordinary('beginBlock'),
+			indent: 1
+		}));
+var $author$project$Render$Export$LaTeX$beginNumberedBlock = A2(
+	$author$project$Generic$BlockUtilities$updateMeta,
+	function (m) {
+		return _Utils_update(
+			m,
+			{numberOfLines: 2, sourceText: '| beginBlock\nitemize'});
+	},
+	_Utils_update(
+		$author$project$Render$Export$LaTeX$emptyExpressionBlock,
+		{
+			body: $toastal$either$Either$Right(
+				_List_fromArray(
+					[
+						A2(
+						$author$project$Generic$Language$Text,
+						'enumerate',
+						{begin: 0, end: 7, id: 'begin', index: 0})
+					])),
+			heading: $author$project$Generic$Language$Ordinary('beginNumberedBlock'),
 			indent: 1
 		}));
 var $author$project$Render$Export$LaTeX$nextState = F2(
@@ -52333,7 +52399,29 @@ var $author$project$Render$Export$LaTeX$nextState = F2(
 var $author$project$Render$Export$LaTeX$nextStep = function (state) {
 	var _v0 = $elm$core$List$head(state.input);
 	if (_v0.$ === 'Nothing') {
-		return $author$project$Tools$Loop$Done(state.output);
+		var _v1 = state.status;
+		switch (_v1.$) {
+			case 'InsideItemizedList':
+				return $author$project$Tools$Loop$Done(
+					A2(
+						$elm$core$List$cons,
+						$maca$elm_rose_tree$RoseTree$Tree$leaf($author$project$Render$Export$LaTeX$endItemizedBlock),
+						state.output));
+			case 'InsideNumberedList':
+				return $author$project$Tools$Loop$Done(
+					A2(
+						$elm$core$List$cons,
+						$maca$elm_rose_tree$RoseTree$Tree$leaf($author$project$Render$Export$LaTeX$endNumberedBlock),
+						state.output));
+			case 'InsideDescriptionList':
+				return $author$project$Tools$Loop$Done(
+					A2(
+						$elm$core$List$cons,
+						$maca$elm_rose_tree$RoseTree$Tree$leaf($author$project$Render$Export$LaTeX$endDescriptionBlock),
+						state.output));
+			default:
+				return $author$project$Tools$Loop$Done(state.output);
+		}
 	} else {
 		var tree = _v0.a;
 		return $author$project$Tools$Loop$Loop(
@@ -52341,11 +52429,26 @@ var $author$project$Render$Export$LaTeX$nextStep = function (state) {
 	}
 };
 var $author$project$Render$Export$LaTeX$encloseLists = function (blocks) {
+	var processedBlocks = A2($elm$core$List$map, $author$project$Render$Export$LaTeX$processTreeChildren, blocks);
 	return $elm$core$List$reverse(
 		A2(
 			$author$project$Tools$Loop$loop,
-			{input: blocks, itemNumber: 0, output: _List_Nil, status: $author$project$Render$Export$LaTeX$OutsideList},
+			{input: processedBlocks, itemNumber: 0, output: _List_Nil, status: $author$project$Render$Export$LaTeX$OutsideList},
 			$author$project$Render$Export$LaTeX$nextStep));
+};
+var $author$project$Render$Export$LaTeX$processTreeChildren = function (_v0) {
+	var block = _v0.a;
+	var children = _v0.b;
+	var childList = $elm$core$Array$toList(children);
+	var processedChildren = function () {
+		if (!childList.b) {
+			return $elm$core$Array$empty;
+		} else {
+			return $elm$core$Array$fromList(
+				$author$project$Render$Export$LaTeX$encloseLists(childList));
+		}
+	}();
+	return A2($maca$elm_rose_tree$RoseTree$Tree$Tree, block, processedChildren);
 };
 var $author$project$Render$Export$LaTeX$addTikzPictureClosing = F2(
 	function (flagUp, str) {
@@ -52371,6 +52474,16 @@ var $author$project$Render$Export$LaTeX$descriptionItem = F2(
 			return '\\item[' + (arg + (']{' + (body + '}')));
 		}
 	});
+var $author$project$Render$Utility$getArg = F3(
+	function (_default, index, args) {
+		var _v0 = A2($elm_community$list_extra$List$Extra$getAt, index, args);
+		if (_v0.$ === 'Nothing') {
+			return _default;
+		} else {
+			var a = _v0.a;
+			return a;
+		}
+	});
 var $author$project$Render$Export$LaTeX$functionDict = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
@@ -52387,9 +52500,11 @@ var $author$project$Render$Export$LaTeX$mapChars2 = function (str) {
 var $author$project$Render$Export$LaTeX$aliases = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
-			_Utils_Tuple2('i', 'italic'),
+			_Utils_Tuple2('i', 'textit'),
+			_Utils_Tuple2('italic', 'textit'),
 			_Utils_Tuple2('b', 'textbf'),
-			_Utils_Tuple2('bold', 'textbf')
+			_Utils_Tuple2('bold', 'textbf'),
+			_Utils_Tuple2('large', 'large')
 		]));
 var $author$project$Render$Export$LaTeX$unalias = function (str) {
 	var _v0 = A2($elm$core$Dict$get, str, $author$project$Render$Export$LaTeX$aliases);
@@ -52422,16 +52537,6 @@ var $author$project$Render$Export$LaTeX$macro1 = F2(
 					}
 				}
 			}
-		}
-	});
-var $author$project$Render$Utility$getArg = F3(
-	function (_default, index, args) {
-		var _v0 = A2($elm_community$list_extra$List$Extra$getAt, index, args);
-		if (_v0.$ === 'Nothing') {
-			return _default;
-		} else {
-			var a = _v0.a;
-			return a;
 		}
 	});
 var $author$project$Tools$Utility$removeNonAlphaNum = function (string) {
@@ -52639,7 +52744,7 @@ var $author$project$Render$Export$LaTeX$blockDict = function (mathMacroDict) {
 				'item',
 				F3(
 					function (_v38, _v39, body) {
-						return A2($author$project$Render$Export$LaTeX$macro1, 'item', body);
+						return '\\item ' + body;
 					})),
 				_Utils_Tuple2(
 				'itemList',
@@ -52657,7 +52762,7 @@ var $author$project$Render$Export$LaTeX$blockDict = function (mathMacroDict) {
 				'numbered',
 				F3(
 					function (_v43, _v44, body) {
-						return A2($author$project$Render$Export$LaTeX$macro1, 'item', body);
+						return '\\item ' + body;
 					})),
 				_Utils_Tuple2(
 				'desc',
@@ -52734,17 +52839,33 @@ var $author$project$Render$Export$LaTeX$environment = F2(
 					A2($author$project$Render$Export$LaTeX$tagged, 'end', name)
 				]));
 	});
+var $elm$core$String$filter = _String_filter;
 var $author$project$Render$Export$Image$exportCenteredFigure = F3(
 	function (url, options, caption) {
-		return (caption === 'none') ? A2(
-			$elm$core$String$join,
-			'',
-			_List_fromArray(
-				['\\imagecenter{', url, '}{' + (options + '}')])) : A2(
-			$elm$core$String$join,
-			'',
-			_List_fromArray(
-				['\\imagecentercaptioned{', url, '}{' + (options + ('}{' + (caption + '}')))]));
+		if ((caption === 'none') || (caption === '')) {
+			return A2(
+				$elm$core$String$join,
+				'',
+				_List_fromArray(
+					['\\begin{center}\n', '\\includegraphics[width=' + (options + (']{' + (url + '}\n'))), '\\end{center}']));
+		} else {
+			var label = A2(
+				$elm$core$String$filter,
+				$elm$core$Char$isAlphaNum,
+				$elm$core$String$toLower(
+					A2(
+						$elm$core$String$join,
+						'',
+						A2(
+							$elm$core$List$take,
+							2,
+							$elm$core$String$words(caption)))));
+			return A2(
+				$elm$core$String$join,
+				'',
+				_List_fromArray(
+					['\\begin{figure}[h]\n', '  \\centering\n', '  \\includegraphics[width=' + (options + (']{' + (url + '}\n'))), '  \\caption{' + (caption + '}\n'), '  \\label{fig:' + (label + '}\n'), '\\end{figure}']));
+		}
 	});
 var $author$project$Render$Export$Image$fractionaRescale = function (k) {
 	var f = $elm$core$String$fromFloat(k / 600.0);
@@ -52838,16 +52959,9 @@ var $author$project$Render$Export$Image$imageParametersForBlock = F2(
 var $author$project$Render$Export$Image$exportBlock = F2(
 	function (settings, block) {
 		var params = A2($author$project$Render$Export$Image$imageParametersForBlock, settings, block);
-		var options = A2(
-			$elm$core$String$join,
-			'',
-			_List_fromArray(
-				[params.fractionalWidth, ',keepaspectratio']));
-		return A3($author$project$Render$Export$Image$exportCenteredFigure, params.url, options, params.caption);
+		var widthOption = (params.fractionalWidth === '') ? '0.75\\textwidth' : params.fractionalWidth;
+		return A3($author$project$Render$Export$Image$exportCenteredFigure, params.url, widthOption, params.caption);
 	});
-var $author$project$Render$Export$LaTeX$encloseWithBraces = function (str_) {
-	return '{' + ($elm$core$String$trim(str_) + '}');
-};
 var $author$project$Render$Export$LaTeX$blindIndex = '';
 var $author$project$Render$Export$Util$getArgs = A2(
 	$elm$core$Basics$composeR,
@@ -52884,25 +52998,41 @@ var $author$project$Render$Export$LaTeX$dontRender = F2(
 	});
 var $author$project$Render$Export$Image$exportWrappedFigure = F4(
 	function (placement, url, options, caption) {
-		return A2(
-			$elm$core$String$join,
-			'',
-			_List_fromArray(
-				['\\imagefloat{', url, '}{' + (options + ('}{' + (caption + ('}{' + (placement + '}')))))]));
+		var placementChar = function () {
+			switch (placement) {
+				case 'L':
+					return 'l';
+				case 'R':
+					return 'r';
+				default:
+					return 'r';
+			}
+		}();
+		if ((caption === 'none') || (caption === '')) {
+			return A2(
+				$elm$core$String$join,
+				'',
+				_List_fromArray(
+					['\\begin{wrapfigure}{' + (placementChar + ('}{' + (options + '}\n'))), '\\centering\n', '\\includegraphics[width=' + (options + (']{' + (url + '}\n'))), '\\end{wrapfigure}']));
+		} else {
+			var label = A2(
+				$elm$core$String$filter,
+				$elm$core$Char$isAlphaNum,
+				$elm$core$String$toLower(
+					A2(
+						$elm$core$String$join,
+						'',
+						A2(
+							$elm$core$List$take,
+							2,
+							$elm$core$String$words(caption)))));
+			return A2(
+				$elm$core$String$join,
+				'',
+				_List_fromArray(
+					['\\begin{wrapfigure}{' + (placementChar + ('}{' + (options + '}\n'))), '\\centering\n', '\\includegraphics[width=' + (options + (']{' + (url + '}\n'))), '\\caption{' + (caption + '}\n'), '\\label{fig:' + (label + '}\n'), '\\end{wrapfigure}']));
+		}
 	});
-var $author$project$Render$Export$Image$fixWidth = function (w) {
-	return ((w === '') || (w === 'fill')) ? '500' : w;
-};
-var $author$project$Render$Export$Util$getOneArg = function (exprs) {
-	var _v0 = $elm$core$List$head(
-		$author$project$Render$Export$Util$getArgs(exprs));
-	if (_v0.$ === 'Nothing') {
-		return '';
-	} else {
-		var str = _v0.a;
-		return str;
-	}
-};
 var $author$project$Render$Export$Image$imageParameters = F2(
 	function (settings, body) {
 		var displayWidth = settings.width;
@@ -53018,23 +53148,8 @@ var $author$project$Render$Export$Image$imageParameters = F2(
 var $author$project$Render$Export$Image$export = F2(
 	function (s, exprs) {
 		var params = A2($author$project$Render$Export$Image$imageParameters, s, exprs);
-		var options = A2(
-			$elm$core$String$join,
-			'',
-			_List_fromArray(
-				[
-					$author$project$Render$Export$Image$fixWidth(params.width),
-					',keepaspectratio'
-				]));
-		var args = $elm$core$String$words(
-			$author$project$Render$Export$Util$getOneArg(exprs));
-		var _v0 = $elm$core$List$head(args);
-		if (_v0.$ === 'Nothing') {
-			return 'ERROR IN IMAGE';
-		} else {
-			var url_ = _v0.a;
-			return (params.placement === 'C') ? A3($author$project$Render$Export$Image$exportCenteredFigure, url_, options, params.caption) : A4($author$project$Render$Export$Image$exportWrappedFigure, params.placement, url_, params.fractionalWidth, params.caption);
-		}
+		var widthOption = (params.fractionalWidth === '') ? '0.75\\textwidth' : params.fractionalWidth;
+		return (params.url === 'no-image') ? 'ERROR IN IMAGE' : ((params.placement === 'C') ? A3($author$project$Render$Export$Image$exportCenteredFigure, params.url, widthOption, params.caption) : A4($author$project$Render$Export$Image$exportWrappedFigure, params.placement, params.url, params.fractionalWidth, params.caption));
 	});
 var $author$project$Render$Export$Util$getTwoArgs = function (exprs) {
 	var args = $author$project$Render$Export$Util$getArgs(exprs);
@@ -53067,6 +53182,16 @@ var $author$project$Render$Export$LaTeX$link = function (exprs) {
 		'',
 		_List_fromArray(
 			['\\href{', args.second, '}{', args.first, '}']));
+};
+var $author$project$Render$Export$Util$getOneArg = function (exprs) {
+	var _v0 = $elm$core$List$head(
+		$author$project$Render$Export$Util$getArgs(exprs));
+	if (_v0.$ === 'Nothing') {
+		return '';
+	} else {
+		var str = _v0.a;
+		return str;
+	}
 };
 var $author$project$Render$Export$LaTeX$markwith = function (exprs) {
 	var arg = $author$project$Render$Export$Util$getOneArg(exprs);
@@ -53323,9 +53448,12 @@ var $author$project$ETeX$Transform$resolveSymbolName = function (expr) {
 			var exprs = expr.a;
 			return $author$project$ETeX$Transform$Expr(
 				A2($elm$core$List$map, $author$project$ETeX$Transform$resolveSymbolName, exprs));
-		default:
+		case 'Text':
 			var str = expr.a;
 			return $author$project$ETeX$Transform$Text(str);
+		default:
+			var str = expr.a;
+			return $author$project$ETeX$Transform$Text('\\' + str);
 	}
 };
 var $author$project$ETeX$Transform$resolveSymbolNameInDeco = function (deco) {
@@ -53455,16 +53583,12 @@ var $author$project$Render$Export$LaTeX$exportExpr = F3(
 						var f = _v2.a;
 						return A2(f, settings, exps_);
 					} else {
-						return '\\' + ($author$project$Render$Export$LaTeX$unalias(name) + A2(
-							$elm$core$String$join,
-							'',
-							A2(
-								$elm$core$List$map,
-								A2(
-									$elm$core$Basics$composeL,
-									$author$project$Render$Export$LaTeX$encloseWithBraces,
-									A2($author$project$Render$Export$LaTeX$exportExpr, mathMacroDict, settings)),
-								exps_)));
+						var exportedExprs = A2(
+							$elm$core$List$map,
+							A2($author$project$Render$Export$LaTeX$exportExpr, mathMacroDict, settings),
+							exps_);
+						var combinedContent = A2($elm$core$String$join, '', exportedExprs);
+						return '\\' + ($author$project$Render$Export$LaTeX$unalias(name) + ('{' + (combinedContent + '}')));
 					}
 				}
 			case 'Text':
@@ -53885,19 +54009,49 @@ var $author$project$Render$Export$LaTeX$exportBlock = F3(
 										'\\end{equation}'
 									]));
 						case 'aligned':
-							var processedLines = A2(
-								$elm$core$String$join,
-								'\\\\\n',
+							var stripTrailingBackslashes = function (line) {
+								return A2($elm$core$String$endsWith, '\\\\', line) ? $elm$core$String$trimRight(
+									A2($elm$core$String$dropRight, 2, line)) : line;
+							};
+							var lines = A2(
+								$elm$core$List$map,
+								$author$project$MicroLaTeX$Util$transformLabel,
 								A2(
 									$elm$core$List$map,
-									$author$project$MicroLaTeX$Util$transformLabel,
+									$author$project$ETeX$Transform$transformETeX(mathMacroDict),
 									A2(
 										$elm$core$List$map,
-										$author$project$ETeX$Transform$transformETeX(mathMacroDict),
+										stripTrailingBackslashes,
 										A2(
-											$elm$core$List$map,
-											$elm$core$String$trim,
-											A2($elm$core$String$split, '\\\\', str)))));
+											$elm$core$List$filter,
+											function (line) {
+												return !$elm$core$String$isEmpty(line);
+											},
+											A2(
+												$elm$core$List$map,
+												$elm$core$String$trim,
+												$elm$core$String$lines(str))))));
+							var processedLines = function () {
+								var _v12 = $elm$core$List$reverse(lines);
+								if (!_v12.b) {
+									return '';
+								} else {
+									var lastLine = _v12.a;
+									var restReversed = _v12.b;
+									return A2(
+										$elm$core$String$join,
+										'\n',
+										_Utils_ap(
+											A2(
+												$elm$core$List$map,
+												function (line) {
+													return line + '\\\\';
+												},
+												$elm$core$List$reverse(restReversed)),
+											_List_fromArray(
+												[lastLine])));
+								}
+							}();
 							return A2(
 								$elm$core$String$join,
 								'\n',
@@ -54026,6 +54180,17 @@ var $author$project$Render$Export$LaTeX$exportBlock = F3(
 var $author$project$Generic$Language$getHeadingFromBlock = function (block) {
 	return block.heading;
 };
+var $author$project$Render$Export$LaTeX$indentNestedList = function (str) {
+	return A2(
+		$elm$core$String$join,
+		'\n',
+		A2(
+			$elm$core$List$map,
+			function (line) {
+				return '  ' + line;
+			},
+			$elm$core$String$lines(str)));
+};
 var $author$project$Render$Export$LaTeX$exportTree = F3(
 	function (mathMacroDict, settings, tree) {
 		var _v0 = $author$project$Generic$Language$getHeadingFromBlock(
@@ -54035,23 +54200,6 @@ var $author$project$Render$Export$LaTeX$exportTree = F3(
 			if (_v0.$ === 'Ordinary') {
 				switch (_v0.a) {
 					case 'itemList':
-						var hang = function (str) {
-							return '\\leftskip=1em\\hangindent=1em\n\\hangafter=1\n' + str;
-						};
-						var renderExprList = function (exprs) {
-							return A2(
-								$elm$core$String$join,
-								'\n\n',
-								A2(
-									$elm$core$List$map,
-									A2(
-										$elm$core$Basics$composeR,
-										A2($author$project$Render$Export$LaTeX$exportExpr, mathMacroDict, settings),
-										function (x) {
-											return ' •  ' + hang(x);
-										}),
-									exprs));
-						};
 						var exprList = function () {
 							var _v1 = $maca$elm_rose_tree$RoseTree$Tree$value(tree).body;
 							if (_v1.$ === 'Left') {
@@ -54061,6 +54209,21 @@ var $author$project$Render$Export$LaTeX$exportTree = F3(
 								return exprs;
 							}
 						}();
+						var compactItem = function (x) {
+							return '\\compactItem{' + (x + '}');
+						};
+						var renderExprList = function (exprs) {
+							return A2(
+								$elm$core$String$join,
+								'\n',
+								A2(
+									$elm$core$List$map,
+									A2(
+										$elm$core$Basics$composeR,
+										A2($author$project$Render$Export$LaTeX$exportExpr, mathMacroDict, settings),
+										compactItem),
+									exprs));
+						};
 						return renderExprList(exprList);
 					case 'numberedList':
 						var label = function (n) {
@@ -54113,6 +54276,23 @@ var $author$project$Render$Export$LaTeX$exportTree = F3(
 				$maca$elm_rose_tree$RoseTree$Tree$value(tree));
 		} else {
 			var children = _v3;
+			var _v4 = $author$project$Generic$BlockUtilities$getExpressionBlockName(
+				$maca$elm_rose_tree$RoseTree$Tree$value(tree));
+			_v4$2:
+			while (true) {
+				if (_v4.$ === 'Just') {
+					switch (_v4.a) {
+						case 'item':
+							return A4($author$project$Render$Export$LaTeX$handleItemWithChildren, mathMacroDict, settings, tree, children);
+						case 'numbered':
+							return A4($author$project$Render$Export$LaTeX$handleItemWithChildren, mathMacroDict, settings, tree, children);
+						default:
+							break _v4$2;
+					}
+				} else {
+					break _v4$2;
+				}
+			}
 			var root = $elm$core$String$lines(
 				A3(
 					$author$project$Render$Export$LaTeX$exportBlock,
@@ -54127,16 +54307,16 @@ var $author$project$Render$Export$LaTeX$exportTree = F3(
 						$elm$core$List$map,
 						A2($author$project$Render$Export$LaTeX$exportTree, mathMacroDict, settings),
 						children)));
-			var _v4 = $elm_community$list_extra$List$Extra$unconsLast(root);
-			if (_v4.$ === 'Nothing') {
+			var _v5 = $elm_community$list_extra$List$Extra$unconsLast(root);
+			if (_v5.$ === 'Nothing') {
 				return '';
 			} else {
-				var _v5 = _v4.a;
-				var lastLine = _v5.a;
-				var firstLines = _v5.b;
-				var _v6 = firstLines;
-				var _v7 = renderedChildren;
-				var _v8 = lastLine;
+				var _v6 = _v5.a;
+				var lastLine = _v6.a;
+				var firstLines = _v6.b;
+				var _v7 = firstLines;
+				var _v8 = renderedChildren;
+				var _v9 = lastLine;
 				return A2(
 					$elm$core$String$join,
 					'\n',
@@ -54147,6 +54327,48 @@ var $author$project$Render$Export$LaTeX$exportTree = F3(
 							_List_fromArray(
 								[lastLine]))));
 			}
+		}
+	});
+var $author$project$Render$Export$LaTeX$handleItemWithChildren = F4(
+	function (mathMacroDict, settings, tree, children) {
+		var itemContent = A3(
+			$author$project$Render$Export$LaTeX$exportBlock,
+			mathMacroDict,
+			settings,
+			$maca$elm_rose_tree$RoseTree$Tree$value(tree));
+		var firstChildIsBeginBlock = A2(
+			$elm$core$Maybe$withDefault,
+			false,
+			A2(
+				$elm$core$Maybe$map,
+				function (name) {
+					return (name === 'beginBlock') || (name === 'beginNumberedBlock');
+				},
+				A2(
+					$elm$core$Maybe$andThen,
+					$author$project$Generic$BlockUtilities$getExpressionBlockName,
+					A2(
+						$elm$core$Maybe$map,
+						$maca$elm_rose_tree$RoseTree$Tree$value,
+						$elm$core$List$head(children)))));
+		if (firstChildIsBeginBlock) {
+			var childrenOutput = $author$project$Render$Export$LaTeX$indentNestedList(
+				A2(
+					$elm$core$String$join,
+					'\n',
+					A2(
+						$elm$core$List$map,
+						A2($author$project$Render$Export$LaTeX$exportTree, mathMacroDict, settings),
+						children)));
+			return itemContent + ('\n' + childrenOutput);
+		} else {
+			return itemContent + ('\n' + A2(
+				$elm$core$String$join,
+				'\n',
+				A2(
+					$elm$core$List$map,
+					A2($author$project$Render$Export$LaTeX$exportTree, mathMacroDict, settings),
+					children)));
 		}
 	});
 var $elm$core$Elm$JsArray$map = _JsArray_map;
@@ -54206,6 +54428,9 @@ var $maca$elm_rose_tree$RoseTree$Tree$map = F2(
 					$maca$elm_rose_tree$RoseTree$Tree$map(f),
 					ns)));
 	});
+var $author$project$Render$Export$LaTeX$smartJoin = function (strings) {
+	return A2($elm$core$String$join, '\n\n', strings);
+};
 var $author$project$Render$Export$LaTeX$rawExport = F2(
 	function (settings, ast_) {
 		var mathMacroDict = $author$project$ETeX$Transform$makeMacroDict(
@@ -54252,24 +54477,23 @@ var $author$project$Render$Export$LaTeX$rawExport = F2(
 						ast_));
 			}
 		}();
-		return A2(
-			$elm$core$String$join,
-			'\n\n',
+		var processedTrees = $author$project$Render$Export$LaTeX$encloseLists(
 			A2(
-				$elm$core$List$map,
-				A2($author$project$Render$Export$LaTeX$exportTree, mathMacroDict, settings),
-				$author$project$Render$Export$LaTeX$encloseLists(
-					A2(
-						$author$project$Generic$Forest$map,
-						$author$project$Generic$BlockUtilities$condenseUrls,
-						A2(
-							$author$project$Generic$ASTTools$filterForestOnLabelNames,
-							function (name) {
-								return !_Utils_eq(
-									name,
-									$elm$core$Maybe$Just('runninghead'));
-							},
-							ast)))));
+				$author$project$Generic$Forest$map,
+				$author$project$Generic$BlockUtilities$condenseUrls,
+				A2(
+					$author$project$Generic$ASTTools$filterForestOnLabelNames,
+					function (name) {
+						return !_Utils_eq(
+							name,
+							$elm$core$Maybe$Just('runninghead'));
+					},
+					ast)));
+		var exportedStrings = A2(
+			$elm$core$List$map,
+			A2($author$project$Render$Export$LaTeX$exportTree, mathMacroDict, settings),
+			processedTrees);
+		return $author$project$Render$Export$LaTeX$smartJoin(exportedStrings);
 	});
 var $author$project$Render$Export$LaTeX$tableofcontents = F2(
 	function (properties, rawBlockNames_) {
@@ -54811,6 +55035,7 @@ var $author$project$Generic$ASTTools$matchingIdsInAST = F2(
 				A2($elm$core$List$map, $author$project$Library$Tree$flatten, ast)));
 	});
 var $author$project$ScriptaV2$Helper$matchingIdsInAST = $author$project$Generic$ASTTools$matchingIdsInAST;
+var $elm$file$File$name = _File_name;
 var $author$project$Document$newDocument = F6(
 	function (id, title, author, content, theme, now) {
 		return {author: author, content: content, createdAt: now, id: id, modifiedAt: now, theme: theme, title: title};
@@ -55312,6 +55537,1568 @@ var $elm$file$File$Download$string = F3(
 			A3(_File_download, name, mime, content));
 	});
 var $elm$file$File$toString = _File_toString;
+var $author$project$Render$Export$LaTeXToScripta$convertVerbatimBacktick = function (input) {
+	var verbPattern = A2(
+		$elm$core$Maybe$withDefault,
+		$elm$regex$Regex$never,
+		$elm$regex$Regex$fromString('\\\\verb`([^`]*)`'));
+	var replacer = function (match) {
+		var _v0 = match.submatches;
+		if ((_v0.b && (_v0.a.$ === 'Just')) && (!_v0.b.b)) {
+			var content = _v0.a.a;
+			return '`' + (content + '`');
+		} else {
+			return match.match;
+		}
+	};
+	return A3($elm$regex$Regex$replace, verbPattern, replacer, input);
+};
+var $author$project$Render$Export$LaTeXToScripta$formatMacroDefinition = function (_v0) {
+	var name = _v0.a;
+	var body = _v0.b;
+	return name + (': ' + body);
+};
+var $author$project$Render$Export$LaTeXToScripta$isAlphaNum = function (str) {
+	var _v0 = $elm$core$String$uncons(str);
+	if (_v0.$ === 'Just') {
+		var _v1 = _v0.a;
+		var _char = _v1.a;
+		return $elm$core$Char$isAlphaNum(_char);
+	} else {
+		return false;
+	}
+};
+var $author$project$Render$Export$LaTeXToScripta$intelligentJoin = function (tokens) {
+	if (!tokens.b) {
+		return '';
+	} else {
+		if (!tokens.b.b) {
+			var single = tokens.a;
+			return single;
+		} else {
+			var first = tokens.a;
+			var _v1 = tokens.b;
+			var second = _v1.a;
+			var rest = _v1.b;
+			var needsSpace = $author$project$Render$Export$LaTeXToScripta$isAlphaNum(
+				A2($elm$core$String$right, 1, first)) && $author$project$Render$Export$LaTeXToScripta$isAlphaNum(
+				A2($elm$core$String$left, 1, second));
+			var separator = needsSpace ? ' ' : '';
+			return _Utils_ap(
+				first,
+				_Utils_ap(
+					separator,
+					$author$project$Render$Export$LaTeXToScripta$intelligentJoin(
+						A2($elm$core$List$cons, second, rest))));
+		}
+	}
+};
+var $author$project$Render$Export$LaTeXToScripta$decoToString = F2(
+	function (newMacroNames, deco) {
+		if (deco.$ === 'DecoM') {
+			var expr = deco.a;
+			var content = A2($author$project$Render$Export$LaTeXToScripta$mathExprToScripta, newMacroNames, expr);
+			return A2($elm$core$String$startsWith, '\"', content) ? content : ((($elm$core$String$length(content) > 1) || A2($elm$core$String$contains, ' ', content)) ? ('{' + (content + '}')) : content);
+		} else {
+			var n = deco.a;
+			var nStr = $elm$core$String$fromInt(n);
+			return ($elm$core$String$length(nStr) > 1) ? ('{' + (nStr + '}')) : nStr;
+		}
+	});
+var $author$project$Render$Export$LaTeXToScripta$mathExprToScripta = F2(
+	function (newMacroNames, expr) {
+		switch (expr.$) {
+			case 'AlphaNum':
+				var str = expr.a;
+				return str;
+			case 'MacroName':
+				var str = expr.a;
+				return ($author$project$ETeX$KaTeX$isKaTeX(str) || A2($elm$core$List$member, str, newMacroNames)) ? str : ('\\' + str);
+			case 'FunctionName':
+				var str = expr.a;
+				return str;
+			case 'Arg':
+				var exprs = expr.a;
+				return $author$project$Render$Export$LaTeXToScripta$intelligentJoin(
+					A2(
+						$elm$core$List$map,
+						$author$project$Render$Export$LaTeXToScripta$mathExprToScripta(newMacroNames),
+						exprs));
+			case 'Param':
+				var n = expr.a;
+				return '#' + $elm$core$String$fromInt(n);
+			case 'WS':
+				return ' ';
+			case 'MathSpace':
+				return ' ';
+			case 'MathSmallSpace':
+				return ' ';
+			case 'MathMediumSpace':
+				return ' ';
+			case 'LeftMathBrace':
+				return '\\{';
+			case 'RightMathBrace':
+				return '\\}';
+			case 'MathSymbols':
+				var str = expr.a;
+				return str;
+			case 'Macro':
+				var name = expr.a;
+				var args = expr.b;
+				if ($elm$core$List$isEmpty(args)) {
+					return $author$project$ETeX$KaTeX$isKaTeX(name) ? name : ('\\' + name);
+				} else {
+					if (name === 'text') {
+						if ((args.b && (args.a.$ === 'Arg')) && (!args.b.b)) {
+							var content = args.a.a;
+							return '\"' + (A2(
+								$elm$core$String$join,
+								'',
+								A2(
+									$elm$core$List$map,
+									$author$project$Render$Export$LaTeXToScripta$mathExprToScripta(newMacroNames),
+									content)) + '\"');
+						} else {
+							return '\\' + (name + A2(
+								$elm$core$String$join,
+								'',
+								A2(
+									$elm$core$List$map,
+									$author$project$Render$Export$LaTeXToScripta$mathExprToScriptaArg(newMacroNames),
+									args)));
+						}
+					} else {
+						if ($author$project$ETeX$KaTeX$isKaTeX(name) || A2($elm$core$List$member, name, newMacroNames)) {
+							if (args.b && (!args.b.b)) {
+								var singleArg = args.a;
+								return name + (' ' + A2($author$project$Render$Export$LaTeXToScripta$mathExprToScripta, newMacroNames, singleArg));
+							} else {
+								return name + ('(' + (A2(
+									$elm$core$String$join,
+									',',
+									A2(
+										$elm$core$List$map,
+										$author$project$Render$Export$LaTeXToScripta$mathExprToScripta(newMacroNames),
+										args)) + ')'));
+							}
+						} else {
+							return '\\' + (name + A2(
+								$elm$core$String$join,
+								'',
+								A2(
+									$elm$core$List$map,
+									A2(
+										$elm$core$Basics$composeR,
+										$author$project$Render$Export$LaTeXToScripta$mathExprToScripta(newMacroNames),
+										function (x) {
+											return '{' + (x + '}');
+										}),
+									args)));
+						}
+					}
+				}
+			case 'Expr':
+				var exprs = expr.a;
+				return A2(
+					$elm$core$String$join,
+					'',
+					A2(
+						$elm$core$List$map,
+						$author$project$Render$Export$LaTeXToScripta$mathExprToScripta(newMacroNames),
+						exprs));
+			case 'Comma':
+				return ',';
+			case 'LeftParen':
+				return '(';
+			case 'RightParen':
+				return ')';
+			case 'Sub':
+				var deco = expr.a;
+				return '_' + A2($author$project$Render$Export$LaTeXToScripta$decoToString, newMacroNames, deco);
+			default:
+				var deco = expr.a;
+				return '^' + A2($author$project$Render$Export$LaTeXToScripta$decoToString, newMacroNames, deco);
+		}
+	});
+var $author$project$Render$Export$LaTeXToScripta$mathExprToScriptaArg = F2(
+	function (newMacroNames, expr) {
+		if (expr.$ === 'Arg') {
+			var exprs = expr.a;
+			return '{' + (A2(
+				$elm$core$String$join,
+				'',
+				A2(
+					$elm$core$List$map,
+					$author$project$Render$Export$LaTeXToScripta$mathExprToScripta(newMacroNames),
+					exprs)) + '}');
+		} else {
+			return A2($author$project$Render$Export$LaTeXToScripta$mathExprToScripta, newMacroNames, expr);
+		}
+	});
+var $author$project$ETeX$MathMacros$ExpectingLeftBrace = {$: 'ExpectingLeftBrace'};
+var $author$project$ETeX$MathMacros$ExpectingNewCommand = {$: 'ExpectingNewCommand'};
+var $author$project$ETeX$MathMacros$ExpectingRightBrace = {$: 'ExpectingRightBrace'};
+var $author$project$ETeX$MathMacros$ExpectingBackslash = {$: 'ExpectingBackslash'};
+var $author$project$ETeX$MathMacros$ExpectingAlpha = {$: 'ExpectingAlpha'};
+var $author$project$ETeX$MathMacros$alphaNumParser_ = A2(
+	$elm$parser$Parser$Advanced$keeper,
+	A2(
+		$elm$parser$Parser$Advanced$keeper,
+		A2(
+			$elm$parser$Parser$Advanced$keeper,
+			$elm$parser$Parser$Advanced$succeed($elm$core$String$slice),
+			A2(
+				$elm$parser$Parser$Advanced$ignorer,
+				A2(
+					$elm$parser$Parser$Advanced$ignorer,
+					$elm$parser$Parser$Advanced$getOffset,
+					A2($elm$parser$Parser$Advanced$chompIf, $elm$core$Char$isAlpha, $author$project$ETeX$MathMacros$ExpectingAlpha)),
+				$elm$parser$Parser$Advanced$chompWhile($elm$core$Char$isAlphaNum))),
+		$elm$parser$Parser$Advanced$getOffset),
+	$elm$parser$Parser$Advanced$getSource);
+var $author$project$ETeX$MathMacros$second = F2(
+	function (p, q) {
+		return A2(
+			$elm$parser$Parser$Advanced$andThen,
+			function (_v0) {
+				return q;
+			},
+			p);
+	});
+var $author$project$ETeX$MathMacros$f0Parser = A2(
+	$elm$parser$Parser$Advanced$map,
+	$author$project$ETeX$MathMacros$MacroName,
+	A2(
+		$author$project$ETeX$MathMacros$second,
+		$elm$parser$Parser$Advanced$symbol(
+			A2($elm$parser$Parser$Advanced$Token, '\\', $author$project$ETeX$MathMacros$ExpectingBackslash)),
+		$author$project$ETeX$MathMacros$alphaNumParser_));
+var $author$project$ETeX$MathMacros$manyHelp = F2(
+	function (p, vs) {
+		return $elm$parser$Parser$Advanced$oneOf(
+			_List_fromArray(
+				[
+					A2(
+					$elm$parser$Parser$Advanced$keeper,
+					$elm$parser$Parser$Advanced$succeed(
+						function (v) {
+							return $elm$parser$Parser$Advanced$Loop(
+								A2($elm$core$List$cons, v, vs));
+						}),
+					p),
+					A2(
+					$elm$parser$Parser$Advanced$map,
+					function (_v0) {
+						return $elm$parser$Parser$Advanced$Done(
+							$elm$core$List$reverse(vs));
+					},
+					$elm$parser$Parser$Advanced$succeed(_Utils_Tuple0))
+				]));
+	});
+var $author$project$ETeX$MathMacros$many = function (p) {
+	return A2(
+		$elm$parser$Parser$Advanced$loop,
+		_List_Nil,
+		$author$project$ETeX$MathMacros$manyHelp(p));
+};
+var $author$project$ETeX$MathMacros$ExpectingCaret = {$: 'ExpectingCaret'};
+var $author$project$ETeX$MathMacros$ExpectingLeftParen = {$: 'ExpectingLeftParen'};
+var $author$project$ETeX$MathMacros$ExpectingRightParen = {$: 'ExpectingRightParen'};
+var $author$project$ETeX$MathMacros$ExpectingUnderscore = {$: 'ExpectingUnderscore'};
+var $author$project$ETeX$MathMacros$alphaNumParser = A2($elm$parser$Parser$Advanced$map, $author$project$ETeX$MathMacros$AlphaNum, $author$project$ETeX$MathMacros$alphaNumParser_);
+var $author$project$ETeX$MathMacros$ExpectingComma = {$: 'ExpectingComma'};
+var $author$project$ETeX$MathMacros$commaParser = A2(
+	$elm$parser$Parser$Advanced$ignorer,
+	$elm$parser$Parser$Advanced$succeed($author$project$ETeX$MathMacros$Comma),
+	$elm$parser$Parser$Advanced$symbol(
+		A2($elm$parser$Parser$Advanced$Token, ',', $author$project$ETeX$MathMacros$ExpectingComma)));
+var $author$project$ETeX$MathMacros$ExpectingLeftMathBrace = {$: 'ExpectingLeftMathBrace'};
+var $author$project$ETeX$MathMacros$leftBraceParser = A2(
+	$elm$parser$Parser$Advanced$ignorer,
+	$elm$parser$Parser$Advanced$succeed($author$project$ETeX$MathMacros$LeftMathBrace),
+	$elm$parser$Parser$Advanced$symbol(
+		A2($elm$parser$Parser$Advanced$Token, '\\{', $author$project$ETeX$MathMacros$ExpectingLeftMathBrace)));
+var $author$project$ETeX$MathMacros$leftParenParser = A2(
+	$elm$parser$Parser$Advanced$ignorer,
+	$elm$parser$Parser$Advanced$succeed($author$project$ETeX$MathMacros$LeftParen),
+	$elm$parser$Parser$Advanced$symbol(
+		A2($elm$parser$Parser$Advanced$Token, '(', $author$project$ETeX$MathMacros$ExpectingLeftParen)));
+var $author$project$ETeX$MathMacros$ExpectingMathMediumSpace = {$: 'ExpectingMathMediumSpace'};
+var $author$project$ETeX$MathMacros$mathMediumSpaceParser = A2(
+	$elm$parser$Parser$Advanced$ignorer,
+	$elm$parser$Parser$Advanced$succeed($author$project$ETeX$MathMacros$MathMediumSpace),
+	$elm$parser$Parser$Advanced$symbol(
+		A2($elm$parser$Parser$Advanced$Token, '\\;', $author$project$ETeX$MathMacros$ExpectingMathMediumSpace)));
+var $author$project$ETeX$MathMacros$ExpectingMathSmallSpace = {$: 'ExpectingMathSmallSpace'};
+var $author$project$ETeX$MathMacros$mathSmallSpaceParser = A2(
+	$elm$parser$Parser$Advanced$ignorer,
+	$elm$parser$Parser$Advanced$succeed($author$project$ETeX$MathMacros$MathSmallSpace),
+	$elm$parser$Parser$Advanced$symbol(
+		A2($elm$parser$Parser$Advanced$Token, '\\,', $author$project$ETeX$MathMacros$ExpectingMathSmallSpace)));
+var $author$project$ETeX$MathMacros$ExpectingMathSpace = {$: 'ExpectingMathSpace'};
+var $author$project$ETeX$MathMacros$mathSpaceParser = A2(
+	$elm$parser$Parser$Advanced$ignorer,
+	$elm$parser$Parser$Advanced$succeed($author$project$ETeX$MathMacros$MathSpace),
+	$elm$parser$Parser$Advanced$symbol(
+		A2($elm$parser$Parser$Advanced$Token, '\\ ', $author$project$ETeX$MathMacros$ExpectingMathSpace)));
+var $author$project$ETeX$MathMacros$ExpectingNotAlpha = {$: 'ExpectingNotAlpha'};
+var $author$project$ETeX$MathMacros$mathSymbolsParser = A2(
+	$elm$parser$Parser$Advanced$map,
+	$author$project$ETeX$MathMacros$MathSymbols,
+	A2(
+		$elm$parser$Parser$Advanced$keeper,
+		A2(
+			$elm$parser$Parser$Advanced$keeper,
+			A2(
+				$elm$parser$Parser$Advanced$keeper,
+				$elm$parser$Parser$Advanced$succeed($elm$core$String$slice),
+				A2(
+					$elm$parser$Parser$Advanced$ignorer,
+					A2(
+						$elm$parser$Parser$Advanced$ignorer,
+						$elm$parser$Parser$Advanced$getOffset,
+						A2(
+							$elm$parser$Parser$Advanced$chompIf,
+							function (c) {
+								return (!$elm$core$Char$isAlpha(c)) && (!A2(
+									$elm$core$List$member,
+									c,
+									_List_fromArray(
+										[
+											_Utils_chr('_'),
+											_Utils_chr('^'),
+											_Utils_chr('#'),
+											_Utils_chr('\\'),
+											_Utils_chr('{'),
+											_Utils_chr('}'),
+											_Utils_chr('('),
+											_Utils_chr(')'),
+											_Utils_chr(',')
+										])));
+							},
+							$author$project$ETeX$MathMacros$ExpectingNotAlpha)),
+					$elm$parser$Parser$Advanced$chompWhile(
+						function (c) {
+							return (!$elm$core$Char$isAlpha(c)) && (!A2(
+								$elm$core$List$member,
+								c,
+								_List_fromArray(
+									[
+										_Utils_chr('_'),
+										_Utils_chr('^'),
+										_Utils_chr('#'),
+										_Utils_chr('\\'),
+										_Utils_chr('{'),
+										_Utils_chr('}'),
+										_Utils_chr('('),
+										_Utils_chr(')'),
+										_Utils_chr(',')
+									])));
+						}))),
+			$elm$parser$Parser$Advanced$getOffset),
+		$elm$parser$Parser$Advanced$getSource));
+var $author$project$ETeX$MathMacros$ExpectingInt = {$: 'ExpectingInt'};
+var $author$project$ETeX$MathMacros$InvalidNumber = {$: 'InvalidNumber'};
+var $author$project$ETeX$MathMacros$numericDecoParser = A2(
+	$elm$parser$Parser$Advanced$map,
+	$author$project$ETeX$MathMacros$DecoI,
+	A2($elm$parser$Parser$Advanced$int, $author$project$ETeX$MathMacros$ExpectingInt, $author$project$ETeX$MathMacros$InvalidNumber));
+var $author$project$ETeX$MathMacros$ExpectingHash = {$: 'ExpectingHash'};
+var $author$project$ETeX$MathMacros$paramParser = A2(
+	$elm$parser$Parser$Advanced$map,
+	$author$project$ETeX$MathMacros$Param,
+	A2(
+		$elm$parser$Parser$Advanced$keeper,
+		A2(
+			$elm$parser$Parser$Advanced$ignorer,
+			$elm$parser$Parser$Advanced$succeed($elm$core$Basics$identity),
+			$elm$parser$Parser$Advanced$symbol(
+				A2($elm$parser$Parser$Advanced$Token, '#', $author$project$ETeX$MathMacros$ExpectingHash))),
+		A2($elm$parser$Parser$Advanced$int, $author$project$ETeX$MathMacros$ExpectingInt, $author$project$ETeX$MathMacros$InvalidNumber)));
+var $author$project$ETeX$MathMacros$ExpectingRightMathBrace = {$: 'ExpectingRightMathBrace'};
+var $author$project$ETeX$MathMacros$rightBraceParser = A2(
+	$elm$parser$Parser$Advanced$ignorer,
+	$elm$parser$Parser$Advanced$succeed($author$project$ETeX$MathMacros$RightMathBrace),
+	$elm$parser$Parser$Advanced$symbol(
+		A2($elm$parser$Parser$Advanced$Token, '\\}', $author$project$ETeX$MathMacros$ExpectingRightMathBrace)));
+var $author$project$ETeX$MathMacros$rightParenParser = A2(
+	$elm$parser$Parser$Advanced$ignorer,
+	$elm$parser$Parser$Advanced$succeed($author$project$ETeX$MathMacros$RightParen),
+	$elm$parser$Parser$Advanced$symbol(
+		A2($elm$parser$Parser$Advanced$Token, ')', $author$project$ETeX$MathMacros$ExpectingRightParen)));
+var $author$project$ETeX$MathMacros$ExpectingSpace = {$: 'ExpectingSpace'};
+var $author$project$ETeX$MathMacros$whitespaceParser = A2(
+	$elm$parser$Parser$Advanced$map,
+	function (_v0) {
+		return $author$project$ETeX$MathMacros$WS;
+	},
+	$elm$parser$Parser$Advanced$symbol(
+		A2($elm$parser$Parser$Advanced$Token, ' ', $author$project$ETeX$MathMacros$ExpectingSpace)));
+function $author$project$ETeX$MathMacros$cyclic$mathExprParser() {
+	return $elm$parser$Parser$Advanced$oneOf(
+		_List_fromArray(
+			[
+				$author$project$ETeX$MathMacros$mathMediumSpaceParser,
+				$author$project$ETeX$MathMacros$mathSmallSpaceParser,
+				$author$project$ETeX$MathMacros$mathSpaceParser,
+				$author$project$ETeX$MathMacros$leftBraceParser,
+				$author$project$ETeX$MathMacros$rightBraceParser,
+				$author$project$ETeX$MathMacros$leftParenParser,
+				$author$project$ETeX$MathMacros$rightParenParser,
+				$author$project$ETeX$MathMacros$commaParser,
+				$author$project$ETeX$MathMacros$cyclic$macroParser(),
+				$author$project$ETeX$MathMacros$mathSymbolsParser,
+				$elm$parser$Parser$Advanced$lazy(
+				function (_v3) {
+					return $author$project$ETeX$MathMacros$cyclic$argParser();
+				}),
+				$elm$parser$Parser$Advanced$lazy(
+				function (_v4) {
+					return $author$project$ETeX$MathMacros$cyclic$parenthesizedGroupParser();
+				}),
+				$author$project$ETeX$MathMacros$paramParser,
+				$author$project$ETeX$MathMacros$whitespaceParser,
+				$author$project$ETeX$MathMacros$alphaNumParser,
+				$author$project$ETeX$MathMacros$f0Parser,
+				$author$project$ETeX$MathMacros$cyclic$subscriptParser(),
+				$author$project$ETeX$MathMacros$cyclic$superscriptParser()
+			]));
+}
+function $author$project$ETeX$MathMacros$cyclic$macroParser() {
+	return A2(
+		$elm$parser$Parser$Advanced$keeper,
+		A2(
+			$elm$parser$Parser$Advanced$keeper,
+			A2(
+				$elm$parser$Parser$Advanced$ignorer,
+				$elm$parser$Parser$Advanced$succeed($author$project$ETeX$MathMacros$Macro),
+				$elm$parser$Parser$Advanced$symbol(
+					A2($elm$parser$Parser$Advanced$Token, '\\', $author$project$ETeX$MathMacros$ExpectingBackslash))),
+			$author$project$ETeX$MathMacros$alphaNumParser_),
+		$author$project$ETeX$MathMacros$many(
+			$author$project$ETeX$MathMacros$cyclic$argParser()));
+}
+function $author$project$ETeX$MathMacros$cyclic$argParser() {
+	return A2(
+		$elm$parser$Parser$Advanced$map,
+		$author$project$ETeX$MathMacros$Arg,
+		A2(
+			$elm$parser$Parser$Advanced$ignorer,
+			A2(
+				$elm$parser$Parser$Advanced$keeper,
+				A2(
+					$elm$parser$Parser$Advanced$ignorer,
+					$elm$parser$Parser$Advanced$succeed($elm$core$Basics$identity),
+					$elm$parser$Parser$Advanced$symbol(
+						A2($elm$parser$Parser$Advanced$Token, '{', $author$project$ETeX$MathMacros$ExpectingLeftBrace))),
+				$elm$parser$Parser$Advanced$lazy(
+					function (_v2) {
+						return $author$project$ETeX$MathMacros$many(
+							$author$project$ETeX$MathMacros$cyclic$mathExprParser());
+					})),
+			$elm$parser$Parser$Advanced$symbol(
+				A2($elm$parser$Parser$Advanced$Token, '}', $author$project$ETeX$MathMacros$ExpectingRightBrace))));
+}
+function $author$project$ETeX$MathMacros$cyclic$superscriptParser() {
+	return A2(
+		$elm$parser$Parser$Advanced$map,
+		$author$project$ETeX$MathMacros$Super,
+		A2(
+			$elm$parser$Parser$Advanced$keeper,
+			A2(
+				$elm$parser$Parser$Advanced$ignorer,
+				$elm$parser$Parser$Advanced$succeed($elm$core$Basics$identity),
+				$elm$parser$Parser$Advanced$symbol(
+					A2($elm$parser$Parser$Advanced$Token, '^', $author$project$ETeX$MathMacros$ExpectingCaret))),
+			$author$project$ETeX$MathMacros$cyclic$decoParser()));
+}
+function $author$project$ETeX$MathMacros$cyclic$subscriptParser() {
+	return A2(
+		$elm$parser$Parser$Advanced$map,
+		$author$project$ETeX$MathMacros$Sub,
+		A2(
+			$elm$parser$Parser$Advanced$keeper,
+			A2(
+				$elm$parser$Parser$Advanced$ignorer,
+				$elm$parser$Parser$Advanced$succeed($elm$core$Basics$identity),
+				$elm$parser$Parser$Advanced$symbol(
+					A2($elm$parser$Parser$Advanced$Token, '_', $author$project$ETeX$MathMacros$ExpectingUnderscore))),
+			$author$project$ETeX$MathMacros$cyclic$decoParser()));
+}
+function $author$project$ETeX$MathMacros$cyclic$decoParser() {
+	return $elm$parser$Parser$Advanced$oneOf(
+		_List_fromArray(
+			[
+				$author$project$ETeX$MathMacros$numericDecoParser,
+				A2(
+				$elm$parser$Parser$Advanced$map,
+				$author$project$ETeX$MathMacros$DecoM,
+				$elm$parser$Parser$Advanced$lazy(
+					function (_v1) {
+						return $author$project$ETeX$MathMacros$cyclic$mathExprParser();
+					}))
+			]));
+}
+function $author$project$ETeX$MathMacros$cyclic$parenthesizedGroupParser() {
+	return A2(
+		$elm$parser$Parser$Advanced$map,
+		$author$project$ETeX$MathMacros$Arg,
+		A2(
+			$elm$parser$Parser$Advanced$ignorer,
+			A2(
+				$elm$parser$Parser$Advanced$keeper,
+				A2(
+					$elm$parser$Parser$Advanced$ignorer,
+					$elm$parser$Parser$Advanced$succeed($elm$core$Basics$identity),
+					$elm$parser$Parser$Advanced$symbol(
+						A2($elm$parser$Parser$Advanced$Token, '(', $author$project$ETeX$MathMacros$ExpectingLeftParen))),
+				$elm$parser$Parser$Advanced$lazy(
+					function (_v0) {
+						return $author$project$ETeX$MathMacros$many(
+							$author$project$ETeX$MathMacros$cyclic$mathExprParser());
+					})),
+			$elm$parser$Parser$Advanced$symbol(
+				A2($elm$parser$Parser$Advanced$Token, ')', $author$project$ETeX$MathMacros$ExpectingRightParen))));
+}
+try {
+	var $author$project$ETeX$MathMacros$mathExprParser = $author$project$ETeX$MathMacros$cyclic$mathExprParser();
+	$author$project$ETeX$MathMacros$cyclic$mathExprParser = function () {
+		return $author$project$ETeX$MathMacros$mathExprParser;
+	};
+	var $author$project$ETeX$MathMacros$macroParser = $author$project$ETeX$MathMacros$cyclic$macroParser();
+	$author$project$ETeX$MathMacros$cyclic$macroParser = function () {
+		return $author$project$ETeX$MathMacros$macroParser;
+	};
+	var $author$project$ETeX$MathMacros$argParser = $author$project$ETeX$MathMacros$cyclic$argParser();
+	$author$project$ETeX$MathMacros$cyclic$argParser = function () {
+		return $author$project$ETeX$MathMacros$argParser;
+	};
+	var $author$project$ETeX$MathMacros$superscriptParser = $author$project$ETeX$MathMacros$cyclic$superscriptParser();
+	$author$project$ETeX$MathMacros$cyclic$superscriptParser = function () {
+		return $author$project$ETeX$MathMacros$superscriptParser;
+	};
+	var $author$project$ETeX$MathMacros$subscriptParser = $author$project$ETeX$MathMacros$cyclic$subscriptParser();
+	$author$project$ETeX$MathMacros$cyclic$subscriptParser = function () {
+		return $author$project$ETeX$MathMacros$subscriptParser;
+	};
+	var $author$project$ETeX$MathMacros$decoParser = $author$project$ETeX$MathMacros$cyclic$decoParser();
+	$author$project$ETeX$MathMacros$cyclic$decoParser = function () {
+		return $author$project$ETeX$MathMacros$decoParser;
+	};
+	var $author$project$ETeX$MathMacros$parenthesizedGroupParser = $author$project$ETeX$MathMacros$cyclic$parenthesizedGroupParser();
+	$author$project$ETeX$MathMacros$cyclic$parenthesizedGroupParser = function () {
+		return $author$project$ETeX$MathMacros$parenthesizedGroupParser;
+	};
+} catch ($) {
+	throw 'Some top-level definitions from `ETeX.MathMacros` are causing infinite recursion:\n\n  ┌─────┐\n  │    mathExprParser\n  │     ↓\n  │    macroParser\n  │     ↓\n  │    argParser\n  │     ↓\n  │    superscriptParser\n  │     ↓\n  │    subscriptParser\n  │     ↓\n  │    decoParser\n  │     ↓\n  │    parenthesizedGroupParser\n  └─────┘\n\nThese errors are very tricky, so read https://elm-lang.org/0.19.1/bad-recursion to learn how to fix it!';}
+var $author$project$ETeX$MathMacros$ExpectingLeftBracket = {$: 'ExpectingLeftBracket'};
+var $author$project$ETeX$MathMacros$ExpectingRightBracket = {$: 'ExpectingRightBracket'};
+var $author$project$ETeX$MathMacros$optionalParamParser = A2(
+	$elm$parser$Parser$Advanced$keeper,
+	A2(
+		$elm$parser$Parser$Advanced$ignorer,
+		$elm$parser$Parser$Advanced$succeed($elm$core$Basics$identity),
+		$elm$parser$Parser$Advanced$symbol(
+			A2($elm$parser$Parser$Advanced$Token, '[', $author$project$ETeX$MathMacros$ExpectingLeftBracket))),
+	A2(
+		$elm$parser$Parser$Advanced$ignorer,
+		A2($elm$parser$Parser$Advanced$int, $author$project$ETeX$MathMacros$ExpectingInt, $author$project$ETeX$MathMacros$InvalidNumber),
+		$elm$parser$Parser$Advanced$symbol(
+			A2($elm$parser$Parser$Advanced$Token, ']', $author$project$ETeX$MathMacros$ExpectingRightBracket))));
+var $author$project$ETeX$MathMacros$newCommandParser1 = A2(
+	$elm$parser$Parser$Advanced$keeper,
+	A2(
+		$elm$parser$Parser$Advanced$keeper,
+		A2(
+			$elm$parser$Parser$Advanced$keeper,
+			A2(
+				$elm$parser$Parser$Advanced$ignorer,
+				A2(
+					$elm$parser$Parser$Advanced$ignorer,
+					$elm$parser$Parser$Advanced$succeed(
+						F3(
+							function (name, arity, body) {
+								return A3($author$project$ETeX$MathMacros$NewCommand, name, arity, body);
+							})),
+					$elm$parser$Parser$Advanced$symbol(
+						A2($elm$parser$Parser$Advanced$Token, '\\newcommand', $author$project$ETeX$MathMacros$ExpectingNewCommand))),
+				$elm$parser$Parser$Advanced$symbol(
+					A2($elm$parser$Parser$Advanced$Token, '{', $author$project$ETeX$MathMacros$ExpectingLeftBrace))),
+			A2(
+				$elm$parser$Parser$Advanced$ignorer,
+				$author$project$ETeX$MathMacros$f0Parser,
+				$elm$parser$Parser$Advanced$symbol(
+					A2($elm$parser$Parser$Advanced$Token, '}', $author$project$ETeX$MathMacros$ExpectingRightBrace)))),
+		$author$project$ETeX$MathMacros$optionalParamParser),
+	$author$project$ETeX$MathMacros$many($author$project$ETeX$MathMacros$mathExprParser));
+var $author$project$ETeX$MathMacros$newCommandParser2 = A2(
+	$elm$parser$Parser$Advanced$keeper,
+	A2(
+		$elm$parser$Parser$Advanced$keeper,
+		A2(
+			$elm$parser$Parser$Advanced$ignorer,
+			A2(
+				$elm$parser$Parser$Advanced$ignorer,
+				$elm$parser$Parser$Advanced$succeed(
+					F2(
+						function (name, body) {
+							return A3($author$project$ETeX$MathMacros$NewCommand, name, 0, body);
+						})),
+				$elm$parser$Parser$Advanced$symbol(
+					A2($elm$parser$Parser$Advanced$Token, '\\newcommand', $author$project$ETeX$MathMacros$ExpectingNewCommand))),
+			$elm$parser$Parser$Advanced$symbol(
+				A2($elm$parser$Parser$Advanced$Token, '{', $author$project$ETeX$MathMacros$ExpectingLeftBrace))),
+		A2(
+			$elm$parser$Parser$Advanced$ignorer,
+			$author$project$ETeX$MathMacros$f0Parser,
+			$elm$parser$Parser$Advanced$symbol(
+				A2($elm$parser$Parser$Advanced$Token, '}', $author$project$ETeX$MathMacros$ExpectingRightBrace)))),
+	$author$project$ETeX$MathMacros$many($author$project$ETeX$MathMacros$mathExprParser));
+var $author$project$ETeX$MathMacros$newCommandParser = $elm$parser$Parser$Advanced$oneOf(
+	_List_fromArray(
+		[
+			$elm$parser$Parser$Advanced$backtrackable($author$project$ETeX$MathMacros$newCommandParser1),
+			$author$project$ETeX$MathMacros$newCommandParser2
+		]));
+var $author$project$ETeX$MathMacros$parseNewCommand = function (str) {
+	return A2($elm$parser$Parser$Advanced$run, $author$project$ETeX$MathMacros$newCommandParser, str);
+};
+var $author$project$Render$Export$LaTeXToScripta$parseNewCommand = F2(
+	function (newMacroNames, line) {
+		var _v0 = $author$project$ETeX$MathMacros$parseNewCommand(line);
+		if ((_v0.$ === 'Ok') && (_v0.a.a.$ === 'MacroName')) {
+			var _v1 = _v0.a;
+			var name = _v1.a.a;
+			var bodyExprs = _v1.c;
+			var body = $elm$core$String$trim(
+				A2(
+					$elm$core$String$join,
+					'',
+					A2(
+						$elm$core$List$map,
+						$author$project$Render$Export$LaTeXToScripta$mathExprToScripta(newMacroNames),
+						bodyExprs)));
+			return $elm$core$Maybe$Just(
+				_Utils_Tuple2(name, body));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $author$project$Render$Export$LaTeXToScripta$mathMacros = F2(
+	function (newMacroNames, latexMacros) {
+		var lines = A2(
+			$elm$core$List$filter,
+			A2($elm$core$Basics$composeL, $elm$core$Basics$not, $elm$core$String$isEmpty),
+			A2(
+				$elm$core$List$map,
+				$elm$core$String$trim,
+				$elm$core$String$lines(latexMacros)));
+		var macroDefinitions = A2(
+			$elm$core$List$map,
+			$author$project$Render$Export$LaTeXToScripta$formatMacroDefinition,
+			A2(
+				$elm$core$List$filterMap,
+				$author$project$Render$Export$LaTeXToScripta$parseNewCommand(newMacroNames),
+				lines));
+		return $elm$core$List$isEmpty(macroDefinitions) ? '' : ('| mathmacros\n' + A2($elm$core$String$join, '\n', macroDefinitions));
+	});
+var $author$project$Render$Export$LaTeXToScripta$parseL = function (latexSource) {
+	var outerCount = 0;
+	var lines = $elm$core$String$lines(latexSource);
+	var idPrefix = $author$project$ScriptaV2$Config$idPrefix;
+	return A6($author$project$Generic$Compiler$parse_, $author$project$ScriptaV2$Language$MicroLaTeXLang, $author$project$MicroLaTeX$PrimitiveBlock$parse, $author$project$MicroLaTeX$Expression$parse, idPrefix, outerCount, lines);
+};
+var $author$project$Render$Export$LaTeXToScripta$determineContext = F2(
+	function (index, forest) {
+		var findListContext = function (blocks) {
+			findListContext:
+			while (true) {
+				if (!blocks.b) {
+					return $elm$core$Maybe$Nothing;
+				} else {
+					var block = blocks.a;
+					var rest = blocks.b;
+					var _v1 = block.heading;
+					_v1$3:
+					while (true) {
+						if (_v1.$ === 'Ordinary') {
+							switch (_v1.a) {
+								case 'enumerate':
+									return $elm$core$Maybe$Just('enumerate');
+								case 'itemize':
+									return $elm$core$Maybe$Just('itemize');
+								case 'item':
+									var $temp$blocks = rest;
+									blocks = $temp$blocks;
+									continue findListContext;
+								default:
+									break _v1$3;
+							}
+						} else {
+							break _v1$3;
+						}
+					}
+					return $elm$core$Maybe$Nothing;
+				}
+			}
+		};
+		var blocksBeforeIndex = $elm$core$List$reverse(
+			A2(
+				$elm$core$List$map,
+				$maca$elm_rose_tree$RoseTree$Tree$value,
+				A2($elm$core$List$take, index, forest)));
+		return findListContext(blocksBeforeIndex);
+	});
+var $author$project$ETeX$MathMacros$parse = function (str) {
+	return A2(
+		$elm$parser$Parser$Advanced$run,
+		$author$project$ETeX$MathMacros$many($author$project$ETeX$MathMacros$mathExprParser),
+		str);
+};
+var $author$project$Render$Export$LaTeXToScripta$convertLatexMathToScripta = F2(
+	function (newMacroNames, latexMath) {
+		var _v0 = $author$project$ETeX$MathMacros$parse(latexMath);
+		if (_v0.$ === 'Ok') {
+			var exprs = _v0.a;
+			return $author$project$Render$Export$LaTeXToScripta$intelligentJoin(
+				A2(
+					$elm$core$List$map,
+					$author$project$Render$Export$LaTeXToScripta$mathExprToScripta(newMacroNames),
+					exprs));
+		} else {
+			return latexMath;
+		}
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderVerbatimFunction = F3(
+	function (newMacroNames, name, content) {
+		switch (name) {
+			case 'math':
+				return '$' + (A2($author$project$Render$Export$LaTeXToScripta$convertLatexMathToScripta, newMacroNames, content) + '$');
+			case 'code':
+				return '`' + (content + '`');
+			default:
+				return '[' + (name + (' ' + (content + ']')));
+		}
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderArgs = F2(
+	function (newMacroNames, args) {
+		return A2(
+			$elm$core$String$join,
+			' ',
+			A2(
+				$elm$core$List$map,
+				$author$project$Render$Export$LaTeXToScripta$renderExpression(newMacroNames),
+				args));
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderExpression = F2(
+	function (newMacroNames, expr) {
+		switch (expr.$) {
+			case 'Text':
+				var str = expr.a;
+				return str;
+			case 'Fun':
+				var name = expr.a;
+				var args = expr.b;
+				return A3($author$project$Render$Export$LaTeXToScripta$renderFunction, newMacroNames, name, args);
+			case 'VFun':
+				var name = expr.a;
+				var arg = expr.b;
+				return A3($author$project$Render$Export$LaTeXToScripta$renderVerbatimFunction, newMacroNames, name, arg);
+			default:
+				var exprs = expr.a;
+				return A2(
+					$elm$core$String$join,
+					' ',
+					A2(
+						$elm$core$List$map,
+						$author$project$Render$Export$LaTeXToScripta$renderExpression(newMacroNames),
+						exprs));
+		}
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderFunction = F3(
+	function (newMacroNames, name, args) {
+		switch (name) {
+			case 'text':
+				return '\"' + (A2($author$project$Render$Export$LaTeXToScripta$renderArgs, newMacroNames, args) + '\"');
+			case 'bold':
+				return '[b ' + (A2($author$project$Render$Export$LaTeXToScripta$renderArgs, newMacroNames, args) + ']');
+			case 'textbf':
+				return '[b ' + (A2($author$project$Render$Export$LaTeXToScripta$renderArgs, newMacroNames, args) + ']');
+			case 'italic':
+				return '[i ' + (A2($author$project$Render$Export$LaTeXToScripta$renderArgs, newMacroNames, args) + ']');
+			case 'emph':
+				return '[i ' + (A2($author$project$Render$Export$LaTeXToScripta$renderArgs, newMacroNames, args) + ']');
+			case 'underline':
+				return '[u ' + (A2($author$project$Render$Export$LaTeXToScripta$renderArgs, newMacroNames, args) + ']');
+			case 'footnote':
+				return '[footnote ' + (A2($author$project$Render$Export$LaTeXToScripta$renderArgs, newMacroNames, args) + ']');
+			case 'cite':
+				return '[cite ' + (A2($author$project$Render$Export$LaTeXToScripta$renderArgs, newMacroNames, args) + ']');
+			case 'compactItem':
+				return '- ' + A2($author$project$Render$Export$LaTeXToScripta$renderArgs, newMacroNames, args);
+			case 'ref':
+				return '[ref ' + (A2($author$project$Render$Export$LaTeXToScripta$renderArgs, newMacroNames, args) + ']');
+			case 'label':
+				return '[label ' + (A2($author$project$Render$Export$LaTeXToScripta$renderArgs, newMacroNames, args) + ']');
+			case 'href':
+				if (args.b) {
+					if (args.b.b) {
+						var first = args.a;
+						var _v2 = args.b;
+						var second = _v2.a;
+						return '[link ' + (A2($author$project$Render$Export$LaTeXToScripta$renderExpression, newMacroNames, second) + (' ' + (A2($author$project$Render$Export$LaTeXToScripta$renderExpression, newMacroNames, first) + ']')));
+					} else {
+						var single = args.a;
+						return '[link ' + (A2($author$project$Render$Export$LaTeXToScripta$renderExpression, newMacroNames, single) + ']');
+					}
+				} else {
+					return '[link]';
+				}
+			case 'includegraphics':
+				if (args.b) {
+					var path = args.a;
+					return '[image ' + (A2($author$project$Render$Export$LaTeXToScripta$renderExpression, newMacroNames, path) + ']');
+				} else {
+					return '[image]';
+				}
+			case 'imagecentercaptioned':
+				if (args.b) {
+					if (args.b.b) {
+						if (args.b.b.b) {
+							var caption = args.a;
+							var _v5 = args.b;
+							var width = _v5.a;
+							var _v6 = _v5.b;
+							var url = _v6.a;
+							var _v7 = width;
+							return '| image caption:' + (A2($author$project$Render$Export$LaTeXToScripta$renderExpression, newMacroNames, caption) + ('\n' + A2($author$project$Render$Export$LaTeXToScripta$renderExpression, newMacroNames, url)));
+						} else {
+							var caption = args.a;
+							var _v8 = args.b;
+							var url = _v8.a;
+							return '| image caption:' + (A2($author$project$Render$Export$LaTeXToScripta$renderExpression, newMacroNames, caption) + ('\n' + A2($author$project$Render$Export$LaTeXToScripta$renderExpression, newMacroNames, url)));
+						}
+					} else {
+						var url = args.a;
+						return '| image\n' + A2($author$project$Render$Export$LaTeXToScripta$renderExpression, newMacroNames, url);
+					}
+				} else {
+					return '| image';
+				}
+			default:
+				return '[' + (name + (' ' + (A2($author$project$Render$Export$LaTeXToScripta$renderArgs, newMacroNames, args) + ']')));
+		}
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderCenterEnvironment = F2(
+	function (newMacroNames, block) {
+		var _v0 = block.heading;
+		if ((_v0.$ === 'Verbatim') && (_v0.a === 'center')) {
+			var _v1 = block.body;
+			if (_v1.$ === 'Left') {
+				var str = _v1.a;
+				if (A2($elm$core$String$contains, '\\includegraphics', str)) {
+					var extractUrl = function (s) {
+						return function (line) {
+							var _v2 = A2($elm$core$String$split, '{', line);
+							if (_v2.b) {
+								var rest = _v2.b;
+								return $elm$core$String$trim(
+									A2(
+										$elm$core$Maybe$withDefault,
+										'',
+										$elm$core$List$head(
+											A2(
+												$elm$core$String$split,
+												'}',
+												A2($elm$core$String$join, '{', rest)))));
+							} else {
+								return '';
+							}
+						}(
+							A2(
+								$elm$core$Maybe$withDefault,
+								'',
+								$elm$core$List$head(
+									A2(
+										$elm$core$List$filter,
+										$elm$core$String$contains('\\includegraphics'),
+										$elm$core$String$lines(s)))));
+					};
+					var url = extractUrl(str);
+					return $elm$core$String$isEmpty(url) ? '| image' : ('| image\n' + url);
+				} else {
+					return '| center\n' + $elm$core$String$trim(str);
+				}
+			} else {
+				return '| center';
+			}
+		} else {
+			var _v3 = block.body;
+			if (_v3.$ === 'Right') {
+				var exprs = _v3.a;
+				var hasIncludeGraphics = A2(
+					$elm$core$List$any,
+					function (expr) {
+						if (expr.$ === 'Fun') {
+							var name = expr.a;
+							return A2($elm$core$String$startsWith, 'includegraphics', name);
+						} else {
+							return false;
+						}
+					},
+					exprs);
+				if (hasIncludeGraphics) {
+					return A2(
+						$elm$core$Maybe$withDefault,
+						'| image',
+						A2(
+							$elm$core$Maybe$map,
+							function (url) {
+								return '| image\n' + url;
+							},
+							$elm$core$List$head(
+								A2(
+									$elm$core$List$filterMap,
+									function (expr) {
+										if (expr.$ === 'Fun') {
+											var name = expr.a;
+											var args = expr.b;
+											if (A2($elm$core$String$startsWith, 'includegraphics', name)) {
+												_v5$2:
+												while (true) {
+													if (args.b) {
+														if (args.b.b) {
+															if (args.b.a.$ === 'Text') {
+																var _v6 = args.b;
+																var _v7 = _v6.a;
+																var url = _v7.a;
+																return A2($elm$core$String$contains, 'http', url) ? $elm$core$Maybe$Just(url) : $elm$core$Maybe$Nothing;
+															} else {
+																break _v5$2;
+															}
+														} else {
+															if (args.a.$ === 'Text') {
+																var _v8 = args.a;
+																var url = _v8.a;
+																return A2($elm$core$String$contains, 'http', url) ? $elm$core$Maybe$Just(url) : $elm$core$Maybe$Nothing;
+															} else {
+																break _v5$2;
+															}
+														}
+													} else {
+														break _v5$2;
+													}
+												}
+												return $elm$core$List$head(
+													A2(
+														$elm$core$List$filterMap,
+														function (arg) {
+															if (arg.$ === 'Text') {
+																var url = arg.a;
+																return A2($elm$core$String$contains, 'http', url) ? $elm$core$Maybe$Just(url) : $elm$core$Maybe$Nothing;
+															} else {
+																return $elm$core$Maybe$Nothing;
+															}
+														},
+														args));
+											} else {
+												return $elm$core$Maybe$Nothing;
+											}
+										} else {
+											return $elm$core$Maybe$Nothing;
+										}
+									},
+									exprs))));
+				} else {
+					var content = A2(
+						$elm$core$String$join,
+						' ',
+						A2(
+							$elm$core$List$map,
+							$author$project$Render$Export$LaTeXToScripta$renderExpression(newMacroNames),
+							exprs));
+					return '| center\n' + content;
+				}
+			} else {
+				var str = _v3.a;
+				return '| center\n' + $elm$core$String$trim(str);
+			}
+		}
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderEnvironment = F3(
+	function (newMacroNames, envName, block) {
+		var content = function () {
+			var _v0 = block.body;
+			if (_v0.$ === 'Left') {
+				var str = _v0.a;
+				return $elm$core$String$trim(str);
+			} else {
+				var exprs = _v0.a;
+				return A2(
+					$elm$core$String$join,
+					' ',
+					A2(
+						$elm$core$List$map,
+						$author$project$Render$Export$LaTeXToScripta$renderExpression(newMacroNames),
+						exprs));
+			}
+		}();
+		return '| ' + (envName + ('\n' + content));
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderFigure = function (block) {
+	var caption = function () {
+		var _v0 = block.args;
+		if (!_v0.b) {
+			return '';
+		} else {
+			var arg = _v0.a;
+			return '\nCaption: ' + arg;
+		}
+	}();
+	return '| figure' + caption;
+};
+var $author$project$Render$Export$LaTeXToScripta$renderNoteLike = F3(
+	function (newMacroNames, envName, block) {
+		var content = function () {
+			var _v0 = block.body;
+			if (_v0.$ === 'Left') {
+				var str = _v0.a;
+				return $elm$core$String$trim(str);
+			} else {
+				var exprs = _v0.a;
+				return A2(
+					$elm$core$String$join,
+					' ',
+					A2(
+						$elm$core$List$map,
+						$author$project$Render$Export$LaTeXToScripta$renderExpression(newMacroNames),
+						exprs));
+			}
+		}();
+		return '| ' + (envName + ('\n' + content));
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderSection = F2(
+	function (level, block) {
+		var title = function () {
+			var _v0 = block.body;
+			if (_v0.$ === 'Right') {
+				var exprs = _v0.a;
+				if (exprs.b && (exprs.a.$ === 'Text')) {
+					var _v2 = exprs.a;
+					var titleText = _v2.a;
+					return titleText;
+				} else {
+					var _v3 = block.args;
+					if (_v3.b) {
+						var arg = _v3.a;
+						return arg;
+					} else {
+						return 'Section';
+					}
+				}
+			} else {
+				var str = _v0.a;
+				return str;
+			}
+		}();
+		var marker = A2($elm$core$String$repeat, level, '#');
+		return marker + (' ' + title);
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderSectionWithLevel = function (block) {
+	var level = A2($elm$core$String$contains, '\\subsection', block.firstLine) ? 2 : (A2($elm$core$String$contains, '\\subsubsection', block.firstLine) ? 3 : 1);
+	return A2($author$project$Render$Export$LaTeXToScripta$renderSection, level, block);
+};
+var $author$project$Render$Export$LaTeXToScripta$renderTable = function (block) {
+	var _v0 = block.body;
+	if (_v0.$ === 'Left') {
+		var str = _v0.a;
+		return '| table\n' + $elm$core$String$trim(str);
+	} else {
+		return '| table';
+	}
+};
+var $author$project$Render$Export$LaTeXToScripta$smartJoin = function (parts) {
+	return $elm$core$String$trim(
+		A3(
+			$elm$core$List$foldl,
+			F2(
+				function (part, acc) {
+					return $elm$core$String$isEmpty(acc) ? part : ((A2($elm$core$String$startsWith, '$', part) || A2($elm$core$String$endsWith, '$', acc)) ? _Utils_ap(acc, part) : (acc + (' ' + part)));
+				}),
+			'',
+			A2(
+				$elm$core$List$filter,
+				A2($elm$core$Basics$composeL, $elm$core$Basics$not, $elm$core$String$isEmpty),
+				parts)));
+};
+var $author$project$Render$Export$LaTeXToScripta$renderTheoremLike = F3(
+	function (newMacroNames, envName, block) {
+		var title = function () {
+			var _v1 = block.args;
+			if (!_v1.b) {
+				return '';
+			} else {
+				var arg = _v1.a;
+				return ' ' + arg;
+			}
+		}();
+		var content = function () {
+			var _v0 = block.body;
+			if (_v0.$ === 'Left') {
+				var str = _v0.a;
+				return $elm$core$String$trim(str);
+			} else {
+				var exprs = _v0.a;
+				return $author$project$Render$Export$LaTeXToScripta$smartJoin(
+					A2(
+						$elm$core$List$map,
+						$author$project$Render$Export$LaTeXToScripta$renderExpression(newMacroNames),
+						exprs));
+			}
+		}();
+		return '| ' + (envName + (title + ('\n' + content)));
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderOrdinary = F3(
+	function (newMacroNames, name, block) {
+		switch (name) {
+			case 'section':
+				return $author$project$Render$Export$LaTeXToScripta$renderSectionWithLevel(block);
+			case 'subsection':
+				return A2($author$project$Render$Export$LaTeXToScripta$renderSection, 2, block);
+			case 'subsubsection':
+				return A2($author$project$Render$Export$LaTeXToScripta$renderSection, 3, block);
+			case 'itemize':
+				return '';
+			case 'enumerate':
+				return '';
+			case 'item':
+				return '';
+			case 'theorem':
+				return A3($author$project$Render$Export$LaTeXToScripta$renderTheoremLike, newMacroNames, 'theorem', block);
+			case 'lemma':
+				return A3($author$project$Render$Export$LaTeXToScripta$renderTheoremLike, newMacroNames, 'lemma', block);
+			case 'proposition':
+				return A3($author$project$Render$Export$LaTeXToScripta$renderTheoremLike, newMacroNames, 'proposition', block);
+			case 'corollary':
+				return A3($author$project$Render$Export$LaTeXToScripta$renderTheoremLike, newMacroNames, 'corollary', block);
+			case 'definition':
+				return A3($author$project$Render$Export$LaTeXToScripta$renderTheoremLike, newMacroNames, 'definition', block);
+			case 'example':
+				return A3($author$project$Render$Export$LaTeXToScripta$renderNoteLike, newMacroNames, 'example', block);
+			case 'remark':
+				return A3($author$project$Render$Export$LaTeXToScripta$renderNoteLike, newMacroNames, 'remark', block);
+			case 'note':
+				return A3($author$project$Render$Export$LaTeXToScripta$renderNoteLike, newMacroNames, 'note', block);
+			case 'abstract':
+				return A3($author$project$Render$Export$LaTeXToScripta$renderEnvironment, newMacroNames, 'abstract', block);
+			case 'quote':
+				return A3($author$project$Render$Export$LaTeXToScripta$renderEnvironment, newMacroNames, 'quote', block);
+			case 'center':
+				return A2($author$project$Render$Export$LaTeXToScripta$renderCenterEnvironment, newMacroNames, block);
+			case 'figure':
+				return $author$project$Render$Export$LaTeXToScripta$renderFigure(block);
+			case 'table':
+				return $author$project$Render$Export$LaTeXToScripta$renderTable(block);
+			default:
+				return '| ' + name;
+		}
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderParagraph = F2(
+	function (newMacroNames, block) {
+		var _v0 = block.body;
+		if (_v0.$ === 'Left') {
+			var str = _v0.a;
+			return $elm$core$String$trim(str);
+		} else {
+			var exprs = _v0.a;
+			return $elm$core$String$trim(
+				A2(
+					$elm$core$String$join,
+					' ',
+					A2(
+						$elm$core$List$map,
+						$author$project$Render$Export$LaTeXToScripta$renderExpression(newMacroNames),
+						exprs)));
+		}
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderAlignedBlock = F2(
+	function (newMacroNames, block) {
+		var content = function () {
+			var _v0 = block.body;
+			if (_v0.$ === 'Left') {
+				var str = _v0.a;
+				return $elm$core$String$trim(str);
+			} else {
+				var _v1 = block.args;
+				if (!_v1.b) {
+					var sourceLines = $elm$core$String$lines(block.meta.sourceText);
+					var extractContent = function (lines) {
+						return $elm$core$String$trim(
+							A2(
+								$elm$core$String$join,
+								'\n',
+								A2(
+									$elm$core$List$filter,
+									function (line) {
+										return (!A2($elm$core$String$contains, '\\begin{align}', line)) && (!A2($elm$core$String$contains, '\\end{align}', line));
+									},
+									lines)));
+					};
+					return extractContent(sourceLines);
+				} else {
+					var args = _v1;
+					return A2($elm$core$String$join, '\n', args);
+				}
+			}
+		}();
+		return $elm$core$String$isEmpty(content) ? '| aligned' : ('| aligned\n' + A2($author$project$Render$Export$LaTeXToScripta$convertLatexMathToScripta, newMacroNames, content));
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderCodeBlock = function (block) {
+	var _v0 = block.body;
+	if (_v0.$ === 'Left') {
+		var str = _v0.a;
+		return '| code\n' + str;
+	} else {
+		return 'Error: Invalid code block';
+	}
+};
+var $author$project$Render$Export$LaTeXToScripta$renderEquationBlock = F2(
+	function (newMacroNames, block) {
+		var _v0 = block.body;
+		if (_v0.$ === 'Left') {
+			var str = _v0.a;
+			return '| equation\n' + A2($author$project$Render$Export$LaTeXToScripta$convertLatexMathToScripta, newMacroNames, str);
+		} else {
+			return 'Error: Invalid equation block';
+		}
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderFigureVerbatim = function (block) {
+	var _v0 = block.body;
+	if (_v0.$ === 'Left') {
+		var str = _v0.a;
+		var lines = $elm$core$String$lines(str);
+		var extractImageUrl = function (line) {
+			return A2($elm$core$String$contains, '\\includegraphics', line) ? A2(
+				$elm$core$Maybe$withDefault,
+				'',
+				$elm$core$List$head(
+					A2(
+						$elm$core$String$split,
+						'}',
+						A2(
+							$elm$core$Maybe$withDefault,
+							'',
+							$elm$core$List$head(
+								A2(
+									$elm$core$List$drop,
+									1,
+									A2($elm$core$String$split, '{', line))))))) : '';
+		};
+		var imageUrl = A2(
+			$elm$core$Maybe$withDefault,
+			'',
+			$elm$core$List$head(
+				A2(
+					$elm$core$List$filter,
+					$elm$core$Basics$neq(''),
+					A2($elm$core$List$map, extractImageUrl, lines))));
+		var extractCaption = function (lines_) {
+			return A2(
+				$elm$core$Maybe$withDefault,
+				'',
+				A2(
+					$elm$core$Maybe$map,
+					function (line) {
+						return A2(
+							$elm$core$Maybe$withDefault,
+							'',
+							$elm$core$List$head(
+								A2(
+									$elm$core$String$split,
+									'}',
+									A2(
+										$elm$core$String$join,
+										'',
+										A2(
+											$elm$core$List$drop,
+											1,
+											A2($elm$core$String$split, '\\caption{', line))))));
+					},
+					$elm$core$List$head(
+						A2(
+							$elm$core$List$filter,
+							$elm$core$String$contains('\\caption'),
+							lines_))));
+		};
+		var caption = extractCaption(lines);
+		return $elm$core$String$isEmpty(imageUrl) ? '| figure' : ($elm$core$String$isEmpty(caption) ? ('| image\n' + imageUrl) : ('| image caption:' + (caption + ('\n' + imageUrl))));
+	} else {
+		return '| figure';
+	}
+};
+var $author$project$Render$Export$LaTeXToScripta$renderMathBlock = F2(
+	function (newMacroNames, block) {
+		var _v0 = block.body;
+		if (_v0.$ === 'Left') {
+			var str = _v0.a;
+			return '| math\n' + A2($author$project$Render$Export$LaTeXToScripta$convertLatexMathToScripta, newMacroNames, str);
+		} else {
+			return '| math';
+		}
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderVerbatimBlock = function (block) {
+	var _v0 = block.body;
+	if (_v0.$ === 'Left') {
+		var str = _v0.a;
+		return '| code\n' + str;
+	} else {
+		return '| code';
+	}
+};
+var $author$project$Render$Export$LaTeXToScripta$renderVerbatim = F3(
+	function (newMacroNames, name, block) {
+		switch (name) {
+			case 'math':
+				return A2($author$project$Render$Export$LaTeXToScripta$renderMathBlock, newMacroNames, block);
+			case 'equation':
+				return A2($author$project$Render$Export$LaTeXToScripta$renderEquationBlock, newMacroNames, block);
+			case 'align':
+				return A2($author$project$Render$Export$LaTeXToScripta$renderAlignedBlock, newMacroNames, block);
+			case 'code':
+				return $author$project$Render$Export$LaTeXToScripta$renderCodeBlock(block);
+			case 'verbatim':
+				return $author$project$Render$Export$LaTeXToScripta$renderVerbatimBlock(block);
+			case 'lstlisting':
+				return $author$project$Render$Export$LaTeXToScripta$renderCodeBlock(block);
+			case 'minted':
+				return $author$project$Render$Export$LaTeXToScripta$renderCodeBlock(block);
+			case 'figure':
+				return $author$project$Render$Export$LaTeXToScripta$renderFigureVerbatim(block);
+			default:
+				return '| ' + name;
+		}
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderBlock = F2(
+	function (newMacroNames, block) {
+		var _v0 = block.heading;
+		switch (_v0.$) {
+			case 'Paragraph':
+				return A2($author$project$Render$Export$LaTeXToScripta$renderParagraph, newMacroNames, block);
+			case 'Ordinary':
+				var name = _v0.a;
+				return A3($author$project$Render$Export$LaTeXToScripta$renderOrdinary, newMacroNames, name, block);
+			default:
+				var name = _v0.a;
+				return A3($author$project$Render$Export$LaTeXToScripta$renderVerbatim, newMacroNames, name, block);
+		}
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderItemWithContext = F3(
+	function (newMacroNames, context, block) {
+		var prefix = function () {
+			if ((context.$ === 'Just') && (context.a === 'enumerate')) {
+				return '. ';
+			} else {
+				return '- ';
+			}
+		}();
+		var extractFromFirstLine = function () {
+			var line = block.firstLine;
+			return (A2($elm$core$String$contains, '\\item', line) && A2($elm$core$String$contains, '{', line)) ? $elm$core$String$trim(
+				A2(
+					$elm$core$Maybe$withDefault,
+					'',
+					$elm$core$List$head(
+						A2(
+							$elm$core$String$split,
+							'}',
+							function (s) {
+								return A2($elm$core$String$startsWith, '{', s) ? A2($elm$core$String$dropLeft, 1, s) : s;
+							}(
+								$elm$core$String$trim(
+									A3($elm$core$String$replace, '\\item', '', line))))))) : '';
+		}();
+		var content = function () {
+			if (!$elm$core$String$isEmpty(extractFromFirstLine)) {
+				return extractFromFirstLine;
+			} else {
+				if (!$elm$core$List$isEmpty(block.args)) {
+					var _v0 = block.args;
+					if (_v0.b) {
+						var arg = _v0.a;
+						return arg;
+					} else {
+						return '';
+					}
+				} else {
+					var _v1 = block.body;
+					if (_v1.$ === 'Left') {
+						var str = _v1.a;
+						return $elm$core$String$trim(str);
+					} else {
+						var exprs = _v1.a;
+						return $elm$core$String$trim(
+							A2(
+								$elm$core$String$join,
+								' ',
+								A2(
+									$elm$core$List$map,
+									$author$project$Render$Export$LaTeXToScripta$renderExpression(newMacroNames),
+									A2(
+										$elm$core$List$filter,
+										function (expr) {
+											_v2$2:
+											while (true) {
+												if (expr.$ === 'Fun') {
+													switch (expr.a) {
+														case 'errorHighlight':
+															return false;
+														case 'blue':
+															return false;
+														default:
+															break _v2$2;
+													}
+												} else {
+													break _v2$2;
+												}
+											}
+											return true;
+										},
+										exprs))));
+					}
+				}
+			}
+		}();
+		return _Utils_ap(prefix, content);
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderBlockWithContext = F3(
+	function (newMacroNames, context, block) {
+		var _v0 = block.heading;
+		if ((_v0.$ === 'Ordinary') && (_v0.a === 'item')) {
+			return A3($author$project$Render$Export$LaTeXToScripta$renderItemWithContext, newMacroNames, context, block);
+		} else {
+			return A2($author$project$Render$Export$LaTeXToScripta$renderBlock, newMacroNames, block);
+		}
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderTreeWithContext = F4(
+	function (newMacroNames, indent, parentContext, tree) {
+		var indentStr = A2($elm$core$String$repeat, indent * 2, ' ');
+		var currentBlock = $maca$elm_rose_tree$RoseTree$Tree$value(tree);
+		var shouldRenderChildren = function () {
+			var _v2 = currentBlock.heading;
+			_v2$2:
+			while (true) {
+				if (_v2.$ === 'Ordinary') {
+					switch (_v2.a) {
+						case 'itemize':
+							return false;
+						case 'enumerate':
+							return false;
+						default:
+							break _v2$2;
+					}
+				} else {
+					break _v2$2;
+				}
+			}
+			return true;
+		}();
+		var context = function () {
+			var _v1 = currentBlock.heading;
+			_v1$2:
+			while (true) {
+				if (_v1.$ === 'Ordinary') {
+					switch (_v1.a) {
+						case 'enumerate':
+							return $elm$core$Maybe$Just('enumerate');
+						case 'itemize':
+							return $elm$core$Maybe$Just('itemize');
+						default:
+							break _v1$2;
+					}
+				} else {
+					break _v1$2;
+				}
+			}
+			return parentContext;
+		}();
+		var currentRendered = _Utils_ap(
+			indentStr,
+			A3($author$project$Render$Export$LaTeXToScripta$renderBlockWithContext, newMacroNames, context, currentBlock));
+		var children = $maca$elm_rose_tree$RoseTree$Tree$children(tree);
+		var childrenRendered = function () {
+			if (!shouldRenderChildren) {
+				return '';
+			} else {
+				if (!children.b) {
+					return '';
+				} else {
+					return function (s) {
+						return '\n' + s;
+					}(
+						A2(
+							$elm$core$String$join,
+							'\n',
+							A2(
+								$elm$core$List$map,
+								A3($author$project$Render$Export$LaTeXToScripta$renderTreeWithContext, newMacroNames, indent + 1, context),
+								children)));
+				}
+			}
+		}();
+		return _Utils_ap(currentRendered, childrenRendered);
+	});
+var $author$project$Render$Export$LaTeXToScripta$renderS = F2(
+	function (newMacroNames, forest) {
+		return A2(
+			$elm$core$String$join,
+			'\n\n',
+			A2(
+				$elm$core$List$filter,
+				A2($elm$core$Basics$composeL, $elm$core$Basics$not, $elm$core$String$isEmpty),
+				A2(
+					$elm$core$List$indexedMap,
+					F2(
+						function (index, tree) {
+							var context = A2($author$project$Render$Export$LaTeXToScripta$determineContext, index, forest);
+							return A4($author$project$Render$Export$LaTeXToScripta$renderTreeWithContext, newMacroNames, 0, context, tree);
+						}),
+					forest)));
+	});
+var $author$project$Render$Export$LaTeXToScripta$translate = function (latexSource) {
+	var lines = $elm$core$String$lines(
+		$author$project$Render$Export$LaTeXToScripta$convertVerbatimBacktick(latexSource));
+	var isNewCommand = function (line) {
+		return A2(
+			$elm$core$String$startsWith,
+			'\\newcommand',
+			$elm$core$String$trim(line));
+	};
+	var _v0 = A2($elm$core$List$partition, isNewCommand, lines);
+	var newCommandLines = _v0.a;
+	var contentLines = _v0.b;
+	var contentSource = A2($elm$core$String$join, '\n', contentLines);
+	var forest = $author$project$Render$Export$LaTeXToScripta$parseL(contentSource);
+	var newMacroNames = A2(
+		$elm$core$List$filterMap,
+		function (line) {
+			var _v1 = $author$project$ETeX$MathMacros$parseNewCommand(line);
+			if ((_v1.$ === 'Ok') && (_v1.a.a.$ === 'MacroName')) {
+				var _v2 = _v1.a;
+				var name = _v2.a.a;
+				return $elm$core$Maybe$Just(name);
+			} else {
+				return $elm$core$Maybe$Nothing;
+			}
+		},
+		newCommandLines);
+	var macroBlock = $elm$core$List$isEmpty(newCommandLines) ? '' : (A2(
+		$author$project$Render$Export$LaTeXToScripta$mathMacros,
+		newMacroNames,
+		A2($elm$core$String$join, '\n', newCommandLines)) + '\n\n');
+	var renderedContent = ($elm$core$List$isEmpty(forest) && (!$elm$core$String$isEmpty(
+		$elm$core$String$trim(contentSource)))) ? contentSource : A2($author$project$Render$Export$LaTeXToScripta$renderS, newMacroNames, forest);
+	return _Utils_ap(macroBlock, renderedContent);
+};
 var $ohanhi$keyboard$Keyboard$Backspace = {$: 'Backspace'};
 var $ohanhi$keyboard$Keyboard$Clear = {$: 'Clear'};
 var $ohanhi$keyboard$Keyboard$Copy = {$: 'Copy'};
@@ -56000,16 +57787,16 @@ var $author$project$MainSQLite$update = F2(
 						$elm$core$Task$perform,
 						$author$project$MainSQLite$FileLoaded,
 						$elm$file$File$toString(file)));
-			default:
+			case 'FileLoaded':
 				var content = msg.a;
 				var title = $author$project$Common$Model$getTitleFromContent(content);
 				var storage = $author$project$Storage$SQLite$storage($author$project$MainSQLite$StorageMsg);
-				var _v10 = A2(
+				var _v11 = A2(
 					$author$project$MainSQLite$updateCommon,
 					$author$project$Common$Model$InputText(content),
 					model);
-				var modelWithContent = _v10.a;
-				var cmdFromUpdate = _v10.b;
+				var modelWithContent = _v11.a;
+				var cmdFromUpdate = _v11.b;
 				var newId = 'imported-' + $elm$core$String$fromInt(
 					($elm$time$Time$posixToMillis(modelWithContent.common.currentTime) / 1) | 0);
 				var newDoc = A6(
@@ -56031,6 +57818,72 @@ var $author$project$MainSQLite$update = F2(
 							lastLoadedDocumentId: $elm$core$Maybe$Just(newId),
 							loadDocumentIntoEditor: true,
 							sourceText: content
+						});
+				}();
+				var updatedModel = _Utils_update(
+					modelWithContent,
+					{common: updatedCommon});
+				return _Utils_Tuple2(
+					updatedModel,
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[
+								cmdFromUpdate,
+								storage.saveDocument(newDoc),
+								A2(
+								$elm$core$Task$perform,
+								$elm$core$Basics$always(
+									$author$project$MainSQLite$CommonMsg($author$project$Common$Model$ResetLoadFlag)),
+								$elm$core$Process$sleep(100))
+							])));
+			case 'LaTeXFileSelected':
+				var file = msg.a;
+				return _Utils_Tuple2(
+					model,
+					A2(
+						$elm$core$Task$perform,
+						function (content) {
+							return $author$project$MainSQLite$LaTeXFileLoaded(
+								{
+									content: content,
+									filename: $elm$file$File$name(file)
+								});
+						},
+						$elm$file$File$toString(file)));
+			default:
+				var filename = msg.a.filename;
+				var content = msg.a.content;
+				var translatedContent = $author$project$Render$Export$LaTeXToScripta$translate(content);
+				var storage = $author$project$Storage$SQLite$storage($author$project$MainSQLite$StorageMsg);
+				var basename = A2($elm$core$String$endsWith, '.tex', filename) ? A2($elm$core$String$dropRight, 4, filename) : filename;
+				var scriptaContent = '| title\n' + (basename + ('\n\n' + translatedContent));
+				var _v12 = A2(
+					$author$project$MainSQLite$updateCommon,
+					$author$project$Common$Model$InputText(scriptaContent),
+					model);
+				var modelWithContent = _v12.a;
+				var cmdFromUpdate = _v12.b;
+				var newId = 'latex-import-' + $elm$core$String$fromInt(
+					($elm$time$Time$posixToMillis(modelWithContent.common.currentTime) / 1000) | 0);
+				var newDoc = A6(
+					$author$project$Document$newDocument,
+					newId,
+					basename,
+					A2($elm$core$Maybe$withDefault, '', modelWithContent.common.userName),
+					scriptaContent,
+					modelWithContent.common.theme,
+					modelWithContent.common.currentTime);
+				var updatedCommon = function () {
+					var oldCommon = modelWithContent.common;
+					return _Utils_update(
+						oldCommon,
+						{
+							currentDocument: $elm$core$Maybe$Just(newDoc),
+							documents: A2($elm$core$List$cons, newDoc, modelWithContent.common.documents),
+							initialText: scriptaContent,
+							lastLoadedDocumentId: $elm$core$Maybe$Just(newId),
+							loadDocumentIntoEditor: true,
+							sourceText: scriptaContent
 						});
 				}();
 				var updatedModel = _Utils_update(
@@ -56368,6 +58221,35 @@ var $author$project$MainSQLite$updateCommon = F2(
 								{showDocumentList: !common.showDocumentList})
 						}),
 					$elm$core$Platform$Cmd$none);
+			case 'ToggleSortOrder':
+				var newSortOrder = function () {
+					var _v5 = common.sortOrder;
+					if (_v5.$ === 'Alphabetical') {
+						return $author$project$Common$Model$Recent;
+					} else {
+						return $author$project$Common$Model$Alphabetical;
+					}
+				}();
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							common: _Utils_update(
+								common,
+								{sortOrder: newSortOrder})
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 'InputDocumentSearchText':
+				var text = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							common: _Utils_update(
+								common,
+								{documentSearchText: text})
+						}),
+					$elm$core$Platform$Cmd$none);
 			case 'AutoSave':
 				var time = msg.a;
 				var shouldSave = (($elm$time$Time$posixToMillis(time) - $elm$time$Time$posixToMillis(common.lastSaved)) > 30000) && ((common.sourceText !== '') && (!_Utils_eq(common.lastChanged, common.lastSaved)));
@@ -56455,6 +58337,14 @@ var $author$project$MainSQLite$updateCommon = F2(
 						_List_fromArray(
 							['text/plain', '.scripta', '.txt']),
 						$author$project$MainSQLite$FileSelected));
+			case 'ImportLaTeXFile':
+				return _Utils_Tuple2(
+					model,
+					A2(
+						$elm$file$File$Select$file,
+						_List_fromArray(
+							['text/x-tex', 'text/x-latex', '.tex', 'application/x-tex']),
+						$author$project$MainSQLite$LaTeXFileSelected));
 			case 'PrintToPDF':
 				var settings = A7(
 					$author$project$Render$Settings$makeSettings,
@@ -56585,7 +58475,7 @@ var $author$project$MainSQLite$updateCommon = F2(
 						{common: newCommon}),
 					(firstId !== '') ? A2(
 						$elm$core$Task$perform,
-						function (_v8) {
+						function (_v9) {
 							return $author$project$MainSQLite$CommonMsg(
 								$author$project$Common$Model$SelectId(firstId));
 						},
@@ -56603,7 +58493,7 @@ var $author$project$MainSQLite$updateCommon = F2(
 						$elm$core$Task$perform,
 						$elm$core$Basics$always(
 							$author$project$MainSQLite$CommonMsg($author$project$Common$Model$ResetLoadFlag)),
-						$elm$core$Process$sleep(100)));
+						$elm$core$Process$sleep(300)));
 			case 'ResetLoadFlag':
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -56681,7 +58571,7 @@ var $author$project$MainSQLite$updateCommon = F2(
 								$elm$core$Task$perform,
 								$elm$core$Basics$always(
 									$author$project$MainSQLite$CommonMsg($author$project$Common$Model$LoadContentIntoEditorDelayed)),
-								$elm$core$Process$sleep(200))
+								$elm$core$Process$sleep(500))
 							])));
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -57278,6 +59168,9 @@ var $author$project$Common$View$mainColumnStyle = _List_fromArray(
 		$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 		$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
 	]);
+var $author$project$Common$Model$InputDocumentSearchText = function (a) {
+	return {$: 'InputDocumentSearchText', a: a};
+};
 var $mdgriffith$elm_ui$Internal$Model$Hover = {$: 'Hover'};
 var $mdgriffith$elm_ui$Internal$Flag$hover = $mdgriffith$elm_ui$Internal$Flag$flag(33);
 var $mdgriffith$elm_ui$Element$mouseOver = function (decs) {
@@ -57378,7 +59271,7 @@ var $author$project$Common$View$crudButtons = F2(
 			$mdgriffith$elm_ui$Element$row,
 			_List_fromArray(
 				[
-					$mdgriffith$elm_ui$Element$spacing(8),
+					$mdgriffith$elm_ui$Element$spacing(4),
 					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 				]),
 			_List_fromArray(
@@ -57390,22 +59283,12 @@ var $author$project$Common$View$crudButtons = F2(
 var $author$project$Common$Model$DeleteDocument = function (a) {
 	return {$: 'DeleteDocument', a: a};
 };
-var $author$project$Style$formatRelativeTime = F2(
-	function (currentTime, savedTime) {
-		var savedMillis = $elm$time$Time$posixToMillis(savedTime);
-		var currentMillis = $elm$time$Time$posixToMillis(currentTime);
-		var diffMillis = currentMillis - savedMillis;
-		var seconds = (diffMillis / 1000) | 0;
-		var minutes = (seconds / 60) | 0;
-		var hours = (minutes / 60) | 0;
-		return (!savedMillis) ? 'Never' : ((seconds < 5) ? 'Just now' : ((seconds < 60) ? ($elm$core$String$fromInt(seconds) + ' seconds ago') : ((minutes < 60) ? ($elm$core$String$fromInt(minutes) + (' minute' + (((minutes === 1) ? '' : 's') + ' ago'))) : ((hours < 24) ? ($elm$core$String$fromInt(hours) + (' hour' + (((hours === 1) ? '' : 's') + ' ago'))) : ($elm$core$String$fromInt((hours / 24) | 0) + (' day' + (((((hours / 24) | 0) === 1) ? '' : 's') + ' ago')))))));
-	});
 var $author$project$Common$View$documentItem = F3(
 	function (toMsg, model, doc) {
 		var isActive = function () {
-			var _v2 = model.currentDocument;
-			if (_v2.$ === 'Just') {
-				var currentDoc = _v2.a;
+			var _v1 = model.currentDocument;
+			if (_v1.$ === 'Just') {
+				var currentDoc = _v1.a;
 				return _Utils_eq(currentDoc.id, doc.id);
 			} else {
 				return false;
@@ -57416,8 +59299,8 @@ var $author$project$Common$View$documentItem = F3(
 				$mdgriffith$elm_ui$Element$Border$width(1),
 				$mdgriffith$elm_ui$Element$Border$color(
 				function () {
-					var _v1 = model.theme;
-					if (_v1.$ === 'Light') {
+					var _v0 = model.theme;
+					if (_v0.$ === 'Light') {
 						return A3($mdgriffith$elm_ui$Element$rgb255, 64, 64, 64);
 					} else {
 						return A3($mdgriffith$elm_ui$Element$rgb255, 220, 220, 220);
@@ -57430,7 +59313,7 @@ var $author$project$Common$View$documentItem = F3(
 				_List_fromArray(
 					[
 						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$padding(8),
+						$mdgriffith$elm_ui$Element$padding(4),
 						$mdgriffith$elm_ui$Element$Border$rounded(4),
 						$mdgriffith$elm_ui$Element$spacing(8),
 						$mdgriffith$elm_ui$Element$mouseOver(
@@ -57451,38 +59334,12 @@ var $author$project$Common$View$documentItem = F3(
 						]),
 					{
 						label: A2(
-							$mdgriffith$elm_ui$Element$column,
+							$mdgriffith$elm_ui$Element$el,
 							_List_fromArray(
 								[
-									$mdgriffith$elm_ui$Element$spacing(2)
+									$mdgriffith$elm_ui$Element$Font$size(13)
 								]),
-							_List_fromArray(
-								[
-									A2(
-									$mdgriffith$elm_ui$Element$el,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$Font$size(13)
-										]),
-									$mdgriffith$elm_ui$Element$text(doc.title)),
-									A2(
-									$mdgriffith$elm_ui$Element$el,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$Font$size(11),
-											$mdgriffith$elm_ui$Element$Font$color(
-											function () {
-												var _v0 = model.theme;
-												if (_v0.$ === 'Light') {
-													return A3($mdgriffith$elm_ui$Element$rgb, 0.4, 0.4, 0.4);
-												} else {
-													return A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.7, 0.7);
-												}
-											}())
-										]),
-									$mdgriffith$elm_ui$Element$text(
-										A2($author$project$Style$formatRelativeTime, model.currentTime, doc.modifiedAt)))
-								])),
+							$mdgriffith$elm_ui$Element$text(doc.title)),
 						onPress: $elm$core$Maybe$Just(
 							toMsg(
 								$author$project$Common$Model$LoadDocument(doc.id)))
@@ -57517,6 +59374,7 @@ var $author$project$Common$View$documentItem = F3(
 var $author$project$Common$Model$ExportScriptaFile = {$: 'ExportScriptaFile'};
 var $author$project$Common$Model$ExportToLaTeX = {$: 'ExportToLaTeX'};
 var $author$project$Common$Model$ExportToRawLaTeX = {$: 'ExportToRawLaTeX'};
+var $author$project$Common$Model$ImportLaTeXFile = {$: 'ImportLaTeXFile'};
 var $author$project$Common$Model$ImportScriptaFile = {$: 'ImportScriptaFile'};
 var $author$project$Common$Model$PrintToPDF = {$: 'PrintToPDF'};
 var $author$project$Common$View$extractFileName = function (pdfLink) {
@@ -57534,7 +59392,7 @@ var $author$project$Common$View$exportStuff = F2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
 				[
-					$mdgriffith$elm_ui$Element$spacing(4),
+					$mdgriffith$elm_ui$Element$spacing(2),
 					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 				]),
 			_List_fromArray(
@@ -57542,8 +59400,8 @@ var $author$project$Common$View$exportStuff = F2(
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
-						[$mdgriffith$elm_ui$Element$Font$bold]),
-					$mdgriffith$elm_ui$Element$text('Export')),
+						[$mdgriffith$elm_ui$Element$Font$semiBold]),
+					$mdgriffith$elm_ui$Element$text('Export/Import')),
 					function () {
 					var _v0 = model.printingState;
 					switch (_v0.$) {
@@ -57552,7 +59410,7 @@ var $author$project$Common$View$exportStuff = F2(
 								$mdgriffith$elm_ui$Element$column,
 								_List_fromArray(
 									[
-										$mdgriffith$elm_ui$Element$spacing(4),
+										$mdgriffith$elm_ui$Element$spacing(2),
 										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 									]),
 								_List_fromArray(
@@ -57561,7 +59419,7 @@ var $author$project$Common$View$exportStuff = F2(
 										$mdgriffith$elm_ui$Element$row,
 										_List_fromArray(
 											[
-												$mdgriffith$elm_ui$Element$spacing(4),
+												$mdgriffith$elm_ui$Element$spacing(2),
 												$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 											]),
 										_List_fromArray(
@@ -57586,26 +59444,42 @@ var $author$project$Common$View$exportStuff = F2(
 												'Raw LaTeX')
 											])),
 										A2(
-										$mdgriffith$elm_ui$Element$row,
+										$mdgriffith$elm_ui$Element$column,
 										_List_fromArray(
 											[
-												$mdgriffith$elm_ui$Element$spacing(4),
+												$mdgriffith$elm_ui$Element$spacing(2),
 												$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 											]),
 										_List_fromArray(
 											[
+												A2(
+												$mdgriffith$elm_ui$Element$row,
+												_List_fromArray(
+													[
+														$mdgriffith$elm_ui$Element$spacing(2),
+														$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+													]),
+												_List_fromArray(
+													[
+														A3(
+														$author$project$Widget$sidebarButton,
+														model.theme,
+														$elm$core$Maybe$Just(
+															toMsg($author$project$Common$Model$ExportScriptaFile)),
+														'Save Scripta'),
+														A3(
+														$author$project$Widget$sidebarButton,
+														model.theme,
+														$elm$core$Maybe$Just(
+															toMsg($author$project$Common$Model$ImportScriptaFile)),
+														'Import Scripta')
+													])),
 												A3(
 												$author$project$Widget$sidebarButton,
 												model.theme,
 												$elm$core$Maybe$Just(
-													toMsg($author$project$Common$Model$ExportScriptaFile)),
-												'Save Scripta'),
-												A3(
-												$author$project$Widget$sidebarButton,
-												model.theme,
-												$elm$core$Maybe$Just(
-													toMsg($author$project$Common$Model$ImportScriptaFile)),
-												'Import Scripta')
+													toMsg($author$project$Common$Model$ImportLaTeXFile)),
+												'Import LaTeX')
 											]))
 									]));
 						case 'PrintProcessing':
@@ -57622,32 +59496,48 @@ var $author$project$Common$View$exportStuff = F2(
 								$mdgriffith$elm_ui$Element$column,
 								_List_fromArray(
 									[
-										$mdgriffith$elm_ui$Element$spacing(4),
+										$mdgriffith$elm_ui$Element$spacing(2),
 										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 									]),
 								_List_fromArray(
 									[
 										A2(
-										$mdgriffith$elm_ui$Element$row,
+										$mdgriffith$elm_ui$Element$column,
 										_List_fromArray(
 											[
-												$mdgriffith$elm_ui$Element$spacing(4),
+												$mdgriffith$elm_ui$Element$spacing(2),
 												$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 											]),
 										_List_fromArray(
 											[
+												A2(
+												$mdgriffith$elm_ui$Element$row,
+												_List_fromArray(
+													[
+														$mdgriffith$elm_ui$Element$spacing(2),
+														$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+													]),
+												_List_fromArray(
+													[
+														A3(
+														$author$project$Widget$sidebarButton,
+														model.theme,
+														$elm$core$Maybe$Just(
+															toMsg($author$project$Common$Model$ExportScriptaFile)),
+														'Save Scripta'),
+														A3(
+														$author$project$Widget$sidebarButton,
+														model.theme,
+														$elm$core$Maybe$Just(
+															toMsg($author$project$Common$Model$ImportScriptaFile)),
+														'Import Scripta')
+													])),
 												A3(
 												$author$project$Widget$sidebarButton,
 												model.theme,
 												$elm$core$Maybe$Just(
-													toMsg($author$project$Common$Model$ExportScriptaFile)),
-												'Save Scripta'),
-												A3(
-												$author$project$Widget$sidebarButton,
-												model.theme,
-												$elm$core$Maybe$Just(
-													toMsg($author$project$Common$Model$ImportScriptaFile)),
-												'Import Scripta')
+													toMsg($author$project$Common$Model$ImportLaTeXFile)),
+												'Import LaTeX')
 											])),
 										function () {
 										var _v1 = model.pdfResponse;
@@ -57753,20 +59643,27 @@ var $author$project$Common$View$exportStuff = F2(
 				}()
 				]));
 	});
-var $author$project$Style$innerColumn = _List_fromArray(
-	[
-		$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-		$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-		A2($mdgriffith$elm_ui$Element$paddingXY, 16, 16),
-		$mdgriffith$elm_ui$Element$spacing(12),
-		$mdgriffith$elm_ui$Element$scrollbarY,
-		$mdgriffith$elm_ui$Element$htmlAttribute(
-		A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
-		$mdgriffith$elm_ui$Element$htmlAttribute(
-		A2($elm$html$Html$Attributes$style, 'min-height', '0')),
-		$mdgriffith$elm_ui$Element$htmlAttribute(
-		A2($elm$html$Html$Attributes$style, 'box-sizing', 'border-box'))
-	]);
+var $author$project$Common$View$filterDocuments = F2(
+	function (searchText, docs) {
+		if ($elm$core$String$isEmpty(searchText)) {
+			return docs;
+		} else {
+			var searchLower = $elm$core$String$toLower(searchText);
+			return A2(
+				$elm$core$List$filter,
+				function (doc) {
+					return A2(
+						$elm$core$String$contains,
+						searchLower,
+						$elm$core$String$toLower(doc.title));
+				},
+				docs);
+		}
+	});
+var $mdgriffith$elm_ui$Element$Input$HiddenLabel = function (a) {
+	return {$: 'HiddenLabel', a: a};
+};
+var $mdgriffith$elm_ui$Element$Input$labelHidden = $mdgriffith$elm_ui$Element$Input$HiddenLabel;
 var $author$project$Common$Model$InputUserName = function (a) {
 	return {$: 'InputUserName', a: a};
 };
@@ -57791,10 +59688,6 @@ var $mdgriffith$elm_ui$Element$alpha = function (o) {
 			'transparency-' + $mdgriffith$elm_ui$Internal$Model$floatClass(transparency),
 			transparency));
 };
-var $mdgriffith$elm_ui$Element$Input$HiddenLabel = function (a) {
-	return {$: 'HiddenLabel', a: a};
-};
-var $mdgriffith$elm_ui$Element$Input$labelHidden = $mdgriffith$elm_ui$Element$Input$HiddenLabel;
 var $mdgriffith$elm_ui$Element$Input$TextInputNode = function (a) {
 	return {$: 'TextInputNode', a: a};
 };
@@ -58661,6 +60554,11 @@ var $author$project$Common$View$nameElement = F2(
 					A2($elm$core$Basics$composeL, toMsg, $author$project$Common$Model$InputUserName))
 				]));
 	});
+var $mdgriffith$elm_ui$Element$Input$Placeholder = F2(
+	function (a, b) {
+		return {$: 'Placeholder', a: a, b: b};
+	});
+var $mdgriffith$elm_ui$Element$Input$placeholder = $mdgriffith$elm_ui$Element$Input$Placeholder;
 var $author$project$Style$rightPanelBackgroundColor = function (theme) {
 	if (theme.$ === 'Light') {
 		return A3($mdgriffith$elm_ui$Element$rgb255, 230, 230, 230);
@@ -58672,7 +60570,25 @@ var $author$project$Style$rightPanelBackground_ = function (theme) {
 	return $mdgriffith$elm_ui$Element$Background$color(
 		$author$project$Style$rightPanelBackgroundColor(theme));
 };
-var $author$project$Common$Model$ToggleTheme = {$: 'ToggleTheme'};
+var $author$project$Common$View$sortDocuments = F2(
+	function (sortOrder, docs) {
+		if (sortOrder.$ === 'Alphabetical') {
+			return A2(
+				$elm$core$List$sortBy,
+				function ($) {
+					return $.title;
+				},
+				docs);
+		} else {
+			return A2(
+				$elm$core$List$sortBy,
+				function (d) {
+					return -$elm$time$Time$posixToMillis(d.modifiedAt);
+				},
+				docs);
+		}
+	});
+var $author$project$Common$Model$ToggleSortOrder = {$: 'ToggleSortOrder'};
 var $mdgriffith$elm_ui$Element$Font$extraLight = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.textExtraLight);
 var $author$project$Common$View$sidebarButton2 = F4(
 	function (modelTheme, buttonTheme, msg, label) {
@@ -58709,6 +60625,71 @@ var $author$project$Common$View$sidebarButton2 = F4(
 				onPress: msg
 			});
 	});
+var $author$project$Common$View$toggleSortOrder = F2(
+	function (toMsg, model) {
+		return A2(
+			$mdgriffith$elm_ui$Element$row,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$height(
+					$mdgriffith$elm_ui$Element$px(30)),
+					$mdgriffith$elm_ui$Element$spacing(0)
+				]),
+			_List_fromArray(
+				[
+					function () {
+					var _v0 = model.sortOrder;
+					if (_v0.$ === 'Alphabetical') {
+						return A2(
+							$mdgriffith$elm_ui$Element$row,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$spacing(0)
+								]),
+							_List_fromArray(
+								[
+									A4(
+									$author$project$Common$View$sidebarButton2,
+									model.theme,
+									model.theme,
+									$elm$core$Maybe$Just(
+										toMsg($author$project$Common$Model$ToggleSortOrder)),
+									'Alpha'),
+									A3(
+									$author$project$Widget$sidebarButton,
+									model.theme,
+									$elm$core$Maybe$Just(
+										toMsg($author$project$Common$Model$ToggleSortOrder)),
+									'Recent')
+								]));
+					} else {
+						return A2(
+							$mdgriffith$elm_ui$Element$row,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$spacing(0)
+								]),
+							_List_fromArray(
+								[
+									A3(
+									$author$project$Widget$sidebarButton,
+									model.theme,
+									$elm$core$Maybe$Just(
+										toMsg($author$project$Common$Model$ToggleSortOrder)),
+									'Alpha'),
+									A4(
+									$author$project$Common$View$sidebarButton2,
+									model.theme,
+									model.theme,
+									$elm$core$Maybe$Just(
+										toMsg($author$project$Common$Model$ToggleSortOrder)),
+									'Recent')
+								]));
+					}
+				}()
+				]));
+	});
+var $author$project$Common$Model$ToggleTheme = {$: 'ToggleTheme'};
 var $author$project$Common$View$toggleTheme = F2(
 	function (toMsg, model) {
 		return A2(
@@ -58763,58 +60744,102 @@ var $author$project$Common$View$sidebar = F2(
 					$mdgriffith$elm_ui$Element$Border$widthEach(
 					{bottom: 0, left: 1, right: 0, top: 0}),
 					$mdgriffith$elm_ui$Element$Border$color(
-					A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.5, 0.5))
+					A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.5, 0.5)),
+					$mdgriffith$elm_ui$Element$htmlAttribute(
+					A2($elm$html$Html$Attributes$style, 'overflow', 'hidden')),
+					A2($mdgriffith$elm_ui$Element$paddingXY, 8, 8)
 				]),
 			_List_fromArray(
 				[
 					A2(
 					$mdgriffith$elm_ui$Element$column,
-					$author$project$Style$innerColumn,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$spacing(2),
+							$mdgriffith$elm_ui$Element$paddingEach(
+							{bottom: 36, left: 0, right: 0, top: 0})
+						]),
 					_List_fromArray(
 						[
 							A2($author$project$Common$View$nameElement, toMsg, model),
-							A2(
-							$mdgriffith$elm_ui$Element$el,
-							_List_fromArray(
-								[
-									A2($mdgriffith$elm_ui$Element$paddingXY, 0, 8),
-									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-								]),
-							$mdgriffith$elm_ui$Element$text('')),
 							A2($author$project$Common$View$toggleTheme, toMsg, model),
-							A2($author$project$Common$View$crudButtons, toMsg, model),
-							A2($author$project$Common$View$exportStuff, toMsg, model),
+							A2($author$project$Common$View$crudButtons, toMsg, model)
+						])),
+					A2(
+					$mdgriffith$elm_ui$Element$column,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$paddingEach(
+							{bottom: 36, left: 0, right: 0, top: 0})
+						]),
+					_List_fromArray(
+						[
+							A2($author$project$Common$View$exportStuff, toMsg, model)
+						])),
+					A2(
+					$mdgriffith$elm_ui$Element$column,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$spacing(2)
+						]),
+					_List_fromArray(
+						[
 							A2(
-							$mdgriffith$elm_ui$Element$el,
+							$mdgriffith$elm_ui$Element$Input$text,
 							_List_fromArray(
 								[
-									A2($mdgriffith$elm_ui$Element$paddingXY, 0, 8),
-									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+									$mdgriffith$elm_ui$Element$height(
+									$mdgriffith$elm_ui$Element$px(28)),
+									$mdgriffith$elm_ui$Element$Font$size(14),
+									A2($mdgriffith$elm_ui$Element$paddingXY, 8, 3),
+									$mdgriffith$elm_ui$Element$Border$width(1),
+									$mdgriffith$elm_ui$Element$Border$color(
+									$author$project$Style$borderColor(model.theme)),
+									$mdgriffith$elm_ui$Element$Background$color(
+									$author$project$Style$backgroundColor(model.theme)),
+									$mdgriffith$elm_ui$Element$Font$color(
+									$author$project$Style$textColor(model.theme))
 								]),
-							$mdgriffith$elm_ui$Element$text('')),
+							{
+								label: $mdgriffith$elm_ui$Element$Input$labelHidden('Search documents'),
+								onChange: A2($elm$core$Basics$composeL, toMsg, $author$project$Common$Model$InputDocumentSearchText),
+								placeholder: $elm$core$Maybe$Just(
+									A2(
+										$mdgriffith$elm_ui$Element$Input$placeholder,
+										_List_Nil,
+										$mdgriffith$elm_ui$Element$text('Search documents...'))),
+								text: model.documentSearchText
+							}),
+							A2($author$project$Common$View$toggleSortOrder, toMsg, model),
 							A2(
 							$mdgriffith$elm_ui$Element$column,
 							_List_fromArray(
 								[
 									$mdgriffith$elm_ui$Element$spacing(4),
 									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-									$mdgriffith$elm_ui$Element$height(
-									$mdgriffith$elm_ui$Element$px(300)),
+									$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 									$mdgriffith$elm_ui$Element$scrollbarY,
 									$mdgriffith$elm_ui$Element$htmlAttribute(
 									A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto')),
 									$mdgriffith$elm_ui$Element$htmlAttribute(
-									A2($elm$html$Html$Attributes$style, 'overflow-x', 'hidden'))
+									A2($elm$html$Html$Attributes$style, 'overflow-x', 'hidden')),
+									$mdgriffith$elm_ui$Element$htmlAttribute(
+									A2($elm$html$Html$Attributes$style, 'flex', '1')),
+									$mdgriffith$elm_ui$Element$htmlAttribute(
+									A2($elm$html$Html$Attributes$style, 'min-height', '0'))
 								]),
 							A2(
 								$elm$core$List$map,
 								A2($author$project$Common$View$documentItem, toMsg, model),
 								A2(
-									$elm$core$List$sortBy,
-									function (d) {
-										return d.title;
-									},
-									model.documents)))
+									$author$project$Common$View$sortDocuments,
+									model.sortOrder,
+									A2($author$project$Common$View$filterDocuments, model.documentSearchText, model.documents))))
 						]))
 				]));
 	});
