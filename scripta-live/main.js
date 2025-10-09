@@ -16202,6 +16202,9 @@ var $author$project$ETeX$Transform$FCall = F2(
 	function (a, b) {
 		return {$: 'FCall', a: a, b: b};
 	});
+var $author$project$ETeX$Transform$GreekSymbol = function (a) {
+	return {$: 'GreekSymbol', a: a};
+};
 var $author$project$ETeX$Transform$LeftMathBrace = {$: 'LeftMathBrace'};
 var $author$project$ETeX$Transform$LeftParen = {$: 'LeftParen'};
 var $author$project$ETeX$Transform$Macro = F2(
@@ -16414,9 +16417,12 @@ var $author$project$ETeX$Transform$replaceParam_ = F3(
 				return $author$project$ETeX$Transform$RightParen;
 			case 'Comma':
 				return $author$project$ETeX$Transform$Comma;
-			default:
+			case 'MathSymbols':
 				var str = target.a;
 				return $author$project$ETeX$Transform$MathSymbols(str);
+			default:
+				var str = target.a;
+				return $author$project$ETeX$Transform$GreekSymbol(str);
 		}
 	});
 var $author$project$ETeX$Transform$replaceParam = F3(
@@ -16638,9 +16644,12 @@ var $author$project$ETeX$Transform$expandMacroWithDict = F2(
 				return $author$project$ETeX$Transform$RightParen;
 			case 'Comma':
 				return $author$project$ETeX$Transform$Comma;
-			default:
+			case 'MathSymbols':
 				var str = expr.a;
 				return $author$project$ETeX$Transform$MathSymbols(str);
+			default:
+				var str = expr.a;
+				return $author$project$ETeX$Transform$GreekSymbol(str);
 		}
 	});
 var $author$project$ETeX$Transform$manyHelp = F2(
@@ -16801,6 +16810,26 @@ var $author$project$ETeX$Transform$f0Parser = A2(
 		$author$project$ETeX$Transform$second,
 		$elm$parser$Parser$Advanced$symbol(
 			A2($elm$parser$Parser$Advanced$Token, '\\', $author$project$ETeX$Transform$ExpectingBackslash)),
+		$author$project$ETeX$Transform$alphaNumParser_));
+var $author$project$ETeX$Transform$ExpectingGreekLetter = {$: 'ExpectingGreekLetter'};
+var $elm$parser$Parser$Advanced$problem = function (x) {
+	return $elm$parser$Parser$Advanced$Parser(
+		function (s) {
+			return A2(
+				$elm$parser$Parser$Advanced$Bad,
+				false,
+				A2($elm$parser$Parser$Advanced$fromState, s, x));
+		});
+};
+var $author$project$ETeX$Transform$greekSymbolParser = A2(
+	$elm$parser$Parser$Advanced$andThen,
+	function (str) {
+		return A2($elm$core$List$member, str, $author$project$ETeX$KaTeX$greekLetters) ? $elm$parser$Parser$Advanced$succeed(
+			$author$project$ETeX$Transform$AlphaNum('\\' + str)) : $elm$parser$Parser$Advanced$problem($author$project$ETeX$Transform$ExpectingGreekLetter);
+	},
+	A2(
+		$elm$parser$Parser$Advanced$keeper,
+		$elm$parser$Parser$Advanced$succeed($elm$core$Basics$identity),
 		$author$project$ETeX$Transform$alphaNumParser_));
 var $author$project$ETeX$Transform$ExpectingLeftMathBrace = {$: 'ExpectingLeftMathBrace'};
 var $author$project$ETeX$Transform$leftBraceParser = A2(
@@ -17140,13 +17169,14 @@ var $author$project$ETeX$Transform$mathExprParser = function (userMacroDict) {
 		_List_fromArray(
 			[
 				$author$project$ETeX$Transform$textParser,
+				$elm$parser$Parser$Advanced$backtrackable($author$project$ETeX$Transform$greekSymbolParser),
 				$author$project$ETeX$Transform$mathMediumSpaceParser,
 				$author$project$ETeX$Transform$mathSmallSpaceParser,
 				$author$project$ETeX$Transform$mathSpaceParser,
 				$author$project$ETeX$Transform$leftBraceParser,
 				$author$project$ETeX$Transform$rightBraceParser,
-				$author$project$ETeX$Transform$macroParser(userMacroDict),
 				$author$project$ETeX$Transform$alphaNumWithLookaheadParser(userMacroDict),
+				$author$project$ETeX$Transform$macroParser(userMacroDict),
 				$elm$parser$Parser$Advanced$lazy(
 				function (_v1) {
 					return $author$project$ETeX$Transform$standaloneParenthExprParser(userMacroDict);
@@ -17327,9 +17357,12 @@ var $author$project$ETeX$Transform$print = function (expr) {
 			var exprs = expr.a;
 			return $author$project$ETeX$Transform$encloseP(
 				$author$project$ETeX$Transform$printList(exprs));
-		default:
+		case 'Text':
 			var str = expr.a;
 			return '\\text{' + (str + '}');
+		default:
+			var str = expr.a;
+			return '\\' + str;
 	}
 };
 var $author$project$ETeX$Transform$printArgList = function (exprs) {
@@ -19948,6 +19981,129 @@ var $author$project$Render$Blocks$Container$registerRenderers = function (regist
 			]),
 		registry);
 };
+var $author$project$Render$Blocks$Document$renderWithDefaultWithSize = F7(
+	function (size, _default, count, acc, settings, attr, exprs) {
+		return $elm$core$List$isEmpty(exprs) ? _List_fromArray(
+			[
+				A2(
+				$mdgriffith$elm_ui$Element$el,
+				_Utils_ap(
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Font$color(settings.redColor),
+							$mdgriffith$elm_ui$Element$Font$size(size)
+						]),
+					attr),
+				$mdgriffith$elm_ui$Element$text(_default))
+			]) : A2(
+			$elm$core$List$map,
+			A4($author$project$Render$Expression$render, count, acc, settings, attr),
+			exprs);
+	});
+var $author$project$Render$Blocks$Document$book = F5(
+	function (count, acc, settings, attr, block) {
+		var fontSize = $elm$core$Basics$round(2.2 * settings.maxHeadingFontSize);
+		var exprs = $author$project$Generic$Language$getExpressionContent(block);
+		return A2(
+			$mdgriffith$elm_ui$Element$paragraph,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$size(fontSize)
+				]),
+			A7($author$project$Render$Blocks$Document$renderWithDefaultWithSize, fontSize, '--', count, acc, settings, attr, exprs));
+	});
+var $author$project$Render$Sync$highlightIfIdIsSelected = F3(
+	function (firstLineNumber, numberOfLines, settings) {
+		return _Utils_eq(
+			$elm$core$String$fromInt(firstLineNumber),
+			settings.selectedId) ? _List_fromArray(
+			[
+				A2($author$project$Render$Sync$rightToLeftSyncHelper, firstLineNumber, firstLineNumber + numberOfLines),
+				$mdgriffith$elm_ui$Element$Background$color(
+				A3($mdgriffith$elm_ui$Element$rgb, 0.8, 0.8, 1.0))
+			]) : _List_Nil;
+	});
+var $author$project$Generic$ASTTools$stringValue = function (expr) {
+	switch (expr.$) {
+		case 'Text':
+			var str = expr.a;
+			return str;
+		case 'Fun':
+			var textList = expr.b;
+			return A2(
+				$elm$core$String$join,
+				' ',
+				A2($elm$core$List$map, $author$project$Generic$ASTTools$stringValue, textList));
+		case 'VFun':
+			var str = expr.b;
+			return str;
+		default:
+			return '[ExprList]';
+	}
+};
+var $author$project$Generic$ASTTools$stringValueOfList = function (textList) {
+	return A2(
+		$elm$core$String$join,
+		' ',
+		A2($elm$core$List$map, $author$project$Generic$ASTTools$stringValue, textList));
+};
+var $author$project$Render$Utility$makeId = function (exprs) {
+	return A2(
+		$author$project$Render$Utility$elementAttribute,
+		'id',
+		$author$project$Render$Utility$makeSlug(
+			$elm$core$String$trim(
+				$author$project$Generic$ASTTools$stringValueOfList(exprs))));
+};
+var $author$project$Render$Blocks$Document$sectionBlockAttributes = F3(
+	function (block, settings, attrs) {
+		return _Utils_ap(
+			_List_fromArray(
+				[
+					$author$project$Render$Utility$makeId(
+					$author$project$Generic$Language$getExpressionContent(block)),
+					$author$project$Render$Utility$idAttribute(block.meta.id)
+				]),
+			_Utils_ap(
+				A3($author$project$Render$Sync$highlightIfIdIsSelected, block.meta.lineNumber, block.meta.numberOfLines, settings),
+				attrs));
+	});
+var $author$project$Render$Blocks$Document$topPadding = function (k) {
+	return $mdgriffith$elm_ui$Element$paddingEach(
+		{bottom: 0, left: 0, right: 0, top: k});
+};
+var $author$project$Render$Blocks$Document$chapter = F5(
+	function (count, acc, settings, attr, block) {
+		var fontSize = $elm$core$Basics$round(1.6 * settings.maxHeadingFontSize);
+		var exprs = $author$project$Generic$Language$getExpressionContent(block);
+		return A2(
+			$mdgriffith$elm_ui$Element$link,
+			_Utils_ap(
+				A3(
+					$author$project$Render$Blocks$Document$sectionBlockAttributes,
+					block,
+					settings,
+					_List_fromArray(
+						[
+							$author$project$Render$Blocks$Document$topPadding(20),
+							$mdgriffith$elm_ui$Element$Font$size(fontSize),
+							$mdgriffith$elm_ui$Element$Font$color(
+							A2(
+								$author$project$Render$Theme$getElementColor,
+								settings.theme,
+								function ($) {
+									return $.text;
+								}))
+						])),
+				A2($author$project$Render$Sync$attributes, settings, block)),
+			{
+				label: A2(
+					$mdgriffith$elm_ui$Element$paragraph,
+					_List_Nil,
+					A7($author$project$Render$Blocks$Document$renderWithDefaultWithSize, 18, '--', count, acc, settings, attr, exprs)),
+				url: $author$project$Render$Utility$internalLink(settings.titlePrefix + 'title')
+			});
+	});
 var $author$project$Render$Helper$fontColor = F3(
 	function (selectedId, selectedSlug, docId) {
 		return _Utils_eq(selectedId, docId) ? $mdgriffith$elm_ui$Element$Font$color(
@@ -20087,86 +20243,7 @@ var $author$project$Render$Helper$blockLabel = function (properties) {
 		'',
 		A2($elm$core$Dict$get, 'label', properties));
 };
-var $author$project$Render$Blocks$Document$renderWithDefaultWithSize = F7(
-	function (size, _default, count, acc, settings, attr, exprs) {
-		return $elm$core$List$isEmpty(exprs) ? _List_fromArray(
-			[
-				A2(
-				$mdgriffith$elm_ui$Element$el,
-				_Utils_ap(
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$Font$color(settings.redColor),
-							$mdgriffith$elm_ui$Element$Font$size(size)
-						]),
-					attr),
-				$mdgriffith$elm_ui$Element$text(_default))
-			]) : A2(
-			$elm$core$List$map,
-			A4($author$project$Render$Expression$render, count, acc, settings, attr),
-			exprs);
-	});
-var $author$project$Render$Sync$highlightIfIdIsSelected = F3(
-	function (firstLineNumber, numberOfLines, settings) {
-		return _Utils_eq(
-			$elm$core$String$fromInt(firstLineNumber),
-			settings.selectedId) ? _List_fromArray(
-			[
-				A2($author$project$Render$Sync$rightToLeftSyncHelper, firstLineNumber, firstLineNumber + numberOfLines),
-				$mdgriffith$elm_ui$Element$Background$color(
-				A3($mdgriffith$elm_ui$Element$rgb, 0.8, 0.8, 1.0))
-			]) : _List_Nil;
-	});
-var $author$project$Generic$ASTTools$stringValue = function (expr) {
-	switch (expr.$) {
-		case 'Text':
-			var str = expr.a;
-			return str;
-		case 'Fun':
-			var textList = expr.b;
-			return A2(
-				$elm$core$String$join,
-				' ',
-				A2($elm$core$List$map, $author$project$Generic$ASTTools$stringValue, textList));
-		case 'VFun':
-			var str = expr.b;
-			return str;
-		default:
-			return '[ExprList]';
-	}
-};
-var $author$project$Generic$ASTTools$stringValueOfList = function (textList) {
-	return A2(
-		$elm$core$String$join,
-		' ',
-		A2($elm$core$List$map, $author$project$Generic$ASTTools$stringValue, textList));
-};
-var $author$project$Render$Utility$makeId = function (exprs) {
-	return A2(
-		$author$project$Render$Utility$elementAttribute,
-		'id',
-		$author$project$Render$Utility$makeSlug(
-			$elm$core$String$trim(
-				$author$project$Generic$ASTTools$stringValueOfList(exprs))));
-};
-var $author$project$Render$Blocks$Document$sectionBlockAttributes = F3(
-	function (block, settings, attrs) {
-		return _Utils_ap(
-			_List_fromArray(
-				[
-					$author$project$Render$Utility$makeId(
-					$author$project$Generic$Language$getExpressionContent(block)),
-					$author$project$Render$Utility$idAttribute(block.meta.id)
-				]),
-			_Utils_ap(
-				A3($author$project$Render$Sync$highlightIfIdIsSelected, block.meta.lineNumber, block.meta.numberOfLines, settings),
-				attrs));
-	});
 var $elm$core$Basics$sqrt = _Basics_sqrt;
-var $author$project$Render$Blocks$Document$topPadding = function (k) {
-	return $mdgriffith$elm_ui$Element$paddingEach(
-		{bottom: 0, left: 0, right: 0, top: k});
-};
 var $author$project$Render$Blocks$Document$section = F5(
 	function (count, acc, settings, attr, block) {
 		var maxNumberedLevel = A2(
@@ -20333,69 +20410,77 @@ var $author$project$Render$Blocks$Document$registerRenderers = function (registr
 		_List_fromArray(
 			[
 				_Utils_Tuple2('document', $author$project$Render$Blocks$Document$document),
+				_Utils_Tuple2('book', $author$project$Render$Blocks$Document$book),
+				_Utils_Tuple2('chapter', $author$project$Render$Blocks$Document$chapter),
 				_Utils_Tuple2('section', $author$project$Render$Blocks$Document$section),
 				_Utils_Tuple2('section*', $author$project$Render$Blocks$Document$unnumberedSection),
 				_Utils_Tuple2('subheading', $author$project$Render$Blocks$Document$subheading),
 				_Utils_Tuple2('sh', $author$project$Render$Blocks$Document$subheading),
-				_Utils_Tuple2('visibleBanner', $author$project$Render$Blocks$Document$visibleBanner),
 				_Utils_Tuple2(
-				'runninghead_',
+				'settings',
 				F5(
 					function (_v0, _v1, _v2, _v3, _v4) {
 						return $mdgriffith$elm_ui$Element$none;
 					})),
+				_Utils_Tuple2('visibleBanner', $author$project$Render$Blocks$Document$visibleBanner),
 				_Utils_Tuple2(
-				'banner',
+				'runninghead_',
 				F5(
 					function (_v5, _v6, _v7, _v8, _v9) {
 						return $mdgriffith$elm_ui$Element$none;
 					})),
 				_Utils_Tuple2(
-				'subtitle',
+				'banner',
 				F5(
 					function (_v10, _v11, _v12, _v13, _v14) {
 						return $mdgriffith$elm_ui$Element$none;
 					})),
 				_Utils_Tuple2(
-				'author',
+				'subtitle',
 				F5(
 					function (_v15, _v16, _v17, _v18, _v19) {
 						return $mdgriffith$elm_ui$Element$none;
 					})),
 				_Utils_Tuple2(
-				'date',
+				'author',
 				F5(
 					function (_v20, _v21, _v22, _v23, _v24) {
 						return $mdgriffith$elm_ui$Element$none;
 					})),
 				_Utils_Tuple2(
-				'contents',
+				'date',
 				F5(
 					function (_v25, _v26, _v27, _v28, _v29) {
 						return $mdgriffith$elm_ui$Element$none;
 					})),
 				_Utils_Tuple2(
-				'tags',
+				'contents',
 				F5(
 					function (_v30, _v31, _v32, _v33, _v34) {
 						return $mdgriffith$elm_ui$Element$none;
 					})),
 				_Utils_Tuple2(
-				'type',
+				'tags',
 				F5(
 					function (_v35, _v36, _v37, _v38, _v39) {
 						return $mdgriffith$elm_ui$Element$none;
 					})),
 				_Utils_Tuple2(
-				'setcounter',
+				'type',
 				F5(
 					function (_v40, _v41, _v42, _v43, _v44) {
 						return $mdgriffith$elm_ui$Element$none;
 					})),
 				_Utils_Tuple2(
-				'shiftandsetcounter',
+				'setcounter',
 				F5(
 					function (_v45, _v46, _v47, _v48, _v49) {
+						return $mdgriffith$elm_ui$Element$none;
+					})),
+				_Utils_Tuple2(
+				'shiftandsetcounter',
+				F5(
+					function (_v50, _v51, _v52, _v53, _v54) {
 						return $mdgriffith$elm_ui$Element$none;
 					}))
 			]),
@@ -30499,15 +30584,6 @@ var $pablohirafuji$elm_syntax_highlight$SyntaxHighlight$Language$Helpers$delimit
 var $elm$parser$Parser$Problem = function (a) {
 	return {$: 'Problem', a: a};
 };
-var $elm$parser$Parser$Advanced$problem = function (x) {
-	return $elm$parser$Parser$Advanced$Parser(
-		function (s) {
-			return A2(
-				$elm$parser$Parser$Advanced$Bad,
-				false,
-				A2($elm$parser$Parser$Advanced$fromState, s, x));
-		});
-};
 var $elm$parser$Parser$problem = function (msg) {
 	return $elm$parser$Parser$Advanced$problem(
 		$elm$parser$Parser$Problem(msg));
@@ -34192,6 +34268,7 @@ var $author$project$Render$VerbatimBlock$verbatimDict = $elm$core$Dict$fromList(
 			_Utils_Tuple2('code', $author$project$Render$VerbatimBlock$renderCode),
 			_Utils_Tuple2('verse', $author$project$Render$VerbatimBlock$renderVerse),
 			_Utils_Tuple2('verbatim', $author$project$Render$VerbatimBlock$renderVerbatim),
+			_Utils_Tuple2('settings', $author$project$Render$Helper$renderNothing),
 			_Utils_Tuple2('load', $author$project$Render$VerbatimBlock$renderLoad),
 			_Utils_Tuple2('load-data', $author$project$Render$Helper$renderNothing),
 			_Utils_Tuple2('hide', $author$project$Render$Helper$renderNothing),
@@ -35663,52 +35740,28 @@ var $author$project$Render$TOCTree$makeNodeValue = F2(
 		var visible = (level <= 1) || A2($elm$core$List$member, block.meta.id, idsOfOpenNodes);
 		return {block: newBlock, visible: true};
 	});
-var $author$project$Generic$ASTTools$tableOfContents = F2(
-	function (maximumLevel, ast) {
-		return A2(
-			$author$project$Generic$ASTTools$filterBlocksOnName,
-			'section',
-			$elm$core$List$concat(
-				A2($elm$core$List$map, $author$project$Library$Tree$flatten, ast)));
+var $author$project$Generic$ASTTools$matchBlockName2 = F3(
+	function (key, key2, block) {
+		return _Utils_eq(
+			$elm$core$Maybe$Just(key),
+			$author$project$Generic$Language$getName(block)) || _Utils_eq(
+			$elm$core$Maybe$Just(key2),
+			$author$project$Generic$Language$getName(block));
 	});
-var $author$project$Render$TOCTree$style_ = function (theme_) {
-	if (theme_.$ === 'Dark') {
-		return _List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$Background$color(
-				A2(
-					$author$project$Render$Settings$getThemedElementColor,
-					function ($) {
-						return $.background;
-					},
-					theme_)),
-				$mdgriffith$elm_ui$Element$Font$color(
-				A2(
-					$author$project$Render$Settings$getThemedElementColor,
-					function ($) {
-						return $.text;
-					},
-					theme_))
-			]);
-	} else {
-		return _List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$Background$color(
-				A2(
-					$author$project$Render$Settings$getThemedElementColor,
-					function ($) {
-						return $.background;
-					},
-					theme_)),
-				$mdgriffith$elm_ui$Element$Font$color(
-				A2(
-					$author$project$Render$Settings$getThemedElementColor,
-					function ($) {
-						return $.text;
-					},
-					theme_))
-			]);
-	}
+var $author$project$Generic$ASTTools$filterBlocksOnName2 = F3(
+	function (name, name2, blocks) {
+		return A2(
+			$elm$core$List$filter,
+			A2($author$project$Generic$ASTTools$matchBlockName2, name, name2),
+			blocks);
+	});
+var $author$project$Generic$ASTTools$tableOfContents = function (ast) {
+	return A3(
+		$author$project$Generic$ASTTools$filterBlocksOnName2,
+		'section',
+		'chapter',
+		$elm$core$List$concat(
+			A2($elm$core$List$map, $author$project$Library$Tree$flatten, ast)));
 };
 var $author$project$ScriptaV2$Msg$ToggleTOCNodeID = function (a) {
 	return {$: 'ToggleTOCNodeID', a: a};
@@ -35752,74 +35805,92 @@ var $elm_community$string_extra$String$Extra$softWrapWith = F3(
 			separator,
 			A2($elm_community$string_extra$String$Extra$softBreak, width, string));
 	});
-var $author$project$Render$TOCTree$tocIndentAux = function (args) {
-	var _v0 = $elm$core$List$head(args);
-	if (_v0.$ === 'Nothing') {
-		return 0;
+var $author$project$Render$TOCTree$style_ = function (theme_) {
+	if (theme_.$ === 'Dark') {
+		return _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$Background$color(
+				A2(
+					$author$project$Render$Settings$getThemedElementColor,
+					function ($) {
+						return $.background;
+					},
+					theme_)),
+				$mdgriffith$elm_ui$Element$Font$color(
+				A2(
+					$author$project$Render$Settings$getThemedElementColor,
+					function ($) {
+						return $.text;
+					},
+					theme_))
+			]);
 	} else {
-		var str = _v0.a;
-		return function (x) {
-			return 12 * (x - 1);
-		}(
-			A2(
-				$elm$core$Maybe$withDefault,
-				0,
-				$elm$core$String$toInt(str)));
+		return _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$Background$color(
+				A2(
+					$author$project$Render$Settings$getThemedElementColor,
+					function ($) {
+						return $.background;
+					},
+					theme_)),
+				$mdgriffith$elm_ui$Element$Font$color(
+				A2(
+					$author$project$Render$Settings$getThemedElementColor,
+					function ($) {
+						return $.text;
+					},
+					theme_))
+			]);
 	}
 };
-var $author$project$Render$TOCTree$tocIndent = function (args) {
-	return $mdgriffith$elm_ui$Element$paddingEach(
-		{
-			bottom: 0,
-			left: $author$project$Render$TOCTree$tocIndentAux(args),
-			right: 0,
-			top: 0
-		});
-};
-var $author$project$Render$TOCTree$viewTocItem_ = F5(
-	function (theme, viewParameters, acc, hasChildren, block) {
+var $author$project$Render$TOCTree$viewTocItem_ = F6(
+	function (theme, indentation, viewParameters, acc, hasChildren, block) {
 		var args = block.args;
 		var body = block.body;
 		var properties = block.properties;
-		var maximumNumberedTocLevel = 1;
 		if (body.$ === 'Left') {
 			return $mdgriffith$elm_ui$Element$none;
 		} else {
 			var exprs = body.a;
 			var sectionNumber = function () {
-				var nosectionNumeber = A2(
-					$mdgriffith$elm_ui$Element$el,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$paddingEach(
-							{bottom: 0, left: 8, right: 0, top: 0})
-						]),
-					$mdgriffith$elm_ui$Element$text('-'));
-				var _v3 = A2(
-					$elm$core$Maybe$andThen,
-					$elm$core$String$toInt,
-					A2($elm$core$Dict$get, 'number-to-level', properties));
+				var nosectionNumber = function (str) {
+					return A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$paddingEach(
+								{bottom: 0, left: 8, right: 0, top: 0})
+							]),
+						$mdgriffith$elm_ui$Element$text(str));
+				};
+				var _v3 = A2($elm$core$Dict$get, 'label', properties);
 				if (_v3.$ === 'Nothing') {
-					return nosectionNumeber;
+					return nosectionNumber('@@');
 				} else {
-					var level = _v3.a;
-					if (_Utils_cmp(level, maximumNumberedTocLevel) < 1) {
-						var _v4 = A2($elm$core$Dict$get, 'label', properties);
-						if (_v4.$ === 'Nothing') {
-							return nosectionNumeber;
-						} else {
-							var label = _v4.a;
-							return A2(
-								$mdgriffith$elm_ui$Element$el,
-								_List_Nil,
-								$mdgriffith$elm_ui$Element$text(label + '.'));
-						}
-					} else {
-						return nosectionNumeber;
-					}
+					var label = _v3.a;
+					return A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_Nil,
+						$mdgriffith$elm_ui$Element$text(label + '.'));
 				}
 			}();
 			var nodeId = block.meta.id;
+			var lvl = A2(
+				$elm$core$Maybe$withDefault,
+				4,
+				A2(
+					$elm$core$Maybe$andThen,
+					$elm$core$String$toInt,
+					A2($elm$core$Dict$get, 'level', properties)));
+			var spacer = A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$width(
+						$mdgriffith$elm_ui$Element$px(20 * lvl))
+					]),
+				$mdgriffith$elm_ui$Element$none);
 			var id = $author$project$ScriptaV2$Config$expressionIdPrefix + ($elm$core$String$fromInt(block.meta.lineNumber) + '.0');
 			var exprs2 = function () {
 				var _v1 = A2(
@@ -35850,9 +35921,8 @@ var $author$project$Render$TOCTree$viewTocItem_ = F5(
 				_Utils_ap(
 					_List_fromArray(
 						[
-							$author$project$Render$TOCTree$tocIndent(args),
 							$mdgriffith$elm_ui$Element$width(
-							$mdgriffith$elm_ui$Element$px(180)),
+							$mdgriffith$elm_ui$Element$px(240)),
 							$mdgriffith$elm_ui$Element$spacing(8)
 						]),
 					$author$project$Render$TOCTree$style_(theme)),
@@ -35881,35 +35951,41 @@ var $author$project$Render$TOCTree$viewTocItem_ = F5(
 					$mdgriffith$elm_ui$Element$Font$size(14)
 				]);
 			return A2(
-				$mdgriffith$elm_ui$Element$el,
-				clickHandlers,
-				A2(
-					$mdgriffith$elm_ui$Element$link,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$Font$color(color)
-						]),
-					{
-						label: content,
-						url: $author$project$Render$Utility$internalLink(id)
-					}));
+				$mdgriffith$elm_ui$Element$row,
+				_List_Nil,
+				_List_fromArray(
+					[
+						spacer,
+						A2(
+						$mdgriffith$elm_ui$Element$el,
+						_Utils_ap(
+							clickHandlers,
+							$author$project$Render$TOCTree$style_(theme)),
+						A2(
+							$mdgriffith$elm_ui$Element$link,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$Font$color(
+									A3($mdgriffith$elm_ui$Element$rgb, 1, 0, 0))
+								]),
+							{
+								label: content,
+								url: $author$project$Render$Utility$internalLink(id)
+							}))
+					]));
 		}
 	});
 var $author$project$Render$TOCTree$viewNodeWithChildren = F6(
 	function (theme, viewParameters, acc, indentation, node, hasChildren) {
-		return A5($author$project$Render$TOCTree$viewTocItem_, theme, viewParameters, acc, hasChildren, node.block);
+		return A6($author$project$Render$TOCTree$viewTocItem_, theme, indentation, viewParameters, acc, hasChildren, node.block);
 	});
 var $author$project$Render$TOCTree$viewTOCTree = F7(
 	function (theme, viewParameters, acc, depth, indentation, maybeFoundIds, tocTree) {
 		var val = $maca$elm_rose_tree$RoseTree$Tree$value(tocTree);
-		var style = $author$project$Render$TOCTree$style_(theme);
 		var actualChildren = $maca$elm_rose_tree$RoseTree$Tree$children(tocTree);
 		var children = A2($elm$core$List$member, val.block.meta.id, viewParameters.idsOfOpenNodes) ? actualChildren : _List_Nil;
 		var hasChildren = !$elm$core$List$isEmpty(actualChildren);
-		return ((depth < 0) || (!val.visible)) ? $mdgriffith$elm_ui$Element$none : ($elm$core$List$isEmpty(children) ? A2(
-			$mdgriffith$elm_ui$Element$el,
-			style,
-			A6($author$project$Render$TOCTree$viewNodeWithChildren, theme, viewParameters, acc, indentation, val, hasChildren)) : A2(
+		return ((depth < 0) || (!val.visible)) ? $mdgriffith$elm_ui$Element$none : ($elm$core$List$isEmpty(children) ? A6($author$project$Render$TOCTree$viewNodeWithChildren, theme, viewParameters, acc, indentation, val, hasChildren) : A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
 				[
@@ -35917,10 +35993,7 @@ var $author$project$Render$TOCTree$viewTOCTree = F7(
 				]),
 			A2(
 				$elm$core$List$cons,
-				A2(
-					$mdgriffith$elm_ui$Element$el,
-					style,
-					A6($author$project$Render$TOCTree$viewNodeWithChildren, theme, viewParameters, acc, indentation, val, hasChildren)),
+				A6($author$project$Render$TOCTree$viewNodeWithChildren, theme, viewParameters, acc, indentation, val, hasChildren),
 				A2(
 					$elm$core$List$map,
 					A6($author$project$Render$TOCTree$viewTOCTree, theme, viewParameters, acc, depth - 1, indentation + 1, maybeFoundIds),
@@ -35949,7 +36022,7 @@ var $author$project$Render$TOCTree$view = F4(
 				]) : _List_Nil;
 			return A2($mdgriffith$elm_ui$Element$el, format, data.view);
 		};
-		var tocAST = A2($author$project$Generic$ASTTools$tableOfContents, 8, documentAst);
+		var tocAST = $author$project$Generic$ASTTools$tableOfContents(documentAst);
 		var nodes = A2(
 			$elm$core$List$map,
 			$author$project$Render$TOCTree$makeNodeValue(viewParameters.idsOfOpenNodes),
@@ -36458,7 +36531,7 @@ var $elm$core$Dict$singleton = F2(
 		return A5($elm$core$Dict$RBNode_elm_builtin, $elm$core$Dict$Black, key, value, $elm$core$Dict$RBEmpty_elm_builtin, $elm$core$Dict$RBEmpty_elm_builtin);
 	});
 var $author$project$M$PrimitiveBlock$verbatimWords = _List_fromArray(
-	['math', 'chem', 'compute', 'equation', 'aligned', 'array', 'textarray', 'table', 'code', 'verse', 'verbatim', 'load', 'load-data', 'hide', 'texComment', 'docinfo', 'mathmacros', 'textmacros', 'csvtable', 'table', 'chart', 'svg', 'quiver', 'image', 'tikz', 'load-files', 'include', 'setup', 'iframe']);
+	['math', 'chem', 'compute', 'equation', 'aligned', 'array', 'textarray', 'table', 'code', 'verse', 'verbatim', 'load', 'load-data', 'hide', 'texComment', 'docinfo', 'mathmacros', 'textmacros', 'csvtable', 'table', 'chart', 'svg', 'quiver', 'image', 'tikz', 'load-files', 'include', 'setup', 'iframe', 'settings']);
 var $author$project$M$PrimitiveBlock$getHeadingData = function (line_) {
 	var line = $elm$core$String$trim(line_);
 	var _v0 = $author$project$Tools$KV$argsAndProperties(
@@ -36692,23 +36765,62 @@ var $author$project$Generic$BlockUtilities$dropLast = function (list) {
 var $author$project$Generic$PrimitiveBlock$finalize = function (block) {
 	var properties = function () {
 		var _v3 = block.heading;
-		if ((_v3.$ === 'Ordinary') && (_v3.a === 'document')) {
-			var docId = A2(
-				$elm$core$Maybe$withDefault,
-				'noDocId',
-				A2(
-					$elm$core$Maybe$map,
-					function (_v4) {
-						var a = _v4.a;
-						var b = _v4.b;
-						return a + (':' + b);
-					},
-					$elm$core$List$head(
-						$elm$core$Dict$toList(block.properties))));
-			return A3($elm$core$Dict$insert, 'docId', docId, block.properties);
-		} else {
-			return block.properties;
+		_v3$2:
+		while (true) {
+			switch (_v3.$) {
+				case 'Ordinary':
+					if (_v3.a === 'document') {
+						var docId = A2(
+							$elm$core$Maybe$withDefault,
+							'noDocId',
+							A2(
+								$elm$core$Maybe$map,
+								function (_v4) {
+									var a = _v4.a;
+									var b = _v4.b;
+									return a + (':' + b);
+								},
+								$elm$core$List$head(
+									$elm$core$Dict$toList(block.properties))));
+						return A3($elm$core$Dict$insert, 'docId', docId, block.properties);
+					} else {
+						break _v3$2;
+					}
+				case 'Verbatim':
+					if (_v3.a === 'settings') {
+						var getPair = function (strings) {
+							if ((strings.b && strings.b.b) && (!strings.b.b.b)) {
+								var a = strings.a;
+								var _v6 = strings.b;
+								var b = _v6.a;
+								return $elm$core$Maybe$Just(
+									_Utils_Tuple2(a, b));
+							} else {
+								return $elm$core$Maybe$Nothing;
+							}
+						};
+						var dict = $elm$core$Dict$fromList(
+							A2(
+								$elm$core$List$filterMap,
+								$elm$core$Basics$identity,
+								A2(
+									$elm$core$List$map,
+									getPair,
+									A2(
+										$elm$core$List$map,
+										function (s) {
+											return A2($elm$core$String$split, ':', s);
+										},
+										A2($elm$core$List$map, $elm$core$String$trim, block.body)))));
+						return A2($elm$core$Dict$union, dict, block.properties);
+					} else {
+						break _v3$2;
+					}
+				default:
+					break _v3$2;
+			}
 		}
+		return block.properties;
 	}();
 	var oldMeta = block.meta;
 	var content_ = $elm$core$List$reverse(block.body);
@@ -36731,22 +36843,11 @@ var $author$project$Generic$PrimitiveBlock$finalize = function (block) {
 	};
 	var content = function () {
 		var _v0 = block.heading;
-		_v0$2:
-		while (true) {
-			if (_v0.$ === 'Verbatim') {
-				switch (_v0.a) {
-					case 'equation':
-						return addLabel(content_);
-					case 'aligned':
-						return addLabel(content_);
-					default:
-						break _v0$2;
-				}
-			} else {
-				break _v0$2;
-			}
+		if ((_v0.$ === 'Verbatim') && (_v0.a === 'equation')) {
+			return addLabel(content_);
+		} else {
+			return content_;
 		}
-		return content_;
 	}();
 	var sourceText = (!_Utils_eq(block.heading, $author$project$Generic$Language$Paragraph)) ? A2(
 		$elm$core$String$join,
@@ -48088,9 +48189,12 @@ var $author$project$ETeX$Transform$convertToETeXMathExpr = function (expr) {
 			return $author$project$ETeX$MathMacros$RightParen;
 		case 'Comma':
 			return $author$project$ETeX$MathMacros$Comma;
-		default:
+		case 'Text':
 			var str = expr.a;
 			return $author$project$ETeX$MathMacros$MathSymbols(str);
+		default:
+			var str = expr.a;
+			return $author$project$ETeX$MathMacros$AlphaNum('\\' + str);
 	}
 };
 var $author$project$ETeX$Transform$ExpectingLeftBracket = {$: 'ExpectingLeftBracket'};
@@ -49058,7 +49162,7 @@ var $author$project$Generic$Acc$vectorPrefix = function (headingIndex) {
 var $author$project$Generic$Acc$transformBlock = F2(
 	function (acc, block) {
 		var _v0 = _Utils_Tuple2(block.heading, block.args);
-		_v0$8:
+		_v0$9:
 		while (true) {
 			switch (_v0.a.$) {
 				case 'Ordinary':
@@ -49076,6 +49180,43 @@ var $author$project$Generic$Acc$transformBlock = F2(
 											'label',
 											$author$project$Generic$Vector$toString(acc.headingIndex),
 											block.properties))
+								});
+						case 'chapter':
+							var tag = function () {
+								var _v1 = block.body;
+								if (_v1.$ === 'Left') {
+									var str = _v1.a;
+									return $author$project$Tools$String$makeSlug(str);
+								} else {
+									var expr = _v1.a;
+									return $author$project$Tools$String$makeSlug(
+										A2(
+											$elm$core$String$join,
+											'-',
+											$elm_community$maybe_extra$Maybe$Extra$values(
+												A2($elm$core$List$map, $author$project$Generic$ASTTools$getText, expr))));
+								}
+							}();
+							return _Utils_update(
+								block,
+								{
+									properties: A3(
+										$elm$core$Dict$insert,
+										'level',
+										'0',
+										A3(
+											$elm$core$Dict$insert,
+											'chapter-number',
+											A2($author$project$Generic$Acc$getCounterAsString, 'chapter', acc.counter),
+											A3(
+												$elm$core$Dict$insert,
+												'tag',
+												tag,
+												A3(
+													$elm$core$Dict$insert,
+													'label',
+													$author$project$Generic$Vector$toString(acc.headingIndex),
+													block.properties))))
 								});
 						case 'quiver':
 							return _Utils_update(
@@ -49119,12 +49260,12 @@ var $author$project$Generic$Acc$transformBlock = F2(
 								});
 						case 'document':
 							var title = function () {
-								var _v1 = block.body;
-								if (_v1.$ === 'Left') {
-									var str = _v1.a;
+								var _v2 = block.body;
+								if (_v2.$ === 'Left') {
+									var str = _v2.a;
 									return str;
 								} else {
-									var expr = _v1.a;
+									var expr = _v2.a;
 									return A2(
 										$elm$core$String$join,
 										' ',
@@ -49142,7 +49283,7 @@ var $author$project$Generic$Acc$transformBlock = F2(
 									properties: A3($elm$core$Dict$insert, 'label', label, block.properties)
 								});
 						default:
-							break _v0$8;
+							break _v0$9;
 					}
 				case 'Verbatim':
 					switch (_v0.a.a) {
@@ -49164,18 +49305,18 @@ var $author$project$Generic$Acc$transformBlock = F2(
 									properties: A3($elm$core$Dict$insert, 'equation-number', equationProp, block.properties)
 								});
 						default:
-							break _v0$8;
+							break _v0$9;
 					}
 				default:
-					break _v0$8;
+					break _v0$9;
 			}
 		}
 		var heading = _v0.a;
-		var _v2 = $author$project$Generic$Language$getNameFromHeading(heading);
-		if (_v2.$ === 'Nothing') {
+		var _v3 = $author$project$Generic$Language$getNameFromHeading(heading);
+		if (_v3.$ === 'Nothing') {
 			return block;
 		} else {
-			var name = _v2.a;
+			var name = _v3.a;
 			if (A2(
 				$elm$core$List$member,
 				name,
@@ -49590,10 +49731,22 @@ var $author$project$Generic$Acc$updateWithOrdinarySectionBlock = F5(
 						$elm$core$String$trim,
 						A2($elm$core$String$replace, ' ', '-'))),
 				titleWords));
+		var delta = function () {
+			var _v0 = A2($elm$core$Dict$get, 'has-chapters', accumulator.keyValueDict);
+			if (_v0.$ === 'Nothing') {
+				return 0;
+			} else {
+				if (_v0.a === 'yes') {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+		}();
 		var headingIndex = A2(
 			$author$project$Generic$Vector$increment,
 			function (x) {
-				return (x - 1) + accumulator.deltaLevel;
+				return ((x - 1) + delta) + accumulator.deltaLevel;
 			}(
 				A2(
 					$elm$core$Maybe$withDefault,
@@ -49994,7 +50147,7 @@ var $author$project$Generic$TextMacro$buildDictionary = function (lines) {
 		$elm$core$Dict$empty,
 		lines);
 };
-var $author$project$Generic$Acc$normalzeLines = function (lines) {
+var $author$project$Generic$Acc$normalizeLines = function (lines) {
 	return A2(
 		$elm$core$List$filter,
 		function (line) {
@@ -50013,7 +50166,7 @@ var $author$project$Generic$Acc$updateWithTextMacros = F2(
 			accumulator,
 			{
 				textMacroDict: $author$project$Generic$TextMacro$buildDictionary(
-					$author$project$Generic$Acc$normalzeLines(
+					$author$project$Generic$Acc$normalizeLines(
 						$elm$core$String$lines(content)))
 			});
 	});
@@ -50195,11 +50348,8 @@ var $author$project$Generic$Acc$updateAccumulator = F2(
 							{
 								itemVector: $author$project$Generic$Vector$init(4)
 							});
-					case 'section':
-						var level = A2(
-							$elm$core$Maybe$withDefault,
-							'1',
-							A2($elm$core$Dict$get, 'level', properties));
+					case 'chapter':
+						var level = '0';
 						var _v5 = $author$project$Generic$Acc$getNameContentId(block);
 						if (_v5.$ === 'Just') {
 							var name = _v5.a.name;
@@ -50218,16 +50368,56 @@ var $author$project$Generic$Acc$updateAccumulator = F2(
 						} else {
 							return A2($author$project$Generic$Acc$updateReferenceWithBlock, block, accumulator);
 						}
-					case 'document':
-						var level = A2(
-							$elm$core$Maybe$withDefault,
-							'1',
-							$elm$core$List$head(args));
+					case 'section':
+						var level = function () {
+							var _v7 = A2($elm$core$Dict$get, 'has-chapters', accumulator.keyValueDict);
+							if (_v7.$ === 'Nothing') {
+								return A2(
+									$elm$core$Maybe$withDefault,
+									'1',
+									A2($elm$core$Dict$get, 'level', properties));
+							} else {
+								if (_v7.a === 'yes') {
+									return A2(
+										$elm$core$Maybe$withDefault,
+										'1',
+										A2($elm$core$Dict$get, 'level', properties));
+								} else {
+									return A2(
+										$elm$core$Maybe$withDefault,
+										'1',
+										A2($elm$core$Dict$get, 'level', properties));
+								}
+							}
+						}();
 						var _v6 = $author$project$Generic$Acc$getNameContentId(block);
 						if (_v6.$ === 'Just') {
 							var name = _v6.a.name;
 							var content = _v6.a.content;
 							var id = _v6.a.id;
+							return A2(
+								$author$project$Generic$Acc$updateReferenceWithBlock,
+								block,
+								A5(
+									$author$project$Generic$Acc$updateWithOrdinarySectionBlock,
+									accumulator,
+									$elm$core$Maybe$Just(name),
+									content,
+									level,
+									id));
+						} else {
+							return A2($author$project$Generic$Acc$updateReferenceWithBlock, block, accumulator);
+						}
+					case 'document':
+						var level = A2(
+							$elm$core$Maybe$withDefault,
+							'1',
+							$elm$core$List$head(args));
+						var _v8 = $author$project$Generic$Acc$getNameContentId(block);
+						if (_v8.$ === 'Just') {
+							var name = _v8.a.name;
+							var content = _v8.a.content;
+							var id = _v8.a.id;
 							return A5(
 								$author$project$Generic$Acc$updateWithOrdinaryDocumentBlock,
 								accumulator,
@@ -50240,18 +50430,18 @@ var $author$project$Generic$Acc$updateAccumulator = F2(
 						}
 					case 'title':
 						var headingIndex = function () {
-							var _v7 = A2($elm$core$Dict$get, 'first-section', block.properties);
-							if (_v7.$ === 'Nothing') {
+							var _v9 = A2($elm$core$Dict$get, 'first-section', block.properties);
+							if (_v9.$ === 'Nothing') {
 								return {
 									content: _List_fromArray(
 										[0, 0, 0, 0]),
 									size: 4
 								};
 							} else {
-								var firstSection_ = _v7.a;
-								var _v8 = $elm$core$String$toInt(firstSection_);
-								if (_v8.$ === 'Just') {
-									var n = _v8.a;
+								var firstSection_ = _v9.a;
+								var _v10 = $elm$core$String$toInt(firstSection_);
+								if (_v10.$ === 'Just') {
+									var n = _v10.a;
 									return {
 										content: _List_fromArray(
 											[
@@ -50319,35 +50509,41 @@ var $author$project$Generic$Acc$updateAccumulator = F2(
 				}
 			case 'Verbatim':
 				switch (heading.a) {
+					case 'settings':
+						return _Utils_update(
+							accumulator,
+							{
+								keyValueDict: A2($elm$core$Dict$union, properties, accumulator.keyValueDict)
+							});
 					case 'mathmacros':
-						var _v9 = $author$project$Generic$Language$getVerbatimContent(block);
-						if (_v9.$ === 'Nothing') {
+						var _v11 = $author$project$Generic$Language$getVerbatimContent(block);
+						if (_v11.$ === 'Nothing') {
 							return accumulator;
 						} else {
-							var str = _v9.a;
+							var str = _v11.a;
 							return A2($author$project$Generic$Acc$updateWithMathMacros, str, accumulator);
 						}
 					case 'textmacros':
-						var _v10 = $author$project$Generic$Language$getVerbatimContent(block);
-						if (_v10.$ === 'Nothing') {
+						var _v12 = $author$project$Generic$Language$getVerbatimContent(block);
+						if (_v12.$ === 'Nothing') {
 							return accumulator;
 						} else {
-							var str = _v10.a;
+							var str = _v12.a;
 							return A2($author$project$Generic$Acc$updateWithTextMacros, str, accumulator);
 						}
 					default:
 						var name_ = heading.a;
-						var _v11 = block.body;
-						if (_v11.$ === 'Left') {
-							var str = _v11.a;
+						var _v13 = block.body;
+						if (_v13.$ === 'Left') {
+							var str = _v13.a;
 							return A2($author$project$Generic$Acc$updateWithVerbatimBlock, block, accumulator);
 						} else {
 							return accumulator;
 						}
 				}
 			default:
-				var _v12 = $author$project$Generic$Acc$getNameContentIdTag(block);
-				if (_v12.$ === 'Nothing') {
+				var _v14 = $author$project$Generic$Acc$getNameContentIdTag(block);
+				if (_v14.$ === 'Nothing') {
 					return A2(
 						$author$project$Generic$Acc$updateReferenceWithBlock,
 						block,
@@ -50360,10 +50556,10 @@ var $author$project$Generic$Acc$updateAccumulator = F2(
 									inListState: A2($author$project$Generic$Acc$nextInListState, block.heading, accumulator.inListState)
 								})));
 				} else {
-					var name = _v12.a.name;
-					var content = _v12.a.content;
-					var id = _v12.a.id;
-					var tag = _v12.a.tag;
+					var name = _v14.a.name;
+					var content = _v14.a.content;
+					var id = _v14.a.id;
+					var tag = _v14.a.tag;
 					return A2(
 						$author$project$Generic$Acc$updateReferenceWithBlock,
 						block,
@@ -51434,12 +51630,9 @@ var $author$project$Generic$ASTTools$frontMatterDict = function (ast) {
 				'\n',
 				A2($author$project$Generic$ASTTools$getVerbatimBlockValue, 'docinfo', ast))));
 };
-var $author$project$Render$Export$LaTeX$frontMatter = F2(
-	function (currentTime, ast) {
-		var title = function (title_) {
-			return '\\title{' + (title_ + '}');
-		}(
-			$author$project$Generic$ASTTools$title(ast));
+var $author$project$Render$Export$LaTeX$frontMatter = F3(
+	function (currentTime, publicationData, ast) {
+		var title = '\\title{' + (publicationData.title + '}');
 		var dict = $author$project$Generic$ASTTools$frontMatterDict(ast);
 		var date = A2(
 			$elm$core$Maybe$withDefault,
@@ -51450,16 +51643,8 @@ var $author$project$Render$Export$LaTeX$frontMatter = F2(
 					return '\\date{' + (date_ + '}');
 				},
 				A2($elm$core$Dict$get, 'date', dict)));
-		var author4 = A2($elm$core$Dict$get, 'author4', dict);
-		var author3 = A2($elm$core$Dict$get, 'author3', dict);
-		var author2 = A2($elm$core$Dict$get, 'author2', dict);
-		var author1 = A2($elm$core$Dict$get, 'author1', dict);
 		var authors = function () {
-			var authorList = A2(
-				$elm$core$List$filterMap,
-				$elm$core$Basics$identity,
-				_List_fromArray(
-					[author1, author2, author3, author4]));
+			var authorList = publicationData.authorList;
 			if (!authorList.b) {
 				return '\\author{}';
 			} else {
@@ -51658,7 +51843,7 @@ var $author$project$Render$Export$Preamble$supportingCode = function (packagesIn
 		'',
 		$author$project$Render$Export$Preamble$setupCode);
 };
-var $author$project$Render$Export$Preamble$make = F2(
+var $author$project$Render$Export$Preamble$makeArticle = F2(
 	function (blockNames_, expressionNames_) {
 		var names = _Utils_ap(blockNames_, expressionNames_);
 		var packagesUsed = $author$project$Render$Export$Preamble$packagesNeeded(names);
@@ -51674,6 +51859,25 @@ var $author$project$Render$Export$Preamble$make = F2(
 					$author$project$Render$Export$Preamble$commands
 				]));
 	});
+var $author$project$Render$Export$Preamble$makeBook = F2(
+	function (blockNames_, expressionNames_) {
+		var names = _Utils_ap(blockNames_, expressionNames_);
+		var packagesUsed = $author$project$Render$Export$Preamble$packagesNeeded(names);
+		return A2(
+			$elm$core$String$join,
+			'\n',
+			_List_fromArray(
+				[
+					'\\documentclass[11pt, oneside]{book}',
+					$author$project$Render$Export$Preamble$newPackageText(packagesUsed),
+					$author$project$Render$Export$Preamble$supportingCode(packagesUsed),
+					$author$project$Render$Export$Preamble$standardPackages,
+					$author$project$Render$Export$Preamble$commands
+				]));
+	});
+var $author$project$Render$Export$Preamble$make = function (publication) {
+	return (publication.kind === 'Book') ? $author$project$Render$Export$Preamble$makeBook : $author$project$Render$Export$Preamble$makeArticle;
+};
 var $author$project$Generic$ASTTools$rawBlockNames = function (forest) {
 	return $elm_community$maybe_extra$Maybe$Extra$values(
 		A2(
@@ -52077,9 +52281,39 @@ var $author$project$Render$Export$LaTeX$processTreeChildren = function (_v0) {
 	}();
 	return A2($maca$elm_rose_tree$RoseTree$Tree$Tree, block, processedChildren);
 };
+var $author$project$Render$Export$LaTeX$annotateWithLineNumber = F2(
+	function (block, output) {
+		var lineNumber = block.meta.lineNumber;
+		return (lineNumber > 0) ? ('%%% Line ' + ($elm$core$String$fromInt(lineNumber) + ('\n' + output))) : output;
+	});
 var $author$project$Render$Export$LaTeX$addTikzPictureClosing = F2(
 	function (flagUp, str) {
 		return flagUp ? (str + '\n\\end{tikzpicture}') : str;
+	});
+var $author$project$Tools$Utility$removeNonAlphaNum = function (string) {
+	return A3(
+		$author$project$Tools$Utility$userReplace,
+		'[^A-Za-z0-9\\-]',
+		function (_v0) {
+			return '';
+		},
+		string);
+};
+var $author$project$MicroLaTeX$Util$normalizedWord = function (words) {
+	return A2(
+		$elm$core$String$join,
+		'-',
+		A2(
+			$elm$core$List$map,
+			A2($elm$core$Basics$composeR, $elm$core$String$toLower, $author$project$Tools$Utility$removeNonAlphaNum),
+			words));
+};
+var $author$project$Render$Export$LaTeX$chapter = F3(
+	function (_v0, _v1, body) {
+		var tag = $author$project$MicroLaTeX$Util$normalizedWord(
+			$elm$core$String$words(body));
+		var label = ' \\label{' + (tag + '}');
+		return '\\chapter{' + (body + ('}' + label));
 	});
 var $author$project$Render$Export$LaTeX$argString = function (args) {
 	return A2(
@@ -52166,24 +52400,6 @@ var $author$project$Render$Export$LaTeX$macro1 = F2(
 			}
 		}
 	});
-var $author$project$Tools$Utility$removeNonAlphaNum = function (string) {
-	return A3(
-		$author$project$Tools$Utility$userReplace,
-		'[^A-Za-z0-9\\-]',
-		function (_v0) {
-			return '';
-		},
-		string);
-};
-var $author$project$MicroLaTeX$Util$normalizedWord = function (words) {
-	return A2(
-		$elm$core$String$join,
-		'-',
-		A2(
-			$elm$core$List$map,
-			A2($elm$core$Basics$composeR, $elm$core$String$toLower, $author$project$Tools$Utility$removeNonAlphaNum),
-			words));
-};
 var $author$project$Render$Export$LaTeX$section = F3(
 	function (settings, args, body) {
 		var tag = $author$project$MicroLaTeX$Util$normalizedWord(
@@ -52350,6 +52566,12 @@ var $author$project$Render$Export$LaTeX$blockDict = function (mathMacroDict) {
 						return 'Index: not implemented';
 					})),
 				_Utils_Tuple2(
+				'chapter',
+				F3(
+					function (settings_, args, body) {
+						return A3($author$project$Render$Export$LaTeX$chapter, settings_, args, body);
+					})),
+				_Utils_Tuple2(
 				'section',
 				F3(
 					function (settings_, args, body) {
@@ -52450,6 +52672,7 @@ var $author$project$Render$Export$LaTeX$blockDict = function (mathMacroDict) {
 var $author$project$Render$Export$LaTeX$commentBlankLine = function (line) {
 	return (line === '') ? '%' : line;
 };
+var $elm$core$String$endsWith = _String_endsWith;
 var $author$project$Render$Export$LaTeX$tagged = F2(
 	function (name, body) {
 		return '\\' + (name + ('{' + (body + '}')));
@@ -53075,9 +53298,12 @@ var $author$project$ETeX$Transform$resolveSymbolName = function (expr) {
 			var exprs = expr.a;
 			return $author$project$ETeX$Transform$Expr(
 				A2($elm$core$List$map, $author$project$ETeX$Transform$resolveSymbolName, exprs));
-		default:
+		case 'Text':
 			var str = expr.a;
 			return $author$project$ETeX$Transform$Text(str);
+		default:
+			var str = expr.a;
+			return $author$project$ETeX$Transform$Text('\\' + str);
 	}
 };
 var $author$project$ETeX$Transform$resolveSymbolNameInDeco = function (deco) {
@@ -53633,19 +53859,49 @@ var $author$project$Render$Export$LaTeX$exportBlock = F3(
 										'\\end{equation}'
 									]));
 						case 'aligned':
-							var processedLines = A2(
-								$elm$core$String$join,
-								'\\\\\n',
+							var stripTrailingBackslashes = function (line) {
+								return A2($elm$core$String$endsWith, '\\\\', line) ? $elm$core$String$trimRight(
+									A2($elm$core$String$dropRight, 2, line)) : line;
+							};
+							var lines = A2(
+								$elm$core$List$map,
+								$author$project$MicroLaTeX$Util$transformLabel,
 								A2(
 									$elm$core$List$map,
-									$author$project$MicroLaTeX$Util$transformLabel,
+									$author$project$ETeX$Transform$transformETeX(mathMacroDict),
 									A2(
 										$elm$core$List$map,
-										$author$project$ETeX$Transform$transformETeX(mathMacroDict),
+										stripTrailingBackslashes,
 										A2(
-											$elm$core$List$map,
-											$elm$core$String$trim,
-											A2($elm$core$String$split, '\\\\', str)))));
+											$elm$core$List$filter,
+											function (line) {
+												return !$elm$core$String$isEmpty(line);
+											},
+											A2(
+												$elm$core$List$map,
+												$elm$core$String$trim,
+												$elm$core$String$lines(str))))));
+							var processedLines = function () {
+								var _v12 = $elm$core$List$reverse(lines);
+								if (!_v12.b) {
+									return '';
+								} else {
+									var lastLine = _v12.a;
+									var restReversed = _v12.b;
+									return A2(
+										$elm$core$String$join,
+										'\n',
+										_Utils_ap(
+											A2(
+												$elm$core$List$map,
+												function (line) {
+													return line + '\\\\';
+												},
+												$elm$core$List$reverse(restReversed)),
+											_List_fromArray(
+												[lastLine])));
+								}
+							}();
 							return A2(
 								$elm$core$String$join,
 								'\n',
@@ -53764,7 +54020,7 @@ var $author$project$Render$Export$LaTeX$exportBlock = F3(
 						case 'hide':
 							return '';
 						default:
-							return ': export of this block is unimplemented';
+							return '%%% export of this block is unimplemented';
 					}
 				} else {
 					return '???(13)';
@@ -53787,141 +54043,135 @@ var $author$project$Render$Export$LaTeX$indentNestedList = function (str) {
 };
 var $author$project$Render$Export$LaTeX$exportTree = F3(
 	function (mathMacroDict, settings, tree) {
-		var _v0 = $author$project$Generic$Language$getHeadingFromBlock(
-			$maca$elm_rose_tree$RoseTree$Tree$value(tree));
-		_v0$2:
-		while (true) {
-			if (_v0.$ === 'Ordinary') {
-				switch (_v0.a) {
-					case 'itemList':
-						var exprList = function () {
-							var _v1 = $maca$elm_rose_tree$RoseTree$Tree$value(tree).body;
-							if (_v1.$ === 'Left') {
-								return _List_Nil;
-							} else {
-								var exprs = _v1.a;
-								return exprs;
-							}
-						}();
-						var compactItem = function (x) {
-							return '\\compactItem{' + (x + '}');
-						};
-						var renderExprList = function (exprs) {
-							return A2(
-								$elm$core$String$join,
-								'\n',
-								A2(
-									$elm$core$List$map,
+		var block = $maca$elm_rose_tree$RoseTree$Tree$value(tree);
+		var result = function () {
+			var _v0 = $author$project$Generic$Language$getHeadingFromBlock(block);
+			_v0$2:
+			while (true) {
+				if (_v0.$ === 'Ordinary') {
+					switch (_v0.a) {
+						case 'itemList':
+							var exprList = function () {
+								var _v1 = block.body;
+								if (_v1.$ === 'Left') {
+									return _List_Nil;
+								} else {
+									var exprs = _v1.a;
+									return exprs;
+								}
+							}();
+							var compactItem = function (x) {
+								return '\\compactItem{' + (x + '}');
+							};
+							var renderExprList = function (exprs) {
+								return A2(
+									$elm$core$String$join,
+									'\n',
 									A2(
-										$elm$core$Basics$composeR,
-										A2($author$project$Render$Export$LaTeX$exportExpr, mathMacroDict, settings),
-										compactItem),
-									exprs));
-						};
-						return renderExprList(exprList);
-					case 'numberedList':
-						var label = function (n) {
-							return $elm$core$String$fromInt(n + 1) + '. ';
-						};
-						var hang = function (str) {
-							return '\\leftskip=1em\\hangindent=1em\n\\hangafter=1\n' + str;
-						};
-						var renderExprList = function (exprs) {
-							return A2(
-								$elm$core$String$join,
-								'\n\n',
-								A2(
-									$elm$core$List$indexedMap,
-									function (k) {
-										return A2(
+										$elm$core$List$map,
+										A2(
 											$elm$core$Basics$composeR,
 											A2($author$project$Render$Export$LaTeX$exportExpr, mathMacroDict, settings),
-											function (x) {
-												return _Utils_ap(
-													label(k),
-													hang(x));
-											});
-									},
-									exprs));
-						};
-						var exprList = function () {
-							var _v2 = $maca$elm_rose_tree$RoseTree$Tree$value(tree).body;
-							if (_v2.$ === 'Left') {
-								return _List_Nil;
-							} else {
-								var exprs = _v2.a;
-								return exprs;
-							}
-						}();
-						return renderExprList(exprList);
-					default:
-						break _v0$2;
-				}
-			} else {
-				break _v0$2;
-			}
-		}
-		var _v3 = $maca$elm_rose_tree$RoseTree$Tree$children(tree);
-		if (!_v3.b) {
-			return A3(
-				$author$project$Render$Export$LaTeX$exportBlock,
-				mathMacroDict,
-				settings,
-				$maca$elm_rose_tree$RoseTree$Tree$value(tree));
-		} else {
-			var children = _v3;
-			var _v4 = $author$project$Generic$BlockUtilities$getExpressionBlockName(
-				$maca$elm_rose_tree$RoseTree$Tree$value(tree));
-			_v4$2:
-			while (true) {
-				if (_v4.$ === 'Just') {
-					switch (_v4.a) {
-						case 'item':
-							return A4($author$project$Render$Export$LaTeX$handleItemWithChildren, mathMacroDict, settings, tree, children);
-						case 'numbered':
-							return A4($author$project$Render$Export$LaTeX$handleItemWithChildren, mathMacroDict, settings, tree, children);
+											compactItem),
+										exprs));
+							};
+							return renderExprList(exprList);
+						case 'numberedList':
+							var label = function (n) {
+								return $elm$core$String$fromInt(n + 1) + '. ';
+							};
+							var hang = function (str) {
+								return '\\leftskip=1em\\hangindent=1em\n\\hangafter=1\n' + str;
+							};
+							var renderExprList = function (exprs) {
+								return A2(
+									$elm$core$String$join,
+									'\n\n',
+									A2(
+										$elm$core$List$indexedMap,
+										function (k) {
+											return A2(
+												$elm$core$Basics$composeR,
+												A2($author$project$Render$Export$LaTeX$exportExpr, mathMacroDict, settings),
+												function (x) {
+													return _Utils_ap(
+														label(k),
+														hang(x));
+												});
+										},
+										exprs));
+							};
+							var exprList = function () {
+								var _v2 = block.body;
+								if (_v2.$ === 'Left') {
+									return _List_Nil;
+								} else {
+									var exprs = _v2.a;
+									return exprs;
+								}
+							}();
+							return renderExprList(exprList);
 						default:
-							break _v4$2;
+							break _v0$2;
 					}
 				} else {
-					break _v4$2;
+					break _v0$2;
 				}
 			}
-			var root = $elm$core$String$lines(
-				A3(
-					$author$project$Render$Export$LaTeX$exportBlock,
-					mathMacroDict,
-					settings,
-					$maca$elm_rose_tree$RoseTree$Tree$value(tree)));
-			var renderedChildren = $elm$core$List$concat(
-				A2(
-					$elm$core$List$map,
-					$elm$core$String$lines,
+			var _v3 = $maca$elm_rose_tree$RoseTree$Tree$children(tree);
+			if (!_v3.b) {
+				return A3($author$project$Render$Export$LaTeX$exportBlock, mathMacroDict, settings, block);
+			} else {
+				var children = _v3;
+				var _v4 = $author$project$Generic$BlockUtilities$getExpressionBlockName(block);
+				_v4$2:
+				while (true) {
+					if (_v4.$ === 'Just') {
+						switch (_v4.a) {
+							case 'item':
+								return A4($author$project$Render$Export$LaTeX$handleItemWithChildren, mathMacroDict, settings, tree, children);
+							case 'numbered':
+								return A4($author$project$Render$Export$LaTeX$handleItemWithChildren, mathMacroDict, settings, tree, children);
+							default:
+								break _v4$2;
+						}
+					} else {
+						break _v4$2;
+					}
+				}
+				var root = $elm$core$String$lines(
+					A3($author$project$Render$Export$LaTeX$exportBlock, mathMacroDict, settings, block));
+				var renderedChildren = $elm$core$List$concat(
 					A2(
 						$elm$core$List$map,
-						A2($author$project$Render$Export$LaTeX$exportTree, mathMacroDict, settings),
-						children)));
-			var _v5 = $elm_community$list_extra$List$Extra$unconsLast(root);
-			if (_v5.$ === 'Nothing') {
-				return '';
-			} else {
-				var _v6 = _v5.a;
-				var lastLine = _v6.a;
-				var firstLines = _v6.b;
-				var _v7 = firstLines;
-				var _v8 = renderedChildren;
-				var _v9 = lastLine;
-				return A2(
-					$elm$core$String$join,
-					'\n',
-					_Utils_ap(
-						firstLines,
+						$elm$core$String$lines,
+						A2(
+							$elm$core$List$map,
+							A2($author$project$Render$Export$LaTeX$exportTree, mathMacroDict, settings),
+							children)));
+				var _v5 = $elm_community$list_extra$List$Extra$unconsLast(root);
+				if (_v5.$ === 'Nothing') {
+					return '';
+				} else {
+					var _v6 = _v5.a;
+					var lastLine = _v6.a;
+					var firstLines = _v6.b;
+					var _v7 = firstLines;
+					var _v8 = renderedChildren;
+					var _v9 = lastLine;
+					return A2(
+						$elm$core$String$join,
+						'\n',
 						_Utils_ap(
-							renderedChildren,
-							_List_fromArray(
-								[lastLine]))));
+							firstLines,
+							_Utils_ap(
+								renderedChildren,
+								_List_fromArray(
+									[lastLine]))));
+				}
 			}
-		}
+		}();
+		return A2($author$project$Render$Export$LaTeX$annotateWithLineNumber, block, result);
 	});
 var $author$project$Render$Export$LaTeX$handleItemWithChildren = F4(
 	function (mathMacroDict, settings, tree, children) {
@@ -54023,40 +54273,7 @@ var $maca$elm_rose_tree$RoseTree$Tree$map = F2(
 					ns)));
 	});
 var $author$project$Render$Export$LaTeX$smartJoin = function (strings) {
-	var isListStructure = function (str) {
-		return A2($elm$core$String$startsWith, '\\begin{itemize}', str) || (A2($elm$core$String$startsWith, '\\end{itemize}', str) || (A2($elm$core$String$startsWith, '\\begin{enumerate}', str) || (A2($elm$core$String$startsWith, '\\end{enumerate}', str) || (A2($elm$core$String$startsWith, '\\begin{description}', str) || (A2($elm$core$String$startsWith, '\\end{description}', str) || A2($elm$core$String$startsWith, '\\item ', str))))));
-	};
-	var joinPair = function (_v2) {
-		var prev = _v2.a;
-		var curr = _v2.b;
-		return (isListStructure(prev) && isListStructure(curr)) ? '\n' : '\n\n';
-	};
-	var joined = function () {
-		if (!strings.b) {
-			return '';
-		} else {
-			var first = strings.a;
-			var rest = strings.b;
-			return A3(
-				$elm$core$List$foldl,
-				F2(
-					function (curr, _v1) {
-						var acc = _v1.a;
-						var prevStr = _v1.b;
-						return _Utils_Tuple2(
-							_Utils_ap(
-								acc,
-								_Utils_ap(
-									joinPair(
-										_Utils_Tuple2(prevStr, curr)),
-									curr)),
-							curr);
-					}),
-				_Utils_Tuple2(first, first),
-				rest).a;
-		}
-	}();
-	return joined;
+	return A2($elm$core$String$join, '\n\n', strings);
 };
 var $author$project$Render$Export$LaTeX$rawExport = F2(
 	function (settings, ast_) {
@@ -54141,8 +54358,8 @@ var $author$project$Render$Export$LaTeX$tableofcontents = F2(
 		var shouldShowTOC = (sectionCount > 1) && (numberToLevel > 0);
 		return shouldShowTOC ? '\n\n\\tableofcontents' : '';
 	});
-var $author$project$Render$Export$LaTeX$export = F3(
-	function (currentTime, settings_, ast) {
+var $author$project$Render$Export$LaTeX$export = F4(
+	function (currentTime, publicationData, settings_, ast) {
 		var titleData = A2($author$project$Generic$ASTTools$getBlockByName, 'title', ast);
 		var textMacroDefinitions = A2($author$project$Generic$ASTTools$getVerbatimBlockValue, 'textmacros', ast);
 		var rawBlockNames = $author$project$Generic$ASTTools$rawBlockNames(ast);
@@ -54179,7 +54396,7 @@ var $author$project$Render$Export$LaTeX$export = F3(
 				return '\n\\setcounter{section}{' + ($elm$core$String$fromInt(k) + '}\n');
 			}
 		}();
-		return A2($author$project$Render$Export$Preamble$make, rawBlockNames, expressionNames) + (A2($author$project$Render$Export$LaTeX$frontMatter, currentTime, ast) + (setTheFirstSection + (A2($author$project$Render$Export$LaTeX$tableofcontents, properties, rawBlockNames) + ('\n\n' + (A2($author$project$Render$Export$LaTeX$rawExport, settings, ast) + '\n\n\\end{document}\n')))));
+		return A3($author$project$Render$Export$Preamble$make, publicationData, rawBlockNames, expressionNames) + (A3($author$project$Render$Export$LaTeX$frontMatter, currentTime, publicationData, ast) + (setTheFirstSection + (A2($author$project$Render$Export$LaTeX$tableofcontents, properties, rawBlockNames) + ('\n\n' + (A2($author$project$Render$Export$LaTeX$rawExport, settings, ast) + '\n\n\\end{document}\n')))));
 	});
 var $elm$random$Random$Generate = function (a) {
 	return {$: 'Generate', a: a};
@@ -55340,7 +55557,8 @@ var $author$project$Main$update = F2(
 									1.0,
 									model.windowWidth,
 									$elm$core$Dict$empty);
-								var exportText = A3($author$project$Render$Export$LaTeX$export, model.currentTime, settings, model.editRecord.tree);
+								var publicationData = {authorList: _List_Nil, kind: 'article', title: model.title};
+								var exportText = A4($author$project$Render$Export$LaTeX$export, model.currentTime, publicationData, settings, model.editRecord.tree);
 								return A3($elm$file$File$Download$string, model.title + '.tex', 'application/x-latex', exportText);
 							} else {
 								if (A2($elm$core$List$member, $ohanhi$keyboard$Keyboard$Control, pressedKeys) && A2(
@@ -55673,7 +55891,8 @@ var $author$project$Main$update = F2(
 						1.0,
 						model.windowWidth,
 						$elm$core$Dict$empty);
-					var exportText = A3($author$project$Render$Export$LaTeX$export, model.currentTime, settings, model.editRecord.tree);
+					var publicationData = {authorList: _List_Nil, kind: 'article', title: model.title};
+					var exportText = A4($author$project$Render$Export$LaTeX$export, model.currentTime, publicationData, settings, model.editRecord.tree);
 					return _Utils_Tuple2(
 						model,
 						A3($elm$file$File$Download$string, model.title + '.tex', 'application/x-latex', exportText));
