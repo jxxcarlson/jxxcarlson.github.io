@@ -15,7 +15,18 @@
     <!-- Load the actual KaTeX library first -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
-    
+
+    <!-- Load mhchem extension for chemistry formulas -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/mhchem.min.js"></script>
+    <script>
+        console.log('mhchem script tag executed');
+        console.log('typeof katex:', typeof katex);
+        console.log('typeof renderMathInElement:', typeof renderMathInElement);
+        if (typeof katex !== 'undefined' && katex.__extensions) {
+            console.log('KaTeX extensions:', katex.__extensions);
+        }
+    </script>
+
     <!-- Then load the custom element wrapper -->
     <script src="katex.js"></script>
     
@@ -47,11 +58,20 @@
         function saveDbToLocalStorage() {
             try {
                 if (!db) return;
-                
+
                 // Export database as an array of bytes
                 const data = db.export();
+
                 // Convert to base64 for localStorage
-                const base64 = btoa(String.fromCharCode.apply(null, data));
+                // Use chunking to avoid stack overflow with large data
+                let binary = '';
+                const chunkSize = 8192;
+                for (let i = 0; i < data.length; i += chunkSize) {
+                    const chunk = data.subarray(i, i + chunkSize);
+                    binary += String.fromCharCode.apply(null, chunk);
+                }
+                const base64 = btoa(binary);
+
                 localStorage.setItem('scripta-sqlite-db', base64);
                 console.log('Database saved to localStorage (' + data.length + ' bytes)');
             } catch (error) {
@@ -174,8 +194,8 @@
                         case 'saveDocument':
                             const doc = command.document;
                             db.run(
-                                `INSERT OR REPLACE INTO documents 
-                                 (id, title, author, content, theme, createdAt, modifiedAt) 
+                                `INSERT OR REPLACE INTO documents
+                                 (id, title, author, content, theme, createdAt, modifiedAt)
                                  VALUES (?, ?, ?, ?, ?, ?, ?)`,
                                 [doc.id, doc.title, doc.author, doc.content, doc.theme, doc.createdAt, doc.modifiedAt]
                             );
@@ -259,15 +279,19 @@
             
             // Initialize KaTeX
             if (typeof initKatex === 'function') {
+                console.log('About to call initKatex()...');
+                console.log('KaTeX available?', typeof katex !== 'undefined');
+                console.log('mhchem available?', typeof katex !== 'undefined' && katex.__extensions ? katex.__extensions : 'no __extensions property');
                 initKatex();
                 console.log('KaTeX custom elements initialized');
             } else {
                 console.error('initKatex function not found!');
             }
-            
+
             // Check if KaTeX library is loaded
             if (typeof katex !== 'undefined') {
                 console.log('KaTeX library is loaded');
+                console.log('Checking for mhchem support in renderToString options...');
             } else {
                 console.log('Waiting for KaTeX library to load...');
             }
