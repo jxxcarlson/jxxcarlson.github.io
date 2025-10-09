@@ -51200,7 +51200,7 @@ var $author$project$Render$Tree$renderTree_ = F5(
 var $author$project$Render$Tree$renderTree = F5(
 	function (params, settings, accumulator, attrs_, tree) {
 		var width2 = $mdgriffith$elm_ui$Element$width(
-			$mdgriffith$elm_ui$Element$px(params.docWidth - 60));
+			$mdgriffith$elm_ui$Element$px(settings.width - 60));
 		var root = $maca$elm_rose_tree$RoseTree$Tree$value(tree);
 		var style = function () {
 			var _v2 = A2($elm$core$Dict$get, 'style', root.properties);
@@ -51239,7 +51239,7 @@ var $author$project$Render$Tree$renderTree = F5(
 			A2(
 				$elm$core$List$cons,
 				$mdgriffith$elm_ui$Element$width(
-					$mdgriffith$elm_ui$Element$px(params.docWidth - 0)),
+					$mdgriffith$elm_ui$Element$px(settings.width)),
 				A2(
 					$elm$core$List$cons,
 					$mdgriffith$elm_ui$Element$Background$color(bgColorAttr),
@@ -51262,7 +51262,7 @@ var $author$project$Render$Tree$renderTree = F5(
 							$mdgriffith$elm_ui$Element$paddingEach(
 							{bottom: 18, left: 0, right: 0, top: 0}),
 							$mdgriffith$elm_ui$Element$Border$color(borderColor),
-							$mdgriffith$elm_ui$Element$Border$width(2),
+							$mdgriffith$elm_ui$Element$Border$width(4),
 							$mdgriffith$elm_ui$Element$centerX,
 							width2
 						]),
@@ -54917,6 +54917,7 @@ var $author$project$Common$Model$LoadDocument = function (a) {
 	return {$: 'LoadDocument', a: a};
 };
 var $author$project$AppData$defaultDocumentText = '| title number-to-level:1\nAnnouncement\n\n[vspace 30]\n[large [italic This is what you can do with Scripta Live:]]\n\n| image figure:1 caption: Humming bird\nhttps://www.realsimple.com/thmb/7xn0oIF6a9eJ-y_4OO5vN0lJhCg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/humming-bird-flowers-GettyImages-1271839175-b515cb4f06a34e66b084ba617995f00a.jpg\n\n| equation label:wave-equation\npdd(u,x) + pdd(u,y) + pdd(u,z) = frac(1,c^2) pdd(u,t))\n\n\n[large [i ...make beautiful things with simple tools.]]\n[vspace 30]\n\n\n[i Note: See [eqref heat-equation] for the heat equation in three dimensions.]\n\n# About Scripta Live\n\nScripta is a markup language much like LaTeX, but with a simplified, ergonomic syntax.\nBetter yet: what you write (here, on the left) is rendered\n[i instantaneously ] in the right-hand window pane. No setup required.\nJust click the "New" button and start writing.\n\n- Your documents are saved in the browser\'s local storage or in an\nsqlite database, depending on the version.  If you refresh the\nbrowser or close it and come back to it later, it will be there, waiting for you.\n\n- Use the megaphone icon on the right to report bugs, ask questions, and make suggestions.\n\n- Scripta documents can be exported to standard LaTeX or to PDF.\n\n\n# Examples\n\n| mathmacros\npdd:  frac(partial^2 #1, partial #2^2)\nnat:    mathbb N\nreals: mathbb R\npd:  frac(partial #1, partial #2)\nset:    \\{ #1 \\}\nsett:   \\{ #1 \\ | \\ #2 \\}\n\nPythagoras said: $a^2 + b^2 = c^2$.\n\nThis will be on the test:\n\n| equation\nint_0^1 x^n dx = frac(1,n+1)\n\n\nBoth of the above equalities were written using an `equation` block.  If you look\nat the source text on the left,\nyou will see that [eqref wave-equation] a\na property, namely  `label:wave-equation`. The property is used for cross-referencing: we say `[eqref wave-equation]` to make a hot link to [eqref wave-equation].  Click on it now\nto see what happens.\n\nHere is an [u aligned] block:\n\n| aligned\nnat &= set("positive whole numbers and zero")\nnat &= sett(n " is a whole number", n > 0)\n\n| equation\n\\begin{pmatrix}\n2 & 1 \\\n1 & 2\n\\end{pmatrix}\n\\begin{pmatrix}\n2 & 1 \\\n1 & 2\n\\end{pmatrix}\n=\n\\begin{pmatrix}\n5 & 4 \\\n4 & 5\n\\end{pmatrix}\n\n| hide\n| image caption: Cloud Chamber\nhttps://www.researchgate.net/publication/329220318/figure/fig2/AS:697638865338375@1543341475684/Trajectories-in-a-Cloud-Chamber-the-core-evidence-for-the-local-particle-nature-of.png\n\n| equation label:heat-equation\nalpha \\left( pdd(u,x) + pdd(u,y) + pdd(u,z) \\right) =  pd(u,t))\nqquad "Heat Equation"\n';
+var $elm$core$Debug$log = _Debug_log;
 var $author$project$Render$Theme$Dark = {$: 'Dark'};
 var $author$project$Theme$mapTheme = function (theme) {
 	if (theme.$ === 'Light') {
@@ -54960,6 +54961,19 @@ var $author$project$MainSQLite$handleStorageMsg = F2(
 			case 'DocumentsListed':
 				if (msg.a.$ === 'Ok') {
 					var docs = msg.a.a;
+					var _v1 = A2(
+						$elm$core$Debug$log,
+						'Documents listed',
+						$elm$core$List$length(docs));
+					var _v2 = A2(
+						$elm$core$Debug$log,
+						'Document IDs',
+						A2(
+							$elm$core$List$map,
+							function ($) {
+								return $.id;
+							},
+							docs));
 					return $elm$core$List$isEmpty(docs) ? _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -55019,7 +55033,23 @@ var $author$project$MainSQLite$handleStorageMsg = F2(
 						$elm$core$Platform$Cmd$none);
 				} else {
 					var error = msg.a.a;
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					var firstDoc = $elm$core$List$head(common.documents);
+					var _v3 = A2($elm$core$Debug$log, 'Document load failed', error);
+					if (firstDoc.$ === 'Just') {
+						var doc = firstDoc.a;
+						var storage = $author$project$Storage$SQLite$storage($author$project$MainSQLite$StorageMsg);
+						var _v5 = A2($elm$core$Debug$log, 'Loading first available document instead', doc.id);
+						return _Utils_Tuple2(
+							model,
+							storage.loadDocument(doc.id));
+					} else {
+						return _Utils_Tuple2(
+							model,
+							A2(
+								$elm$random$Random$generate,
+								A2($elm$core$Basics$composeL, $author$project$MainSQLite$CommonMsg, $author$project$Common$Model$GeneratedId),
+								$author$project$MainSQLite$generateId));
+					}
 				}
 			case 'DocumentSaved':
 				if (msg.a.$ === 'Ok') {
@@ -55033,6 +55063,7 @@ var $author$project$MainSQLite$handleStorageMsg = F2(
 								return !_Utils_eq(d.id, doc.id);
 							},
 							common.documents));
+					var _v6 = A2($elm$core$Debug$log, 'Document saved successfully', doc.id);
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -55044,6 +55075,7 @@ var $author$project$MainSQLite$handleStorageMsg = F2(
 						$elm$core$Platform$Cmd$none);
 				} else {
 					var error = msg.a.a;
+					var _v7 = A2($elm$core$Debug$log, 'Document save failed', error);
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 'DocumentDeleted':
@@ -55092,6 +55124,7 @@ var $author$project$MainSQLite$handleStorageMsg = F2(
 					var newCommon = _Utils_update(
 						common,
 						{lastSavedDocumentId: maybeId});
+					var _v8 = A2($elm$core$Debug$log, 'Last document ID loaded', maybeId);
 					if (maybeId.$ === 'Just') {
 						var id = maybeId.a;
 						return _Utils_Tuple2(
@@ -58028,12 +58061,12 @@ var $author$project$MainSQLite$update = F2(
 				var content = msg.a;
 				var title = $author$project$Common$Model$getTitleFromContent(content);
 				var storage = $author$project$Storage$SQLite$storage($author$project$MainSQLite$StorageMsg);
-				var _v11 = A2(
+				var _v12 = A2(
 					$author$project$MainSQLite$updateCommon,
 					$author$project$Common$Model$InputText(content),
 					model);
-				var modelWithContent = _v11.a;
-				var cmdFromUpdate = _v11.b;
+				var modelWithContent = _v12.a;
+				var cmdFromUpdate = _v12.b;
 				var newId = 'imported-' + $elm$core$String$fromInt(
 					($elm$time$Time$posixToMillis(modelWithContent.common.currentTime) / 1) | 0);
 				var newDoc = A6(
@@ -58094,12 +58127,12 @@ var $author$project$MainSQLite$update = F2(
 				var storage = $author$project$Storage$SQLite$storage($author$project$MainSQLite$StorageMsg);
 				var basename = A2($elm$core$String$endsWith, '.tex', filename) ? A2($elm$core$String$dropRight, 4, filename) : filename;
 				var scriptaContent = '| title\n' + (basename + ('\n\n' + translatedContent));
-				var _v12 = A2(
+				var _v13 = A2(
 					$author$project$MainSQLite$updateCommon,
 					$author$project$Common$Model$InputText(scriptaContent),
 					model);
-				var modelWithContent = _v12.a;
-				var cmdFromUpdate = _v12.b;
+				var modelWithContent = _v13.a;
+				var cmdFromUpdate = _v13.b;
 				var newId = 'latex-import-' + $elm$core$String$fromInt(
 					($elm$time$Time$posixToMillis(modelWithContent.common.currentTime) / 1000) | 0);
 				var newDoc = A6(
@@ -58427,6 +58460,7 @@ var $author$project$MainSQLite$updateCommon = F2(
 				}
 			case 'LoadDocument':
 				var id = msg.a;
+				var _v5 = A2($elm$core$Debug$log, 'Attempting to load document', id);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -58465,8 +58499,8 @@ var $author$project$MainSQLite$updateCommon = F2(
 					$elm$core$Platform$Cmd$none);
 			case 'ToggleSortOrder':
 				var newSortOrder = function () {
-					var _v5 = common.sortOrder;
-					if (_v5.$ === 'Alphabetical') {
+					var _v6 = common.sortOrder;
+					if (_v6.$ === 'Alphabetical') {
 						return $author$project$Common$Model$Recent;
 					} else {
 						return $author$project$Common$Model$Alphabetical;
@@ -58710,7 +58744,7 @@ var $author$project$MainSQLite$updateCommon = F2(
 						{common: newCommon}),
 					(firstId !== '') ? A2(
 						$elm$core$Task$perform,
-						function (_v9) {
+						function (_v10) {
 							return $author$project$MainSQLite$CommonMsg(
 								$author$project$Common$Model$SelectId(firstId));
 						},
